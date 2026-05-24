@@ -91,6 +91,464 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-analytics-tools',
+    title: 'Best YouTube Analytics Tools: A Complete Guide for Creators and Brands',
+    excerpt: 'YouTube Studio is the foundation, but it leaves real gaps: competitor data, keyword research, A/B testing, channel auditing. The strongest analytics tools available, organized by the gap each one fills, with a recommended stack by channel size.',
+    date: '2026-05-22',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-analytics-tools-cover.webp',
+    author: 'Denzil',
+    readTime: '14 min read',
+    content: () => (
+      <>
+        <p>YouTube Studio is the starting point for every creator's analytics workflow. It is free, accurate, and covers your own channel's performance data better than any third-party platform can. It is also where most creators stop, which is exactly where the gap begins.</p>
+
+        <p>The best youtube analytics tools fill what YouTube Studio leaves open. Competitor data, keyword research, A/B testing, bulk optimization, and cross-channel reporting are all outside YouTube Studio's scope. The right third-party tool depends entirely on which of those gaps is <a href="/blog/youtube-channel-not-growing">limiting your growth right now</a>.</p>
+
+        <p>This guide covers the strongest youtube analytics options available, organized by the specific problem each one solves, with a recommended stack by channel size so you know exactly which tools to layer on top of YouTube Studio at every stage of your channel's growth.</p>
+
+        <h2>What YouTube Studio Covers and What It Misses</h2>
+
+        <p>Every creator's analytics workflow should start with YouTube Studio. It is the only platform with authenticated access to your channel's actual data including CTR, retention, revenue, and audience demographics. Every third-party tool either supplements this data or estimates metrics it cannot directly access.</p>
+
+        <p>Understanding <a href="/blog/youtube-analytics">what YouTube Studio covers</a> and where it runs out tells you exactly which external tool you need before spending anything.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>YouTube Studio</th>
+              <th>Third-Party Tools</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Your own CTR and retention</td><td>Full access</td><td>Cannot access directly</td></tr>
+            <tr><td>Traffic sources and search terms</td><td>Full access</td><td>Limited or estimated</td></tr>
+            <tr><td>Revenue and RPM</td><td>Full access</td><td>Estimated only</td></tr>
+            <tr><td>Audience demographics</td><td>Full access</td><td>Limited</td></tr>
+            <tr><td>Competitor channel data</td><td>Not available</td><td>Core strength</td></tr>
+            <tr><td>Keyword research and SEO scoring</td><td>Basic (Inspiration tab only)</td><td>Core strength</td></tr>
+            <tr><td>A/B testing thumbnails and titles</td><td>Not available</td><td>TubeBuddy only</td></tr>
+            <tr><td>Bulk video optimization</td><td>Not available</td><td>TubeBuddy only</td></tr>
+            <tr><td>Cross-channel reporting</td><td>Not available</td><td>Agency tools only</td></tr>
+            <tr><td>Channel audit framework</td><td>Not available</td><td>Varies by tool</td></tr>
+          </tbody>
+        </table>
+
+        <p>The gap on the right side of this table is where third-party tools earn their place. No single external tool fills every gap. The strongest approach is YouTube Studio as the foundation with one or two targeted tools layered on top based on your specific growth challenge.</p>
+
+        <p><strong>One important clarification on youtube analytics api:</strong> Developers can connect directly to YouTube's data via the YouTube Analytics API to build custom dashboards and reporting systems. This is a technical integration path used by agencies and enterprise teams, not a consumer tool. The tools in this guide are all built on top of that API and present the data in accessible interfaces without requiring any coding.</p>
+
+        <h2>How to Choose the Right YouTube Analytics Tool</h2>
+
+        <p>Most creators pick a youtube channel analytics tool based on which one they see recommended most often. That approach produces tools with features you never use and gaps in the areas where you actually need help.</p>
+
+        <p>Ask these five questions before choosing any tool:</p>
+
+        <h3>What Specific Problem Am I Trying to Solve?</h3>
+
+        <p>A creator struggling to find video topics needs a keyword research tool. A creator with low CTR needs A/B testing capability. A creator benchmarking against competitors needs external channel data. The problem comes first. The tool follows.</p>
+
+        <h3>Do I Need Data on My Own Channel or Other Channels?</h3>
+
+        <p>YouTube Studio already covers your own channel comprehensively. If your primary need is youtube analytics for other channels, competitor tracking tools are your priority. If your primary need is optimizing your own content, SEO and audit tools are more valuable.</p>
+
+        <h3>What Is My Budget?</h3>
+
+        <p>Free tools cover a surprising amount of ground. YouTube Studio, Social Blade's free tier, and vidIQ's free plan together provide enough data for a channel under 1,000 subscribers to make informed content decisions without spending anything.</p>
+
+        <h3>What Is My Channel Size?</h3>
+
+        <p>A channel with 10 videos needs different tools than a channel with 200 videos. Bulk optimization tools add no value without an existing library. A/B testing requires consistent upload volume to generate statistically meaningful results.</p>
+
+        <h3>Do I Need a Standalone Tool or an Integrated Platform?</h3>
+
+        <p>Some creators prefer one platform that covers keyword research, competitor tracking, and channel auditing together. Others prefer best-in-class tools for each function. Both approaches work. The integrated approach saves time. The best-in-class approach produces deeper data in each category.</p>
+
+        <h2>Best YouTube Analytics Tools for Keyword Research and SEO</h2>
+
+        <p>Keyword research and SEO tools help you find topics with real search demand before you film and optimize your metadata before you publish. This is the most populated category in the best youtube analytics tool market and the one where the differences between platforms matter most.</p>
+
+        <h3>1. vidIQ</h3>
+
+        <img src="/blog/youtube-analytics-tools-vidiq.webp" alt="vidIQ Keyword Inspector showing search volume, competition scores, and related keyword clusters" />
+
+        <p>vidIQ is the strongest dedicated keyword research tool in this category. It returns search volume, competition scores, and related keyword clusters for any topic you search.</p>
+
+        <p>The Keyword Inspector surfaces long-tail variations with lower competition than head terms, which is particularly valuable for smaller channels trying to rank against established competitors. The AI Daily Ideas feature pulls <a href="/blog/youtube-trends">trending topic suggestions</a> from your niche based on what similar channels are currently gaining traction on.</p>
+
+        <p>Pricing starts at $7.50 per month on annual billing. The free plan includes basic keyword research with five related keywords per search and competition scoring.</p>
+
+        <h3>2. TubeBuddy</h3>
+
+        <img src="/blog/youtube-analytics-tools-tubebuddy.webp" alt="TubeBuddy SEO scorecard surfacing inside YouTube Studio at the point of upload" />
+
+        <p><a href="/blog/tubebuddy-vs-vidiq">TubeBuddy's keyword explorer</a> is functional but returns fewer data points per search than vidIQ. Its strongest SEO feature is the scorecard that appears directly inside YouTube Studio during upload, grading your title, description, and tags in real time before you publish.</p>
+
+        <p>For creators who want guided optimization at the point of upload rather than standalone keyword research, TubeBuddy's integrated approach removes more friction than vidIQ's separate dashboard.</p>
+
+        <p>Pricing starts at $3.60 per month on annual billing with a 50% discount for channels under 1,000 subscribers.</p>
+
+        <h3>3. ytgrowth.io</h3>
+
+        <img src="/blog/youtube-analytics-tools-ytgrowth.webp" alt="YTGrowth SEO Studio scoring a full video's metadata against the live niche before upload" />
+
+        <p>The <a href="/features/keyword-research">Keyword Explorer</a> and <a href="/features/seo-studio">SEO Studio</a> in ytgrowth.io take a different approach from both vidIQ and TubeBuddy. Rather than treating keyword research as a separate workflow from your channel's performance data, ytgrowth.io connects search volume and competition scoring directly to your channel's existing content gaps.</p>
+
+        <p>The SEO Studio covers full metadata optimization across title, description, tags, and hashtags in one structured workflow, and the results are informed by what your specific audience is already searching for rather than platform-wide keyword data alone.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Keyword Depth</th>
+              <th>SEO Scoring</th>
+              <th>Upload Integration</th>
+              <th>Free Plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>vidIQ</strong></td><td>High</td><td>Strong</td><td>Separate dashboard</td><td>Yes</td></tr>
+            <tr><td><strong>TubeBuddy</strong></td><td>Medium</td><td>Strong</td><td>Direct YouTube Studio</td><td>Yes</td></tr>
+            <tr><td><strong>ytgrowth.io</strong></td><td>High</td><td>Comprehensive</td><td>Full metadata workflow</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Best YouTube Analytics Tools for Competitor Research</h2>
+
+        <p>Understanding what competing channels are doing is one of the most valuable inputs a creator can have, and it is the area where YouTube Studio offers nothing at all. The tools in this category fill that gap by surfacing public data on any YouTube channel including subscriber growth trends, top performing videos, upload frequency, and estimated view counts.</p>
+
+        <h3>1. Social Blade</h3>
+
+        <img src="/blog/youtube-analytics-tools-socialblade.webp" alt="Social Blade dashboard with historical subscriber and view trends plus a growth grade for a public YouTube channel" />
+
+        <p>Social Blade is the most widely used free tool for tracking public <a href="/blog/youtube-competitor-analysis">youtube channel analysis</a> data. It shows historical subscriber and view trends for any public channel, estimated monthly earnings ranges, and a growth grade based on recent performance trajectory. The data is publicly available and updates regularly making it a reliable starting point for competitor research at zero cost.</p>
+
+        <p>The limitation is depth. Social Blade shows you what happened to a competitor's channel over time but not why. It cannot surface which specific videos drove growth spikes or which topics are generating the most engagement on competing channels.</p>
+
+        <h3>2. vidIQ</h3>
+
+        <img src="/blog/youtube-analytics-tools-vidiq-1.webp" alt="vidIQ competitor tracking showing views per hour on individual videos from a competing channel" />
+
+        <p>vidIQ's competitor tracking goes deeper than Social Blade by showing views per hour on individual competitor videos. That metric reveals which videos are currently gaining momentum on a competing channel in real time, giving you an early signal on which topics are performing well in your niche before you commit to filming.</p>
+
+        <p>The Boost and Max plans allow tracking multiple competitor channels simultaneously with alerts when a competitor publishes a new video that is gaining traction quickly.</p>
+
+        <h3>3. OutlierKit</h3>
+
+        <img src="/blog/youtube-analytics-tools-outlier-kit.webp" alt="OutlierKit surfacing videos that perform significantly above a channel's average" />
+
+        <p>OutlierKit specializes in identifying <a href="/features/outliers">outlier videos that perform significantly above</a> a channel's average. For youtube analytics for other channels, this feature is particularly useful because it surfaces the specific videos where a competitor broke through their normal performance ceiling. Those outlier topics represent the highest opportunity angles in your niche.</p>
+
+        <h3>4. ytgrowth.io</h3>
+
+        <img src="/blog/youtube-analytics-tools-ytgrowth-1.webp" alt="YTGrowth Competitor Analysis surfacing rising videos, open content gaps, and niche-level metric benchmarks" />
+
+        <p>The <a href="/features/competitor-analysis">Competitor Analysis</a> feature in ytgrowth.io surfaces which topics competing channels are gaining traction on, which content gaps they are leaving open, and how your key metrics compare against theirs across CTR, retention, and posting consistency. Unlike tools that show raw competitor data without context, ytgrowth.io connects competitor insights directly to content recommendations so the research translates into specific videos worth making.</p>
+
+        <h3>What No Tool Can Show You About Other Channels</h3>
+
+        <p>It is worth being clear about the limits of youtube video analytics for other channels. No third-party tool has authenticated access to a competitor's private metrics. CTR, audience retention, revenue, and demographic data are never accessible externally. Every competitor tool works with publicly available data only. The private metrics that matter most for understanding why a video performed well remain exclusive to the channel owner inside YouTube Studio.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Competitor Tracking</th>
+              <th>Video Momentum Data</th>
+              <th>Outlier Detection</th>
+              <th>Free Plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Social Blade</strong></td><td>Channel-level trends</td><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>vidIQ</strong></td><td>Channel and video level</td><td>Yes, views per hour</td><td>Limited</td><td>Yes</td></tr>
+            <tr><td><strong>OutlierKit</strong></td><td>Video level</td><td>Yes</td><td>Yes, core feature</td><td>Yes</td></tr>
+            <tr><td><strong>ytgrowth.io</strong></td><td>Channel and content gaps</td><td>Yes</td><td>Yes, via Outliers feature</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Best YouTube Analytics Tools for Channel Auditing</h2>
+
+        <p>A <a href="/blog/youtube-channel-audit">structured channel audit</a> requires more than checking individual metrics in isolation. It requires connecting your CTR, retention, SEO performance, traffic sources, audience data, and competitor benchmarks into one structured assessment that tells you where your channel stands and what to prioritize fixing first.</p>
+
+        <p>This is the category where most tools fall shortest and where the gap between a keyword research tool and a dedicated audit platform becomes most visible.</p>
+
+        <h3>1. vidIQ</h3>
+
+        <img src="/blog/youtube-analytics-tools-vidiq-2.webp" alt="vidIQ channel audit dashboard surfacing best performing videos and subscriber gains and losses over time" />
+
+        <p>vidIQ's channel audit surfaces your best performing videos, flags underperforming content, and tracks subscriber gains and losses over time. It gives you a useful high-level overview of channel health but stops short of connecting those findings to a prioritized action plan. The audit tells you what is happening without consistently telling you what to do about it first.</p>
+
+        <h3>2. TubeBuddy</h3>
+
+        <img src="/blog/youtube-analytics-tools-tubebuddy-1.webp" alt="TubeBuddy channel health report flagging videos with weak tags and low SEO scores across the back catalog" />
+
+        <p>TubeBuddy's channel health report covers SEO scorecard data across your video library and identifies metadata gaps at scale. Its strongest audit capability is bulk identification of videos with weak tags, missing descriptions, or low SEO scores across your entire back catalog. For creators with large libraries, that bulk audit saves significant manual review time.</p>
+
+        <p>What TubeBuddy does not cover is performance benchmarking against competing channels. Its audit is entirely inward-facing, comparing your videos against each other rather than against the channels your audience is also watching.</p>
+
+        <h3>3. ytgrowth.io</h3>
+
+        <img src="/blog/youtube-analytics-tools-ytgrowth-2.webp" alt="YTGrowth Channel Audit running a 10-dimension analysis with a single prioritized action plan" />
+
+        <p>The <a href="/features/channel-audit">Channel Audit</a> in ytgrowth.io is built specifically around the gap both vidIQ and TubeBuddy leave open. It runs a 10-dimension analysis covering CTR, retention, traffic sources, demographics, SEO performance, posting consistency, and competitor benchmarking in your specific niche. Rather than presenting raw data for the creator to interpret, it surfaces a prioritized action plan identifying the single highest impact improvement to make before the next upload.</p>
+
+        <p>The audit also benchmarks your key metrics against the channels your target audience is already watching, giving you the competitive context that an inward-facing audit cannot provide.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Audit Depth</th>
+              <th>Competitor Benchmarking</th>
+              <th>Prioritized Action Plan</th>
+              <th>Free Plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>vidIQ</strong></td><td>Medium</td><td>Limited</td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>TubeBuddy</strong></td><td>Medium</td><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>ytgrowth.io</strong></td><td>Comprehensive, 10 dimensions</td><td>Yes, niche-specific</td><td>Yes</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Get the audit YouTube Studio cannot give you"
+          sub="Channel Audit runs a 10-dimension analysis covering CTR, retention, SEO, and competitor benchmarks in your niche, then surfaces the single highest priority fix to make before your next upload. Free to try."
+          button="Try Channel Audit →"
+        />
+
+        <h2>Best YouTube Analytics Tools for Agencies and Brands</h2>
+
+        <p>Agencies and brands managing YouTube channels have different requirements from individual creators. A social media manager running five client channels needs cross-platform reporting, white-label dashboards, and the ability to present performance data to stakeholders without manually pulling numbers from YouTube Studio every week.</p>
+
+        <h3>1. Sprout Social</h3>
+
+        <img src="/blog/youtube-analytics-tools-sproutsocial.webp" alt="Sprout Social unified dashboard covering YouTube alongside other social platforms for agency multi-platform reporting" />
+
+        <p>Sprout Social is the strongest option for agencies needing YouTube analytics as part of a broader social media management workflow. It covers YouTube alongside Instagram, Facebook, X, and LinkedIn in one unified dashboard, which makes it the practical choice for teams managing multi-platform content calendars rather than YouTube-only strategies.</p>
+
+        <p>Its YouTube-specific analytics cover views, watch time, engagement rate, and audience demographics with exportable reports suitable for client presentations. The limitation is depth. Sprout Social covers YouTube analytics at a channel summary level rather than the granular video-level data that growth-focused creators need.</p>
+
+        <p>Pricing starts at $249 per month making it unsuitable for individual creators but justified for agencies billing multiple clients.</p>
+
+        <h3>2. Brand24</h3>
+
+        <img src="/blog/youtube-analytics-tools-brand24.webp" alt="Brand24 social listening dashboard monitoring brand mentions across YouTube comments and video descriptions" />
+
+        <p>Brand24 is primarily a social listening tool that monitors brand mentions across the web including YouTube comments and video descriptions. For brands running influencer partnerships or tracking how their products are being discussed in YouTube content, Brand24 surfaces youtube insights that YouTube Studio does not cover at all.</p>
+
+        <p>Its YouTube analytics cover mention volume, sentiment analysis, and reach estimates across videos mentioning a brand or keyword. It is not a channel growth tool. It is a brand monitoring tool with YouTube coverage built in.</p>
+
+        <p>youtube influencer analytics is a specific use case Brand24 handles well. Brands researching a creator before a partnership can use it to track how often a creator mentions specific topics, what sentiment their audience expresses in comments, and how their reach has trended over time.</p>
+
+        <h3>3. ytgrowth.io</h3>
+
+        <img src="/blog/youtube-analytics-tools-ytgrowth-3.webp" alt="YTGrowth Agency plan supporting up to 10 client channels with multi-channel audits and weekly reports" />
+
+        <p>The Agency plan in ytgrowth.io is built for teams managing multiple YouTube channels simultaneously. It supports up to 10 channels under one account, giving agencies a single platform to run channel audits, track competitor benchmarks, and manage keyword research across all client channels without switching between accounts.</p>
+
+        <p>The weekly performance report feature delivers an automated summary of each channel's key metrics and the single highest priority action for the week, which removes the manual reporting burden that agencies typically handle in spreadsheets or separate dashboard tools.</p>
+
+        <p>For agencies focused exclusively on YouTube growth rather than multi-platform social media management, ytgrowth.io covers more channel-specific depth than Sprout Social at a significantly lower price point.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Best For</th>
+              <th>YouTube Depth</th>
+              <th>Cross-Platform</th>
+              <th>Free Plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Sprout Social</strong></td><td>Multi-platform agency reporting</td><td>Channel summary level</td><td>Yes</td><td>No</td></tr>
+            <tr><td><strong>Brand24</strong></td><td>Brand monitoring, influencer research</td><td>Mention and sentiment tracking</td><td>Yes</td><td>Limited trial</td></tr>
+            <tr><td><strong>ytgrowth.io</strong></td><td>YouTube-focused agencies, multi-channel management</td><td>Comprehensive, 10 dimensions</td><td>YouTube only</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Best Free YouTube Analytics Tools</h2>
+
+        <p>Not every creator needs a paid tool. The free options available in 2026 cover enough ground for a channel under 1,000 subscribers to make informed content decisions without spending anything. Knowing where each free tool runs out tells you exactly when upgrading becomes necessary.</p>
+
+        <h3>1. YouTube Studio (Free)</h3>
+
+        <img src="/blog/youtube-analytics-tools-youtube-studio.webp" alt="YouTube Studio analytics dashboard covering CTR, retention, traffic sources, and audience demographics" />
+
+        <p>YouTube Studio is the strongest free youtube analytic platform available and the one no paid tool replaces. It provides authenticated access to your own channel's CTR, retention, traffic sources, audience demographics, and revenue data with no usage limits or paywalls. Every creator regardless of channel size should have YouTube Studio as the foundation of their analytics workflow before adding anything else.</p>
+
+        <h3>2. Social Blade (Free)</h3>
+
+        <img src="/blog/youtube-analytics-tools-socialblade.webp" alt="Social Blade free tier showing 90 days of public subscriber and view trends with a growth grade" />
+
+        <p>Social Blade's free tier tracks public subscriber and view trends for any YouTube channel. For creators researching competitors or benchmarking their own growth trajectory against similar channels, it delivers useful data at zero cost. The free tier shows 90 days of historical data with basic growth grade scoring.</p>
+
+        <h3>3. vidIQ (Free Plan)</h3>
+
+        <img src="/blog/youtube-analytics-tools-vidiq-3.webp" alt="vidIQ free plan covering basic keyword research, three competitor channel slots, and views per hour data" />
+
+        <p>vidIQ's free plan includes basic keyword research returning five related keywords per search with volume and competition scores, three competitor channel slots with trending video tracking, and views per hour data on any YouTube video. For a beginner channel with no budget, this combination of keyword research and competitor tracking covers the two most common gaps YouTube Studio leaves open.</p>
+
+        <h3>4. ytgrowth.io (Free Plan)</h3>
+
+        <img src="/blog/youtube-analytics-tools-ytgrowth.webp" alt="YTGrowth free plan covering three lifetime analyses, one channel connection, and core SEO tools" />
+
+        <p>ytgrowth.io's free plan includes three lifetime analyses, one channel connection, and access to the core SEO and keyword research tools. For a new creator wanting to run an initial channel audit and identify their highest priority improvement before committing to a paid plan, the free tier delivers enough structured insight to inform the first 90 days of content strategy.</p>
+
+        <p>When free tools are no longer enough:</p>
+
+        <ul>
+          <li>You are publishing consistently and need A/B testing data to improve CTR</li>
+          <li>You want to track more than three competitor channels simultaneously</li>
+          <li>You need bulk metadata optimization across an existing video library</li>
+          <li>You want a structured channel audit with competitor benchmarking rather than individual metric checks</li>
+        </ul>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>What the Free Plan Covers</th>
+              <th>Main Limitation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>YouTube Studio</strong></td><td>Full own-channel data</td><td>No competitor data</td></tr>
+            <tr><td><strong>Social Blade</strong></td><td>Public channel trends, 90 days</td><td>No video-level data</td></tr>
+            <tr><td><strong>vidIQ</strong></td><td>5 keywords per search, 3 competitors</td><td>Limited research depth</td></tr>
+            <tr><td><strong>ytgrowth.io</strong></td><td>3 analyses, core SEO tools, 1 channel</td><td>Limited analysis volume</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Recommended Tool Stack by Channel Size</h2>
+
+        <p>The best youtube analytics app for your channel depends as much on where you are in your growth journey as it does on which features you need. A new channel and an established channel have fundamentally different data needs and different budgets to work with.</p>
+
+        <p>Here are three recommended stacks covering every stage of channel growth:</p>
+
+        <h3>Under 1,000 Subscribers: Free Foundation Stack</h3>
+
+        <p>At this stage your priority is understanding your own channel data and finding topics with real search demand. You do not yet have enough upload history for A/B testing to produce statistically meaningful results and bulk optimization tools have nothing to work on yet.</p>
+
+        <ol>
+          <li><strong>YouTube Studio:</strong> Full channel analytics at no cost</li>
+          <li><strong>vidIQ Free:</strong> Basic keyword research and three competitor slots</li>
+          <li><strong>Social Blade Free:</strong> Public competitor growth tracking</li>
+          <li><strong>ytgrowth.io Free:</strong> Initial channel audit and SEO Studio for metadata optimization</li>
+        </ol>
+
+        <p><strong>Total cost:</strong> Free</p>
+
+        <h3>1,000 to 10,000 Subscribers: Growth Stack</h3>
+
+        <p>At this stage you have enough upload history to identify content patterns, enough impressions for <a href="/blog/thumbnail-tester">A/B testing on thumbnails</a> to produce reliable data, and enough competitors worth tracking systematically.</p>
+
+        <ol>
+          <li><strong>YouTube Studio:</strong> Full channel analytics foundation</li>
+          <li><strong>TubeBuddy Pro:</strong> A/B testing on thumbnails and titles, SEO scorecard at upload</li>
+          <li><strong>ytgrowth.io:</strong> Channel audit, Keyword Explorer, Competitor Analysis, and weekly performance reports</li>
+        </ol>
+
+        <p>This stack covers keyword research, metadata optimization, CTR testing, and structured channel auditing in one workflow without duplicating functionality across tools.</p>
+
+        <h3>10,000+ Subscribers: Scale Stack</h3>
+
+        <p>At this stage your library is large enough to benefit from bulk optimization, your analytics have enough historical depth to identify meaningful performance patterns, and competitor benchmarking becomes a core part of content strategy rather than occasional research.</p>
+
+        <ol>
+          <li><strong>YouTube Studio:</strong> Full channel analytics foundation</li>
+          <li><strong>TubeBuddy Legend:</strong> Bulk processing across back catalog, advanced A/B testing</li>
+          <li><strong>ytgrowth.io Growth or Agency plan:</strong> Comprehensive channel audit, multi-channel competitor tracking, SEO Studio, and automated weekly reporting</li>
+          <li><strong>Social Blade:</strong> Ongoing public competitor growth monitoring at no additional cost</li>
+        </ol>
+
+        <h3>Agencies: Client Management Stack</h3>
+
+        <ol>
+          <li><strong>YouTube Studio:</strong> Per-client channel analytics</li>
+          <li><strong>ytgrowth.io Agency plan:</strong> Multi-channel audit, competitor benchmarking, and automated weekly reports across all client channels</li>
+          <li><strong>Sprout Social:</strong> Cross-platform reporting for clients managing YouTube alongside other social channels</li>
+          <li><strong>Brand24:</strong> Influencer research and brand mention monitoring for partnership campaigns</li>
+        </ol>
+
+        <h2>YouTube Analytics Tools Comparison Table</h2>
+
+        <p>Here is a full side-by-side comparison of every tool covered in this guide across the features that matter most for channel growth:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Best For</th>
+              <th>Keyword Research</th>
+              <th>Channel Audit</th>
+              <th>Competitor Data</th>
+              <th>A/B Testing</th>
+              <th>Bulk Optimization</th>
+              <th>Free Plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>YouTube Studio</strong></td><td>Own channel data foundation</td><td>Basic</td><td>No</td><td>No</td><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>vidIQ</strong></td><td>Keyword research, SEO, AI ideas</td><td>High depth</td><td>Basic</td><td>Yes, video level</td><td>Limited</td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>TubeBuddy</strong></td><td>A/B testing, bulk optimization, SEO</td><td>Medium depth</td><td>Basic</td><td>Limited</td><td>Yes, full</td><td>Yes</td><td>Yes</td></tr>
+            <tr><td><strong>Social Blade</strong></td><td>Public competitor tracking</td><td>No</td><td>No</td><td>Yes, channel level</td><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>OutlierKit</strong></td><td>Outlier and content strategy research</td><td>No</td><td>No</td><td>Yes, video level</td><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>ytgrowth.io</strong></td><td>Channel audit, SEO, competitor analysis</td><td>High depth</td><td>Comprehensive</td><td>Yes, niche-specific</td><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><td><strong>Sprout Social</strong></td><td>Agency multi-platform reporting</td><td>No</td><td>No</td><td>Limited</td><td>No</td><td>No</td><td>No</td></tr>
+            <tr><td><strong>Brand24</strong></td><td>Brand monitoring, influencer research</td><td>No</td><td>No</td><td>Mention tracking</td><td>No</td><td>No</td><td>Limited trial</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Key Takeaways From the Table</h3>
+
+        <ul>
+          <li>No single tool covers every category. YouTube Studio plus one or two targeted tools produces better results than one platform trying to do everything.</li>
+          <li>ytgrowth.io is the only tool in this comparison offering a comprehensive channel audit with competitor benchmarking and a prioritized action plan in one workflow.</li>
+          <li>TubeBuddy is the only tool offering full A/B testing on live videos, which remains its clearest competitive advantage.</li>
+          <li>vidIQ leads on keyword research depth and AI-powered content ideas among the dedicated creator tools.</li>
+          <li>Free plans across YouTube Studio, vidIQ, Social Blade, OutlierKit, and ytgrowth.io together cover enough ground for a new channel to operate without spending anything.</li>
+        </ul>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What Is the Best Free YouTube Analytics Tool?</h3>
+
+        <p>YouTube Studio is the strongest free youtube analytic platform available because it provides authenticated access to your own channel's complete performance data at no cost. For competitor research and keyword data beyond YouTube Studio, vidIQ's free plan and Social Blade's free tier together cover the most common gaps without spending anything.</p>
+
+        <h3>Can I See Analytics for Other YouTube Channels?</h3>
+
+        <p>Yes, but with limitations. Third-party tools like Social Blade, vidIQ, and ytgrowth.io surface publicly available data on any YouTube channel including subscriber trends, estimated views, and top performing videos. No external tool can access private metrics like CTR, audience retention, or revenue from another creator's channel. Those metrics remain exclusive to the channel owner inside YouTube Studio.</p>
+
+        <h3>Do I Need a Third-Party YouTube Analytics Tool?</h3>
+
+        <p>Not immediately. YouTube Studio covers your own channel's performance data comprehensively at no cost. A third-party tool becomes necessary when you need competitor data, keyword research beyond YouTube Studio's basic Inspiration tab, A/B testing capability, or a structured channel audit with benchmarking against competing channels in your niche.</p>
+
+        <h3>What Is the Best YouTube Analytics Tool for Small Channels?</h3>
+
+        <p>The free stack of YouTube Studio, vidIQ's free plan, and ytgrowth.io's free tier covers everything a channel under 1,000 subscribers needs to make informed content decisions. YouTube Studio handles your own data. vidIQ handles keyword research and basic competitor tracking. ytgrowth.io handles the initial channel audit and metadata optimization workflow.</p>
+
+        <h3>What Is the Best YouTube Analytics App for Tracking Channel Growth Over Time?</h3>
+
+        <p>Social Blade is the strongest free option for tracking historical growth trends on any public channel. For tracking your own channel's growth across all performance dimensions over time, YouTube Studio's date range comparison feature and ytgrowth.io's quarterly channel audit together give you the most complete picture of how your key metrics are trending.</p>
+
+        <h2>Pick the Tool That Solves Your Specific Problem</h2>
+
+        <p>The best youtube analytics tools are not the most popular ones. They are the ones built for the specific problem your channel is facing right now.</p>
+
+        <p>Start with YouTube Studio. It is free, accurate, and covers your own channel's performance data better than any third-party platform. Add tools on top of it only when you hit a specific gap it cannot fill. Need keyword research before you film? Add vidIQ. Need A/B testing on live videos? Add TubeBuddy. Need a structured channel audit with competitor benchmarking? Add ytgrowth.io.</p>
+
+        <p>The recommended stacks in Section 9 give you a clear starting point at every channel size. Follow them in order rather than adding every tool at once. Each addition should solve a specific problem you have already identified in your YouTube Studio data, not a problem you think you might have someday.</p>
+
+        <p>Better youtube analytics does not come from having more tools. It comes from knowing which metrics to act on, which gaps your current setup leaves open, and which tool fills each gap most directly. That clarity is worth more than any premium subscription applied without a clear purpose.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-analytics',
     title: 'YouTube Analytics Explained: A Complete Guide to Your Channel Data',
     excerpt: 'Views tell you the score. CTR, retention, and traffic sources tell you what to fix. A complete breakdown of every tab in YouTube Studio, the metrics that actually drive growth, and a post-publish routine that turns data into specific decisions before your next upload.',
