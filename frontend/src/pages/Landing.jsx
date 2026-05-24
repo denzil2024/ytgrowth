@@ -327,14 +327,23 @@ function useBreakpoint() {
   return { isMobile: width <= 768, isTablet: width <= 1024 }
 }
 
-/* ─── Logo ──────────────────────────────────────────────────────────────── */
-function Logo({ size = 32 }) {
+/* ─── Logo: icon + Inter 800 wordmark ─────────────────────────────────── */
+function Logo({ size = 32, color = '#0a0a0f', iconOnly = false }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
-      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
-    </svg>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: iconOnly ? 0 : Math.round(size * 0.32) }}>
+      <img src="/logo-mark.svg" width={size} height={size} alt=""
+        style={{ display: 'block', width: size, height: size }} />
+      {!iconOnly && (
+        <span style={{
+          fontFamily: "'Inter', system-ui, sans-serif",
+          fontWeight: 800,
+          fontSize: Math.round(size * 0.72),
+          letterSpacing: '-0.045em',
+          lineHeight: 1,
+          color,
+        }}>ytgrowth</span>
+      )}
+    </span>
   )
 }
 
@@ -901,10 +910,7 @@ export default function Landing() {
         height: 60, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px 0 80px',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.svg" height={38} alt="ytgrowth"
-            style={{ height: 38, width: 'auto', display: 'block' }} />
-        </div>
+        <Logo size={32} />
 
         {!isMobile && (
           <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
@@ -1608,7 +1614,7 @@ export default function Landing() {
                     </div>
                     <div style={{ padding: 18 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
-                        <Logo size={32} />
+                        <Logo size={32} iconOnly />
                         <div>
                           <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>YTGrowth</p>
                           <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>wants YouTube read access</p>

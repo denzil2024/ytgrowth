@@ -1,10 +1,20 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
 
-function Logo({ size = 32 }) {
+function Logo({ size = 32, color = 'var(--ytg-text)' }) {
   return (
-    <img src="/logo.svg" height={size} alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: Math.round(size * 0.32) }}>
+      <img src="/logo-mark.svg" width={size} height={size} alt=""
+        style={{ display: 'block', width: size, height: size }} />
+      <span style={{
+        fontFamily: "'Inter', system-ui, sans-serif",
+        fontWeight: 800,
+        fontSize: Math.round(size * 0.72),
+        letterSpacing: '-0.045em',
+        lineHeight: 1,
+        color,
+      }}>ytgrowth</span>
+    </span>
   )
 }
 
@@ -51,7 +61,7 @@ export default function Refund() {
 
       <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(12px)' }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
-          <Logo size={38} />
+          <Logo size={32} />
         </a>
         <a href="/" style={{ fontSize: 14, color: 'var(--ytg-text-3)', textDecoration: 'none', fontWeight: 500 }}>← Back to home</a>
       </nav>

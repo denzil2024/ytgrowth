@@ -19,11 +19,21 @@ export function YTGLogo({ size = 12 }) {
   )
 }
 
-/* ─── Logo (full lockup, white wordmark for dark shell) ────────────────── */
-export function Logo({ size = 26 }) {
+/* ─── Logo (icon + Inter 800 wordmark, white for dark shell) ───────────── */
+export function Logo({ size = 32, color = '#ffffff' }) {
   return (
-    <img src="/logo-light.svg" height={size} alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: Math.round(size * 0.32) }}>
+      <img src="/logo-mark.svg" width={size} height={size} alt=""
+        style={{ display: 'block', width: size, height: size }} />
+      <span style={{
+        fontFamily: "'Inter', system-ui, sans-serif",
+        fontWeight: 800,
+        fontSize: Math.round(size * 0.72),
+        letterSpacing: '-0.045em',
+        lineHeight: 1,
+        color,
+      }}>ytgrowth</span>
+    </span>
   )
 }
 

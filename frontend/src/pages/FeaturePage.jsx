@@ -151,10 +151,20 @@ function useFeatureStyles() {
   }, [])
 }
 
-function Logo({ size = 28 }) {
+function Logo({ size = 32, color = '#0a0a0f' }) {
   return (
-    <img src="/logo.svg" height={size} alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: Math.round(size * 0.32) }}>
+      <img src="/logo-mark.svg" width={size} height={size} alt=""
+        style={{ display: 'block', width: size, height: size }} />
+      <span style={{
+        fontFamily: "'Inter', system-ui, sans-serif",
+        fontWeight: 800,
+        fontSize: Math.round(size * 0.72),
+        letterSpacing: '-0.045em',
+        lineHeight: 1,
+        color,
+      }}>ytgrowth</span>
+    </span>
   )
 }
 
@@ -268,7 +278,7 @@ export default function FeaturePage({
         background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)',
       }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
-          <Logo size={38} />
+          <Logo size={32} />
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
           {!isMobile && <FeaturesNavDropdown />}

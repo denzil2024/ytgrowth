@@ -4,10 +4,20 @@ import { useEffect, useState } from 'react'
    feature pages, Privacy/Terms/Refund/Contact). Multi-column on desktop , 
    brand + Features + Legal. For clean internal linking. Stacks on mobile. */
 
-function Logo({ size = 32 }) {
+function Logo({ size = 36, color = '#ffffff' }) {
   return (
-    <img src="/logo-light.svg" height={size} alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: Math.round(size * 0.32) }}>
+      <img src="/logo-mark.svg" width={size} height={size} alt=""
+        style={{ display: 'block', width: size, height: size }} />
+      <span style={{
+        fontFamily: "'Inter', system-ui, sans-serif",
+        fontWeight: 800,
+        fontSize: Math.round(size * 0.72),
+        letterSpacing: '-0.045em',
+        lineHeight: 1,
+        color,
+      }}>ytgrowth</span>
+    </span>
   )
 }
 
@@ -161,7 +171,7 @@ export default function LandingFooter() {
       <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '36px 24px 26px' }}>
         <div style={{ maxWidth: 360, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <a href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <Logo size={48} />
+            <Logo size={40} />
           </a>
           <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.42)', textAlign: 'center', marginBottom: 24, lineHeight: 1.55 }}>
             Built for creators serious about growth.
@@ -211,7 +221,7 @@ export default function LandingFooter() {
           {/* Brand block */}
           <div>
             <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginBottom: 14 }}>
-              <Logo size={40} />
+              <Logo size={34} />
             </a>
             <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.42)', maxWidth: 280, lineHeight: 1.65 }}>
               AI-powered YouTube analytics. Built for creators serious about growth.
