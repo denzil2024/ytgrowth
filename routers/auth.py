@@ -808,6 +808,37 @@ def get_data(request: Request):
     data, _ = get_session(session_id)
     if not data:
         return JSONResponse({"error": "No data available"}, status_code=404)
+
+    # Audit-polling worker-sync: the background task in /refresh-analysis
+    # writes finished insights to BOTH the in-memory _user_data dict AND
+    # the DB. The in-memory write only updates the worker that ran the
+    # task. When the frontend polls /auth/data, requests can land on any
+    # worker. If they land on a worker whose in-memory cache still has
+    # insights=None, the user spins on "Auditing..." forever even though
+    # the audit is done.
+    #
+    # Guard with `insights is None` so this DB hit only runs during the
+    # short audit-pending window. Normal Feed loads (insights already set)
+    # skip it and pay zero extra cost.
+    if data.get("insights") is None:
+        try:
+            db = SessionLocal()
+            try:
+                row = db.query(UserSession).filter_by(session_id=session_id).first()
+                if row and row.user_data_json:
+                    db_data = json.loads(row.user_data_json)
+                    if db_data.get("insights") is not None:
+                        # DB is fresher than this worker's memory — adopt
+                        # the DB copy and converge the in-memory cache so
+                        # the next request on this worker is also fresh.
+                        data = db_data
+                        _user_data[session_id] = data
+                        print(f"[/auth/data] synced fresh insights from DB for {session_id[:8]}")
+            finally:
+                db.close()
+        except Exception as e:
+            print(f"[/auth/data] DB sync error: {e}")
+
     return JSONResponse(data)
 
 
