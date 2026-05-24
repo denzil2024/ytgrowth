@@ -76,13 +76,14 @@ function saveViewState(channelId, state) {
 
 // ─── Default export ──────────────────────────────────────────────────────
 
-export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }) {
+export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId, onBundleLoaded }) {
   const [state, setState] = useState({ loading: true, data: null })
   const [dismissed, setDismissed] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     let pollCount = 0
+    let notifiedParent = false
     const MAX_POLLS = 18
     async function fetchOnce() {
       try {
@@ -91,6 +92,13 @@ export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }
         const d = await r.json()
         if (cancelled) return
         setState({ loading: false, data: d })
+        // Hand the bundle back to the parent ONCE per mount so it can
+        // drive the "fresh outlier" nav dot without making its own
+        // /dashboard/niche-outlier call.
+        if (!notifiedParent && d?.ok) {
+          notifiedParent = true
+          try { onBundleLoaded?.(d) } catch {}
+        }
         if (!d.ok && d.reason === 'generating_now' && pollCount < MAX_POLLS) {
           pollCount += 1
           setTimeout(fetchOnce, 5000)

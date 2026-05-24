@@ -183,30 +183,24 @@ export default function Dashboard() {
       .catch(() => {})
   }, [])
 
-  // Probe the niche-outlier bundle on mount so the Research nav can show
-  // a "● new" dot when this week's outlier is fresh and the user hasn't
-  // yet navigated to Outliers to see it. NicheHeroCard hits the same
-  // endpoint; the browser caches the response so this is effectively free.
-  useEffect(() => {
-    fetch('/dashboard/niche-outlier', { credentials: 'include' })
-      .then(r => r.ok ? r.json() : null)
-      .then(d => {
-        if (!d?.ok) return
-        const refreshed = d.bundle?.refreshed_at || d.outlier?.refreshed_at
-        if (!refreshed) return
-        const ageMs = Date.now() - new Date(refreshed).getTime()
-        const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000
-        if (!Number.isFinite(ageMs) || ageMs > SEVEN_DAYS) return
-        const channelId = d.outlier?.channel_id || d.creator || 'unknown'
-        // Suppress the dot once the user has visited Outliers since this
-        // outlier appeared. Keyed by the outlier's video_id or the
-        // refreshed_at so a fresh refresh resets the seen flag.
-        const seenKey = `ytg_outlier_seen:${channelId}:${d.bundle?.videos?.[0]?.video_id || d.outlier?.video_id || refreshed}`
-        try { if (localStorage.getItem(seenKey)) return } catch {}
-        setFreshOutlier(true)
-      })
-      .catch(() => {})
-  }, [])
+  // Fresh-outlier "● new" dot on the Outliers nav. Computed from the
+  // bundle NicheHeroCard already fetches (via onBundleLoaded below) so
+  // we don't double-hit /dashboard/niche-outlier on every Feed load.
+  const handleOutlierBundleLoaded = (d) => {
+    if (!d?.ok) return
+    const refreshed = d.bundle?.refreshed_at || d.outlier?.refreshed_at
+    if (!refreshed) return
+    const ageMs = Date.now() - new Date(refreshed).getTime()
+    const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000
+    if (!Number.isFinite(ageMs) || ageMs > SEVEN_DAYS) return
+    const channelId = d.outlier?.channel_id || d.creator || 'unknown'
+    // Suppress the dot once the user has visited Outliers since this
+    // outlier appeared. Keyed by the outlier's video_id or the
+    // refreshed_at so a fresh refresh resets the seen flag.
+    const seenKey = `ytg_outlier_seen:${channelId}:${d.bundle?.videos?.[0]?.video_id || d.outlier?.video_id || refreshed}`
+    try { if (localStorage.getItem(seenKey)) return } catch {}
+    setFreshOutlier(true)
+  }
 
   // Onboarding step signals: mark "optimized a video" / "found an idea"
   // when the user actually visits those surfaces (by any path), so the
@@ -1463,6 +1457,7 @@ export default function Dashboard() {
                     key="nichehero"
                     channelId={data?.channel?.channel_id}
                     onNavigate={(target) => setNav(target)}
+                    onBundleLoaded={handleOutlierBundleLoaded}
                     onOpenSeoStudio={(title, keyword) => {
                       try {
                         if (title) {
