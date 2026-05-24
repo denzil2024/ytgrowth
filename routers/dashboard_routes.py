@@ -1954,8 +1954,10 @@ def missing_tags(request: Request):
 
 
 _UNANSWERED_COMMENT_TTL_HOURS = 12
-_UNANSWERED_COMMENT_NULL_TTL_HOURS = 1  # Don't sit on null for 12h —
-# if user replies to comments mid-day, fresh picks should appear quickly.
+_UNANSWERED_COMMENT_NULL_TTL_HOURS = 6  # Bumped from 1h to 6h to cut
+# the cold-cache walk cost. A user with no unanswered comments no
+# longer re-walks the YouTube API every hour; new comments still get
+# surfaced within 6h, which is fast enough for a habit-loop card.
 
 
 def _read_unanswered_comment_cache(db, channel_id):
@@ -2052,7 +2054,10 @@ def unanswered_comment(request: Request, force: int = 0):
     from app.utils import cached_ai_output
     import hashlib as _hashlib
 
-    MAX_VIDEOS = 5  # Cap quota: at most MAX_VIDEOS commentThreads.list calls per cold pick
+    MAX_VIDEOS = 1  # Cold-cache cost capped at 1 commentThreads.list call.
+    # Only the most recent video is walked. The card goes quiet more often
+    # (older videos with unanswered comments don't surface), but worst-case
+    # quota drops from 5 units per user per 12h to 1.
     MAX_THREADS_PER_VIDEO = 50  # Wider window than the 20 default so we catch unanswered comments past the very newest few
 
     db = SessionLocal()
