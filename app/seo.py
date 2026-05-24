@@ -794,13 +794,29 @@ def _score_suggestion_rubric(
     else:
         seo += 10
 
-    # Pipe structure bonus (0-10) — required format, reward compliance.
+    # Structure bonus (0-10). Used to require an exact pipe-structured
+    # two-beat title which made every suggestion look templated. Now any
+    # well-formed structure earns full credit:
+    #   - pipe-separated 2 beats (Story | Niche framing)
+    #   - colon-separated reveal (Topic: Specific Hook)
+    #   - a clean single-phrase title with 5+ words and no dangling separator
+    # Malformed titles (lone separator, all caps fragments, single-word
+    # halves) lose the points.
+    structure_bonus = 0
     pipe_structure_valid = False
     if "|" in t:
         parts = [p.strip() for p in t.split("|") if p.strip()]
         if len(parts) == 2 and all(len(p.split()) >= 2 for p in parts):
             pipe_structure_valid = True
-            seo += 10
+            structure_bonus = 10
+    elif ":" in t:
+        parts = [p.strip() for p in t.split(":", 1) if p.strip()]
+        if len(parts) == 2 and all(len(p.split()) >= 2 for p in parts):
+            structure_bonus = 10
+    elif len(words) >= 5 and not re.search(r"[|:,]\s*$", t):
+        # Clean single-phrase title, no dangling separator.
+        structure_bonus = 10
+    seo += structure_bonus
 
     # Anti-keyword-stuffing (0-5)
     if pk:
@@ -1090,30 +1106,33 @@ PHASE 2 — GAP
 PHASE 3 — 5 CREATIVE TITLES
 Write 5 titles (the system will keep only the strongest 3, so make every one count). Each aimed at the gap above, feeling like titles a creator would write, not templates.
 
-THE CREATIVE DNA you are aiming for (describe, do not copy):
-A strong title in this style reads like a confession or a dare — a real person narrating what they actually did, followed by a pipe and a second beat that names the challenge, the niche, or the geography. It should feel written, not assembled. Vivid verbs. Concrete stakes. Zero marketing language.
-
 WHAT MAKES A TITLE WORK HERE:
-- First-person or journey voice to open ("I", "My", "Inside", "Surviving", "Cooking", "Testing"). Readers feel a real person behind the video.
-- Pipe (|) as the structural divider — opens with the story beat, then pipes to the sub-framing (niche, geography, stakes, challenge type).
-- Specificity — a real number, a concrete outcome, a named contrast. Never vague words like "Shocking", "Amazing", "You Won't Believe".
-- Anchored to the gap_opportunity above — that is the reason YouTube will push it to a fresh audience.
+- A real person speaking, not a marketing team. Use first-person or journey verbs to open ("I", "My", "Inside", "Surviving", "Cooking", "Testing", "How I") when the topic supports it. Readers feel a real creator behind the video.
+- Specificity. A real number, a concrete outcome, a named contrast, a place, a stake. Never vague words like "Shocking", "Amazing", "You Won't Believe".
+- Anchored to the gap_opportunity above. That is the reason YouTube will push it to a fresh audience.
+
+STRUCTURE (vary it across the 5 titles, do not use the same shape twice):
+A YouTube title can be shaped many ways. Pick what reads most naturally for each one. Examples of valid structures:
+  - A flowing sentence with no separator: "I Spent A Week Living On 5 Dollars A Day"
+  - Colon-separated reveal: "Apartment Tour Kenya: What 800 Dollars Gets You"
+  - Pipe-separated two beats: "Living Alone At 23 | A Lagos Apartment Tour"
+  - Comma-separated lead-in: "Cheap, Easy, Fast, A Real Weeknight Curry"
+None of these is the "right" shape. Pick whichever fits the topic and creator voice. Forcing every title into the same separator makes the suggestions look templated.
 
 ANTI-GENERIC TEST (every title must pass):
-If you could swap the niche keyword in your title for a different topic and the title would still make sense, the title is TOO GENERIC. Each title must reference something specific that could ONLY belong to THIS niche, based on the competitor data above. Pull vocabulary and angle cues from the real competitor titles — not from generic YouTube title patterns.
+If you could swap the niche keyword in your title for a different topic and the title would still make sense, the title is TOO GENERIC. Each title must reference something specific that could ONLY belong to THIS niche, based on the competitor data above. Pull vocabulary and angle cues from the real competitor titles, not from generic YouTube title patterns.
 
 TOPIC PRESERVATION (critical):
-The user's core topic phrase must appear in at least 4 of the 5 titles in its FULL form, not abbreviated. If the user's topic is "shopping haul" → use "shopping haul" — NOT "shop", NOT "haul" alone. If it is "apartment tour" → use "apartment tour", not "apartment" or "tour" alone. Core noun phrases drive search ranking. Shortening them kills SEO and reads awkwardly. Preserve the phrase as-is.
+The user's core topic phrase must appear in at least 4 of the 5 titles in its FULL form, not abbreviated. If the user's topic is "shopping haul" use "shopping haul", NOT "shop", NOT "haul" alone. If it is "apartment tour" use "apartment tour", not "apartment" or "tour" alone. Core noun phrases drive search ranking.
 
-HARD RULES (enforced — any violation means the title is unusable):
-- 50–75 characters total, including spaces. Count exactly.
-- FORBIDDEN CHARACTERS: colons (:), hyphens (-), em-dashes (—), en-dashes (–). Do not use ANY of these.
-- REQUIRED STRUCTURE: exactly one pipe (|) separating two beats. Opening beat = 3-7 words personal/story hook. Closing beat = niche/geo/stakes framing.
+HARD RULES (enforced, any violation means the title is unusable):
+- 50-75 characters total, including spaces. Count exactly.
+- FORBIDDEN CHARACTERS: em-dashes (—), en-dashes (–). Use a comma, a colon, a hyphen, or a pipe if you need a separator. Em-dashes and en-dashes are out.
 - NO YEAR references. Do not write "2024", "2025", "2026", or any year. The creator hates year-stamped titles.
 - Plain text. No emoji. No ALL CAPS words.
-- No fabricated facts. No invented numbers. If the user's title already mentions a number you may keep it; never invent one.
+- No fabricated facts. No invented numbers. If the user's title already mentions a number you may keep it, never invent one.
 - No forced listicle numbers ("7 Things") unless the video is genuinely a list.
-- Each title must be DIFFERENT from the other two in both opening verb and the secondary framing — not 3 rephrasings.
+- Each title must be DIFFERENT from the other two in both opening verb and the secondary framing, not 3 rephrasings.
 - No generic stock phrases: "You Won't Believe", "This Will Shock You", "The Ultimate Guide", "Everything You Need to Know". Any of these = automatic fail.
 
 YOU MUST ALSO SCORE EACH TITLE on two dimensions, 0-100 each. Be honest — weak titles deserve weak scores.
@@ -1146,7 +1165,7 @@ Return ONLY this JSON (no markdown, no prose). Include ALL 5 titles — the syst
     "gap_opportunity": "..."
   }},
   "titles": [
-    {{"title": "<50-75 chars, pipe-structured, no colon/hyphen>", "primary_keyword": "<anchor keyword>", "angle": "<why YouTube pushes it>", "why_it_works": "<emotion the viewer feels>", "ctr_score": 0, "hook_score": 0}},
+    {{"title": "<50-75 chars, vary structure across the 5, no em/en-dashes>", "primary_keyword": "<anchor keyword>", "angle": "<why YouTube pushes it>", "why_it_works": "<emotion the viewer feels>", "ctr_score": 0, "hook_score": 0}},
     {{"title": "...", "primary_keyword": "...", "angle": "...", "why_it_works": "...", "ctr_score": 0, "hook_score": 0}},
     {{"title": "...", "primary_keyword": "...", "angle": "...", "why_it_works": "...", "ctr_score": 0, "hook_score": 0}},
     {{"title": "...", "primary_keyword": "...", "angle": "...", "why_it_works": "...", "ctr_score": 0, "hook_score": 0}},
@@ -1160,10 +1179,12 @@ Return ONLY this JSON (no markdown, no prose). Include ALL 5 titles — the syst
         if not title_text or len(title_text) < 15:
             return None
 
-        # Punctuation + year safety net — non-negotiable rules we enforce even if Claude slips.
-        title_text = title_text.replace("—", " | ").replace("–", " | ")
-        title_text = title_text.replace(":", " | ")
-        title_text = re.sub(r"\s[-–—]\s", " | ", title_text)
+        # Punctuation + year safety net. Em-dashes and en-dashes are out
+        # per the project style rule, replaced with commas so the title
+        # still reads naturally. Colons and hyphens are now allowed and
+        # left alone (used to be force-converted to pipes, which was the
+        # main reason every suggested title looked templated).
+        title_text = title_text.replace("—", ",").replace("–", ",")
         title_text = re.sub(r"\s+(?:in\s+)?20[2-9][0-9]\b", "", title_text, flags=re.IGNORECASE)
         title_text = re.sub(r"\b20[2-9][0-9]\s+", " ", title_text)
         title_text = re.sub(r"\|\s*\|", "|", title_text)
