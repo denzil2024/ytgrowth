@@ -901,9 +901,9 @@ export default function Landing() {
         height: 60, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px 0 80px',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 17, lineHeight: 1, letterSpacing: '-0.4px', color: '#0a0a0f' }}>YTGrowth</span>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <img src="/logo.svg" height={30} alt="ytgrowth"
+            style={{ height: 30, width: 'auto', display: 'block' }} />
         </div>
 
         {!isMobile && (

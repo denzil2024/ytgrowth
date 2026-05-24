@@ -69,11 +69,8 @@ const RESOURCES_GROUPS = [
 
 function Logo({ size = 28 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
-      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
-    </svg>
+    <img src="/logo.svg" height={size} alt="ytgrowth"
+      style={{ height: size, width: 'auto', display: 'block' }} />
   )
 }
 
@@ -250,7 +247,6 @@ export default function SiteHeader() {
       <nav className="sh-nav">
         <a href="/" className="sh-brand">
           <Logo size={28} />
-          <span className="sh-brand-name">YTGrowth</span>
         </a>
 
         {!isMobile && (
