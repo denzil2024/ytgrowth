@@ -73,10 +73,10 @@ function Logo({ size = 36, color = '#0a0a0f' }) {
       <img src="/logo-mark.svg" width={size} height={size} alt=""
         style={{ display: 'block', width: size, height: size }} />
       <span style={{
-        fontFamily: "'Inter', system-ui, sans-serif",
-        fontWeight: 800,
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+        fontWeight: 900,
         fontSize: Math.round(size * 0.72),
-        letterSpacing: '-0.045em',
+        letterSpacing: '-0.035em',
         lineHeight: 1,
         color,
       }}>ytgrowth</span>
