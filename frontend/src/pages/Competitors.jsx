@@ -119,24 +119,28 @@ function useCompetitorStyles() {
         box-shadow: 0 0 0 4px rgba(229,37,27,0.10), ${D.cardShadow};
       }
 
-      /* ── primary red CTA — Search button. Vertical gradient + inset
-         highlight, same treatment as the Chat send button. ── */
+      /* ── primary red CTA — Search button. Matches the dashboard's
+         ytg-dash-btn-primary so every red button in the app reads as one
+         system: flat brand red, pill shape, soft red-tinted shadow. ── */
       .comp-btn-primary {
-        background: linear-gradient(180deg, #ef3a31 0%, #e5251b 100%);
+        background: #e5251b;
         color: #fff;
         border: none;
-        border-radius: 12px;
-        padding: 12px 22px;
-        font-size: 13px;
+        border-radius: 100px;
+        padding: 9px 20px;
+        font-size: 12.5px;
         font-weight: 600;
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer;
         white-space: nowrap;
-        transition: filter 160ms cubic-bezier(0.32, 0.72, 0, 1), transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
+        transition: filter 180ms ease, transform 180ms ease, box-shadow 180ms ease;
         letter-spacing: -0.01em;
-        box-shadow: 0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
       }
-      .comp-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      .comp-btn-primary:hover:not(:disabled) {
+        filter: brightness(1.07); transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
+      }
       .comp-btn-primary:disabled {
         background: rgba(255,255,255,0.06);
         color: ${D.text3};
