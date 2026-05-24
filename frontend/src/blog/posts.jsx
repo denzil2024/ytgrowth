@@ -91,6 +91,428 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-analytics',
+    title: 'YouTube Analytics Explained: A Complete Guide to Your Channel Data',
+    excerpt: 'Views tell you the score. CTR, retention, and traffic sources tell you what to fix. A complete breakdown of every tab in YouTube Studio, the metrics that actually drive growth, and a post-publish routine that turns data into specific decisions before your next upload.',
+    date: '2026-05-22',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-analytics-cover.webp',
+    author: 'Denzil',
+    readTime: '14 min read',
+    content: () => (
+      <>
+        <p>YouTube gives every creator access to a full performance dashboard the moment they upload a video. Most creators open it, check their view count, and close it without acting on anything else.</p>
+
+        <p>Views are one of the least actionable metrics in youtube analytics. They tell you what happened but not why. CTR tells you whether <a href="/blog/youtube-title">your packaging is working</a>. Retention tells you whether your content is holding attention. Traffic sources tell you how viewers are finding you. Those three metrics tell you what to fix. Views just tell you the score.</p>
+
+        <p>This guide breaks down every tab in YouTube Studio, explains every youtube metric that matters, and gives you a post-publish routine that turns data into specific decisions before your next upload.</p>
+
+        <h2>What Is YouTube Analytics and How to Access It</h2>
+
+        <p><strong>YouTube analytics is YouTube's built-in performance dashboard that tracks every aspect of your channel and video performance in real time</strong>. It covers views, watch time, click-through rate, audience demographics, traffic sources, and revenue data across your entire channel and individual videos.</p>
+
+        <img src="/blog/youtube-analytics-channel-dashboard.webp" alt="YouTube Studio channel dashboard with overview metrics across views, watch time, subscribers, and revenue" />
+
+        <p>How to access it on desktop:</p>
+
+        <ol>
+          <li>Go to <a href="https://studio.youtube.com" target="_blank" rel="noopener">studio.youtube.com</a> and sign in.</li>
+          <li>Click Analytics in the left navigation menu.</li>
+          <li>Select Channel Analytics for overall performance or click into any individual video to view its specific data.</li>
+        </ol>
+
+        <p>How to access it on mobile:</p>
+
+        <ol>
+          <li>Open the YouTube Studio app.</li>
+          <li>Tap the Analytics icon in the bottom navigation bar.</li>
+          <li>Swipe between tabs to view channel or video-level data.</li>
+        </ol>
+
+        <p>How often does the data update:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Data Type</th>
+              <th>Update Frequency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Real-time views</td><td>Last 48 hours, updates continuously</td></tr>
+            <tr><td>Most metrics</td><td>Every 24 to 48 hours</td></tr>
+            <tr><td>Revenue data</td><td>24 to 48 hours with a 3-day delay</td></tr>
+            <tr><td>Audience demographics</td><td>Every 24 to 48 hours</td></tr>
+          </tbody>
+        </table>
+
+        <p>YouTube Studio organizes all data across five tabs. Each tab covers a distinct dimension of your channel's performance and answers a different question about your growth.</p>
+
+        <ul>
+          <li><strong>Overview:</strong> How is my channel performing overall?</li>
+          <li><strong>Content:</strong> How is my audience finding and interacting with my content?</li>
+          <li><strong>Audience:</strong> Who is watching and when?</li>
+          <li><strong>Revenue:</strong> How much is my content earning?</li>
+          <li><strong>Trends:</strong> What is my audience watching beyond my own content?</li>
+        </ul>
+
+        <p>Each tab is covered in detail in the sections that follow.</p>
+
+        <h2>1. The Overview Tab</h2>
+
+        <p>The Overview tab is the first screen you see when you open youtube studio analytics. It gives you a high-level summary of your channel's performance across a selected time period without requiring you to dig into individual metrics.</p>
+
+        <img src="/blog/youtube-analytics-overview-tab.webp" alt="YouTube Studio Overview tab showing total views, watch time, subscribers, estimated revenue, and a performance graph" />
+
+        <p>What the Overview tab shows:</p>
+
+        <ul>
+          <li><strong>Views:</strong> Total number of times your videos were watched in the selected period</li>
+          <li><strong>Watch time:</strong> Total hours viewers spent watching your content</li>
+          <li><strong>Subscribers:</strong> Net change in subscriber count, gains minus losses</li>
+          <li><strong>Estimated revenue:</strong> Total ad revenue for monetized channels</li>
+          <li><strong>Real-time activity:</strong> Views and impressions from the last 48 hours updated continuously</li>
+        </ul>
+
+        <h3>How to Read the Performance Graph</h3>
+
+        <p>The main graph plots your selected metric over time. Use the dropdown above the graph to switch between views, watch time, subscribers, and revenue. Look for three patterns:</p>
+
+        <ul>
+          <li>A consistent upward trend signals healthy compounding growth</li>
+          <li>A sudden spike followed by a drop signals a viral moment with no sustained momentum behind it</li>
+          <li>A gradual decline signals a content, consistency, or algorithm issue worth investigating</li>
+        </ul>
+
+        <p>Typical performance sits below the main graph as a grey band showing your historical average range. When a recent video performs above the band, the algorithm is amplifying it beyond your normal distribution. When it sits below, the video underperformed against your own baseline.</p>
+
+        <p>The Overview tab is useful for spotting patterns and anomalies. It is not where you find the data to act on. The Content tab holds the channel-level metrics that tell you what to change, and clicking into any individual video gives you access to its Reach and Engagement tabs for deeper diagnosis.</p>
+
+        <h2>2. The Content Tab: Impressions, CTR, and Traffic Sources</h2>
+
+        <p>The Content tab gives you a channel-level summary of how your audience finds and interacts with your videos across your entire library. It is where impressions, CTR, and traffic source data live at the channel level, not in a separate Reach tab.</p>
+
+        <img src="/blog/youtube-analytics-content-tab.webp" alt="YouTube Studio Content tab surfacing channel-level impressions, CTR, watch time, top content, and traffic sources" />
+
+        <p>What the Content tab shows:</p>
+
+        <ul>
+          <li><strong>Impressions:</strong> How many times YouTube showed your thumbnails to viewers across all videos</li>
+          <li><strong>Impressions CTR:</strong> What percentage of those impressions converted into views</li>
+          <li><strong>Watch time:</strong> Total hours viewers spent watching your content</li>
+          <li><strong>Top content:</strong> Your best performing videos sorted by views, watch time, or impressions</li>
+          <li><strong>Traffic sources:</strong> Where views are coming from across your entire channel</li>
+        </ul>
+
+        <h3>Impressions and CTR</h3>
+
+        <p>Impressions count how many times YouTube showed your thumbnail to a viewer. A low impression count means the algorithm is not distributing your content widely. CTR measures what percentage of those impressions converted into views and is the most direct signal of whether your <a href="/blog/youtube-thumbnail-ideas">thumbnail and title combination</a> is working.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>CTR Range</th>
+              <th>What It Means</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Below 2%</strong></td><td>Packaging is significantly underperforming</td><td>Update thumbnail and title immediately</td></tr>
+            <tr><td><strong>2% to 4%</strong></td><td>Below average, room for improvement</td><td>Test a new thumbnail on existing videos</td></tr>
+            <tr><td><strong>4% to 6%</strong></td><td>Average performance</td><td>Monitor and refine title formula</td></tr>
+            <tr><td><strong>6% to 8%</strong></td><td>Strong performance</td><td>Identify what is working and replicate it</td></tr>
+            <tr><td><strong>Above 8%</strong></td><td>Exceptional performance</td><td>Use this video as a packaging benchmark</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Traffic Sources</h3>
+
+        <p>The traffic sources report breaks down where your views are coming from across your full channel. Click See More under the traffic sources card to expand the full breakdown and click into each source for detailed data.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Traffic Source</th>
+              <th>What It Signals</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>YouTube Search</td><td>Strong keyword targeting and SEO</td></tr>
+            <tr><td>Browse Features</td><td>Algorithm amplification on homepage</td></tr>
+            <tr><td>Suggested Videos</td><td>Algorithm recommending alongside similar content</td></tr>
+            <tr><td>External</td><td>Promotion outside YouTube driving traffic</td></tr>
+            <tr><td>Playlists</td><td>Strong session time and content grouping</td></tr>
+            <tr><td>Notifications</td><td>High subscriber engagement quality</td></tr>
+          </tbody>
+        </table>
+
+        <h3>YouTube Search Terms</h3>
+
+        <p>Inside the YouTube Search traffic source sits one of the most underused tools in youtube channel stats. Click on YouTube Search in your traffic sources and scroll down to see the exact phrases viewers typed before finding your videos.</p>
+
+        <p>These confirmed search queries are content opportunities with pre-validated demand. Any phrase driving consistent traffic that you have not yet built a dedicated video around is a gap worth filling.</p>
+
+        <p><strong>Note:</strong> For video-level impressions and CTR data specific to one upload, click into any individual video from the Content tab and select the Reach tab within that video's analytics.</p>
+
+        <blockquote><strong>Pro Tip:</strong> In the Content tab, sort your videos by impressions and identify any video with high impressions but low CTR. These are your highest leverage optimization targets. A thumbnail update on a high-impression video can revive distribution without publishing anything new.</blockquote>
+
+        <h2>3. The Audience Tab: Who Is Watching</h2>
+
+        <p>The Audience tab answers a question most creators overlook entirely: is the algorithm serving your content to the right people. High view counts with the wrong audience profile produce low subscriber rates, weak engagement, and content strategy decisions built on misleading data.</p>
+
+        <img src="/blog/youtube-analytics-audience-tab.webp" alt="YouTube Studio Audience tab with new vs returning viewers, demographics, geography, and watch-time peaks" />
+
+        <h3>New vs Returning Viewers</h3>
+
+        <p>This is the most important metric in the Audience tab for <a href="/blog/youtube-channel-not-growing">diagnosing growth plateau</a>. A healthy growing channel pulls a consistent percentage of new viewers on every upload.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Viewer Split</th>
+              <th>What It Signals</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Above 70% returning</td><td>Channel is not reaching new audiences</td><td>Add search-optimized content to attract new viewers</td></tr>
+            <tr><td>50% to 70% returning</td><td>Balanced but leaning toward existing audience</td><td>Increase keyword-targeted content frequency</td></tr>
+            <tr><td>Below 50% returning</td><td>Strong new viewer acquisition</td><td>Focus on converting new viewers to subscribers</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Subscriber Demographics</h3>
+
+        <p>The age, gender, and geographic breakdown of your subscribers tells you whether your content is reaching the audience it was designed for. A channel creating content for 25 to 34 year old professionals but attracting a majority of 13 to 17 year old viewers has a content-audience mismatch that affects every growth metric downstream.</p>
+
+        <h3>Geography</h3>
+
+        <p>The geographic breakdown shows where your viewers are located. This data has two direct applications. First, it explains CPM variation in your revenue data since viewers in the US, UK, and Australia generate significantly higher ad rates than viewers in other markets. Second, it tells you whether your content language, references, and context are resonating with your intended geographic audience.</p>
+
+        <h3>When Your Viewers Are on YouTube</h3>
+
+        <p>This graph shows the days and times your existing audience is most active on the platform. Publishing when your audience is most active increases the likelihood of early engagement during YouTube's test window, which strengthens the video's distribution signal in the critical first 48 hours.</p>
+
+        <h3>Other Channels Your Audience Watches</h3>
+
+        <p>This section shows which other YouTube channels your audience subscribes to. It is your most direct competitor list and one of the most underused insights in all of youtube channel statistics. Every channel listed is a <a href="/blog/youtube-competitor-analysis">potential collaboration partner</a>, a benchmark competitor, and a source of content gap research.</p>
+
+        <h2>4. The Revenue Tab</h2>
+
+        <p>The Revenue tab is only visible to channels that have been accepted into the YouTube Partner Program. It covers how much your content is earning, which revenue sources are contributing most, and which content types generate the highest ad income.</p>
+
+        <img src="/blog/youtube-analytics-revenue-tab.webp" alt="YouTube Studio Revenue tab with estimated revenue, RPM, CPM, playback-based CPM, and ad impressions" />
+
+        <h3>Key Metrics in the Revenue Tab</h3>
+
+        <ul>
+          <li><strong>Estimated revenue:</strong> Total earnings across all revenue sources for the selected period</li>
+          <li><strong>RPM (Revenue Per Mille):</strong> How much you earn per 1,000 video views after YouTube's 45% cut</li>
+          <li><strong>CPM (Cost Per Mille):</strong> How much advertisers are paying per 1,000 ad impressions before YouTube's cut</li>
+          <li><strong>Playback-based CPM:</strong> CPM calculated only on views where an ad was actually served</li>
+          <li>Ad impressions: Total number of ads served across your videos</li>
+        </ul>
+
+        <h3>RPM vs CPM</h3>
+
+        <p>RPM is always lower than CPM because YouTube takes 45% of all ad revenue before paying creators. If your CPM is $10, your RPM will be approximately $5.50. RPM is the number that reflects your actual earnings per 1,000 views and is the more useful metric for creators tracking revenue performance.</p>
+
+        <h3>How to Use Revenue Tab Data to Improve Earnings</h3>
+
+        <p>Review your top videos by estimated revenue rather than by views. A video with 50,000 views generating more revenue than a video with 80,000 views is attracting higher-paying advertisers. That gap tells you which topics and audience segments command higher CPM rates in your niche.</p>
+
+        <p>Cross-reference your revenue data with your traffic sources. Videos pulling strong search traffic from high-intent keywords <a href="/blog/youtube-cpm">consistently generate higher RPM</a> than videos pulling browse or suggested traffic because search viewers signal stronger purchase intent to advertisers.</p>
+
+        <h2>5. The Trends Tab</h2>
+
+        <p>The Trends tab shows you what your audience and viewers across YouTube are <a href="/blog/youtube-trends">actively searching for right now</a>. It is the only tab in YouTube Studio built entirely around content discovery rather than performance review, making it the most useful starting point for planning your next video before you open any keyword research tool.</p>
+
+        <img src="/blog/youtube-analytics-trends-tab.webp" alt="YouTube Studio Trends tab showing top searches from the channel audience, saved search terms, and similar-channel content" />
+
+        <p>What the Trends tab shows:</p>
+
+        <ul>
+          <li><strong>Top searches:</strong> The most common search terms from your specific audience over the last 28 days. These are not platform-wide searches. They are searches from the viewers already watching your channel, which makes them higher-confidence content opportunities than generic keyword data.</li>
+          <li><strong>Saved search terms:</strong> Any topic you have saved for future reference appears here for quick access during content planning sessions.</li>
+          <li><strong>Content from similar channels:</strong> Well-performing videos from channels similar to yours surface here as inspiration. This gives you a real-time view of what is gaining traction in your niche without manually searching competitor channels.</li>
+        </ul>
+
+        <p>How to access the Trends tab:</p>
+
+        <ol>
+          <li>Sign in to YouTube Studio at <a href="https://studio.youtube.com" target="_blank" rel="noopener">studio.youtube.com</a></li>
+          <li>Click <strong>Analytics</strong> in the left navigation menu</li>
+          <li>Click the <strong>Trends tab</strong> at the top of the Analytics page</li>
+          <li>Enter a search topic in the search bar or browse the trending page</li>
+          <li>Click Save next to any search term you want to track over time</li>
+        </ol>
+
+        <h3>How to Use the Trends Tab for Content Planning</h3>
+
+        <p>The top searches card is the most actionable section. A search term appearing here means your existing audience is actively looking for that content and not finding it on your channel. That gap is your next video. Type any topic into the search bar to see how much interest it is generating among your audience specifically before committing to filming it.</p>
+
+        <p><strong>Note:</strong> Some insights in the Trends tab are limited by country, language, and device. If your audience is geographically diverse, results may reflect the largest geographic segment of your viewers rather than your full audience picture.</p>
+
+        <h2>The Most Important YouTube Metrics Ranked by Impact</h2>
+
+        <p>Most youtube metrics explained guides treat every metric as equally important. They are not. Some metrics directly determine how the algorithm distributes your content. Others are useful for context. A few are vanity metrics that feel good to track but drive no actionable decisions.</p>
+
+        <p>Here is every metric that matters ranked by its direct impact on channel growth:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Metric</th>
+              <th>Impact</th>
+              <th>What It Measures</th>
+              <th>Action When Low</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>1</strong></td><td><strong>Click-Through Rate</strong></td><td>Very High</td><td>Whether packaging converts impressions to views</td><td>Update thumbnail and title</td></tr>
+            <tr><td><strong>2</strong></td><td><strong>Average View Duration</strong></td><td>Very High</td><td>Whether content holds attention after the click</td><td>Fix hook and content structure</td></tr>
+            <tr><td><strong>3</strong></td><td><strong>Impressions</strong></td><td>High</td><td>How widely YouTube is distributing your content</td><td>Improve keyword targeting and SEO</td></tr>
+            <tr><td><strong>4</strong></td><td><strong>New Viewer Ratio</strong></td><td>High</td><td>Whether channel is reaching beyond existing audience</td><td>Add search-optimized content</td></tr>
+            <tr><td><strong>5</strong></td><td><strong>Search Traffic %</strong></td><td>High</td><td>How much traffic comes from active search queries</td><td>Strengthen metadata and keyword research</td></tr>
+            <tr><td><strong>6</strong></td><td><strong>Watch Time</strong></td><td>Medium</td><td>Total viewing hours accumulated across channel</td><td>Publish consistently and improve retention</td></tr>
+            <tr><td><strong>7</strong></td><td><strong>Subscriber Rate</strong></td><td>Medium</td><td>How many viewers convert to subscribers per view</td><td>Improve content value and CTAs</td></tr>
+            <tr><td><strong>8</strong></td><td><strong>RPM</strong></td><td>Medium</td><td>Actual earnings per 1,000 views</td><td>Shift toward higher CPM content topics</td></tr>
+            <tr><td><strong>9</strong></td><td><strong>Views</strong></td><td>Low</td><td>Total watch sessions in a period</td><td>Symptom of other metrics, not a cause</td></tr>
+            <tr><td><strong>10</strong></td><td><strong>Subscribers</strong></td><td>Low</td><td>Total channel subscriber count</td><td>Vanity metric without engagement context</td></tr>
+          </tbody>
+        </table>
+
+        <p>The two metrics at the bottom of this table are the ones most creators check first. Views and subscriber count are outputs of the metrics above them. Fixing CTR, retention, and impressions produces more views and subscribers as a natural consequence. Chasing views and subscribers directly without addressing the metrics that drive them is the most common analytics mistake on the platform.</p>
+
+        <p>The three metrics every creator should check after every upload:</p>
+
+        <ul>
+          <li>CTR in the first 48 hours</li>
+          <li>Average view duration at the 48-hour mark</li>
+          <li>Traffic sources after seven days</li>
+        </ul>
+
+        <p>Those three data points tell you whether the packaging worked, whether the content held attention, and whether the keyword targeting is generating search traffic. Every other metric provides useful context around those three core signals.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Benchmark your CTR, retention, and SEO against your niche"
+          sub="Channel Audit pulls every metric in this guide and compares them against the channels actually competing with you, then surfaces the single highest priority fix to make before your next upload. Free to try."
+          button="Try Channel Audit →"
+        />
+
+        <h2>YouTube Search Terms Analytics: Using Data for Content Research</h2>
+
+        <p>The search terms report inside youtube search terms analytics is one of the most underused tools available to creators in YouTube Studio. Most creators never open it. The ones who do consistently find <a href="/tools/youtube-video-ideas-generator">confirmed content opportunities</a> sitting inside their own channel data.</p>
+
+        <img src="/blog/youtube-analytics-youtube-search.webp" alt="YouTube Studio search terms report showing the exact phrases viewers typed before finding the channel" />
+
+        <p>How to access the search terms report:</p>
+
+        <ol>
+          <li>Open YouTube Studio and click <strong>Analytics</strong> in the left menu.</li>
+          <li>Click the <strong>Content tab</strong> at the top of the Analytics page.</li>
+          <li>Scroll down to the <strong>Traffic Sources</strong> card and click See More.</li>
+          <li>Click <strong>YouTube Search</strong> in the traffic source list.</li>
+          <li>Scroll down to see the full list of search terms driving views across your channel.</li>
+        </ol>
+
+        <h3>What the Search Terms Report Tells You</h3>
+
+        <p>Every phrase in this list is a confirmed search query that real viewers typed into YouTube before finding your content. That confirmation is more valuable than any keyword research tool because it is drawn from your actual audience rather than platform-wide search data.</p>
+
+        <p>Three ways to use search terms data for content research:</p>
+
+        <ul>
+          <li><strong>Find your strongest ranking keywords:</strong> The phrases driving the most views from search are the topics YouTube already associates with your channel. Publishing more videos targeting those same keyword clusters reinforces that association and improves ranking across the entire cluster.</li>
+          <li><strong>Identify content gaps:</strong> Search phrases appearing in your data that you have not yet built a dedicated video around are your highest confidence content opportunities. The demand is confirmed. The audience already exists. The only missing piece is a video targeting that phrase directly.</li>
+          <li><strong>Spot unexpected ranking opportunities:</strong> Phrases you never deliberately targeted but are appearing in your search traffic reveal topics the algorithm is already connecting to your channel. A dedicated video targeting those phrases can significantly increase traffic from an audience segment you did not know you were reaching.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> Export your search terms data every quarter and compare it against the previous quarter. Phrases that are growing in volume over time represent rising demand in your niche that you can act on before competitors identify the same trend.</blockquote>
+
+        <h2>A Simple Post-Publish Analytics Routine</h2>
+
+        <p>Most creators either check analytics obsessively in the first hour after publishing or ignore the data entirely until a video has been live for weeks. Neither approach produces useful insights. A structured review at specific intervals gives you the data you need to act on without the noise of checking too early or too late.</p>
+
+        <p>Here is the complete post-publish routine covering five checkpoints:</p>
+
+        <h3>48 Hours After Publishing: Check CTR and Real-Time Performance</h3>
+
+        <p>Open the Reach tab and check your CTR. Below 4% in the first 48 hours means the thumbnail or title needs updating before the algorithm's test window closes. Open the Overview tab and check real-time views. A video gaining momentum in the first 48 hours should show a rising curve. A flat line in the first 48 hours signals weak initial distribution worth investigating.</p>
+
+        <h3>7 Days After Publishing: Check Retention and Engagement</h3>
+
+        <p>Open the Engagement tab and review the <a href="/blog/youtube-watch-hours">audience retention graph</a>. Identify the timestamp where the largest drop occurs and watch the video from 30 seconds before that point. Note the pattern for your next upload's script or edit. Check average view duration against your channel benchmark. A significant drop below your typical retention rate signals a structural content issue.</p>
+
+        <h3>14 Days After Publishing: Check Traffic Sources</h3>
+
+        <p>Open the Reach tab and review traffic source breakdown. Identify what percentage of views came from search. Below 15% from search on a keyword-targeted video suggests the <a href="/blog/what-is-youtube-seo">metadata needs strengthening</a>. Check whether suggested feed traffic is contributing. Strong suggested placement on a two-week-old video signals the algorithm is still actively distributing it.</p>
+
+        <h3>30 Days After Publishing: Check Audience Data</h3>
+
+        <p>Open the Audience tab and review the new vs returning viewer ratio for the video. A high returning viewer ratio on a video designed to attract new audiences confirms a keyword or discoverability problem. Check whether the video generated subscribers above or below your channel average subscriber rate.</p>
+
+        <h3>90 Days After Publishing: Check Long-Term Search Performance</h3>
+
+        <p>Return to the search terms report in the Reach tab and identify whether the video is ranking for its target keyword. A video still generating search traffic at 90 days is a long-term asset worth updating with fresh metadata to extend its ranking life. A video with no search traffic at 90 days needs a title, description, and tag refresh before it settles permanently at low visibility.</p>
+
+        <h2>Common Analytics Mistakes Creators Make</h2>
+
+        <p>Understanding youtube video analytics is only useful if you are reading the right metrics and drawing the right conclusions from them. These are the four mistakes that consistently lead creators to make the wrong content decisions.</p>
+
+        <h3>Mistake 1: Checking Views and Ignoring Everything Else</h3>
+
+        <p>Views are the output of CTR, retention, and impressions working together. A creator who sees low views and responds by posting more frequently without checking CTR or retention is adding volume to a broken system. The fix is to identify which of the three core metrics is underperforming before changing anything about the upload strategy.</p>
+
+        <h3>Mistake 2: Making Content Decisions Based on One Video</h3>
+
+        <p>A single video's performance is influenced by publish timing, thumbnail testing luck, and short-term algorithm fluctuations that have nothing to do with the content quality or topic demand. Content decisions made from one data point are unreliable. The fix is to look for patterns across at least five to ten videos before drawing conclusions about what is working in your niche.</p>
+
+        <h3>Mistake 3: Ignoring the Search Terms Report</h3>
+
+        <p>The search terms report in the Reach tab is the most direct source of confirmed content opportunities available in yt analytics. Creators who never open it are making keyword and topic decisions without the most relevant data available to them. Check it monthly and act on at least one confirmed gap per content planning session.</p>
+
+        <h3>Mistake 4: Never Checking the Audience Tab</h3>
+
+        <p>The Audience tab reveals whether the algorithm is serving your content to the right people. A channel attracting the wrong demographic, a declining new viewer ratio, or a geographic mismatch between intended and actual audience are all problems invisible without opening this tab. Check it quarterly <a href="/blog/youtube-channel-audit">as part of your channel audit</a> to confirm your content is reaching the audience it was built for.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How Do I Access YouTube Analytics?</h3>
+
+        <p>Open YouTube Studio at studio.youtube.com on desktop and click Analytics in the left navigation menu. On mobile, open the YouTube Studio app and tap the Analytics icon in the bottom navigation bar. Both versions cover the same five tabs: Overview, Content, Audience, Revenue, and Trends.</p>
+
+        <h3>How Often Does YouTube Analytics Update?</h3>
+
+        <p>Most metrics update every 24 to 48 hours. Real-time data covering the last 48 hours updates continuously. Revenue data updates every 24 to 48 hours but carries an additional three-day delay before final figures are confirmed.</p>
+
+        <h3>What Is the Most Important Metric in YouTube Analytics?</h3>
+
+        <p>Click-through rate and average view duration are the two metrics with the most direct impact on <a href="/blog/youtube-algorithm">how the algorithm distributes your content</a>. CTR determines whether impressions convert to views. Average view duration determines whether YouTube continues pushing the video to a wider audience after the initial test window. Both need to be strong for a video to receive sustained distribution.</p>
+
+        <h3>Can I See Analytics for Other YouTube Channels?</h3>
+
+        <p>YouTube Studio only shows data for your own channel. To view youtube analytics for other channels you need a third-party tool. Most competitor analytics tools show publicly available data including subscriber count trends, estimated views, and top performing videos. They do not show private metrics like CTR, retention, or revenue from another creator's channel.</p>
+
+        <h3>What Are YouTube Channel Stats and Where Do I Find Them?</h3>
+
+        <p>Youtube channel stats refer to the overall performance metrics of a channel including total views, watch time, subscriber count, and engagement rates. Your own channel stats are available in YouTube Studio under the Overview tab. Public stats for any channel are visible on the channel page itself and through third-party analytics platforms.</p>
+
+        <h2>Data Without Action Is Just Numbers</h2>
+
+        <p>YouTube analytics explained properly is not about understanding every metric in the dashboard. It is about knowing which three metrics to check after every upload, which tab to open when growth stalls, and which data points tell you what to change before the next video goes live.</p>
+
+        <p>CTR tells you whether your packaging is working. Average view duration tells you whether your content is holding attention. Traffic sources tell you whether viewers are finding you through search. Those three metrics answer the most important questions about your channel's growth before you touch anything else.</p>
+
+        <p>Run the post-publish routine in Section 10 after every upload. Check your search terms report monthly for confirmed content opportunities. Review your Audience tab quarterly to confirm the algorithm is serving your content to the right people. That process applied consistently turns youtube channel statistics from a passive report into an active growth system.</p>
+
+        <p>For a deeper level of benchmarking beyond what YouTube Studio provides, the <a href="/features/channel-audit">Channel Audit</a> in ytgrowth.io compares your CTR, retention, traffic sources, and content patterns against competing channels in your niche, giving you the context YouTube Studio alone cannot provide.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-description-template',
     title: 'YouTube Description Template: How to Write Video and Channel Descriptions That Work',
     excerpt: 'A YouTube description is the second most important piece of metadata after the title. A complete template for every content type, a separate template for your channel, and the best practices that apply to both.',
