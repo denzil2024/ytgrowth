@@ -28,6 +28,7 @@ from pydantic import BaseModel
 
 import datetime
 import json
+import re
 import time
 
 from app.niche_outliers import (
@@ -608,80 +609,40 @@ def suggested_competitors(request: Request):
     if not my_id:
         return JSONResponse({"ok": True, "suggestions": [], "category": None})
 
-    from app.competitors import extract_niche_keywords
+    from app.niche_detector import detect_channel_niche
     from app.top_channels import CATEGORY_QUERIES
     from app.seo import _normalize_cache_query
 
-    niche_kw = extract_niche_keywords(channel, videos) or []
-    niche_kw_lower = [str(k).lower() for k in niche_kw]
+    # Single Haiku call asks "what niche is this channel?" and returns a
+    # free-form niche label + 3-5 search keywords. Cached per content
+    # fingerprint for 30 days, so repeat Feed loads are free.
+    detected = detect_channel_niche(channel, videos)
+    niche_label = (detected.get("niche") or "").strip()
+    niche_kw    = [str(k).strip() for k in (detected.get("keywords") or []) if str(k).strip()]
 
-    # Build a wider pool of tokens to match against category seed terms.
-    # Channel name + creator-declared channel.keywords + top 5 videos by
-    # VIEWS contribute alongside the extracted niche_keywords.
-    import re as _re
-    extra_tokens: set[str] = set()
-    def _add(s: str):
-        for w in _re.split(r"[\s,/|·\-_:#@()\[\]]+", (s or "").lower()):
-            w = w.strip()
-            if len(w) > 3 and not w.isdigit():
-                extra_tokens.add(w)
-    _add(channel.get("channel_name") or "")
-    _add(channel.get("keywords") or "")
-    for v in sorted(videos, key=lambda x: x.get("views", 0) or 0, reverse=True)[:5]:
-        _add(v.get("title") or "")
-    match_tokens = {*niche_kw_lower, *extra_tokens}
+    # If Haiku could not read the channel at all, return empty so the
+    # frontend hides the card. No more "your top niche: vlogs" fallback.
+    if not niche_label and not niche_kw:
+        payload = {"ok": True, "suggestions": [], "category": None, "niche_keywords": []}
+        if request.query_params.get("debug") == "1":
+            payload["_debug"] = {
+                "channel_id_suffix": my_id[-10:] if my_id else "",
+                "detector_error":    detected.get("error", ""),
+            }
+        return JSONResponse(payload)
 
-    # Generic words that appear in many seed queries but don't actually
-    # disambiguate the category (every YouTuber's metadata contains some
-    # of these). Strip them BEFORE scoring so e.g. "channel" or "youtube"
-    # in the user's keywords no longer drags them into Gaming.
-    _GENERIC_SEED_WORDS = {
-        "youtube", "channel", "videos", "video", "shows", "show",
-        "artist", "daily",  # "daily" appears in vlogs + news; ambiguous
-    }
-
-    # Category-specific terms with generic words stripped, plus an
-    # explicit alias map for niches whose dominant search phrasing
-    # doesn't appear in the original seed query. Lifestyle vloggers
-    # tend to put "lifestyle" / "vlog" / "tour" / "haul" in their
-    # metadata more than "daily" — add those to the vlogs aliases.
-    _CATEGORY_ALIASES = {
-        "vlogs":         ["vlog", "vlogger", "lifestyle", "haul", "tour", "apartment", "routine", "grwm"],
-        "cooking":       ["recipe", "kitchen", "meal", "dinner", "breakfast", "lunch"],
-        "beauty":        ["skincare", "lipstick", "eyeshadow", "foundation", "grwm"],
-        "travel":        ["vlog", "tour", "trip", "destination"],
-        "fitness":       ["gym", "training", "weightloss", "abs", "cardio"],
-        "tech":          ["review", "unboxing", "gadget", "smartphone", "laptop"],
-        "finance":       ["money", "stocks", "investing", "crypto", "budget"],
-        "gaming":        ["gamer", "gameplay", "playthrough", "speedrun"],
-        "comedy":        ["funny", "skit", "prank"],
-        "music":         ["song", "cover", "remix", "album"],
-        "education":     ["explained", "tutorial", "lesson", "course", "history"],
-        "sports":        ["highlight", "match", "league", "team"],
-        "entertainment": ["reaction", "interview", "celebrity"],
-        "news":          ["breaking", "headlines", "report"],
-    }
-
-    def _cat_terms(cat, query):
-        seed_terms = [t for t in query.lower().split() if len(t) > 2 and t not in _GENERIC_SEED_WORDS]
-        aliases    = _CATEGORY_ALIASES.get(cat, [])
-        return list({*seed_terms, *aliases})
-
-    # Word-equality match (not substring). "channel" in the user's
-    # tokens used to score for Gaming via substring; now it only scores
-    # if the user has an exact-word match like "gaming" or "gamer".
-    best_cat = None
-    best_score = 0
-    cat_scores = {}
-    for cat, query in CATEGORY_QUERIES.items():
-        terms = _cat_terms(cat, query)
-        score = sum(1 for term in terms if term in match_tokens)
-        cat_scores[cat] = score
-        if score > best_score:
-            best_score = score
-            best_cat = cat
-    if best_cat is None and "vlogs" in CATEGORY_QUERIES:
-        best_cat = "vlogs"
+    # Best-effort map from the free-form niche label / keywords to one of
+    # the 14 TopChannelCache buckets. If any bucket name appears as a
+    # word in the label or keywords, use it — gives us the curated
+    # leaderboard for that bucket on top of the keyword-based search.
+    # If nothing matches, we just skip TopChannelCache and rely on the
+    # keyword cache (works for narrow niches that don't fit a bucket).
+    haystack = " ".join([niche_label, *niche_kw]).lower()
+    matched_bucket = None
+    for cat in CATEGORY_QUERIES:
+        if re.search(rf"\b{re.escape(cat)}\b", haystack):
+            matched_bucket = cat
+            break
 
     db = SessionLocal()
     try:
@@ -702,15 +663,16 @@ def suggested_competitors(request: Request):
 
         candidates = {}  # channel_id -> dict
 
-        # Primary: TopChannelCache by inferred category (global region).
-        # Has subscribers, thumbnails, handles — the rich data needed for
-        # the VidIQ-style card.
-        if best_cat:
+        # Primary signal: TopChannelCache for the matched bucket, when
+        # Haiku's niche maps cleanly to one of our 14 curated buckets.
+        # Channels here come with subs, thumbnails, handles, so they
+        # render the richest cards.
+        if matched_bucket:
             try:
                 rows = (
                     db.query(TopChannelCache)
                     .filter(
-                        TopChannelCache.category == best_cat,
+                        TopChannelCache.category == matched_bucket,
                         TopChannelCache.region == 'global',
                     )
                     .order_by(TopChannelCache.subscribers.desc())
@@ -726,15 +688,15 @@ def suggested_competitors(request: Request):
                         "handle":       r.handle or "",
                         "thumbnail":    r.thumbnail or "",
                         "subscribers":  int(r.subscribers or 0),
-                        "score":        2,  # strong signal: curated category leaderboard
+                        "score":        2,
                     }
             except Exception as e:
                 print(f"[suggested-competitors] top_channel_cache read error: {e}")
 
-        # Secondary: comp:<niche_kw> rows in youtube_search_cache.
-        # Sub counts aren't in the search-result payload, but channel_id
-        # + name + thumbnail are. We dedupe and bump score for channels
-        # that appear across multiple keyword searches.
+        # Secondary signal: youtube_search_cache rows with comp: prefix
+        # keyed off Haiku's niche keywords. Catches the narrow-niche case
+        # where the bucket match misses but other users have searched for
+        # this niche through Competitors.
         for kw in niche_kw[:5]:
             try:
                 prefix = f"comp:{_normalize_cache_query(kw)}"
@@ -772,20 +734,23 @@ def suggested_competitors(request: Request):
             key=lambda x: (-x["score"], -x["subscribers"]),
         )[:8]
 
+        # Frontend renders `category` as the subline ("Based on your top
+        # niche: X"). Send the free-form niche label there so creators
+        # see "knife sharpening tutorials" instead of being mislabelled
+        # as "vlogs".
         payload = {
-            "ok":          True,
-            "suggestions": ordered,
-            "category":    best_cat,
+            "ok":             True,
+            "suggestions":    ordered,
+            "category":       niche_label or matched_bucket,
             "niche_keywords": niche_kw[:5],
         }
         if request.query_params.get("debug") == "1":
             payload["_debug"] = {
                 "channel_id_suffix": my_id[-10:] if my_id else "",
-                "extra_tokens":      sorted(extra_tokens)[:30],
-                "match_tokens":      sorted(match_tokens)[:40],
-                "cat_scores":        cat_scores,
-                "best_cat":          best_cat,
-                "best_score":        best_score,
+                "niche_label":       niche_label,
+                "niche_keywords":    niche_kw,
+                "matched_bucket":    matched_bucket,
+                "detector_error":    detected.get("error", ""),
             }
         return JSONResponse(payload)
     finally:
