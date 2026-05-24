@@ -303,7 +303,11 @@ export default function Dashboard() {
     // fetches their latest videos via the YouTube Data API.
     fetch('/dashboard/competitor-activity', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d && !d.error && d.items?.length) setCompetitorActivity(d) })
+      // Set state when there are items OR when the user has tracked
+      // competitors but no recent uploads. The empty-state branch in
+      // CompetitorActivityCard renders the latter as "quiet week" copy
+      // instead of vanishing silently.
+      .then(d => { if (d && !d.error && ((d.items?.length || 0) > 0 || (d.competitor_count || 0) > 0)) setCompetitorActivity(d) })
       .catch(() => {})
 
     // Load Suggested Competitors (auto-curated from cross-user caches, zero
@@ -1734,12 +1738,13 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const competitorActivityBlock = competitorActivity?.items?.length > 0 ? (() => {
+                const competitorActivityBlock = ((competitorActivity?.items?.length || 0) > 0 || (competitorActivity?.competitor_count || 0) > 0) ? (() => {
                   const dismissKey = `ytg_competitor_activity_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
                     <CompetitorActivityCard
                       items={competitorActivity.items}
+                      competitorCount={competitorActivity.competitor_count}
                       refreshing={refreshingCompActivity}
                       onRefresh={() => {
                         if (refreshingCompActivity) return

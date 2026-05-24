@@ -1142,6 +1142,13 @@ def title_suggestion(request: Request):
     # don't keep re-calling Claude.
     from app.seo import generate_title_suggestions
     from app.utils import cached_ai_output
+    from app.niche_detector import detect_channel_niche
+
+    # Shared niche source of truth (cached, see missing_description for
+    # rationale). Lets Claude write titles that fit the real niche
+    # instead of guessing from a possibly-empty Studio keywords field.
+    detected_niche_pack = detect_channel_niche(channel, videos)
+    detected_niche = (detected_niche_pack.get("niche") or "").strip()
 
     viral_videos = [
         {"title": v.get("title", "") or "", "views": int(v.get("views", 0) or 0)}
@@ -1151,6 +1158,7 @@ def title_suggestion(request: Request):
     channel_context = {
         "channel_name":     channel.get("channel_name", "") or "",
         "channel_keywords": channel.get("keywords", "") or "",
+        "niche":            detected_niche,
         "top_video_titles": [v["title"] for v in viral_videos],
         "viral_videos":     viral_videos,
     }
@@ -1165,10 +1173,10 @@ def title_suggestion(request: Request):
         "title":          title,
         "description":    description,
         "viral_titles":   sorted(v["title"].lower() for v in viral_videos),
-        "channel_kw":     (channel.get("keywords", "") or "").lower()[:200],
+        "niche":          detected_niche.lower()[:120],
         "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
         "is_short":       bool(is_short),
-        "prompt_version": "feed_v1",
+        "prompt_version": "feed_v2",  # bumped: now keyed off detected niche
     }
 
     def _fetch():
@@ -1354,6 +1362,16 @@ def missing_description(request: Request):
 
     from app.seo import generate_description_suggestions
     from app.utils import cached_ai_output
+    from app.niche_detector import detect_channel_niche
+
+    # Read the channel's niche from the shared Haiku detector. Replaces
+    # the old (channel.keywords.split(",")[0]) hack that fed Claude an
+    # empty niche string when the Studio keywords field was blank.
+    # Detector is cached cross-user for 30 days, so calls from Suggested
+    # Competitors / Niche Outlier / Title Suggestion / Missing Tags all
+    # share the same row.
+    detected_niche_pack = detect_channel_niche(channel, videos)
+    detected_niche = (detected_niche_pack.get("niche") or "").strip()
 
     top_titles = [
         (v.get("title") or "")
@@ -1363,6 +1381,7 @@ def missing_description(request: Request):
     channel_context = {
         "channel_name":     channel.get("channel_name", "") or "",
         "channel_keywords": channel.get("keywords", "") or "",
+        "niche":            detected_niche,
         "top_video_titles": top_titles,
     }
 
@@ -1430,9 +1449,9 @@ def missing_description(request: Request):
         cache_inputs = {
             "title":          title,
             "is_short":       bool(is_short),
-            "channel_kw":     (channel.get("keywords", "") or "").lower()[:200],
+            "niche":          detected_niche.lower()[:120],
             "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
-            "prompt_version": "feed_desc_v2",  # bumped to invalidate any rows cached against the old buggy reader
+            "prompt_version": "feed_desc_v3",  # bumped: now keyed off detected niche, not raw kw chunk
         }
 
         def _fetch():
@@ -1440,7 +1459,7 @@ def missing_description(request: Request):
                 descriptions, _kw, err = generate_description_suggestions(
                     title=title,
                     current_description=current_desc[:240],
-                    niche=(channel.get("keywords", "") or "").split(",")[0].strip() or "",
+                    niche=detected_niche,
                     intent_analysis=None,
                     keyword_scores=[],
                     channel_context=channel_context,
@@ -1821,6 +1840,12 @@ def missing_tags(request: Request):
 
     from app.seo import generate_tag_suggestions
     from app.utils import cached_ai_output
+    from app.niche_detector import detect_channel_niche
+
+    # Shared niche source of truth (cached, see missing_description for
+    # rationale).
+    detected_niche_pack = detect_channel_niche(channel, videos)
+    detected_niche = (detected_niche_pack.get("niche") or "").strip()
 
     top_titles = [
         (v.get("title") or "")
@@ -1830,6 +1855,7 @@ def missing_tags(request: Request):
     channel_context = {
         "channel_name":     channel.get("channel_name", "") or "",
         "channel_keywords": channel.get("keywords", "") or "",
+        "niche":            detected_niche,
         "top_video_titles": top_titles,
     }
 
@@ -1850,16 +1876,16 @@ def missing_tags(request: Request):
         cache_inputs = {
             "title":          title,
             "is_short":       bool(is_short),
-            "channel_kw":     (channel.get("keywords", "") or "").lower()[:200],
+            "niche":          detected_niche.lower()[:120],
             "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
-            "prompt_version": "feed_tags_v1",
+            "prompt_version": "feed_tags_v2",  # bumped: now keyed off detected niche
         }
 
         def _fetch():
             try:
                 sets, err = generate_tag_suggestions(
                     title=title,
-                    niche=(channel.get("keywords", "") or "").split(",")[0].strip() or "",
+                    niche=detected_niche,
                     current_tags=cur_tags,
                     channel_context=channel_context,
                 )

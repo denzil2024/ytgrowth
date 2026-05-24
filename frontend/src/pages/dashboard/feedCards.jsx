@@ -3496,9 +3496,15 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
 }
 
 
-export function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAll, onDismiss }) {
+export function CompetitorActivityCard({ items, competitorCount, refreshing, onRefresh, onOpen, onOpenAll, onDismiss }) {
   const top3 = (items || []).slice(0, 3)
-  if (top3.length === 0) return null
+  const tracking = Number(competitorCount || 0)
+  // Hide entirely only when there's nothing to say (no tracked competitors).
+  // When the user IS tracking competitors but none posted in the last 7
+  // days, render an empty-state card instead of silently disappearing —
+  // mirrors the RelatedTrafficCard pattern.
+  if (top3.length === 0 && tracking === 0) return null
+  const isEmpty = top3.length === 0
 
   return (
     <FeedCard
@@ -3515,7 +3521,7 @@ export function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, o
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '0.05em', textTransform: 'uppercase',
         }}>
-          {top3.length} new
+          {isEmpty ? `${tracking} tracked` : `${top3.length} new`}
         </span>
       }
     >
@@ -3523,10 +3529,27 @@ export function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, o
         fontSize: 14, fontWeight: 600, color: SHELL.text1,
         letterSpacing: '-0.3px', lineHeight: 1.25,
         marginBottom: 14,
-      }}>What your competition just posted</h3>
+      }}>{isEmpty ? 'A quiet week from your competition' : 'What your competition just posted'}</h3>
+
+      {/* Empty-state explainer when no recent uploads from tracked channels.
+          Silent failure is what made users think tracking was broken. */}
+      {isEmpty && (
+        <div style={{
+          padding: '16px 18px',
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px dashed rgba(255,255,255,0.10)',
+          borderRadius: 12,
+          color: SHELL.text2,
+          fontSize: 13, fontWeight: 450, lineHeight: 1.55,
+          letterSpacing: '-0.01em',
+          marginBottom: 12,
+        }}>
+          Tracking {tracking} {tracking === 1 ? 'channel' : 'channels'} but none posted in the last 7 days. Hit refresh to pull again, or head to Competitors to add more channels worth watching.
+        </div>
+      )}
 
       {/* 3-up grid of recent uploads */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 12 }}>
+      {!isEmpty && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 12 }}>
         {top3.map((item, i) => (
           <a
             key={i}
@@ -3597,7 +3620,7 @@ export function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, o
             </div>
           </a>
         ))}
-      </div>
+      </div>}
 
       {/* Bottom row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
