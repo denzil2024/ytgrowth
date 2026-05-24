@@ -457,12 +457,21 @@ function _barFill(color) {
 // One horizontal bar in the score breakdown. Label on the left in fixed
 // tabular-aligned column, animated fill in the middle, tabular number on
 // the right. Width 0 -> value on mount so the bars sweep in.
+// Hover tooltip copy. Native title= attribute, no new visual element on
+// the page — matches the pattern used in Autopsy / feedCards.
+const _SCORE_TOOLTIPS = {
+  SEO:  'SEO score: title length, keyword overlap, and structure compliance. Deterministic, computed from your title and the live competitor data.',
+  CTR:  'Click-through score: will the viewer\'s thumb stop and click? Scored by Claude against an explicit 0-100 rubric.',
+  Hook: 'Hook score: do the first 3-5 words make a viewer stop scrolling? Scored by Claude against an explicit 0-100 rubric.',
+}
+
 function ScoreBar({ label, value, mounted }) {
   const v = Number.isFinite(value) ? value : 0
   const color = _subColor(v)
   const w = mounted ? `${Math.max(2, Math.min(100, v))}%` : '0%'
+  const tip = _SCORE_TOOLTIPS[label] || ''
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+    <div title={tip} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
       <span style={{
         fontSize: 10, fontWeight: 600, color: C.text3,
         letterSpacing: '0.10em', textTransform: 'uppercase',
@@ -748,6 +757,7 @@ function ShortTile({ video, baselineViews }) {
   const mult  = _fmtMultiplier(views, baselineViews)
   const tier  = _multTier(views, baselineViews)
   const pill  = tier ? _MULT_PILL[tier] : null
+  const age   = _relTimeDays(video.published_at || video.publishedAt)
   return (
     <a
       href={video.video_id ? `https://www.youtube.com/watch?v=${video.video_id}` : '#'}
@@ -803,7 +813,7 @@ function ShortTile({ video, baselineViews }) {
           }}>{mult}</span>
         )}
         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {video.channel || '—'}
+          {video.channel || '—'}{age ? ` · ${age}` : ''}
         </span>
       </p>
     </a>
@@ -2679,6 +2689,18 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               {intentOptions.map((opt, i) => (
                 <button key={i} className="seo-intent-opt" onClick={() => handleSelectIntent(opt.keyword)}>
                   <div style={{ flex: 1, minWidth: 0 }}>
+                    {/* Backend orders most-likely first. Surface that as a
+                        small green eyebrow on the first row only so the
+                        user knows which option matches their channel best.
+                        Eyebrow style mirrors the "PICK THE NICHE" eyebrow
+                        at the top of this card — no new visual element. */}
+                    {i === 0 && (
+                      <p style={{
+                        fontSize: 10, fontWeight: 600, color: '#34d27b',
+                        letterSpacing: '0.10em', textTransform: 'uppercase',
+                        marginBottom: 6,
+                      }}>Recommended for your channel</p>
+                    )}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
                       <span style={{ fontSize: 14.5, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.15px' }}>
                         {opt.label}
