@@ -389,16 +389,21 @@ def run_free_peek_for_channel(channel_id: str, channel: dict, videos: list) -> d
 
     channel = channel or {}
     videos = videos or []
-    channel_title = channel.get("channel_name") or channel.get("title") or ""
-    recent_titles = [v.get("title", "") for v in videos[:10] if v.get("title")]
     subscribers = int(channel.get("subscribers", 0) or 0) or 1000
 
-    niche_kw = extract_niche_keywords(channel, videos) or []
+    # Single Haiku call asks "what niche is this channel?" and returns a
+    # free-form niche label + 3-5 search keywords. Cached per content
+    # fingerprint for 30 days. Replaces the brittle extract_niche_keywords
+    # -> infer_niche -> 'vlog' literal chain that bucketed every new
+    # account into the same generic seed.
+    from app.niche_detector import detect_channel_niche
+    detected = detect_channel_niche(channel, videos)
+    niche_kw = [str(k).strip() for k in (detected.get("keywords") or []) if str(k).strip()]
     if not niche_kw:
-        inferred = infer_niche(channel.get("keywords") or "", channel_title, recent_titles)
-        niche_kw = NICHE_KEYWORDS.get(inferred, [inferred or "vlog"])
+        print(f"[niche_outliers] free_peek: no niche detected for {channel_id} (err={detected.get('error', '')})")
+        return None
 
-    query = niche_kw[0] if niche_kw else (channel_title or "vlog")
+    query = niche_kw[0]
 
     try:
         result = search_outliers(
@@ -485,19 +490,24 @@ def refresh_for_channel(channel_id: str, channel: dict, videos: list) -> dict | 
 
     channel = channel or {}
     videos = videos or []
-    channel_title = channel.get("channel_name") or channel.get("title") or ""
-    recent_titles = [v.get("title", "") for v in videos[:10] if v.get("title")]
     subscribers = int(channel.get("subscribers", 0) or 0) or 1000
 
-    niche_kw = extract_niche_keywords(channel, videos) or []
+    # Single Haiku call (see free_peek above for rationale). Same niche
+    # source of truth so both the free peek and the full refresh agree
+    # on what the channel is about.
+    from app.niche_detector import detect_channel_niche
+    detected = detect_channel_niche(channel, videos)
+    niche_kw = [str(k).strip() for k in (detected.get("keywords") or []) if str(k).strip()]
     if not niche_kw:
-        # Fall back to inferred broad niche keywords so search has SOMETHING
-        # to anchor on. Better than returning no card.
-        inferred = infer_niche(channel.get("keywords") or "", channel_title, recent_titles)
-        niche_kw = NICHE_KEYWORDS.get(inferred, [inferred or "vlog"])
+        print(f"[niche_outliers] refresh: no niche detected for {channel_id} (err={detected.get('error', '')})")
+        return None
 
-    query = niche_kw[0] if niche_kw else (channel_title or "vlog")
-    detected_niche = infer_niche(channel.get("keywords") or "", channel_title, recent_titles)
+    query = niche_kw[0]
+    # Free-form niche label from Haiku. Stored on the cache row for
+    # display and downstream angle generation. Was previously one of
+    # the 14 broad infer_niche buckets; now reflects what the channel
+    # actually is.
+    detected_niche = (detected.get("niche") or "").strip() or query
 
     try:
         result = search_outliers(
@@ -628,7 +638,7 @@ def _save_for_channel(
                     why_bullets.append(ex)
         why_bullets = [str(b)[:180] for b in why_bullets[:3]]
 
-        angle_pack = _generate_angle(detected_niche or "vlogs", top) or {
+        angle_pack = _generate_angle(detected_niche or "this niche", top) or {
             "angle":   top.get("title", "")[:160],
             "angle_reasoning": "Adapt the winning structure to your own voice and audience.",
             "keyword": "",
@@ -909,7 +919,7 @@ def personalize_angle(
     payload = get_for_channel(channel_id)
     if not payload:
         return None
-    niche = payload.get("niche") or "vlogs"
+    niche = payload.get("niche") or "this niche"
     if not os.getenv("ANTHROPIC_API_KEY"):
         return None
     try:
