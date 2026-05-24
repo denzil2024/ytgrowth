@@ -78,6 +78,7 @@ def analyze_video_autopsy(
     all_videos: list,
     channel_stats: dict = None,
     traffic_sources: list = None,
+    video_traffic_sources: list = None,
 ) -> dict:
     """
     Generate a Claude-driven post-publish autopsy for ONE video.
@@ -109,24 +110,43 @@ def analyze_video_autopsy(
     comments_per_1k = round(comments / views * 1000, 2) if views else 0
     subs_per_1k     = round(subs     / views * 1000, 2) if views else 0
 
-    # Traffic mix line (optional — shapes algo-push diagnosis)
-    traffic_line = ""
-    if traffic_sources:
-        total = sum((ts.get("views") or 0) for ts in traffic_sources) or 1
+    # Traffic mix lines. Two signals when we have both:
+    #   - per-video mix: where the algo did or did not push THIS video
+    #   - channel-wide mix (last 90d): the baseline to compare against
+    # Surfacing both lets Claude say "this video pulled 60% Search vs your
+    # channel's 20%, meaning it landed as a search winner". Without the
+    # per-video line (which we used to omit), Claude could only reason on
+    # channel-wide averages and missed the per-upload story.
+    def _mix_shares(rows):
+        total = sum((ts.get("views") or 0) for ts in (rows or [])) or 1
         share = {}
-        for ts in traffic_sources:
+        for ts in (rows or []):
             src = (ts.get("source") or "").strip().upper()
             v = ts.get("views") or 0
             if not src:
                 continue
             share[src] = share.get(src, 0) + (v / total * 100)
-        browse    = round(share.get("YT_OTHER_PAGE", 0) + share.get("YT_CHANNEL", 0) + share.get("BROWSE", 0), 1)
-        suggested = round(share.get("RELATED_VIDEO", 0) + share.get("SUGGESTED", 0), 1)
-        search    = round(share.get("YT_SEARCH", 0) + share.get("SEARCH", 0), 1)
-        external  = round(share.get("EXT_URL", 0) + share.get("EXTERNAL", 0), 1)
+        return {
+            "browse":    round(share.get("YT_OTHER_PAGE", 0) + share.get("YT_CHANNEL", 0) + share.get("BROWSE", 0), 1),
+            "suggested": round(share.get("RELATED_VIDEO", 0) + share.get("SUGGESTED", 0), 1),
+            "search":    round(share.get("YT_SEARCH", 0) + share.get("SEARCH", 0), 1),
+            "external":  round(share.get("EXT_URL", 0) + share.get("EXTERNAL", 0), 1),
+        }
+
+    traffic_line = ""
+    if traffic_sources:
+        mix = _mix_shares(traffic_sources)
         traffic_line = (
             f"Channel traffic mix (last 90d): "
-            f"Browse {browse}%  Suggested {suggested}%  Search {search}%  External {external}%"
+            f"Browse {mix['browse']}%  Suggested {mix['suggested']}%  Search {mix['search']}%  External {mix['external']}%"
+        )
+
+    video_traffic_line = ""
+    if video_traffic_sources:
+        vmix = _mix_shares(video_traffic_sources)
+        video_traffic_line = (
+            f"THIS VIDEO's traffic mix: "
+            f"Browse {vmix['browse']}%  Suggested {vmix['suggested']}%  Search {vmix['search']}%  External {vmix['external']}%"
         )
 
     baseline_lines = []
@@ -168,6 +188,7 @@ Performance:
 --- CHANNEL BASELINE (compare against) ---
 {baseline_block}
 
+{video_traffic_line}
 {traffic_line}
 
 --- HOW YOUTUBE REWARDS VIDEOS (use these levers) ---
@@ -230,4 +251,25 @@ Bullet rules:
     raw = msg.content[0].text.strip()
     raw = re.sub(r"^```[a-z]*\n?", "", raw)
     raw = re.sub(r"\n?```$", "", raw).strip()
-    return json.loads(raw)
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError as parse_err:
+        # Salvage path. If Claude exceeded max_tokens mid-JSON or appended
+        # a closing line of prose, json.loads fails and the credit was
+        # already consumed for the call. Trim to the largest balanced
+        # JSON object and try again. Mirrors the same fallback used in
+        # app/insights.py for the channel-audit Claude response.
+        from app.insights import _trim_to_balanced_json
+        salvaged = _trim_to_balanced_json(raw)
+        if salvaged:
+            try:
+                result = json.loads(salvaged)
+                print(f"[autopsy] Recovered partial JSON ({len(raw)} -> {len(salvaged)} chars)")
+                return result
+            except json.JSONDecodeError:
+                pass
+        stop_reason = getattr(msg, "stop_reason", "unknown")
+        print(f"[autopsy] JSON parse failed (stop={stop_reason}): {parse_err}")
+        print(f"[autopsy] First 200 chars: {raw[:200]}")
+        print(f"[autopsy] Last 200 chars:  {raw[-200:]}")
+        raise

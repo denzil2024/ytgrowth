@@ -50,7 +50,7 @@ def _age_days(published_at: str) -> int:
 
 @router.post("/analyze")
 def analyze(body: AnalyzeBody, request: Request):
-    data, _ = get_session(request.session.get("session_id"))
+    data, creds = get_session(request.session.get("session_id"))
     if not data:
         return JSONResponse({"error": "Not authenticated."}, status_code=401)
 
@@ -90,11 +90,23 @@ def analyze(body: AnalyzeBody, request: Request):
 
     try:
         traffic_sources = data.get("traffic_sources") or []
+        # Fetch the per-VIDEO traffic mix from YouTube Analytics. Free
+        # against our 10K Data API quota (Analytics API has a separate
+        # budget). Falls back to None silently if the call fails; the
+        # autopsy still runs against the channel-wide mix in that case.
+        video_traffic_sources = None
+        if creds:
+            try:
+                from app.youtube import get_video_traffic_sources
+                video_traffic_sources = get_video_traffic_sources(creds, channel_id, target["video_id"])
+            except Exception as e:
+                print(f"[autopsy] per-video traffic fetch failed for {target['video_id']}: {e}")
         result = analyze_video_autopsy(
             video=target,
             all_videos=videos,
             channel_stats=channel,
             traffic_sources=traffic_sources,
+            video_traffic_sources=video_traffic_sources,
         )
     except Exception as e:
         print(f"[autopsy] analyze error: {e}")

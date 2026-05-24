@@ -330,6 +330,40 @@ def get_traffic_sources(credentials, channel_id):
         return None
 
 
+def get_video_traffic_sources(credentials, channel_id, video_id, days=90):
+    """Per-video traffic mix from YouTube Analytics. Returns the same shape
+    as get_traffic_sources (list of {source, views, watch_minutes}) but
+    scoped to ONE specific video. Used by Video Review to diagnose where
+    the algorithm did or didn't push this specific upload, instead of the
+    channel-wide 90-day average.
+
+    Analytics API quota is separate from the 10K Data API budget, so this
+    is free against our quota math.
+    """
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="views,estimatedMinutesWatched",
+            dimensions="insightTrafficSourceType",
+            filters=f"video=={video_id}",
+        ).execute()
+        rows = response.get("rows", [])
+        result = [
+            {"source": r[0], "views": int(r[1]), "watch_minutes": int(r[2])}
+            for r in rows
+        ]
+        result.sort(key=lambda x: x["views"], reverse=True)
+        return result
+    except Exception as e:
+        print(f"Video traffic sources error for {video_id}: {e}")
+        return None
+
+
 def get_related_traffic_source_videos(credentials, channel_id, days=14, max_results=15):
     """Per-source-video breakdown of who is sending the channel its traffic.
 
