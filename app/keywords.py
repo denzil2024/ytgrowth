@@ -54,15 +54,20 @@ def scrape_autocomplete(seed_keyword: str) -> list[str]:
     return results
 
 
-def generate_intent_options(title: str) -> tuple[list[dict], str]:
+def generate_intent_options(title: str, channel_context: dict | None = None) -> tuple[list[dict], str]:
     """
-    Fast Haiku call — given a title, return 3 possible search keyword interpretations.
-    The user picks one before the full analysis runs.
+    Fast Haiku call: given a title plus the creator's channel context, return
+    3 possible search-intent interpretations. The user picks one (or "Let AI
+    decide") before the full analysis runs.
 
-    Cached cross-user in ai_output_cache (30-day TTL). A title's
-    intent interpretations are stable for weeks — "office cleaning"
-    means the same thing today as it did last month. The first user
-    to paste a title pays Haiku; everyone after them reads from cache.
+    The FIRST option is always the most-likely interpretation given the
+    creator's actual channel and the literal reading of the title. The other
+    two are adjacent niches.
+
+    Cross-user cached in ai_output_cache (30-day TTL). Cache key includes a
+    coarse channel fingerprint so two creators with similar channels share
+    rows, but a vlog creator's "office cleaning" doesn't get the same
+    interpretations as a cleaning-business channel's "office cleaning".
     """
     import json as _json
     from app.utils import cached_ai_output
@@ -75,10 +80,38 @@ def generate_intent_options(title: str) -> tuple[list[dict], str]:
     if not title_norm:
         return [], ""
 
+    # Channel context block: name + top 3 video titles + Studio keywords.
+    # Lets Claude default to the creator's actual niche when the title
+    # is ambiguous instead of guessing an outsider's perspective.
+    ch = channel_context or {}
+    channel_name = (ch.get("channel_name") or "").strip()
+    channel_kw   = (ch.get("channel_keywords") or "").strip()
+    top_titles   = [t for t in (ch.get("top_video_titles") or []) if t][:3]
+
+    context_lines = []
+    if channel_name:
+        context_lines.append(f"Channel name: {channel_name}")
+    if channel_kw:
+        context_lines.append(f"Channel keywords (Studio field): {channel_kw}")
+    if top_titles:
+        context_lines.append("Top videos by views:")
+        for t in top_titles:
+            context_lines.append(f"  - {t}")
+    context_block = ("\n".join(context_lines) + "\n\n") if context_lines else ""
+
+    # Cache fingerprint: lowercase channel name + sorted top-title slugs.
+    # Stable across cosmetic reorderings, scoped per-creator-niche.
+    ch_fingerprint = {
+        "channel_name": channel_name.lower()[:80],
+        "channel_kw":   channel_kw.lower()[:200],
+        "top_titles":   sorted(t.lower()[:120] for t in top_titles),
+    }
+
     cache_inputs = {
         "title":          title_norm,
+        "channel":        ch_fingerprint,
         "model":          "claude-haiku-4-5-20251001",
-        "prompt_version": "v1",
+        "prompt_version": "v2",  # bumped: channel context + most-likely-first ordering
     }
 
     def _fetch():
@@ -86,19 +119,23 @@ def generate_intent_options(title: str) -> tuple[list[dict], str]:
         try:
             msg = client.messages.create(
                 model="claude-haiku-4-5-20251001",
-                max_tokens=300,
-                messages=[{"role": "user", "content": f"""A YouTube creator wrote this title: "{title}"
+                max_tokens=400,
+                messages=[{"role": "user", "content": f"""{context_block}A YouTube creator wrote this title: "{title}"
 
-The same words can mean very different things — e.g. "office cleaning" could be a personal home-office vlog OR a commercial cleaning business tutorial.
+Generate 3 possible search-intent interpretations for this video, ordered from MOST LIKELY to LESS LIKELY based on the channel context above and a literal reading of the title.
 
-Generate exactly 3 distinct search intent interpretations. Each should represent a genuinely different audience and purpose.
+CRITICAL RULES for picking the first (most-likely) option:
+- First-person language ("My X", "I X", "Our X") means the CREATOR is the subject. The video is about their own life, place, routine. Do NOT default to outsider framings (expat, tourist, traveler, foreigner) when the title says "my" anything.
+- Location words ("in Kenya", "in Lagos", "in Tokyo") with first-person mean the creator LIVES there. The viewer wants to see a local's daily life, not a tourist's perspective.
+- If the channel context shows the creator is a vlogger or lifestyle creator, the first option should be a lifestyle/daily vlog interpretation, not a tutorial or business angle.
+- The first option must reflect what a thoughtful viewer typing this title into YouTube would expect to watch FIRST. The other two options can be adjacent niches for users who want a different audience.
 
-For each, return:
-- keyword: the 2–4 word YouTube search phrase a viewer would type (be specific, keep niche identifiers)
-- label: 3–5 word label shown to the creator (e.g. "Personal home office vlog")
-- description: one sentence — who is this for and what do they want to see?
+For each option, return:
+- keyword: the 2-4 word YouTube search phrase a viewer would type (be specific, keep niche identifiers like "vlog", "daily life", location names)
+- label: 3-5 word label shown to the creator (e.g. "Kenyan daily life vlog")
+- description: one sentence on who is this for and what they want to see
 
-Return ONLY a JSON array of 3 objects, no markdown:
+Return ONLY a JSON array of 3 objects, no markdown, ordered most-likely first:
 [{{"keyword":"...","label":"...","description":"..."}},{{"keyword":"...","label":"...","description":"..."}},{{"keyword":"...","label":"...","description":"..."}}]"""}]
             )
             raw = msg.content[0].text.strip()

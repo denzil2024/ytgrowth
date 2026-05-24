@@ -152,7 +152,28 @@ def intent_options(body: TitleIntentRequest, request: Request):
     feat = check_free_tier_access(channel_id, "seo")
     if not feat["allowed"]:
         return _locked_response("seo", feat.get("reason", "locked"))
-    options, error = generate_intent_options(body.title.strip())
+
+    # Build channel context so Claude can default to the creator's actual
+    # niche when the title is ambiguous (e.g. "My Life in Kenya" should
+    # surface "Kenyan daily vlog" first, not "expat in Kenya"). Previously
+    # the intent options ignored channel context entirely and frequently
+    # guessed an outsider's perspective.
+    channel_context = None
+    if data:
+        ch = data.get("channel", {}) or {}
+        videos = data.get("videos", []) or []
+        top_titles = [
+            v.get("title", "")
+            for v in sorted(videos, key=lambda v: v.get("views", 0) or 0, reverse=True)[:5]
+            if v.get("title")
+        ]
+        channel_context = {
+            "channel_name":     ch.get("channel_name", ""),
+            "channel_keywords": ch.get("keywords", ""),
+            "top_video_titles": top_titles,
+        }
+
+    options, error = generate_intent_options(body.title.strip(), channel_context=channel_context)
     if error and not options:
         return JSONResponse({"error": error}, status_code=500)
     return JSONResponse({"options": options})
