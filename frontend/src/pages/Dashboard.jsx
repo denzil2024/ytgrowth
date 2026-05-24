@@ -45,7 +45,7 @@ import {
 import {
   FeedFilterPills, ActionsRailCard, PriorityActionCard,
   MilestoneFeedCard, ContentMixFeedCard, ChannelHealthFeedCard,
-  TopPerformerCard, PostingConsistencyCard, BestTimeCard,
+  PostingConsistencyCard, BestTimeCard,
   TrackedLiftCard, DailyIdeasCard, TitleSuggestionCard,
   MissingDescriptionCard, MissingTagsCard, UnansweredCommentCard, TopSearchTermsCard,
   PinnedAIInput,
@@ -83,6 +83,10 @@ export default function Dashboard() {
   // Sidebar live signals. Drive the nav badges so the sidebar reads as a
   // status surface, not just a list of links.
   const [freshOutlier, setFreshOutlier] = useState(false)
+  // Latest niche-outlier bundle handed up by NicheHeroCard. Lets
+  // navigateTo mark the current outlier as seen without firing its
+  // own fetch (the card already loaded it).
+  const [outlierBundleSeed, setOutlierBundleSeed] = useState(null)
   // Chat history, surfaced in the sidebar (Chat group). Dashboard seeds
   // the list once from /chat/state (chat DB only, no YouTube quota);
   // ChatCoach reports back via onChatState so the sidebar stays the
@@ -188,6 +192,7 @@ export default function Dashboard() {
   // we don't double-hit /dashboard/niche-outlier on every Feed load.
   const handleOutlierBundleLoaded = (d) => {
     if (!d?.ok) return
+    setOutlierBundleSeed(d)
     const refreshed = d.bundle?.refreshed_at || d.outlier?.refreshed_at
     if (!refreshed) return
     const ageMs = Date.now() - new Date(refreshed).getTime()
@@ -195,9 +200,10 @@ export default function Dashboard() {
     if (!Number.isFinite(ageMs) || ageMs > SEVEN_DAYS) return
     const channelId = d.outlier?.channel_id || d.creator || 'unknown'
     // Suppress the dot once the user has visited Outliers since this
-    // outlier appeared. Keyed by the outlier's video_id or the
-    // refreshed_at so a fresh refresh resets the seen flag.
-    const seenKey = `ytg_outlier_seen:${channelId}:${d.bundle?.videos?.[0]?.video_id || d.outlier?.video_id || refreshed}`
+    // exact refresh appeared. Key on refreshed_at first so a fresh
+    // outlier_cache refresh always resets the seen flag (even if the
+    // top video_id happens to be unchanged across the refresh).
+    const seenKey = `ytg_outlier_seen:${channelId}:${refreshed || d.bundle?.videos?.[0]?.video_id || d.outlier?.video_id || 'unknown'}`
     try { if (localStorage.getItem(seenKey)) return } catch {}
     setFreshOutlier(true)
   }
@@ -530,23 +536,18 @@ export default function Dashboard() {
   })()
 
   // Wrap setNav so navigating to Outliers also clears the "new" dot. We
-  // mark the current outlier as seen in localStorage so a refresh of the
-  // niche cache (new video_id) re-triggers the dot.
+  // mark the current outlier's refresh as seen in localStorage so the
+  // next true refresh of the niche cache re-triggers the dot.
   const navigateTo = (target) => {
     if (target === 'Outliers' && freshOutlier) {
       try {
-        // Fire-and-forget: read current outlier id, write seen flag.
-        fetch('/dashboard/niche-outlier', { credentials: 'include' })
-          .then(r => r.ok ? r.json() : null)
-          .then(d => {
-            if (!d?.ok) return
-            const channelId = d.outlier?.channel_id || data?.channel?.channel_id || 'unknown'
-            const refreshed = d.bundle?.refreshed_at || d.outlier?.refreshed_at || ''
-            const vid = d.bundle?.videos?.[0]?.video_id || d.outlier?.video_id || refreshed
-            const seenKey = `ytg_outlier_seen:${channelId}:${vid}`
-            try { localStorage.setItem(seenKey, '1') } catch {}
-          })
-          .catch(() => {})
+        const d = outlierBundleSeed
+        if (d?.ok) {
+          const channelId = d.outlier?.channel_id || data?.channel?.channel_id || 'unknown'
+          const refreshed = d.bundle?.refreshed_at || d.outlier?.refreshed_at || ''
+          const seenKey = `ytg_outlier_seen:${channelId}:${refreshed || d.bundle?.videos?.[0]?.video_id || d.outlier?.video_id || 'unknown'}`
+          try { localStorage.setItem(seenKey, '1') } catch {}
+        }
       } catch {}
       setFreshOutlier(false)
     }
@@ -1413,27 +1414,6 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const topPerformerBlock = patterns?.bestVideo ? (() => {
-                  const totalV = videos?.reduce((s, v) => s + (v.views || 0), 0) || 0
-                  const avgV = videos?.length > 0 ? totalV / videos.length : 0
-                  const dismissKey = `ytg_top_perf_dismissed:${data?.channel?.channel_id || 'x'}:${patterns.bestVideo.video_id || patterns.bestVideo.title}`
-                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                  return (
-                    <TopPerformerCard
-                      video={patterns.bestVideo}
-                      channelAvgViews={avgV}
-                      onOpen={() => {
-                        if (patterns.bestVideo.video_id) setSelectedVideoId(patterns.bestVideo.video_id)
-                        else setNav('Videos')
-                      }}
-                      onDismiss={() => {
-                        try { localStorage.setItem(dismissKey, '1') } catch {}
-                        setChecked(prev => ({ ...prev }))
-                      }}
-                    />
-                  )
-                })() : null
-
                 const trackedLiftBlock = trackedLift && trackedLift.top ? (() => {
                   const w = trackedLift.top
                   const dismissKey = `ytg_tracked_lift_dismissed:${data?.channel?.channel_id || 'x'}:${w.video_id}:${w.optimized_at}`
@@ -1865,13 +1845,11 @@ export default function Dashboard() {
                 // with category 'insights' that have data, Actions
                 // tab = category 'actions' with data, etc. Add a new
                 // card by appending one line.
-                // topPerformerBlock is omitted intentionally: merged
-                // into Title Suggestion card.
                 const FEED = [
                   // Title Suggestion already shows the top-performing video
-                  // (thumb + view count) inline, so the standalone
-                  // topPerformerBlock would be a duplicate. Lead with the
-                  // merged card directly after the stat strip.
+                  // (thumb + view count) inline, so no standalone Top
+                  // Performer card. Lead with the merged card directly
+                  // after the stat strip.
                   { category: 'actions',      block: titleSuggestionBlock },
                   { category: 'actions',      block: priorityActionsBlock },
                   { category: 'actions',      block: missingDescriptionBlock },
