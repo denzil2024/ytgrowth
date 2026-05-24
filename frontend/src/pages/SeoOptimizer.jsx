@@ -3035,8 +3035,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                         {result.autocomplete_terms.map(t => (
                           <span key={t}
                             role="button" tabIndex={0}
-                            onClick={() => setTitle(t)}
-                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(t) } }}
+                            onClick={() => { navigator.clipboard.writeText(t) }}
+                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(t) } }}
+                            title="Click to copy"
                             style={{ ...T.chip, display: 'inline-flex', alignItems: 'center', gap: 6 }}
                             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
                             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = C.text2 }}>
