@@ -161,7 +161,7 @@ export default function LandingFooter() {
       <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '36px 24px 26px' }}>
         <div style={{ maxWidth: 360, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <a href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <Logo size={40} />
+            <Logo size={48} />
           </a>
           <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.42)', textAlign: 'center', marginBottom: 24, lineHeight: 1.55 }}>
             Built for creators serious about growth.
@@ -211,7 +211,7 @@ export default function LandingFooter() {
           {/* Brand block */}
           <div>
             <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginBottom: 14 }}>
-              <Logo size={30} />
+              <Logo size={40} />
             </a>
             <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.42)', maxWidth: 280, lineHeight: 1.65 }}>
               AI-powered YouTube analytics. Built for creators serious about growth.

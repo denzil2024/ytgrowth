@@ -902,8 +902,8 @@ export default function Landing() {
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px 0 80px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.svg" height={30} alt="ytgrowth"
-            style={{ height: 30, width: 'auto', display: 'block' }} />
+          <img src="/logo.svg" height={38} alt="ytgrowth"
+            style={{ height: 38, width: 'auto', display: 'block' }} />
         </div>
 
         {!isMobile && (

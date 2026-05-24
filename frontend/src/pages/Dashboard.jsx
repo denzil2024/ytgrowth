@@ -569,7 +569,7 @@ export default function Dashboard() {
 
         {/* Brand */}
         <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${SHELL.hair}` }}>
-          <Logo size={28} />
+          <Logo size={34} />
           {(() => { const pb = planBadge(billingPlan); return (
             <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 600, color: pb.color, background: pb.bg, border: `1px solid ${pb.bdr}`, padding: '2px 8px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>{pb.label}</span>
           ) })()}

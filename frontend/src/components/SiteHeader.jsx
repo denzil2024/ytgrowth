@@ -246,7 +246,7 @@ export default function SiteHeader() {
     <>
       <nav className="sh-nav">
         <a href="/" className="sh-brand">
-          <Logo size={28} />
+          <Logo size={38} />
         </a>
 
         {!isMobile && (
