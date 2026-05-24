@@ -1176,7 +1176,7 @@ def title_suggestion(request: Request):
         "niche":          detected_niche.lower()[:120],
         "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
         "is_short":       bool(is_short),
-        "prompt_version": "feed_v3",  # bumped: pipe-structure rule relaxed, colons/hyphens allowed
+        "prompt_version": "feed_v4",  # bumped: topic-preservation rule softened (2 of 5 strict, 3 of 5 variants ok)
     }
 
     def _fetch():

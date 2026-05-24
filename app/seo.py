@@ -94,6 +94,20 @@ VIRAL_FORMATS = {
         "example": "How I Grew [Subject] From 0 to [Number] in [Time]",
         "why": "Transformation stories are the highest-retention format.",
     },
+    "observational_vlog": {
+        "label": "Observational Vlog",
+        "patterns": [
+            r"\b(a day|day) in (?:my|the) life\b",
+            r"\binside (?:my|our) (?:apartment|home|studio|life|kitchen|room|day|week|world)\b",
+            r"\bliving (?:alone|together|in|on)\b",
+            r"\bmy (?:weekend|morning|night|evening|week) (?:in|with|at)\b",
+            r"\b(?:cooking|building|moving|trying) (?:in|with|for) [a-z]",
+            r"\bwhat (?:i ate|i did|i made|i bought) (?:this|in|today|on)\b",
+            r"\b(?:welcome|come) (?:to|with) (?:my|me)\b",
+        ],
+        "example": "A Day In My Studio | Tokyo · OR · Living Alone At 23 In Lagos",
+        "why": "Immersive, low-stakes, location- or routine-anchored. Strongest for personal vlog audiences who want to live alongside the creator.",
+    },
 }
 
 # Stop words for n-gram extraction — includes contractions after punctuation-stripping
@@ -1122,8 +1136,8 @@ None of these is the "right" shape. Pick whichever fits the topic and creator vo
 ANTI-GENERIC TEST (every title must pass):
 If you could swap the niche keyword in your title for a different topic and the title would still make sense, the title is TOO GENERIC. Each title must reference something specific that could ONLY belong to THIS niche, based on the competitor data above. Pull vocabulary and angle cues from the real competitor titles, not from generic YouTube title patterns.
 
-TOPIC PRESERVATION (critical):
-The user's core topic phrase must appear in at least 4 of the 5 titles in its FULL form, not abbreviated. If the user's topic is "shopping haul" use "shopping haul", NOT "shop", NOT "haul" alone. If it is "apartment tour" use "apartment tour", not "apartment" or "tour" alone. Core noun phrases drive search ranking.
+TOPIC PRESERVATION:
+The user's core topic phrase ("{niche}") must appear in its FULL form in at least 2 of the 5 titles. These are the SEO anchors that protect search ranking. The remaining 3 titles MUST be on-topic (same subject, same intent) but may vary the phrasing using close variants or semantically equivalent words from the competitor data above. Examples for "shopping haul": variants like "haul try-on", "what I bought", "thrift haul", "haul review" are all fine. Examples for "apartment tour": variants like "my apartment", "studio tour", "moving into", "home reveal" are fine. The point is variety, not repetition. Five titles that all start with the same noun phrase look templated.
 
 HARD RULES (enforced, any violation means the title is unusable):
 - 50-75 characters total, including spaces. Count exactly.
@@ -1408,18 +1422,77 @@ Return ONLY this JSON (no markdown, no explanation):
 
 # ─── Description generation ────────────────────────────────────────────────────
 
-# Location signals — if any of these appear in the title/niche, geography hashtags are appropriate.
+# Location signals — if any of these appear in the title/niche, geography
+# hashtags are appropriate. Substantially expanded from the original
+# UK/US-heavy list so creators in narrower locations (African, Asian,
+# Latin American, regional European cities) get correctly anchored.
 _GEO_PATTERN = re.compile(
-    r'\b(africa|kenya|nigeria|ghana|south africa|tanzania|uganda|ethiopia|'
-    r'rwanda|cameroon|senegal|ivory coast|zimbabwe|zambia|botswana|namibia|'
-    r'uk|london|united kingdom|england|scotland|wales|ireland|'
-    r'usa|america|new york|los angeles|chicago|houston|miami|'
-    r'india|pakistan|bangladesh|sri lanka|nepal|'
-    r'australia|sydney|melbourne|canada|toronto|vancouver|'
-    r'germany|france|spain|italy|portugal|netherlands|'
-    r'dubai|uae|saudi|qatar|kuwait|bahrain|'
-    r'nairobi|lagos|accra|johannesburg|cape town|addis ababa|'
-    r'singapore|malaysia|philippines|indonesia|thailand|vietnam)\b',
+    # ── Africa: countries + adjectives + major cities ───────────────────────
+    r'\b(africa|african|'
+    r'kenya|kenyan|nairobi|mombasa|kisumu|eldoret|nakuru|'
+    r'nigeria|nigerian|lagos|abuja|ibadan|ikeja|lekki|yaba|port harcourt|kano|'
+    r'ghana|ghanaian|accra|kumasi|tema|'
+    r'south africa|south african|johannesburg|cape town|durban|pretoria|soweto|'
+    r'tanzania|tanzanian|dar es salaam|arusha|zanzibar|'
+    r'uganda|ugandan|kampala|'
+    r'ethiopia|ethiopian|addis ababa|'
+    r'rwanda|rwandan|kigali|'
+    r'cameroon|cameroonian|yaounde|douala|'
+    r'senegal|senegalese|dakar|'
+    r'ivory coast|ivorian|abidjan|'
+    r'zimbabwe|zimbabwean|harare|bulawayo|'
+    r'zambia|zambian|lusaka|'
+    r'botswana|gaborone|namibia|windhoek|'
+    r'morocco|moroccan|casablanca|marrakesh|rabat|'
+    r'tunisia|tunis|algeria|algerian|algiers|'
+    r'egypt|egyptian|cairo|alexandria|'
+    r'mozambique|maputo|sudan|khartoum|'
+    # ── UK / Ireland ────────────────────────────────────────────────────────
+    r'uk|united kingdom|britain|british|england|english|london|manchester|birmingham|liverpool|leeds|bristol|'
+    r'scotland|scottish|edinburgh|glasgow|wales|welsh|cardiff|ireland|irish|dublin|belfast|'
+    # ── North America ──────────────────────────────────────────────────────
+    r'usa|america|american|us|'
+    r'new york|nyc|brooklyn|manhattan|queens|bronx|los angeles|la|hollywood|san francisco|sf|'
+    r'chicago|houston|miami|dallas|austin|seattle|portland|boston|philadelphia|atlanta|denver|'
+    r'detroit|phoenix|san diego|las vegas|nashville|orlando|'
+    r'canada|canadian|toronto|vancouver|montreal|ottawa|calgary|edmonton|'
+    r'mexico|mexican|mexico city|cancun|guadalajara|monterrey|'
+    # ── South Asia ─────────────────────────────────────────────────────────
+    r'india|indian|mumbai|bombay|delhi|new delhi|bangalore|bengaluru|chennai|kolkata|hyderabad|pune|'
+    r'ahmedabad|jaipur|kerala|goa|punjab|'
+    r'pakistan|pakistani|karachi|lahore|islamabad|'
+    r'bangladesh|dhaka|sri lanka|colombo|nepal|kathmandu|'
+    # ── East / Southeast Asia ──────────────────────────────────────────────
+    r'japan|japanese|tokyo|osaka|kyoto|yokohama|'
+    r'korea|korean|seoul|busan|'
+    r'china|chinese|shanghai|beijing|guangzhou|shenzhen|hong kong|taiwan|taipei|'
+    r'singapore|malaysia|kuala lumpur|penang|'
+    r'philippines|filipino|manila|cebu|'
+    r'indonesia|jakarta|bali|surabaya|'
+    r'thailand|thai|bangkok|chiang mai|phuket|'
+    r'vietnam|vietnamese|hanoi|ho chi minh|saigon|da nang|'
+    # ── Australia / NZ ──────────────────────────────────────────────────────
+    r'australia|australian|sydney|melbourne|brisbane|perth|adelaide|gold coast|'
+    r'new zealand|auckland|wellington|'
+    # ── Europe ──────────────────────────────────────────────────────────────
+    r'germany|german|berlin|munich|hamburg|frankfurt|'
+    r'france|french|paris|lyon|marseille|nice|bordeaux|'
+    r'spain|spanish|madrid|barcelona|valencia|seville|'
+    r'italy|italian|rome|milan|florence|venice|naples|'
+    r'portugal|portuguese|lisbon|porto|'
+    r'netherlands|dutch|amsterdam|rotterdam|the hague|'
+    r'belgium|brussels|antwerp|'
+    r'switzerland|swiss|zurich|geneva|'
+    r'austria|vienna|sweden|stockholm|norway|oslo|denmark|copenhagen|finland|helsinki|'
+    r'poland|warsaw|krakow|czech|prague|hungary|budapest|greece|athens|'
+    r'russia|moscow|saint petersburg|ukraine|kyiv|kiev|'
+    # ── Middle East ────────────────────────────────────────────────────────
+    r'dubai|uae|abu dhabi|saudi|saudi arabia|riyadh|jeddah|qatar|doha|kuwait|bahrain|manama|oman|muscat|'
+    r'israel|tel aviv|jerusalem|jordan|amman|lebanon|beirut|turkey|istanbul|ankara|iran|tehran|'
+    # ── Latin America ──────────────────────────────────────────────────────
+    r'brazil|brazilian|sao paulo|rio de janeiro|salvador|brasilia|'
+    r'argentina|buenos aires|colombia|bogota|medellin|peru|lima|chile|santiago|'
+    r'venezuela|caracas|cuba|havana|dominican|puerto rico)\b',
     re.IGNORECASE,
 )
 
