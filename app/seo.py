@@ -1529,13 +1529,13 @@ VIEWER CONTEXT:
 - Viewer profile: {viewer_profile or "someone interested in this topic"}
 - Gap opportunity: {gap_opportunity or ""}
 
-KEYWORDS TO WEAVE INTO THE BODY (viewers actually type these — use them naturally across the 300-400 words):
+KEYWORDS TO WEAVE INTO THE BODY (viewers actually type these, use them naturally across the prose):
 {keywords_block}
 
-Every description must use AT LEAST 6 of these keyword phrases organically across the prose. Do not bunch them. Do not repeat any single phrase more than twice total. If a phrase sounds awkward, rephrase the sentence but keep the core words.
+Every description must use AT LEAST 5 of these keyword phrases organically. Do not bunch them. Do not repeat any single phrase more than twice. If a phrase sounds awkward, rephrase the sentence but keep the core words.
 
 HASHTAG RULE (non-negotiable):
-The description must end with EXACTLY this line of 3 hashtags — no more, no fewer:
+The description must end with EXACTLY this line of 3 hashtags, no more, no fewer:
 {hashtags_line}
 These are derived from the top 3 highest-scoring keyword phrases. Do not change them. Do not add extras.
 
@@ -1546,46 +1546,46 @@ GEOGRAPHY RULE:
 Write 3 complete YouTube descriptions. Each uses a different opening strategy.
 
 CRITICAL WRITING RULES for every description:
-1. LENGTH: 300-400 words. Hard floor — shorter descriptions get downgraded by YouTube.
-2. OPENING (first 150 characters — visible before "Show more"): Must reference something SPECIFIC to this video's title that could not apply to a generic video. Open with a sensory detail, a named moment, a concrete thing that only belongs to this topic. BANNED OPENINGS (automatic fail): "In this video", "Welcome to my channel", "Hey guys", "Today I'm going to", "Let me show you", "If you've ever", "Have you ever".
-3. PROSE STYLE: Warm flowing paragraphs. Write like you are talking to one person over coffee. No bullet points, no numbered lists, no sub-headers. Each paragraph leads into the next. Sentences vary in length — short ones land harder.
-4. SWEETNESS: Use sensory detail, small specifics, real moments. A description should feel lived-in, not like filler copy. Find one moment or image to anchor it.
-5. KEYWORD USE: Weave at least 6 of the keyword phrases above into the body naturally, spread across different sentences. Never more than twice for any single phrase. They must feel like words a human would say, not forced anchors.
-6. CALL TO ACTION: One short genuine CTA at the end — warm, specific, not shouty. Examples: "If this helped, drop a comment below" or "Save this for later — you'll want it when you start."
+1. LENGTH: 180-240 words. Tight is better than long. Cut anything that doesn't earn its place. Hard cap at 250 words.
+2. OPENING (first 150 characters, visible before "Show more"): MUST be a concrete, specific detail that could only belong to THIS video. Not a mood, not a generalised feeling. A specific image: a smell, a sound, an object, a place, a time of day, a named moment. BANNED OPENINGS (automatic fail): "In this video", "Welcome to my channel", "Hey guys", "Today I'm going to", "Let me show you", "If you've ever", "Have you ever", "Imagine if", "Picture this", "There's something about", "We all know", "We've all been there".
+3. PROSE STYLE: Warm flowing paragraphs, 2 to 3 of them. Write like you are talking to one person over coffee. No bullet points, no numbered lists, no sub-headers. Sentences vary in length, short ones land harder.
+4. SPECIFICITY OVER POETRY: Real moments and concrete nouns beat pretty adjectives. A description should feel lived-in, not like filler. One anchor image is enough, do not pile them up.
+5. KEYWORD USE: Weave at least 5 of the keyword phrases above into the body naturally, spread across different sentences. Never more than twice for any single phrase. They must read like words a human would say, not stuffed anchors.
+6. CALL TO ACTION: One short genuine CTA at the end, warm and specific. Example: "If this helped, drop a comment below."
 7. HASHTAGS: The very last line must be exactly: {hashtags_line}
 8. No timestamps, no external links, no em-dashes, no en-dashes. Use a hyphen or a comma instead. Do not use a colon to open a section.
-9. Year references must be {current_year} or later — never a past year.
+9. Year references must be {current_year} or later, never a past year.
 
-Description A — STORY / HOOK:
-Open with a personal or relatable moment tied to the emotional driver. Pull the viewer in by putting them in a scene or feeling they recognise. The primary keyword must appear in the first sentence.
+Description A, STORY:
+Open with ONE specific moment from this video's topic. A real scene the creator could have walked through, told as if recalling it. NOT a generalised feeling. NOT a question. NOT a hypothetical. A concrete detail (object, sound, smell, name, time of day) the viewer can picture in their head before sentence two. The primary keyword appears within the first two sentences.
 
-Description B — VALUE / BENEFIT:
-Open with the concrete outcome the viewer gets from watching. State it directly and specifically. Make the gap between where they are and where this video takes them feel real — not vague. Primary keyword in the first sentence.
+Description B, VALUE:
+Open with the concrete outcome the viewer gets from watching, named specifically. Not "you'll learn how" but "you'll walk away with X you can use today." Make the gap between where they are and where this video takes them feel real. Primary keyword in the first sentence.
 
-Description C — SEO / DIRECT:
+Description C, SEO / DIRECT:
 Open with the primary keyword naturally in the very first phrase. Intent-first, benefits clear, reads authoritative but still human. Best for search ranking.
 
-Return ONLY this JSON array — no markdown, no commentary:
+Return ONLY this JSON array, no markdown, no commentary:
 [
   {{
     "type": "story",
     "label": "Story / Hook",
     "preview": "<first 150 characters of the full description>",
-    "full": "<complete 300-400 word description ending with the hashtag line>",
+    "full": "<complete 180-240 word description ending with the hashtag line>",
     "why_it_works": "<one sentence explaining why this opening matches the viewer's emotional driver>"
   }},
   {{
     "type": "value",
     "label": "Value / Benefit",
     "preview": "<first 150 characters>",
-    "full": "<complete 300-400 word description ending with the hashtag line>",
+    "full": "<complete 180-240 word description ending with the hashtag line>",
     "why_it_works": "<one sentence>"
   }},
   {{
     "type": "keyword",
     "label": "SEO / Keyword-first",
     "preview": "<first 150 characters>",
-    "full": "<complete 300-400 word description ending with the hashtag line>",
+    "full": "<complete 180-240 word description ending with the hashtag line>",
     "why_it_works": "<one sentence>"
   }}
 ]"""

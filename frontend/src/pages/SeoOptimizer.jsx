@@ -2281,6 +2281,10 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           },
           body: JSON.stringify({
             title: selectedTitle,
+            // Original title the user typed into /analyze. Lets the backend
+            // attach the description output to the correct SeoAnalysisCache
+            // row instead of guessing "most recent".
+            analyzed_title: title,
             current_description:
               currentDesc.trim(),
             niche:

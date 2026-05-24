@@ -1451,7 +1451,7 @@ def missing_description(request: Request):
             "is_short":       bool(is_short),
             "niche":          detected_niche.lower()[:120],
             "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
-            "prompt_version": "feed_desc_v3",  # bumped: now keyed off detected niche, not raw kw chunk
+            "prompt_version": "feed_desc_v4",  # bumped: tighter 180-240 length + stricter story-opening rules
         }
 
         def _fetch():

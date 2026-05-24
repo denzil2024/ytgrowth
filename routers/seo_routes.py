@@ -28,6 +28,11 @@ class DescriptionRequest(BaseModel):
     keyword_scores: list = None
     current_year: int = 2026
     autocomplete_terms: list = None
+    # The originally-analyzed title (what the user typed into /seo/analyze).
+    # `title` above is the SELECTED suggestion the user wants a description
+    # for, which may be one of the AI variants. We need analyzed_title to
+    # find the right SeoAnalysisCache row to attach the descriptions to.
+    analyzed_title: str = ""
 
 
 def _locked_response(feature: str, reason: str = "locked"):
@@ -81,27 +86,42 @@ def _save_analysis_cache(channel_id: str, title: str, confirmed_keyword: str, re
 
 def _update_description_cache(
     channel_id: str,
+    analyzed_title: str,
     selected_title: str,
     current_description: str,
     descriptions: list,
     top_keywords: list,
 ) -> None:
-    """Tag the description-optimizer output onto the user's MOST RECENT
-    analysis row for this channel. We don't know which analyzed title the
-    description run belongs to (the request body carries the *selected*
-    suggestion, not the originally-analyzed title), so "most recent" is a
-    pragmatic match — the row the user is currently working in. Fire-and-
-    forget; errors are swallowed."""
+    """Tag the description-optimizer output onto the right SeoAnalysisCache
+    row.
+
+    Match by analyzed_title (the title the user originally typed into
+    /seo/analyze) since that is what keyed the row in _save_analysis_cache.
+    If analyzed_title is empty (legacy frontends still in flight after a
+    deploy), fall back to the previous "most recent row" heuristic.
+    Without the exact-match path, running two analyses then generating
+    descriptions for the older one attached the output to the newer row.
+
+    Fire-and-forget; errors are swallowed.
+    """
     if not channel_id:
         return
     db = SessionLocal()
     try:
-        row = (
-            db.query(SeoAnalysisCache)
-              .filter_by(channel_id=channel_id)
-              .order_by(SeoAnalysisCache.updated_at.desc())
-              .first()
-        )
+        row = None
+        if analyzed_title and analyzed_title.strip():
+            row = (
+                db.query(SeoAnalysisCache)
+                  .filter_by(channel_id=channel_id, title_lower=analyzed_title.strip().lower())
+                  .first()
+            )
+        if row is None:
+            row = (
+                db.query(SeoAnalysisCache)
+                  .filter_by(channel_id=channel_id)
+                  .order_by(SeoAnalysisCache.updated_at.desc())
+                  .first()
+            )
         if not row:
             return
         if selected_title:
@@ -248,10 +268,12 @@ def generate_description(body: DescriptionRequest, request: Request):
             {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
             status_code=500,
         )
-    # Tag description output onto the most recent analysis row so it
-    # rehydrates alongside the main report when the user reopens it.
+    # Tag description output onto the analysis row keyed by the title the
+    # user originally analyzed (body.analyzed_title). Falls back to most-
+    # recent if the frontend didn't send analyzed_title.
     _update_description_cache(
         channel_id=channel_id,
+        analyzed_title=body.analyzed_title,
         selected_title=body.title,
         current_description=body.current_description,
         descriptions=descriptions,
