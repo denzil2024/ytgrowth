@@ -882,8 +882,9 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
                 {
                     "error": (
                         f"Your channel audit refreshes once a week on the free plan. "
-                        f"Try again in {retry_days} day{'s' if retry_days != 1 else ''}, "
-                        f"or upgrade for on-demand re-audits."
+                        f"Try again in {retry_days} day{'s' if retry_days != 1 else ''}. "
+                        f"Your trial credits are for SEO Studio, Outliers, and Competitor Analysis, "
+                        f"so they don't apply to re-audits. Upgrade for on-demand re-audits."
                     ),
                     "show_upgrade": True,
                     "rate_limited": True,
