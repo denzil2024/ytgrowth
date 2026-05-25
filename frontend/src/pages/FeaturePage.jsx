@@ -268,7 +268,7 @@ export default function FeaturePage({
         background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)',
       }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
-          <Logo size={32} />
+          <Logo size={26} />
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
           {!isMobile && <FeaturesNavDropdown />}

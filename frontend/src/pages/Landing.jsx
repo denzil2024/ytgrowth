@@ -907,7 +907,7 @@ export default function Landing() {
         height: 60, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px 0 80px',
       }}>
-        <Logo size={32} />
+        <Logo size={26} />
 
         {!isMobile && (
           <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
