@@ -14,7 +14,9 @@ load_dotenv()
 @asynccontextmanager
 async def lifespan(_):
     from app.scheduler import scheduler, backfill_existing_users
+    from app.nurture_sequence import backfill_existing_free_users
     threading.Thread(target=backfill_existing_users, daemon=True).start()
+    threading.Thread(target=backfill_existing_free_users, daemon=True).start()
     scheduler.start()
     print("[scheduler] Jobs started: monthly_resets + weekly_reports")
     yield

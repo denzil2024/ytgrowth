@@ -26,9 +26,16 @@ from app.email_templates.nurture import OFFSET_DAYS, build_email
 BASE_URL = os.environ.get("BASE_URL", "http://localhost:5173")
 PRICING_URL = "https://ytgrowth.io/pricing"
 
-# Resend free tier allows 100 emails/day. The job runs hourly, so cap each run
-# well under that to leave headroom for the weekly report and welcome sends.
+# Resend free tier allows 100 emails/day, shared with welcome + weekly-report
+# sends. NURTURE_DAILY_CAP is the hard ceiling on nurture emails per calendar
+# day across all hourly runs combined; the existing base is drained at this
+# rate. Default 50 leaves ~50/day headroom. Override via env if on a paid plan.
+NURTURE_DAILY_CAP = int(os.environ.get("NURTURE_DAILY_CAP", "50"))
+# Safety ceiling on rows touched in a single hourly run.
 MAX_PER_RUN = 50
+# Drop a row after this many failed Resend attempts (bad address, etc.) so a
+# permanently-failing send can't be retried forever and eat the daily budget.
+MAX_ATTEMPTS = 3
 
 
 def _first_name(display_name: str | None) -> str:
@@ -138,19 +145,37 @@ def _send_one(row: EmailSequence, db) -> bool:
 
 
 def run_nurture_emails() -> None:
-    """Hourly job. Sends every pending nurture email whose scheduled_at has
-    passed, up to MAX_PER_RUN. Each row's status is moved to sent / skipped /
-    failed so it is never reconsidered (failures are not retried, we'd rather
-    drop one email than risk a loop hammering Resend)."""
+    """Hourly job. Sends due nurture emails (oldest scheduled first) while
+    respecting NURTURE_DAILY_CAP across all of today's runs combined, so the
+    existing base drains at a steady rate that never trips Resend's daily limit.
+
+    Send attempts that fail transiently are left pending and retried next run;
+    a row is only marked failed after MAX_ATTEMPTS. sent_at records the last
+    attempt time and is what the daily-budget query counts (skips excluded)."""
     db = SessionLocal()
     try:
         now = datetime.datetime.now(datetime.timezone.utc)
+
+        # Daily Resend budget shared across every hourly run today. Count any
+        # row that hit the Resend API today (sent or still-pending-after-fail),
+        # excluding skips which never call Resend.
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        used_today = (
+            db.query(EmailSequence)
+              .filter(EmailSequence.sent_at >= start_of_day)
+              .filter(EmailSequence.status != "skipped")
+              .count()
+        )
+        remaining = NURTURE_DAILY_CAP - used_today
+        if remaining <= 0:
+            return
+
         due = (
             db.query(EmailSequence)
               .filter(EmailSequence.status == "pending")
               .filter(EmailSequence.scheduled_at <= now)
-              .order_by(EmailSequence.scheduled_at.asc())
-              .limit(MAX_PER_RUN)
+              .order_by(EmailSequence.scheduled_at.asc(), EmailSequence.id.asc())
+              .limit(min(MAX_PER_RUN, remaining))
               .all()
         )
 
@@ -159,24 +184,94 @@ def run_nurture_emails() -> None:
             try:
                 if _is_unsubscribed(row.channel_id, db):
                     row.status = "skipped"
-                    row.sent_at = now
+                    row.sent_at = datetime.datetime.now(datetime.timezone.utc)
                     db.commit()
                     continue
 
                 _send_one(row, db)
                 row.status = "sent"
+                row.attempts = (row.attempts or 0) + 1
                 row.sent_at = datetime.datetime.now(datetime.timezone.utc)
                 db.commit()
                 sent += 1
             except Exception as send_err:
-                print(f"[nurture] send failed for {row.user_email} "
-                      f"#{row.email_number}: {send_err}")
-                row.status = "failed"
+                row.attempts = (row.attempts or 0) + 1
                 row.sent_at = datetime.datetime.now(datetime.timezone.utc)
+                if (row.attempts or 0) >= MAX_ATTEMPTS:
+                    row.status = "failed"
+                    print(f"[nurture] giving up on {row.user_email} "
+                          f"#{row.email_number} after {row.attempts} tries: {send_err}")
+                else:
+                    print(f"[nurture] send failed for {row.user_email} "
+                          f"#{row.email_number} (attempt {row.attempts}), will retry: {send_err}")
                 db.commit()
                 continue
 
         if due:
-            print(f"[nurture] Job complete: sent {sent} of {len(due)} due")
+            print(f"[nurture] Job complete: sent {sent} of {len(due)} due "
+                  f"(cap {NURTURE_DAILY_CAP}/day, {used_today} already used today)")
+    finally:
+        db.close()
+
+
+def backfill_existing_free_users() -> None:
+    """Run once on startup. Enqueue the 7-email sequence for every existing
+    FREE user so the established base enters the funnel, not just new signups.
+
+    Idempotent two ways: a sentinel row short-circuits re-runs on later boots,
+    and enqueue_nurture_sequence skips any email that already has rows. Pacing
+    is left entirely to the send loop's daily cap, so enqueuing everyone at once
+    here is safe; nobody gets a burst of mail.
+    """
+    from database.models import UserAccount, UserSubscription, ChannelRegistry
+
+    SENTINEL = "__nurture_backfill_done__"
+    db = SessionLocal()
+    try:
+        if db.query(EmailSequence).filter_by(user_email=SENTINEL).first():
+            return
+
+        accounts = db.query(UserAccount).all()
+        enqueued = 0
+        skipped_paid = 0
+        for acct in accounts:
+            email = acct.email
+            if not email or email.startswith("__"):
+                continue
+
+            # Free check: any non-free subscription tied to this email => paid.
+            subs = db.query(UserSubscription).filter_by(email=email).all()
+            if any((s.plan or "free") != "free" for s in subs):
+                skipped_paid += 1
+                continue
+
+            # Carry a channel_id for unsubscribe handling; prefer an active one.
+            reg = (
+                db.query(ChannelRegistry)
+                  .filter_by(owner_email=email)
+                  .order_by(ChannelRegistry.is_active.desc(),
+                            ChannelRegistry.connected_at.desc())
+                  .first()
+            )
+            channel_id = reg.channel_id if reg else None
+
+            enqueue_nurture_sequence(email, acct.display_name, channel_id)
+            enqueued += 1
+
+        # Sentinel row (email_number 0, status skipped) so the scan never
+        # repeats and the send loop never picks it up.
+        db.add(EmailSequence(
+            user_email=SENTINEL,
+            channel_id=None,
+            email_number=0,
+            scheduled_at=datetime.datetime.now(datetime.timezone.utc),
+            status="skipped",
+        ))
+        db.commit()
+        print(f"[nurture] Backfill complete: enqueued {enqueued} free users, "
+              f"skipped {skipped_paid} paid")
+    except Exception as e:
+        print(f"[nurture] backfill error: {e}")
+        db.rollback()
     finally:
         db.close()

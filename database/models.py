@@ -253,6 +253,7 @@ class EmailSequence(Base):
     scheduled_at = Column(DateTime, nullable=False, index=True)
     sent_at      = Column(DateTime, nullable=True)
     status       = Column(String,  default="pending")  # pending|sent|failed|skipped
+    attempts     = Column(Integer, default=0)           # send tries; give up after MAX_ATTEMPTS
     created_at   = Column(DateTime, default=_now)
     __table_args__ = (
         UniqueConstraint("user_email", "email_number", name="uq_email_sequence_user_num"),
@@ -829,6 +830,14 @@ try:
         "CREATE INDEX IF NOT EXISTS ix_chat_conversations_last_message_at ON chat_conversations (last_message_at)",
         "ALTER TABLE chat_messages ADD COLUMN conversation_id INTEGER",
         "CREATE INDEX IF NOT EXISTS ix_chat_messages_conversation_id ON chat_messages (conversation_id)",
+        # Free-to-paid nurture sequence. Created by create_all too; this CREATE
+        # is the belt-and-suspenders path, and the ALTER adds the retry counter
+        # onto the table already deployed by the first nurture push.
+        "CREATE TABLE IF NOT EXISTS email_sequences (id INTEGER PRIMARY KEY AUTOINCREMENT, user_email TEXT NOT NULL, channel_id TEXT, email_number INTEGER NOT NULL, scheduled_at DATETIME NOT NULL, sent_at DATETIME, status TEXT DEFAULT 'pending', created_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_email_sequences_user_email ON email_sequences (user_email)",
+        "CREATE INDEX IF NOT EXISTS ix_email_sequences_scheduled_at ON email_sequences (scheduled_at)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_email_sequence_user_num ON email_sequences (user_email, email_number)",
+        "ALTER TABLE email_sequences ADD COLUMN attempts INTEGER DEFAULT 0",
     ]:
         try:
             _conn.execute(_text(_stmt))
