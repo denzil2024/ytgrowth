@@ -534,7 +534,40 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
             })
             return JSONResponse({"ok": True, "kind": "plan_change", "to": target})
 
-        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', 'reengagement', 'milestone', 'topup', or 'plan_change'"}, status_code=400)
+        if kind == "nurture":
+            # Free-to-paid nurture sequence. Sends all 7 by default; pass
+            # ?n=<1-7> to send just one. Mirrors the live sender (denzil@).
+            #   GET /admin/test-welcome?to=you@example.com&kind=nurture
+            #   GET /admin/test-welcome?to=you@example.com&kind=nurture&n=6
+            from app.email_templates.nurture import OFFSET_DAYS, build_email
+            import resend as _resend
+            _resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+            n_param = request.query_params.get("n", "").strip()
+            numbers = [int(n_param)] if n_param.isdigit() else sorted(OFFSET_DAYS.keys())
+            sent = []
+            for n in numbers:
+                if n not in OFFSET_DAYS:
+                    continue
+                subject, text, html = build_email(
+                    n,
+                    first_name="Denzil",
+                    pricing_url="https://ytgrowth.io/pricing",
+                    dashboard_url=f"{base_url}/dashboard",
+                    unsubscribe_url=f"{base_url}/email/unsubscribe?token=test",
+                )
+                _resend.Emails.send({
+                    "from":     "Denzil from YTGrowth <denzil@ytgrowth.io>",
+                    "to":       [target],
+                    "subject":  f"[TEST] {subject}",
+                    "html":     html,
+                    "text":     text,
+                    "reply_to": "denzil@ytgrowth.io",
+                })
+                sent.append(n)
+            return JSONResponse({"ok": True, "kind": "nurture", "to": target, "sent": sent})
+
+        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', 'reengagement', 'milestone', 'topup', 'plan_change', or 'nurture'"}, status_code=400)
     except Exception as e:
         import traceback
         tb = traceback.format_exc()
