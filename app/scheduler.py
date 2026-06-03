@@ -321,6 +321,30 @@ scheduler.add_job(
 )
 
 
+# ── Job 4: Free-to-paid nurture sequence ──────────────────────────────────────
+# Runs hourly. Sends whichever nurture emails are due (7-email series over the
+# first 18 days after signup). Rows are enqueued on signup in
+# routers/auth.py -> app.nurture_sequence.enqueue_nurture_sequence. The whole
+# thing is wrapped in try/except so a bad row or a Resend outage can never
+# bubble up and stall the Uvicorn/scheduler thread.
+
+def _run_nurture_job():
+    try:
+        from app.nurture_sequence import run_nurture_emails
+        run_nurture_emails()
+    except Exception as e:
+        print(f"[nurture_job] Error: {e}")
+
+
+scheduler.add_job(
+    _run_nurture_job,
+    trigger="interval",
+    hours=1,
+    id="nurture_sequence",
+    replace_existing=True,
+)
+
+
 # ── One-time backfill ─────────────────────────────────────────────────────────
 
 def _resolve_email(user_data: dict, creds_json_str: str, channel_id: str, db) -> str:

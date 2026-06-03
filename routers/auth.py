@@ -581,6 +581,20 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             except Exception as _e:
                 print(f"[welcome_immediate] schedule error: {_e}")
 
+            # ── Free-to-paid nurture sequence ────────────────────────────
+            # Enqueue the 7-email series (sent over the first 18 days by the
+            # hourly scheduler job). Idempotent on email, and wrapped so a DB
+            # hiccup never blocks the OAuth callback.
+            try:
+                from app.nurture_sequence import enqueue_nurture_sequence
+                enqueue_nurture_sequence(
+                    email=google_email,
+                    display_name=display_name,
+                    channel_id=channel_id,
+                )
+            except Exception as _e:
+                print(f"[nurture] enqueue schedule error: {_e}")
+
         # ── Channel abuse prevention ──────────────────────────────────────
         if google_email:
             db = SessionLocal()

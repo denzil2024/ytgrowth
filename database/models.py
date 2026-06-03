@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, BigInteger, Float, DateTime, Text, Boolean, create_engine
+from sqlalchemy import Column, String, Integer, BigInteger, Float, DateTime, Text, Boolean, UniqueConstraint, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -233,6 +233,30 @@ class UserEmailPreferences(Base):
     # a crash mid-run can resume without double-emailing anyone.
     plan_change_email_sent_at  = Column(DateTime, nullable=True)
     created_at        = Column(DateTime, default=_now)
+
+
+class EmailSequence(Base):
+    """Free-to-paid nurture sequence. One row per (user, email_number).
+
+    Seven rows are inserted when a new free user signs up, each with a
+    scheduled_at computed from signup time (see app/email_templates/nurture.py
+    OFFSET_DAYS). An hourly scheduler job sends whatever is due. Keyed by email
+    because that is the account identity in this app (UserAccount.email is the
+    PK) and the address we actually send to. channel_id is carried so the send
+    loop can honour the existing unsubscribe flag and build unsubscribe links.
+    """
+    __tablename__ = "email_sequences"
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    user_email   = Column(String, nullable=False, index=True)
+    channel_id   = Column(String, nullable=True)
+    email_number = Column(Integer, nullable=False)   # 1..7
+    scheduled_at = Column(DateTime, nullable=False, index=True)
+    sent_at      = Column(DateTime, nullable=True)
+    status       = Column(String,  default="pending")  # pending|sent|failed|skipped
+    created_at   = Column(DateTime, default=_now)
+    __table_args__ = (
+        UniqueConstraint("user_email", "email_number", name="uq_email_sequence_user_num"),
+    )
 
 
 class UserAccount(Base):
