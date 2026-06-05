@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { openCheckout } from '../checkout'
 import LandingFooter from '../components/LandingFooter'
 import AuthErrorModal from '../components/AuthErrorModal'
+import BrandLockup from '../components/BrandLockup'
 
 /* ─── inject font + global styles into <head> once ─────────────────────── */
 function useGlobalStyles() {
@@ -338,10 +339,7 @@ function Logo({ size = 32, iconOnly = false }) {
       </svg>
     )
   }
-  return (
-    <img src="/logo.svg" alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
-  )
+  return <BrandLockup height={size - 2} />
 }
 
 /* ─── Per-card Monthly / Yearly toggle ─────────────────────────────────────

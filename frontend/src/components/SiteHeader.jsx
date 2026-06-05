@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import BrandLockup from './BrandLockup'
 
 /* ─── Shared site header ─────────────────────────────────────────────────
    One nav, used on every public page outside Landing (Affiliate, Contact,
@@ -66,13 +67,6 @@ const RESOURCES_GROUPS = [
     ],
   },
 ]
-
-function Logo({ size = 32 }) {
-  return (
-    <img src="/logo.svg" alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
-  )
-}
 
 function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
@@ -245,8 +239,8 @@ export default function SiteHeader() {
   return (
     <>
       <nav className="sh-nav">
-        <a href="/" className="sh-brand">
-          <Logo size={26} />
+        <a href="/" className="sh-brand" aria-label="ytgrowth home">
+          <BrandLockup height={24} />
         </a>
 
         {!isMobile && (

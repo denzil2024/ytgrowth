@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
+import BrandLockup from '../components/BrandLockup'
 
-function Logo({ size = 32 }) {
-  return (
-    <img src="/logo.svg" alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
-  )
+function Logo() {
+  return <BrandLockup height={24} />
 }
 
 function useGlobalStyles() {

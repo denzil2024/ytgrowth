@@ -3,6 +3,7 @@
    the Milestone surfaces. No data fetching, no app state, no callbacks
    that mutate parent state — every prop is a value the caller already has. */
 import { C, SHELL } from './tokens'
+import BrandLockup from '../../components/BrandLockup'
 import {
   scoreColor, scoreLabel,
   fmtNum,
@@ -19,12 +20,9 @@ export function YTGLogo({ size = 12 }) {
   )
 }
 
-/* ─── Logo (Canva lockup, white wordmark variant for dark shell) ───────── */
-export function Logo({ size = 30 }) {
-  return (
-    <img src="/logo-light.svg" alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
-  )
+/* ─── Logo (lockup, white wordmark variant for the dark shell) ─────────── */
+export function Logo({ size = 24 }) {
+  return <BrandLockup height={size} tone="light" />
 }
 
 /* ─── Score ring ────────────────────────────────────────────────────────── */

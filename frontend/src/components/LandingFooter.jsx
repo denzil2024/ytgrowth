@@ -4,11 +4,10 @@ import { useEffect, useState } from 'react'
    feature pages, Privacy/Terms/Refund/Contact). Multi-column on desktop , 
    brand + Features + Legal. For clean internal linking. Stacks on mobile. */
 
-function Logo({ size = 32 }) {
-  return (
-    <img src="/logo-light.svg" alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
-  )
+import BrandLockup from './BrandLockup'
+
+function Logo({ size = 28 }) {
+  return <BrandLockup height={size} tone="light" />
 }
 
 const SOCIAL_LINKS = [
@@ -161,7 +160,7 @@ export default function LandingFooter() {
       <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '36px 24px 26px' }}>
         <div style={{ maxWidth: 360, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <a href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <Logo size={34} />
+            <Logo size={28} />
           </a>
           <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.42)', textAlign: 'center', marginBottom: 24, lineHeight: 1.55 }}>
             Built for creators serious about growth.

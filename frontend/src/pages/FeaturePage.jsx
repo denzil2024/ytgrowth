@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
+import BrandLockup from '../components/BrandLockup'
 
 /* Shared layout for /features/* pages.
  *
@@ -151,11 +152,8 @@ function useFeatureStyles() {
   }, [])
 }
 
-function Logo({ size = 32 }) {
-  return (
-    <img src="/logo.svg" alt="ytgrowth"
-      style={{ height: size, width: 'auto', display: 'block' }} />
-  )
+function Logo() {
+  return <BrandLockup height={24} />
 }
 
 function Check({ onDark = false }) {
