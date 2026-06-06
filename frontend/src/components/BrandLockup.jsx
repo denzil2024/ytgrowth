@@ -7,21 +7,21 @@
    (already loaded site-wide), so it stays crisp at any size and the type
    is fully tunable.
 
-   Two-tone: "yt" in brand red to tie back to the mark, "growth" in
-   near-black. Pass tone="light" on dark backgrounds (app shell, footer)
-   to flip "growth" to white.
+   Single-tone wordmark: the whole "ytgrowth" is one colour so it reads
+   clean next to the red play-mark. Near-black on light backgrounds;
+   pass tone="light" on dark backgrounds (app shell, footer) for white.
 
    Props:
      height  icon size in px (wordmark scales from it). Default 24.
-     tone    'dark'  → growth is near-black (light backgrounds)
-             'light' → growth is white      (dark backgrounds)
+     tone    'dark'  → wordmark near-black (light backgrounds)
+             'light' → wordmark white       (dark backgrounds)
      gap     space between mark and wordmark. Default 9. */
 
 const RED = '#e5251b'
 const INK = '#0a0a0f'
 
 export default function BrandLockup({ height = 24, tone = 'dark', gap = 9 }) {
-  const growthColor = tone === 'light' ? '#ffffff' : INK
+  const wordColor = tone === 'light' ? '#ffffff' : INK
   const fontSize = Math.round(height * 0.72 * 10) / 10
 
   return (
@@ -39,10 +39,8 @@ export default function BrandLockup({ height = 24, tone = 'dark', gap = 9 }) {
         letterSpacing: '-0.3px',
         lineHeight: 1,
         whiteSpace: 'nowrap',
-      }}>
-        <span style={{ color: RED }}>yt</span>
-        <span style={{ color: growthColor }}>growth</span>
-      </span>
+        color: wordColor,
+      }}>ytgrowth</span>
     </span>
   )
 }
