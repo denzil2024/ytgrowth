@@ -10,7 +10,7 @@ import threading
 from app.youtube import (
     get_channel_stats, get_recent_videos, get_video_metrics_map, merge_metrics_into_videos,
     get_full_channel_data, get_watch_minutes_365d)
-from app.insights import analyze_channel
+from app.insights import analyze_channel, _fallback_analysis
 from app.milestones import check_and_record as _check_milestones, get_state as _get_milestone_state
 from app.milestone_email import send_milestone_emails as _send_milestone_emails
 from database.models import (
@@ -336,6 +336,38 @@ def _upsert_email_preferences(channel_id: str, email: str) -> None:
         db.close()
 
 
+def _save_insights_to_db_row(session_id: str, insights: dict, analyzed_at: str) -> bool:
+    """Write insights + analyzed_at straight into the UserSession DB row.
+
+    Needs no in-memory creds, so it works when the background task lost its
+    session (worker recycle / restore miss) or when the AI call failed and we
+    have to land a fallback. Without a write here the row keeps insights=None
+    forever and the frontend audit-progress card spins at 94% with no way out.
+    Also converges this worker's in-memory cache if it still holds the row.
+    Returns True if the DB row was updated.
+    """
+    mem = _user_data.get(session_id)
+    if mem is not None:
+        mem["insights"] = insights
+        mem["analyzed_at"] = analyzed_at
+    try:
+        db = SessionLocal()
+        try:
+            row = db.query(UserSession).filter_by(session_id=session_id).first()
+            if row and row.user_data_json:
+                d = json.loads(row.user_data_json)
+                d["insights"] = insights
+                d["analyzed_at"] = analyzed_at
+                row.user_data_json = json.dumps(d)
+                db.commit()
+                return True
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[insights db write] error for {session_id[:8]}: {e}")
+    return False
+
+
 def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full_data: dict, plan: str = "free", charged: bool = False):
     """Run AI analysis after login and update session data when done.
     If `charged=True`, the caller already spent 1 credit via check_and_deduct.
@@ -367,6 +399,14 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
             _user_data[session_id] = data
             _persist_session(session_id, creds, data)
             print(f"Analysis saved for {session_id[:8]}")
+        else:
+            # No in-memory creds (worker recycle / restore miss). The audit still
+            # succeeded, so write insights straight to the DB row; otherwise this
+            # session's row keeps insights=None and the frontend audit card spins
+            # at 94% forever. _persist_session needs creds we don't have here, so
+            # we patch the row directly instead.
+            print(f"Session creds missing for {session_id[:8]}; writing insights to DB row")
+            _save_insights_to_db_row(session_id, insights, analyzed_at)
 
         # Fan-out: if the user logged out and back in (or has the dashboard
         # open on another device) WHILE this background task was running,
@@ -394,7 +434,7 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
             # email support@ytgrowth.io for goodwill bumps). Free plan shows an
             # upgrade nudge in the Weekly Report tab instead.
             channel_id = stats.get("channel_id")
-            email = data.get("email", "")
+            email = (data or {}).get("email", "")  # data is None when creds were missing
             if channel_id and email:
                 try:
                     from database.models import WeeklyReport, UserSubscription
@@ -434,6 +474,20 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
         traceback.print_exc()
         # Claude already ran (or attempted) — credit stays consumed. Users
         # can email support@ytgrowth.io for a manual goodwill bump.
+        # Land a rule-based fallback so the audit-progress card stops spinning;
+        # the user gets a usable audit plus a re-audit path, not a dead screen.
+        try:
+            fb = _fallback_analysis(stats, videos, full_data.get("analytics"))
+            fb_at = datetime.datetime.utcnow().isoformat() + 'Z'
+            if _save_insights_to_db_row(session_id, fb, fb_at):
+                print(f"Fallback audit saved for {session_id[:8]} after analysis error")
+                if channel_id:
+                    try:
+                        _fanout_insights_to_channel(channel_id, fb, fb_at, exclude_session_id=session_id)
+                    except Exception:
+                        pass
+        except Exception as fb_err:
+            print(f"Fallback persist error for {session_id[:8]}: {fb_err}")
 
 
 @router.get("/callback")

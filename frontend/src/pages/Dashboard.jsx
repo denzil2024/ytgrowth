@@ -450,19 +450,35 @@ export default function Dashboard() {
   const [auditFinishing, setAuditFinishing] = useState(false)
   useEffect(() => {
     if (!analyzingAI) return
-    let polledData = null
+    // Failsafe ceiling. The audit normally writes insights within 10-25s, but a
+    // recycled worker (Railway deploy / idle scaling) or a hard backend error can
+    // leave insights=null. Without a cap the progress card spins at 94% with no
+    // way out. After ~90s we stop polling, drop the card, and surface a retry so
+    // the user is never stranded on a frozen screen.
+    let attempts = 0
+    const MAX_ATTEMPTS = 22  // 22 × 4s ≈ 88s
     const interval = setInterval(() => {
+      attempts += 1
       fetch('/auth/data', { credentials: 'include' })
         .then(r => r.json())
         .then(d => {
           if (d.insights !== null) {
-            polledData = d
             setData(d)
             setAuditFinishing(true)
             clearInterval(interval)
+          } else if (attempts >= MAX_ATTEMPTS) {
+            clearInterval(interval)
+            setAnalyzingAI(false)
+            setReAuditError("Your audit is taking longer than usual. That's on us, not you. Hit Re-Audit to try again, or refresh in a minute.")
           }
         })
-        .catch(() => {})
+        .catch(() => {
+          if (attempts >= MAX_ATTEMPTS) {
+            clearInterval(interval)
+            setAnalyzingAI(false)
+            setReAuditError("We lost contact while building your audit. Hit Re-Audit to try again.")
+          }
+        })
     }, 4000)
     return () => clearInterval(interval)
   }, [analyzingAI])
@@ -888,6 +904,24 @@ export default function Dashboard() {
                     })
                 }
 
+                // While an audit is running (first signup audit or a re-audit),
+                // the progress card is the most important thing on the page, so
+                // it sits at the TOP of the column. It used to render far below
+                // the feed and milestones, leaving new users scrolling to find
+                // the one thing actually working. analyzingAI always coincides
+                // with insights=null (re-audit nulls it), so this is the single
+                // render site for the card.
+                if (analyzingAI) {
+                  return (
+                    <AuditProgress
+                      done={auditFinishing}
+                      onDone={() => {
+                        setAnalyzingAI(false)
+                        setAuditFinishing(false)
+                      }}
+                    />
+                  )
+                }
                 if (showOnboarding) {
                   return (
                     <OnboardingCard
@@ -2039,19 +2073,8 @@ export default function Dashboard() {
             )
           })()}
 
-          {/* ── INSIGHTS ─────────────────────────────────────────────── */}
-          {data && nav === 'Overview' && analyzingAI && (
-            <div style={{ padding: '24px 0 36px' }}>
-              <AuditProgress
-                done={auditFinishing}
-                onDone={() => {
-                  setAnalyzingAI(false)
-                  setAuditFinishing(false)
-                }}
-              />
-            </div>
-          )}
-
+          {/* The audit-progress card now renders at the TOP of the Overview
+              column (in the IIFE above), not here at the bottom. */}
 
           {/* ── AUDIT DETAIL (legacy block) ─────────────────────────────
               Hidden by default. Renders only when the user expands the
