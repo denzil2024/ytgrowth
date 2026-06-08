@@ -73,7 +73,11 @@ const TOTAL_DURATION_MS = 22000   // ~22s baseline before "Almost ready" hold
 export default function AuditProgress({ done = false, onDone }) {
   const [elapsed, setElapsed] = useState(0)
   const startRef = useRef(Date.now())
-  const finishedRef = useRef(false)
+
+  // Latest-ref for onDone. The parent passes a fresh inline arrow on every
+  // render, so we must NOT depend on it in the teardown effect below.
+  const onDoneRef = useRef(onDone)
+  useEffect(() => { onDoneRef.current = onDone }, [onDone])
 
   useEffect(() => {
     let raf
@@ -85,14 +89,17 @@ export default function AuditProgress({ done = false, onDone }) {
     return () => cancelAnimationFrame(raf)
   }, [])
 
+  // Fire onDone ~700ms after the parent flips done=true, so the bar visually
+  // lands on 100% before we're torn down. Depend ONLY on `done`: when insights
+  // arrive the parent re-renders (e.g. setPrevScore), which used to hand us a
+  // new onDone reference, run the effect cleanup, clear this timeout, and never
+  // reschedule it — freezing the card at 100% forever. Reading onDone from a
+  // ref breaks that race.
   useEffect(() => {
-    if (done && !finishedRef.current) {
-      finishedRef.current = true
-      // Let the bar visually catch up before the parent removes us.
-      const t = setTimeout(() => onDone?.(), 700)
-      return () => clearTimeout(t)
-    }
-  }, [done, onDone])
+    if (!done) return
+    const t = setTimeout(() => onDoneRef.current?.(), 700)
+    return () => clearTimeout(t)
+  }, [done])
 
   // Compute progress 0..1. Eases toward 0.94 while waiting, snaps to 1.0
   // when done=true. The asymptote prevents the "100% but still waiting"
