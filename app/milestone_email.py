@@ -81,10 +81,15 @@ def send_milestone_emails(
 
             try:
                 _resend.Emails.send({
-                    "from":    "YTGrowth <milestones@ytgrowth.io>",
+                    "from":    "Denzil from YTGrowth <denzil@ytgrowth.io>",
                     "to":      [email],
                     "subject": subject,
                     "html":    html,
+                    "reply_to": "denzil@ytgrowth.io",
+                    "headers": {
+                        "List-Unsubscribe":      f"<{unsubscribe_url}>",
+                        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+                    },
                 })
             except Exception as e:
                 print(f"[milestone_email] Resend error: {e}")

@@ -317,15 +317,20 @@ def send_weekly_report(channel_id: str, email: str, report_data: dict,
 
     _resend.api_key = os.environ.get("RESEND_API_KEY", "")
     text, html = build_email(report_data, unsubscribe_token, BASE_URL, LOGO_URL)
+    unsubscribe_url = f"{BASE_URL}/unsubscribe?token={unsubscribe_token}"
 
     try:
         response = _resend.Emails.send({
-            "from":     "Denzil from YTGrowth <reports@ytgrowth.io>",
+            "from":     "Denzil from YTGrowth <denzil@ytgrowth.io>",
             "to":       [email],
             "subject":  report_data.get("reportTitle", "Your weekly YouTube report"),
             "html":     html,
             "text":     text,
-            "reply_to": "hello@ytgrowth.io",
+            "reply_to": "denzil@ytgrowth.io",
+            "headers": {
+                "List-Unsubscribe":      f"<{unsubscribe_url}>",
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            },
         })
         return bool(response and response.get("id"))
     except Exception as e:

@@ -3,7 +3,7 @@
 import os
 import datetime
 from fastapi import APIRouter
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from database.models import SessionLocal, UserEmailPreferences
 
@@ -28,28 +28,48 @@ _BRAND = """
 """
 
 
-@router.get("/unsubscribe", response_class=HTMLResponse)
-def unsubscribe(token: str = ""):
+def _apply_unsubscribe(token: str) -> bool:
+    """Flip the global opt-out flag for the pref owning this token. Returns
+    True if a matching pref was found. Shared by the GET (browser click) and
+    POST (RFC 8058 one-click) handlers."""
     if not token:
-        return HTMLResponse(_page("Invalid link", "This unsubscribe link is invalid or has expired."), status_code=400)
-
+        return False
     db = SessionLocal()
     try:
         pref = db.query(UserEmailPreferences).filter_by(unsubscribe_token=token).first()
         if not pref:
-            return HTMLResponse(_page("Invalid link", "This unsubscribe link is invalid or has expired."), status_code=404)
-
-        pref.weekly_report    = False
-        pref.unsubscribed_at  = datetime.datetime.utcnow()
+            return False
+        pref.weekly_report   = False
+        pref.unsubscribed_at = datetime.datetime.utcnow()
         db.commit()
-
-        body = (
-            "You won't receive weekly reports from YTGrowth anymore. "
-            "You can resubscribe anytime from your Settings in the app."
-        )
-        return HTMLResponse(_page("You've been unsubscribed", body, show_btn=True))
+        return True
     finally:
         db.close()
+
+
+@router.get("/unsubscribe", response_class=HTMLResponse)
+def unsubscribe(token: str = ""):
+    if not token:
+        return HTMLResponse(_page("Invalid link", "This unsubscribe link is invalid or has expired."), status_code=400)
+    if not _apply_unsubscribe(token):
+        return HTMLResponse(_page("Invalid link", "This unsubscribe link is invalid or has expired."), status_code=404)
+
+    body = (
+        "You won't receive emails from YTGrowth anymore. "
+        "You can resubscribe anytime from your Settings in the app."
+    )
+    return HTMLResponse(_page("You've been unsubscribed", body, show_btn=True))
+
+
+@router.post("/unsubscribe")
+def unsubscribe_one_click(token: str = ""):
+    """RFC 8058 one-click unsubscribe. Gmail / Yahoo POST here when the user
+    clicks the native 'Unsubscribe' button next to the sender. Must accept POST
+    and return 200 without a page render. Advertising this (via the
+    List-Unsubscribe-Post header) is a strong 'wanted mail' signal that helps
+    keep us out of the Promotions/Spam buckets."""
+    _apply_unsubscribe(token)
+    return PlainTextResponse("Unsubscribed", status_code=200)
 
 
 @router.get("/resubscribe", response_class=HTMLResponse)

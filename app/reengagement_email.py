@@ -176,12 +176,16 @@ def run_reengagement_emails() -> None:
                 )
 
                 _resend.Emails.send({
-                    "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
+                    "from":     "Denzil from YTGrowth <denzil@ytgrowth.io>",
                     "to":       [email],
                     "subject":  "Your channel insights are waiting",
                     "html":     html,
                     "text":     text,
-                    "reply_to": "hello@ytgrowth.io",
+                    "reply_to": "denzil@ytgrowth.io",
+                    "headers": {
+                        "List-Unsubscribe":      f"<{unsubscribe_url}>",
+                        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+                    },
                 })
                 pref.reengagement_email_sent_at = now
                 db.commit()

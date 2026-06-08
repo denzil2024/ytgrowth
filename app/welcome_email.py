@@ -127,12 +127,16 @@ def send_welcome_email(
 
         try:
             _resend.Emails.send({
-                "from":    "Denzil from YTGrowth <hello@ytgrowth.io>",
+                "from":    "Denzil from YTGrowth <denzil@ytgrowth.io>",
                 "to":      [email],
                 "subject": "Your YTGrowth audit is ready",
                 "html":    html,
                 "text":    text,
-                "reply_to": "hello@ytgrowth.io",
+                "reply_to": "denzil@ytgrowth.io",
+                "headers": {
+                    "List-Unsubscribe":      f"<{unsubscribe_url}>",
+                    "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+                },
             })
             pref.welcome_email_sent_at = datetime.datetime.utcnow()
             db.commit()

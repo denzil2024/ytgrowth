@@ -85,6 +85,7 @@ app.include_router(billing.router,           prefix="/billing")
 app.include_router(video_ideas_routes.router, prefix="/video-ideas")
 app.include_router(thumbnail_routes.router,  prefix="/thumbnail")
 app.include_router(email_routes.router)                          # /unsubscribe, /resubscribe
+app.include_router(email_routes.router, prefix="/email")         # /email/unsubscribe — every email's link uses this path; mount both so it resolves
 app.include_router(report_routes.router,     prefix="/api/reports")
 app.include_router(channel_routes.router,    prefix="/channels")
 app.include_router(public_routes.router,     prefix="/api/public")

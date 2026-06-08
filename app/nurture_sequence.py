@@ -125,12 +125,13 @@ def _send_one(row: EmailSequence, db) -> bool:
     except Exception:
         pass
 
+    unsubscribe_url = _unsubscribe_url(row.channel_id, db)
     subject, text, html = build_email(
         row.email_number,
         first_name=_first_name(display_name),
         pricing_url=PRICING_URL,
         dashboard_url=f"{BASE_URL}/dashboard",
-        unsubscribe_url=_unsubscribe_url(row.channel_id, db),
+        unsubscribe_url=unsubscribe_url,
     )
 
     _resend.Emails.send({
@@ -140,6 +141,10 @@ def _send_one(row: EmailSequence, db) -> bool:
         "html":     html,
         "text":     text,
         "reply_to": "denzil@ytgrowth.io",
+        "headers": {
+            "List-Unsubscribe":      f"<{unsubscribe_url}>",
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
     })
     return True
 
