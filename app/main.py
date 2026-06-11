@@ -114,8 +114,17 @@ def health():
         db_status = "connected"
     except Exception as e:
         db_status = f"error: {e}"
+    # Deployed commit SHA. Railway injects RAILWAY_GIT_COMMIT_SHA on every
+    # build, so curling /health tells you EXACTLY which commit is live —
+    # no more inferring deploy status from served asset hashes.
+    commit = (
+        os.environ.get("RAILWAY_GIT_COMMIT_SHA")
+        or os.environ.get("RAILWAY_GIT_COMMIT")
+        or "unknown"
+    )
     return {
         "status": "ok",
+        "commit": commit[:12],
         "anthropic_key_prefix": key[:12] if key else "NOT SET",
         "db": db_status
     }
