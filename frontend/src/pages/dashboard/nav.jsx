@@ -95,7 +95,7 @@ export function NavBtn({ label, active, onClick, badge, dot }) {
 
 // Sub-item button. No icon. Indented under the parent verb, aligned to
 // the icon column so the visual gutter is consistent.
-export function NavSubBtn({ label, active, onClick }) {
+export function NavSubBtn({ label, active, onClick, locked = false }) {
   return (
     <button
       onClick={onClick}
@@ -128,6 +128,17 @@ export function NavSubBtn({ label, active, onClick }) {
         transition: 'background 0.14s ease, box-shadow 0.14s ease',
       }}/>
       <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
+      {locked && (
+        <svg
+          width="12" height="12" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          aria-label="Paid feature"
+          style={{ flexShrink: 0, color: SHELL.iconIdle }}
+        >
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      )}
     </button>
   )
 }

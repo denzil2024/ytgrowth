@@ -674,10 +674,10 @@ export default function Dashboard() {
             anyChildActive={['SEO Studio','Thumbnail Score','Video Ideas','Videos','Autopsy','Weekly Report'].includes(nav)}
           >
             <NavSubBtn label="SEO Studio"    active={nav === 'SEO Studio'}       onClick={() => setNav('SEO Studio')} />
-            <NavSubBtn label="Thumbnails"    active={nav === 'Thumbnail Score'}  onClick={() => setNav('Thumbnail Score')} />
-            <NavSubBtn label="Video Ideas"   active={nav === 'Video Ideas'}      onClick={() => setNav('Video Ideas')} />
+            <NavSubBtn label="Thumbnails"    active={nav === 'Thumbnail Score'}  onClick={() => setNav('Thumbnail Score')} locked={billingPlan === 'free'} />
+            <NavSubBtn label="Video Ideas"   active={nav === 'Video Ideas'}      onClick={() => setNav('Video Ideas')} locked={billingPlan === 'free'} />
             <NavSubBtn label="My Videos"     active={nav === 'Videos'}           onClick={() => setNav('Videos')} />
-            <NavSubBtn label="Video Review"  active={nav === 'Autopsy'}          onClick={() => setNav('Autopsy')} />
+            <NavSubBtn label="Video Review"  active={nav === 'Autopsy'}          onClick={() => setNav('Autopsy')} locked={billingPlan === 'free'} />
             <NavSubBtn label="Weekly Report" active={nav === 'Weekly Report'}    onClick={() => setNav('Weekly Report')} />
           </NavGroup>
 
@@ -687,7 +687,7 @@ export default function Dashboard() {
             dot={freshOutlier}
           >
             <NavSubBtn label="Outliers"    active={nav === 'Outliers'}    onClick={() => navigateTo('Outliers')} />
-            <NavSubBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
+            <NavSubBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} locked={billingPlan === 'free'} />
             <NavSubBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
           </NavGroup>
 
