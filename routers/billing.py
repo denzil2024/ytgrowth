@@ -9,7 +9,7 @@ import hmac
 import hashlib
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
-from database.models import SessionLocal, UserSubscription
+from database.models import SessionLocal, UserSubscription, UserEmailPreferences, ChannelRegistry
 from routers.auth import get_session
 from app.utils import get_or_create_subscription, next_reset_date
 
@@ -117,6 +117,38 @@ def _activate(sub: UserSubscription, meta: dict, customer_id: str, subscription_
         sub.pack_balance = (sub.pack_balance or 0) + bonus
 
 
+def _recover_channel_id(db, email: str, customer_id: str) -> str:
+    """Best-effort recovery of channel_id when Paddle's custom_data omits it
+    (Retain/Profitwell re-checkout, payment links, or a checkout opened before
+    the channel was attached). Without this a real payment silently fails to
+    upgrade the buyer. Tries the Paddle customer id first (exact match for a
+    returning customer), then the email across every table that maps an email
+    to a channel. Returns "" if nothing matches."""
+    try:
+        if customer_id:
+            row = db.query(UserSubscription).filter_by(paddle_customer_id=customer_id).first()
+            if row and row.channel_id:
+                return row.channel_id
+        if email:
+            row = db.query(UserSubscription).filter_by(email=email).first()
+            if row and row.channel_id:
+                return row.channel_id
+            pref = db.query(UserEmailPreferences).filter_by(email=email).first()
+            if pref and pref.channel_id:
+                return pref.channel_id
+            reg = (
+                db.query(ChannelRegistry)
+                .filter_by(owner_email=email)
+                .order_by(ChannelRegistry.id.desc())
+                .first()
+            )
+            if reg and reg.channel_id:
+                return reg.channel_id
+    except Exception as e:
+        print(f"[webhook] channel recovery error: {e}")
+    return ""
+
+
 # ── Webhook handler ────────────────────────────────────────────────────────────
 
 @router.post("/webhook")
@@ -148,11 +180,19 @@ async def paddle_webhook(request: Request):
 
     db = SessionLocal()
     try:
+        # Paddle sometimes omits custom_data.channel_id (Retain re-checkout,
+        # payment links). Recover it so a real payment never silently fails to
+        # upgrade the buyer.
+        if not channel_id:
+            channel_id = _recover_channel_id(db, email, customer_id)
+            if channel_id:
+                print(f"[webhook] recovered channel_id={channel_id} from email/customer for {event_type}")
+
         if event_type == "transaction.completed":
             # One-time purchases and lifetime plans
             meta = meta_from_price_id(data)
             if not meta or not channel_id:
-                print(f"[webhook] transaction.completed — missing meta or channel_id. custom={custom}")
+                print(f"[webhook] ALERT transaction.completed could not resolve channel — PAID BUT NOT UPGRADED. email={email} customer_id={customer_id} custom={custom}")
                 return JSONResponse({"ok": True})
 
             sub = get_or_create_subscription(db, channel_id, email)
@@ -168,6 +208,8 @@ async def paddle_webhook(request: Request):
                 _activate(sub, meta, customer_id, subscription_id)
                 db.commit()
                 print(f"[webhook] subscription.activated: activated {meta['plan']} for channel {channel_id}")
+            else:
+                print(f"[webhook] ALERT subscription.activated could not resolve channel/meta — PAID BUT NOT UPGRADED. email={email} customer_id={customer_id} custom={custom}")
 
         elif event_type == "subscription.updated":
             meta            = meta_from_price_id(data)
@@ -184,6 +226,8 @@ async def paddle_webhook(request: Request):
                 sub.channels_allowed  = meta["channels"]
                 db.commit()
                 print(f"[webhook] subscription.updated: updated plan to {meta['plan']} for channel {channel_id}")
+            else:
+                print(f"[webhook] ALERT subscription.updated could not resolve channel/meta. email={email} customer_id={customer_id} custom={custom}")
 
         elif event_type == "subscription.canceled":
             if channel_id:
