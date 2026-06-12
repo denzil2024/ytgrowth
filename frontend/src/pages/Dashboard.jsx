@@ -675,7 +675,7 @@ export default function Dashboard() {
           >
             <NavSubBtn label="SEO Studio"    active={nav === 'SEO Studio'}       onClick={() => setNav('SEO Studio')} />
             <NavSubBtn label="Thumbnails"    active={nav === 'Thumbnail Score'}  onClick={() => setNav('Thumbnail Score')} locked={billingPlan === 'free'} />
-            <NavSubBtn label="Video Ideas"   active={nav === 'Video Ideas'}      onClick={() => setNav('Video Ideas')} locked={billingPlan === 'free'} />
+            <NavSubBtn label="Video Ideas"   active={nav === 'Video Ideas'}      onClick={() => setNav('Video Ideas')} />
             <NavSubBtn label="My Videos"     active={nav === 'Videos'}           onClick={() => setNav('Videos')} />
             <NavSubBtn label="Video Review"  active={nav === 'Autopsy'}          onClick={() => setNav('Autopsy')} locked={billingPlan === 'free'} />
             <NavSubBtn label="Weekly Report" active={nav === 'Weekly Report'}    onClick={() => setNav('Weekly Report')} />

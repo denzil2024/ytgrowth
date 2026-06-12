@@ -443,6 +443,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
   const [result,   setResult]    = useState(null)  // { id, video_id, video_title, thumbnail, result }
   const [error,    setError]     = useState('')
   const [creditsOut, setCreditsOut] = useState(false)
+  const [locked, setLocked] = useState(false)  // free user hit the paid-only gate (403)
   const [videoSort, setVideoSort] = useState('date')
 
   // Build "videos at least 7 days old" client-side from the same `videos`
@@ -484,6 +485,10 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
       })
       if (r.status === 401) { window.location = '/'; return }
       if (r.status === 402) { setCreditsOut(true); return }
+      // 403 = paid-only feature lock for free users. The backend returns
+      // {"error":"locked"} here; show the upgrade modal in lock mode instead
+      // of falling through to a generic error.
+      if (r.status === 403) { setLocked(true); setCreditsOut(true); return }
       const d = await r.json()
       if (!r.ok) { setError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."); return }
       setResult(d)
@@ -791,8 +796,9 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
 
       <CreditsEmptyModal
         open={creditsOut}
-        onClose={() => setCreditsOut(false)}
-        featureName="autopsies"
+        onClose={() => { setCreditsOut(false); setLocked(false) }}
+        featureName={locked ? 'Video Review' : 'autopsies'}
+        lockMode={locked}
       />
     </div>
   )
