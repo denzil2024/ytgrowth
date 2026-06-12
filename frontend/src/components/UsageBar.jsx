@@ -95,6 +95,29 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     </span>
   ) : null
 
+  // Quiet, always-present upgrade path for free users — so the nudge exists
+  // before they ever hit the limit (alert mode only fires near/at zero).
+  // A text link, not a button: brand red (red is for CTAs), no chrome.
+  const UpgradeLink = isFreePlan ? (
+    <button
+      onClick={() => window.location.href = '/?tab=monthly'}
+      style={{
+        fontSize: 10.5, fontWeight: 700, color: dark ? '#fb6a60' : C.red,
+        background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+        fontFamily: 'inherit', letterSpacing: '0.01em', flexShrink: 0,
+        display: 'inline-flex', alignItems: 'center', gap: 3,
+        transition: 'filter 0.15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.15)' }}
+      onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
+    >
+      Upgrade
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </button>
+  ) : null
+
   /* ── Quiet mode (default). No card chrome — a borderless slim strip so
         it recedes into the footer instead of stacking as a second box
         next to the What's-new card. ──────────────────────────────────── */
@@ -124,7 +147,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
           <span style={{ fontSize: 10.5, color: C.text3, fontWeight: 500 }}>
             {refillText}
           </span>
-          {PackChip}
+          {isFreePlan ? UpgradeLink : PackChip}
         </div>
       </div>
     )
