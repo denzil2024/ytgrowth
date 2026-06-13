@@ -50,6 +50,7 @@ import {
   MissingDescriptionCard, MissingTagsCard, UnansweredCommentCard, TopSearchTermsCard,
   PinnedAIInput,
   SuggestedCompetitorsCard, RelatedTrafficCard, CompetitorActivityCard,
+  AuditLockedCard,
 } from './dashboard/feedCards'
 import {
   NavBtn, NavGroup, NavSubBtn,
@@ -118,6 +119,7 @@ export default function Dashboard() {
     try { return localStorage.getItem('ytg_feed_filter') || 'all' } catch { return 'all' }
   })
   const [auditOpen, setAuditOpen] = useState(false)
+  const [auditLocked, setAuditLocked] = useState(false)  // free user tried to open the full audit
   // Tracked Optimization Lift — the proof loop card. Fetched on mount when
   // the user is on the Overview. Null while loading or when there's no
   // meaningful win to surface yet.
@@ -1329,6 +1331,9 @@ export default function Dashboard() {
                 // Each row shows just the action verb (action.action, ~1
                 // sentence) - the long analytical problem text is now only
                 // visible when the row is expanded.
+                // Free users get a taste: only the #1 priority action shows;
+                // the rest lock behind the AuditLockedCard teaser below.
+                const isFreeAudit = billingPlan === 'free'
                 const priorityActionsBlock = data.insights?.priorityActions ? (() => {
                   const all = data.insights.priorityActions
                   const open = []
@@ -1337,7 +1342,7 @@ export default function Dashboard() {
                     const rank = a.rank ?? (i + 1)
                     const k = `rank_${rank}`
                     if (!checked[k] && !deleted[k]) open.push({ a, rank, k, idx: i })
-                    if (open.length >= 3) break
+                    if (open.length >= (isFreeAudit ? 1 : 3)) break
                   }
                   if (open.length === 0) return null
                   return (
@@ -1355,7 +1360,7 @@ export default function Dashboard() {
                           : 'Audit'
                         return {
                           rank, key: k, action: a, impact, ctaLabel,
-                          onAct: () => target ? setNav(target) : setAuditOpen(true),
+                          onAct: () => target ? setNav(target) : (isFreeAudit ? setAuditLocked(true) : setAuditOpen(true)),
                           onDone: () => {
                             const next = { ...checked, [k]: true }
                             setChecked(next)
@@ -1375,6 +1380,23 @@ export default function Dashboard() {
                     />
                   )
                 })() : null
+
+                // Free-tier teaser: how many priority actions are hidden behind
+                // upgrade (everything past the single free one shown above).
+                const priorityLockedBlock = (() => {
+                  if (!isFreeAudit) return null
+                  const all = data.insights?.priorityActions || []
+                  let openCount = 0
+                  for (let i = 0; i < all.length; i++) {
+                    const a = all[i]
+                    const rank = a.rank ?? (i + 1)
+                    const k = `rank_${rank}`
+                    if (!checked[k] && !deleted[k]) openCount++
+                  }
+                  const hidden = Math.max(0, openCount - 1)
+                  if (hidden === 0) return null
+                  return <AuditLockedCard key="audit-locked" count={hidden} onUpgrade={() => setAuditLocked(true)} />
+                })()
 
                 const dailyIdeasBlock = dailyIdeas?.ideas?.length > 0 ? (() => {
                   const dismissKey = `ytg_daily_ideas_dismissed:${data?.channel?.channel_id || 'x'}`
@@ -1857,7 +1879,8 @@ export default function Dashboard() {
                           categories={surfaced}
                           weakest={weakest}
                           open={auditOpen}
-                          onToggle={() => setAuditOpen(o => !o)}
+                          locked={isFreeAudit}
+                          onToggle={isFreeAudit ? () => setAuditLocked(true) : () => setAuditOpen(o => !o)}
                           fillHeight
                         />
                       )
@@ -1880,6 +1903,7 @@ export default function Dashboard() {
                   // after the stat strip.
                   { category: 'actions',      block: titleSuggestionBlock },
                   { category: 'actions',      block: priorityActionsBlock },
+                  { category: 'actions',      block: priorityLockedBlock },
                   { category: 'actions',      block: missingDescriptionBlock },
                   { category: 'insights',     block: nicheHeroBlock },
                   { category: 'actions',      block: missingTagsBlock },
@@ -1940,7 +1964,7 @@ export default function Dashboard() {
               now surfaces as a Feed card up above; the full grid (every
               tier per category) only renders when the user expands the
               Channel Health audit collapse. */}
-          {data && nav === 'Overview' && milestones && auditOpen && (() => {
+          {data && nav === 'Overview' && milestones && auditOpen && billingPlan !== 'free' && (() => {
             const cats = [
               { key: 'subs',        Title: 'Subscribers' },
               { key: 'views',       Title: 'Total Views' },
@@ -2081,7 +2105,7 @@ export default function Dashboard() {
               new Channel Health Feed card's "See full audit" collapse.
               The new PriorityActionCards on the Feed read from the same
               checked/deleted state, so ticking either updates both. */}
-          {data && nav === 'Overview' && data.insights && auditOpen && (
+          {data && nav === 'Overview' && data.insights && auditOpen && billingPlan !== 'free' && (
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
@@ -2661,7 +2685,7 @@ export default function Dashboard() {
               Hidden by default. The Content Mix insight surfaces as a
               Feed card above; this detailed Shorts vs long-form breakdown
               only renders when the user expands the audit collapse. */}
-          {data && nav === 'Overview' && patterns && auditOpen && (
+          {data && nav === 'Overview' && patterns && auditOpen && billingPlan !== 'free' && (
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
@@ -2826,6 +2850,12 @@ export default function Dashboard() {
         open={creditsOut}
         onClose={() => setCreditsOut(false)}
         featureName="channel audits"
+      />
+      <CreditsEmptyModal
+        open={auditLocked}
+        onClose={() => setAuditLocked(false)}
+        featureName="the full audit"
+        lockMode
       />
     </div>
   )

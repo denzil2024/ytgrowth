@@ -8,7 +8,7 @@ import {
   ArrowDown, ArrowRight, ChevronDown, ExternalLink, Eye, Flame,
   RefreshCw, Users,
   Target, Trophy, BarChart3, Activity, CalendarDays,
-  Clock, TrendingUp, Lightbulb, UserPlus,
+  Clock, TrendingUp, Lightbulb, UserPlus, Lock,
   X as XIcon,
 } from 'lucide-react'
 import { C, SHELL, DAYS_SHORT, DAYS_LONG } from './tokens'
@@ -800,7 +800,7 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
 // per-category score dots (visual), with the score chip on the right of
 // the eyebrow. The full audit (priority actions checklist, category bars,
 // quick wins, biggest risk) renders below when expanded.
-export function ChannelHealthFeedCard({ score, categories, weakest, children, open, onToggle, fillHeight = false }) {
+export function ChannelHealthFeedCard({ score, categories, weakest, children, open, onToggle, fillHeight = false, locked = false }) {
   const scoreClr =
     score >= 75 ? '#34d27b' : score >= 50 ? '#f0a23b' : C.red
   const scoreBdr =
@@ -900,19 +900,69 @@ export function ChannelHealthFeedCard({ score, categories, weakest, children, op
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
         >
-          {open ? 'Hide audit' : 'See full audit'}
-          <ChevronDown size={11} strokeWidth={2.4} style={{
-            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.2s ease',
-          }}/>
+          {locked ? (
+            <>Unlock full audit<Lock size={10} strokeWidth={2.2} /></>
+          ) : (
+            <>
+              {open ? 'Hide audit' : 'See full audit'}
+              <ChevronDown size={11} strokeWidth={2.4} style={{
+                transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease',
+              }}/>
+            </>
+          )}
         </button>
       </div>
 
-      {open && (
+      {open && !locked && (
         <div style={{ marginTop: 18 }}>
           {children}
         </div>
       )}
+    </FeedCard>
+  )
+}
+
+// Audit teaser for free users. Sits right after the single free priority
+// action and locks the rest of the action plan behind upgrade. Matches the
+// Feed card chassis (FeedCard wrapper, 16/600 title, one body line, one CTA).
+export function AuditLockedCard({ count, onUpgrade }) {
+  return (
+    <FeedCard
+      category="Your full action plan"
+      rightSlot={
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          padding: '3px 10px', borderRadius: 100,
+          border: '1px solid rgba(229,37,27,0.22)',
+          background: 'rgba(229,37,27,0.06)',
+          fontSize: 11, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.02em',
+        }}>
+          <Lock size={11} strokeWidth={2.2} /> Paid
+        </span>
+      }
+    >
+      <p style={{ fontSize: 13.5, fontWeight: 450, color: SHELL.text2, lineHeight: 1.6, margin: '0 0 14px' }}>
+        Your audit found <strong style={{ color: SHELL.text1, fontWeight: 600 }}>{count} more priority {count === 1 ? 'action' : 'actions'}</strong>. Upgrade to see every ranked move, the full channel analysis, and fresh re-audits as your channel grows.
+      </p>
+      <button
+        type="button"
+        onClick={onUpgrade}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 7,
+          padding: '9px 16px', borderRadius: 100, border: 'none', cursor: 'pointer',
+          background: 'linear-gradient(180deg, #ef3a31 0%, #e5251b 100%)',
+          color: '#fff', fontFamily: 'inherit', fontSize: 12.5, fontWeight: 600,
+          letterSpacing: '-0.01em',
+          boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.20)',
+          transition: 'filter 0.15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)' }}
+        onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
+      >
+        Unlock full audit
+        <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>· from $19/mo</span>
+      </button>
     </FeedCard>
   )
 }
