@@ -1363,14 +1363,19 @@ export default function Dashboard() {
                         return {
                           rank, key: k, action: a, impact, ctaLabel,
                           onAct: () => target ? setNav(target) : (isFreeAudit ? setAuditLocked(true) : setAuditOpen(true)),
-                          onDone: () => {
+                          // Free users get a single taste action; check/dismiss
+                          // are paid-checklist controls. Disabling them keeps the
+                          // one full action always visible — the backend only
+                          // sends rank-1 in full, so dismissing it would reveal a
+                          // redacted stub.
+                          onDone: isFreeAudit ? undefined : () => {
                             const next = { ...checked, [k]: true }
                             setChecked(next)
                             if (data?.channel?.channel_id) {
                               try { localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
                             }
                           },
-                          onDismiss: () => {
+                          onDismiss: isFreeAudit ? undefined : () => {
                             const next = { ...deleted, [k]: true }
                             setDeleted(next)
                             if (data?.channel?.channel_id) {

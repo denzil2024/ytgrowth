@@ -340,7 +340,9 @@ export function ActionsRailCard({ items }) {
                       )}
                     </div>
                   )}
+                  {(it.onDone || it.onDismiss) && (
                   <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                    {it.onDone && (
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); it.onDone() }}
@@ -357,6 +359,8 @@ export function ActionsRailCard({ items }) {
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)' }}
                     >Mark done</button>
+                    )}
+                    {it.onDismiss && (
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); it.onDismiss() }}
@@ -373,7 +377,9 @@ export function ActionsRailCard({ items }) {
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.78)' }}
                     >Dismiss</button>
+                    )}
                   </div>
+                  )}
                 </div>
               )}
             </div>

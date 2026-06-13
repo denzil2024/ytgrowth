@@ -870,6 +870,63 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         return RedirectResponse(f"{BASE_URL}?error=analysis_failed")
 
 
+# Insights fields that are part of the paid audit deliverable. Free users get
+# the score + health card + ONE priority action as a taste; everything below
+# is stripped from the /auth/data payload so it never reaches the browser (the
+# UI already hides it, but the bytes were still in the network response — a
+# real leak, same class as the SEO Feed leak fixed in 482288ae6).
+_PAID_INSIGHT_FIELDS = (
+    "quickWins", "biggestRisk", "topPerformingPattern",
+    "trafficDominantSource", "audienceSummary", "shareabilityScore",
+    "competitorBenchmark",
+)
+
+
+def _is_free_plan_channel(channel_id: str | None) -> bool:
+    """True if the channel has no paid subscription. Fails toward PAID (False)
+    on a DB hiccup so paying users never lose their audit over a transient
+    error — mirrors the Feed SEO-leak gate."""
+    if not channel_id:
+        return True
+    try:
+        db = SessionLocal()
+        try:
+            sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+            return ((sub.plan if sub else "free") or "free") == "free"
+        finally:
+            db.close()
+    except Exception:
+        return False
+
+
+def _redact_insights_for_free(insights: dict) -> dict:
+    """Return a copy of `insights` with paid deliverables removed. Keeps the
+    score, category scores, summary, and the rank-1 action in full. Every other
+    priority action collapses to {rank, locked:true} so the teaser can still
+    count them without shipping their text."""
+    if not isinstance(insights, dict):
+        return insights
+    out = dict(insights)
+    for f in _PAID_INSIGHT_FIELDS:
+        out.pop(f, None)
+
+    actions = out.get("priorityActions")
+    if isinstance(actions, list) and actions:
+        # Reveal the single lowest-rank (top) action in full; stub the rest.
+        def _rank(a, i):
+            try:
+                return a.get("rank", i + 1)
+            except Exception:
+                return i + 1
+        ranked = sorted(enumerate(actions), key=lambda p: _rank(p[1], p[0]))
+        top_idx = ranked[0][0]
+        out["priorityActions"] = [
+            a if i == top_idx else {"rank": _rank(a, i), "locked": True}
+            for i, a in enumerate(actions)
+        ]
+    return out
+
+
 @router.get("/data")
 def get_data(request: Request):
     session_id = request.session.get("session_id")
@@ -906,6 +963,16 @@ def get_data(request: Request):
                 db.close()
         except Exception as e:
             print(f"[/auth/data] DB sync error: {e}")
+
+    # Free-tier redaction: strip paid audit deliverables before they leave the
+    # server. The browser already hides them, but they were still present in
+    # this response — a free user could read the full action plan, quick wins,
+    # biggest risk, audience + competitor intelligence straight from DevTools.
+    insights = data.get("insights")
+    if isinstance(insights, dict):
+        channel_id = (data.get("channel") or {}).get("channel_id")
+        if _is_free_plan_channel(channel_id):
+            data = {**data, "insights": _redact_insights_for_free(insights)}
 
     return JSONResponse(data)
 
