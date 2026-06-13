@@ -45,6 +45,26 @@ from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
 
+def _is_free_plan(channel_id: str) -> bool:
+    """True if the channel has no paid subscription. Used to gate the Feed's
+    AI-generated SEO cards (title / description / tags / comment) for free
+    users: those reproduce paid SEO Studio output, so free users get the audit
+    taste, not the full SEO deliverables for free. Fails toward showing the
+    card on a DB hiccup so paid users never lose cards over a transient error."""
+    if not channel_id:
+        return True
+    try:
+        from database.models import UserSubscription
+        db = SessionLocal()
+        try:
+            sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+            return ((sub.plan if sub else "free") or "free") == "free"
+        finally:
+            db.close()
+    except Exception:
+        return False
+
+
 router = APIRouter()
 
 
@@ -1046,6 +1066,11 @@ def title_suggestion(request: Request):
     if not channel_id or not videos:
         return JSONResponse({"ok": True, "video": None})
 
+    # Paid depth: free users get SEO suggestions by running SEO Studio (a trial
+    # feature), not free-and-unlimited on the Feed.
+    if _is_free_plan(channel_id):
+        return JSONResponse({"ok": True, "video": None, "locked": True})
+
     from app.insights import parse_duration_seconds
 
     # Pick: the user's TOP-PERFORMING video by views (was most-recent).
@@ -1302,6 +1327,11 @@ def missing_description(request: Request):
     channel_id = channel.get("channel_id", "") or ""
     if not channel_id or not videos:
         return JSONResponse({"ok": True, "video": None, "_debug": {"halted": "no_channel_or_videos", "channel_id": bool(channel_id), "videos_n": len(videos)}} if debug else {"ok": True, "video": None})
+
+    # Paid depth: free users get descriptions via SEO Studio (a trial feature),
+    # not free-and-unlimited on the Feed.
+    if _is_free_plan(channel_id):
+        return JSONResponse({"ok": True, "video": None, "locked": True})
 
     from app.insights import parse_duration_seconds
 
@@ -1790,6 +1820,11 @@ def missing_tags(request: Request):
     if not channel_id or not videos:
         return JSONResponse({"ok": True, "video": None, "_debug": {"halted": "no_channel_or_videos"}} if debug else {"ok": True, "video": None})
 
+    # Paid depth: free users get tag suggestions via SEO Studio (a trial
+    # feature), not free-and-unlimited on the Feed.
+    if _is_free_plan(channel_id):
+        return JSONResponse({"ok": True, "video": None, "locked": True})
+
     from app.insights import parse_duration_seconds
 
     TAG_FLOOR = 5
@@ -2047,6 +2082,11 @@ def unanswered_comment(request: Request, force: int = 0):
     channel_id = channel.get("channel_id", "") or ""
     if not channel_id or not videos:
         return JSONResponse({"ok": True, "comment": None})
+
+    # Paid depth: AI comment-reply drafts are not part of the free taste. Also
+    # spares the commentThreads.list quota on a cohort that doesn't pay.
+    if _is_free_plan(channel_id):
+        return JSONResponse({"ok": True, "comment": None, "locked": True})
 
     from app.insights import parse_duration_seconds
     from app.youtube import get_unanswered_comments_for_video
