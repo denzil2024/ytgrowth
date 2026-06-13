@@ -54,11 +54,41 @@ function useReferralsStyles() {
   }, [])
 }
 
-const STATS = [
-  { value: '30%',     label: 'Recurring commission', sub: 'Every payment, not just the first' },
-  { value: '30 days', label: 'Cookie window',        sub: 'Standard attribution window' },
-  { value: '$50',     label: 'Payout minimum',       sub: 'Monthly via PayPal or bank' },
+const COMMISSION = 0.30 // 30% recurring
+const TIERS = [
+  { name: 'Solo',   price: 19 },
+  { name: 'Growth', price: 49 },
+  { name: 'Agency', price: 149 },
 ]
+const PER_REFERRAL = 49 * COMMISSION  // Growth-plan assumption, captioned
+const REF_OPTIONS = [1, 3, 5]
+
+/* Lightweight area-line chart in the Feed's red-gradient grammar.
+   12 monthly points; recurring income stacks linearly as referrals
+   accumulate (no fake exponential). */
+function ProjectionChart({ perMonth }) {
+  const W = 1000, H = 150
+  const months = 12
+  const pts = Array.from({ length: months }, (_, i) => perMonth * (i + 1) * PER_REFERRAL)
+  const max = pts[pts.length - 1] || 1
+  const x = (i) => (i / (months - 1)) * W
+  const y = (v) => H - (v / max) * (H - 10) - 4
+  const line = pts.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')
+  const area = `M0,${H} L ${pts.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' L ')} L ${W},${H} Z`
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: 150, display: 'block' }}>
+      <defs>
+        <linearGradient id="ref-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="rgba(229,37,27,0.18)" />
+          <stop offset="100%" stopColor="rgba(229,37,27,0)" />
+        </linearGradient>
+      </defs>
+      <path d={area} fill="url(#ref-fill)" />
+      <polyline points={line} fill="none" stroke="#e5251b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      <circle cx={x(months - 1)} cy={y(pts[pts.length - 1])} r="4.5" fill="#e5251b" />
+    </svg>
+  )
+}
 
 const STEPS = [
   { n: '1', title: 'Copy your link',    body: 'Grab your unique referral link from the dashboard below. Anyone who signs up through it is tied to your account.' },
@@ -71,6 +101,7 @@ export default function Referrals() {
   const [token, setToken] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [refsPerMonth, setRefsPerMonth] = useState(3)
 
   useEffect(() => {
     let cancelled = false
@@ -111,16 +142,93 @@ export default function Referrals() {
         </p>
       </div>
 
-      {/* ── Stats strip ─────────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 28 }}>
-        {STATS.map(s => (
-          <div key={s.label} style={{ ...CARD, padding: '18px 20px' }}>
-            <p style={{ fontSize: 26, fontWeight: 800, color: C.red, letterSpacing: '-0.6px', lineHeight: 1.05, marginBottom: 7, fontVariantNumeric: 'tabular-nums' }}>{s.value}</p>
-            <p style={{ fontSize: 13.5, fontWeight: 600, color: C.ink, letterSpacing: '-0.1px' }}>{s.label}</p>
-            <p style={{ fontSize: 12, fontWeight: 450, color: C.ink55, marginTop: 3, lineHeight: 1.45 }}>{s.sub}</p>
+      {/* ── Earning potential — the lure ────────────────────────────────── */}
+      {(() => {
+        const headline = Math.round(refsPerMonth * 12 * PER_REFERRAL)
+        return (
+          <div style={{ ...CARD, padding: '22px 24px 20px', marginBottom: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+              <div style={{ minWidth: 0 }}>
+                <p className="ref-eyebrow" style={{ marginBottom: 8 }}>Your earning potential</p>
+                <p style={{ fontSize: 28, fontWeight: 800, color: C.ink, letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+                  ${headline.toLocaleString()}<span style={{ fontSize: 15, fontWeight: 600, color: C.ink55, letterSpacing: '-0.1px' }}> /mo recurring by month 12</span>
+                </p>
+                <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 6, lineHeight: 1.5 }}>
+                  Illustrative. Assumes the Growth plan ($49/mo) and that referrals stay subscribed.
+                </p>
+              </div>
+              {/* Quiet soft-grey segmented toggle — referrals per month */}
+              <div style={{ display: 'inline-flex', gap: 4, padding: 3, background: 'rgba(10,10,15,0.04)', borderRadius: 100, flexShrink: 0 }}>
+                {REF_OPTIONS.map(n => {
+                  const active = n === refsPerMonth
+                  return (
+                    <button key={n} onClick={() => setRefsPerMonth(n)} style={{
+                      padding: '6px 14px', borderRadius: 100, border: 'none', cursor: 'pointer',
+                      fontFamily: 'inherit', fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
+                      background: active ? '#ffffff' : 'transparent',
+                      color: active ? C.ink : C.ink55,
+                      boxShadow: active ? '0 1px 2px rgba(15,15,25,0.06)' : 'none',
+                      transition: 'background 0.15s, color 0.15s',
+                    }}>{n}/mo</button>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 16 }}>
+              <ProjectionChart perMonth={refsPerMonth} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 500, color: C.ink45 }}>Month 1</span>
+                <span style={{ fontSize: 11, fontWeight: 500, color: C.ink45 }}>Month 12</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18, marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.hair}` }}>
+              {[
+                ['30%', 'recurring commission'],
+                ['30-day', 'cookie window'],
+                ['$50', 'payout minimum'],
+                ['Monthly', 'PayPal or bank'],
+              ].map(([v, l]) => (
+                <span key={l} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: C.ink, fontVariantNumeric: 'tabular-nums' }}>{v}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55 }}>{l}</span>
+                </span>
+              ))}
+            </div>
           </div>
-        ))}
+        )
+      })()}
+
+      {/* ── What each referral is worth — per-tier bars ─────────────────── */}
+      <p className="ref-eyebrow" style={{ marginBottom: 12 }}>What each referral is worth</p>
+      <div style={{ ...CARD, padding: '22px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 28, height: 150 }}>
+          {TIERS.map(t => {
+            const monthly = t.price * COMMISSION
+            const maxMonthly = TIERS[TIERS.length - 1].price * COMMISSION
+            const h = Math.max(8, (monthly / maxMonthly) * 116)
+            return (
+              <div key={t.name} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+                <span style={{ fontSize: 15, fontWeight: 800, color: C.ink, letterSpacing: '-0.3px', fontVariantNumeric: 'tabular-nums', marginBottom: 8 }}>
+                  ${monthly.toFixed(2)}<span style={{ fontSize: 11.5, fontWeight: 600, color: C.ink45 }}>/mo</span>
+                </span>
+                <div style={{
+                  width: '100%', maxWidth: 120, height: h, borderRadius: '8px 8px 0 0',
+                  background: `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 100%)`,
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2)',
+                }} />
+                <span style={{ fontSize: 13, fontWeight: 600, color: C.ink, marginTop: 10 }}>{t.name}</span>
+                <span style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 2 }}>${t.price}/mo plan</span>
+              </div>
+            )
+          })}
+        </div>
+        <p style={{ fontSize: 12, fontWeight: 450, color: C.ink55, marginTop: 18, paddingTop: 14, borderTop: `1px solid ${C.hair}`, lineHeight: 1.5 }}>
+          Recurring monthly commission per referred creator. One Agency referral clears the $50 payout minimum in about two months.
+        </p>
       </div>
+      <div style={{ height: 28 }} />
 
       {/* ── How it works ────────────────────────────────────────────────── */}
       <p className="ref-eyebrow" style={{ marginBottom: 12 }}>How it works</p>
@@ -182,7 +290,7 @@ export default function Referrals() {
       <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 16, marginBottom: 48, lineHeight: 1.6, textAlign: 'center', letterSpacing: '-0.005em' }}>
         Full program details on the{' '}
         <a href="/affiliate" target="_blank" rel="noopener noreferrer" style={{ color: C.ink70, fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: 2 }}>public affiliate page</a>
-        {' '}— earnings calculator, FAQ, comparisons.
+        {' '}has the earnings calculator, FAQ, and plan comparisons.
       </p>
     </div>
   )
