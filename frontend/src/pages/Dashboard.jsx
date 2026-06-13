@@ -895,6 +895,7 @@ export default function Dashboard() {
                       setAnalyzingAI(false)
                       if (r.status === 401) { window.location = '/'; return }
                       if (r.status === 402) { setCreditsOut(true); return }
+                      if (r.status === 403) { setAuditLocked(true); return }  // re-audits are paid
                       const d = await r.json().catch(() => ({}))
                       setReAuditError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
                       setTimeout(() => setReAuditError(''), 8000)
@@ -1007,6 +1008,7 @@ export default function Dashboard() {
                             return
                           }
                           if (r.status === 402) { setCreditsOut(true); return }
+                          if (r.status === 403) { setAuditLocked(true); return }  // re-audits are paid
                           const d = await r.json().catch(() => ({}))
                           setReAuditError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
                           setTimeout(() => setReAuditError(''), 8000)

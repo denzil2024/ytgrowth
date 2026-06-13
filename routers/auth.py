@@ -941,23 +941,28 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
     is_free_plan = plan == "free"
 
     if is_free_plan:
-        # Free re-audit: no credit charged, NOT drawn from the 5-credit
-        # trial pool. Rate-limited to once / 7 days so it can't become an
-        # uncached-Claude money leak on a cohort that does not pay.
-        retry_days = _free_audit_retry_days(channel_id)
-        if retry_days > 0:
+        # Free plan: the FIRST audit is free (the signup hook). RE-audits are a
+        # paid feature — refreshing the audit as the channel grows is part of
+        # the upgrade. This both stops the recurring uncached-Claude cost on a
+        # cohort that doesn't pay, and gives a concrete reason to upgrade.
+        # A failed first audit lands a "fallback mode" insights blob; allow a
+        # free retry in that case so a broken first run isn't paywalled.
+        existing = data.get("insights")
+        is_fallback = bool(
+            existing and "fallback mode" in str(existing.get("channelSummary", "")).lower()
+        )
+        already_audited = bool(existing) and not is_fallback
+        if already_audited:
             return JSONResponse(
                 {
                     "error": (
-                        f"Your channel audit refreshes once a week on the free plan. "
-                        f"Try again in {retry_days} day{'s' if retry_days != 1 else ''}. "
-                        f"Your trial credits are for SEO Studio, Outliers, and Competitor Analysis, "
-                        f"so they don't apply to re-audits. Upgrade for on-demand re-audits."
+                        "Re-audits are a paid feature. Your first audit is free; "
+                        "upgrade to refresh it on demand as your channel grows."
                     ),
                     "show_upgrade": True,
-                    "rate_limited": True,
+                    "locked": True,
                 },
-                status_code=429,
+                status_code=403,
             )
         _stamp_last_audit(channel_id)
     else:
