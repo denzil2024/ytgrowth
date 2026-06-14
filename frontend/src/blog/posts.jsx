@@ -7905,9 +7905,10 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   },
   {
     slug: 'youtube-algorithm',
-    title: "Stop Gaming the Bot: The 2026 Guide to YouTube's Audience-First Algorithm",
-    excerpt: 'The YouTube algorithm does not push videos out to audiences. It pulls them toward viewers most likely to finish them. The complete 2026 guide to the three discovery engines, the three metrics that move the needle, and the myths to stop chasing.',
+    title: "YouTube Algorithm 2026: How Discovery Works (Stop Gaming the Bot)",
+    excerpt: 'How the YouTube algorithm works in 2026: the three discovery engines, the three metrics that move the needle, and the myths to stop chasing.',
     date: '2026-05-07',
+    updated: '2026-06-14',
     category: CATEGORIES.strategy,
     cover: '/blog/youtube-algorithm-cover.webp',
     author: 'Denzil',
