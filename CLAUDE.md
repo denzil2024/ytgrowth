@@ -128,6 +128,10 @@ When adding a new blog post or public route, do everything end-to-end in one pus
 
 Missing the prerender step ships an empty SPA shell to crawlers (broken SEO). The full workflow is non-negotiable.
 
+## Blog post conclusions
+
+Never end a post with a generic "Final Thoughts" or "Conclusion" heading. The final H2 must be a creative, content-specific line tied to the article's thesis (example: the Chrome-extensions post closes with "Six Tools Beat Twenty"). Generic headings read like a beginner template and waste the most memorable slot in the piece. Still end with a real conclusion, not a sales pitch (the CTA card belongs mid-article). Sweep older posts' generic conclusion headings whenever you touch them.
+
 
 ---
 

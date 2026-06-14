@@ -310,7 +310,7 @@ export const posts = [
 
         <p>For a lot of the research and analysis above, a web app does the same job without asking for browser-wide permissions or adding overhead to YouTube. That is the trade-off worth weighing: an extension is convenient because it sits on the page, but a dedicated tool like <a href="/features/competitor-analysis">competitor analysis</a> or <a href="/features/keyword-research">keyword research</a> keeps the access it needs contained to one site you choose to visit. For account-level safety, that separation is a feature, not a limitation.</p>
 
-        <h2>Final Thoughts</h2>
+        <h2>Six Tools Beat Twenty</h2>
 
         <p>The best Chrome extension setup for YouTube is <strong>not the longest one</strong>. It is the smallest stack that genuinely improves how you research, analyze, produce, and manage your channel, chosen deliberately and vetted before you install. A creator running <strong>six well-chosen tools</strong> will out-work one running twenty, because the six are doing real jobs while the rest mostly add lag and risk.</p>
 
