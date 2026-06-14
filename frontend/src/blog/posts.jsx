@@ -102,7 +102,7 @@ export const posts = [
     readTime: '11 min read',
     content: () => (
       <>
-        <p>Two creators can post videos in the same week, pull similar view counts, and end up with completely different amounts in their AdSense accounts. The difference is rarely about effort or production quality. It almost always comes down to YouTube RPM.</p>
+        <p>Two creators can post videos in the same week, pull similar view counts, and end up with completely different amounts in their <a href="/blog/google-adsense-youtube">AdSense accounts</a>. The difference is rarely about effort or production quality. It almost always comes down to YouTube RPM.</p>
 
         <p>Most creators check their views first. Views feel like the scoreboard. But views only tell you how many people watched. <strong>RPM tells you how much each of those watches was worth.</strong> A channel pulling 100,000 views at $8 RPM earns more than a channel pulling 300,000 views at $2 RPM. That gap is not luck. It is the result of decisions around niche, format, audience geography, and video length that compound over time.</p>
 
@@ -223,7 +223,7 @@ export const posts = [
 
         <p>YouTube Shorts RPM sits in a completely different category. Shorts operates on a pooled revenue model where ad income from the Shorts feed is distributed across eligible creators based on their share of engaged views that month. Verified creator data puts <strong>Shorts RPM between $0.03 and $0.08 per 1,000 views</strong> in 2026, roughly 95% lower than long-form content in the same niche. <strong>Shorts are a discovery and growth tool. They are not a reliable revenue driver at most channel sizes.</strong></p>
 
-        <p>If you want to estimate what your channel could realistically earn based on your niche and audience country before making any content changes, the free <a href="/tools/youtube-money-calculator">YouTube Money Calculator</a> runs the numbers by niche and geography with no signup required.</p>
+        <p>If you want to estimate what your channel could realistically earn based on your niche and audience country before making any content changes, the free <a href="/tools/youtube-money-calculator">YouTube Money Calculator</a> runs the numbers by niche and geography with no signup required. To work backward from a subscriber target instead, the <a href="/tools/youtube-subscriber-money-calculator">YouTube subscriber money calculator</a> estimates earnings by audience size.</p>
 
         <blockquote><strong>Pro Tip:</strong> If your channel sits at the lower end of your niche's RPM range and your audience geography skews away from tier-one markets, do not chase a niche pivot first. Add memberships, enable Super Thanks on every upload, and place mid-rolls manually on every video over 8 minutes. Those three changes lift the existing RPM without changing what you create. A niche pivot rebuilds the audience from scratch and should be the last move, not the first.</blockquote>
 
@@ -409,7 +409,7 @@ export const posts = [
 
         <h2>YouTube Studio: The Free Starting Point</h2>
 
-        <p>Before spending anything on a third-party tool, every creator should exhaust what YouTube Studio already provides. It is the only platform with direct authenticated access to your channel's actual data, and its keyword signals are based on real viewer behavior, not estimates.</p>
+        <p>Before spending anything on a <a href="/blog/youtube-analytics-tools">third-party tool</a>, every creator should exhaust what YouTube Studio already provides. It is the only platform with direct authenticated access to your channel's actual data, and its keyword signals are based on real viewer behavior, not estimates.</p>
 
         <p>The <strong>Inspiration tab inside YouTube Studio Analytics</strong> is the most underused YouTube keyword tool available to any creator. It shows you topics your existing audience is actively searching for, content gaps your channel has not covered yet, and rising queries in your niche pulling views on other channels. All of it is free and updated continuously based on your actual audience data.</p>
 
@@ -1953,7 +1953,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h2>How to Write Title and Description in YouTube Together</h2>
 
-        <p>Your title and description are not two separate tasks. They are two parts of the same signal you send to YouTube about what your video covers and who it is for. A strong title with a weak description leaves half that signal incomplete.</p>
+        <p>Your title and <a href="/blog/youtube-description-template">description</a> are not two separate tasks. They are two parts of the same signal you send to YouTube about what your video covers and who it is for. A strong title with a weak description leaves half that signal incomplete.</p>
 
         <p>The description's first two sentences carry the most SEO weight of anything you write below the title. YouTube reads those opening lines as the primary context for your video's topic alongside the title itself.</p>
 
