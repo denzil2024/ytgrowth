@@ -91,6 +91,234 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'chrome-extensions-for-youtube',
+    title: 'The Best Chrome Extensions for YouTube Creators in 2026 (and How to Choose Them)',
+    excerpt: 'The Chrome extensions worth installing in 2026, grouped by what creators really do: keyword research, competitor and outlier analysis, recording, and workflow. Plus how to vet an extension before you trust it with your channel and how to build a lean stack that does not slow your browser.',
+    date: '2026-06-14',
+    category: CATEGORIES.seo,
+    cover: '/blog/chrome-extensions-for-youtube-cover.jpg',
+    author: 'Denzil',
+    readTime: '13 min read',
+    content: () => (
+      <>
+        <p>The Chrome Web Store has hundreds of extensions that promise to make you a better YouTuber, and <strong>most of them will do the opposite</strong>. Each one you install adds a little browser lag, a little more surface area for your data to leak, and a little more clutter to an interface that is already busy enough. The creators who get real value out of extensions are not the ones with the longest list. They are the ones who install <strong>the right six or eight and ignore everything else</strong>.</p>
+
+        <p>This guide is built around that principle. Instead of a flat list of every tool that exists, the fifteen extensions below are <strong>numbered and grouped by the job they do</strong> in a real creator workflow: researching what to make, studying the competition, recording, and customizing how you work inside YouTube. Each one is judged on what it is best at, what it costs, and where it falls short, so you build a lean stack rather than a bloated one.</p>
+
+        <p>One note before the list. Every extension here gets access to your browser, and <strong>a few connect directly to your YouTube account</strong>. That access is the price of the convenience, and it is only worth paying for tools that are well maintained and trustworthy. The last two sections cover how to vet an extension before you install it, and how to build a minimal stack for your type of channel.</p>
+
+        <h2>Keyword and SEO Research Extensions</h2>
+
+        <p>Start here. The single highest-leverage thing an extension can do is <strong>tell you what to make before you spend hours making it</strong>. These four surface search demand, tag data, and ranking signals directly on the pages you are already looking at.</p>
+
+        <h3>1. vidIQ</h3>
+
+        <p><strong>Best for keyword research and SEO scoring.</strong> Overlays a <strong>search volume and competition score</strong> on any YouTube search, suggests tags, and tracks competitors without leaving the page. The free tier validates a topic fast; paid plans add AI tools and daily ideas. The trade-off is a hard upsell and a fair amount of its own UI layered onto YouTube. Our <a href="/blog/vidiq-review">vidIQ review</a> covers where it earns its price.</p>
+
+        <h3>2. TubeBuddy</h3>
+
+        <p><strong>Best for optimizing videos inside YouTube Studio.</strong> Grades each keyword on competition and <strong>your channel's odds of ranking</strong> for it, then bulk-edits cards, end screens, and descriptions across many videos at once. Most of its power sits behind paid tiers and only appears with Studio open. The <a href="/blog/tubebuddy-vs-vidiq">TubeBuddy vs vidIQ comparison</a> covers which one fits your workflow.</p>
+
+        <h3>3. Keywords Everywhere</h3>
+
+        <p><strong>Best for cross-checking demand on Google.</strong> Shows <strong>monthly search volume and competition</strong> under the search bar on both Google and YouTube, so you can see whether a topic has pull before you film. It is now a low-cost, credit-based tool with no free tier. Pairs well with the workflow in our <a href="/blog/youtube-keyword-research-tools">keyword research tools</a> guide.</p>
+
+        <h3>4. Ahrefs SEO Toolbar</h3>
+
+        <p><strong>Best for ranking videos on Google, not just YouTube.</strong> Surfaces <strong>keyword difficulty and search volume</strong> on any page, which helps you judge when a video can win a Google result instead of a blog post. It is built for web SEO first, so its YouTube value is indirect. Worth it only if you want your <a href="/blog/what-is-youtube-seo">YouTube SEO</a> reaching Google search.</p>
+
+        <blockquote><strong>Pro tip:</strong> a tool's homepage is a weak keyword seed because it ranks mostly for brand and spam terms. When you plug a competitor into your keyword tool, use a <strong>content URL</strong> (their blog, not their product page) to surface the informational keywords you can win.</blockquote>
+
+        <CtaCard
+          to="/features/keyword-research"
+          title="Skip the extension and research keywords in the browser"
+          sub="Keyword Research surfaces search demand, competition, and ranked opportunities with no overlay on YouTube and no account access to grant. Free to try."
+          button="Try Keyword Research →"
+        />
+
+        <h2>Competitor and Outlier Analysis Extensions</h2>
+
+        <p>Once you know what to make, the next question is <strong>what is already working</strong>. These read other channels and videos for you, flagging the breakout performers so you study winners instead of guessing.</p>
+
+        <h3>5. Social Blade</h3>
+
+        <p><strong>Best for a fast size-up of any channel.</strong> Drops <strong>subscribers, total views, estimated earnings, and a grade</strong> onto channel pages so you can judge a competitor's trajectory in seconds. Treat the earnings as rough estimates from public view counts, not real revenue. For how those numbers really work, see <a href="/blog/youtube-cpm">CPM</a> and <a href="/blog/youtube-rpm">RPM</a>.</p>
+
+        <h3>6. OutlierKit</h3>
+
+        <p><strong>Best for free outlier detection.</strong> Paints a <strong>color-coded outlier score</strong> on a channel's Videos tab, so the uploads that beat that channel's norm jump out instantly. It is narrower than the full suites, and that focus is the point. It works with no account, which makes it easy to keep installed.</p>
+
+        <h3>7. Viewstats</h3>
+
+        <p><strong>Best for reading how a video earned its momentum.</strong> Adds <strong>views-over-time graphs and title and thumbnail history</strong>, so you can see the swap that moved the numbers, not just the final count. The richest data is paid. Useful when you are reverse engineering a competitor's <a href="/blog/youtube-thumbnail-ideas">thumbnail decisions</a>.</p>
+
+        <h3>8. 1of10</h3>
+
+        <p><strong>Best for building an idea pipeline from proven winners.</strong> Flags videos that hit <strong>roughly ten times</strong> their channel's typical views while you browse. Its real value lives in the paid plans, so it suits creators who research ideas at volume. Our <a href="/blog/youtube-analytics-tools">analytics tools</a> roundup shows where it fits.</p>
+
+        <blockquote><strong>Pro tip:</strong> when an outlier tool flags a breakout video, study the <strong>first thirty seconds and the thumbnail</strong>, not the topic. The packaging and the hook are usually what broke it out, and those are the parts you can replicate on your own channel.</blockquote>
+
+        <CtaCard
+          to="/features/competitor-analysis"
+          title="Get competitor and outlier data without installing anything"
+          sub="Competitor Analysis pulls any channel's top performers, scores their view-to-subscriber ratios, and surfaces the gaps worth attacking, all in the browser with no permissions to grant. Free to try."
+          button="Try Competitor Analysis →"
+        />
+
+        <h2>Recording and Production Extensions</h2>
+
+        <p>Research tells you what to make. This group helps you make it, covering <strong>screen recording and tutorial capture</strong>, where a lot of educational and software channels live.</p>
+
+        <h3>9. Loom</h3>
+
+        <p><strong>Best for fast screen-and-camera recording.</strong> Records both and hands you a <strong>shareable link the moment you stop</strong>, with an auto transcript and AI summary to seed a description. The free tier caps recording length and library size, so daily recorders will outgrow it, but for demos and async updates it is more than enough.</p>
+
+        <h3>10. Screencastify</h3>
+
+        <p><strong>Best for Chrome-native screen capture.</strong> Records, lightly edits, and <strong>exports straight to YouTube or Drive</strong>, keeping a tutorial workflow in the browser from capture to upload. The free tier carries length limits, so check the current cap before relying on it for full-length videos.</p>
+
+        <h3>11. Vidyard</h3>
+
+        <p><strong>Best for video with viewer analytics.</strong> Adds branded sharing pages and <strong>watch-time tracking</strong> that tells you how much of each video people really watched. It earns its place when video is part of a business workflow, outreach, or course delivery rather than a pure YouTube upload.</p>
+
+        <h3>12. Scribe</h3>
+
+        <p><strong>Best for turning a process into a written guide.</strong> Captures your clicks into a <strong>step-by-step document with screenshots</strong>, a fast way to produce the written companion that pairs with a how-to video. It makes documentation, not video, so pair it with a recorder rather than using it alone.</p>
+
+        <blockquote><strong>Pro tip:</strong> record once, publish twice. Capture a tutorial with Loom or Screencastify and run the same process through Scribe to get a <strong>written guide for your blog</strong>, doubling the SEO surface from a single session.</blockquote>
+
+        <h2>Workflow and Customization Extensions</h2>
+
+        <p>The last creator-facing group does not make or research content. It changes <strong>how you work inside YouTube</strong>, from reviewing your own footage closely to summarizing long competitor videos in seconds.</p>
+
+        <h3>13. Enhancer for YouTube</h3>
+
+        <p><strong>Best for customizing playback and the interface.</strong> Adds <strong>speed controls, cinema mode, default quality, and volume boost</strong>, all configurable, which is ideal for reviewing your own footage closely. Free, donation-supported, and well maintained, it does so much that it takes a few minutes to set up the way you want, after which it fades into the background.</p>
+
+        <h3>14. Glasp YouTube Summary</h3>
+
+        <p><strong>Best for fast competitor research.</strong> Generates a transcript and AI summary of any video, turning a <strong>thirty-minute upload into a one-minute skim</strong>. Summaries miss tone and anything visual, so use them to triage which videos deserve a full watch, not to replace watching the ones that matter.</p>
+
+        <h3>15. Language Reactor</h3>
+
+        <p><strong>Best for captions and localization.</strong> Shows <strong>dual-language subtitles</strong> for checking translated captions and studying how creators in other languages structure content. It was built for language learners, so install it only if a multilingual audience is genuinely part of your plan.</p>
+
+        <h2>Viewer-Side Extensions Every Creator Should Understand</h2>
+
+        <p>These three are not tools for managing your channel. They change how <strong>millions of viewers experience YouTube</strong>, which makes them required knowledge. If a large share of your audience runs them, they quietly reshape how your intros, titles, and thumbnails land.</p>
+
+        <h3>SponsorBlock</h3>
+
+        <p><strong>Crowdsourced skipping of sponsor reads, intros, and self-promotion.</strong> The lesson for creators: a meaningful slice of your audience <strong>never hears the sponsor segment you were paid for</strong>. Tighter, better-integrated reads survive the skip far better than long, obvious ones.</p>
+
+        <h3>Return YouTube Dislike</h3>
+
+        <p><strong>Restores an estimated dislike count</strong> after YouTube hid the public number. Visible mixed reactions add click hesitation, so it is a reminder that viewers still gauge sentiment before clicking. The figures are estimates, so read them as a <strong>rough signal, not a verdict</strong>.</p>
+
+        <h3>DeArrow</h3>
+
+        <p><strong>Swaps clickbait titles and thumbnails for neutral, crowdsourced alternatives.</strong> It shows how some viewers see you <strong>stripped of your packaging</strong> and signals a real fatigue with exaggerated framing. Keep strong packaging, but make sure the <a href="/blog/youtube-title">title</a> and thumbnail deliver on the click.</p>
+
+        <h2>YouTube Chrome Extensions at a Glance</h2>
+
+        <p>All fifteen creator tools plus the three viewer-side extensions, grouped by job. <strong>Pricing</strong> is Free, Freemium (a free tier plus a paid upgrade), or Paid. The <strong>Account</strong> column flags what each one asks you to sign into, because that is the real privacy cost: "None" runs in the browser only, "Sign-up" needs an app login, and "YouTube login" connects to your channel.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Extension</th>
+              <th>Best for</th>
+              <th>Pricing</th>
+              <th>Account</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colSpan="4" style={{ background: 'var(--ytg-bg-2)', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}><strong>Keyword and SEO research</strong></td></tr>
+            <tr><td>vidIQ</td><td>Keyword research and SEO scores</td><td>Freemium</td><td>YouTube login</td></tr>
+            <tr><td>TubeBuddy</td><td>In-Studio optimization and bulk edits</td><td>Freemium</td><td>YouTube login</td></tr>
+            <tr><td>Keywords Everywhere</td><td>Search volume on Google and YouTube</td><td>Paid</td><td>Sign-up</td></tr>
+            <tr><td>Ahrefs SEO Toolbar</td><td>Google ranking signals for videos</td><td>Free</td><td>Sign-up</td></tr>
+            <tr><td colSpan="4" style={{ background: 'var(--ytg-bg-2)', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}><strong>Competitor and outlier analysis</strong></td></tr>
+            <tr><td>Social Blade</td><td>Fast channel size and trend check</td><td>Freemium</td><td>None</td></tr>
+            <tr><td>OutlierKit</td><td>Spotting breakout videos</td><td>Freemium</td><td>None</td></tr>
+            <tr><td>Viewstats</td><td>Views-over-time and thumbnail history</td><td>Freemium</td><td>None</td></tr>
+            <tr><td>1of10</td><td>Idea research from 10x outliers</td><td>Freemium</td><td>Sign-up</td></tr>
+            <tr><td colSpan="4" style={{ background: 'var(--ytg-bg-2)', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}><strong>Recording and production</strong></td></tr>
+            <tr><td>Loom</td><td>Fast screen and camera recording</td><td>Freemium</td><td>Sign-up</td></tr>
+            <tr><td>Screencastify</td><td>Chrome-native screen recording</td><td>Freemium</td><td>Sign-up</td></tr>
+            <tr><td>Vidyard</td><td>Recording with viewer analytics</td><td>Freemium</td><td>Sign-up</td></tr>
+            <tr><td>Scribe</td><td>Step-by-step tutorial capture</td><td>Freemium</td><td>Sign-up</td></tr>
+            <tr><td colSpan="4" style={{ background: 'var(--ytg-bg-2)', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}><strong>Workflow and customization</strong></td></tr>
+            <tr><td>Enhancer for YouTube</td><td>Playback and interface customization</td><td>Free</td><td>None</td></tr>
+            <tr><td>Glasp YouTube Summary</td><td>Fast AI summaries for research</td><td>Freemium</td><td>Sign-up</td></tr>
+            <tr><td>Language Reactor</td><td>Dual subtitles and localization</td><td>Freemium</td><td>None</td></tr>
+            <tr><td colSpan="4" style={{ background: 'var(--ytg-bg-2)', textTransform: 'uppercase', fontSize: '12px', letterSpacing: '0.05em' }}><strong>Viewer-side (know these)</strong></td></tr>
+            <tr><td>SponsorBlock</td><td>Understanding sponsor-skip behavior</td><td>Free</td><td>None</td></tr>
+            <tr><td>Return YouTube Dislike</td><td>Reading audience sentiment</td><td>Free</td><td>None</td></tr>
+            <tr><td>DeArrow</td><td>Seeing how viewers de-clickbait you</td><td>Free</td><td>None</td></tr>
+          </tbody>
+        </table>
+
+        <h2>How to Choose a Safe YouTube Extension</h2>
+
+        <p>An extension is not a harmless add-on. It is code running inside your browser with the access you grant it, and a few of the tools above connect directly to your YouTube account. That makes vetting them part of the job, not an afterthought. The following checks take a minute each and rule out the extensions most likely to cause problems.</p>
+
+        <ul>
+          <li><strong>Install only from the Chrome Web Store.</strong> Extensions distributed outside the official store skip Google's review and are where most malicious lookalikes live. If a tool asks you to sideload it from a website, treat that as a reason to walk away.</li>
+          <li><strong>Read the permissions before you accept.</strong> An extension that needs to "read and change your data on youtube.com" is reasonable for a YouTube tool. One that wants access to your data on all websites should earn that trust first, because that is the permission that lets an extension watch everything you do online.</li>
+          <li><strong>Check that it is actively maintained.</strong> Chrome moved every extension to the Manifest V3 standard, and abandoned tools built on the old standard will break or quietly stop working. A recent update date and a steady stream of reviews are the simplest signs a developer is still paying attention.</li>
+          <li><strong>Be deliberate about account connections.</strong> Tools like vidIQ and TubeBuddy ask to connect to your YouTube account, which is genuine account access, not just page access. That is fine for established, reputable tools with millions of users, but it is not access you should hand to a brand-new extension with a few hundred installs.</li>
+          <li><strong>Fewer extensions is safer than more.</strong> Every extension you add is more browser overhead and more attack surface. A lean stack of well-chosen tools is both faster and safer than a dozen overlapping ones, which is the whole argument of this guide.</li>
+        </ul>
+
+        <blockquote><strong>Rule of thumb:</strong> if you cannot remember why you installed an extension, remove it. Unused extensions keep their permissions and keep running in the background, which means they cost you performance and risk for zero benefit. Audit your list every few months and uninstall anything you no longer use.</blockquote>
+
+        <h2>Build Your Lean Stack</h2>
+
+        <p>You do not need every tool above. The right stack depends on what kind of creator you are and what stage your channel is at. Here are four starting points, each built to stay small enough that it does not slow your browser or your workflow.</p>
+
+        <ul>
+          <li><strong>The brand-new creator.</strong> Pick one research suite, either vidIQ or TubeBuddy but not both, add Social Blade for quick competitor checks, and add Enhancer for YouTube to review your own videos closely. Three extensions cover research, competition, and playback without any clutter.</li>
+          <li><strong>The SEO-focused creator.</strong> Run vidIQ for YouTube keyword and tag data, Keywords Everywhere to validate demand on Google search, and the Ahrefs SEO Toolbar if you want your videos to rank on Google as well. This stack is built around ranking and is worth pairing with solid <a href="/blog/youtube-tags">tag research</a>.</li>
+          <li><strong>The data-driven creator.</strong> Lean on OutlierKit and Viewstats to find and dissect breakout videos, with Social Blade for fast channel sizing. This is the idea-research stack, aimed at studying winners before you make anything. Our <a href="/features/outliers">Outliers tool</a> covers the same ground without an install.</li>
+          <li><strong>The tutorial or educational creator.</strong> Use Loom or Screencastify to capture your screen, Scribe to turn the same process into a written guide, and Glasp to summarize the competitor videos you are researching. This stack is built for teaching, where the written companion matters as much as the video.</li>
+        </ul>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Are YouTube Chrome extensions safe to use?</h3>
+
+        <p>The well-known ones from the Chrome Web Store are generally safe, but safety depends on the extension, not the category. Install only from the official store, read the permissions an extension requests, and favor tools that are actively maintained with a large, recent review history. Be especially careful with anything that asks to connect to your YouTube account or to read data on every website you visit.</p>
+
+        <h3>Do these extensions work with YouTube Premium?</h3>
+
+        <p>Yes. Browser extensions and YouTube Premium operate independently, so they run alongside each other without conflict. Premium removes ads and unlocks background play at the account level, while extensions modify the interface and add tools in your browser. The only overlap is that some Premium features make certain viewer-side extensions redundant for you personally.</p>
+
+        <h3>Can I run multiple YouTube extensions at the same time?</h3>
+
+        <p>You can, and most creators run several. The practical limit is performance and interface clutter rather than any technical conflict. Tools that both add overlays to YouTube, such as running vidIQ and TubeBuddy together, can make the interface busy, so some creators toggle one off while focusing on the other. Keeping your active set small is the simplest way to avoid slowdown.</p>
+
+        <h3>Do Chrome extensions slow down your browser?</h3>
+
+        <p>Each extension adds a small amount of memory use and load time, and the effect is cumulative. A handful of well-built extensions is unnoticeable on a modern machine, but a long list of overlapping tools will make pages feel sluggish. This is the main reason to build a lean stack and uninstall anything you no longer use.</p>
+
+        <h3>Are free YouTube extensions good enough, or do I need a paid plan?</h3>
+
+        <p>For most creators starting out, the free tiers are enough to research topics, check competitors, and record content. Paid plans earn their cost once you are publishing consistently and want deeper data, bulk editing, or A/B testing. Start free, learn which tool you reach for most, and upgrade only that one rather than paying for several suites at once.</p>
+
+        <h3>Do I even need an extension, or can a web app do the same thing?</h3>
+
+        <p>For a lot of the research and analysis above, a web app does the same job without asking for browser-wide permissions or adding overhead to YouTube. That is the trade-off worth weighing: an extension is convenient because it sits on the page, but a dedicated tool like <a href="/features/competitor-analysis">competitor analysis</a> or <a href="/features/keyword-research">keyword research</a> keeps the access it needs contained to one site you choose to visit. For account-level safety, that separation is a feature, not a limitation.</p>
+
+        <h2>Final Thoughts</h2>
+
+        <p>The best Chrome extension setup for YouTube is <strong>not the longest one</strong>. It is the smallest stack that genuinely improves how you research, analyze, produce, and manage your channel, chosen deliberately and vetted before you install. A creator running <strong>six well-chosen tools</strong> will out-work one running twenty, because the six are doing real jobs while the rest mostly add lag and risk.</p>
+
+        <p>Start with one research suite, add the analysis and production tools your channel needs, and keep the viewer-side extensions in mind for what they reveal about your audience. <strong>Audit the list every few months</strong>, remove anything you have stopped using, and treat every new permission request as a decision rather than a formality. Build the stack that fits your workflow, then get back to making videos.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-rpm',
     title: 'YouTube RPM Explained: What It Means, What Affects It, and How to Increase It',
     excerpt: 'What YouTube RPM means, why it moves, the niches that pay 3 to 10x more than average, and the five levers that lift the number in your Revenue tab.',
