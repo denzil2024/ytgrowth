@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-/* ── Design tokens — exact match to Dashboard.jsx / SeoOptimizer.jsx ───── */
+/* ── Design tokens, exact match to Dashboard.jsx / SeoOptimizer.jsx ───── */
 const C = {
   red:      '#e5251b', redBg:    '#fff5f5', redBdr:    '#fecaca',
   green:    '#059669', greenBg:  '#ecfdf5', greenBdr:  '#a7f3d0',
@@ -69,7 +69,7 @@ function useAdminStyles() {
         .adm p,.adm span,.adm div,.adm h1,.adm h2,.adm h3 { margin:0; }
         .adm .num { font-variant-numeric:tabular-nums; }
 
-        /* Light stat card — suite card grammar: white, hairline, 14px,
+        /* Light stat card, suite card grammar: white, hairline, 14px,
            single soft shadow + inset highlight. No pseudo textures. */
         .adm-stat-card {
           background:#ffffff;
@@ -79,7 +79,7 @@ function useAdminStyles() {
           cursor:default; position:relative; overflow:hidden;
         }
 
-        /* Hero RED stat card — purposeful colour kept (the page's focal
+        /* Hero RED stat card, purposeful colour kept (the page's focal
            anchor), but the dot-grid texture and triple shadow are gone.
            One confident red shadow + a single soft top-edge sheen. */
         .adm-stat-card-red {
@@ -111,7 +111,7 @@ function useAdminStyles() {
           color:var(--adm-axis, #b8b8c4);
         }
 
-        /* MRR breakdown bars — per-tier horizontal bars on the red hero card */
+        /* MRR breakdown bars, per-tier horizontal bars on the red hero card */
         .adm-mrr-bars { display:flex; flex-direction:column; gap:9px; margin-top:18px; }
         .adm-mrr-bar-row { display:grid; grid-template-columns: 58px 1fr 60px; align-items:center; gap:10px; }
         .adm-mrr-bar-label {
@@ -135,7 +135,7 @@ function useAdminStyles() {
           text-align:right;
         }
 
-        /* Inline usage bar (Top users row) — gradient + subtle glow */
+        /* Inline usage bar (Top users row), gradient + subtle glow */
         .adm-usage-track {
           margin-top:5px; height:5px; border-radius:99px;
           background:#f0f0f4; overflow:hidden;
@@ -146,7 +146,7 @@ function useAdminStyles() {
           transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        /* Engagement bar — Active 7d card, single horizontal bar */
+        /* Engagement bar, Active 7d card, single horizontal bar */
         .adm-engage-track {
           margin-top:14px; height:6px; border-radius:99px;
           background:#eaeaef; overflow:hidden;
@@ -160,7 +160,7 @@ function useAdminStyles() {
         }
 
 
-        /* Delta chip — replaces inline trend text */
+        /* Delta chip, replaces inline trend text */
         .adm-delta {
           display:inline-flex; align-items:center; gap:3px;
           padding:2px 8px; border-radius:100px;
@@ -168,7 +168,7 @@ function useAdminStyles() {
           font-variant-numeric:tabular-nums; letter-spacing:-0.05px;
         }
 
-        /* Section title block — bigger, bolder, with a real subhead "vibe" */
+        /* Section title block, bigger, bolder, with a real subhead "vibe" */
         .adm-section-title {
           display:flex; align-items:center; gap:10px;
         }
@@ -201,7 +201,7 @@ function useAdminStyles() {
           animation:admPulse 2.2s ease-in-out infinite;
         }
 
-        /* Today's pulse strip — sits above the 4-card stat row */
+        /* Today's pulse strip, sits above the 4-card stat row */
         .adm-pulse-strip {
           display:flex; align-items:center; gap:18px; flex-wrap:wrap;
           padding:13px 22px; margin-bottom:16px;
@@ -304,7 +304,7 @@ function planBadge(plan) {
   return { bg: '#f4f4f6', color: C.text2, bdr: C.border }
 }
 
-/* plan bar accent: 3 tiers — paid plans get vivid green/amber/red, free is neutral */
+/* plan bar accent: 3 tiers, paid plans get vivid green/amber/red, free is neutral */
 function planBarAccent(plan) {
   const p = (plan || '').toLowerCase()
   if (p.includes('agency'))   return C.red
@@ -341,7 +341,7 @@ function Avatar({ src, name, size = 30 }) {
   )
 }
 
-/* ── Sparkline — 7 mini bars, today on the right ───────────────────────── */
+/* ── Sparkline, 7 mini bars, today on the right ───────────────────────── */
 function Sparkline({ data, accent, axisColor }) {
   const max = Math.max(1, ...data)
   return (
@@ -368,7 +368,7 @@ function Sparkline({ data, accent, axisColor }) {
   )
 }
 
-/* ── Stat card — solid red variant + light variant ──────────────────────── */
+/* ── Stat card, solid red variant + light variant ──────────────────────── */
 function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, breakdownTotal, engagementPct, variant = 'light' }) {
   // variant: 'light' (white gradient card) | 'red' (hero red gradient)
   if (variant === 'red') {
@@ -412,7 +412,7 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
     )
   }
 
-  // Light variant — white card with red accent
+  // Light variant, white card with red accent
   const col = alert ? C.red : (accent || C.text1)
   const accentVar = accent || C.red
   return (
@@ -448,7 +448,7 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
   )
 }
 
-/* ── Section header (replaces SectionLabel) — title + count + optional sub */
+/* ── Section header (replaces SectionLabel), title + count + optional sub */
 function SectionHeader({ title, count, sub, right }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
@@ -469,7 +469,7 @@ function SectionLabel({ children }) {
   return <SectionHeader title={children} />
 }
 
-/* ── SectionCard — title sits INSIDE the card header, body below ────────── */
+/* ── SectionCard, title sits INSIDE the card header, body below ────────── */
 function SectionCard({ title, count, sub, right, children, padBody = 0 }) {
   return (
     <div style={{ ...CARD, overflow: 'hidden' }}>
@@ -490,7 +490,7 @@ function SectionCard({ title, count, sub, right, children, padBody = 0 }) {
   )
 }
 
-/* ── Conversion funnel — Signups → Active → Paying ─────────────────────── */
+/* ── Conversion funnel, Signups → Active → Paying ─────────────────────── */
 /* These three steps aren't strictly nested (a free user can be active,
    a paid user can be inactive), but they're useful parallel slices of
    the same total user base. The bars are scaled to total = 100%. */
@@ -585,7 +585,7 @@ function EmptyState({ eyebrow = 'Empty', children }) {
   )
 }
 
-/* ── Bar row — green/amber accent palette ────────────────────────────────── */
+/* ── Bar row, green/amber accent palette ────────────────────────────────── */
 function BarRow({ label, count, total, accent, prefix, muted }) {
   const pct = total > 0 ? (count / total) * 100 : 0
   return (
@@ -675,7 +675,7 @@ function BreakdownsCard({ plans, sources, countries, totalForPlan, totalForUtm, 
         </div>
       </div>
 
-      {/* Tab strip — quiet soft-grey active pills (suite standard; red is
+      {/* Tab strip, quiet soft-grey active pills (suite standard; red is
           reserved for primary CTAs only). */}
       <div style={{ display: 'flex', gap: 6, padding: '12px 18px', borderBottom: `1px solid ${C.border}` }}>
         {BREAKDOWN_TABS.map(t => {
@@ -784,7 +784,7 @@ export default function Admin() {
     if (!topupData || topupData.eligible_count === 0) return
     const ok = window.confirm(
       `Send the TOPUP30 offer email to ${topupData.eligible_count} ${topupData.eligible_count === 1 ? 'user' : 'users'}?\n\n` +
-      `This is idempotent — already-sent users are excluded.\n` +
+      `This is idempotent, already-sent users are excluded.\n` +
       `Emails fire in a background thread at ~6/sec.`
     )
     if (!ok) return
@@ -893,7 +893,7 @@ export default function Admin() {
   })()
   const signupsToday = dayBuckets[dayBuckets.length - 1]
 
-  /* Today's pulse — derive from recent_signups by filtering created_at
+  /* Today's pulse, derive from recent_signups by filtering created_at
      to local-day. Conversions = users who signed up today AND are on a
      paid plan. MRR added = sum of monthly prices for today's solo /
      growth / agency signups. Lifetime + pack don't recur, so they
@@ -917,7 +917,7 @@ export default function Admin() {
   })()
 
 
-  /* Country — always show; append "not tracked" for existing users */
+  /* Country, always show; append "not tracked" for existing users */
   const knownCountries  = data.country_breakdown || []
   const unknownCount    = data.unknown_country_count ?? 0
   const countryTotal    = knownCountries.reduce((a, r) => a + r.count, 0) + unknownCount
@@ -928,7 +928,7 @@ export default function Admin() {
   const signupSlice     = data.recent_signups.slice(signupPage * PAGE_SIZE_SIGNUPS, (signupPage + 1) * PAGE_SIZE_SIGNUPS)
   const topSlice        = data.top_users.slice(topPage * PAGE_SIZE_TOP, (topPage + 1) * PAGE_SIZE_TOP)
 
-  /* Source bar accents — cycle green / amber for visual variety */
+  /* Source bar accents, cycle green / amber for visual variety */
   const UTM_ACCENTS = [C.green, C.amber, C.green, C.amber, C.green, C.amber]
 
   const SIGNUP_COLS = [
@@ -989,7 +989,7 @@ export default function Admin() {
         </button>
       </div>
 
-      {/* ── Today's pulse — thin live strip above the stat row ──────────── */}
+      {/* ── Today's pulse, thin live strip above the stat row ──────────── */}
       <div className="adm-pulse-strip">
         <div className="adm-pulse-eyebrow">
           <span className="adm-live-dot" />
@@ -1016,7 +1016,7 @@ export default function Admin() {
         )}
       </div>
 
-      {/* ── Stat row — 2 hero red cards + 2 white secondary cards ─────────── */}
+      {/* ── Stat row, 2 hero red cards + 2 white secondary cards ─────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 36 }}>
         <Stat
           variant="red"
@@ -1064,7 +1064,7 @@ export default function Admin() {
       {/* ── Two-column body: Recent signups | Tabbed Breakdowns ────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: 20, marginBottom: 40 }}>
 
-        {/* LEFT — Recent signups, title now lives inside the card header */}
+        {/* LEFT, Recent signups, title now lives inside the card header */}
         <SectionCard
           title="Recent signups"
           count={data.recent_signups.length}
@@ -1102,7 +1102,7 @@ export default function Admin() {
           <Pager page={signupPage} total={data.recent_signups.length} onPage={setSignupPage} />
         </SectionCard>
 
-        {/* RIGHT — Tabbed Breakdowns (plan / source / country in one card) */}
+        {/* RIGHT, Tabbed Breakdowns (plan / source / country in one card) */}
         <BreakdownsCard
           plans={data.plan_breakdown}
           sources={data.utm_breakdown}
@@ -1255,7 +1255,7 @@ export default function Admin() {
               {/* Result / error feedback */}
               {topupResult && (
                 <div style={{ marginTop: 18, padding: '12px 14px', background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 10, color: C.green, fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
-                  ✓ Queued {topupResult.queued} {topupResult.queued === 1 ? 'email' : 'emails'}. Sending in the background — refresh in a few seconds to see the count drop as recipients are marked sent.
+                  ✓ Queued {topupResult.queued} {topupResult.queued === 1 ? 'email' : 'emails'}. Sending in the background, refresh in a few seconds to see the count drop as recipients are marked sent.
                 </div>
               )}
               {topupError && (
@@ -1302,7 +1302,7 @@ export default function Admin() {
               }
             >
 
-            {/* Filter chips — quiet soft-grey active (suite standard;
+            {/* Filter chips, quiet soft-grey active (suite standard;
                 red reserved for primary CTAs only). */}
             <div style={{ display: 'flex', gap: 7, padding: '14px 24px', flexWrap: 'wrap', borderBottom: `1px solid ${C.border}`, background: '#fafafc' }}>
               {FILTERS.map(f => {

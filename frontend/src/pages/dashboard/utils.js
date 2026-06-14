@@ -24,9 +24,9 @@ export function tierMetal(category, tier) {
 
 export function sev(severity) { return SEV[severity] || SEV.critical }
 
-/* YouTube thumbnail cascade — prefers maxresdefault (1280x720), falls back to
+/* YouTube thumbnail cascade, prefers maxresdefault (1280x720), falls back to
    hqdefault (always present at 480x360), finally to the stored thumbnail URL.
-   Also detects YouTube's 120x90 grey placeholder (HTTP 200 — onError never
+   Also detects YouTube's 120x90 grey placeholder (HTTP 200, onError never
    fires) via onLoad dimension check so broken thumbs don't render. Identical
    to the Outliers page helpers, kept local here to avoid cross-page imports. */
 export function ytMaxThumbUrl(videoId) {
@@ -78,7 +78,7 @@ export function healthScore(insights) {
   return Math.max(Math.min(s, 100), 0)
 }
 
-/* Normalise backend timestamps — Python omits 'Z'; JS treats no-tz strings as local time */
+/* Normalise backend timestamps, Python omits 'Z'; JS treats no-tz strings as local time */
 export function parseUTC(str) {
   if (!str) return null
   const s = str.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(str) ? str : str + 'Z'

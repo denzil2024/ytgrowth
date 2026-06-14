@@ -1,6 +1,6 @@
 /* ─── Design tokens for the Dashboard surface ──────────────────────────────
    Pure data only. No JSX, no React, no hooks. Anything imported here must
-   itself be pure data — keep this file leaf-level so it can be consumed by
+   itself be pure data, keep this file leaf-level so it can be consumed by
    every other dashboard/* module without import cycles. */
 
 /* Light-page palette. Pages stay on this; only the app shell uses SHELL. */
@@ -81,7 +81,7 @@ export const MILESTONE_VERB = {
   watch_hours: 'watch hours',
 }
 
-/* Vivid metallic tier palette — radial gradients give true 3D metallic sheen. */
+/* Vivid metallic tier palette, radial gradients give true 3D metallic sheen. */
 export const METAL = {
   bronze:   { highlight: '#ffcfa0', mid: '#e28a3f', deep: '#8b4a13', shadow: '#5c2e08', ribbon: '#6b3712', ink: '#6b3712' },
   silver:   { highlight: '#ffffff', mid: '#c8ccd1', deep: '#6d7378', shadow: '#3a4046', ribbon: '#4a5056', ink: '#3a4046' },
@@ -101,7 +101,7 @@ export const CATEGORY_GRADIENT = {
 /* Confetti palette for the milestone celebration modal. */
 export const CONFETTI_COLORS = ['#ff3b30', '#ffd60a', '#30d158', '#0a84ff', '#bf5af2', '#ff9f0a', '#ff2d92', '#64d2ff', '#ffffff']
 
-/* Severity palette — 3-color system: red critical, amber warnings, slate minor */
+/* Severity palette, 3-color system: red critical, amber warnings, slate minor */
 export const SEV = {
   critical: { color: '#dc2626', bg: '#fff5f5', bdr: '#fecaca' },
   high:     { color: '#f0a23b', bg: '#fffbeb', bdr: '#fde68a' },

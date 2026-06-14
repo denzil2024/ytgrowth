@@ -258,7 +258,7 @@ export default function YoutubeMoneyCalculator() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
-      {/* ── NAV — shared SiteHeader ──────────────────────────────────────── */}
+      {/* ── NAV, shared SiteHeader ──────────────────────────────────────── */}
       <SiteHeader />
       <FaqSchema items={FAQS} />
 
@@ -322,7 +322,7 @@ export default function YoutubeMoneyCalculator() {
               </p>
             </div>
 
-              {/* Grow CTA — sits under the inputs so the columns balance.
+              {/* Grow CTA, sits under the inputs so the columns balance.
                   flex:1 so it stretches when LEFT is the shorter column. */}
               <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Grow these numbers</p>
@@ -343,7 +343,7 @@ export default function YoutubeMoneyCalculator() {
 
             {/* RIGHT. Result column */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              {/* Headline — flex:1 stretches it when LEFT column is taller.
+              {/* Headline, flex:1 stretches it when LEFT column is taller.
                   Footer block uses margin-top:auto to anchor at the bottom so
                   the card fills cleanly whether it stretches or not. */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>

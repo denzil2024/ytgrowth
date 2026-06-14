@@ -42,7 +42,7 @@ function useBreakpoint() {
 
 export default function Terms() {
   useGlobalStyles()
-  useEffect(() => { document.title = 'Terms of Service — YTGrowth' }, [])
+  useEffect(() => { document.title = 'Terms of Service, YTGrowth' }, [])
   const { isMobile } = useBreakpoint()
 
   return (

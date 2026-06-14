@@ -33,7 +33,7 @@ function Logo({ size = 28 }) {
   )
 }
 
-/* Mega-menu data — mirrors the Landing page header exactly */
+/* Mega-menu data, mirrors the Landing page header exactly */
 const FEATURE_GROUPS = [
   {
     label: 'Audit & strategy',
@@ -208,7 +208,7 @@ function useStyles() {
         text-transform: uppercase; letter-spacing: 0.09em;
       }
 
-      /* Category pill — used at the top of single posts. Distinct from
+      /* Category pill, used at the top of single posts. Distinct from
          the generic eyebrow: solid red, more presence, links to /blog. */
       .bp-category {
         display: inline-block;
@@ -237,9 +237,9 @@ function useStyles() {
       .bp-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
       .bp-nav-link:hover { color: var(--ytg-text-2); }
 
-      /* Byline — clean two-line stacked treatment. Big author name on
+      /* Byline, clean two-line stacked treatment. Big author name on
          top in DM Sans, smaller meta line below in muted gray. No labels,
-         no dividers, no avatar — just the credit, the way Stripe or
+         no dividers, no avatar, just the credit, the way Stripe or
          Linear do it. */
       .bp-byline {
         text-align: center;
@@ -269,7 +269,7 @@ function useStyles() {
         line-height: 1.4;
       }
 
-      /* HERO IMAGE — 16:9 (matches YouTube thumbnail ratio).
+      /* HERO IMAGE, 16:9 (matches YouTube thumbnail ratio).
          Recommended source size: 1600x900 (or 1200x675 lighter). */
       .bp-hero-image {
         max-width: 1080px;
@@ -291,7 +291,7 @@ function useStyles() {
         color: rgba(10,10,15,0.16);
       }
 
-      /* PROSE — typography for the post body */
+      /* PROSE, typography for the post body */
       .bp-prose {
         max-width: 820px;
         margin: 0 auto;
@@ -342,7 +342,7 @@ function useStyles() {
         background-image: linear-gradient(transparent calc(100% - 1px), var(--ytg-accent) 1px);
       }
 
-      /* UNORDERED list — clear red dot markers, not the default invisible glyph */
+      /* UNORDERED list, clear red dot markers, not the default invisible glyph */
       .bp-prose ul {
         padding-left: 1.5em;
         list-style: none;
@@ -364,7 +364,7 @@ function useStyles() {
         background: var(--ytg-text);
       }
 
-      /* ORDERED list — red bold numerals */
+      /* ORDERED list, red bold numerals */
       .bp-prose ol {
         padding-left: 1.6em;
         list-style: none;
@@ -387,7 +387,7 @@ function useStyles() {
         font-size: 0.95em;
       }
 
-      /* Callout — clean red left line, no background, label in red. Reads
+      /* Callout, clean red left line, no background, label in red. Reads
          as a quiet pull-quote, not a card. The bold prefix (Pro Tip:,
          The Formula:, Warning:) inherits the accent so it scans first. */
       .bp-prose blockquote {
@@ -409,7 +409,7 @@ function useStyles() {
         font-weight: 700;
       }
 
-      /* Inline CTA button — solid red pill that authors can drop into
+      /* Inline CTA button, solid red pill that authors can drop into
          the post body to drive to signup or any internal route. */
       .bp-prose .bp-cta-inline {
         display: inline-flex;
@@ -434,7 +434,7 @@ function useStyles() {
         color: #fff !important;
       }
 
-      /* CTA card — bigger row-style promo block. Title + sub-line on the
+      /* CTA card, bigger row-style promo block. Title + sub-line on the
          left, red pill button on the right. Drops into a post anywhere
          to upsell a feature or push signups. */
       .bp-prose .bp-cta-card-link {
@@ -557,10 +557,10 @@ function useStyles() {
         margin: 2.8em 0;
       }
 
-      /* Template block — light card with a Copy pill in the top-right.
+      /* Template block, light card with a Copy pill in the top-right.
          Used in posts that hand the reader a paste-ready text artifact
          (description templates, channel about templates, script outlines).
-         Monospace body but readable on a light surface — the dark <pre>
+         Monospace body but readable on a light surface, the dark <pre>
          treatment is wrong for paste-ready text the reader needs to scan. */
       .bp-prose .bp-template-block {
         position: relative;
@@ -697,7 +697,7 @@ function useStyles() {
       }
       .bp-related-card-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ytg-text-3); }
 
-      /* Related cards mobile — tighter padding/font */
+      /* Related cards mobile, tighter padding/font */
       @media (max-width: 768px) {
         .bp-related-card { border-radius: 14px; }
         .bp-related-card-body { padding: 18px 18px 20px; gap: 6px; }
@@ -725,7 +725,7 @@ function useStyles() {
         .bp-section-pad { padding-left: 18px !important; padding-right: 18px !important; }
         .bp-hero-image { border-radius: 14px; margin-top: 20px; box-shadow: var(--ytg-shadow); }
 
-        /* Category pill — slightly smaller, less margin on mobile */
+        /* Category pill, slightly smaller, less margin on mobile */
         .bp-category {
           padding: 6px 14px;
           font-size: 10.5px;
@@ -737,7 +737,7 @@ function useStyles() {
         .bp-byline-author { font-size: 15px; }
         .bp-byline-meta { font-size: 12.5px; margin-top: 4px; }
 
-        /* CTA card mid-post — tighter padding/typography */
+        /* CTA card mid-post, tighter padding/typography */
         .bp-prose .bp-cta-card-link {
           margin: 2em 0;
           padding: 20px 20px;
@@ -812,7 +812,7 @@ export default function BlogPost() {
 
   useEffect(() => {
     if (!post) return
-    document.title = `${post.title} — YTGrowth Blog`
+    document.title = `${post.title} | YTGrowth Blog`
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
@@ -878,10 +878,10 @@ export default function BlogPost() {
 
       <ScrollProgress />
 
-      {/* NAV — shared SiteHeader */}
+      {/* NAV, shared SiteHeader */}
       <SiteHeader />
 
-      {/* 1 — HEADER. White */}
+      {/* 1, HEADER. White */}
       <section style={{ padding: isMobile ? '24px 18px 0' : '56px 40px 0', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <Link to="/blog" className="bp-category">{post.category.label}</Link>
@@ -898,7 +898,7 @@ export default function BlogPost() {
           </div>
         </div>
 
-        {/* Hero image — flush against the top of the next section */}
+        {/* Hero image, flush against the top of the next section */}
         <div className="bp-section-pad" style={{ maxWidth: 1180, margin: '0 auto', position: 'relative' }}>
           <div className="bp-hero-image">
             {post.cover
@@ -908,14 +908,14 @@ export default function BlogPost() {
         </div>
       </section>
 
-      {/* 2 — POST BODY. Light bg, prose typography */}
+      {/* 2, POST BODY. Light bg, prose typography */}
       <section className="bp-section-pad" style={{ padding: isMobile ? '32px 18px 56px' : '72px 40px 96px', background: '#ffffff' }}>
         <article className="bp-prose">
           <Body />
         </article>
       </section>
 
-      {/* 3 — BOTTOM CTA. Centered card, matches the rhythm of the
+      {/* 3, BOTTOM CTA. Centered card, matches the rhythm of the
           feature/contact page bottom CTAs. */}
       <section style={{ padding: isMobile ? '0 14px 0' : '0 40px 0', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', paddingTop: isMobile ? 36 : 80, paddingBottom: isMobile ? 36 : 80 }}>
@@ -950,7 +950,7 @@ export default function BlogPost() {
         </div>
       </section>
 
-      {/* 4 — RELATED POSTS */}
+      {/* 4, RELATED POSTS */}
       {related.length > 0 && (
         <section className="bp-section-pad" style={{ padding: isMobile ? '0 18px 56px' : '0 40px 120px', background: 'var(--ytg-bg)' }}>
           <div style={{ maxWidth: 1180, margin: '0 auto' }}>

@@ -7,7 +7,7 @@ import { posts, formatPostDate } from '../blog/posts.jsx'
 /* Pagination tunables. POSTS_PER_PAGE = grid cards per page. The
    featured post is shown on page 1 in addition to the cards (so page 1
    has 1 + POSTS_PER_PAGE visible) and is excluded from the pagination
-   math entirely — it doesn't eat into the page budget. */
+   math entirely, it doesn't eat into the page budget. */
 const POSTS_PER_PAGE = 12
 
 /* Blog index. Visual DNA matches the feature/tool pages exactly:
@@ -36,7 +36,7 @@ function Logo({ size = 28 }) {
   )
 }
 
-/* ─── Mega-menu data — matches the Landing page nav exactly so the
+/* ─── Mega-menu data, matches the Landing page nav exactly so the
      header reads as one continuous brand surface across the site. */
 const FEATURE_GROUPS = [
   {
@@ -84,7 +84,7 @@ const RESOURCES_GROUPS = [
   },
 ]
 
-/* MegaMenu — same VidIQ-pattern panel the Landing page uses */
+/* MegaMenu, same VidIQ-pattern panel the Landing page uses */
 function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
   const panelWidth = columns === 3 ? 780 : 540
@@ -523,16 +523,16 @@ export default function Blog() {
 
   // Title + description per page so paged URLs index distinctly without
   // looking like duplicate content. Canonical points back to the current
-  // paginated URL (don't collapse to /blog — that would let Google
+  // paginated URL (don't collapse to /blog, that would let Google
   // ignore page 2+ entirely).
   useEffect(() => {
-    document.title = page === 1 ? 'Blog — YTGrowth' : `Blog (Page ${page}) — YTGrowth`
+    document.title = page === 1 ? 'Blog, YTGrowth' : `Blog (Page ${page}), YTGrowth`
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
     meta.content = page === 1
       ? 'YouTube growth tactics, channel deep-dives, and creator playbooks from the YTGrowth team.'
-      : `More posts from the YTGrowth blog — page ${page} of ${totalPages}. YouTube growth tactics, channel deep-dives, and creator playbooks.`
+      : `More posts from the YTGrowth blog, page ${page} of ${totalPages}. YouTube growth tactics, channel deep-dives, and creator playbooks.`
   }, [page, totalPages])
 
   // rel=prev/next link tags so search engines understand the paged
@@ -560,10 +560,10 @@ export default function Blog() {
 
       <ScrollProgress />
 
-      {/* NAV — shared SiteHeader */}
+      {/* NAV, shared SiteHeader */}
       <SiteHeader />
 
-      {/* 1 — HERO. White */}
+      {/* 1, HERO. White */}
       <section style={{ padding: isMobile ? '40px 18px 40px' : '110px 40px 72px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="bl-eyebrow">
@@ -579,7 +579,7 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* 2 — FEATURED + GRID. Light bg */}
+      {/* 2, FEATURED + GRID. Light bg */}
       <section className="bl-section-pad" style={{ padding: isMobile ? '36px 18px 56px' : '80px 40px 120px', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto' }}>
 
@@ -608,7 +608,7 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* 3 — BOTTOM CTA. Stepped bg */}
+      {/* 3, BOTTOM CTA. Stepped bg */}
       <section style={{ padding: isMobile ? '0 14px 56px' : '0 40px 120px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', paddingTop: isMobile ? 36 : 88 }}>
           <div style={{

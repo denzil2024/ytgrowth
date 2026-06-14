@@ -290,7 +290,7 @@ export default function YoutubeSubscriberMoneyCalculator() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
-      {/* ── NAV — shared SiteHeader ── */}
+      {/* ── NAV, shared SiteHeader ── */}
       <SiteHeader />
       <FaqSchema items={FAQS} />
 
@@ -370,7 +370,7 @@ export default function YoutubeSubscriberMoneyCalculator() {
               </p>
             </div>
 
-              {/* Grow CTA — sits under the inputs so the columns balance.
+              {/* Grow CTA, sits under the inputs so the columns balance.
                   flex:1 so it stretches to fill the column when LEFT is the
                   shorter of the two; otherwise it stays its natural size. */}
               <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
@@ -417,7 +417,7 @@ export default function YoutubeSubscriberMoneyCalculator() {
                 </div>
               </div>
 
-              {/* Targets card — flex:1 so it fills the column when RIGHT is
+              {/* Targets card, flex:1 so it fills the column when RIGHT is
                   the shorter of the two and prevents a dead-space gap. */}
               <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 26 }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>To hit these targets</p>

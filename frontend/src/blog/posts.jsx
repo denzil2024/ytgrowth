@@ -3,11 +3,11 @@
  *
  * To add a new post, add an object to the `posts` array below. Required
  * fields: slug, title, excerpt, date, category, cover, readTime, content.
- * Optional: updated (ISO date — if set, the byline shows "Updated {date}"
- * with this value instead of the original publish date — keeps the post
+ * Optional: updated (ISO date - if set, the byline shows "Updated {date}"
+ * with this value instead of the original publish date - keeps the post
  * looking fresh after substantive edits).
  *
- * The `content` field is a JSX render function — write the body as JSX.
+ * The `content` field is a JSX render function - write the body as JSX.
  * Inside it you can use:
  *   - <p>, <h2>, <h3>, <ul>, <ol>, <li>, <strong>, <em>, <blockquote>
  *   - <table>, <thead>, <tbody>, <tr>, <th>, <td>
@@ -16,9 +16,9 @@
  *   - <img src="/blog/your-image.webp" alt="..." />   (drop image in frontend/public/blog/)
  *
  * Promo / upsell components for use inside post content:
- *   - <CtaButton to="/dashboard">Try free</CtaButton>            — small inline pill
+ *   - <CtaButton to="/dashboard">Try free</CtaButton>            - small inline pill
  *   - <CtaCard to="/features/seo-studio"
- *              title="..."  sub="..."  button="Try free →" />    — full-row promo card
+ *              title="..."  sub="..."  button="Try free →" />    - full-row promo card
  *
  * Cover image specs: 16:9 aspect ratio, 1600x900 (preferred) or 1200x675.
  * Save to frontend/public/blog/your-slug-cover.jpg and set cover field.
@@ -26,12 +26,12 @@
  * Headings are written in Title Case to match the main title.
  */
 
-/* Inline pill button — drop into the post body to drive a click. */
+/* Inline pill button - drop into the post body to drive a click. */
 export function CtaButton({ to = '/dashboard', children = 'Try free →' }) {
   return <a href={to} className="bp-cta-inline">{children}</a>
 }
 
-/* Template block — a light card holding paste-ready text (description
+/* Template block - a light card holding paste-ready text (description
    templates, channel about templates, script outlines, etc.) with a small
    "Copy" pill in the top-right that writes the full text to the user's
    clipboard. The label flips to "Copied" for 1.6s on success. Use this
@@ -65,7 +65,7 @@ export function TemplateBlock({ text }) {
   )
 }
 
-/* Row-style promo card — title + sub on the left, red pill on the right.
+/* Row-style promo card - title + sub on the left, red pill on the right.
    Use to upsell a specific feature or surface a free tool inside a post. */
 export function CtaCard({ to = '/dashboard', title, sub, button = 'Try free →' }) {
   return (
@@ -624,8 +624,9 @@ export const posts = [
   {
     slug: 'youtube-analytics-tools',
     title: 'Best YouTube Analytics Tools: A Complete Guide for Creators and Brands',
-    excerpt: 'YouTube Studio is the foundation, but it leaves real gaps: competitor data, keyword research, A/B testing, channel auditing. The strongest analytics tools available, organized by the gap each one fills, with a recommended stack by channel size.',
+    excerpt: 'The best YouTube analytics tools in 2026, organized by the gap each fills: competitor data, keyword research, A/B testing, auditing. Plus a stack by channel size.',
     date: '2026-05-22',
+    updated: '2026-06-14',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-analytics-tools-cover.webp',
     author: 'Denzil',
@@ -1526,8 +1527,9 @@ export const posts = [
   {
     slug: 'youtube-description-template',
     title: 'YouTube Description Template: How to Write Video and Channel Descriptions That Work',
-    excerpt: 'A YouTube description is the second most important piece of metadata after the title. A complete template for every content type, a separate template for your channel, and the best practices that apply to both.',
+    excerpt: 'Your description is the second most important metadata after the title. A ready template for every video type, a channel description template, and the best practices for both.',
     date: '2026-05-22',
+    updated: '2026-06-14',
     category: CATEGORIES.seo,
     cover: '/blog/youtube-description-template-cover.webp',
     author: 'Denzil',
@@ -3796,8 +3798,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'google-adsense-youtube',
     title: 'Google AdSense for YouTube: How It Works, Setup, and Getting Paid (2026)',
-    excerpt: 'The complete guide to the AdSense side of YouTube money: what it is, how it differs from Google Ads, setup and linking, the approval and tax steps, the payment cycle, and the mistakes that get accounts suspended.',
+    excerpt: 'How Google AdSense for YouTube works: setup and linking, the approval and tax steps, when you get paid, and the mistakes that get accounts suspended.',
     date: '2026-05-19',
+    updated: '2026-06-14',
     category: CATEGORIES.monetization,
     cover: '/blog/google-adsense-youtube-cover.webp',
     author: 'Denzil',
@@ -4066,8 +4069,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'vidiq-review',
     title: 'vidIQ Review (2026): Is It Worth It, and the Free Alternative',
-    excerpt: 'An honest vidIQ review for 2026: what the Chrome extension does, what the paid plans cost, where users get frustrated with billing and data accuracy, and how to cover the same jobs with a free alternative.',
+    excerpt: 'An honest vidIQ review for 2026: what the extension does, what the plans cost, where users hit billing and accuracy issues, and how to cover the same jobs free.',
     date: '2026-05-18',
+    updated: '2026-06-14',
     category: CATEGORIES.seo,
     cover: '/blog/vidiq-review-cover.webp',
     author: 'Denzil',
@@ -4573,7 +4577,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'youtube-cpm',
     title: 'YouTube CPM Rates: The Best Niches and How to Maximize Your Ad Revenue',
-    excerpt: 'Two channels with identical view counts can earn completely different revenue. The reason is CPM. What CPM is (and how it differs from RPM), the average rates by category, the niches that pay 10x more, and the levers that lift CPM without changing your niche.',
+    excerpt: 'What YouTube CPM is and how it differs from RPM, the average rates by category, the niches that pay 10x more, and the levers that lift your CPM without changing niche.',
     date: '2026-05-17',
     updated: '2026-06-14',
     category: CATEGORIES.monetization,
@@ -4859,7 +4863,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'youtube-tags',
     title: 'YouTube Tags for Views: The Best Tags to Use and How to Find Them',
-    excerpt: 'Tags are not a formality. They are the primary signal you send the algorithm about who should see your content. What makes a tag drive views (volume, competition, relevance), the best tag structures by niche, hashtags vs metadata tags, and the 15-tag system to apply on every upload.',
+    excerpt: 'YouTube tags are a ranking signal, not a formality. What makes a tag drive views, the best tags by niche, hashtags vs metadata tags, and a 15-tag system for every upload.',
     date: '2026-05-17',
     updated: '2026-06-14',
     category: CATEGORIES.seo,
@@ -5221,8 +5225,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'shorts-tagging',
     title: 'YouTube Shorts Tagging: How to Use Hashtags and Metadata for More Views',
-    excerpt: 'Zero views on a Short is usually a tagging problem, not a content one. The difference between visible hashtags and hidden metadata tags, the 3-tier hashtag framework (1 broad, 2 niche, 1 brand), the Tags field most creators never fill, and the four mistakes that suppress reach across every niche.',
+    excerpt: 'Zero views on a Short is usually a tagging problem, not content. The hashtag vs metadata tag difference, a 3-tier hashtag framework, and the mistakes that quietly suppress reach.',
     date: '2026-05-17',
+    updated: '2026-06-14',
     category: CATEGORIES.seo,
     cover: '/blog/shorts-tagging-cover.webp',
     author: 'Denzil',
@@ -7458,7 +7463,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'youtube-shorts-algorithm',
     title: 'Beyond the Scroll: A 5-Step Guide to Mastering the YouTube Shorts Algorithm in 2026',
-    excerpt: 'Shorts is push-based, not pull-based. The Viewed vs. Swiped Away ratio decides whether a Short scales to thousands or dies at 47 views. The full framework — Hook-Body-Loop, technical specs, related-video funnel, and the testing cadence that earns wider distribution.',
+    excerpt: 'Shorts is push-based, not pull-based. The Viewed vs Swiped Away ratio decides whether a Short scales to thousands or dies at 47 views. The full framework, from Hook-Body-Loop to testing cadence.',
     date: '2026-05-07',
     category: CATEGORIES.strategy,
     cover: '/blog/youtube-shorts-algorithm-cover.webp',
@@ -7686,7 +7691,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h2>And That's a Wrap</h2>
 
-        <p>The YouTube Shorts algorithm is not random. Every distribution decision it makes traces back to the same two signals: whether viewers watched or swiped, and how long they stayed. Everything else — the hashtags, the posting time, the subscriber count — sits far behind those two in terms of actual impact on reach.</p>
+        <p>The YouTube Shorts algorithm is not random. Every distribution decision it makes traces back to the same two signals: whether viewers watched or swiped, and how long they stayed. Everything else (the hashtags, the posting time, the subscriber count) sits far behind those two in terms of actual impact on reach.</p>
 
         <p>The Hook-Body-Loop framework gives you the structural blueprint to clear both thresholds consistently. The technical specs keep the algorithm from penalizing your content before it even gets tested. The Related Video funnel converts that reach into long-term channel value. And the 3 to 5 weekly upload cadence gives the system enough data points to find your audience and keep expanding your distribution over time.</p>
 
@@ -7952,7 +7957,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
           </tbody>
         </table>
 
-        <p>YouTube does not distribute your video. It matches your video to the right viewer at the right moment, and the only way to earn that match is to produce content that real people finish, enjoy, and come back for. The three discovery systems that power that matching process — Home, Search, and Shorts — each work differently, and the YouTube algorithm explained properly means understanding all three.</p>
+        <p>YouTube does not distribute your video. It matches your video to the right viewer at the right moment, and the only way to earn that match is to produce content that real people finish, enjoy, and come back for. The three discovery systems that power that matching process (Home, Search, and Shorts) each work differently, and the YouTube algorithm explained properly means understanding all three.</p>
 
         <h2>The Three Pillars of Discovery: Home, Search, and Shorts</h2>
 
@@ -8106,7 +8111,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <p>The YouTube algorithm has not changed its fundamental objective in years. It has always been designed to find the right video for the right viewer and keep them on the platform as long as possible. What has changed is how sophisticated it has become at doing that, and how little room that leaves for creators who are still optimizing for signals that stopped mattering years ago.</p>
 
-        <p>CTR gets the click. AVD earns the watch. Satisfaction keeps the algorithm sending more viewers your way. Everything else — the tags, the resolution, the upload frequency — sits far behind those three in terms of actual impact on distribution.</p>
+        <p>CTR gets the click. AVD earns the watch. Satisfaction keeps the algorithm sending more viewers your way. Everything else (the tags, the resolution, the upload frequency) sits far behind those three in terms of actual impact on distribution.</p>
 
         <p>The creators winning on YouTube in 2026 are not the ones who cracked a code. They are the ones who accepted that the system rewards genuine audience satisfaction above everything else, and built their entire content process around delivering it consistently. That is the only strategy with no expiry date.</p>
       </>
@@ -8115,8 +8120,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'what-is-youtube-seo',
     title: 'What is YouTube SEO? The Complete Guide to Ranking Videos in 2026',
-    excerpt: 'YouTube SEO is the discipline that turns good content into found content. The complete framework — keyword research, on-page metadata, engagement signals, and channel-level authority — for ranking videos in 2026.',
+    excerpt: 'YouTube SEO turns good content into found content: keyword research, on-page metadata, engagement signals, and channel authority. The complete 2026 ranking framework.',
     date: '2026-05-07',
+    updated: '2026-06-14',
     category: CATEGORIES.seo,
     cover: '/blog/what-is-youtube-seo-cover.webp',
     author: 'Denzil',
@@ -8309,7 +8315,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'youtube-seo-best-practices',
     title: 'The 2026 YouTube SEO Blueprint: Engineering Retention and CTR to Dominate the Algorithm',
-    excerpt: 'Cross a 6% CTR and 50% Average View Duration and YouTube starts pushing your video through Browse and Suggested. The technical playbook to engineer both — built for the 2026 algorithm.',
+    excerpt: 'Cross a 6% CTR and 50% Average View Duration and YouTube starts pushing your video through Browse and Suggested. The technical playbook to engineer both, built for the 2026 algorithm.',
     date: '2026-05-07',
     category: CATEGORIES.seo,
     cover: '/blog/youtube-seo-best-practices-cover.webp',
@@ -8486,7 +8492,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   {
     slug: 'seo-tools-for-youtube',
     title: 'The 5-Pillar YouTube SEO Tool Stack to Dominate the Algorithm (And the Secret CTR Stack)',
-    excerpt: 'Most creators are still optimizing YouTube like it is 2018. The right five-pillar tool stack handles keyword research, optimization, competitor intel, CTR, and analytics — all working together.',
+    excerpt: 'Most creators are still optimizing YouTube like it is 2018. The right five-pillar tool stack handles keyword research, optimization, competitor intel, CTR, and analytics, all working together.',
     date: '2026-05-07',
     category: CATEGORIES.seo,
     cover: '/blog/seo-tools-for-youtube-cover.webp',
@@ -8973,9 +8979,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h2>Step 4: Design High-CTR Thumbnails Using the Curiosity Gap</h2>
 
-        <p>You cannot get free YouTube subscribers without first getting views, and thumbnails are the primary driver of views. Before anyone decides to watch your video, they see your thumbnail. It is the first and sometimes only impression your content makes, and a weak one means your video never gets the chance to convert anyone into a subscriber. CTR is the gatekeeping metric here — the <a href="/blog/youtube-seo-best-practices">2026 SEO blueprint</a> covers the specific 6% threshold that flips the algorithm into Suggested distribution.</p>
+        <p>You cannot get free YouTube subscribers without first getting views, and thumbnails are the primary driver of views. Before anyone decides to watch your video, they see your thumbnail. It is the first and sometimes only impression your content makes, and a weak one means your video never gets the chance to convert anyone into a subscriber. CTR is the gatekeeping metric here, and the <a href="/blog/youtube-seo-best-practices">2026 SEO blueprint</a> covers the specific 6% threshold that flips the algorithm into Suggested distribution.</p>
 
-        <img src="/blog/step-4.webp" alt="Thumbnail design principles — high contrast and the curiosity gap" />
+        <img src="/blog/step-4.webp" alt="Thumbnail design principles: high contrast and the curiosity gap" />
 
         <p>Thumbnail design rules to follow:</p>
 

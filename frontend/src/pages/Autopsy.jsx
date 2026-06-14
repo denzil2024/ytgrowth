@@ -3,7 +3,7 @@ import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 const API = ''
 
-/* Dark — mirrors the shipped app-shell / Competitors dark system.
+/* Dark, mirrors the shipped app-shell / Competitors dark system.
    Defined above the injected stylesheet so it can interpolate ${C.*}.
    Semantic red/green/amber keep their hue; tints re-tuned for dark and
    *Hi variants give legible text on the dark tinted chips. */
@@ -26,7 +26,7 @@ const C = {
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
 }
 
-// Geist page-scoped — matches Chat / Competitors / Keywords / Outliers / WeeklyReport.
+// Geist page-scoped, matches Chat / Competitors / Keywords / Outliers / WeeklyReport.
 if (typeof document !== 'undefined' && !document.getElementById('au-geist-font')) {
   const link = document.createElement('link')
   link.id = 'au-geist-font'
@@ -66,7 +66,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     }
 
     /* Quiet view-switch tabs (Competitors / Keywords / Outliers / My Videos
-       pattern). NEVER red active — red is for primary CTAs only. */
+       pattern). NEVER red active, red is for primary CTAs only. */
     .au-tab-btn {
       background: transparent; color: ${C.text2};
       border: 1px solid transparent; border-radius: 100px;
@@ -147,7 +147,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-chip .val { font-size: 12px; font-weight: 600; color: ${C.text1}; }
     .au-chip .lbl { font-size: 11px; color: ${C.text3}; font-weight: 500; }
 
-    /* Eligible-videos grid — 4 cols default (everything down to ~900px).
+    /* Eligible-videos grid, 4 cols default (everything down to ~900px).
        Was 5 cols above 1500px which crammed the metrics; the user wants a
        consistent 4-up rhythm across desktop widths. */
     .au-eligible-grid {
@@ -162,7 +162,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
       .au-eligible-grid { grid-template-columns: 1fr; }
     }
 
-    /* Video card — same card grammar as .au-card but flex column so the
+    /* Video card, same card grammar as .au-card but flex column so the
        footer (KPI strip + button) sticks to the bottom regardless of how
        many lines the title takes. */
     .au-video-card {
@@ -281,7 +281,7 @@ function ReportCard({ data, video, onClose }) {
         </p>
       )}
 
-      {/* Metric strip — the key inputs the verdict was built on */}
+      {/* Metric strip, the key inputs the verdict was built on */}
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))',
         gap: 8, marginBottom: 18,
@@ -307,7 +307,7 @@ function ReportCard({ data, video, onClose }) {
         ))}
       </div>
 
-      {/* What worked / What didn't — paired panels */}
+      {/* What worked / What didn't, paired panels */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
         <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`,
           borderRadius: 12, padding: '12px 14px' }}>
@@ -335,7 +335,7 @@ function ReportCard({ data, video, onClose }) {
         </div>
       </div>
 
-      {/* Next actions — amber top border (matches insight-card pattern) */}
+      {/* Next actions, amber top border (matches insight-card pattern) */}
       {(data.next_actions || []).length > 0 && (
         <div>
           <p style={{ fontSize: 11, fontWeight: 600, color: C.text3,
@@ -381,7 +381,7 @@ function ReportCard({ data, video, onClose }) {
 }
 
 
-// ── Helpers — copied verbatim from Dashboard.jsx so the eligible grid uses
+// ── Helpers, copied verbatim from Dashboard.jsx so the eligible grid uses
 // the exact same thumbnail-fallback ladder, time formatting and number
 // formatting as the Videos tab. Do not "improve" these. ────────────────────
 function ytMaxThumbUrl(videoId) {
@@ -447,7 +447,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
   const [videoSort, setVideoSort] = useState('date')
 
   // Build "videos at least 7 days old" client-side from the same `videos`
-  // array the Videos tab uses — same data, same fields, same formatting.
+  // array the Videos tab uses, same data, same fields, same formatting.
   const MIN_AGE_DAYS = 7
   const eligible = (videos || []).filter(v => {
     const d = parseUTC(v.published_at)
@@ -525,7 +525,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
   return (
     <div className="au-page" style={{ color: C.text1 }}>
 
-      {/* Header — H1 + single subtitle line. Matches the Outliers / Keywords /
+      {/* Header, H1 + single subtitle line. Matches the Outliers / Keywords /
           Competitors header rhythm: 26 / 700 / -0.7px with a 14 / 500 / muted
           subtitle on one line. */}
       <div style={{ marginBottom: 24 }}>
@@ -597,7 +597,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
             </p>
           </div>
         ) : (
-          // Card grid — copied verbatim from Dashboard.jsx Videos tab so
+          // Card grid, copied verbatim from Dashboard.jsx Videos tab so
           // Autopsy uses the exact same .ytg-card layout, thumbnail,
           // metric footer and Optimise-style button. The ONLY changes:
           // primary CTA text says "Run autopsy · 1 credit" (or "Re-run …"
@@ -647,13 +647,13 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
 
                   {/* Body */}
                   <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    {/* Title — 14.5/600 (was 16/700, too heavy at this card width) */}
+                    {/* Title, 14.5/600 (was 16/700, too heavy at this card width) */}
                     <p style={{
                       fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.15px',
                       display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 41,
                     }}>{v.title}</p>
 
-                    {/* Meta line — all 500, single muted color, no mid-weight spikes */}
+                    {/* Meta line, all 500, single muted color, no mid-weight spikes */}
                     <p style={{ fontSize: 12, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {fmtNum(v.views)} views · {fmtNum(v.likes)} likes · {relTimeLong(v.published_at) || '—'}
                     </p>
@@ -706,7 +706,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
               <p style={{ fontSize: 13.5, color: C.text2, fontWeight: 500,
                 maxWidth: 360, margin: '0 auto', lineHeight: 1.6, letterSpacing: '-0.005em' }}>
                 Run a review on any of your eligible videos and it'll show up
-                here — so you can always come back to a report you've already
+                here, so you can always come back to a report you've already
                 paid for.
               </p>
             </div>

@@ -1,4 +1,4 @@
-/* OnboardingCard — the real getting-started flow for new signups.
+/* OnboardingCard, the real getting-started flow for new signups.
    Lives at the top of the Feed (.ov-page) for new users only, in the
    Feed's own card grammar (dark SHELL gradient, hairline
    rgba(255,255,255,0.08), 14px radius, soft shadow + inset). Replaces the lone
@@ -10,14 +10,14 @@
    always done on arrival so the user opens at 1/4, never 0.
 
    Props:
-     channelName     — for the step-1 trailing label
-     audited         — has the AI audit run (data.insights present)
-     optimized       — has run an SEO optimization
-     exploredIdeas   — has used Video Ideas / Outliers
-     running         — audit currently in progress
-     onRunAudit()    — trigger the first audit (same flow as the old card)
-     onNavigate(tab) — jump to a feature tab
-     onDismiss()     — skip / finish */
+     channelName    , for the step-1 trailing label
+     audited        , has the AI audit run (data.insights present)
+     optimized      , has run an SEO optimization
+     exploredIdeas  , has used Video Ideas / Outliers
+     running        , audit currently in progress
+     onRunAudit()   , trigger the first audit (same flow as the old card)
+     onNavigate(tab), jump to a feature tab
+     onDismiss()    , skip / finish */
 
 import { useEffect, useState } from 'react'
 

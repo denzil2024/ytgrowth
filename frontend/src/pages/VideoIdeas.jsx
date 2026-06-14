@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
-// Geist loaded page-scoped — matches Chat / Competitors / Keywords / Outliers /
+// Geist loaded page-scoped, matches Chat / Competitors / Keywords / Outliers /
 // Video Review / Weekly Report / My Videos.
 if (typeof document !== 'undefined' && !document.getElementById('vi-geist-font')) {
   const link = document.createElement('link')
@@ -12,7 +12,7 @@ if (typeof document !== 'undefined' && !document.getElementById('vi-geist-font')
   document.head.appendChild(link)
 }
 
-/* Dark — mirrors the shipped app-shell / Competitors dark system.
+/* Dark, mirrors the shipped app-shell / Competitors dark system.
    Defined above the injected stylesheet so it can interpolate ${C.*}.
    Semantic hues kept; *Hi-bright text for the dark tinted chips. */
 const C = {
@@ -36,7 +36,7 @@ const C = {
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
 }
 
-/* ─── Styles injected once — matches the Overview/Videos/Outliers design
+/* ─── Styles injected once, matches the Overview/Videos/Outliers design
        language: hairline borders, system-standard elevation (0 1/3 + 0 4/16),
        no hover-lift transforms. ───────────────────────────────────────── */
 if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')) {
@@ -48,7 +48,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
     @keyframes viSpin    { to { transform: rotate(360deg) } }
     @keyframes viFadeUp  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
 
-    /* Idea card — direct copy of SEO Studio's .seo-suggestion-card tokens
+    /* Idea card, direct copy of SEO Studio's .seo-suggestion-card tokens
        (SeoOptimizer.jsx:33-45) so Video Ideas reads as the same element as
        "Suggested titles": 14px radius, hairline border, system elevation
        (0 1/2 + 0 4/14), lift on hover. Amber 3px top stripe is applied
@@ -69,7 +69,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       transform: translateY(-1px);
     }
     .vi-idea-card.done { opacity: 0.48; }
-    /* Severity stripe — 3px coloured line at the top edge of each card,
+    /* Severity stripe, 3px coloured line at the top edge of each card,
        gives each idea a scannable visual entry point colour-keyed to its
        opportunity score. Matches the Feed Priority Action cards. */
     .vi-stripe {
@@ -88,7 +88,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       100% { background-position: -200% 0 }
     }
 
-    /* Refresh-confirm modal — minimal overlay, matches other dialogs in the
+    /* Refresh-confirm modal, minimal overlay, matches other dialogs in the
        app: backdrop blur + centered card with hairline + system elevation. */
     .vi-modal-backdrop {
       position: fixed; inset: 0; z-index: 200;
@@ -106,7 +106,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
   document.head.appendChild(s)
 }
 
-/* ─── Design tokens — matches the shared dashboard palette (no purple; red
+/* ─── Design tokens, matches the shared dashboard palette (no purple; red
        is strictly semantic for CTAs/hero, amber covers AI-generated accent,
        green = completed/positive, blue = informational tint). ─────────── */
 /* (dark C palette defined above the injected stylesheet) */
@@ -249,7 +249,7 @@ function SkeletonCard({ index }) {
   )
 }
 
-/* RefreshConfirmModal — shown before a paid refresh. Lists the cost and
+/* RefreshConfirmModal, shown before a paid refresh. Lists the cost and
    how the generation is scoped so the user knows what 1 credit buys. */
 function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
   useEffect(() => {
@@ -324,7 +324,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
   )
 }
 
-/* IdeaCard — direct adaptation of SEO Studio's Suggested Title card
+/* IdeaCard, direct adaptation of SEO Studio's Suggested Title card
    (SeoOptimizer.jsx:1271-1353). Canonical insight-card skeleton shared by
    Dashboard Priority Actions and SEO Studio suggestions: 3px amber top
    stripe, 14px radius, 26×26 amber rank badge + "Built around" eyebrow +
@@ -332,7 +332,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
    2-col body (blue Why-now / white+amber-bar Action), bottom action row
    with red primary CTA. Checkbox added to the rank cluster so this card
    also tracks completion like Priority Actions. */
-/* IdeaCard v4 — proof-led layout. The cheesy gradient mockup is gone.
+/* IdeaCard v4, proof-led layout. The cheesy gradient mockup is gone.
    Now each idea shows REAL evidence: a row of 3 thumbnail tiles for the
    top YouTube videos already ranking for this keyword today, with
    actual view counts and channel names. Score chip moves to a small
@@ -426,7 +426,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
 
         {/* ── Title (single bold line). 17/700 to anchor the card as the
             hero element, slightly larger than Feed cards (which are 15-16)
-            because this page is title-focused — every card IS a proposed
+            because this page is title-focused, every card IS a proposed
             title, so the typography should make that the star. ── */}
         <h3 style={{
           fontSize: 16, fontWeight: 600,
@@ -714,7 +714,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           setStale(!!data.stale)
           return
         }
-        // Backend has nothing — try backfilling from Competitors localStorage cache
+        // Backend has nothing, try backfilling from Competitors localStorage cache
         const seeded = await seedFromLocalStorage()
         if (seeded) {
           setIdeas(seeded.ideas)
@@ -834,11 +834,11 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
 
   /* ── Render ── */
 
-  // Free-tier refresh was attempted and server returned 403 — replace the
+  // Free-tier refresh was attempted and server returned 403, replace the
   // feature with the upsell modal. (Standard flow: free user's Refresh
   // button is already hidden; this catches any bypass attempts.)
   if (refreshGated) {
-    // Teaser preview — mock ranked video-ideas list behind the gate.
+    // Teaser preview, mock ranked video-ideas list behind the gate.
     const viTeaser = (
       <div style={{
         background: C.cardFlat, border: `1px solid ${C.border}`,
@@ -853,7 +853,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         </div>
         {[
           ['My First 10K Subs · The 3 Things That Actually Worked',           92],
-          ['I Posted Daily for 30 Days — Honest Results',                      87],
+          ['I Posted Daily for 30 Days, Honest Results',                      87],
           ['The Thumbnail Formula That Tripled My CTR',                        84],
           ['Why Your Intro Is Killing Your Retention (Fix in 60s)',            79],
         ].map(([t, score], i) => {
@@ -882,7 +882,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       <div className="vi-page" style={{ width: '100%' }}>
         <UpsellGate
           title="Unlock Video Ideas refreshes"
-          description="Free accounts see up to 5 video ideas from your competitor analyses. Upgrade to refresh with AI every month — fresh ideas tuned to your niche, trend signals, and current-year search queries."
+          description="Free accounts see up to 5 video ideas from your competitor analyses. Upgrade to refresh with AI every month, fresh ideas tuned to your niche, trend signals, and current-year search queries."
           bullets={[
             'Refresh your 10 ranked video ideas on demand',
             'Ideas tuned to your channel + tracked competitors + trend data',
@@ -898,7 +898,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
   return (
     <div className="vi-page" style={{ maxWidth: 1040, margin: '0 auto' }}>
 
-      {/* Header — system H1 24/800/-0.6 + meta line with · separators (same
+      {/* Header, system H1 24/800/-0.6 + meta line with · separators (same
           pattern as Overview / SEO Optimizer / Thumbnail IQ).
           NOTE: every feature page wraps content in maxWidth 1040 centered,
           matching the Feed redesign. Do not break this without
@@ -920,7 +920,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           </p>
         </div>
 
-        {/* Refresh — tightened pill, matches Feed card CTA scale.
+        {/* Refresh, tightened pill, matches Feed card CTA scale.
             Opens a confirmation modal (1 credit cost). Hidden for free
             users; backend also blocks the endpoint with a 403. */}
         {!isFreePlan && (
@@ -957,7 +957,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         )}
       </div>
 
-      {/* Stale nudge — amber tint, same language as other banners in the app */}
+      {/* Stale nudge, amber tint, same language as other banners in the app */}
       {stale && !loading && (
         <div style={{
           fontSize: 13, color: C.amberHi, background: C.amberBg,
@@ -995,7 +995,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         </>
       )}
 
-      {/* Empty state — matches system card elevation, not a hero */}
+      {/* Empty state, matches system card elevation, not a hero */}
       {!loading && !refreshing && source === 'empty' && !error && (
         <div style={{
           textAlign: 'center', padding: '56px 24px',
@@ -1051,7 +1051,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         </div>
       )}
 
-      {/* Refresh confirmation modal — warns about the 1-credit cost and
+      {/* Refresh confirmation modal, warns about the 1-credit cost and
           what the generation considers (niche + competitors + recent data)
           so the user knows what they're paying for. */}
       {confirmOpen && (
@@ -1065,7 +1065,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       {/* Ideas list */}
       {!loading && !refreshing && ideas.length > 0 && (
         <div style={{ marginTop: 8 }}>
-          {/* Clear completed bar — green tint strip, matches other tinted banners */}
+          {/* Clear completed bar, green tint strip, matches other tinted banners */}
           {doneCount > 0 && (
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',

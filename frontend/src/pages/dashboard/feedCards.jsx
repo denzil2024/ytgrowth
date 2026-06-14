@@ -207,7 +207,7 @@ export function ActionsRailCard({ items }) {
       overflow: 'hidden',
       marginBottom: 12,
     }}>
-      {/* Header — single eyebrow line, no big bold paragraph */}
+      {/* Header, single eyebrow line, no big bold paragraph */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '12px 18px',
@@ -415,7 +415,7 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
         }}>{impactKey} impact</span>
       }
     >
-      {/* Headline — lighter weight so the Actions tab doesn't read like a
+      {/* Headline, lighter weight so the Actions tab doesn't read like a
           wall of bold. The eyebrow chip already signals the weight. */}
       <h3 style={{
         fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
@@ -746,7 +746,7 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
         </span>
       </div>
 
-      {/* Recommendation line — fills the height gap with real signal */}
+      {/* Recommendation line, fills the height gap with real signal */}
       <p style={{
         fontSize: 12.5, fontWeight: 500, color: SHELL.text2,
         letterSpacing: '-0.01em', lineHeight: 1.55,
@@ -756,7 +756,7 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
         {recommendation}
       </p>
 
-      {/* Action row — pinned to the bottom when fillHeight is on */}
+      {/* Action row, pinned to the bottom when fillHeight is on */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
         marginTop: fillHeight ? 'auto' : 0,
@@ -1266,7 +1266,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
         <PostingTimeline uploadDays={gridOldestFirst} />
       </div>
 
-      {/* Stat strip — 4 tiles edge to edge across the card */}
+      {/* Stat strip, 4 tiles edge to edge across the card */}
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16,
         paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)',
@@ -1323,7 +1323,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
       {open && (
         <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
-            Daily uploads — last 28 days
+            Daily uploads, last 28 days
           </p>
           {/* Horizontal strip: 28 cells in a single row */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(28, 1fr)', gap: 4 }}>
@@ -1769,7 +1769,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
               onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              {/* Rank badge — neutral charcoal, no amber tint */}
+              {/* Rank badge, neutral charcoal, no amber tint */}
               <div style={{
                 flexShrink: 0,
                 width: 24, height: 24, borderRadius: 7,
@@ -1789,7 +1789,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
                 }}>{idea.title}</p>
-                {/* Angle (one-line truncated) — text2 for readability, not faint text3 */}
+                {/* Angle (one-line truncated), text2 for readability, not faint text3 */}
                 {idea.angle && (
                   <p style={{
                     fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.65)',
@@ -1904,7 +1904,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
 // Suggested Competitors card. Auto-curated discovery surface: pulls
 // channels from top_channel_cache (curated category leaderboards) and
 // from comp:<niche_kw> rows in the cross-user youtube_search_cache.
-// Zero new YouTube quota — everything comes from caches that were
+// Zero new YouTube quota, everything comes from caches that were
 // already populated by other features.
 //
 // Each row: avatar + name + sub count + Track CTA. The Track CTA stashes
@@ -2086,7 +2086,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
         </div>
       </div>
 
-      {/* Pagination dots — only when there are multiple suggestions */}
+      {/* Pagination dots, only when there are multiple suggestions */}
       {canCycle && (
         <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 12 }}>
           {suggestions.map((_, i) => (
@@ -3028,7 +3028,7 @@ export function UnansweredCommentCard({
 // Top Search Terms card. Real YouTube Analytics data: the actual queries
 // viewers typed to find this creator's videos in the last 28 days. Each
 // row is a query + view count from that query. No AI, no scoring guesses
-// — just the raw signal. CTA opens Keyword Research with the top term
+//, just the raw signal. CTA opens Keyword Research with the top term
 // pre-filled so the user can act on the highest-volume query that's
 // already bringing them viewers.
 export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }) {
@@ -3164,7 +3164,7 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
 }
 
 export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, onOpenAll }) {
-  // Show up to 4 suggestions. Hide if fewer than 2 — a single tile feels
+  // Show up to 4 suggestions. Hide if fewer than 2, a single tile feels
   // empty and breaks the 4-up grid rhythm.
   const top = (suggestions || []).slice(0, 4)
   if (top.length < 2) return null
@@ -3415,7 +3415,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
         )}
       </div>
 
-      {/* Empty-state explainer — silent failures become visible failures. */}
+      {/* Empty-state explainer, silent failures become visible failures. */}
       {top.length === 0 && reasonCopy && (
         <div style={{
           padding: '16px 18px',
@@ -3789,7 +3789,7 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
         {/* Divider between header and body */}
         {!checked && <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 14, marginLeft: 46 }} />}
 
-        {/* ── Body — hidden when done ── */}
+        {/* ── Body, hidden when done ── */}
         {!checked && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
 

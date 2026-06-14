@@ -28,8 +28,8 @@ async function clearDbCache(videoId) {
   } catch {}
 }
 
-// ── Tight, disciplined palette — color used sparingly ─────────────────────────
-/* Dark — VideoOptimizePanel is My-Videos-only; mirrors the shipped
+// ── Tight, disciplined palette, color used sparingly ─────────────────────────
+/* Dark, VideoOptimizePanel is My-Videos-only; mirrors the shipped
    dark surface system. Semantic hues kept; *Hi-bright text on dark
    tinted chips; fill tints re-tuned for dark. */
 const C = {
@@ -60,7 +60,7 @@ const BREAKDOWN_META = {
   power_words:       { label: 'Power words',      max: 15, why: 'Words like "Best", "Secret", "Never", "Shocking" trigger an emotional response that overrides the rational decision not to click.' },
   numbers:           { label: 'Numbers / digits', max: 10, why: 'Specific numbers ("7 Tips", "24-Hour", "10x") outperform vague titles. They signal concrete, structured value.' },
   question:          { label: 'Question format',  max: 10, why: 'Questions create an unresolved tension the viewer needs to close. "Why does..." and "How do I..." titles get disproportionate clicks.' },
-  hook_format:       { label: 'Hook / structure', max: 10, why: 'A colon ":", parenthesis, or bracket splits your title into a hook + payoff — the viewer gets a promise and wants the answer.' },
+  hook_format:       { label: 'Hook / structure', max: 10, why: 'A colon ":", parenthesis, or bracket splits your title into a hook + payoff, the viewer gets a promise and wants the answer.' },
   keyword_relevance: { label: 'Keyword relevance',max: 10, why: 'Titles that share phrases with top-viewed videos in your niche rank higher in search and appear in suggested videos more often.' },
   viral_format:      { label: 'Viral format',     max: 10, why: 'Titles following proven viral patterns (Curiosity Gap, Listicle, Authority/Warning, etc.) consistently outperform generic alternatives.' },
 }
@@ -74,7 +74,7 @@ const DESC_TYPE_META = {
 const HOOK_META = {
   curiosity:      { label: 'Curiosity / FOMO', color: C.blue,  desc: "Makes viewers feel they're missing something" },
   transformation: { label: 'Transformation',   color: '#34d27b', desc: 'Focuses on the outcome or result' },
-  contrarian:     { label: 'Contrarian',        color: '#f0a23b', desc: "Challenges assumptions — what others don't show" },
+  contrarian:     { label: 'Contrarian',        color: '#f0a23b', desc: "Challenges assumptions, what others don't show" },
 }
 
 // ── Primitives ─────────────────────────────────────────────────────────────────
@@ -463,7 +463,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
   const isLoading = videoLoading || titleLoading
 
   if (videoOptimizeGated) {
-    // Teaser preview — mock video optimization card (current title +
+    // Teaser preview, mock video optimization card (current title +
     // score ring + AI rewrite suggestion) behind the gate.
     const videoOptTeaser = (
       <div style={{
@@ -510,7 +510,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
       }}>
         <UpsellGate
           title="Unlock video optimization"
-          description="AI rewrites your existing video's title, description, and thumbnail text using the exact signals the YouTube algorithm scores on — then lets you push the update straight to YouTube."
+          description="AI rewrites your existing video's title, description, and thumbnail text using the exact signals the YouTube algorithm scores on, then lets you push the update straight to YouTube."
           bullets={[
             'AI title analysis with SEO, CTR, and hook scores',
             'New descriptions generated to match the rewritten title',
@@ -586,7 +586,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
             return (
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                 <span style={{ fontSize: 10, fontWeight: 700, color: '#fb6a60', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Fix first</span>
-                <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{area}{msg ? ` — ${msg}` : ''}</p>
+                <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{area}{msg ? `, ${msg}` : ''}</p>
               </div>
             )
           })()}
@@ -627,7 +627,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                 </div>
               )}
 
-              {/* Intent analysis — 3-col InsightCard layout */}
+              {/* Intent analysis, 3-col InsightCard layout */}
               {titleResult.intent_analysis?.search_intent && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginBottom: 16 }}>
 
@@ -661,7 +661,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
               {titleResult.suggestions?.length > 0 && (
                 <div>
                   <p style={{ fontSize: 13, fontWeight: 600, color: C.text3, marginBottom: 12 }}>
-                    AI-Suggested Titles — select one to apply
+                    AI-Suggested Titles, select one to apply
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
                     {titleResult.suggestions.map((s, i) => {
@@ -762,7 +762,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
 
                 {/* Hook quality */}
                 <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderLeft: `3px solid #7aa2ff`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: '#7aa2ff', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Hook — first 150 chars</p>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: '#7aa2ff', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Hook, first 150 chars</p>
                   <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{a.description.hook_quality || 'No hook data available.'}</p>
                 </div>
 

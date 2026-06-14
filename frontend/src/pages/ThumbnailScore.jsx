@@ -3,7 +3,7 @@ import { ChevronDown, Upload, Lightbulb } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
-// Load Geist once — SCOPED to this page (each page owns its font loading, never global)
+// Load Geist once, SCOPED to this page (each page owns its font loading, never global)
 if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-geist-font')) {
   const link = document.createElement('link')
   link.id = 'thumb-iq-geist-font'
@@ -12,7 +12,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-geist-
   document.head.appendChild(link)
 }
 
-/* Dark — mirrors the shipped app-shell / Competitors dark system.
+/* Dark, mirrors the shipped app-shell / Competitors dark system.
    Defined above the injected stylesheet so it can interpolate ${C.*}.
    Semantic hues kept; *Hi-bright text for the dark tinted chips. */
 const C = {
@@ -40,7 +40,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
     @keyframes thumbFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
     @keyframes thumbSpin    { to { transform: rotate(360deg) } }
 
-    /* Page-scoped Geist inheritance — every element inside .tiq-page picks up
+    /* Page-scoped Geist inheritance, every element inside .tiq-page picks up
        Geist via the descendant universal selector. Other pages keep their own
        font loaders untouched. */
     .tiq-page, .tiq-page * {
@@ -77,7 +77,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
     }
 
-    /* ── Tabs — quiet soft-grey active (NEVER red). Matches the
+    /* ── Tabs, quiet soft-grey active (NEVER red). Matches the
          feedback-quiet-toggles rule used across every redesigned page. ── */
     .tiq-tab-strip {
       display: flex; gap: 4px;
@@ -143,7 +143,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       box-shadow: ${C.cardShadow};
     }
 
-    /* Trash button — hidden until wrapper hovered */
+    /* Trash button, hidden until wrapper hovered */
     .tiq-remove-btn {
       position: absolute;
       top: 12px;
@@ -170,7 +170,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       color: #e5251b;
     }
 
-    /* "Open report" button — red pill, primary CTA */
+    /* "Open report" button, red pill, primary CTA */
     .tiq-btn-report {
       background: #e5251b;
       color: #fff;
@@ -204,7 +204,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
   document.head.appendChild(s)
 }
 
-/* ─── Design tokens — match Dashboard/SeoOptimizer C object exactly. Brand palette
+/* ─── Design tokens, match Dashboard/SeoOptimizer C object exactly. Brand palette
        is red/amber/green + charcoal text tiers; no blue, no orange. Reasoning
        context goes neutral so red can stay semantic for action. ─────────── */
 /* (dark C palette defined above the injected stylesheet) */
@@ -466,13 +466,13 @@ function L1Row({ keyName, data, benchComp }) {
 
       {open && explanation && (
         <div style={{ paddingBottom: 14, display: 'grid', gridTemplateColumns: fix ? '1fr 1fr' : '1fr', gap: 8 }}>
-          {/* Why — charcoal-neutral tint. Reasoning context goes neutral so red stays semantic for the actionable Fix. */}
+          {/* Why, charcoal-neutral tint. Reasoning context goes neutral so red stays semantic for the actionable Fix. */}
           <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '11px 13px' }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why</p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>{explanation}</p>
           </div>
           {fix && (
-            /* Fix — symmetric red-tinted card, matches WeeklyReport priority pattern */
+            /* Fix, symmetric red-tinted card, matches WeeklyReport priority pattern */
             <div style={{
               background: 'linear-gradient(160deg, rgba(229,37,27,0.07) 0%, rgba(229,37,27,0.025) 100%)',
               border: '1px solid rgba(229,37,27,0.22)',
@@ -676,7 +676,7 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
 }
 
 /* ─── Upload panel (ideas dropdown + topic + file zone) ───────────────────── */
-/* Custom dropdown — replaces native <select> which renders as OS-default (ugly on Windows/Linux).
+/* Custom dropdown, replaces native <select> which renders as OS-default (ugly on Windows/Linux).
    Supports options with a primary label, optional right-side meta chip, optional divider. Closes on outside click. */
 function Dropdown({ value, onChange, options, placeholder }) {
   const [open, setOpen] = useState(false)
@@ -844,7 +844,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
        fontFamily: 'inherit',
      }}>
 
-      {/* Card header — neutral grey eyebrow (red stays semantic for CTAs, not generic labels).
+      {/* Card header, neutral grey eyebrow (red stays semantic for CTAs, not generic labels).
           Typography scale: 11 eyebrow · 13 desc (matches Overview's card headers). */}
       <div style={{ marginBottom: 18, paddingBottom: 16, borderBottom: `1px solid ${C.border}` }}>
         <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Score a new thumbnail</p>
@@ -920,7 +920,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
         )}
       </div>
 
-      {/* Info banner when no video ideas — amber warning tint (no blue), Lightbulb in a soft tinted circle. */}
+      {/* Info banner when no video ideas, amber warning tint (no blue), Lightbulb in a soft tinted circle. */}
       {!hasIdeas && !bannerDismissed && (
         <div style={{
           marginBottom: 14, background: C.amberBg, border: `1px solid ${C.amberBdr}`,
@@ -1003,7 +1003,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
                onChange={e => handleFileSelect(e.target.files)}/>
       </div>
 
-      {/* Analyze button — matches the full-width red pill CTA used site-wide
+      {/* Analyze button, matches the full-width red pill CTA used site-wide
           (Overview / Videos / Outliers / SEO Optimizer): radius 100, 13.5/700 */}
       <button
         onClick={handleUploadClick}
@@ -1103,7 +1103,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
 
     // Render the page as soon as video-ideas resolves. History was previously
     // blocked behind a Promise.all and could carry up to 5 full base64-encoded
-    // thumbnails (~1 MB of JSON) on a cold Postgres connection — that's what
+    // thumbnails (~1 MB of JSON) on a cold Postgres connection, that's what
     // produced the ~20s spinner on Thumbnails. The user lands on "New Thumbnail"
     // by default, so history can populate in the background and the Previous
     // tab will light up when it's ready.
@@ -1324,11 +1324,11 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       padding: '36px 40px 72px',
       minHeight: 'calc(100vh - 52px)',
     }}>
-     {/* 1040 centered column — every polished feature page (Video Ideas / SEO / Overview) wraps content
+     {/* 1040 centered column, every polished feature page (Video Ideas / SEO / Overview) wraps content
          in this. Don't drop it; the 2fr/3fr results grid stretches without an upper bound otherwise. */}
      <div className="tiq-page" style={{ maxWidth: 1040, margin: '0 auto' }}>
 
-      {/* Header — H1 26/700, matching every other redesigned page */}
+      {/* Header, H1 26/700, matching every other redesigned page */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div>
@@ -1342,7 +1342,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
         </div>
       </div>
 
-      {/* Tabs — quiet soft-grey active (matches the feedback-quiet-toggles rule
+      {/* Tabs, quiet soft-grey active (matches the feedback-quiet-toggles rule
           used across every redesigned page; the red underline pattern violated it). */}
       <div className="tiq-tab-strip">
         {TABS.map(tab => (
@@ -1411,7 +1411,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
               return (
                 <div key={item.id} className="tiq-acc-wrapper">
 
-                  {/* Trash — hidden until wrapper hovered */}
+                  {/* Trash, hidden until wrapper hovered */}
                   <button className="tiq-remove-btn"
                     title="Remove thumbnail"
                     onClick={e => { e.stopPropagation(); handleDelete(item.id) }}>
@@ -1452,7 +1452,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                         )}
                       </div>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                        {/* Score chip — number is the data point, kept at 13/700 for emphasis (numbers are the one
+                        {/* Score chip, number is the data point, kept at 13/700 for emphasis (numbers are the one
                             place 700 still earns its keep) but the chip chrome is neutral, not coloured-border. */}
                         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2,
                                        background: C.cardFlat, border: `1px solid ${col}33`,
@@ -1548,9 +1548,9 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                             </div>
                           )}
                         </div>
-                        {/* Right — Overview Channel-audit pattern: Summary → Technical breakdown → AI analysis → Win/Fix */}
+                        {/* Right, Overview Channel-audit pattern: Summary → Technical breakdown → AI analysis → Win/Fix */}
                         <div>
-                          {/* Summary card — ScoreRing + divider + verdict text */}
+                          {/* Summary card, ScoreRing + divider + verdict text */}
                           <div className="tiq-card" style={{ padding: '18px 20px', marginBottom: 10, background: C.cardFlat }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
                               <div style={{ flexShrink: 0 }}>
@@ -1583,7 +1583,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                             </div>
                           </div>
 
-                          {/* AI analysis card (no marginBottom — last card in right column) */}
+                          {/* AI analysis card (no marginBottom, last card in right column) */}
                           {itemL2 && (
                             <div className="tiq-card" style={{ padding: '16px 20px', background: C.cardFlat }}>
                               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -1638,7 +1638,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
         <div className="tiq-section">
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
 
-            {/* LEFT — thumbnail, AI-tag pill strip inline at the bottom of the card, then Win/Fix stacked below to fill the column */}
+            {/* LEFT, thumbnail, AI-tag pill strip inline at the bottom of the card, then Win/Fix stacked below to fill the column */}
             <div>
               <div className="tiq-card" style={{ overflow: 'hidden' }}>
                 {analysis.thumbnail_b64
@@ -1647,7 +1647,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                   : <div style={{ width: '100%', aspectRatio: '16/9', background: '#26262b' }}/>
                 }
 
-                {/* AI-tag pill strip — Emotion / Feed / CTR as compact pills in the card footer */}
+                {/* AI-tag pill strip, Emotion / Feed / CTR as compact pills in the card footer */}
                 {state === 'ready2' && l2 && (l2.emotionLabel || l2.feedPosition || l2.clickPrediction) && (
                   <div style={{ borderTop: `1px solid ${C.border}`, padding: '10px 14px', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                     {l2.emotionLabel && (
@@ -1676,7 +1676,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                   </div>
                 )}
 
-                {/* Benchmark context — small muted strip at the very bottom of the card */}
+                {/* Benchmark context, small muted strip at the very bottom of the card */}
                 {keyword && (
                   <div style={{ padding: '10px 14px', borderTop: `1px solid ${C.border}` }}>
                     <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.55 }}>
@@ -1688,7 +1688,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 )}
               </div>
 
-              {/* Biggest Win / Fix stacked below the thumbnail — fills the left-column height */}
+              {/* Biggest Win / Fix stacked below the thumbnail, fills the left-column height */}
               {state === 'ready2' && l2 && (l2.biggestWin || l2.biggestFix) && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
                   {l2.biggestWin && (
@@ -1712,7 +1712,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 </div>
               )}
 
-              {/* New thumbnail — switch to idle */}
+              {/* New thumbnail, switch to idle */}
               <button
                 onClick={() => { setAnalysis(null); setMarkedReady(false); setState('idle') }}
                 style={{
@@ -1728,7 +1728,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
               </button>
             </div>
 
-            {/* RIGHT — Overview Channel-audit pattern: Summary card → Score breakdown → AI analysis → Insights */}
+            {/* RIGHT, Overview Channel-audit pattern: Summary card → Score breakdown → AI analysis → Insights */}
             <div>
               {/* Linked idea context card */}
               <LinkedIdeaCard idea={linkedIdea} />
@@ -1741,7 +1741,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 const isFinal      = state === 'ready2' && !!l2
                 return (
                   <>
-                    {/* ── 1. Summary card — ScoreRing + vertical divider + AI-assessment text ── */}
+                    {/* ── 1. Summary card, ScoreRing + vertical divider + AI-assessment text ── */}
                     <div className="tiq-card" style={{ padding: '26px 28px', marginBottom: 14 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
                         <div style={{ flexShrink: 0 }}>
@@ -1764,7 +1764,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                         </div>
                       </div>
 
-                      {/* Benchmark stats strip — 3 small tiles below the main row */}
+                      {/* Benchmark stats strip, 3 small tiles below the main row */}
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 20, paddingTop: 18, borderTop: `1px solid ${C.border}` }}>
                         {[
                           { label: 'Your score',    value: `${currentScore}/${currentMax}` },
@@ -1780,7 +1780,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       </div>
                     </div>
 
-                    {/* ── 2. Score breakdown — Overview Category-scores pattern (Dashboard.jsx:2101-2133) ── */}
+                    {/* ── 2. Score breakdown, Overview Category-scores pattern (Dashboard.jsx:2101-2133) ── */}
                     <div className="tiq-card" style={{ padding: '22px 28px', marginBottom: 14 }}>
                       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
                         <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Technical breakdown</p>
@@ -1793,7 +1793,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       </div>
                     </div>
 
-                    {/* ── 3. AI Analysis — same Category-scores pattern, separate card for its own identity ── */}
+                    {/* ── 3. AI Analysis, same Category-scores pattern, separate card for its own identity ── */}
                     {isFinal && l2 && (
                       <div className="tiq-card" style={{ padding: '22px 28px', marginBottom: 14 }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -1812,7 +1812,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 )
               })()}
 
-              {/* CTA: Run Full Thumbnail IQ — same pill CTA as Overview / Videos / Outliers */}
+              {/* CTA: Run Full Thumbnail IQ, same pill CTA as Overview / Videos / Outliers */}
               {state === 'ready1' && (
                 <div style={{ marginTop: 4 }}>
                   <button

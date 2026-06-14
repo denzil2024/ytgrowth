@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import UpsellGate from '../components/UpsellGate'
 
-// Load Geist page-scoped — matches Chat / Competitors / Keywords / Outliers.
+// Load Geist page-scoped, matches Chat / Competitors / Keywords / Outliers.
 if (typeof document !== 'undefined' && !document.getElementById('wr-geist-font')) {
   const link = document.createElement('link')
   link.id = 'wr-geist-font'
@@ -96,7 +96,7 @@ function MetricCard({ label, value, metric, unit, isScore, valueColor }) {
   )
 }
 
-/* Health color for metric numbers — red when below healthy, amber mid, green good. */
+/* Health color for metric numbers, red when below healthy, amber mid, green good. */
 function healthColor(n, { red, amber }) {
   if (n == null) return null
   if (n < red)   return C.redHi
@@ -124,7 +124,7 @@ function ReportCard({ report, expanded, onToggle }) {
     // .ytg-card carries canonical bg/border/shadow + hover lift. Injected
     // by Dashboard.useDashboardStyles() (WeeklyReport renders inside it).
     <div className="ytg-card" style={{ overflow: 'hidden' }}>
-      {/* Header row — always visible */}
+      {/* Header row, always visible */}
       <button
         onClick={onToggle}
         style={{
@@ -186,7 +186,7 @@ function ReportBody({ rd, isLatest }) {
 
   return (
     <>
-      {/* Metrics grid — elevated cards, Overview-style */}
+      {/* Metrics grid, elevated cards, Overview-style */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
@@ -198,7 +198,7 @@ function ReportBody({ rd, isLatest }) {
         <MetricCard label="Channel Score"  value={scoreVal} metric={m.channelScore} isScore valueColor={scoreColor} />
       </div>
 
-      {/* Weekly summary — bold statement (like Overview insight problem) */}
+      {/* Weekly summary, bold statement (like Overview insight problem) */}
       {rd.weeklySummary && (
         <p style={{
           fontSize: 14.5, fontWeight: 600,
@@ -210,7 +210,7 @@ function ReportBody({ rd, isLatest }) {
         </p>
       )}
 
-      {/* 3-column grid — Watch out / Priority / Biggest Win.
+      {/* 3-column grid, Watch out / Priority / Biggest Win.
          Unified shape language: same radius, same border weight, same
          padding rhythm. Priority gets visual weight via a richer red
          tint + glow shadow rather than an asymmetric border-radius. */}
@@ -229,7 +229,7 @@ function ReportBody({ rd, isLatest }) {
             : <div />
           }
 
-          {/* Priority (red — the hero, slightly louder tint + glow) */}
+          {/* Priority (red, the hero, slightly louder tint + glow) */}
           {rd.priorityAction
             ? <div style={{
                 background: 'linear-gradient(160deg, rgba(229,37,27,0.16) 0%, rgba(229,37,27,0.06) 100%)',
@@ -255,7 +255,7 @@ function ReportBody({ rd, isLatest }) {
         </div>
       )}
 
-      {/* Motivational close — muted, no divider line above (just spacing) */}
+      {/* Motivational close, muted, no divider line above (just spacing) */}
       {rd.motivationalClose && (
         <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.65, marginTop: 22 }}>
           {rd.motivationalClose}
@@ -292,13 +292,13 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
       })
       .catch(() => { setReports([]); setLoading(false) })
 
-    // Current email preference — seeds the toggle from real state
+    // Current email preference, seeds the toggle from real state
     fetch(`/api/reports/email-preference?channel_id=${channelId}`, { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && typeof d.weekly_report === 'boolean') setEmailOn(d.weekly_report) })
       .catch(() => {})
 
-    // Out-of-credits notice — paid plan with 0 credits available
+    // Out-of-credits notice, paid plan with 0 credits available
     fetch(`/api/reports/status?channel_id=${channelId}`, { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d) setCreditNotice(!!d.should_show_credit_notice) })
@@ -338,7 +338,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
   const previous   = hasReports ? reports.slice(1) : []
 
   const subSubtitle = isFree
-    ? 'Weekly AI insights — available on paid plans.'
+    ? 'Weekly AI insights, available on paid plans.'
     : 'Your channel performance, delivered every week.'
 
   const header = (
@@ -348,7 +348,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
         <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>{subSubtitle}</p>
       </div>
 
-      {/* Email delivery toggle — paid only (free users have nothing to toggle) */}
+      {/* Email delivery toggle, paid only (free users have nothing to toggle) */}
       {!isFree && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -406,14 +406,14 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           <MetricCard label="Channel Score"  value={scoreVal} valueColor={scoreColor} />
         </div>
 
-        {/* Gate with inline blurred preview (mock report tease) — handled
+        {/* Gate with inline blurred preview (mock report tease), handled
             by UpsellGate's previewContent prop. Same visual as before,
             now shared across every gated page. */}
         <UpsellGate
           title="Unlock weekly AI reports"
-          description="YTGrowth audits your channel every week and tells you the single thing to fix next — not a wall of data, a clear priority."
+          description="YTGrowth audits your channel every week and tells you the single thing to fix next, not a wall of data, a clear priority."
           bullets={[
-            'Biggest win, watch out, and priority — every week',
+            'Biggest win, watch out, and priority, every week',
             'Fresh analysis delivered straight to your inbox',
             '4 AI reports delivered to your inbox every month.',
           ]}
@@ -422,7 +422,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
                 <div>
                   <div style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 5 }}>
-                    Your Week on YouTube — Apr 13 – 19
+                    Your Week on YouTube, Apr 13 – 19
                   </div>
                   <div style={{ fontSize: 12.5, color: C.text3 }}>2026-04-13 – 2026-04-19</div>
                 </div>
@@ -439,7 +439,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
               </div>
 
               <p style={{ fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.15px', marginBottom: 18 }}>
-                {channelFirstName} grew 12% this week with strong retention on the house tour, but the 14-day posting gap is starting to hurt recommendation surfaces — here&rsquo;s what&rsquo;s working and what to focus on next.
+                {channelFirstName} grew 12% this week with strong retention on the house tour, but the 14-day posting gap is starting to hurt recommendation surfaces, here&rsquo;s what&rsquo;s working and what to focus on next.
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 10 }}>
@@ -455,11 +455,11 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                   boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
                 }}>
                   <ColLabel color={C.red}>Your priority</ColLabel>
-                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Film two shopping hauls this week — they are your repeatable winner, and a second one inside 7 days compounds the algorithm boost.</p>
+                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Film two shopping hauls this week, they are your repeatable winner, and a second one inside 7 days compounds the algorithm boost.</p>
                 </div>
                 <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                   <ColLabel color={C.green}>Biggest win</ColLabel>
-                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>The house tour hit 13,908 views and pulled in 25 new subs — your best single video this quarter.</p>
+                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>The house tour hit 13,908 views and pulled in 25 new subs, your best single video this quarter.</p>
                 </div>
               </div>
             </div>
@@ -474,7 +474,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
     <div className="wr-page">
       {header}
 
-      {/* Out-of-credits notice — paid plan with 0 credits available */}
+      {/* Out-of-credits notice, paid plan with 0 credits available */}
       {creditNotice && (
         <div style={{
           display: 'flex', alignItems: 'flex-start', gap: 12,

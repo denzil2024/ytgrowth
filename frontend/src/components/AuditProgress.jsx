@@ -1,4 +1,4 @@
-/* AuditProgress — premium full-screen-card audit experience.
+/* AuditProgress, premium full-screen-card audit experience.
 
    Replaces the previous "Running AI audit…" spinner with a staged
    progress card that explains what's happening while Claude is
@@ -10,8 +10,8 @@
    moment land.
 
    Props:
-     done    — flips true when the parent has the insights payload
-     onDone  — optional callback fired once the progress bar reaches
+     done   , flips true when the parent has the insights payload
+     onDone , optional callback fired once the progress bar reaches
                100% AND done=true; lets the parent reveal results
                with a coordinated fade.
 */
@@ -54,7 +54,7 @@ const STAGES = [
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
     ),
-    weight: 0.42,  // the long one — Claude is actually running here
+    weight: 0.42,  // the long one, Claude is actually running here
   },
   {
     label: 'Writing your Priority Actions',
@@ -93,7 +93,7 @@ export default function AuditProgress({ done = false, onDone }) {
   // lands on 100% before we're torn down. Depend ONLY on `done`: when insights
   // arrive the parent re-renders (e.g. setPrevScore), which used to hand us a
   // new onDone reference, run the effect cleanup, clear this timeout, and never
-  // reschedule it — freezing the card at 100% forever. Reading onDone from a
+  // reschedule it, freezing the card at 100% forever. Reading onDone from a
   // ref breaks that race.
   useEffect(() => {
     if (!done) return

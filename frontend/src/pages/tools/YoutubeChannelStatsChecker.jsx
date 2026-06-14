@@ -266,7 +266,7 @@ export default function YoutubeChannelStatsChecker() {
   const [openFaq, setOpenFaq]   = useState(0)
   const resultsRef = useRef(null)
 
-  /* Top-channels browser — fetches the daily-refreshed cache once on
+  /* Top-channels browser, fetches the daily-refreshed cache once on
      mount. Shows category tabs + 5-column card grid. Click a card to
      load that channel via the existing lookup flow. */
   const [topChannels, setTopChannels] = useState(null)
@@ -348,7 +348,7 @@ export default function YoutubeChannelStatsChecker() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
-      {/* ── NAV — shared SiteHeader ── */}
+      {/* ── NAV, shared SiteHeader ── */}
       <SiteHeader />
       <FaqSchema items={FAQS} />
 
@@ -563,7 +563,7 @@ export default function YoutubeChannelStatsChecker() {
                 })()}
               </div>
 
-              {/* Category tabs — only categories that actually have rows */}
+              {/* Category tabs, only categories that actually have rows */}
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
                 {filledCats.map(cat => {
                   const isActive = cat === activeCat
@@ -582,7 +582,7 @@ export default function YoutubeChannelStatsChecker() {
                 })}
               </div>
 
-              {/* Channel cards grid — 5 cols on desktop = 5×2 = clean rows
+              {/* Channel cards grid, 5 cols on desktop = 5×2 = clean rows
                  of 10. Rank badge in the top-left corner makes the
                  leaderboard order obvious at a glance. */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)', gap: 12 }}>

@@ -5,7 +5,7 @@
 
    Flag images come from flagcdn.com (free, no auth, served as SVG so they
    scale crisply at any size). The `flag` emoji field is kept for fallback
-   and accessibility but flagSrc is what we actually render — emoji flags
+   and accessibility but flagSrc is what we actually render, emoji flags
    don't render as flags on Windows browsers (they show as letter pairs). */
 
 const flagSrcFor = (code) => `https://flagcdn.com/${code.toLowerCase()}.svg`
@@ -33,7 +33,7 @@ export const COUNTRY_META = [
       { q: "Why are US YouTube channels usually the highest-earning?",
         a: "Three reasons. (1) US ad spend per capita is the highest in the world, so the same view from a US viewer triggers a higher CPM than any other country. (2) The categories US viewers watch most (finance, tech, software, automotive, health) all map to high-CPM advertiser inventory. (3) The brand-deal economy is most mature in the US: established creator-marketplace networks and direct sponsorships add a 2-4x revenue multiplier on top of AdSense for established channels." },
       { q: "What's the typical RPM for a US-focused YouTube channel?",
-        a: "RPMs in the US average $4-$12 per 1,000 views across categories, with finance and tech channels often clearing $20-$50. International channels with US-heavy audiences earn close to the same rates. The same content uploaded to a channel with a tier-3 country audience would earn $0.50-$2 per 1,000 views — a 5-10x gap." },
+        a: "RPMs in the US average $4-$12 per 1,000 views across categories, with finance and tech channels often clearing $20-$50. International channels with US-heavy audiences earn close to the same rates. The same content uploaded to a channel with a tier-3 country audience would earn $0.50-$2 per 1,000 views, a 5-10x gap." },
       { q: "Are these only US-based channels or any channel popular in the US?",
         a: "Both. The leaderboards are built by querying YouTube's search.list with regionCode='US', which returns channels surfacing in US search results. That captures US-based creators primarily but also includes international channels with strong US viewership (English-language UK, Canadian, and Australian channels often appear in US regional results too)." },
       { q: "How does YouTube decide which channels surface in US results?",
@@ -58,7 +58,7 @@ export const COUNTRY_META = [
     ],
     highlights: [
       'Tier-1 RPMs: UK ad spend is the second-highest English-language market globally, behind only the US.',
-      'Strong in football commentary, comedy, music, and lifestyle vlogging — long-running creator culture.',
+      'Strong in football commentary, comedy, music, and lifestyle vlogging, long-running creator culture.',
       'British sponsors plus US sponsors both bid into UK channels, doubling the brand-deal pool.',
     ],
     faqs: [
@@ -161,7 +161,7 @@ export const COUNTRY_META = [
       { q: "How much do top Indian YouTubers actually earn?",
         a: "The very top tier (10M+ subs) earn substantial seven-figure annual incomes from YouTube alone, often complemented by larger income from brand deals and acting/production work. Mid-tier Indian creators (500K-2M subs) earn anywhere from $2K-$25K/month depending on category, audience country mix, and brand-deal activity. Per-view ad rates are low, but volume and increasingly competitive Indian brand-deal markets compensate." },
       { q: "Why is India's per-view RPM so much lower than the US?",
-        a: "Because Indian advertisers historically spent less per impression than US/UK advertisers. This is changing — the Indian advertising market is growing fast, and YouTube CPMs in India have roughly doubled over the past 5 years. But per-view RPMs in India still run 4-8x lower than US rates because the underlying ad-buy economy is smaller. The gap is closing, not closed." },
+        a: "Because Indian advertisers historically spent less per impression than US/UK advertisers. This is changing, the Indian advertising market is growing fast, and YouTube CPMs in India have roughly doubled over the past 5 years. But per-view RPMs in India still run 4-8x lower than US rates because the underlying ad-buy economy is smaller. The gap is closing, not closed." },
       { q: "Should Indian creators target English or regional languages?",
         a: "Both work, with different upside. English content can reach the global audience and earn higher per-view RPMs but faces global competition. Regional-language content (Hindi, Tamil, Telugu, Punjabi, Bengali) has lower per-view rates but much less competition in India and very strong audience loyalty. Top Indian YouTubers in regional languages often have larger absolute incomes than equivalent-sized English-language Indian channels." },
       { q: "Why is T-Series so massive on YouTube?",

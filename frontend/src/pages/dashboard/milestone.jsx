@@ -526,7 +526,7 @@ export function MilestoneCelebrationModal({ milestone, channelName, channelThumb
           animation: 'popIn 0.55s cubic-bezier(0.22,1.3,0.36,1)',
         }}
       >
-        {/* Eyebrow — category-tinted pill with star */}
+        {/* Eyebrow, category-tinted pill with star */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
           padding: '5px 14px 5px 11px', borderRadius: 999,

@@ -1,4 +1,4 @@
-import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-CP2iHdEU.js";import{i as r,n as i,r as a}from"./index-Dgy_3mLN.js";import"./BrandLockup-DYLf7yyr.js";import{t as o}from"./LandingFooter-DQftyLvA.js";import{t as s}from"./SiteHeader-CWSSlVVP.js";import{n as c,r as l,t as u}from"./posts-DgkCueOp.js";var d=e(t(),1),f=n();function p(){let[e,t]=(0,d.useState)(typeof window<`u`?window.innerWidth:1280);return(0,d.useEffect)(()=>{let e=()=>t(window.innerWidth);return window.addEventListener(`resize`,e),()=>window.removeEventListener(`resize`,e)},[]),{isMobile:e<=768,isTablet:e<=1024}}function m(){(0,d.useEffect)(()=>{if(document.getElementById(`bp-styles`))return;let e=document.createElement(`link`);e.id=`bp-font`,e.rel=`stylesheet`,e.href=`https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap`,document.head.appendChild(e);let t=document.createElement(`style`);t.id=`bp-styles`,t.textContent=`
+import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-CP2iHdEU.js";import{i as r,n as i,r as a}from"./index-BMmlvpB9.js";import"./BrandLockup-DYLf7yyr.js";import{t as o}from"./LandingFooter-DQftyLvA.js";import{t as s}from"./SiteHeader-B_66jMj6.js";import{n as c,r as l,t as u}from"./posts-DSvi0kn_.js";var d=e(t(),1),f=n();function p(){let[e,t]=(0,d.useState)(typeof window<`u`?window.innerWidth:1280);return(0,d.useEffect)(()=>{let e=()=>t(window.innerWidth);return window.addEventListener(`resize`,e),()=>window.removeEventListener(`resize`,e)},[]),{isMobile:e<=768,isTablet:e<=1024}}function m(){(0,d.useEffect)(()=>{if(document.getElementById(`bp-styles`))return;let e=document.createElement(`link`);e.id=`bp-font`,e.rel=`stylesheet`,e.href=`https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap`,document.head.appendChild(e);let t=document.createElement(`style`);t.id=`bp-styles`,t.textContent=`
       :root {
         --ytg-bg:           #f4f4f6;
         --ytg-bg-2:         #ecedf1;
@@ -62,7 +62,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         text-transform: uppercase; letter-spacing: 0.09em;
       }
 
-      /* Category pill — used at the top of single posts. Distinct from
+      /* Category pill, used at the top of single posts. Distinct from
          the generic eyebrow: solid red, more presence, links to /blog. */
       .bp-category {
         display: inline-block;
@@ -91,9 +91,9 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
       .bp-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
       .bp-nav-link:hover { color: var(--ytg-text-2); }
 
-      /* Byline — clean two-line stacked treatment. Big author name on
+      /* Byline, clean two-line stacked treatment. Big author name on
          top in DM Sans, smaller meta line below in muted gray. No labels,
-         no dividers, no avatar — just the credit, the way Stripe or
+         no dividers, no avatar, just the credit, the way Stripe or
          Linear do it. */
       .bp-byline {
         text-align: center;
@@ -123,7 +123,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         line-height: 1.4;
       }
 
-      /* HERO IMAGE — 16:9 (matches YouTube thumbnail ratio).
+      /* HERO IMAGE, 16:9 (matches YouTube thumbnail ratio).
          Recommended source size: 1600x900 (or 1200x675 lighter). */
       .bp-hero-image {
         max-width: 1080px;
@@ -145,7 +145,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         color: rgba(10,10,15,0.16);
       }
 
-      /* PROSE — typography for the post body */
+      /* PROSE, typography for the post body */
       .bp-prose {
         max-width: 820px;
         margin: 0 auto;
@@ -196,7 +196,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         background-image: linear-gradient(transparent calc(100% - 1px), var(--ytg-accent) 1px);
       }
 
-      /* UNORDERED list — clear red dot markers, not the default invisible glyph */
+      /* UNORDERED list, clear red dot markers, not the default invisible glyph */
       .bp-prose ul {
         padding-left: 1.5em;
         list-style: none;
@@ -218,7 +218,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         background: var(--ytg-text);
       }
 
-      /* ORDERED list — red bold numerals */
+      /* ORDERED list, red bold numerals */
       .bp-prose ol {
         padding-left: 1.6em;
         list-style: none;
@@ -241,7 +241,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         font-size: 0.95em;
       }
 
-      /* Callout — clean red left line, no background, label in red. Reads
+      /* Callout, clean red left line, no background, label in red. Reads
          as a quiet pull-quote, not a card. The bold prefix (Pro Tip:,
          The Formula:, Warning:) inherits the accent so it scans first. */
       .bp-prose blockquote {
@@ -263,7 +263,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         font-weight: 700;
       }
 
-      /* Inline CTA button — solid red pill that authors can drop into
+      /* Inline CTA button, solid red pill that authors can drop into
          the post body to drive to signup or any internal route. */
       .bp-prose .bp-cta-inline {
         display: inline-flex;
@@ -288,7 +288,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         color: #fff !important;
       }
 
-      /* CTA card — bigger row-style promo block. Title + sub-line on the
+      /* CTA card, bigger row-style promo block. Title + sub-line on the
          left, red pill button on the right. Drops into a post anywhere
          to upsell a feature or push signups. */
       .bp-prose .bp-cta-card-link {
@@ -411,10 +411,10 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         margin: 2.8em 0;
       }
 
-      /* Template block — light card with a Copy pill in the top-right.
+      /* Template block, light card with a Copy pill in the top-right.
          Used in posts that hand the reader a paste-ready text artifact
          (description templates, channel about templates, script outlines).
-         Monospace body but readable on a light surface — the dark <pre>
+         Monospace body but readable on a light surface, the dark <pre>
          treatment is wrong for paste-ready text the reader needs to scan. */
       .bp-prose .bp-template-block {
         position: relative;
@@ -551,7 +551,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
       }
       .bp-related-card-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ytg-text-3); }
 
-      /* Related cards mobile — tighter padding/font */
+      /* Related cards mobile, tighter padding/font */
       @media (max-width: 768px) {
         .bp-related-card { border-radius: 14px; }
         .bp-related-card-body { padding: 18px 18px 20px; gap: 6px; }
@@ -579,7 +579,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         .bp-section-pad { padding-left: 18px !important; padding-right: 18px !important; }
         .bp-hero-image { border-radius: 14px; margin-top: 20px; box-shadow: var(--ytg-shadow); }
 
-        /* Category pill — slightly smaller, less margin on mobile */
+        /* Category pill, slightly smaller, less margin on mobile */
         .bp-category {
           padding: 6px 14px;
           font-size: 10.5px;
@@ -591,7 +591,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         .bp-byline-author { font-size: 15px; }
         .bp-byline-meta { font-size: 12.5px; margin-top: 4px; }
 
-        /* CTA card mid-post — tighter padding/typography */
+        /* CTA card mid-post, tighter padding/typography */
         .bp-prose .bp-cta-card-link {
           margin: 2em 0;
           padding: 20px 20px;
@@ -605,4 +605,4 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         .bp-prose { font-size: 15px; }
         .bp-prose h2 { font-size: 20px; }
       }
-    `,document.head.appendChild(t)},[])}function h(){let[e,t]=(0,d.useState)(0);return(0,d.useEffect)(()=>{let e=()=>{let e=document.documentElement.scrollHeight-window.innerHeight;t(e>0?window.scrollY/e*100:0)};return window.addEventListener(`scroll`,e,{passive:!0}),()=>window.removeEventListener(`scroll`,e)},[]),(0,f.jsx)(`div`,{style:{position:`fixed`,top:0,left:0,right:0,height:3,zIndex:999},children:(0,f.jsx)(`div`,{style:{height:`100%`,width:`${e}%`,background:`var(--ytg-accent)`,transition:`width 0.08s linear`,borderRadius:`0 2px 2px 0`}})})}function g({title:e}){return(0,f.jsx)(`div`,{className:`bp-hero-image-fallback`,children:(e||`Y`).trim()[0].toUpperCase()})}function _({title:e}){return(0,f.jsx)(`div`,{className:`bp-related-card-cover-fallback`,children:(e||`Y`).trim()[0].toUpperCase()})}function v({post:e}){return(0,f.jsxs)(i,{to:`/blog/${e.slug}`,className:`bp-related-card`,children:[(0,f.jsx)(`div`,{className:`bp-related-card-cover`,children:e.cover?(0,f.jsx)(`img`,{src:e.cover,alt:e.title,loading:`lazy`,onError:e=>{e.currentTarget.style.display=`none`}}):(0,f.jsx)(_,{title:e.title})}),(0,f.jsxs)(`div`,{className:`bp-related-card-body`,children:[(0,f.jsx)(`span`,{className:`bp-related-card-cat`,children:e.category.label}),(0,f.jsx)(`h3`,{className:`bp-related-card-title`,children:e.title}),(0,f.jsxs)(`div`,{className:`bp-related-card-meta`,children:[(0,f.jsx)(`span`,{children:u(e.date)}),(0,f.jsx)(`span`,{className:`bp-related-card-meta-dot`}),(0,f.jsx)(`span`,{children:e.readTime})]})]})]})}function y(){m();let{slug:e}=r(),t=c(e),{isMobile:n}=p();if((0,d.useEffect)(()=>{if(!t)return;document.title=`${t.title} — YTGrowth Blog`;let e=document.querySelector(`meta[name="description"]`)||(()=>{let e=document.createElement(`meta`);return e.name=`description`,document.head.appendChild(e),e})();e.content=t.excerpt;let n=`https://ytgrowth.io`,r=`${n}/blog/${t.slug}`,i=t.cover?`${n}${t.cover}`:`${n}/og-image.png`,a={"@context":`https://schema.org`,"@graph":[{"@type":`BlogPosting`,headline:t.title,description:t.excerpt,image:i,datePublished:t.date,dateModified:t.updated||t.date,author:{"@type":`Person`,name:t.author},publisher:{"@type":`Organization`,name:`YTGrowth`,logo:{"@type":`ImageObject`,url:`${n}/favicon.svg`}},mainEntityOfPage:{"@type":`WebPage`,"@id":r},articleSection:t.category?.label,url:r},{"@type":`BreadcrumbList`,itemListElement:[{"@type":`ListItem`,position:1,name:`Home`,item:`${n}/`},{"@type":`ListItem`,position:2,name:`Blog`,item:`${n}/blog`},{"@type":`ListItem`,position:3,name:t.title,item:r}]}]},o=document.getElementById(`bp-jsonld`);o||(o=document.createElement(`script`),o.id=`bp-jsonld`,o.type=`application/ld+json`,document.head.appendChild(o)),o.textContent=JSON.stringify(a),window.scrollTo({top:0,behavior:`instant`})},[t]),!t)return(0,f.jsx)(a,{to:`/blog`,replace:!0});let _=t.content,y=l(t.slug,3);return(0,f.jsxs)(`div`,{style:{background:`var(--ytg-bg)`,minHeight:`100vh`},children:[(0,f.jsx)(h,{}),(0,f.jsx)(s,{}),(0,f.jsxs)(`section`,{style:{padding:n?`24px 18px 0`:`56px 40px 0`,textAlign:`center`,background:`#ffffff`},children:[(0,f.jsxs)(`div`,{style:{maxWidth:880,margin:`0 auto`,animation:`fadeUp 0.5s ease both`},children:[(0,f.jsx)(i,{to:`/blog`,className:`bp-category`,children:t.category.label}),(0,f.jsx)(`h1`,{className:`bp-h1`,style:{fontSize:n?26:46,color:`var(--ytg-text)`,marginBottom:n?14:22,letterSpacing:n?`-0.8px`:`-2px`,lineHeight:n?1.18:1.05},children:t.title}),(0,f.jsx)(`p`,{style:{fontSize:n?14.5:18.5,color:`var(--ytg-text-2)`,lineHeight:1.6,maxWidth:720,margin:n?`0 auto 22px`:`0 auto 32px`},children:t.excerpt}),(0,f.jsxs)(`div`,{className:`bp-byline`,children:[(0,f.jsx)(`div`,{className:`bp-byline-rule`}),(0,f.jsxs)(`p`,{className:`bp-byline-author`,children:[`Published by `,t.author]}),(0,f.jsxs)(`p`,{className:`bp-byline-meta`,children:[`Updated `,u(t.updated||t.date),` · `,t.readTime]})]})]}),(0,f.jsx)(`div`,{className:`bp-section-pad`,style:{maxWidth:1180,margin:`0 auto`,position:`relative`},children:(0,f.jsx)(`div`,{className:`bp-hero-image`,children:t.cover?(0,f.jsx)(`img`,{src:t.cover,alt:t.title,onError:e=>{e.currentTarget.style.display=`none`}}):(0,f.jsx)(g,{title:t.title})})})]}),(0,f.jsx)(`section`,{className:`bp-section-pad`,style:{padding:n?`32px 18px 56px`:`72px 40px 96px`,background:`#ffffff`},children:(0,f.jsx)(`article`,{className:`bp-prose`,children:(0,f.jsx)(_,{})})}),(0,f.jsx)(`section`,{style:{padding:n?`0 14px 0`:`0 40px 0`,background:`var(--ytg-bg)`,borderTop:`1px solid var(--ytg-border)`},children:(0,f.jsx)(`div`,{style:{maxWidth:880,margin:`0 auto`,paddingTop:n?36:80,paddingBottom:n?36:80},children:(0,f.jsxs)(`div`,{style:{borderRadius:n?16:22,border:`1px solid var(--ytg-border)`,boxShadow:`var(--ytg-shadow-xl)`,padding:n?`32px 20px 28px`:`56px 48px 52px`,textAlign:`center`,background:`var(--ytg-card)`,position:`relative`,overflow:`hidden`},children:[(0,f.jsx)(`div`,{style:{position:`absolute`,top:-80,left:`50%`,transform:`translateX(-50%)`,width:460,height:220,background:`radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)`,pointerEvents:`none`}}),(0,f.jsxs)(`span`,{className:`bp-eyebrow`,style:{marginBottom:n?12:18,position:`relative`},children:[(0,f.jsx)(`span`,{className:`bp-eyebrow-dot`}),(0,f.jsx)(`span`,{className:`bp-eyebrow-text`,children:`Try YTGrowth`})]}),(0,f.jsxs)(`h2`,{className:`bp-h2`,style:{fontSize:n?22:32,marginBottom:n?10:12,letterSpacing:n?`-0.6px`:`-1.2px`,position:`relative`},children:[`Don't just read the playbook.`,(0,f.jsx)(`br`,{}),(0,f.jsx)(`span`,{style:{color:`var(--ytg-accent)`},children:`Run it on your channel.`})]}),(0,f.jsx)(`p`,{style:{fontSize:n?13.5:15.5,color:`var(--ytg-text-2)`,lineHeight:1.6,maxWidth:560,margin:n?`0 auto 20px`:`0 auto 26px`,position:`relative`},children:`YTGrowth scores your titles, audits your channel against the live niche, and surfaces the gaps your competitors are missing. In 30 seconds.`}),(0,f.jsx)(i,{to:`/dashboard`,className:`bp-btn${n?``:` bp-btn-lg`}`,style:{position:`relative`},children:`Try YTGrowth free →`}),(0,f.jsx)(`p`,{style:{fontSize:12,color:`var(--ytg-text-3)`,marginTop:n?10:14,position:`relative`},children:`5 free analyses · No credit card required`})]})})}),y.length>0&&(0,f.jsx)(`section`,{className:`bp-section-pad`,style:{padding:n?`0 18px 56px`:`0 40px 120px`,background:`var(--ytg-bg)`},children:(0,f.jsxs)(`div`,{style:{maxWidth:1180,margin:`0 auto`},children:[(0,f.jsxs)(`div`,{style:{marginBottom:n?18:28},children:[(0,f.jsxs)(`span`,{className:`bp-eyebrow`,children:[(0,f.jsx)(`span`,{className:`bp-eyebrow-dot`}),(0,f.jsx)(`span`,{className:`bp-eyebrow-text`,children:`Keep reading`})]}),(0,f.jsx)(`h2`,{className:`bp-h2`,style:{fontSize:n?22:32,letterSpacing:n?`-0.6px`:`-1.4px`},children:`More from the blog`})]}),(0,f.jsx)(`div`,{className:`bp-grid-3`,children:y.map(e=>(0,f.jsx)(v,{post:e},e.slug))})]})}),(0,f.jsx)(o,{})]})}export{y as default};
+    `,document.head.appendChild(t)},[])}function h(){let[e,t]=(0,d.useState)(0);return(0,d.useEffect)(()=>{let e=()=>{let e=document.documentElement.scrollHeight-window.innerHeight;t(e>0?window.scrollY/e*100:0)};return window.addEventListener(`scroll`,e,{passive:!0}),()=>window.removeEventListener(`scroll`,e)},[]),(0,f.jsx)(`div`,{style:{position:`fixed`,top:0,left:0,right:0,height:3,zIndex:999},children:(0,f.jsx)(`div`,{style:{height:`100%`,width:`${e}%`,background:`var(--ytg-accent)`,transition:`width 0.08s linear`,borderRadius:`0 2px 2px 0`}})})}function g({title:e}){return(0,f.jsx)(`div`,{className:`bp-hero-image-fallback`,children:(e||`Y`).trim()[0].toUpperCase()})}function _({title:e}){return(0,f.jsx)(`div`,{className:`bp-related-card-cover-fallback`,children:(e||`Y`).trim()[0].toUpperCase()})}function v({post:e}){return(0,f.jsxs)(i,{to:`/blog/${e.slug}`,className:`bp-related-card`,children:[(0,f.jsx)(`div`,{className:`bp-related-card-cover`,children:e.cover?(0,f.jsx)(`img`,{src:e.cover,alt:e.title,loading:`lazy`,onError:e=>{e.currentTarget.style.display=`none`}}):(0,f.jsx)(_,{title:e.title})}),(0,f.jsxs)(`div`,{className:`bp-related-card-body`,children:[(0,f.jsx)(`span`,{className:`bp-related-card-cat`,children:e.category.label}),(0,f.jsx)(`h3`,{className:`bp-related-card-title`,children:e.title}),(0,f.jsxs)(`div`,{className:`bp-related-card-meta`,children:[(0,f.jsx)(`span`,{children:u(e.date)}),(0,f.jsx)(`span`,{className:`bp-related-card-meta-dot`}),(0,f.jsx)(`span`,{children:e.readTime})]})]})]})}function y(){m();let{slug:e}=r(),t=c(e),{isMobile:n}=p();if((0,d.useEffect)(()=>{if(!t)return;document.title=`${t.title} | YTGrowth Blog`;let e=document.querySelector(`meta[name="description"]`)||(()=>{let e=document.createElement(`meta`);return e.name=`description`,document.head.appendChild(e),e})();e.content=t.excerpt;let n=`https://ytgrowth.io`,r=`${n}/blog/${t.slug}`,i=t.cover?`${n}${t.cover}`:`${n}/og-image.png`,a={"@context":`https://schema.org`,"@graph":[{"@type":`BlogPosting`,headline:t.title,description:t.excerpt,image:i,datePublished:t.date,dateModified:t.updated||t.date,author:{"@type":`Person`,name:t.author},publisher:{"@type":`Organization`,name:`YTGrowth`,logo:{"@type":`ImageObject`,url:`${n}/favicon.svg`}},mainEntityOfPage:{"@type":`WebPage`,"@id":r},articleSection:t.category?.label,url:r},{"@type":`BreadcrumbList`,itemListElement:[{"@type":`ListItem`,position:1,name:`Home`,item:`${n}/`},{"@type":`ListItem`,position:2,name:`Blog`,item:`${n}/blog`},{"@type":`ListItem`,position:3,name:t.title,item:r}]}]},o=document.getElementById(`bp-jsonld`);o||(o=document.createElement(`script`),o.id=`bp-jsonld`,o.type=`application/ld+json`,document.head.appendChild(o)),o.textContent=JSON.stringify(a),window.scrollTo({top:0,behavior:`instant`})},[t]),!t)return(0,f.jsx)(a,{to:`/blog`,replace:!0});let _=t.content,y=l(t.slug,3);return(0,f.jsxs)(`div`,{style:{background:`var(--ytg-bg)`,minHeight:`100vh`},children:[(0,f.jsx)(h,{}),(0,f.jsx)(s,{}),(0,f.jsxs)(`section`,{style:{padding:n?`24px 18px 0`:`56px 40px 0`,textAlign:`center`,background:`#ffffff`},children:[(0,f.jsxs)(`div`,{style:{maxWidth:880,margin:`0 auto`,animation:`fadeUp 0.5s ease both`},children:[(0,f.jsx)(i,{to:`/blog`,className:`bp-category`,children:t.category.label}),(0,f.jsx)(`h1`,{className:`bp-h1`,style:{fontSize:n?26:46,color:`var(--ytg-text)`,marginBottom:n?14:22,letterSpacing:n?`-0.8px`:`-2px`,lineHeight:n?1.18:1.05},children:t.title}),(0,f.jsx)(`p`,{style:{fontSize:n?14.5:18.5,color:`var(--ytg-text-2)`,lineHeight:1.6,maxWidth:720,margin:n?`0 auto 22px`:`0 auto 32px`},children:t.excerpt}),(0,f.jsxs)(`div`,{className:`bp-byline`,children:[(0,f.jsx)(`div`,{className:`bp-byline-rule`}),(0,f.jsxs)(`p`,{className:`bp-byline-author`,children:[`Published by `,t.author]}),(0,f.jsxs)(`p`,{className:`bp-byline-meta`,children:[`Updated `,u(t.updated||t.date),` · `,t.readTime]})]})]}),(0,f.jsx)(`div`,{className:`bp-section-pad`,style:{maxWidth:1180,margin:`0 auto`,position:`relative`},children:(0,f.jsx)(`div`,{className:`bp-hero-image`,children:t.cover?(0,f.jsx)(`img`,{src:t.cover,alt:t.title,onError:e=>{e.currentTarget.style.display=`none`}}):(0,f.jsx)(g,{title:t.title})})})]}),(0,f.jsx)(`section`,{className:`bp-section-pad`,style:{padding:n?`32px 18px 56px`:`72px 40px 96px`,background:`#ffffff`},children:(0,f.jsx)(`article`,{className:`bp-prose`,children:(0,f.jsx)(_,{})})}),(0,f.jsx)(`section`,{style:{padding:n?`0 14px 0`:`0 40px 0`,background:`var(--ytg-bg)`,borderTop:`1px solid var(--ytg-border)`},children:(0,f.jsx)(`div`,{style:{maxWidth:880,margin:`0 auto`,paddingTop:n?36:80,paddingBottom:n?36:80},children:(0,f.jsxs)(`div`,{style:{borderRadius:n?16:22,border:`1px solid var(--ytg-border)`,boxShadow:`var(--ytg-shadow-xl)`,padding:n?`32px 20px 28px`:`56px 48px 52px`,textAlign:`center`,background:`var(--ytg-card)`,position:`relative`,overflow:`hidden`},children:[(0,f.jsx)(`div`,{style:{position:`absolute`,top:-80,left:`50%`,transform:`translateX(-50%)`,width:460,height:220,background:`radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)`,pointerEvents:`none`}}),(0,f.jsxs)(`span`,{className:`bp-eyebrow`,style:{marginBottom:n?12:18,position:`relative`},children:[(0,f.jsx)(`span`,{className:`bp-eyebrow-dot`}),(0,f.jsx)(`span`,{className:`bp-eyebrow-text`,children:`Try YTGrowth`})]}),(0,f.jsxs)(`h2`,{className:`bp-h2`,style:{fontSize:n?22:32,marginBottom:n?10:12,letterSpacing:n?`-0.6px`:`-1.2px`,position:`relative`},children:[`Don't just read the playbook.`,(0,f.jsx)(`br`,{}),(0,f.jsx)(`span`,{style:{color:`var(--ytg-accent)`},children:`Run it on your channel.`})]}),(0,f.jsx)(`p`,{style:{fontSize:n?13.5:15.5,color:`var(--ytg-text-2)`,lineHeight:1.6,maxWidth:560,margin:n?`0 auto 20px`:`0 auto 26px`,position:`relative`},children:`YTGrowth scores your titles, audits your channel against the live niche, and surfaces the gaps your competitors are missing. In 30 seconds.`}),(0,f.jsx)(i,{to:`/dashboard`,className:`bp-btn${n?``:` bp-btn-lg`}`,style:{position:`relative`},children:`Try YTGrowth free →`}),(0,f.jsx)(`p`,{style:{fontSize:12,color:`var(--ytg-text-3)`,marginTop:n?10:14,position:`relative`},children:`5 free analyses · No credit card required`})]})})}),y.length>0&&(0,f.jsx)(`section`,{className:`bp-section-pad`,style:{padding:n?`0 18px 56px`:`0 40px 120px`,background:`var(--ytg-bg)`},children:(0,f.jsxs)(`div`,{style:{maxWidth:1180,margin:`0 auto`},children:[(0,f.jsxs)(`div`,{style:{marginBottom:n?18:28},children:[(0,f.jsxs)(`span`,{className:`bp-eyebrow`,children:[(0,f.jsx)(`span`,{className:`bp-eyebrow-dot`}),(0,f.jsx)(`span`,{className:`bp-eyebrow-text`,children:`Keep reading`})]}),(0,f.jsx)(`h2`,{className:`bp-h2`,style:{fontSize:n?22:32,letterSpacing:n?`-0.6px`:`-1.4px`},children:`More from the blog`})]}),(0,f.jsx)(`div`,{className:`bp-grid-3`,children:y.map(e=>(0,f.jsx)(v,{post:e},e.slug))})]})}),(0,f.jsx)(o,{})]})}export{y as default};

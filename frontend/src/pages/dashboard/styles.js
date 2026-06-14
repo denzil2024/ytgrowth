@@ -128,7 +128,7 @@ export function useDashboardStyles() {
         transform: translateY(-1px);
       }
 
-      /* ── OVERVIEW (FEED) — page-scoped redesign ──────────────────────────
+      /* ── OVERVIEW (FEED), page-scoped redesign ──────────────────────────
          Migrates the Feed onto Geist + the Competitors design north-star
          (hairline borders, single soft shadow + inset highlight, 14px
          radius, 200ms cubic-bezier hover) without touching other pages
@@ -262,7 +262,7 @@ export function useDashboardStyles() {
       .ytg-optimise-btn:hover {
         filter: brightness(1.1);
       }
-      /* Videos card grid — 4 cols default (consistent with Video Review).
+      /* Videos card grid, 4 cols default (consistent with Video Review).
          Was 5 cols above 1500px which crammed the metrics; 4-up rhythm
          across all desktop widths reads cleaner. */
       .ytg-videos-grid {
@@ -276,7 +276,7 @@ export function useDashboardStyles() {
       @media (max-width: 560px) {
         .ytg-videos-grid { grid-template-columns: 1fr; }
       }
-      /* Meta-chip in My Videos header — Lucide icon in tinted circle + label.
+      /* Meta-chip in My Videos header, Lucide icon in tinted circle + label.
          Replaces the emoji header chips per the no-generic-icons rule. */
       .ytg-myvid-chip {
         display: inline-flex; align-items: center; gap: 7px;
@@ -291,7 +291,7 @@ export function useDashboardStyles() {
         width: 20px; height: 20px; border-radius: 99px;
         flex-shrink: 0;
       }
-      /* Quiet sort group for My Videos — soft-grey active, no red glow. */
+      /* Quiet sort group for My Videos, soft-grey active, no red glow. */
       .ytg-myvid-sort-grp {
         display: inline-flex; gap: 4px; padding: 4px;
         background: #eeeef3; border-radius: 100px;

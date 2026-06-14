@@ -5,7 +5,7 @@ import App from './App.jsx'
 import { initUtm } from './utm.js'
 
 // Capture UTM attribution off the URL on first paint and install the
-// /auth/login click interceptor — see utm.js.
+// /auth/login click interceptor, see utm.js.
 initUtm()
 
 /* ── Lazy-loaded third-party scripts ──────────────────────────────────────

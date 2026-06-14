@@ -346,7 +346,7 @@ export function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
 
 /* ─── What's new promo card ─────────────────────────────────────────────────
    Sells features the user hasn't dismissed, one card at a time. This is the
-   in-product feature-discovery surface — same role VidIQ's "vidIQ for
+   in-product feature-discovery surface, same role VidIQ's "vidIQ for
    Instagram" launch card plays in their sidebar. Rotates among undismissed
    features; when all are dismissed, nothing renders.
 */

@@ -1,7 +1,7 @@
 /* ─── Small shared UI primitives for the Dashboard ──────────────────────────
    Stateless, presentational components composed throughout the Feed and
    the Milestone surfaces. No data fetching, no app state, no callbacks
-   that mutate parent state — every prop is a value the caller already has. */
+   that mutate parent state, every prop is a value the caller already has. */
 import { C, SHELL } from './tokens'
 import BrandLockup from '../../components/BrandLockup'
 import {
@@ -85,7 +85,7 @@ export function Stat({ label, value, sub, alert, accent }) {
   )
 }
 
-/* HeroTile — foundational metric. Larger than Stat, with optional delta chip. */
+/* HeroTile, foundational metric. Larger than Stat, with optional delta chip. */
 export function HeroTile({ label, value, sub, delta, deltaSuffix, deltaIsAbsolute }) {
   const hasDelta = delta !== null && delta !== undefined && !Number.isNaN(Number(delta))
   const deltaNum = hasDelta ? Number(delta) : 0
@@ -123,7 +123,7 @@ export function HeroTile({ label, value, sub, delta, deltaSuffix, deltaIsAbsolut
 }
 
 /* Sparkline. Pure SVG mini line-chart for the Feed cards. No axes, no
-   labels — just the trend shape. Uses brand red by default with a soft
+   labels, just the trend shape. Uses brand red by default with a soft
    gradient fill below to give the line visual weight at small sizes. */
 export function Sparkline({
   data,
@@ -173,7 +173,7 @@ export function Sparkline({
 /* Rich hero stat card. Replaces the small milestone tile pattern with one
    roomier card per metric: label, big number, delta chip, distance to
    next milestone, AND a real 28-day sparkline of the underlying series.
-   This is the "wow" surface — the page top should feel alive, not flat. */
+   This is the "wow" surface, the page top should feel alive, not flat. */
 export function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, series }) {
   const target = kind === 'subs' ? nextSubMilestone(raw || 0) : nextViewMilestone(raw || 0)
   const pct    = target > 0 ? Math.max(2, Math.min(100, (raw / target) * 100)) : 0

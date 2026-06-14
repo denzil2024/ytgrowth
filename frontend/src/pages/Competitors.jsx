@@ -14,7 +14,7 @@ function saveTracked(list) {
 // ─── inject font + styles once ────────────────────────────────────────────────
 function useCompetitorStyles() {
   useEffect(() => {
-    // Geist Variable load — page-scoped, same pattern as Chat. Geist
+    // Geist Variable load, page-scoped, same pattern as Chat. Geist
     // sits cleaner on this design grammar than Inter; weights drop a
     // tier across the page (500/600 max, never 700/800).
     if (!document.getElementById('ytg-comp-geist-font')) {
@@ -34,7 +34,7 @@ function useCompetitorStyles() {
       .comp-page * { box-sizing: border-box; font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
       .comp-page p, .comp-page span, .comp-page div { margin: 0; }
 
-      /* ── cards — lit gradient + single soft shadow, same dark grammar
+      /* ── cards, lit gradient + single soft shadow, same dark grammar
          as the shipped app shell / ChatCoach. No inner-white highlight
          (it reads as a seam on dark). White-alpha hairline. */
       .comp-card {
@@ -62,7 +62,7 @@ function useCompetitorStyles() {
         transform: translateY(-1px);
       }
 
-      /* ── tabs — quiet pill nav (was chunky red filled with red glow).
+      /* ── tabs, quiet pill nav (was chunky red filled with red glow).
          Tabs are navigation, not the page's CTA, so they shouldn't be
          the loudest element. Charcoal text, hairline border, subtle
          inset tint when active. Brand red is reserved for the page's
@@ -95,7 +95,7 @@ function useCompetitorStyles() {
         color: ${D.text1};
       }
 
-      /* ── search input — matches the Chat composer treatment: hairline
+      /* ── search input, matches the Chat composer treatment: hairline
          at rest, soft red-alpha glow ring on focus. Glass effect is
          dropped here because there's no atmospheric bg behind it. ── */
       .comp-input {
@@ -119,7 +119,7 @@ function useCompetitorStyles() {
         box-shadow: 0 0 0 4px rgba(229,37,27,0.10), ${D.cardShadow};
       }
 
-      /* ── primary red CTA — Search button. Matches the dashboard's
+      /* ── primary red CTA, Search button. Matches the dashboard's
          ytg-dash-btn-primary so every red button in the app reads as one
          system: flat brand red, pill shape, soft red-tinted shadow. ── */
       .comp-btn-primary {
@@ -148,7 +148,7 @@ function useCompetitorStyles() {
         box-shadow: none;
       }
 
-      /* Remove (trash) icon — appears on row hover only, top-right
+      /* Remove (trash) icon, appears on row hover only, top-right
          corner of the identity row (not the wrapper center, since
          cards now have a tall signal row below the identity strip). */
       .comp-remove-btn {
@@ -176,7 +176,7 @@ function useCompetitorStyles() {
         color: #e5251b;
       }
 
-      /* "Open report" — was a red CTA pill; now reduced to a chevron-
+      /* "Open report", was a red CTA pill; now reduced to a chevron-
          only affordance on the right side of the accordion row. The row
          itself is the click target. Brand red is reserved for the
          actual page CTA (Search) and the threat dot. */
@@ -198,7 +198,7 @@ function useCompetitorStyles() {
       .comp-btn-report:hover { color: ${D.text1}; background: ${D.wash}; }
       .comp-btn-report.open { color: ${D.text1}; }
 
-      /* Inline meta line — subs · avg views · gaps · age, one quiet
+      /* Inline meta line, subs · avg views · gaps · age, one quiet
          line. Numbers carry weight via comp-meta-line .val. */
       .comp-meta-line {
         display: inline-flex;
@@ -220,7 +220,7 @@ function useCompetitorStyles() {
         margin: 0 7px;
       }
 
-      /* Quick-wins row — direct copy of Dashboard.jsx's .ytg-qw-row so Topics
+      /* Quick-wins row, direct copy of Dashboard.jsx's .ytg-qw-row so Topics
          to tackle reads as a checkbox task list, not an elevated card stack. */
       .comp-qw-row {
         display: flex; gap: 10px; align-items: flex-start;
@@ -232,7 +232,7 @@ function useCompetitorStyles() {
         background: ${D.wash}; border-color: ${D.hair};
       }
 
-      /* tags — neutral chip by default; variants use inline amber palette */
+      /* tags, neutral chip by default; variants use inline amber palette */
       .comp-tag {
         display: inline-block;
         padding: 3px 10px;
@@ -255,7 +255,7 @@ function useCompetitorStyles() {
       }
       .comp-video-row:hover { background: ${D.wash}; }
 
-      /* KPI tiles — bigger pad and tighter rhythm than before.
+      /* KPI tiles, bigger pad and tighter rhythm than before.
          Used by the at-a-glance KPI strip at the top of every
          expanded report (Subscribers / Avg views / Cadence / Consistency). */
       .comp-timing-pill {
@@ -277,7 +277,7 @@ function useCompetitorStyles() {
         padding: 16px 18px;
       }
 
-      /* Card — single flex-column surface with a colored stripe at the
+      /* Card, single flex-column surface with a colored stripe at the
          top, an identity row (avatar + name + threat + chevron), and a
          visual signal row (3 recent thumbs). Hairline border, system
          elevation, soft lift on hover. */
@@ -302,7 +302,7 @@ function useCompetitorStyles() {
       .comp-accordion-header.open   { border-radius: 14px 14px 0 0; border-bottom-color: ${D.hair}; transform: none; }
       .comp-accordion-header.open:hover { transform: none; }
 
-      /* 3px colored stripe — threat color, top edge of the card. Visual
+      /* 3px colored stripe, threat color, top edge of the card. Visual
          entry point that lets the user scan severity before reading. */
       .comp-stripe {
         height: 3px;
@@ -310,7 +310,7 @@ function useCompetitorStyles() {
         flex-shrink: 0;
       }
 
-      /* Identity row — avatar, name + threat label, meta line, chevron.
+      /* Identity row, avatar, name + threat label, meta line, chevron.
          Still the click target for expand/collapse. */
       .comp-identity-row {
         display: flex;
@@ -319,7 +319,7 @@ function useCompetitorStyles() {
         padding: 16px 20px;
       }
 
-      /* Signal row — visual evidence. Eyebrow + top-performer stat on
+      /* Signal row, visual evidence. Eyebrow + top-performer stat on
          top, 3-up thumbnail grid below. Shows by default (not behind a
          disclosure) because the whole point is to put their work in
          front of you, not a paragraph describing it. */
@@ -488,7 +488,7 @@ function useCompetitorStyles() {
         margin-bottom: 5px;
       }
 
-      /* neutral elevated pill — used for per-row secondary actions (Analyze),
+      /* neutral elevated pill, used for per-row secondary actions (Analyze),
          since red filled is reserved for the page's primary CTA (Search). */
       .comp-btn-ghost {
         background: ${D.card};
@@ -567,7 +567,7 @@ const D = {
   green: '#16a34a', greenHi: '#22c55e', blue: '#6b9bff',
 }
 
-// ─── colour tokens — strict red/amber/green palette with system tints ────────
+// ─── colour tokens, strict red/amber/green palette with system tints ────────
 // Fill + border tints re-tuned for the dark surface; text colours unchanged.
 const THREAT = {
   high:   { bg: 'rgba(229,37,27,0.13)', border: 'rgba(229,37,27,0.32)', text: '#fb6a60', label: 'High threat',   dot: '#e5251b' },
@@ -624,7 +624,7 @@ function outlierFor(views, baseline) {
   return Math.round(mult * 10) / 10
 }
 
-/* ─── CompVideoChips — labeled chips for a competitor video tile. Same
+/* ─── CompVideoChips, labeled chips for a competitor video tile. Same
        grammar as Keywords' VideoMetricsRow (uppercase label segment + bold
        value pill) so the two pages read identically. */
 function CompVideoChips({ views, publishedAt, baselineViews }) {
@@ -657,7 +657,7 @@ function CompVideoChips({ views, publishedAt, baselineViews }) {
   )
 }
 
-// ─── base card — amber 3px top border matches SEO Studio / Keywords pattern.
+// ─── base card, amber 3px top border matches SEO Studio / Keywords pattern.
 // Pass topAccent={null} to render a plain card with no colored top border. ──
 function Card({ children, style, topAccent = '#d97706' }) {
   return (
@@ -681,7 +681,7 @@ function SectionTitle({ children, hint }) {
 }
 
 // small chip: bold number + dim label
-// ─── Disclosure — outlined pill button + revealable body. Pattern for
+// ─── Disclosure, outlined pill button + revealable body. Pattern for
 // hiding prose-heavy sections by default. Open: tinted background +
 // dark text. Closed: white + soft text. Chevron rotates on open.
 function Disclosure({ label, count, children, defaultOpen = false }) {
@@ -830,7 +830,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
   const avgViews        = comp?.avg_views_per_video
   const hasKpi          = subs != null || avgViews != null || avgGap != null || cs != null
 
-  // Topics-to-tackle — pulled out of the old "Your playbook" 3-col card.
+  // Topics-to-tackle, pulled out of the old "Your playbook" 3-col card.
   // Lives as a top-level visible section now; the prose angle is dropped
   // from the visible list and moved into the per-row Disclosure below.
   const ideas      = ai.videoIdeas || []
@@ -926,7 +926,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         )
       })()}
 
-      {/* ── intelligence summary — paneled card. Hidden by default; revealed
+      {/* ── intelligence summary, paneled card. Hidden by default; revealed
            via the "Show full analysis" disclosure at the bottom of the
            expanded report. Two analytical panels separated by a 3px amber
            vertical bar (SeoOptimizer.jsx Title Scorecard pattern). */}
@@ -945,7 +945,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
 
         <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
 
-          {/* Left panel: Summary — plain text, no tile (symmetric with right) */}
+          {/* Left panel: Summary, plain text, no tile (symmetric with right) */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ fontSize: 11, fontWeight: 600, color: D.text2,
               letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
@@ -956,7 +956,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
             </p>
           </div>
 
-          {/* Amber divider — 3px vertical bar, now centered since both panels are flex:1 */}
+          {/* Amber divider, 3px vertical bar, now centered since both panels are flex:1 */}
           <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706', flexShrink: 0, borderRadius: 2 }}/>
 
           {/* Right panel: Why this threat level */}
@@ -973,7 +973,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
       </Card>
       )}
 
-      {/* ── channel insights — prose cards. Hidden by default; revealed
+      {/* ── channel insights, prose cards. Hidden by default; revealed
            by the "Show full analysis" disclosure at the bottom. */}
       {showProse && (() => {
         const insights = [
@@ -1074,7 +1074,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         </Card>
         )
       })()}
-      {/* ── Top content topics — faithful copy of SEO Optimizer's "Related phrases"
+      {/* ── Top content topics, faithful copy of SEO Optimizer's "Related phrases"
            card (SeoOptimizer.jsx:1366–1421). Amber 3px top border, eyebrow + hint
            on the left, big tabular count on the right, hairline divider, then
            a 2-col grid of bar rows with a 1px amber vertical divider between
@@ -1082,7 +1082,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
            + border-left amberBdr). Bar width + value colour both driven by
            scoreColor (relative-to-max here since topics aren't absolute scored). */}
       {ai.topTopics?.length > 0 && (() => {
-        // Single accent — all bars are "their strongest" so they get one
+        // Single accent, all bars are "their strongest" so they get one
         // consistent green. Previous version used red on the weakest, which
         // read as an arbitrary alert color in a section about their wins.
         const viewVals = ai.topTopics.map(t => t.avgViews || 0)
@@ -1116,7 +1116,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
                   {ai.topTopics.map((t, i) => {
-                    // Square-root scaling — stops one runaway leader (517K) from
+                    // Square-root scaling, stops one runaway leader (517K) from
                     // squashing every other topic's bar into a sliver. sqrt(val/max)
                     // compresses the gap so a second-place topic still shows real
                     // bar length while the leader stays at 100%.
@@ -1156,11 +1156,11 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         )
       })()}
 
-      {/* ── Title patterns — Title Scorecard hero layout (SeoOptimizer.jsx:1015-1097)
+      {/* ── Title patterns, Title Scorecard hero layout (SeoOptimizer.jsx:1015-1097)
            Three panels separated by 3px amber vertical bars:
-             • Left — big scoreColor'd number + "AVG LENGTH" label + vs-YT-cap delta
-             • Middle — "DOMINANT FORMATS" eyebrow + numbered list of format strings
-             • Right — "TITLE VOCABULARY" eyebrow + Top keywords (neutral chips) +
+             • Left, big scoreColor'd number + "AVG LENGTH" label + vs-YT-cap delta
+             • Middle, "DOMINANT FORMATS" eyebrow + numbered list of format strings
+             • Right, "TITLE VOCABULARY" eyebrow + Top keywords (neutral chips) +
                Power words (amber chips) stacked
            H2 + subtitle above the card, matching the Top content topics header. */}
       {ai.titlePatterns && (() => {
@@ -1182,7 +1182,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
             <Card topAccent={null}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
 
-                {/* LEFT — big avg length + label + delta (scoreColor by truncation risk) */}
+                {/* LEFT, big avg length + label + delta (scoreColor by truncation risk) */}
                 <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 120 }}>
                   <p style={{ fontSize: 44, fontWeight: 700, color: lenCol,
                     letterSpacing: '-1.2px', lineHeight: 1 }}>
@@ -1205,7 +1205,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                 <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
                   flexShrink: 0, borderRadius: 2 }}/>
 
-                {/* MIDDLE — dominant formats listed as verdict-style content */}
+                {/* MIDDLE, dominant formats listed as verdict-style content */}
                 <div style={{ flex: 1.3, minWidth: 0 }}>
                   <p style={{ fontSize: 11, fontWeight: 600, color: D.text2,
                     letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
@@ -1236,7 +1236,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                 <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
                   flexShrink: 0, borderRadius: 2 }}/>
 
-                {/* RIGHT — title vocabulary (keywords + power words) */}
+                {/* RIGHT, title vocabulary (keywords + power words) */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 11, fontWeight: 600, color: D.text2,
                     letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
@@ -1279,12 +1279,12 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         )
       })()}
 
-      {/* ── winning moves — 2-column grid of Priority-Actions InsightCards ───
+      {/* ── winning moves, 2-column grid of Priority-Actions InsightCards ───
            Exact Dashboard.jsx:1063-1155 InsightCard design, arranged 2-per-row.
            Even-count rule: slice to largest even ≤ N, capped at 10 (so 7→6,
            11→10, 8→8) so the 2-col grid has no orphan.
            Body: 2-col grid (Why now + Action), the Expected-outcome slot is
-           omitted — Winning moves only has 2 data fields.
+           omitted, Winning moves only has 2 data fields.
            No checkbox (observations, not tickable tasks). */}
       {showProse && ai.winningMoves?.length > 0 && (() => {
         const evenCount = Math.min(10, Math.floor(ai.winningMoves.length / 2) * 2)
@@ -1307,7 +1307,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
               {moves.map((m, i) => {
                 const parts  = m.split(/\s+—\s+/)
                 const action = (parts[0] || m).trim()
-                const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
+                const why    = parts.length > 1 ? parts.slice(1).join(', ').trim() : null
 
                 return (
                   <div key={i} className="comp-card" style={{
@@ -1317,7 +1317,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                   }}>
                     <div style={{ padding: '16px 22px 18px' }}>
 
-                      {/* Header — rank badge + category eyebrow + bold title */}
+                      {/* Header, rank badge + category eyebrow + bold title */}
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
                         <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
                           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
@@ -1336,13 +1336,13 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                         </div>
                       </div>
 
-                      {/* Divider — marginLeft:38 past the badge column (no checkbox, so no +8) */}
+                      {/* Divider, marginLeft:38 past the badge column (no checkbox, so no +8) */}
                       <div style={{ height: 1, background: D.hair, marginBottom: 14, marginLeft: 38 }} />
 
-                      {/* Body — 2-col grid (Why now + Action); Expected-outcome slot omitted */}
+                      {/* Body, 2-col grid (Why now + Action); Expected-outcome slot omitted */}
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginLeft: 38 }}>
 
-                        {/* Why now — blue tint, same palette as Overview's Why-now cell */}
+                        {/* Why now, blue tint, same palette as Overview's Why-now cell */}
                         <div style={{ background: 'rgba(79,134,247,0.07)',
                           border: '1px solid rgba(79,134,247,0.12)',
                           borderRadius: 10, padding: '12px 14px' }}>
@@ -1355,7 +1355,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                           </p>
                         </div>
 
-                        {/* Action — white + amber left bar, same as Overview's Action slot */}
+                        {/* Action, white + amber left bar, same as Overview's Action slot */}
                         <div style={{
                           background: D.cardFlat,
                           border: `1px solid ${D.hair}`,
@@ -1381,11 +1381,11 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         )
       })()}
 
-      {/* ── Topics to tackle + Top videos — 3-column paneled card ───────────
+      {/* ── Topics to tackle + Top videos, 3-column paneled card ───────────
            Three panels separated by 3px amber vertical bars.
-           Topics split BALANCED across cols 1 and 2 — ceil(N/2) | floor(N/2):
+           Topics split BALANCED across cols 1 and 2, ceil(N/2) | floor(N/2):
              6 ideas → 3+3 · 7 → 4+3 · 10 → 5+5
-           No amber top border on the card — only the vertical dividers. */}
+           No amber top border on the card, only the vertical dividers. */}
       {/* ─── Topics to tackle ───────────────────────────────────────────────
            Actionable list (the actionable verbatim ideas the user can
            check off). Title + small target-keyword chip per row; the
@@ -1534,7 +1534,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
   // Prefill hook. The Feed's SuggestedCompetitorsCard sets this in
   // sessionStorage on Track click, then navigates here. We consume it
   // once on mount: switch to the Search tab, set the query, fire the
-  // search. Single-shot — the key is cleared so a tab re-mount doesn't
+  // search. Single-shot, the key is cleared so a tab re-mount doesn't
   // refire it.
   useEffect(() => {
     let prefilled = ''
@@ -1659,7 +1659,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
       </div>
 
       {/* ══ search tab. Composer-style search input row at top, no
-             wrapping card — the input is the focal element by itself
+             wrapping card, the input is the focal element by itself
              with its own elevation. ══════════════════════════════════ */}
       {activeTab === 'search' && (
         <div>
@@ -1732,7 +1732,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                 ? new Date(analysis.savedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
                 : ''
 
-              // chevron direction — sole right-side affordance on the row
+              // chevron direction, sole right-side affordance on the row
               const Chevron = () => (
                 <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
                   stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
@@ -1767,7 +1767,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                   <div className={`comp-accordion-header ${isOpen ? 'open' : 'closed'}`}
                     onClick={() => setExpandedIdx(isOpen ? null : i)}>
 
-                    {/* 3px stripe — threat color (gray when no AI yet) */}
+                    {/* 3px stripe, threat color (gray when no AI yet) */}
                     <div className="comp-stripe"
                       style={{ background: threatDot || D.hairHi }} />
 
@@ -1830,7 +1830,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                       </button>
                     </div>
 
-                    {/* Visual signal row — 3 most-recent videos as real
+                    {/* Visual signal row, 3 most-recent videos as real
                          thumbnails. Show, not tell. Renders only when we
                          actually have video data on the analysis. */}
                     {(() => {

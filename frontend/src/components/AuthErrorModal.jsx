@@ -1,4 +1,4 @@
-/* AuthErrorModal — centred modal for auth-callback failures.
+/* AuthErrorModal, centred modal for auth-callback failures.
 
    Visual DNA mirrors CreditsEmptyModal exactly (red gradient icon → title →
    description → primary red-gradient CTA → secondary text link → close X) so
@@ -15,9 +15,9 @@
      - optional secondary link
 
    Props:
-     open       — show/hide
-     errorCode  — one of the keys in ERRORS below; falls back to 'generic'
-     onClose    — dismiss handler */
+     open      , show/hide
+     errorCode , one of the keys in ERRORS below; falls back to 'generic'
+     onClose   , dismiss handler */
 
 import { useEffect } from 'react'
 
@@ -63,7 +63,7 @@ const ERRORS = {
   no_channel: {
     icon: IconYoutube,
     title: 'No YouTube channel found',
-    body:  "We couldn't find a YouTube channel on the Google account you signed in with. Make sure the account owns a channel — or sign in with a different one.",
+    body:  "We couldn't find a YouTube channel on the Google account you signed in with. Make sure the account owns a channel, or sign in with a different one.",
     primary: { label: 'Open YouTube Studio', href: 'https://studio.youtube.com', external: true },
     secondary: { label: 'Try a different Google account', href: '/auth/login' },
   },
@@ -84,42 +84,42 @@ const ERRORS = {
   channel_limit: {
     icon: IconStack,
     title: 'Channel limit reached',
-    body: "Your current plan doesn't allow another channel. Upgrade to add more — or disconnect one in Settings to swap it out.",
+    body: "Your current plan doesn't allow another channel. Upgrade to add more, or disconnect one in Settings to swap it out.",
     primary: { label: 'View plans', href: '/#pricing' },
     secondary: { label: 'Manage channels in Settings', href: '/dashboard' },
   },
   no_code: {
     icon: IconAlert,
     title: "Sign-in didn't complete",
-    body: "Looks like the Google prompt was closed before sign-in finished. No problem — try again and you'll be in within seconds.",
+    body: "Looks like the Google prompt was closed before sign-in finished. No problem, try again and you'll be in within seconds.",
     primary: { label: 'Try again', href: '/auth/login' },
     secondary: null,
   },
   session_expired: {
     icon: IconClock,
     title: 'Sign-in session expired',
-    body: "Your sign-in took longer than expected and the secure session timed out. This is rare — usually a quick retry sorts it.",
+    body: "Your sign-in took longer than expected and the secure session timed out. This is rare, usually a quick retry sorts it.",
     primary: { label: 'Try again', href: '/auth/login' },
     secondary: null,
   },
   analysis_failed: {
     icon: IconAlert,
     title: 'Sign-in worked, audit failed',
-    body: "You're signed in, but our first AI audit hit a snag. Open the dashboard and try a re-audit — we won't charge a credit for the failed run.",
+    body: "You're signed in, but our first AI audit hit a snag. Open the dashboard and try a re-audit, we won't charge a credit for the failed run.",
     primary: { label: 'Open dashboard', href: '/dashboard' },
     secondary: { label: 'Email support if this keeps happening', href: 'mailto:support@ytgrowth.io' },
   },
   quota_exceeded: {
     icon: IconClock,
     title: 'YTGrowth is temporarily at capacity',
-    body: "We've hit our YouTube API quota for the day. This resets at midnight Pacific Time. Please try signing in again in a few hours — your account is fine, nothing is lost.",
+    body: "We've hit our YouTube API quota for the day. This resets at midnight Pacific Time. Please try signing in again in a few hours, your account is fine, nothing is lost.",
     primary: { label: 'Try again', href: '/auth/login' },
     secondary: { label: 'Email support if this keeps happening', href: 'mailto:support@ytgrowth.io' },
   },
   generic: {
     icon: IconAlert,
     title: 'Something went wrong signing you in',
-    body: "We hit an unexpected error during sign-in. Try once more — if it keeps happening, our support team can dig in.",
+    body: "We hit an unexpected error during sign-in. Try once more, if it keeps happening, our support team can dig in.",
     primary: { label: 'Try again', href: '/auth/login' },
     secondary: { label: 'Email support', href: 'mailto:support@ytgrowth.io' },
   },
@@ -193,7 +193,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
           </svg>
         </button>
 
-        {/* Red gradient icon square — mirrors paywall */}
+        {/* Red gradient icon square, mirrors paywall */}
         <div style={{
           width: 50, height: 50, borderRadius: 14,
           background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
@@ -211,7 +211,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
           {cfg.body}
         </p>
 
-        {/* Primary CTA — red gradient pill */}
+        {/* Primary CTA, red gradient pill */}
         <a
           href={cfg.primary.href}
           target={cfg.primary.external ? '_blank' : undefined}

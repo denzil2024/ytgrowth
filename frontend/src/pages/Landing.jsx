@@ -459,10 +459,10 @@ const FEATURE_GROUPS = [
     ],
   },
 ]
-// Flat list — kept for the mobile menu and anywhere else that wants every item
+// Flat list, kept for the mobile menu and anywhere else that wants every item
 const FEATURE_NAV_ITEMS = FEATURE_GROUPS.flatMap(g => g.items)
 
-/* ─── Mega-menu data: Resources — 4 verb-based columns. Clean labels, no
+/* ─── Mega-menu data: Resources, 4 verb-based columns. Clean labels, no
    descriptions, vertical dividers between columns (matches Features). */
 const RESOURCES_GROUPS = [
   {
@@ -497,7 +497,7 @@ const RESOURCES_GROUPS = [
 ]
 const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.items || [])
 
-/* ─── Mega-menu component — VidIQ pattern: clean titles, no descriptions ─ */
+/* ─── Mega-menu component, VidIQ pattern: clean titles, no descriptions ─ */
 function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
   // Panel width scales with column count.
@@ -1762,7 +1762,7 @@ export default function Landing() {
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>5 free analyses</p>
                 <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Full access to our best features, then upgrade</p>
-                {['Full channel audit (free, refresh weekly)', '5 analyses to spend on the tools below', 'Outliers — find proven winning videos', 'Competitor Analysis (1 rival)', 'SEO Studio (full)'].map((f, i) => (
+                {['Full channel audit (free, refresh weekly)', '5 analyses to spend on the tools below', 'Outliers, find proven winning videos', 'Competitor Analysis (1 rival)', 'SEO Studio (full)'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
                 <div style={{ borderTop: '1px solid rgba(10,10,15,0.07)', marginTop: 6, paddingTop: 12 }}>

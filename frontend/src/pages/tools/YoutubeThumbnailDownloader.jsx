@@ -403,7 +403,7 @@ export default function YoutubeThumbnailDownloader() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
-      {/* ── NAV — shared SiteHeader ── */}
+      {/* ── NAV, shared SiteHeader ── */}
       <SiteHeader />
       <FaqSchema items={FAQS} />
 

@@ -1,9 +1,9 @@
-/* ChatCoach — the AI Coach surface.
+/* ChatCoach, the AI Coach surface.
 
    This page renders inside the normal (light) app shell. The shell,
    sidebar and topbar are NOT touched. Only this content panel is dark:
    one self-contained dark workspace docked into the page, with its own
-   conversation history rail. Visual reference: VidIQ AI Coach — calm
+   conversation history rail. Visual reference: VidIQ AI Coach, calm
    neutral dark, plain messages (no coloured bubbles), restrained type.
 
    Plumbing (unchanged):
@@ -34,7 +34,7 @@ import {
   Search,
 } from 'lucide-react'
 
-/* Geist — already the chosen face across the redesigned surfaces. Same
+/* Geist, already the chosen face across the redesigned surfaces. Same
    class of neutral grotesque VidIQ renders, so the type reads calm and
    modern without adding a new dependency. */
 if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-geist-font')) {
@@ -58,14 +58,14 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     .ytg-chat-textarea::placeholder { color: #87878f }
     @keyframes ytgFadeUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
     @media (prefers-reduced-motion: reduce) { .ytg-fade-up { animation: none !important } }
-    /* Bulleted list — small neutral dot, just enough to mark each row. */
+    /* Bulleted list, small neutral dot, just enough to mark each row. */
     .md-list-ul > li { padding-left: 20px; }
     .md-list-ul > li::before {
       content: ''; position: absolute; left: 4px; top: 11px;
       width: 4px; height: 4px; border-radius: 100px;
       background: rgba(255,255,255,0.36);
     }
-    /* Numbered list — plain digit with a period. No badge pill;
+    /* Numbered list, plain digit with a period. No badge pill;
        the structure carries itself via the indent. */
     .md-list-ol > li { counter-increment: mdlist; padding-left: 26px; }
     .md-list-ol > li::before {
@@ -97,7 +97,7 @@ const C = {
   t3:          '#cfd0d6',                 // muted text
   t4:          '#87878f',                 // faint (placeholder, footnotes)
   t5:          '#87878f',                 // faintest (labels, idle icons)
-  red:         '#e5251b',                 // accent — send + active marker only
+  red:         '#e5251b',                 // accent, send + active marker only
   redText:     '#f87171',                 // error copy on dark
   spring:      'cubic-bezier(0.32, 0.72, 0, 1)',
 }
@@ -163,7 +163,7 @@ const MARKDOWN_COMPONENTS = {
     }
     return (
       // Inline code = quoted titles / keywords / handles. Amber TEXT
-      // on a neutral chip — sparingly enough that only the keyword
+      // on a neutral chip, sparingly enough that only the keyword
       // tokens carry color, not the whole chip background.
       <code style={{
         fontFamily: FONT_STACK, fontSize: '0.94em', fontWeight: 500,
@@ -183,7 +183,7 @@ const MARKDOWN_COMPONENTS = {
       borderLeft: '2px solid #34d27b', color: C.t2, fontWeight: 400,
     }}>{children}</blockquote>
   ),
-  // Section headers — plain bold, generous top gap so each section
+  // Section headers, plain bold, generous top gap so each section
   // reads as its own beat without colored accents.
   h1: ({ children }) => (
     <h3 style={{ margin: '24px 0 10px 0', fontSize: 16, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35 }}>{children}</h3>
@@ -530,7 +530,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
   return (
     <div style={{
       // NOT a card. The dark area bleeds out of the shell's content
-      // padding (36/40/72, set by Dashboard — not edited here) so it
+      // padding (36/40/72, set by Dashboard, not edited here) so it
       // fills the whole region under the light topbar edge to edge. No
       // radius, no shadow, no float. The remaining light topbar goes
       // away properly when the shell itself goes dark (next phase).
@@ -606,7 +606,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
                     letterSpacing: '-0.005em', lineHeight: 1.5,
                     textAlign: 'center', margin: '0 0 30px',
                     animation: `ytgFadeUp 0.45s ${C.spring} both`, animationDelay: '70ms',
-                  }}>Ask anything about growing your channel — views, titles, thumbnails, ideas.</p>
+                  }}>Ask anything about growing your channel, views, titles, thumbnails, ideas.</p>
 
                   <div className="ytg-fade-up" style={{
                     width: '100%',
@@ -731,7 +731,7 @@ function Avatar() {
 }
 
 /* ─── A turn. Assistant text sits directly on the surface (no bubble).
-       User text is a quiet neutral chip — never red. Both turns fade
+       User text is a quiet neutral chip, never red. Both turns fade
        up on mount (calm spring) so the conversation has motion without
        being noisy. ──────────────────────────────────────────────── */
 function Message({ role, content, sources }) {
@@ -783,7 +783,7 @@ function Message({ role, content, sources }) {
 
 /* ─── Thinking timeline. Text-only progress rows that fade in while the
        assistant is generating. No icons, no checkmarks, no color
-       coding — the goal is "I can see it working", not a celebration
+       coding, the goal is "I can see it working", not a celebration
        checklist. Steps stagger in via the existing ytgFadeUp keyframes.
        Earlier steps fade to muted so the current step reads as live. ── */
 function ThinkingTimeline({ sources }) {
@@ -831,7 +831,7 @@ function ThinkingTimeline({ sources }) {
   )
 }
 
-/* Typing dots — neutral, no alarm colour, calm bounce. */
+/* Typing dots, neutral, no alarm colour, calm bounce. */
 function Dot({ delay }) {
   return (
     <>

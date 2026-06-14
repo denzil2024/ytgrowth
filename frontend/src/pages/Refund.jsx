@@ -41,7 +41,7 @@ function useBreakpoint() {
 
 export default function Refund() {
   useGlobalStyles()
-  useEffect(() => { document.title = 'Refund Policy — YTGrowth' }, [])
+  useEffect(() => { document.title = 'Refund Policy, YTGrowth' }, [])
   const { isMobile } = useBreakpoint()
 
   return (

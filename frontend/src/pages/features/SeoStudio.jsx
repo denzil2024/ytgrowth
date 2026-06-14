@@ -404,7 +404,7 @@ export default function SeoStudio() {
   return (
     <div style={{ background: 'var(--ytg-bg)', minHeight: '100vh' }}>
 
-      {/* ════ NAV — shared SiteHeader ════════════════════════════════════ */}
+      {/* ════ NAV - shared SiteHeader ════════════════════════════════════ */}
       <SiteHeader />
 
       {/* ════ 1. HERO. White ════════════════════════════════════════════ */}

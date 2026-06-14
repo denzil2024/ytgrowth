@@ -16,7 +16,7 @@ import FaqSchema from '../../components/FaqSchema'
    - For HD preset, auto steps quality down until the file fits YouTube's
      2 MB upload cap. Other presets are uncapped (free for archival,
      web-hosting, OBS overlays, etc.).
-   - Drop / click / paste support. Image stays in the browser — pure
+   - Drop / click / paste support. Image stays in the browser, pure
      HTML5 Canvas, no upload, no server.
 */
 
@@ -344,7 +344,7 @@ const FAQS = [
   },
   {
     q: 'Is my image actually private?',
-    a: <>Yes — verifiably. The entire resize runs in your browser via HTML5 Canvas. The image never touches our server, never gets logged, never gets stored anywhere. Open the Network tab in your browser's DevTools while you use the tool: you'll see zero outbound requests with image data. Drop in a private screenshot, a draft thumbnail, an internal mockup, anything. It stays on your device.</>,
+    a: <>Yes, verifiably. The entire resize runs in your browser via HTML5 Canvas. The image never touches our server, never gets logged, never gets stored anywhere. Open the Network tab in your browser's DevTools while you use the tool: you'll see zero outbound requests with image data. Drop in a private screenshot, a draft thumbnail, an internal mockup, anything. It stays on your device.</>,
   },
   {
     q: 'What happens if my source image isn\'t 16:9?',
@@ -352,7 +352,7 @@ const FAQS = [
   },
   {
     q: 'JPG or PNG. Which should I pick?',
-    a: <>JPG for photographic content (real-world imagery, faces, product shots, gradients). 5–10× smaller than PNG and the quality loss is invisible at thumbnail sizes. PNG for graphic-heavy content (text overlays, illustrations, hard edges, transparency, screenshots of UIs). Lossless but bigger. The default is JPG because 95% of YouTube thumbnails benefit from it. The toggle is right next to the preset selector — no need to re-upload to switch.</>,
+    a: <>JPG for photographic content (real-world imagery, faces, product shots, gradients). 5–10× smaller than PNG and the quality loss is invisible at thumbnail sizes. PNG for graphic-heavy content (text overlays, illustrations, hard edges, transparency, screenshots of UIs). Lossless but bigger. The default is JPG because 95% of YouTube thumbnails benefit from it. The toggle is right next to the preset selector, no need to re-upload to switch.</>,
   },
   {
     q: 'Can I upscale a small source image to 4K?',
@@ -364,7 +364,7 @@ const FAQS = [
   },
   {
     q: 'Does this tool work offline?',
-    a: <>Once the page is loaded, yes. Drop an image, switch presets, change quality, download — no network request happens after the initial page load. You can disconnect from the internet entirely and the tool keeps working.</>,
+    a: <>Once the page is loaded, yes. Drop an image, switch presets, change quality, download, no network request happens after the initial page load. You can disconnect from the internet entirely and the tool keeps working.</>,
   },
 ]
 
@@ -517,7 +517,7 @@ export default function YoutubeThumbnailResizer() {
     if (!result) return null
     const { originalDims, preset: p } = result
     if (originalDims.w < p.w || originalDims.h < p.h) {
-      return `Your source is ${originalDims.w}×${originalDims.h}. Scaling up to ${p.w}×${p.h} stretches pixels — the output won't be sharper than the source.`
+      return `Your source is ${originalDims.w}×${originalDims.h}. Scaling up to ${p.w}×${p.h} stretches pixels, the output won't be sharper than the source.`
     }
     return null
   }, [result])
@@ -567,7 +567,7 @@ export default function YoutubeThumbnailResizer() {
             ))}
           </div>
 
-          {/* Quality controls — only meaningful for JPG */}
+          {/* Quality controls, only meaningful for JPG */}
           {format === 'jpg' && (
             <div className="ytr-quality">
               <span className="ytr-quality-label">JPG quality</span>
@@ -672,7 +672,7 @@ export default function YoutubeThumbnailResizer() {
         </div>
       </section>
 
-      {/* QUALITY PRESETS — explained */}
+      {/* QUALITY PRESETS, explained */}
       <section className="ytr-section-pad" style={{ padding: isMobile ? '64px 20px' : '96px 48px', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
@@ -684,7 +684,7 @@ export default function YoutubeThumbnailResizer() {
               Pick the resolution your <span style={{ color: 'var(--ytg-accent)' }}>workflow needs.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              YouTube's upload spec is 1280×720, but a thumbnail rarely lives in just one place. Embed players, blog hero images, channel banner crops, social previews — every destination wants something a little different. Three presets cover all of them.
+              YouTube's upload spec is 1280×720, but a thumbnail rarely lives in just one place. Embed players, blog hero images, channel banner crops, social previews, every destination wants something a little different. Three presets cover all of them.
             </p>
           </div>
           <div className="ytr-grid-3">
@@ -767,15 +767,15 @@ export default function YoutubeThumbnailResizer() {
               Most resizers <span style={{ color: 'var(--ytg-accent)' }}>upload your image.</span> This one doesn't.
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Search for a thumbnail resizer and you'll find dozens of sites that send your file to a server you don't control, log it, and serve you ads while you wait. Drafts, internal mockups, screenshots — none of that should leave your machine. This tool runs entirely on your device.
+              Search for a thumbnail resizer and you'll find dozens of sites that send your file to a server you don't control, log it, and serve you ads while you wait. Drafts, internal mockups, screenshots, none of that should leave your machine. This tool runs entirely on your device.
             </p>
           </div>
           <div className="ytr-grid-4">
             {[
-              { num: '01', title: 'Browser-based', body: 'Pure HTML5 Canvas. No backend, no server-side processing. Verifiable in your DevTools Network tab — zero outbound requests with image data.' },
+              { num: '01', title: 'Browser-based', body: 'Pure HTML5 Canvas. No backend, no server-side processing. Verifiable in your DevTools Network tab, zero outbound requests with image data.' },
               { num: '02', title: 'Three quality presets', body: 'HD for direct YouTube upload, Full HD for embeds and blogs, 4K for archival masters. One tool, three workflows.' },
               { num: '03', title: 'Auto-fits under 2 MB', body: 'On the HD preset, JPG quality steps down progressively until your file passes YouTube\'s upload cap. No more "thumbnail too large" errors.' },
-              { num: '04', title: 'Works offline', body: 'Once the page is loaded, no internet needed. Drop, switch, download, repeat — the whole loop runs locally.' },
+              { num: '04', title: 'Works offline', body: 'Once the page is loaded, no internet needed. Drop, switch, download, repeat, the whole loop runs locally.' },
             ].map((c, i) => (
               <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 16, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: 26 }}>
                 <p style={{ fontSize: 12, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.06em', fontFamily: 'monospace', marginBottom: 14 }}>{c.num}</p>

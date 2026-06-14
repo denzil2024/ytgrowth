@@ -25,7 +25,7 @@ function Logo({ size = 32 }) {
 function useGlobalStyles() {
   useEffect(() => {
     if (document.getElementById('ytg-contact-styles')) return
-    // DM Sans for display headings + Inter for body — same font pair Landing
+    // DM Sans for display headings + Inter for body, same font pair Landing
     // and Affiliate use. This page is a direct sibling to those two.
     const link = document.createElement('link')
     link.id = 'ytg-font'
@@ -64,7 +64,7 @@ function useGlobalStyles() {
 
       @keyframes fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
 
-      /* Button pattern — copied verbatim from Affiliate's .aff-btn so CTAs
+      /* Button pattern, copied verbatim from Affiliate's .aff-btn so CTAs
          read identically across the marketing site. */
       .contact-btn {
         display: inline-flex; align-items: center; gap: 8px;
@@ -125,7 +125,7 @@ function useGlobalStyles() {
   }, [])
 }
 
-/* Thin red scroll progress bar — same pattern as Affiliate. */
+/* Thin red scroll progress bar, same pattern as Affiliate. */
 function ScrollProgress() {
   const [progress, setProgress] = useState(0)
 
@@ -145,7 +145,7 @@ function ScrollProgress() {
   )
 }
 
-/* Filled check — mirrors Affiliate's Check icon (Affiliate.jsx:219). */
+/* Filled check, mirrors Affiliate's Check icon (Affiliate.jsx:219). */
 function Check() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -155,7 +155,7 @@ function Check() {
   )
 }
 
-/* Stroke-icon set for the reasons grid — matches the app's SVG icon
+/* Stroke-icon set for the reasons grid, matches the app's SVG icon
    language (Dashboard nav, SEO Studio pills, Landing feature tiles). */
 const ICON_PROPS = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' }
 
@@ -214,24 +214,24 @@ const REASONS = [
 const STEPS = [
   {
     n: '01',
-    title: 'You email us — anything',
+    title: 'You email us, anything',
     body: 'Write support@ytgrowth.io from any address. One line or ten paragraphs. Attach a screenshot or don\'t. We\'ll figure it out from whatever you send.',
   },
   {
     n: '02',
-    title: 'A human reads it — personally',
+    title: 'A human reads it, personally',
     body: 'No auto-responder. No ticket queue. No "your issue has been assigned ticket #48219" email. One of us opens your message and reads it through, usually within the hour.',
   },
   {
     n: '03',
     title: 'You get a real reply',
-    body: 'Usually in under 4 hours during our working day. With an actual answer, a fix, or a follow-up question — not a templated reply that ignores what you wrote.',
+    body: 'Usually in under 4 hours during our working day. With an actual answer, a fix, or a follow-up question, not a templated reply that ignores what you wrote.',
   },
 ]
 
 export default function Contact() {
   useGlobalStyles()
-  useEffect(() => { document.title = 'Contact — YTGrowth' }, [])
+  useEffect(() => { document.title = 'Contact, YTGrowth' }, [])
   const { isMobile } = useBreakpoint()
 
   return (
@@ -239,11 +239,11 @@ export default function Contact() {
 
       <ScrollProgress />
 
-      {/* ── NAV — shared SiteHeader ── */}
+      {/* ── NAV, shared SiteHeader ── */}
       <SiteHeader />
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 1 — HERO   bg: #ffffff  (matches Affiliate hero)
+          SECTION 1, HERO   bg: #ffffff  (matches Affiliate hero)
       ══════════════════════════════════════════════════════════ */}
       <section className="contact-section-pad" style={{ padding: isMobile ? '72px 20px 60px' : '110px 40px 88px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 820, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
@@ -254,7 +254,7 @@ export default function Contact() {
             <span style={{ color: 'var(--ytg-accent)' }}>No ticket queues.</span>
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto 14px' }}>
-            One inbox. One human at the other end. Write anything — a bug, a billing question, a feature idea, or just hello — and we'll reply with an actual answer, usually within 4 hours.
+            One inbox. One human at the other end. Write anything, a bug, a billing question, a feature idea, or just hello, and we'll reply with an actual answer, usually within 4 hours.
           </p>
           <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 40 }}>
             No auto-responders. No forms to fill. No routing bots.
@@ -275,14 +275,14 @@ export default function Contact() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 2 — STATS BAR   bg: --ytg-bg-2  (stepped)
+          SECTION 2, STATS BAR   bg: --ytg-bg-2  (stepped)
       ══════════════════════════════════════════════════════════ */}
       <section style={{ background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '52px 24px' : '60px 40px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div className="contact-stats-inner contact-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'center', gap: 32 }}>
             {[
               { value: '< 4h',  label: 'Median reply time',        sub: 'Weekdays, during working hours' },
-              { value: '100%',  label: 'Emails that get a reply',  sub: 'No exceptions — ever' },
+              { value: '100%',  label: 'Emails that get a reply',  sub: 'No exceptions, ever' },
               { value: '0',     label: 'Auto-responders or bots',  sub: 'Only humans answer your email' },
               { value: '7d',    label: 'Inbox monitored',          sub: 'Urgent issues handled at weekends too' },
             ].map((s, i) => (
@@ -297,7 +297,7 @@ export default function Contact() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 3 — HOW IT WORKS   bg: --ytg-bg-3  (darkest step)
+          SECTION 3, HOW IT WORKS   bg: --ytg-bg-3  (darkest step)
       ══════════════════════════════════════════════════════════ */}
       <section id="contact-how" className="contact-section-pad" style={{ padding: isMobile ? '72px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
@@ -320,7 +320,7 @@ export default function Contact() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 4 — REASONS GRID   bg: --ytg-bg
+          SECTION 4, REASONS GRID   bg: --ytg-bg
       ══════════════════════════════════════════════════════════ */}
       <section className="contact-section-pad" style={{ padding: isMobile ? '72px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
@@ -330,7 +330,7 @@ export default function Contact() {
               No question is <span style={{ color: 'var(--ytg-accent)' }}>too small.</span>
             </h2>
             <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', maxWidth: 520, margin: '14px auto 0', lineHeight: 1.75 }}>
-              Here's what usually lands in our inbox. If your reason isn't listed, email anyway — we'll figure out where it needs to go.
+              Here's what usually lands in our inbox. If your reason isn't listed, email anyway, we'll figure out where it needs to go.
             </p>
           </div>
 
@@ -356,7 +356,7 @@ export default function Contact() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 5 — BOTTOM CTA   bg: --ytg-bg-3  (matches Affiliate's bottom CTA)
+          SECTION 5, BOTTOM CTA   bg: --ytg-bg-3  (matches Affiliate's bottom CTA)
       ══════════════════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '0 16px 80px' : '0 40px 120px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', paddingTop: isMobile ? 48 : 80 }}>
@@ -369,7 +369,7 @@ export default function Contact() {
             background: 'var(--ytg-card)',
             position: 'relative', overflow: 'hidden',
           }}>
-            {/* radial red glow — same trick Affiliate uses on its bottom CTA */}
+            {/* radial red glow, same trick Affiliate uses on its bottom CTA */}
             <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 500, height: 240, background: 'radial-gradient(ellipse, rgba(229,37,27,0.09) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <span className="contact-section-label">The inbox is open</span>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 30 : 44, fontWeight: 800, letterSpacing: isMobile ? '-0.8px' : '-1.6px', marginBottom: 14, lineHeight: 1.1, textWrap: 'balance' }}>
@@ -377,7 +377,7 @@ export default function Contact() {
               <span style={{ color: 'var(--ytg-accent)' }}>Send the first email.</span>
             </h2>
             <p style={{ fontSize: isMobile ? 14 : 16, color: 'var(--ytg-text-2)', maxWidth: 480, margin: '0 auto 20px', lineHeight: 1.75 }}>
-              We read every message. We reply to every message. If you've been waiting more than one business day, email again with <strong style={{ color: 'var(--ytg-text)' }}>URGENT</strong> in the subject — we'll prioritise it immediately.
+              We read every message. We reply to every message. If you've been waiting more than one business day, email again with <strong style={{ color: 'var(--ytg-text)' }}>URGENT</strong> in the subject, we'll prioritise it immediately.
             </p>
             <div style={{
               display: 'grid',

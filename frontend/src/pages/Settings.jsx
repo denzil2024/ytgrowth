@@ -228,7 +228,7 @@ function useSettingsStyles() {
         box-shadow: 0 0 0 4px rgba(229,37,27,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
       }
 
-      /* Channel row — hover wash bleeds into the card padding via the
+      /* Channel row, hover wash bleeds into the card padding via the
          negative margin, then rounds, so it feels like a real list. */
       .set-channel-row {
         display: flex; align-items: center; gap: 14px;

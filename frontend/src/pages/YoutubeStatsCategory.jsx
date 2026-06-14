@@ -263,7 +263,7 @@ export default function YoutubeStatsCategory() {
 
   const rows = useMemo(() => (data?.groups?.[category.id] || []).slice(0, 50), [data, category.id])
 
-  // Sibling categories — show 6 random others to seed internal navigation.
+  // Sibling categories, show 6 random others to seed internal navigation.
   const related = useMemo(() => {
     const others = CATEGORY_META.filter(c => c.id !== category.id)
     // Stable shuffle by id hash so prerendered HTML matches client render.
@@ -459,7 +459,7 @@ export default function YoutubeStatsCategory() {
         </div>
       </div>
 
-      {/* ══ FILTER BY COUNTRY — combo page links ══ */}
+      {/* ══ FILTER BY COUNTRY, combo page links ══ */}
       <section className="yts-section-pad" style={{ padding: isMobile ? '64px 20px 24px' : '96px 48px 32px', background: '#fff', borderTop: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 18 }}>

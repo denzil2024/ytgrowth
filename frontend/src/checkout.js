@@ -6,10 +6,10 @@
  * interaction or after a short timeout, then resolves with the Paddle
  * global. Both helpers below await it before touching Paddle.
  *
- * initPaddleRetain(customerId) — call once per authenticated page load
+ * initPaddleRetain(customerId), call once per authenticated page load
  * with the Paddle customer ID (ctm_...) so Retain can track the user.
  *
- * openCheckout(planKey) — opens the Paddle overlay checkout.
+ * openCheckout(planKey), opens the Paddle overlay checkout.
  */
 
 const PADDLE_TOKEN = 'live_2af860b645fca6f106c9d79f8d2'
@@ -24,7 +24,7 @@ function ensurePaddle() {
 /**
  * Re-initialise Paddle with the logged-in customer's Paddle ID.
  * Call this once after /billing/usage resolves and returns a paddle_customer_id.
- * Safe to call multiple times — Paddle ignores repeat calls with the same ID.
+ * Safe to call multiple times, Paddle ignores repeat calls with the same ID.
  */
 export async function initPaddleRetain(customerId) {
   if (!customerId) return
@@ -46,7 +46,7 @@ export async function openCheckout(planKey) {
       credentials: 'include',
     })
 
-    // Unauthenticated visitors hit pricing buttons too — without this branch
+    // Unauthenticated visitors hit pricing buttons too, without this branch
     // /billing/checkout returns 401 and the button silently does nothing,
     // which reads as "broken" (especially on mobile where there's no console).
     // Send them to log in; they can re-click the plan when they land back.

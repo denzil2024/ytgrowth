@@ -41,7 +41,7 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         color: #0a0a0f;
         display: flex; flex-direction: column; gap: 4.5px;
       }
-      /* Mobile overlay — full-screen dark sheet to match the Landing
+      /* Mobile overlay, full-screen dark sheet to match the Landing
          mobile menu so the brand surface stays consistent across the
          site. White overlays read as "abandoned" against feature/tool
          pages that already have light bg. */

@@ -6,7 +6,7 @@
  * stored UTMs are appended as query params, so the backend can persist them
  * against the new UserAccount row in the OAuth callback.
  *
- * This file is loaded once from main.jsx — no React tree involvement.
+ * This file is loaded once from main.jsx, no React tree involvement.
  */
 
 const STORAGE_KEY = 'ytg_utms'
@@ -27,7 +27,7 @@ function writeStored(obj) {
   } catch {}
 }
 
-/* Read utm_* off the current URL. If we find any, store them — otherwise
+/* Read utm_* off the current URL. If we find any, store them, otherwise
  * leave whatever's already in sessionStorage from an earlier page in the
  * same tab. We don't clear stored UTMs on a UTM-less navigation because
  * users often land via a tagged URL and click around before signing up. */

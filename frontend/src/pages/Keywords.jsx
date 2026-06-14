@@ -12,7 +12,7 @@ function saveToDisk(keyword, result) {
   try { localStorage.setItem(LS_KEY, JSON.stringify({ keyword, result })) } catch {}
 }
 
-/* ─── Geist loaded page-scoped — matches Chat + Competitors. ──────────── */
+/* ─── Geist loaded page-scoped, matches Chat + Competitors. ──────────── */
 if (typeof document !== 'undefined' && !document.getElementById('kw-geist-font')) {
   const link = document.createElement('link')
   link.id = 'kw-geist-font'
@@ -21,7 +21,7 @@ if (typeof document !== 'undefined' && !document.getElementById('kw-geist-font')
   document.head.appendChild(link)
 }
 
-/* ─── Styles — system elevation, hairline borders, 14px card radius.
+/* ─── Styles, system elevation, hairline borders, 14px card radius.
        Matches the Competitors / Chat design grammar (Geist, centered
        1040 column, quiet pill tabs, brand red reserved for the page CTA). */
 function useKwStyles() {
@@ -38,7 +38,7 @@ function useKwStyles() {
       @keyframes kwIn   { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
       .kw-in { animation: kwIn 0.26s ease both; }
 
-      /* Card — matches SEO Studio's .seo-suggestion-card exactly
+      /* Card, matches SEO Studio's .seo-suggestion-card exactly
          (SeoOptimizer.jsx:33). That's the benchmark the user wants. */
       .kw-card {
         background: ${C.card};
@@ -54,7 +54,7 @@ function useKwStyles() {
         transform: translateY(-1px);
       }
 
-      /* Keyword row — matches SEO Studio's .seo-kw-row exactly. Phrase
+      /* Keyword row, matches SEO Studio's .seo-kw-row exactly. Phrase
          text brightens on hover. */
       .kw-row-seo:hover .kw-row-phrase { color: ${C.text1}; }
 
@@ -132,7 +132,7 @@ function useKwStyles() {
         border-color: ${C.hairHi};
       }
 
-      /* Tab pills — quiet pill nav like Competitors. Active = soft gray
+      /* Tab pills, quiet pill nav like Competitors. Active = soft gray
          tint, inactive = transparent. Brand red reserved for the page CTA
          (Research) and threat/score accents, never tab chrome. */
       .kw-tab-btn {
@@ -160,7 +160,7 @@ function useKwStyles() {
         font-weight: 600;
       }
 
-      /* Reports list — quieter than the old SEO-Studio elevation. Hairline
+      /* Reports list, quieter than the old SEO-Studio elevation. Hairline
          border, single soft shadow, room between rows. */
       .kw-report-wrapper { position: relative; margin-bottom: 14px; }
       .kw-report-header {
@@ -213,7 +213,7 @@ function useKwStyles() {
       .kw-report-chip .val { font-size: 12px; font-weight: 600; color: ${C.text1}; }
       .kw-report-chip .lbl { font-size: 11px; color: ${C.amberHi}; font-weight: 600; }
 
-      /* Intent picker row — hairline card, green-tinted hover that
+      /* Intent picker row, hairline card, green-tinted hover that
          signals "this is a selection moment". Subtle lift on hover. */
       .kw-intent-opt {
         display: flex; align-items: center; gap: 14px;
@@ -236,7 +236,7 @@ function useKwStyles() {
       .kw-intent-opt .arrow { color: ${C.text3}; transition: color 160ms ease, transform 160ms ease; }
       .kw-intent-opt:hover .arrow { color: ${C.greenHi}; transform: translateX(3px); }
 
-      /* Quiet utility action under the intent picker — outlined pill,
+      /* Quiet utility action under the intent picker, outlined pill,
          no fill, brand red text. The intent options are the primary
          choice; "Let YTGrowth decide" is the secondary escape hatch. */
       .kw-intent-decide-btn {
@@ -260,7 +260,7 @@ function useKwStyles() {
       }
 
 
-      /* Copy button — red brand pill. Matches SEO Studio's seo-btn-primary
+      /* Copy button, red brand pill. Matches SEO Studio's seo-btn-primary
          (SeoOptimizer.jsx:1453) so the theme-colour red shows up on every
          "take action now" moment across the app. */
       .kw-copy-btn {
@@ -279,7 +279,7 @@ function useKwStyles() {
         padding: 7px 15px; /* compensate for 1px border */
       }
 
-      /* Cluster "Copy theme" button — neutral elevated pill.
+      /* Cluster "Copy theme" button, neutral elevated pill.
          White bg, near-black text, hairline border, system-elevation
          shadow. Red is reserved for primary CTAs; this is a utility
          action repeated 5x so it stays quiet but tactile. */
@@ -314,7 +314,7 @@ function useKwStyles() {
   }, [])
 }
 
-/* ─── Design tokens — strict red/amber/green + neutrals, per the project
+/* ─── Design tokens, strict red/amber/green + neutrals, per the project
        palette rule. No blue/purple/teal anywhere. ───────────────────── */
 /* ─── C: dark palette for this page. Mirrors the shipped app-shell /
        Competitors dark system (lit-gradient cards, white-alpha hairlines,
@@ -345,7 +345,7 @@ const C = {
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
 }
 
-// Intent matching — semantic mapping within the strict palette:
+// Intent matching, semantic mapping within the strict palette:
 //   exact   -> green  (win)
 //   strong  -> amber  (secondary)
 //   partial -> neutral grey pill (utility label)
@@ -357,11 +357,11 @@ const INTENT_TONE = {
 
 function oppColor(s) { return s >= 70 ? C.greenHi : s >= 45 ? C.amberHi : C.redHi }
 
-/* ─── MomentumBadge — derived from YouTube competition data we already
+/* ─── MomentumBadge, derived from YouTube competition data we already
        fetched. No extra API calls. Three states:
          - active    : newest top-5 video was published in the last 30 days
          - unclaimed : newest top-5 video is over 180 days old
-         - steady    : in between — rendered as nothing (keeps rows clean) */
+         - steady    : in between, rendered as nothing (keeps rows clean) */
 function MomentumBadge({ momentum }) {
   if (!momentum || momentum === 'steady') return null
   const config = momentum === 'active'
@@ -380,7 +380,7 @@ function MomentumBadge({ momentum }) {
   )
 }
 
-/* Detail modal — Outliers DetailModal pattern. Header + 3-col playbook
+/* Detail modal, Outliers DetailModal pattern. Header + 3-col playbook
    (Why it works / Quick actions / Why now) + action buttons. Opens on
    keyword row click; esc or overlay click to close. */
 function KwDetailModal({ kw, C, onClose }) {
@@ -429,7 +429,7 @@ function KwDetailModal({ kw, C, onClose }) {
             </div>
           </div>
 
-          {/* Top-ranking videos for this keyword — visual evidence at the
+          {/* Top-ranking videos for this keyword, visual evidence at the
               top of the playbook. Pulled from competition.top_videos
               (added by the backend in the same slice as the Top Pick band).
               Rendered only when the field is populated. */}
@@ -556,11 +556,11 @@ function KwDetailModal({ kw, C, onClose }) {
             )
           })()}
 
-          {/* 3-col playbook — exact Outliers pattern (blue / amber / green) */}
+          {/* 3-col playbook, exact Outliers pattern (blue / amber / green) */}
           <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
             <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 16 }}>Keyword playbook</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
-              {/* Blue — Why it works (numbered list, mirrors Quick actions) */}
+              {/* Blue, Why it works (numbered list, mirrors Quick actions) */}
               <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
                 <p style={{ fontSize: 11, fontWeight: 600, color: '#4a7cf7', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
@@ -572,7 +572,7 @@ function KwDetailModal({ kw, C, onClose }) {
                   ))}
                 </ul>
               </div>
-              {/* Amber — Quick actions (numbered list) */}
+              {/* Amber, Quick actions (numbered list) */}
               <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                 <p style={{ fontSize: 11, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
@@ -584,7 +584,7 @@ function KwDetailModal({ kw, C, onClose }) {
                   ))}
                 </ul>
               </div>
-              {/* Green — Why now */}
+              {/* Green, Why now */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
                 <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
                 <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.005em' }}>{buildWhyNow(kw)}</p>
@@ -597,7 +597,7 @@ function KwDetailModal({ kw, C, onClose }) {
   )
 }
 
-/* Tooltip copy for each ranked-keyword row — folds together the real
+/* Tooltip copy for each ranked-keyword row, folds together the real
    data signals so hovering gives the full story at a glance. */
 function buildRowTooltip(kw) {
   const parts = [`${kw.intentMatch || '—'} match`, `Score ${kw.opportunityScore}`]
@@ -614,7 +614,7 @@ function buildRowTooltip(kw) {
   return parts.join(' · ')
 }
 
-/* Ordered list of "Why it works" signal points — rendered as a numbered
+/* Ordered list of "Why it works" signal points, rendered as a numbered
    list (same layout as Quick actions), so the panel reads clean. */
 function buildWhyItWorks(kw) {
   const comp = kw.competition || {}
@@ -630,7 +630,7 @@ function buildWhyItWorks(kw) {
   return out
 }
 
-/* Rule-based ordered action list — fills the "Quick actions" column. */
+/* Rule-based ordered action list, fills the "Quick actions" column. */
 function buildQuickActions(kw) {
   const comp = kw.competition || {}
   const out = []
@@ -643,33 +643,33 @@ function buildQuickActions(kw) {
   }
   out.push('Put the phrase in the first 100 characters of your description.')
   if (comp.top_subs_median && comp.top_subs_median > 500000) {
-    out.push('Try a long-tail variant — big channels dominate the head term.')
+    out.push('Try a long-tail variant, big channels dominate the head term.')
   } else if (kw.momentum === 'unclaimed') {
     out.push('Publish within 7 days while the slot is empty.')
   } else if (kw.momentum === 'active') {
-    out.push('Publish fast — the niche is rising and competitors are still shipping.')
+    out.push('Publish fast, the niche is rising and competitors are still shipping.')
   } else {
     out.push('Add a long-tail variant as a secondary tag for extra coverage.')
   }
   return out
 }
 
-/* One-line "because" — the reason this is the right play right now. */
+/* One-line "because", the reason this is the right play right now. */
 function buildWhyNow(kw) {
   const comp = kw.competition || {}
   if (kw.momentum === 'unclaimed') {
-    return 'No major video in 6+ months — first-mover advantage while the topic is quiet.'
+    return 'No major video in 6+ months, first-mover advantage while the topic is quiet.'
   }
   if (kw.momentum === 'active') {
-    return 'Rising niche with recent activity — the algorithm is actively recommending this space.'
+    return 'Rising niche with recent activity, the algorithm is actively recommending this space.'
   }
   if (kw.intentMatch === 'exact' && kw.opportunityScore >= 75) {
-    return 'Strong exact match with high opportunity score — relevance is on your side.'
+    return 'Strong exact match with high opportunity score, relevance is on your side.'
   }
   if (comp.top_subs_median && comp.top_subs_median > 500000) {
-    return 'Big channels dominate — but a sharper angle can still carve space in the long tail.'
+    return 'Big channels dominate, but a sharper angle can still carve space in the long tail.'
   }
-  return 'Balanced opportunity with room to compete — worth testing against similar variants.'
+  return 'Balanced opportunity with room to compete, worth testing against similar variants.'
 }
 
 function fmtCompact(n) {
@@ -697,7 +697,7 @@ function outlierFor(views, medianViews) {
   return Math.round(mult * 10) / 10
 }
 
-/* ─── VideoMetricsRow — labeled chips under each video card. Two segments
+/* ─── VideoMetricsRow, labeled chips under each video card. Two segments
        per chip (muted label + bold value) so the number has context.
        Outlier chip only shows at >=1.5x the keyword median:
          - amber  (1.5-2.9x) "Above avg"
@@ -732,7 +732,7 @@ function VideoMetricsRow({ vph, outlierMult }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
       {outlierMult && (() => {
-        // Cap display at "10×+" — when a top-ranking video is 30× the
+        // Cap display at "10×+", when a top-ranking video is 30× the
         // typical result, the exact ratio reads as silly. The label still
         // tells the full story (Outlier vs Above avg).
         const displayMult = outlierMult >= 10 ? '10×+' : `${outlierMult}×`
@@ -759,7 +759,7 @@ function VideoMetricsRow({ vph, outlierMult }) {
   )
 }
 
-/* ─── MomentumChart — 12-week SVG line chart of publishing_timeline.
+/* ─── MomentumChart, 12-week SVG line chart of publishing_timeline.
        Color encodes direction: green if the last 4 weeks summed beat the
        previous 4 (niche heating up), amber otherwise. Fill under the line
        at 0.07 alpha gives visual weight without being loud. */
@@ -789,7 +789,7 @@ function MomentumChart({ timeline, height = 120 }) {
   const linePath = points.map((p, i) => (i === 0 ? `M ${p[0]} ${p[1]}` : `L ${p[0]} ${p[1]}`)).join(' ')
   const fillPath = `${linePath} L ${xFor(n - 1)} ${padT + innerH} L ${xFor(0)} ${padT + innerH} Z`
 
-  // X labels — show every 3rd week, with "now" on the right edge.
+  // X labels, show every 3rd week, with "now" on the right edge.
   const labels = timeline.map((t, i) => {
     if (i === n - 1) return 'now'
     if (i % 3 !== 0) return ''
@@ -797,7 +797,7 @@ function MomentumChart({ timeline, height = 120 }) {
     return `${weeksAgo}w`
   })
 
-  // Peak week annotation — finds the max bucket for the caption.
+  // Peak week annotation, finds the max bucket for the caption.
   const peakIdx = counts.indexOf(maxCount)
   const peakWeeksAgo = n - 1 - peakIdx
   const peakLabel = peakIdx === n - 1 ? 'this week' : peakWeeksAgo === 1 ? 'last week' : `${peakWeeksAgo} weeks ago`
@@ -805,7 +805,7 @@ function MomentumChart({ timeline, height = 120 }) {
   return (
     <div>
       <svg width="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ display: 'block' }}>
-        {/* Y gridlines — 3 quiet lines */}
+        {/* Y gridlines, 3 quiet lines */}
         {[0.25, 0.5, 0.75].map(p => (
           <line key={p} x1={padL} x2={W - padR} y1={padT + innerH * p} y2={padT + innerH * p}
             stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
@@ -851,7 +851,7 @@ function MomentumChart({ timeline, height = 120 }) {
   )
 }
 
-/* ─── ScoreRing — copied verbatim from SeoOptimizer.jsx:272 so the hero
+/* ─── ScoreRing, copied verbatim from SeoOptimizer.jsx:272 so the hero
        uses the exact same 108px ring the user already approves on the
        Title Scorecard. */
 function ScoreRing({ score }) {
@@ -907,7 +907,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
   const [copiedCluster, setCopiedCluster] = useState(null)
   const [openRow,       setOpenRow]       = useState(null)
 
-  // Reports tab state — past /keywords/research runs persisted to DB so
+  // Reports tab state, past /keywords/research runs persisted to DB so
   // they stay reopenable even when the user is out of credits.
   const [activeTab,      setActiveTab]      = useState('new')
   const [reports,        setReports]        = useState([])
@@ -1026,7 +1026,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
   return (
     <div className="kw-page">
 
-      {/* Header — Geist 26/700 to anchor the page, subtitle slightly
+      {/* Header, Geist 26/700 to anchor the page, subtitle slightly
           darker so it doesn't disappear on light backgrounds. Matches
           Competitors. */}
       <div style={{ marginBottom: 28 }}>
@@ -1038,7 +1038,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
         </p>
       </div>
 
-      {/* Tabs — New / Reports (mirrors Competitors pattern) */}
+      {/* Tabs, New / Reports (mirrors Competitors pattern) */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
         <button
           className={`kw-tab-btn ${activeTab === 'new' ? 'active' : ''}`}
@@ -1100,12 +1100,12 @@ export default function Keywords({ plan, freeTierFeatures }) {
         </div>
       )}
 
-      {/* Intent picker — green top stripe (selection moment) + tighter
+      {/* Intent picker, green top stripe (selection moment) + tighter
           header with hierarchy, refined option rows. */}
       {intentOptions && !loading && (
         <div className="kw-card kw-in" style={{ padding: 0, marginBottom: 16, borderTop: `3px solid ${C.green}` }}>
           <div style={{ padding: '20px 24px 22px' }}>
-            {/* Tightened header — single visual cluster instead of three
+            {/* Tightened header, single visual cluster instead of three
                 stacked labels. Eyebrow + heading sit together; subtitle
                 is the supporting line. */}
             <div style={{ marginBottom: 16 }}>
@@ -1129,7 +1129,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
                       <span style={{ fontSize: 14.5, fontWeight: 600, color: C.text1,
                         letterSpacing: '-0.15px' }}>{opt.label}</span>
-                      {/* Keyword variant chip — green tint to match the
+                      {/* Keyword variant chip, green tint to match the
                           card's accent. The chip is data ("here's the
                           exact search we'll run"), not a label. */}
                       <span style={{
@@ -1162,7 +1162,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
         </div>
       )}
 
-      {/* Results — every section follows the SEO Studio "Keyword research"
+      {/* Results, every section follows the SEO Studio "Keyword research"
           pattern exactly (SeoOptimizer.jsx:1366-1421):
           out-of-card H2 section header, then a single amber-topped card
           with an uppercase eyebrow + subtitle on the left and a big tabular
@@ -1171,7 +1171,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
       {result && (
         <div className="kw-in">
 
-          {/* ── Top Pick + Search Intent — COMBINED hero. Exact Title
+          {/* ── Top Pick + Search Intent, COMBINED hero. Exact Title
               Scorecard pattern (SeoOptimizer.jsx:1015-1097): ScoreRing on
               the left, amber 3px vertical divider, AI verdict paragraph in
               the middle, second amber divider, intent breakdown on the
@@ -1181,7 +1181,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
               ? result.topPick.opportunityScore
               : Math.max(0, ...(result.keywords || []).map(k => k.opportunityScore || 0))
             const scoreCol = oppColor(topScore)
-            // Drop the < 28 char filter — the intent breakdown was rendering
+            // Drop the < 28 char filter, the intent breakdown was rendering
             // single-row when the AI returned slightly longer labels. Show all
             // three fields if present.
             const rows = [
@@ -1213,7 +1213,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
 
-                  {/* LEFT — ScoreRing + 'TOP PICK' label + keyword caption */}
+                  {/* LEFT, ScoreRing + 'TOP PICK' label + keyword caption */}
                   <div style={{ flexShrink: 0, textAlign: 'center' }}>
                     <ScoreRing score={topScore} />
                     <p style={{ fontSize: 11, color: C.text3, fontWeight: 600, marginTop: 8, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
@@ -1224,10 +1224,10 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     </p>
                   </div>
 
-                  {/* Amber 3px divider — matches Title Scorecard */}
+                  {/* Amber 3px divider, matches Title Scorecard */}
                   <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 2 }}/>
 
-                  {/* MIDDLE — AI verdict paragraph */}
+                  {/* MIDDLE, AI verdict paragraph */}
                   <div style={{ flex: 1.3, minWidth: 0 }}>
                     <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
                       AI verdict
@@ -1243,7 +1243,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 2 }}/>
                   )}
 
-                  {/* RIGHT — Intent breakdown rows */}
+                  {/* RIGHT, Intent breakdown rows */}
                   {rows.length > 0 && (
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
@@ -1276,7 +1276,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             )
           })()}
 
-          {/* ── Top-ranking videos band — its own section BELOW the Top Pick
+          {/* ── Top-ranking videos band, its own section BELOW the Top Pick
                hero (was inside the hero card before; user wanted it as a
                distinct band). Pulls from competition.top_videos on the
                top-pick keyword, with fallback to any enriched keyword
@@ -1412,7 +1412,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             )
           })()}
 
-          {/* ── Competition momentum — line chart of weekly top-ranking video
+          {/* ── Competition momentum, line chart of weekly top-ranking video
                counts for the top pick keyword over the last 12 weeks.
                Real data, derived from search.list publishedAt distribution
                (no extra API cost). Shows whether the niche is heating up or
@@ -1453,7 +1453,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             )
           })()}
 
-          {/* ── Ranked keywords — 2-col row grid inside one card. Each
+          {/* ── Ranked keywords, 2-col row grid inside one card. Each
               row is clickable to open the playbook modal. ── */}
           {result.keywords?.length > 0 && (
             <>
@@ -1544,7 +1544,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             </>
           )}
 
-          {/* ── Content clusters — single card with N columns separated by
+          {/* ── Content clusters, single card with N columns separated by
               amber 3px vertical dividers. No empty bottom-row cells; every
               theme gets its own equal-width column. Mirrors the Top Pick
               hero's column layout. Keyword chips are neutral (was green
@@ -1560,7 +1560,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
               <div className="kw-card" style={{ borderTop: `3px solid ${C.green}` }}>
                 <div style={{ display: 'flex', alignItems: 'stretch', padding: '20px 22px' }}>
-                  {/* Cap at 3 — three columns reads cleanly in the 1040
+                  {/* Cap at 3, three columns reads cleanly in the 1040
                       column. More than 3 cramps the keyword chips and the
                       Copy theme buttons into unreadable narrow slots. */}
                   {result.clusters.slice(0, 3).map((cl, i, arr) => {
@@ -1590,7 +1590,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                             }}>{cl.keywords?.length || 0}</span>
                           </div>
 
-                          {/* Keyword chips — clean green. Green is the
+                          {/* Keyword chips, clean green. Green is the
                               app's "positive opportunity" semantic and pairs
                               cleanly against the amber vertical dividers
                               without competing for the same color slot. */}
@@ -1644,7 +1644,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
         </div>
       )}
 
-      {/* Keyword playbook modal — row click opens this. */}
+      {/* Keyword playbook modal, row click opens this. */}
       {openRow && result?.keywords && (
         <KwDetailModal
           kw={result.keywords.find(k => k.keyword === openRow)}
@@ -1655,7 +1655,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
       </>)}
 
-      {/* ── Reports tab — past /keywords/research runs ────────────────────── */}
+      {/* ── Reports tab, past /keywords/research runs ────────────────────── */}
       {activeTab === 'reports' && (
         <div>
           {reportsLoading ? (
@@ -1672,7 +1672,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 No reports yet
               </p>
               <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
-                Run a keyword research and it'll show up here — so you can always come back to a report you've already paid for.
+                Run a keyword research and it'll show up here, so you can always come back to a report you've already paid for.
               </p>
             </div>
           ) : (

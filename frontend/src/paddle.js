@@ -31,8 +31,8 @@ export const PRICES = {
 
 /**
  * Open Paddle checkout overlay.
- * @param {string} priceKey  — key from PRICES map
- * @param {object} user      — { email, channel_id }
+ * @param {string} priceKey , key from PRICES map
+ * @param {object} user     , { email, channel_id }
  */
 export async function openCheckout(priceKey, user = {}) {
   const paddle = await getPaddle()

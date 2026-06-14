@@ -161,7 +161,7 @@ export default function YoutubeStatsCountryCategory() {
   })
   const [openFaq, setOpenFaq] = useState(0)
 
-  // SEO meta — bake from both country + category metadata so every combo
+  // SEO meta, bake from both country + category metadata so every combo
   // has a unique title and description.
   useEffect(() => {
     if (!country || !category) return
@@ -235,7 +235,7 @@ export default function YoutubeStatsCountryCategory() {
             <span>Top 50 <span style={{ color: 'var(--ytg-accent)' }}>{category.label}</span> channels in {country.label}</span>
           </h1>
 
-          {/* Combined intro — first paragraph from category, first paragraph
+          {/* Combined intro, first paragraph from category, first paragraph
               from country. Together they give ~400 words of unique SEO copy
               per combo without manually writing 70 pages. */}
           <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 18, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginBottom: 16, textWrap: 'pretty' }}>
@@ -308,7 +308,7 @@ export default function YoutubeStatsCountryCategory() {
         </div>
       </section>
 
-      {/* ══ HIGHLIGHTS — combine country + category bullets ══ */}
+      {/* ══ HIGHLIGHTS, combine country + category bullets ══ */}
       <section className="yts-section-pad" style={{ padding: isMobile ? '64px 20px' : '96px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <div style={{ marginBottom: 32, maxWidth: 700 }}>

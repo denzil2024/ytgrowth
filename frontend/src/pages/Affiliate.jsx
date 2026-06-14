@@ -147,19 +147,19 @@ const PLANS = [
 const FAQ_ITEMS = [
   {
     q: 'What is the commission rate and does it really recur?',
-    a: 'You earn 30% of every payment your referrals make — not just the first one. If someone subscribes to the Growth plan at $49/month and stays for two years, you earn 30% of every single renewal for the full two years. Annual plans count too. There is no cliff, no cap, and no expiry on an active customer.',
+    a: 'You earn 30% of every payment your referrals make, not just the first one. If someone subscribes to the Growth plan at $49/month and stays for two years, you earn 30% of every single renewal for the full two years. Annual plans count too. There is no cliff, no cap, and no expiry on an active customer.',
   },
   {
     q: 'How long does the tracking cookie last?',
-    a: 'The cookie window is 30 days. That means anyone who clicks your referral link and completes a purchase within 30 days is attributed to you — even if they close the tab, switch devices, or come back later. Attribution is industry-standard and works across browsers and sessions.',
+    a: 'The cookie window is 30 days. That means anyone who clicks your referral link and completes a purchase within 30 days is attributed to you, even if they close the tab, switch devices, or come back later. Attribution is industry-standard and works across browsers and sessions.',
   },
   {
     q: 'Do I need to be a paying YTGrowth customer to join?',
-    a: 'No. You can join the affiliate program without ever subscribing to YTGrowth yourself. That said, affiliates who actually use the product tend to convert far better — your audience can tell the difference between someone reading copy off a page and someone who genuinely uses the tool every week.',
+    a: 'No. You can join the affiliate program without ever subscribing to YTGrowth yourself. That said, affiliates who actually use the product tend to convert far better, your audience can tell the difference between someone reading copy off a page and someone who genuinely uses the tool every week.',
   },
   {
     q: 'Is there an approval process or minimum audience size?',
-    a: 'No approval required and no minimum subscriber count. Sign up at the YTGrowth affiliate portal, get your link, and start sharing immediately. We do reserve the right to remove affiliates who use spam tactics, misleading claims, or paid ads that violate our policy — but for legitimate creators this is a non-issue.',
+    a: 'No approval required and no minimum subscriber count. Sign up at the YTGrowth affiliate portal, get your link, and start sharing immediately. We do reserve the right to remove affiliates who use spam tactics, misleading claims, or paid ads that violate our policy, but for legitimate creators this is a non-issue.',
   },
   {
     q: 'What happens if my referral cancels and resubscribes later?',
@@ -179,7 +179,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Does the 30% apply to one-time purchases and annual plans too?',
-    a: 'Yes. The 30% commission applies to all plan types — monthly subscriptions, annual subscriptions paid upfront, and any future one-time product purchases. Annual plans pay out a larger single commission because the customer paid for the full year at once, which can mean a significantly bigger cheque per referral.',
+    a: 'Yes. The 30% commission applies to all plan types, monthly subscriptions, annual subscriptions paid upfront, and any future one-time product purchases. Annual plans pay out a larger single commission because the customer paid for the full year at once, which can mean a significantly bigger cheque per referral.',
   },
   {
     q: 'What marketing materials are available?',
@@ -189,7 +189,7 @@ const FAQ_ITEMS = [
 
 const TESTIMONIALS = [
   {
-    quote: 'I mentioned YTGrowth in one video — not even a dedicated review, just a passing recommendation in a tools roundup. Six months later I am still collecting recurring commissions from that single video. That has never happened with any other affiliate program I have promoted.',
+    quote: 'I mentioned YTGrowth in one video, not even a dedicated review, just a passing recommendation in a tools roundup. Six months later I am still collecting recurring commissions from that single video. That has never happened with any other affiliate program I have promoted.',
     name: 'Marcus T.',
     role: 'Tech & Productivity · 42K subs',
     earning: '$340/mo',
@@ -251,7 +251,7 @@ function ChevronIcon({ open }) {
 /* ─── Page ───────────────────────────────────────────────────────────── */
 export default function Affiliate() {
   useGlobalStyles()
-  useEffect(() => { document.title = 'Affiliates — YTGrowth' }, [])
+  useEffect(() => { document.title = 'Affiliates, YTGrowth' }, [])
 
   const [referrals, setReferrals] = useState(10)
   const [openFaq, setOpenFaq]     = useState(0)
@@ -262,11 +262,11 @@ export default function Affiliate() {
 
       <ScrollProgress />
 
-      {/* ── NAV — shared SiteHeader ── */}
+      {/* ── NAV, shared SiteHeader ── */}
       <SiteHeader />
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 1 — HERO   bg: var(--ytg-bg)  #f4f4f6
+          SECTION 1, HERO   bg: var(--ytg-bg)  #f4f4f6
       ══════════════════════════════════════════════════════════ */}
       <section id="aff-hero" className="aff-section-pad" style={{ padding: isMobile ? '72px 20px 60px' : '110px 40px 88px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 820, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
@@ -277,7 +277,7 @@ export default function Affiliate() {
             <span style={{ color: 'var(--ytg-accent)' }}>You should be earning from it.</span>
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto 14px' }}>
-            30% recurring commission on every payment — not just the first sale. Every renewal, every month, for the full lifetime of each customer you refer.
+            30% recurring commission on every payment, not just the first sale. Every renewal, every month, for the full lifetime of each customer you refer.
           </p>
           <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 40 }}>
             Free to join. No approval wait. Link in under 2 minutes.
@@ -298,13 +298,13 @@ export default function Affiliate() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 2 — STATS BAR   bg: --ytg-bg-2  #ecedf1  (stepped darker)
+          SECTION 2, STATS BAR   bg: --ytg-bg-2  #ecedf1  (stepped darker)
       ══════════════════════════════════════════════════════════ */}
       <section id="aff-stats" style={{ background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '60px 40px' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div className="aff-stats-inner" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap', gap: 32 }}>
             {[
-              { value: '30%',    label: 'Recurring commission',    sub: 'Every payment — not just the first' },
+              { value: '30%',    label: 'Recurring commission',    sub: 'Every payment, not just the first' },
               { value: '30 days', label: 'Cookie window',          sub: 'Standard attribution window' },
               { value: '$50',    label: 'Payout minimum',          sub: 'Monthly via PayPal or bank' },
               { value: '∞',      label: 'Earnings cap',            sub: 'No limit, no ceiling, ever' },
@@ -320,7 +320,7 @@ export default function Affiliate() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 3 — CALCULATOR   bg: var(--ytg-bg)  #f4f4f6
+          SECTION 3, CALCULATOR   bg: var(--ytg-bg)  #f4f4f6
       ══════════════════════════════════════════════════════════ */}
       <section id="aff-calculator" className="aff-section-pad" style={{ padding: '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -368,14 +368,14 @@ export default function Affiliate() {
                 </div>
               ))}
               <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: 18, lineHeight: 1.65 }}>
-                Based on 30% of monthly plan price. Recurring — not one-off. Annual plans pay out more in a single commission.
+                Based on 30% of monthly plan price. Recurring, not one-off. Annual plans pay out more in a single commission.
               </p>
             </div>
 
             {/* Right column */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
-              {/* Annual projection card — accent background */}
+              {/* Annual projection card, accent background */}
               <div style={{ background: 'var(--ytg-accent)', borderRadius: 20, border: 'none', boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)', color: '#fff', padding: 36 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.72, marginBottom: 14 }}>
                   If all {referrals} referrals take Growth ($49/mo)
@@ -402,7 +402,7 @@ export default function Affiliate() {
                 <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 18 }}>What your referrals actually get</div>
                 {[
                   'AI-powered channel analysis & insights',
-                  'SEO Studio — title, description & tag optimiser',
+                  'SEO Studio, title, description & tag optimiser',
                   'Competitor tracking & benchmarking',
                   'Keyword research with search volume data',
                   'Weekly performance reports via email',
@@ -424,7 +424,7 @@ export default function Affiliate() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 4 — HOW IT WORKS   bg: --ytg-bg-3  #e6e7ec  (darkest step)
+          SECTION 4, HOW IT WORKS   bg: --ytg-bg-3  #e6e7ec  (darkest step)
       ══════════════════════════════════════════════════════════ */}
       <section id="aff-how" className="aff-section-pad" style={{ padding: '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
@@ -435,16 +435,16 @@ export default function Affiliate() {
           <div className="aff-grid-3">
             {[
               {
-                n: '01', title: 'Sign up — instantly',
+                n: '01', title: 'Sign up, instantly',
                 body: 'Visit the YTGrowth affiliate portal, create a free account, and your unique tracking link is generated immediately. No application form, no waiting for approval, no minimum follower requirement.',
               },
               {
                 n: '02', title: 'Share your link',
-                body: 'Drop it in a YouTube video description, a newsletter, a tweet, a community post, or a pinned comment. The best-converting placements are honest tool recommendations in your regular content — not dedicated review videos.',
+                body: 'Drop it in a YouTube video description, a newsletter, a tweet, a community post, or a pinned comment. The best-converting placements are honest tool recommendations in your regular content, not dedicated review videos.',
               },
               {
                 n: '03', title: 'Earn every single month',
-                body: 'Whenever someone you referred pays their subscription — month after month, or in one annual lump — 30% lands in your affiliate balance. Withdraw at any time once you clear $50.',
+                body: 'Whenever someone you referred pays their subscription, month after month, or in one annual lump, 30% lands in your affiliate balance. Withdraw at any time once you clear $50.',
               },
             ].map((step, i) => (
               <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: 36 }}>
@@ -458,7 +458,7 @@ export default function Affiliate() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 5 — COMPARISON   bg: var(--ytg-bg)  #f4f4f6
+          SECTION 5, COMPARISON   bg: var(--ytg-bg)  #f4f4f6
       ══════════════════════════════════════════════════════════ */}
       <section id="aff-compare" className="aff-section-pad" style={{ padding: '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 860, margin: '0 auto' }}>
@@ -466,7 +466,7 @@ export default function Affiliate() {
             <span className="aff-section-label">How we compare</span>
             <h2 className="aff-section-h2" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>The best affiliate deal in the YouTube tools market</h2>
             <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', marginTop: 14, maxWidth: 520, margin: '14px auto 0', lineHeight: 1.75 }}>
-              We looked at every major competitor program before setting ours. We set out to be meaningfully better — not just slightly higher on paper.
+              We looked at every major competitor program before setting ours. We set out to be meaningfully better, not just slightly higher on paper.
             </p>
           </div>
           <div style={{ background: 'var(--ytg-card)', borderRadius: 20, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', overflow: 'hidden', fontSize: 14 }}>
@@ -504,7 +504,7 @@ export default function Affiliate() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 6 — TESTIMONIALS   bg: --ytg-bg-2  #ecedf1
+          SECTION 6, TESTIMONIALS   bg: --ytg-bg-2  #ecedf1
       ══════════════════════════════════════════════════════════ */}
       <section id="aff-testimonials" className="aff-section-pad" style={{ padding: '100px 40px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
@@ -532,7 +532,7 @@ export default function Affiliate() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 7 — FAQ   bg: var(--ytg-bg)  #f4f4f6
+          SECTION 7, FAQ   bg: var(--ytg-bg)  #f4f4f6
       ══════════════════════════════════════════════════════════ */}
       <section id="aff-faq" className="aff-section-pad" style={{ padding: '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 740, margin: '0 auto' }}>
@@ -540,7 +540,7 @@ export default function Affiliate() {
             <span className="aff-section-label">FAQ</span>
             <h2 className="aff-section-h2" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>Every question answered</h2>
             <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', marginTop: 14, lineHeight: 1.75 }}>
-              If something is not covered here, email <span style={{ color: 'var(--ytg-text)', fontWeight: 600 }}>support@ytgrowth.io</span> — we reply same day.
+              If something is not covered here, email <span style={{ color: 'var(--ytg-text)', fontWeight: 600 }}>support@ytgrowth.io</span>, we reply same day.
             </p>
           </div>
           {FAQ_ITEMS.map((item, i) => (
@@ -568,7 +568,7 @@ export default function Affiliate() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          SECTION 8 — BOTTOM CTA   bg: --ytg-bg-3  #e6e7ec
+          SECTION 8, BOTTOM CTA   bg: --ytg-bg-3  #e6e7ec
       ══════════════════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '0 16px 80px' : '0 40px 120px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', paddingTop: isMobile ? 48 : 80 }}>

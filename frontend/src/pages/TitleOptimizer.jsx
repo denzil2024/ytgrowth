@@ -52,7 +52,7 @@ const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.
 const STRATEGY_META = {
   search: { label: 'Search', color: C.blue,   bg: C.blueBg,   desc: 'Keyword-optimised to rank in YouTube search' },
   browse: { label: 'Browse', color: C.purple, bg: C.purpleBg, desc: 'Emotional hook for homepage & suggested feed' },
-  hybrid: { label: 'Hybrid', color: C.teal,   bg: C.tealBg,   desc: 'Keywords + emotion — ranks and gets clicked' },
+  hybrid: { label: 'Hybrid', color: C.teal,   bg: C.tealBg,   desc: 'Keywords + emotion, ranks and gets clicked' },
 }
 
 // Must match backend _score_title breakdown keys exactly
@@ -62,7 +62,7 @@ const BREAKDOWN_META = {
   power_words:      { label: 'Power words',          max: 15, why: 'Words like "Best", "Secret", "Never", "Shocking" trigger an emotional response that overrides the rational decision not to click.' },
   numbers:          { label: 'Numbers / digits',     max: 10, why: 'Specific numbers ("7 Tips", "24-Hour", "10x") outperform vague titles. They signal concrete, structured value.' },
   question:         { label: 'Question format',      max: 10, why: 'Questions create an unresolved tension the viewer needs to close. "Why does..." and "How do I..." titles get disproportionate clicks.' },
-  hook_format:      { label: 'Hook / structure',     max: 10, why: 'A colon ":", parenthesis, or bracket splits your title into a hook + payoff — the viewer gets a promise and wants the answer.' },
+  hook_format:      { label: 'Hook / structure',     max: 10, why: 'A colon ":", parenthesis, or bracket splits your title into a hook + payoff, the viewer gets a promise and wants the answer.' },
   keyword_relevance:{ label: 'Keyword relevance',    max: 10, why: 'Titles that share phrases with top-viewed videos in your niche rank higher in search and appear in suggested videos more often.' },
   viral_format:     { label: 'Viral format',         max: 10, why: 'Titles following proven viral patterns (Curiosity Gap, Listicle, Authority/Warning, etc.) consistently outperform generic alternatives.' },
 }
@@ -162,7 +162,7 @@ export default function TitleOptimizer() {
   const [intentOptions, setIntentOptions]     = useState(null)
   const [selectedKeyword, setSelectedKeyword] = useState('')
 
-  // Auto-save whenever title or result changes — but don't wipe a previous result
+  // Auto-save whenever title or result changes, but don't wipe a previous result
   // while a new analysis is loading (result is temporarily null during fetch)
   useEffect(() => {
     if (result !== null) saveToDisk(title, result)
@@ -307,7 +307,7 @@ export default function TitleOptimizer() {
         {error && <p style={{ marginTop: 12, fontSize: 14, color: C.red }}>{error}</p>}
       </div>
 
-      {/* Intent picker — shown between title input and full analysis */}
+      {/* Intent picker, shown between title input and full analysis */}
       {intentOptions && !loading && !result && (
         <div style={{ background: C.card, border: `1.5px solid ${C.blue}`, borderRadius: 16, padding: '22px 24px', marginBottom: 20, boxShadow: '0 2px 12px rgba(0,122,255,0.08)' }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 4 }}>What's this video really about?</p>
@@ -333,7 +333,7 @@ export default function TitleOptimizer() {
           </div>
           <button onClick={() => runAnalysis('')}
             style={{ marginTop: 12, fontSize: 12, color: C.text3, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'inherit' }}>
-            None of these — let the AI decide
+            None of these, let the AI decide
           </button>
         </div>
       )}
@@ -351,7 +351,7 @@ export default function TitleOptimizer() {
                   <p style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>{scoreLabel}</p>
                   <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.6 }}>
                     {result.score >= 75 ? 'Well optimised. Small tweaks can push it further.'
-                      : result.score >= 50 ? 'Decent — the 3 AI titles below fix your gaps.'
+                      : result.score >= 50 ? 'Decent, the 3 AI titles below fix your gaps.'
                       : 'Needs work. The AI titles below address every gap.'}
                   </p>
                   {result.primary_phrase && (
@@ -394,7 +394,7 @@ export default function TitleOptimizer() {
             </div>
           </div>
 
-          {/* Keyword Research — VidIQ-style scored table */}
+          {/* Keyword Research, VidIQ-style scored table */}
           {result.keyword_scores?.length > 0 && (
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '18px 24px', marginBottom: 16, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
@@ -477,7 +477,7 @@ export default function TitleOptimizer() {
             </div>
           )}
 
-          {/* Intent analysis + gap — shown when Claude returns analysis */}
+          {/* Intent analysis + gap, shown when Claude returns analysis */}
           {result.intent_analysis?.search_intent && (
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 24px', marginBottom: 16, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 14 }}>Search Intent Analysis</p>
@@ -497,7 +497,7 @@ export default function TitleOptimizer() {
               </div>
               {result.intent_analysis.gap_opportunity && (
                 <div style={{ background: C.greenBg, border: `1px solid #bbf7d0`, borderRadius: 10, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Gap Opportunity — what competitors are NOT doing</p>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Gap Opportunity, what competitors are NOT doing</p>
                   <p style={{ fontSize: 12, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{result.intent_analysis.gap_opportunity}</p>
                   {result.intent_analysis.overused_angle && (
                     <p style={{ fontSize: 12, color: C.text3, marginTop: 6, lineHeight: 1.5 }}>
@@ -523,14 +523,14 @@ export default function TitleOptimizer() {
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '22px 24px', marginBottom: 16, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>AI-Suggested Titles</p>
               <p style={{ fontSize: 12, color: C.text3, marginBottom: 16 }}>
-                3 psychological hooks — each built from the gap in your competitor landscape. Click to copy.
+                3 psychological hooks, each built from the gap in your competitor landscape. Click to copy.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {result.suggestions.map((s, i) => {
                   const hookMeta = {
                     curiosity:      { label: 'Curiosity / FOMO', color: C.purple, bg: C.purpleBg, desc: 'Makes viewers feel they\'re missing something' },
                     transformation: { label: 'Transformation',   color: C.teal,   bg: C.tealBg,   desc: 'Focuses on the outcome or result' },
-                    contrarian:     { label: 'Contrarian',        color: C.blue,   bg: C.blueBg,   desc: 'Challenges assumptions — what others don\'t show' },
+                    contrarian:     { label: 'Contrarian',        color: C.blue,   bg: C.blueBg,   desc: 'Challenges assumptions, what others don\'t show' },
                   }
                   const hm = hookMeta[s.hook] || hookMeta.curiosity
                   const seoColor  = s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.orange : C.red

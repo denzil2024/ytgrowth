@@ -1,4 +1,4 @@
-/* OutlierCards — shared building blocks for surfacing outlier results.
+/* OutlierCards, shared building blocks for surfacing outlier results.
 
    Lives here because TWO pages render these cards:
      1. The paid Outliers page (the full grid + tabs + reports history).
@@ -53,8 +53,8 @@ if (typeof document !== 'undefined' && !document.getElementById('outlier-cards-s
 }
 
 
-/* ─── Color tokens — match Dashboard / Outliers page palette ───────────────── */
-/* Dark — OutlierCards is Feed-only (NicheHeroCard); the Outliers page
+/* ─── Color tokens, match Dashboard / Outliers page palette ───────────────── */
+/* Dark, OutlierCards is Feed-only (NicheHeroCard); the Outliers page
    inlines its own copies. Mirrors the shipped dark surface system;
    semantic *Hi text variants for legibility on dark tinted chips. */
 export const OC_C = {
@@ -97,12 +97,12 @@ export function fmtDuration(seconds) {
 
 /* YouTube serves 3 thumbnail sizes per video. We use the highest one that
    actually exists on a given video:
-     1. maxresdefault.jpg  — 1280x720. Only present if the uploader gave YouTube
+     1. maxresdefault.jpg , 1280x720. Only present if the uploader gave YouTube
                              an HD master; missing on many older or low-quality
                              uploads.
-     2. hqdefault.jpg      — 480x360. ALWAYS present on every YouTube video.
-     3. {stored thumbnail} — whatever the search API returned (~320x180).
-   The onError handler walks this cascade in order — invisible to the user. */
+     2. hqdefault.jpg     , 480x360. ALWAYS present on every YouTube video.
+     3. {stored thumbnail}, whatever the search API returned (~320x180).
+   The onError handler walks this cascade in order, invisible to the user. */
 export function ytMaxThumbUrl(videoId) {
   return videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
 }
@@ -122,7 +122,7 @@ export function makeThumbOnError(videoId, fallbackUrl) {
   return (e) => _advanceThumb(e.target, videoId, fallbackUrl)
 }
 // YouTube returns a 120x90 grey placeholder (HTTP 200) when maxresdefault
-// doesn't exist — onError never fires for it. Detect the placeholder
+// doesn't exist, onError never fires for it. Detect the placeholder
 // dimensions in onLoad and walk the fallback cascade manually.
 export function makeThumbOnLoad(videoId, fallbackUrl) {
   return (e) => {
@@ -154,7 +154,7 @@ export function outlierTier(score) {
 
 
 /* ─── Video result card ──────────────────────────────────────────────────────
-   Handles BOTH the Videos and Thumbnails tabs — the same card with a
+   Handles BOTH the Videos and Thumbnails tabs, the same card with a
    different CTA label (kind='video' -> 'See why', kind='thumbnail' ->
    'See pattern'). The visual is identical because both surface the same
    underlying outlier video.
@@ -181,7 +181,7 @@ export function VideoResultCard({ item, kind, onOpen }) {
 
   return (
     <div className="out-grid-card">
-      {/* Thumbnail — YouTube link */}
+      {/* Thumbnail, YouTube link */}
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
@@ -203,7 +203,7 @@ export function VideoResultCard({ item, kind, onOpen }) {
         )}
       </a>
 
-      {/* Body — title -> channel byline -> meta -> footer (metrics + CTA) */}
+      {/* Body, title -> channel byline -> meta -> footer (metrics + CTA) */}
       <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         <p style={{
           fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
@@ -225,7 +225,7 @@ export function VideoResultCard({ item, kind, onOpen }) {
           <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier', display: `${item.outlier_score}×`,                                                       color: tier.color, tip: 'How many times this video beat its niche cohort\'s median views-per-subscriber. 5×+ is breakout.' },
-              { label: 'VPS',     display: vpsDisplay,                                                                     color: C.text1,    tip: 'Views per subscriber — normalises out raw channel size so small-channel wins show up.' },
+              { label: 'VPS',     display: vpsDisplay,                                                                     color: C.text1,    tip: 'Views per subscriber, normalises out raw channel size so small-channel wins show up.' },
               { label: 'Eng',     display: engPct != null ? `${engPct.toFixed(1)}%` : '—',                                 color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
             ].map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
@@ -273,7 +273,7 @@ export function ChannelResultCard({ item, onOpen }) {
 
   return (
     <div className="out-grid-card">
-      {/* Gradient banner — no video thumbnail; soft red→amber wash that reads
+      {/* Gradient banner, no video thumbnail; soft red→amber wash that reads
           as "channel page" instead of "video card". Small user icon top-right
           reinforces that this is a profile, not content. */}
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
@@ -292,7 +292,7 @@ export function ChannelResultCard({ item, onOpen }) {
       </a>
 
       <div style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        {/* Channel avatar — 72x72 circle, 4px white ring, overlaps banner. */}
+        {/* Channel avatar, 72x72 circle, 4px white ring, overlaps banner. */}
         <div style={{
           width: 72, height: 72, borderRadius: '50%',
           overflow: 'hidden',
@@ -343,7 +343,7 @@ export function ChannelResultCard({ item, onOpen }) {
           <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier',   display: `${item.outlier_score}×`,           color: tier.color, tip: 'Their best-performing video in this search beat the niche median by this multiple.' },
-              { label: 'Hits',      display: String(hits),                       color: C.text1,    tip: 'Number of videos from this channel that surfaced in your search — higher = more on-topic.' },
+              { label: 'Hits',      display: String(hits),                       color: C.text1,    tip: 'Number of videos from this channel that surfaced in your search, higher = more on-topic.' },
               { label: 'Avg views', display: fmtNum(item.avg_views_per_video),   color: C.text1,    tip: 'Average views per video across this channel\'s entire catalog.' },
             ].map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>

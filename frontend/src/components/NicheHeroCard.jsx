@@ -1,4 +1,4 @@
-/* NicheHeroCard — interactive Home outlier card.
+/* NicheHeroCard, interactive Home outlier card.
 
    Data comes from /dashboard/niche-outlier. When source is "outliers_cache"
    the endpoint returns a bundle: {videos:[], thumbnails:[], channels:[]}
@@ -18,7 +18,7 @@ import {
   ChannelResultCard,
 } from './OutlierCards'
 
-/* Dark palette — mirrors the shipped app-shell / Competitors dark
+/* Dark palette, mirrors the shipped app-shell / Competitors dark
    system. NicheHeroCard is Feed-only, so darkening it wholesale is safe. */
 const C = {
   card:        'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
@@ -215,7 +215,7 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
     <section className="nh-section">
       <article className="nh-card">
         {/* Uniform header: title in 16/600, age in 12.5/450, matching the
-            Feed card chassis. No dismiss X — this is a core feature, not
+            Feed card chassis. No dismiss X, this is a core feature, not
             a notification. */}
         <div className="nh-card-head">
           <h3 className="nh-card-title">Niche Outlier</h3>

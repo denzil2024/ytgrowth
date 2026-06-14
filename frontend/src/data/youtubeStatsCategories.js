@@ -139,7 +139,7 @@ export const CATEGORY_META = [
     ],
     faqs: [
       { q: 'How long should a cooking video be on YouTube?',
-        a: 'Recipe videos hit a sweet spot at 6–12 minutes: enough room for ingredients, technique, and a bit of personality without padding. Pure technique deep-dives can stretch to 15–25 minutes if the topic warrants it (e.g. bread, BBQ, knife skills). Avoid hitting 8 minutes artificially just for mid-rolls — viewers feel padded videos and bounce, which kills the algorithm signal that funds the next upload.' },
+        a: 'Recipe videos hit a sweet spot at 6–12 minutes: enough room for ingredients, technique, and a bit of personality without padding. Pure technique deep-dives can stretch to 15–25 minutes if the topic warrants it (e.g. bread, BBQ, knife skills). Avoid hitting 8 minutes artificially just for mid-rolls, viewers feel padded videos and bounce, which kills the algorithm signal that funds the next upload.' },
       { q: 'Do cooking YouTubers buy their own ingredients?',
         a: 'Most do. Brand sponsorships are usually for kitchen tools, appliances, or grocery delivery services rather than ingredients themselves. Some channels work with farms or speciality ingredient suppliers for paid integrations, but the biggest cooking creators usually pay for ingredients out of pocket so editorial independence is obvious.' },
       { q: "What's the typical RPM for a cooking channel?",
@@ -230,7 +230,7 @@ export const CATEGORY_META = [
       { q: 'How do education channels make money if they post once a month?',
         a: 'Each upload generates a long-tail income that runs for years. A single high-quality explainer can earn $10K–$100K over 5 years from AdSense alone, plus large brand-sponsorship rates from learning platforms (Brilliant, MasterClass, Skillshare) and software companies. Patreon and direct-fan support are also disproportionately strong in this category because the audience values the depth of the work.' },
       { q: 'What software do education YouTubers use for animations?',
-        a: "After Effects is still the workhorse for 2D motion graphics. For 3D, Blender (free) has taken over from Cinema 4D at most channels. For data visualisation, custom Python or Manim (originally built by 3Blue1Brown) is common. The biggest channels also commission custom illustrators and animators rather than relying on a single tool. There's no single 'right' stack — the consistent thread is putting genuine production effort into each upload." },
+        a: "After Effects is still the workhorse for 2D motion graphics. For 3D, Blender (free) has taken over from Cinema 4D at most channels. For data visualisation, custom Python or Manim (originally built by 3Blue1Brown) is common. The biggest channels also commission custom illustrators and animators rather than relying on a single tool. There's no single 'right' stack, the consistent thread is putting genuine production effort into each upload." },
       { q: 'Can a solo creator compete with cinematic-quality education channels?',
         a: 'Yes, on angle and clarity rather than production budget. The most successful new education channels of the last 5 years have been solo creators who picked a specific corner of a subject (a particular era of history, a particular subdomain of biology, a particular piece of mathematics) and made the clearest possible explainer of it, accepting lower production quality than the category leaders in exchange for ship velocity.' },
       { q: 'Is education YouTube saturated?',
@@ -246,7 +246,7 @@ export const CATEGORY_META = [
     seoDescription: "The top 50 vlog YouTube channels, ranked by live subscriber count from YouTube's official API. Daily vlogs, family channels, lifestyle creators. Updated daily.",
     intro: [
       "Vlogs are the original YouTube format. The category includes daily vlogs (life as it happens), family channels (multi-person, often multi-generational), and lifestyle creators who build narrative around a specific lifestyle aesthetic.",
-      "What sustains a top vlog channel is parasocial connection: viewers follow the creators across years and genuinely care about the people on screen. The format is high-volume (the best channels ship 3–7 videos per week) and high-burn — many top vloggers have stepped back from daily uploads after multi-year runs because the cadence is unsustainable. The ones still at it run small production teams that handle editing and post-production.",
+      "What sustains a top vlog channel is parasocial connection: viewers follow the creators across years and genuinely care about the people on screen. The format is high-volume (the best channels ship 3–7 videos per week) and high-burn, many top vloggers have stepped back from daily uploads after multi-year runs because the cadence is unsustainable. The ones still at it run small production teams that handle editing and post-production.",
     ],
     highlights: [
       'Highest upload cadence on the platform: top channels post 3–7 days per week.',
@@ -261,7 +261,7 @@ export const CATEGORY_META = [
       { q: 'Is daily vlogging sustainable as a long-term career?',
         a: 'Hard. Most creators who started daily vlogging in the 2014–2018 wave have since either stopped, slowed to weekly, or built teams around themselves to share the editing load. The format demands constant content from your real life, which is psychologically expensive. Most successful long-term vloggers eventually transition into less frequent, more polished uploads or branch into adjacent formats like long-form documentary-style episodes.' },
       { q: 'Do family vlog channels need to feature their kids?',
-        a: 'There is no platform requirement, and a growing number of family channels are deliberately keeping kids off-camera while still framing the content around parenting and family life. Channels that do feature kids face increasing scrutiny around child-creator labour laws and platform safeguards. The decision is more an ethical and legal one than a growth one — both approaches can build large audiences.' },
+        a: 'There is no platform requirement, and a growing number of family channels are deliberately keeping kids off-camera while still framing the content around parenting and family life. Channels that do feature kids face increasing scrutiny around child-creator labour laws and platform safeguards. The decision is more an ethical and legal one than a growth one, both approaches can build large audiences.' },
       { q: 'Can new vloggers still break through in 2026?',
         a: 'Yes, but the bar has risen. The most successful new vlog channels in the past 3 years have all combined a clear identity (a specific city, a specific career, a specific lifestyle) with high production quality and consistent uploads. Generic personal vlogs without a clear hook rarely break out of the long tail. Niche-specific vlogs (small-business vlogs, residency-doctor vlogs, single-parent vlogs, tradie vlogs) still have plenty of room.' },
     ],
@@ -303,7 +303,7 @@ export const CATEGORY_META = [
     seoTitle:       'Top 50 Comedy YouTube Channels 2026: Sketches, Parodies, Reactions',
     seoDescription: "The top 50 comedy YouTube channels, ranked by live subscriber count from YouTube's official API. Sketches, parodies, stand-up, reaction comedy. Updated daily.",
     intro: [
-      "Comedy on YouTube ranges from high-production sketch teams (Smosh, Try Guys, Rhett & Link) to single-creator parody and impressions channels to reaction-and-commentary channels. The category retains audiences extraordinarily well — once viewers find a creator they think is funny, they follow that creator across years and platforms.",
+      "Comedy on YouTube ranges from high-production sketch teams (Smosh, Try Guys, Rhett & Link) to single-creator parody and impressions channels to reaction-and-commentary channels. The category retains audiences extraordinarily well, once viewers find a creator they think is funny, they follow that creator across years and platforms.",
       "What does not work as well in 2026: pure prank content (platform crackdowns and audience fatigue), low-effort meme reactions, and overly long sketch episodes. What does work: tightly-edited sketches under 8 minutes, character-based recurring formats, and original short-form comedy that translates between YouTube proper and Shorts.",
     ],
     highlights: [
@@ -362,7 +362,7 @@ export const CATEGORY_META = [
     seoDescription: "The top 50 entertainment YouTube channels, ranked by live subscriber count from YouTube's official API. Pop culture, TV, film, celebrity, reactions. Updated daily.",
     intro: [
       "Entertainment is YouTube's broadest and busiest category. It includes TV-show recaps, film analysis, celebrity news, reaction channels, late-night-style commentary, pop-culture deep-dives, and the long tail of clip-aggregation channels that chop and re-edit other media.",
-      "The category is highly competitive: established media companies and traditional TV networks all run YouTube channels here, and individual creators have to find specific angles that those institutions can't or don't cover. The independent channels that do well usually combine fast turnaround on news with editorial taste — a perspective viewers can't get from the official sources.",
+      "The category is highly competitive: established media companies and traditional TV networks all run YouTube channels here, and individual creators have to find specific angles that those institutions can't or don't cover. The independent channels that do well usually combine fast turnaround on news with editorial taste, a perspective viewers can't get from the official sources.",
     ],
     highlights: [
       'Highest competition density on the platform: media companies and creators fight for the same topics.',

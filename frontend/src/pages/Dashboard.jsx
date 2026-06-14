@@ -120,7 +120,7 @@ export default function Dashboard() {
   })
   const [auditOpen, setAuditOpen] = useState(false)
   const [auditLocked, setAuditLocked] = useState(false)  // free user tried to open the full audit
-  // Tracked Optimization Lift — the proof loop card. Fetched on mount when
+  // Tracked Optimization Lift, the proof loop card. Fetched on mount when
   // the user is on the Overview. Null while loading or when there's no
   // meaningful win to surface yet.
   const [trackedLift, setTrackedLift] = useState(null)
@@ -152,7 +152,7 @@ export default function Dashboard() {
   const [replyPosting, setReplyPosting] = useState(false)
   const [replyPosted, setReplyPosted] = useState(false)
   const [replyPostError, setReplyPostError] = useState('')
-  // Top Search Terms card. Real YouTube Analytics data — the queries
+  // Top Search Terms card. Real YouTube Analytics data, the queries
   // viewers actually typed to find the user's videos in the last 28 days.
   // Cached per-channel for 24h. Null while loading or when there's no
   // search traffic.
@@ -176,10 +176,10 @@ export default function Dashboard() {
   const [milestones,  setMilestones]  = useState(null)  // { earned: [...], upcoming: [...] }
   const [shareMilestone, setShareMilestone] = useState(null) // { category, tier, achieved_at }
   const [celebrateQueue, setCelebrateQueue] = useState([])   // [{ category, tier, achieved_at }]
-  // Result tracking — videos the user optimized via /seo/update-video, fetched when Videos tab opens
+  // Result tracking, videos the user optimized via /seo/update-video, fetched when Videos tab opens
   const [optimizations, setOptimizations] = useState([])
 
-  // Admin check — fire-and-forget. Determines whether the Admin nav item
+  // Admin check, fire-and-forget. Determines whether the Admin nav item
   // appears in the sidebar. Returns { is_admin: false } for everyone whose
   // session email isn't in the ADMIN_EMAILS env var.
   useEffect(() => {
@@ -232,7 +232,7 @@ export default function Dashboard() {
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
       .then(r => {
-        // Auth expired — bounce to login rather than showing a broken dashboard.
+        // Auth expired, bounce to login rather than showing a broken dashboard.
         if (r.status === 401) { window.location = '/'; throw new Error('Auth expired') }
         if (!r.ok) throw new Error('No data')
         return r.json()
@@ -389,7 +389,7 @@ export default function Dashboard() {
       })
       .catch(() => {})
 
-    // ?nav=<Tab> deep link — used by share links like /feedback to land users
+    // ?nav=<Tab> deep link, used by share links like /feedback to land users
     // on a specific tab. Settings reads its own ?focus param to scroll into view.
     try {
       const params = new URLSearchParams(window.location.search)
@@ -397,7 +397,7 @@ export default function Dashboard() {
       const VALID_NAV = ['Overview','Videos','Autopsy','Weekly Report','SEO Studio','Thumbnail Score','Video Ideas','Outliers','Keywords','Competitors','Settings','Referrals','Admin']
       if (navTarget && VALID_NAV.includes(navTarget)) {
         setNav(navTarget)
-        // Don't strip ?focus — Settings reads it on mount.
+        // Don't strip ?focus, Settings reads it on mount.
         params.delete('nav')
         const qs = params.toString()
         window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
@@ -539,7 +539,7 @@ export default function Dashboard() {
     { label: 'Competitors' },
   ]
 
-  // Sidebar live signals — derived, not stored.
+  // Sidebar live signals, derived, not stored.
   const openPriorityCount = (() => {
     const all = data?.insights?.priorityActions || []
     if (!all.length) return 0
@@ -656,7 +656,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Nav — verbs first, features nested. Down from 14 flat items to
+        {/* Nav, verbs first, features nested. Down from 14 flat items to
             4 primary verbs + Settings. Optimize and Research expand to
             show the existing feature pages; the verb itself is just the
             group toggle for now (verb landing pages come in a later
@@ -708,7 +708,7 @@ export default function Dashboard() {
 
         </nav>
 
-        {/* Sidebar footer — one tight block. Single divider, then a
+        {/* Sidebar footer, one tight block. Single divider, then a
             What's-new promo card, then UsageBar, then Refer | Sign out. */}
         {data && (
           <div style={{
@@ -786,7 +786,7 @@ export default function Dashboard() {
       return (
       <div className={darkRoute ? 'ytg-dark' : undefined} style={{ flex: 1, overflow: 'auto', background: darkRoute ? darkGround : C.bg }}>
 
-        {/* Topbar — light everywhere; dark on dark routes, using the
+        {/* Topbar, light everywhere; dark on dark routes, using the
             locked shell shade so it does not sit as a white band over a
             dark page. Other pages are untouched. */}
         {(() => {
@@ -825,7 +825,7 @@ export default function Dashboard() {
         {/* Page */}
         <div style={{ padding: '36px 40px 72px', animation: 'fadeUp 0.25s ease' }}>
 
-          {/* Loading — skeleton placeholders matching the real Feed layout
+          {/* Loading, skeleton placeholders matching the real Feed layout
               so the page doesn't feel like a blank spinner while data loads. */}
           {loading && (
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
@@ -975,7 +975,7 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
-                  {/* Stale nudge — inline, only when credits available */}
+                  {/* Stale nudge, inline, only when credits available */}
                   {(() => {
                     const auditDate = parseUTC(data.analyzed_at)
                     const daysOld = auditDate ? (Date.now() - auditDate.getTime()) / 86400000 : 0
@@ -1003,7 +1003,7 @@ export default function Dashboard() {
                           setData(prev => ({ ...prev, insights: prevInsights }))
                           setAnalyzingAI(false)
                           if (r.status === 401) {
-                            // Auth expired — bounce back to login.
+                            // Auth expired, bounce back to login.
                             window.location = '/'
                             return
                           }
@@ -1028,7 +1028,7 @@ export default function Dashboard() {
                     {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
                   </button>
 
-                  {/* Refresh stats — with flash feedback */}
+                  {/* Refresh stats, with flash feedback */}
                   <button
                     className="ytg-dash-btn"
                     disabled={refreshingStats}
@@ -1075,7 +1075,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Re-Audit error message — surfaces backend errors / network drops so the user
+              {/* Re-Audit error message, surfaces backend errors / network drops so the user
                   isn't left wondering why nothing happened after clicking Re-Audit. */}
               {reAuditError && (
                 <div style={{
@@ -1093,7 +1093,7 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* ── HERO STRIP — 4 inline tiles separated by hairlines, no
+              {/* ── HERO STRIP, 4 inline tiles separated by hairlines, no
                     per-tile card border. One unified surface that reads as
                     a scoreboard. Replaces the 2 fat HeroStatCards. ───── */}
               {(() => {
@@ -1190,7 +1190,7 @@ export default function Dashboard() {
                     boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
                     marginBottom: 28,
                   }}>
-                    {/* Uniform 16/600 title inside the card — matches Add
+                    {/* Uniform 16/600 title inside the card, matches Add
                         Description / Title Suggestion chassis. */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                       <h3 style={{
@@ -1297,7 +1297,7 @@ export default function Dashboard() {
                 )
               })()}
 
-              {/* Analytics-missing nudge — moved here from the quick-stats
+              {/* Analytics-missing nudge, moved here from the quick-stats
                   strip (the strip is gone in the Feed redesign). */}
               {!data.analytics && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(217,119,6,0.14)', border: `1px solid rgba(217,119,6,0.34)`, borderLeft: `3px solid ${'#f0a23b'}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
@@ -1323,7 +1323,7 @@ export default function Dashboard() {
                   themed H2 sections without losing any conditional logic,
                   filter behaviour, or dismiss handlers. A `null` block
                   means that card has no data / was dismissed / is filtered
-                  out — the section header only renders when at least one
+                  out, the section header only renders when at least one
                   block in the group will render. */}
               {(() => {
                 // ── WHAT TO DO NEXT blocks ──
@@ -1365,7 +1365,7 @@ export default function Dashboard() {
                           onAct: () => target ? setNav(target) : (isFreeAudit ? setAuditLocked(true) : setAuditOpen(true)),
                           // Free users get a single taste action; check/dismiss
                           // are paid-checklist controls. Disabling them keeps the
-                          // one full action always visible — the backend only
+                          // one full action always visible, the backend only
                           // sends rank-1 in full, so dismissing it would reveal a
                           // redacted stub.
                           onDone: isFreeAudit ? undefined : () => {
@@ -1698,7 +1698,7 @@ export default function Dashboard() {
                         // Stash the channel name and land the user on the
                         // Competitors page's Search tab with that query
                         // pre-run. They hit the actual Track (analyze)
-                        // button there — keeps the credit-spend explicit.
+                        // button there, keeps the credit-spend explicit.
                         try {
                           const q = c.channel_name || c.handle || ''
                           if (q) sessionStorage.setItem('competitors_prefilledQuery', q)
@@ -1742,7 +1742,7 @@ export default function Dashboard() {
                   // don't keep the new card hidden.
                   const dismissKey = `ytg_related_traffic_dismissed_v2:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                  // Relative age from refreshed_at — soft "Nd ago" label.
+                  // Relative age from refreshed_at, soft "Nd ago" label.
                   let ageLabel = ''
                   try {
                     if (relatedTraffic.refreshed_at) {
@@ -1899,7 +1899,7 @@ export default function Dashboard() {
                 // Single source of truth for which category each card
                 // belongs to. The render order below is also the All
                 // tab's visual order. Filtering by tab is a pure
-                // projection of this list — Insights tab = entries
+                // projection of this list, Insights tab = entries
                 // with category 'insights' that have data, Actions
                 // tab = category 'actions' with data, etc. Add a new
                 // card by appending one line.
@@ -1950,7 +1950,7 @@ export default function Dashboard() {
                       ))}
                     </div>
 
-                    {/* Pinned AI input — sticky-bottom shortcut into ChatCoach.
+                    {/* Pinned AI input, sticky-bottom shortcut into ChatCoach.
                         Always visible on the Feed regardless of filter so the
                         user can ask the coach anything without leaving. */}
                     <PinnedAIInput
@@ -2054,7 +2054,7 @@ export default function Dashboard() {
                           </div>
                         )}
 
-                        {/* Share button (earned only) — full pill with gradient */}
+                        {/* Share button (earned only), full pill with gradient */}
                         {hasEarned ? (
                           <button
                             onClick={() => setShareMilestone({
@@ -2123,7 +2123,7 @@ export default function Dashboard() {
               {data.insights.channelSummary && (
                 <div className="ytg-card" style={{ padding: '28px 32px', marginBottom: 24 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
-                    {/* Score ring — left */}
+                    {/* Score ring, left */}
                     <div style={{ flexShrink: 0, textAlign: 'center' }}>
                       <ScoreRing score={score} />
                       <p style={{ fontSize: 11, color: SHELL.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Overall</p>
@@ -2178,7 +2178,7 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Priority actions — same visual language as the Feed.
+              {/* Priority actions, same visual language as the Feed.
                   Renders ALL open actions here (Feed only shows top 3).
                   Mark done / Dismiss share state with the Feed cards via
                   the same localStorage keys, so ticking either updates
@@ -2408,8 +2408,8 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* ── Tabs — All videos vs. Tracked optimisations ─────────────────
-                  Mirrors the SEO Studio New/Reports tab pattern verbatim — same
+              {/* ── Tabs, All videos vs. Tracked optimisations ─────────────────
+                  Mirrors the SEO Studio New/Reports tab pattern verbatim, same
                   pill button, red-on-active, white-with-border-on-inactive. */}
               <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
                 {[
@@ -2439,7 +2439,7 @@ export default function Dashboard() {
                 })}
               </div>
 
-              {/* ── Your optimizations — each row is its own ytg-insight-card (same pattern as Overview's Priority Actions).
+              {/* ── Your optimizations, each row is its own ytg-insight-card (same pattern as Overview's Priority Actions).
                     Green top border + green rank badge = "tracked/active", 3-col body grid with tinted views/likes/comments deltas. ── */}
               {videosTab === 'tracked' && optimizations.length > 0 && (() => {
                 const daysSince = (iso) => {
@@ -2453,7 +2453,7 @@ export default function Dashboard() {
                   return Math.round(((after - before) / before) * 100)
                 }
 
-                // Tinted delta cell — palette is brand-only now: charcoal/white+green/green.
+                // Tinted delta cell, palette is brand-only now: charcoal/white+green/green.
                 // Views=charcoal (info), Likes=white+green-bar (action), Comments=green (outcome).
                 const DeltaCell = ({ label, before, current, pctVal, tint }) => {
                   const tintMap = {
@@ -2462,7 +2462,7 @@ export default function Dashboard() {
                     green: { bg: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.34)', labelColor: '#34d27b' },
                   }[tint]
                   // Hide the delta label entirely when nothing has changed (pct is 0 or null).
-                  // 0% everywhere is noise — we only show the badge when there's a real move.
+                  // 0% everywhere is noise, we only show the badge when there's a real move.
                   const showDelta = pctVal != null && pctVal !== 0
                   const col  = showDelta && pctVal > 0 ? '#34d27b' : showDelta && pctVal < 0 ? '#fb6a60' : SHELL.text3
                   const sign = showDelta ? (pctVal > 0 ? `+${pctVal}%` : `${pctVal}%`) : null
@@ -2487,7 +2487,7 @@ export default function Dashboard() {
 
                 return (
                   <div style={{ marginBottom: 28 }}>
-                    {/* Subtler secondary eyebrow — lets "My Videos" keep its H1 identity at the top */}
+                    {/* Subtler secondary eyebrow, lets "My Videos" keep its H1 identity at the top */}
                     <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
                       Tracked updates · {optimizations.length} video{optimizations.length === 1 ? '' : 's'}
                     </p>
@@ -2503,7 +2503,7 @@ export default function Dashboard() {
                         <div key={`${o.video_id}-${o.optimized_at}`} className="ytg-insight-card" style={{ marginBottom: 12, borderTop: `3px solid ${C.amber}` }}>
                           <div style={{ padding: '18px 22px 20px' }}>
 
-                            {/* Header — thumbnail + eyebrow + title diff + days pill.
+                            {/* Header, thumbnail + eyebrow + title diff + days pill.
                                 Dropped the filled amber 26x26 rank-badge tile (was carrying
                                 visual weight that the amber top stripe already provides).
                                 Cleaner: just the thumbnail + content + pill. */}
@@ -2531,17 +2531,17 @@ export default function Dashboard() {
                               </span>
                             </div>
 
-                            {/* Hairline divider — aligned with the thumbnail edge (100 + 14 gap = 114) */}
+                            {/* Hairline divider, aligned with the thumbnail edge (100 + 14 gap = 114) */}
                             <div style={{ height: 1, background: 'rgba(255,255,255,0.10)', marginBottom: 14, marginLeft: 114 }}/>
 
-                            {/* 3-col body — Views / Likes (amber bar centre) / Comments. Brand-only palette. */}
+                            {/* 3-col body, Views / Likes (amber bar centre) / Comments. Brand-only palette. */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 114 }}>
                               <DeltaCell label="Views"    before={o.before_views}    current={o.current_views}    pctVal={vPct} tint="blue"/>
                               <DeltaCell label="Likes"    before={o.before_likes}    current={o.current_likes}    pctVal={lPct} tint="white"/>
                               <DeltaCell label="Comments" before={o.before_comments} current={o.current_comments} pctVal={cPct} tint="green"/>
                             </div>
 
-                            {/* Cross-link to Video Review — different lens on the same video. */}
+                            {/* Cross-link to Video Review, different lens on the same video. */}
                             <div style={{ marginTop: 14, marginLeft: 114, display: 'flex', justifyContent: 'flex-end' }}>
                               <button
                                 onClick={() => setNav('Autopsy')}
@@ -2576,7 +2576,7 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Card grid — All Videos tab only */}
+              {/* Card grid, All Videos tab only */}
               {videosTab === 'all' && (
               <div className="ytg-videos-grid">
                 {[...videos].sort((a, b) => {
@@ -2621,13 +2621,13 @@ export default function Dashboard() {
 
                       {/* Body */}
                       <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                        {/* Title — 14.5/600 (was 16/700, too heavy at this card width) */}
+                        {/* Title, 14.5/600 (was 16/700, too heavy at this card width) */}
                         <p style={{
                           fontSize: 14.5, fontWeight: 600, color: SHELL.text1, lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.15px',
                           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 41,
                         }}>{v.title}</p>
 
-                        {/* Meta line — uniform 12/500 muted, no mid-weight spikes */}
+                        {/* Meta line, uniform 12/500 muted, no mid-weight spikes */}
                         <p style={{ fontSize: 12, fontWeight: 500, color: SHELL.text3, marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {fmtNum(v.views)} views · {fmtNum(v.likes)} likes · {relTimeLong(v.published_at) || '—'}
                         </p>
@@ -2660,7 +2660,7 @@ export default function Dashboard() {
               </div>
               )}
 
-              {/* Optimise panel — modal overlay */}
+              {/* Optimise panel, modal overlay */}
               {selectedVideoId && (() => {
                 const sv = videos.find(v => v.video_id === selectedVideoId)
                 return sv ? (
@@ -2703,7 +2703,7 @@ export default function Dashboard() {
                 {[
                   { label: 'Shorts avg views',    value: fmtNum(patterns.shortAvg), verdict: patterns.shortAvg > patterns.longAvg ? 'Beats long-form' : 'Below long-form', good: patterns.shortAvg > patterns.longAvg },
                   { label: 'Long-form avg views', value: fmtNum(patterns.longAvg),  verdict: patterns.longAvg > patterns.shortAvg ? 'Beats Shorts'     : 'Below Shorts',    good: patterns.longAvg  > patterns.shortAvg },
-                  { label: 'Avg engagement rate', value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 3 ? 'Healthy' : patterns.likeRate >= 1 ? 'Average' : 'Below average', good: patterns.likeRate >= 3, hint: 'likes ÷ views — 3%+ is strong' },
+                  { label: 'Avg engagement rate', value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 3 ? 'Healthy' : patterns.likeRate >= 1 ? 'Average' : 'Below average', good: patterns.likeRate >= 3, hint: 'likes ÷ views, 3%+ is strong' },
                 ].map(p => (
                   <div key={p.label} className="ytg-card" title={p.hint || undefined} style={{ padding: '20px 22px', cursor: p.hint ? 'help' : 'default' }}>
                     <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>{p.label}</p>
@@ -2746,7 +2746,7 @@ export default function Dashboard() {
                           borderRadius: 10, padding: '9px 12px',
                         }}>
                           <p style={{ fontSize: 12, color: isGood ? '#34d27b' : '#fb6a60', lineHeight: 1.7 }}>
-                            {isGood ? 'Study this — replicate its title style, length, and topic angle.' : 'Avoid this format or topic — it isn\'t connecting with your audience.'}
+                            {isGood ? 'Study this, replicate its title style, length, and topic angle.' : 'Avoid this format or topic, it isn\'t connecting with your audience.'}
                           </p>
                         </div>
                       </>
@@ -2810,7 +2810,7 @@ export default function Dashboard() {
           {/* ── ADMIN ────────────────────────────────────────────────── */}
           {nav === 'Admin' && isAdmin && <Admin />}
 
-          {/* ── CHAT — AI Coach ──────────────────────────────────────── */}
+          {/* ── CHAT, AI Coach ──────────────────────────────────────── */}
           {nav === 'Chat' && (
             <ChatCoach
               onNavigate={setNav}

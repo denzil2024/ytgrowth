@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-/* ── Design tokens — Competitors / Settings north-star ─────────────────── */
+/* ── Design tokens, Competitors / Settings north-star ─────────────────── */
 const C = {
   red:      '#e5251b',
   redHi:    '#ef3a31',
@@ -142,7 +142,7 @@ export default function Referrals() {
         </p>
       </div>
 
-      {/* ── Earning potential — the lure ────────────────────────────────── */}
+      {/* ── Earning potential, the lure ────────────────────────────────── */}
       {(() => {
         const headline = Math.round(refsPerMonth * 12 * PER_REFERRAL)
         return (
@@ -157,7 +157,7 @@ export default function Referrals() {
                   Illustrative. Assumes the Growth plan ($49/mo) and that referrals stay subscribed.
                 </p>
               </div>
-              {/* Quiet soft-grey segmented toggle — referrals per month */}
+              {/* Quiet soft-grey segmented toggle, referrals per month */}
               <div style={{ display: 'inline-flex', gap: 4, padding: 3, background: 'rgba(10,10,15,0.04)', borderRadius: 100, flexShrink: 0 }}>
                 {REF_OPTIONS.map(n => {
                   const active = n === refsPerMonth
@@ -200,7 +200,7 @@ export default function Referrals() {
         )
       })()}
 
-      {/* ── What each referral is worth — per-tier bars ─────────────────── */}
+      {/* ── What each referral is worth, per-tier bars ─────────────────── */}
       <p className="ref-eyebrow" style={{ marginBottom: 12 }}>What each referral is worth</p>
       <div style={{ ...CARD, padding: '22px 24px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 28, height: 150 }}>

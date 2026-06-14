@@ -1,19 +1,19 @@
-/* UpsellGate — shared free-tier gate modal. Visual is a direct lift of
+/* UpsellGate, shared free-tier gate modal. Visual is a direct lift of
    Weekly Report's upsell card (lock icon → title → description → optional
    note → bullets → primary CTA → pack link → trust stack). Used as the
    single source of truth so every gated feature reads identically.
 
    Props:
-     title          — h2 headline (e.g. "Unlock Outlier Scoring")
-     description    — p body under the title
-     bullets        — string[] of 2–4 value props
-     note           — optional small amber note under description
+     title         , h2 headline (e.g. "Unlock Outlier Scoring")
+     description   , p body under the title
+     bullets       , string[] of 2–4 value props
+     note          , optional small amber note under description
                       (e.g. "Outlier Scoring requires 3 credits.")
-     showPackLink   — default true; pass false for the one-run gates
+     showPackLink  , default true; pass false for the one-run gates
                       (per product spec: only Weekly Report offers the pack
                       link as a secondary option)
-     primaryCta     — default "See monthly plans"
-     previewContent — optional ReactNode rendered blurred behind the card.
+     primaryCta    , default "See monthly plans"
+     previewContent, optional ReactNode rendered blurred behind the card.
                       Teases what the feature produces so free users see
                       what they're missing (Weekly Report pattern). If
                       omitted, the card renders solo on the page background. */
@@ -45,7 +45,7 @@ export default function UpsellGate({
       fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
       margin: '0 auto',
     }}>
-      {/* Lock icon — red gradient square */}
+      {/* Lock icon, red gradient square */}
       <div style={{
         width: 50, height: 50, borderRadius: 14,
         background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
@@ -66,7 +66,7 @@ export default function UpsellGate({
         {description}
       </p>
 
-      {/* Optional note — small amber line, e.g. "Outlier Scoring requires 3 credits." */}
+      {/* Optional note, small amber line, e.g. "Outlier Scoring requires 3 credits." */}
       {note && (
         <p style={{ fontSize: 12.5, color: '#f0a23b', fontWeight: 600, marginBottom: 22, letterSpacing: '-0.05px' }}>
           {note}
@@ -116,7 +116,7 @@ export default function UpsellGate({
         Plans from <span style={{ fontWeight: 600, color: C.text2 }}>$19/mo</span> · cancel anytime
       </div>
 
-      {/* Secondary pack link — only on Weekly Report (per product spec). */}
+      {/* Secondary pack link, only on Weekly Report (per product spec). */}
       {showPackLink && (
         <div>
           <a

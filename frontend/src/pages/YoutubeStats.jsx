@@ -30,7 +30,7 @@ const FAQS = [
   { q: 'Why a 500K minimum?',
     a: "Because YouTube's search-by-name returns lookalikes. Search for \"drake\" and you get the artist plus thousands of channels named after him by random users with 5 subs each. Filtering at 500K guarantees the leaderboard shows real, established channels and not noise." },
   { q: 'Will you add more categories or per-country breakdowns?',
-    a: "Yes. The next iteration adds country dimensions (top channels in each niche by region: US, UK, Canada, Australia, India, etc.) and per-category landing pages with the full top 50 for each niche. This page is the v1 hub — drilldowns are next." },
+    a: "Yes. The next iteration adds country dimensions (top channels in each niche by region: US, UK, Canada, Australia, India, etc.) and per-category landing pages with the full top 50 for each niche. This page is the v1 hub, drilldowns are next." },
 ]
 
 function useBreakpoint() {

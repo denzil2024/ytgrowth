@@ -1,4 +1,4 @@
-/* UpsellModal — wraps UpsellGate in a dismissible modal overlay.
+/* UpsellModal, wraps UpsellGate in a dismissible modal overlay.
    Same visual DNA as the page-takeover version (lock icon, title,
    description, bullets, teaser, CTA, trust stack), just floating over
    the existing page so users see the feature UI first and only meet
@@ -54,7 +54,7 @@ export default function UpsellModal({
           animation: 'upmPop 0.22s cubic-bezier(0.2, 0.7, 0.3, 1)',
         }}
       >
-        {/* Close button — floats top-right above the card */}
+        {/* Close button, floats top-right above the card */}
         <button
           onClick={onClose}
           aria-label="Close"

@@ -3,7 +3,7 @@ import { Lightbulb, AlertTriangle, Target, Sparkles, TrendingUp, Users } from 'l
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
-// Geist loaded page-scoped — matches every other redesigned page.
+// Geist loaded page-scoped, matches every other redesigned page.
 if (typeof document !== 'undefined' && !document.getElementById('seo-opt-geist-font')) {
   const link = document.createElement('link')
   link.id = 'seo-opt-geist-font'
@@ -22,7 +22,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
      smooth-resize instead of pop. Borrowed from the VidIQ playbook. */
   :root { interpolate-size: allow-keywords; }
 
-  /* Page-scoped Geist inheritance — keeps every element on the canonical
+  /* Page-scoped Geist inheritance, keeps every element on the canonical
      font without dropping inline fontFamily on each component. */
   .seo-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
@@ -59,10 +59,10 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
             mask-image: linear-gradient(to right, black 0, black calc(100% - 60px), transparent 100%); }
   .seo-heat-scroll::-webkit-scrollbar { display: none; height: 0; }
 
-  /* Card grammar — hairline border, 14px radius, double-stage soft shadow
+  /* Card grammar, hairline border, 14px radius, double-stage soft shadow
      for a more elevated feel (page felt too flat). First stage at 2px is
      the close shadow; second at 16px is the ambient lift. Still well within
-     restrained territory — no dual-glow red shadows. */
+     restrained territory, no dual-glow red shadows. */
   .seo-glass-card {
     background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
     border: 1px solid rgba(255,255,255,0.08) !important;
@@ -99,7 +99,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-color: rgba(229,37,27,0.55);
     box-shadow: 0 0 0 3px rgba(229,37,27,0.20);
   }
-  /* Intent picker row — hairline card, green-tinted hover that signals
+  /* Intent picker row, hairline card, green-tinted hover that signals
      "this is a selection moment". Matches the Keywords intent picker
      pattern exactly: label + variant chip + 1-line description + arrow. */
   .seo-intent-opt {
@@ -130,7 +130,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-intent-opt:hover .seo-intent-arrow {
     color: #34d27b; transform: translateX(3px);
   }
-  /* Outlined pill that escapes the intent picker — "Let AI decide". */
+  /* Outlined pill that escapes the intent picker, "Let AI decide". */
   .seo-intent-decide-btn {
     display: inline-flex; align-items: center; gap: 6px;
     margin-top: 16px;
@@ -151,7 +151,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-color: rgba(255,255,255,0.22);
   }
 
-  /* Local button classes — match the canonical button grammar (red CTA
+  /* Local button classes, match the canonical button grammar (red CTA
      with inset highlight + soft shadow, no dual-glow). */
   .seo-btn {
     display: inline-flex; align-items: center; gap: 6px;
@@ -185,7 +185,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     box-shadow: none;
   }
 
-  /* ── Reports list — matches the Competitors tracked accordion grammar. */
+  /* ── Reports list, matches the Competitors tracked accordion grammar. */
   .seo-report-wrapper { position: relative; margin-bottom: 14px; }
   .seo-report-header {
     background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
@@ -271,7 +271,7 @@ function saveToDisk(state) {
 
 const API = ''
 
-// Brand palette — red + amber + green + charcoal neutrals. No blue / purple / teal / orange.
+// Brand palette, red + amber + green + charcoal neutrals. No blue / purple / teal / orange.
 const C = {
   bg: '#0e0e10',
   card: 'linear-gradient(180deg,#1e1e24 0%,#18181c 100%)',
@@ -293,10 +293,10 @@ const C = {
   amberBdr: 'rgba(217,119,6,0.34)',
 }
 
-// Per-tile accent colors — scoped to this section ONLY, never reuse elsewhere.
+// Per-tile accent colors, scoped to this section ONLY, never reuse elsewhere.
 // Row 1 warm (red + amber), row 2 cool (purple + blue), row 3 green-family (teal + green).
-// ── Canonical typography — matches Overview (Dashboard.jsx) exactly.
-//    Sizes intentionally vary by role (card label 11, inner label 10) — this is
+// ── Canonical typography, matches Overview (Dashboard.jsx) exactly.
+//    Sizes intentionally vary by role (card label 11, inner label 10), this is
 //    the hierarchy Overview uses, don't flatten it. ──
 const T = {
   // Page + section headers (Overview: H1 24, H2 22, H3 20)
@@ -305,7 +305,7 @@ const T = {
   h3:           { fontSize: 16, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.2px', lineHeight: 1.3 },
 
   // Uppercase labels
-  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#b2b3bb', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
+  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#b2b3bb', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH"), neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
   sectionHint:  { fontSize: 12.5, fontWeight: 450, color: '#b2b3bb' },                                                     // right-aligned hint text
   innerLabel:   { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // inside sub-blocks (needs + color)
   statLabel:    { fontSize: 11, fontWeight: 500, color: '#b2b3bb', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
@@ -345,7 +345,7 @@ const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.
 const STRATEGY_META = {
   search: { label: 'Search', color: '#34d27b', bg: C.greenBg, desc: 'Keyword-optimised to rank in YouTube search' },
   browse: { label: 'Browse', color: C.text2, bg: 'rgba(255,255,255,0.04)', desc: 'Emotional hook for homepage & suggested feed' },
-  hybrid: { label: 'Hybrid', color: '#fb6a60',   bg: C.redBg,   desc: 'Keywords + emotion — ranks and gets clicked' },
+  hybrid: { label: 'Hybrid', color: '#fb6a60',   bg: C.redBg,   desc: 'Keywords + emotion, ranks and gets clicked' },
 }
 
 
@@ -372,7 +372,7 @@ function sentenceCase(raw) {
   return /[.!?]$/.test(cased) ? cased : cased + '.'
 }
 // First clause of a sentence-cased string. Splits on the first hard break
-// (semicolon, em-dash, " — ", " - ", " because ", " so that ", " and "), so the
+// (semicolon, em-dash, ", ", " - ", " because ", " so that ", " and "), so the
 // headline reads as a single punchy line instead of a paragraph.
 function firstClause(raw, maxChars = 110) {
   const cased = sentenceCase(raw)
@@ -398,7 +398,7 @@ function highlightKeyword(text, keyword) {
   )
 }
 
-// Stats card — matches Dashboard.jsx Stat component EXACTLY (label + value + sub, no pill).
+// Stats card, matches Dashboard.jsx Stat component EXACTLY (label + value + sub, no pill).
 // Same padding, shadow, type scale, spacing as Overview's 4-col stat grid.
 function MiniStat({ label, value, sub, accent, alert }) {
   const col = alert ? C.red : (accent || C.text1)
@@ -441,12 +441,12 @@ function ScoreRing({ score }) {
 }
 
 // Sub-score color ladder. Strong = green, Solid = dark charcoal (text2),
-// Weak = red. Amber was retired across the page — too many warm moments
+// Weak = red. Amber was retired across the page, too many warm moments
 // competed for attention in light mode. Charcoal in the middle reads as
 // "neutral, not bad" without adding a third semantic colour.
 function _subColor(v) { return v >= 75 ? C.green : v >= 55 ? C.text2 : C.red }
 
-// Unified bar fill — every score / progress / saturation bar on the page
+// Unified bar fill, every score / progress / saturation bar on the page
 // uses this so the visual language is consistent. Subtle left-to-right
 // gradient from a soft tint to the full tier color (Niche Heat already
 // used this pattern; the rest of the page now matches).
@@ -458,7 +458,7 @@ function _barFill(color) {
 // tabular-aligned column, animated fill in the middle, tabular number on
 // the right. Width 0 -> value on mount so the bars sweep in.
 // Hover tooltip copy. Native title= attribute, no new visual element on
-// the page — matches the pattern used in Autopsy / feedCards.
+// the page, matches the pattern used in Autopsy / feedCards.
 const _SCORE_TOOLTIPS = {
   SEO:  'SEO score: title length, keyword overlap, and structure compliance. Deterministic, computed from your title and the live competitor data.',
   CTR:  'Click-through score: will the viewer\'s thumb stop and click? Scored by Claude against an explicit 0-100 rubric.',
@@ -578,7 +578,7 @@ function LengthSweetSpot({ length, mounted }) {
   )
 }
 
-// HD thumbnail ladder — same approach as Autopsy.jsx:333-358 and the
+// HD thumbnail ladder, same approach as Autopsy.jsx:333-358 and the
 // Video Ideas page. The API URL on `video.thumbnail` is typically the
 // 320x180 medium variant, which renders soft at our 200-300px tile
 // width on retina. Request maxresdefault.jpg straight from the CDN,
@@ -644,7 +644,7 @@ function _median(nums) {
 // the baseline is valid, so every tile in the strip gets a pill instead of
 // only the outliers. Color tier is decided by the caller via _multTier so
 // > 1.5x reads red, 1.0-1.5x reads neutral charcoal, < 1.0x reads muted.
-// Same maths, no new YouTube calls — derived from view_count already in payload.
+// Same maths, no new YouTube calls, derived from view_count already in payload.
 function _fmtMultiplier(views, baseline) {
   if (!views || !baseline || baseline <= 0) return null
   const mult = views / baseline
@@ -688,7 +688,7 @@ function VideoTile({ video, baselineViews }) {
         display: 'flex', flexDirection: 'column', gap: 8,
         width: 232, flexShrink: 0,
       }}>
-      {/* Thumbnail — kept clean of overlays except the view chip, which sits in
+      {/* Thumbnail, kept clean of overlays except the view chip, which sits in
           the bottom-right where YouTube itself places duration so it never
           collides with creator hooks (which always live top-left). */}
       <div style={{
@@ -820,7 +820,7 @@ function ShortTile({ video, baselineViews }) {
   )
 }
 
-// One horizontal scrolling strip — section eyebrow + scrolling tile list.
+// One horizontal scrolling strip, section eyebrow + scrolling tile list.
 // Used inside NicheHeatCard for the unified winning-content strip. The
 // container hides the native scrollbar but keeps wheel + drag scrolling.
 function HeatStrip({ label, count, Tile, items, baselineViews }) {
@@ -878,7 +878,7 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
 
   // Baseline for multiplier calc = median of THIS strip's view counts so the
   // pill reads as "outlier within this content type". Shorts and longform
-  // have wildly different scales — sharing a baseline would mis-paint.
+  // have wildly different scales, sharing a baseline would mis-paint.
   const baseV = _median(topV.map(v => v.view_count || v.views || 0)) || 1
   const baseS = _median(topS.map(v => v.view_count || v.views || 0)) || 1
 
@@ -936,7 +936,7 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
 // eyebrow row with rank + label + meta, bold title as the hero, always-visible
 // quality chart (3 bars) + length sweet-spot, inline italic notes for the
 // Why/Angle prose so it doesn't compete for attention with the chart, action
-// row at the bottom. No click-to-expand — every value-add is visible at first
+// row at the bottom. No click-to-expand, every value-add is visible at first
 // glance, matching the "lure the user with proof" feedback memory.
 // Cheap text-similarity ranker used to pick which competing videos to show
 // next to each suggestion. Jaccard over lower-cased, stopword-stripped word
@@ -1257,7 +1257,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
     <div className="seo-suggestion-card" style={{
       marginBottom: 10,
     }}>
-      {/* Header — clickable. type pill | teaser | chevron */}
+      {/* Header, clickable. type pill | teaser | chevron */}
       <div
         role="button" tabIndex={0}
         onClick={() => setOpen(o => !o)}
@@ -1287,7 +1287,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
         {/* Divider aligned with content start */}
         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
-        {/* 2-col body — Why it works (charcoal-neutral) + Full description (white + amber left bar + shadow). */}
+        {/* 2-col body, Why it works (charcoal-neutral) + Full description (white + amber left bar + shadow). */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 8, marginLeft: 38 }}>
           <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px' }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
@@ -1319,13 +1319,13 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   )
 }
 
-// Saturation indicator — a compact horizontal bar + "X of N · Label" text.
-// NicheMomentumChart — SVG line chart of publishing momentum in the niche.
+// Saturation indicator, a compact horizontal bar + "X of N · Label" text.
+// NicheMomentumChart, SVG line chart of publishing momentum in the niche.
 // Bucket the publishedAt of top_videos + top_shorts into 12 equal time
 // segments that span from the oldest to the newest ranking video. Bucket
 // unit auto-scales: weeks (span <12w), months (<3y), or quarters (older).
 // Line color encodes direction (green = back half > front half = niche
-// heating up, amber = cooling). Zero new YouTube calls — payload-derived.
+// heating up, amber = cooling). Zero new YouTube calls, payload-derived.
 function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFound }) {
   const items = [...(videos || []), ...(shorts || [])]
   // Collect valid timestamps.
@@ -1466,7 +1466,7 @@ function SaturationDots({ total, filled, color, label }) {
         <strong style={{ color: C.text1, fontWeight: 600 }}>{filled}</strong>
         <span style={{ color: C.text3 }}> of {total} niche videos</span>
       </span>
-      {/* Slimmer 100px-max bar — the verdict chip on the right tells the
+      {/* Slimmer 100px-max bar, the verdict chip on the right tells the
           story; the bar is a visual support, not the headline. */}
       <div style={{ flex: '0 1 100px', maxWidth: 100, height: 4, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
         <div style={{
@@ -1497,12 +1497,12 @@ function IntentInsightRow({
   // below catches anything genuinely long and wraps it cleanly into two lines
   // instead of inserting a mid-sentence ellipsis.
   const cleanHeadline = firstClause(headline, 200)
-  // chipLabel is intentionally unused — the eyebrow already names the insight
+  // chipLabel is intentionally unused, the eyebrow already names the insight
   // ("OPPORTUNITY" / "OVERUSED ANGLE"), so a second outlined pill on the right
   // was duplicating the semantic. Prop kept on the signature for compatibility.
   void chipLabel
   return (
-    // Colored top stripe dropped — Opportunity and Overused Angle now read
+    // Colored top stripe dropped, Opportunity and Overused Angle now read
     // as standard hairline cards. The semantic signal lives in the eyebrow
     // text colour + the tinted icon circle, which are still chipColor.
     <div className="seo-suggestion-card" style={{
@@ -1516,7 +1516,7 @@ function IntentInsightRow({
           padding: '16px 22px', display: 'flex', alignItems: 'center', gap: 14,
           cursor: 'pointer', userSelect: 'none',
         }}>
-        {/* Tinted soft circle icon — 28×28 to match the chip-weight tokens used
+        {/* Tinted soft circle icon, 28×28 to match the chip-weight tokens used
             on the title card and suggestion-card eyebrows; the previous 34×34
             made it the heaviest icon on the page. */}
         <div style={{
@@ -1544,7 +1544,7 @@ function IntentInsightRow({
             label={filledVideos === 0 ? 'Wide open' : filledVideos >= totalVideos * 0.6 ? 'Saturated' : 'Some competition'}
           />
         </div>
-        {/* Chevron only — outlined right-side chip removed (it was a duplicate
+        {/* Chevron only, outlined right-side chip removed (it was a duplicate
             of the eyebrow). Centered vertically with the row via flex
             alignItems:center on the parent. */}
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none"
@@ -1559,7 +1559,7 @@ function IntentInsightRow({
       // card padding 22 + icon 28 + gap 14 = 64.
       <div style={{ padding: '0 22px 18px', paddingLeft: 64 }}>
         <div style={{ height: 1, background: C.border, marginBottom: 12 }} />
-        {/* Q&A layout — definition list pattern. Each row is "label → value". */}
+        {/* Q&A layout, definition list pattern. Each row is "label → value". */}
         {[
           [whyLabel, whyText],
           [actionLabel, actionText],
@@ -1633,7 +1633,7 @@ function AnimatedScoreArc({ value, color, size = 108, tier }) {
 // Derive crude SEO / CTR / Hook sub-scores for the USER's title from the
 // granular per-rule breakdown the backend returns. Three groups of ~35
 // points each, scaled to a 0-100 axis so they sit next to the AI's
-// rubric-scored sub-scores. Approximations, not the same model — used
+// rubric-scored sub-scores. Approximations, not the same model, used
 // only for the side-by-side breakdown disclosure to keep the math honest.
 function _userSubScoresFromBreakdown(b) {
   if (!b) return { seo: 0, ctr: 0, hook: 0 }
@@ -1711,7 +1711,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   const userCol = tierFor(userScore)
   const bestCol = tierFor(bestAvg)
 
-  // Lift chip colors — green for positive lift (you'd improve), red for negative
+  // Lift chip colors, green for positive lift (you'd improve), red for negative
   // (your title is already winning). Mirrors the rest of the page's tier rules.
   const liftPositive = lift >= 0
   const liftColor = liftPositive ? C.green : C.red
@@ -1726,7 +1726,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   }
 
   // Non-card scoreboard layout. The whole section sits directly on the page
-  // background — no border, no rounded card, no shadow. Two columns separated
+  // background, no border, no rounded card, no shadow. Two columns separated
   // by a single hairline divider, with score numbers as the visual anchor.
   // Breaks the wall-of-cards rhythm the user called out.
   const sideLabel = {
@@ -1752,7 +1752,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   return (
     <div style={{ marginBottom: 28 }}>
 
-      {/* ── Eyebrow row: TITLE ANALYSIS · context · lift chip — no card, just
+      {/* ── Eyebrow row: TITLE ANALYSIS · context · lift chip, no card, just
             sits on the page background ── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
@@ -1858,7 +1858,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
           {lift > 0
             ? <>Pick the AI version for <span style={{ fontWeight: 600, color: '#34d27b' }}>+{lift} points</span>.</>
             : lift < 0
-              ? <>Your title scores <span style={{ fontWeight: 600, color: '#fb6a60' }}>{Math.abs(lift)} higher</span> — stick with it.</>
+              ? <>Your title scores <span style={{ fontWeight: 600, color: '#fb6a60' }}>{Math.abs(lift)} higher</span>, stick with it.</>
               : <>Tied with your title.</>
           }
         </p>
@@ -1873,9 +1873,9 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   )
 }
 
-// Niche keyword leaderboard — matches the Video Ideas card DNA exactly: 3px
+// Niche keyword leaderboard, matches the Video Ideas card DNA exactly: 3px
 // severity stripe at top, hairline border, eyebrow row, then a clean ranked
-// list of phrases with score bars. Bubble chart removed — it was unreadable.
+// list of phrases with score bars. Bubble chart removed, it was unreadable.
 // This is the same scan pattern as Video Ideas: rank · keyword · vol/comp
 // chips · score bar · score number. Click a row to use it as your title.
 function NicheMap({ keywords, onPick }) {
@@ -1884,7 +1884,7 @@ function NicheMap({ keywords, onPick }) {
   const sorted = [...keywords].sort((a, b) => b.score - a.score)
   const visible = sorted.slice(0, 12)
 
-  // Volume / competition badge colors — match the score tier semantics. HIGH
+  // Volume / competition badge colors, match the score tier semantics. HIGH
   // volume + LOW competition reads green (good); HIGH competition reads red.
   const volCol  = v => v === 'HIGH' ? C.green : v === 'MED' ? C.text2 : C.text3
   const compCol = c => c === 'LOW' ? C.green : c === 'MED' ? C.text2 : C.red
@@ -1894,7 +1894,7 @@ function NicheMap({ keywords, onPick }) {
     // off the per-row score chips inside the card, not from a coloured edge.
     <div className="vi-idea-card" style={{ marginBottom: 12 }}>
       <div style={{ padding: 18 }}>
-        {/* Eyebrow row — small label + count + helper line on the right.
+        {/* Eyebrow row, small label + count + helper line on the right.
             Matches Video Ideas IdeaCard header DNA. */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
           <div style={{
@@ -1925,7 +1925,7 @@ function NicheMap({ keywords, onPick }) {
           }}>click any to use as title</span>
         </div>
 
-        {/* Ranked list — 12 phrases max. Each row: rank · phrase · vol/comp
+        {/* Ranked list, 12 phrases max. Each row: rank · phrase · vol/comp
             chips · score bar · score number. Consistent typography. */}
         <div style={{
           display: 'flex', flexDirection: 'column',
@@ -1990,7 +1990,7 @@ function NicheMap({ keywords, onPick }) {
 export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, videos = [] }) {
   // Featured hashtags = the first 3 hashtags YouTube auto-extracts from a description
   // and shows above the title. We mirror that rule (regex on description, take first 3),
-  // aggregate across the user's recent videos, and rank by total views — surfacing
+  // aggregate across the user's recent videos, and rank by total views, surfacing
   // the user's own historically successful hashtags. Pure stats, zero AI cost.
   const featuredHashtags = useMemo(() => {
     const map = new Map()
@@ -2020,7 +2020,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
     && (freeTierFeatures?.seo === 'locked' || freeTierFeatures?.seo === 'used')
   const saved = loadSaved()
 
-  // Tab state — 'new' is the active editor; 'reports' lists past analyses
+  // Tab state, 'new' is the active editor; 'reports' lists past analyses
   // persisted server-side (SeoAnalysisCache). Reopening a report loads it
   // back into the editor via setTitle/setResult/etc.
   const [activeTab, setActiveTab] = useState('new')
@@ -2036,7 +2036,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
   const [copied, setCopied]             = useState(null)
   const [intentOptions, setIntentOptions]     = useState(saved.intentOptions || null)
   const [selectedKeyword, setSelectedKeyword] = useState(saved.selectedKeyword || '')
-  // Monotonic request id — latest submit wins; older responses are ignored (race-condition guard).
+  // Monotonic request id, latest submit wins; older responses are ignored (race-condition guard).
   const reqIdRef = useRef(0)
 
   // Tags panel state
@@ -2099,7 +2099,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
     } catch {}
   }, [])
 
-  // Clear the intent picker when the user edits the title — the picker was built for the previous title.
+  // Clear the intent picker when the user edits the title, the picker was built for the previous title.
   // Skip the first run on mount so a restored intentOptions from localStorage doesn't get wiped immediately.
   const titleEditSinceMount = useRef(false)
   useEffect(() => {
@@ -2109,7 +2109,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
   }, [title])
 
   useEffect(() => {
-    // Don't persist state while a request is in flight — setResult(null) at submit start would otherwise overwrite a good previous result with null.
+    // Don't persist state while a request is in flight, setResult(null) at submit start would otherwise overwrite a good previous result with null.
     if (loading || loadingIntent) return
     saveToDisk({ title, result, selectedTitle, currentDesc, descResult, descKeywords, intentOptions, selectedKeyword })
   }, [title, result, loading, loadingIntent, selectedTitle, currentDesc, descResult, descKeywords, intentOptions, selectedKeyword])
@@ -2153,7 +2153,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
     setTitle(report.title || '')
     setResult(report.result || null)
     setSelectedKeyword(report.confirmed_keyword || '')
-    setIntentOptions(null)  // picker is for the current title — not rehydrated
+    setIntentOptions(null)  // picker is for the current title, not rehydrated
     setSelectedTitle(report.selected_title || null)
     setCurrentDesc(report.current_desc || '')
     setDescResult(report.desc_result || null)
@@ -2172,7 +2172,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
     try {
       await fetch(`${API}/seo/reports/${reportId}`, { method: 'DELETE', credentials: 'include' })
     } catch {
-      // Silent — if the delete failed the next fetchReports call will restore it.
+      // Silent, if the delete failed the next fetchReports call will restore it.
     }
   }
 
@@ -2199,7 +2199,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: title.trim() }),
       })
-      if (myId !== reqIdRef.current) return  // stale — a newer submit started, ignore this response
+      if (myId !== reqIdRef.current) return  // stale, a newer submit started, ignore this response
       const data = await res.json()
       if (myId !== reqIdRef.current) return
       if (!res.ok || !data.options?.length) {
@@ -2354,11 +2354,11 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
       background: 'transparent',
       minHeight: 'calc(100vh - 52px)',
     }}>
-     {/* 1040 centered column — every polished feature page (Video Ideas / Thumbnail / Overview) wraps content
+     {/* 1040 centered column, every polished feature page (Video Ideas / Thumbnail / Overview) wraps content
          in this. Don't drop it; the 2-col Preview/Formats grid stretches without an upper bound otherwise. */}
      <div style={{ maxWidth: 1040, margin: '0 auto' }}>
 
-      {/* Header — Overview pattern: H1 (24/800/-0.6) + meta line with · separators + action buttons on right.
+      {/* Header, Overview pattern: H1 (24/800/-0.6) + meta line with · separators + action buttons on right.
           alignItems: flex-end so the H1 baseline aligns with the button bottom edge. */}
       {(() => {
         // Relative timestamp helper (inline, so this page doesn't need a shared import)
@@ -2398,9 +2398,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         )
       })()}
 
-      {/* ── Tabs — quiet soft-grey active pattern (Competitors / Keywords /
+      {/* ── Tabs, quiet soft-grey active pattern (Competitors / Keywords /
            Outliers / Video Review / My Videos). Red is reserved for primary
-           CTAs only — never view-switch toggles. */}
+           CTAs only, never view-switch toggles. */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
         {[
           { key: 'new',     label: 'New analysis' },
@@ -2431,10 +2431,10 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
       {activeTab === 'new' && (<>
 
-      {/* Input area — hero input on top, then 2-col (Preview | Formats) */}
+      {/* Input area, hero input on top, then 2-col (Preview | Formats) */}
       <div style={{ marginBottom: 16 }}>
 
-        {/* ── Title input card — single source of truth for the title plus
+        {/* ── Title input card, single source of truth for the title plus
               its meta. Three optical rows inside: eyebrow + char count,
               the textarea, then ONE action row carrying status + format
               dropdown + Analyse. Spacing and chips mirror VideoIdeas
@@ -2443,7 +2443,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               Dashboard.jsx:1140-1254). ── */}
         <div className="seo-glass-card" style={{ padding: '22px', marginBottom: 14 }}>
 
-          {/* Row 1 — eyebrow + single char-count against the largest surface
+          {/* Row 1, eyebrow + single char-count against the largest surface
               cap. Drops the redundant per-surface breakdown that used to
               repeat the same number three times. */}
           {(() => {
@@ -2466,7 +2466,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             )
           })()}
 
-          {/* Prefill banner — only when prefilled. Lives inside the card,
+          {/* Prefill banner, only when prefilled. Lives inside the card,
               ABOVE the textarea so it doesn't crowd the action row. */}
           {prefillBanner && (
             <div style={{
@@ -2480,7 +2480,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </div>
           )}
 
-          {/* Row 2 — premium title input. Larger padding, bigger type, the
+          {/* Row 2, premium title input. Larger padding, bigger type, the
               same card grammar as every other surface on the page (hairline
               border + inset highlight + soft shadow), with a wider focus
               ring so the field feels deliberate instead of generic. */}
@@ -2523,7 +2523,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </div>
           )}
 
-          {/* Row 3 — single action row carrying status chip + format dropdown +
+          {/* Row 3, single action row carrying status chip + format dropdown +
               Analyse button. All three elements sit on the same optical
               baseline (~36px tall) so the row reads as one band. */}
           <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
@@ -2562,7 +2562,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               )
             })()}
 
-            {/* Format dropdown — single neutral chip + absolutely-positioned
+            {/* Format dropdown, single neutral chip + absolutely-positioned
                 menu of the six VIRAL_FORMATS. Replaces the row of 6 always-on
                 pills. Chevron rotates 180 on open. */}
             <div ref={formatMenuRef} style={{ position: 'relative' }}>
@@ -2628,7 +2628,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
             <div style={{ flex: 1 }}/>
 
-            {/* Analyse — primary CTA. Height matches the chips so the row is
+            {/* Analyse, primary CTA. Height matches the chips so the row is
                 one visual band. */}
             <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
               className="seo-btn-primary" style={{ fontSize: 13, padding: '0 20px', height: 36, lineHeight: 1 }}>
@@ -2648,7 +2648,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </button>
           </div>
 
-          {/* Indeterminate progress bar — sits below the action row so it
+          {/* Indeterminate progress bar, sits below the action row so it
               doesn't disrupt the row's vertical rhythm. */}
           {(loading || loadingIntent) && (
             <div style={{ marginTop: 12, width: '100%', height: 3, background: 'rgba(229,37,27,0.12)', borderRadius: 99, overflow: 'hidden' }}>
@@ -2664,9 +2664,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             half a screen of white empty card. */}
       </div>
 
-      {/* Intent picker — compact rows on a single card with a green selection-
+      {/* Intent picker, compact rows on a single card with a green selection-
            moment top stripe. Was a 3-tile cinematic grid with red-gradient
-           "Route 01/02/03" badges + 3 prose paragraphs — too marketing-page
+           "Route 01/02/03" badges + 3 prose paragraphs, too marketing-page
            for an analyst tool, and the page's worst text-heavy moment. */}
       {intentOptions && !loading && !result && (
         <div className="seo-glass-card" style={{ marginBottom: 20, marginTop: 20, borderTop: `3px solid ${C.green}`, padding: 0 }}>
@@ -2681,7 +2681,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 What niche is this title for?
               </p>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', lineHeight: 1.55 }}>
-                Pick the closest — that's the audience we'll score against.
+                Pick the closest, that's the audience we'll score against.
               </p>
             </div>
 
@@ -2693,7 +2693,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                         small green eyebrow on the first row only so the
                         user knows which option matches their channel best.
                         Eyebrow style mirrors the "PICK THE NICHE" eyebrow
-                        at the top of this card — no new visual element. */}
+                        at the top of this card, no new visual element. */}
                     {i === 0 && (
                       <p style={{
                         fontSize: 10, fontWeight: 600, color: '#34d27b',
@@ -2744,7 +2744,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               the videos-analysed count and the lift chip. Dropping the header
               saves a row and stops repeating the same context twice. */}
 
-          {/* ── Title comparison hero — eyebrow + two title rows + footer
+          {/* ── Title comparison hero, eyebrow + two title rows + footer
                 + breakdown disclosure. Replaces the old card that truncated
                 the titles, repeated the score breakdown's purpose, and
                 buried the niche keyword in the section header. ── */}
@@ -2768,9 +2768,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </div>
           )}
 
-          {/* ── Niche momentum — line chart of publishing activity in the
+          {/* ── Niche momentum, line chart of publishing activity in the
                 niche over the last 12 weeks. Derived client-side from the
-                publishedAt of ranking videos already in the payload — no
+                publishedAt of ranking videos already in the payload, no
                 new YouTube API calls. Hidden if no published_at data. ── */}
           <NicheMomentumChart
             videos={result.top_videos}
@@ -2779,10 +2779,10 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             videosFound={result.videos_found}
           />
 
-          {/* ── Search intent — 3-up visual tile row. Replaces the prose-heavy
+          {/* ── Search intent, 3-up visual tile row. Replaces the prose-heavy
                 stacked Q&A IntentInsightRow cards. Each tile is one short
                 phrase + one visual element (saturation meter / chip cluster).
-                Data lives in result.intent_analysis already — no new API. ── */}
+                Data lives in result.intent_analysis already, no new API. ── */}
           {result.intent_analysis?.search_intent && (() => {
             const ia = result.intent_analysis
             const clean = s => typeof s === 'string'
@@ -2825,7 +2825,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
                 <div style={{ display: 'grid', gridTemplateColumns: overused ? '1fr 1fr 1fr' : '1fr 1fr', gap: 12 }}>
 
-                  {/* Tile 1 — Opportunity (green). Gap by definition = 0 use it. */}
+                  {/* Tile 1, Opportunity (green). Gap by definition = 0 use it. */}
                   <div style={{
                     ...tileBase,
                     background: 'rgba(5,150,105,0.05)',
@@ -2846,7 +2846,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     </div>
                   </div>
 
-                  {/* Tile 2 — Overused angle (amber). Meter ~70% to signal saturation. */}
+                  {/* Tile 2, Overused angle (amber). Meter ~70% to signal saturation. */}
                   {overused && (
                     <div style={{
                       ...tileBase,
@@ -2869,7 +2869,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     </div>
                   )}
 
-                  {/* Tile 3 — Audience drivers (neutral). 3 quiet chips. */}
+                  {/* Tile 3, Audience drivers (neutral). 3 quiet chips. */}
                   <div style={{
                     ...tileBase,
                     background: 'rgba(255,255,255,0.025)',
@@ -2906,7 +2906,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             )
           })()}
 
-          {/* Niche Heat — hero anchor above the suggestion stack. Two
+          {/* Niche Heat, hero anchor above the suggestion stack. Two
               horizontal scrolling strips: Winning videos (16:9 thumbs)
               and Winning shorts (9:16 thumbs), each thumb tagged with a
               red multiplier pill vs the niche median. 4-tile stat
@@ -2949,7 +2949,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </div>
           )}
 
-          {/* AI-Suggested Titles — H2+subtitle header pattern (matches Overview). */}
+          {/* AI-Suggested Titles, H2+subtitle header pattern (matches Overview). */}
           {result.suggestions?.length > 0 && (
             <div style={{ marginBottom: 24, marginTop: 36 }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
@@ -2986,12 +2986,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           )}
 
           {/* ═══════════════════════════════════════════════════════════════
-              3 STACKED CARDS — identical shell, hairline-divider header,
+              3 STACKED CARDS, identical shell, hairline-divider header,
               shared typography. Pattern borrowed from Overview's Priority
               Actions section (one card per concept, neat vertical rhythm).
               ═══════════════════════════════════════════════════════════════ */}
 
-          {/* ── Keyword research — NicheMap visualisation only. The duplicate
+          {/* ── Keyword research, NicheMap visualisation only. The duplicate
                 "Related phrases" 2-col grid card was dropped (same data,
                 NicheMap already shows volume × competition × score with a
                 clickable Top-3 chip strip). ── */}
@@ -3004,7 +3004,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </>
           )}
 
-          {/* ── Keyword discovery — keywords from titles + tags from metadata ── */}
+          {/* ── Keyword discovery, keywords from titles + tags from metadata ── */}
           {(result.autocomplete_terms?.length > 0 || result.top_tags?.length > 0) && (
             <>
               <div style={{ marginBottom: 16, marginTop: 36 }}>
@@ -3012,7 +3012,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-                {/* Block 1 — Keywords (phrases from ranking video titles) */}
+                {/* Block 1, Keywords (phrases from ranking video titles) */}
                 {result.autocomplete_terms?.length > 0 && (
                   <div className="seo-suggestion-card">
                     <div style={{ padding: '16px 22px 18px' }}>
@@ -3052,7 +3052,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   </div>
                 )}
 
-                {/* Block 2 — Suggested tags */}
+                {/* Block 2, Suggested tags */}
                 {result.top_tags?.length > 0 && (
                   <div className="seo-suggestion-card">
                     <div style={{ padding: '16px 22px 18px' }}>
@@ -3079,7 +3079,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                               role="button" tabIndex={0}
                               onClick={() => { navigator.clipboard.writeText(tag) }}
                               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(tag) } }}
-                              title={inTitle ? 'Already in your title — click to copy' : 'Click to copy'}
+                              title={inTitle ? 'Already in your title, click to copy' : 'Click to copy'}
                               style={{
                                 ...T.chip,
                                 display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -3118,14 +3118,14 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {/* ── Description Optimizer ── */}
           {selectedTitle && (
             <>
-              {/* Section header — mirrors Overview's "Channel audit" H2 pattern (H2 + 1-line muted subtitle) */}
+              {/* Section header, mirrors Overview's "Channel audit" H2 pattern (H2 + 1-line muted subtitle) */}
               <div ref={descRef} style={{ marginBottom: 16, marginTop: 36 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Description optimizer</h2>
               </div>
 
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px' }}>
 
-              {/* Picked title + action cluster (Change title + Regenerate when descriptions exist) — single row */}
+              {/* Picked title + action cluster (Change title + Regenerate when descriptions exist), single row */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Picked title</p>
@@ -3149,7 +3149,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   <div style={{ marginBottom: 16 }}>
                     <label style={{ display: 'block', ...T.sectionLabel, marginBottom: 8 }}>
                       Current description{' '}
-                      <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: C.text3 }}>(optional — paste to improve, or leave blank)</span>
+                      <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: C.text3 }}>(optional, paste to improve, or leave blank)</span>
                     </label>
                     <textarea value={currentDesc} onChange={e => setCurrentDesc(e.target.value)}
                       placeholder="Paste your existing description here…"
@@ -3190,7 +3190,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     ))}
                   </div>
 
-                  {/* Top keywords woven into the descriptions — surfaced as chips so the user can see and copy them separately. */}
+                  {/* Top keywords woven into the descriptions, surfaced as chips so the user can see and copy them separately. */}
                   {descKeywords.length > 0 && (
                     <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, gap: 10, flexWrap: 'wrap' }}>
@@ -3234,7 +3234,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     </div>
                   )}
 
-                  {/* Featured hashtags — first 3 hashtags YouTube auto-features above the title,
+                  {/* Featured hashtags, first 3 hashtags YouTube auto-features above the title,
                       mined from this creator's recent videos and ranked by views. Same chip
                       pattern as keywords, just with # symbol + click-to-copy. */}
                   {featuredHashtags.length > 0 && (
@@ -3260,7 +3260,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                             role="button" tabIndex={0}
                             onClick={() => navigator.clipboard.writeText(h.tag)}
                             onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(h.tag) } }}
-                            title={`Used on ${h.count} ${h.count === 1 ? 'video' : 'videos'} · ${h.totalViews.toLocaleString()} total views — click to copy`}
+                            title={`Used on ${h.count} ${h.count === 1 ? 'video' : 'videos'} · ${h.totalViews.toLocaleString()} total views, click to copy`}
                             style={{
                               display: 'inline-flex', alignItems: 'center', gap: 6,
                               fontSize: 12, fontWeight: 600, color: '#34d27b',
@@ -3292,7 +3292,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
       </>)}
 
-      {/* ── Reports tab — list of past /seo/analyze runs ──────────────────── */}
+      {/* ── Reports tab, list of past /seo/analyze runs ──────────────────── */}
       {activeTab === 'reports' && (
         <div>
           {reportsLoading ? (
@@ -3307,7 +3307,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 No reports yet
               </p>
               <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
-                Run a title analysis and it'll show up here — so you can always come back to a report you've already paid for.
+                Run a title analysis and it'll show up here, so you can always come back to a report you've already paid for.
               </p>
             </div>
           ) : (

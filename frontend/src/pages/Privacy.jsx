@@ -41,7 +41,7 @@ function useBreakpoint() {
 
 export default function Privacy() {
   useGlobalStyles()
-  useEffect(() => { document.title = 'Privacy Policy — YTGrowth' }, [])
+  useEffect(() => { document.title = 'Privacy Policy, YTGrowth' }, [])
   const { isMobile } = useBreakpoint()
 
   return (
@@ -69,12 +69,12 @@ export default function Privacy() {
         <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 12 }}>When you connect your Google account we receive:</p>
         <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
           {[
-            'Google account email address — used to identify your account.',
-            'YouTube channel data — channel name, subscriber count, video list, view counts, and public metadata via the YouTube Data API.',
-            'YouTube Analytics data — impressions, CTR, watch time, and traffic source data via the YouTube Analytics API.',
-            'OAuth credentials — access and refresh tokens required to fetch your data. Stored encrypted in our database.',
-            'Usage data — which tools you run, token consumption, and timestamps.',
-            'Payment data — handled entirely by Lemon Squeezy. We only receive your plan type and Lemon Squeezy customer ID. We never store card details.',
+            'Google account email address, used to identify your account.',
+            'YouTube channel data, channel name, subscriber count, video list, view counts, and public metadata via the YouTube Data API.',
+            'YouTube Analytics data, impressions, CTR, watch time, and traffic source data via the YouTube Analytics API.',
+            'OAuth credentials, access and refresh tokens required to fetch your data. Stored encrypted in our database.',
+            'Usage data, which tools you run, token consumption, and timestamps.',
+            'Payment data, handled entirely by Lemon Squeezy. We only receive your plan type and Lemon Squeezy customer ID. We never store card details.',
           ].map((item, i) => (
             <li key={i} style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
           ))}
@@ -86,7 +86,7 @@ export default function Privacy() {
             'To provide AI-powered analysis of your YouTube channel.',
             'To enforce token limits and billing entitlements.',
             'To send transactional emails (billing receipts, usage warnings). No marketing emails without consent.',
-            'To improve our AI using aggregated, anonymised patterns only — never your personal channel data.',
+            'To improve our AI using aggregated, anonymised patterns only, never your personal channel data.',
           ].map((item, i) => (
             <li key={i} style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
           ))}
@@ -95,9 +95,9 @@ export default function Privacy() {
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>3. Third-Party Services</h2>
         <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
           {[
-            'Google / YouTube APIs — subject to Google\'s Privacy Policy and YouTube\'s Terms of Service.',
-            'Lemon Squeezy — our payment processor and Merchant of Record. Handles all payment data under their own privacy policy.',
-            'Anthropic (Claude API) — we send anonymised channel data to generate AI insights. No personally identifiable information is included.',
+            'Google / YouTube APIs, subject to Google\'s Privacy Policy and YouTube\'s Terms of Service.',
+            'Lemon Squeezy, our payment processor and Merchant of Record. Handles all payment data under their own privacy policy.',
+            'Anthropic (Claude API), we send anonymised channel data to generate AI insights. No personally identifiable information is included.',
           ].map((item, i) => (
             <li key={i} style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
           ))}
@@ -123,7 +123,7 @@ export default function Privacy() {
                 { scope: 'https://www.googleapis.com/auth/userinfo.email', reason: 'Retrieves your email address to create and identify your YTGrowth account.' },
                 { scope: 'https://www.googleapis.com/auth/userinfo.profile', reason: 'Retrieves your name and profile picture to personalise your dashboard.' },
                 { scope: 'https://www.googleapis.com/auth/youtube', reason: 'Reads your YouTube channel data (videos, titles, descriptions, thumbnails) and allows updating video metadata (title, description, tags) when you use the SEO Studio editor.' },
-                { scope: 'https://www.googleapis.com/auth/yt-analytics.readonly', reason: 'Reads YouTube Analytics data (impressions, CTR, watch time, traffic sources) to power the growth insights on your dashboard. Read-only — we never modify analytics data.' },
+                { scope: 'https://www.googleapis.com/auth/yt-analytics.readonly', reason: 'Reads YouTube Analytics data (impressions, CTR, watch time, traffic sources) to power the growth insights on your dashboard. Read-only, we never modify analytics data.' },
               ].map(({ scope, reason }, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid var(--ytg-border)', background: i % 2 === 0 ? 'transparent' : 'rgba(10,10,15,0.02)' }}>
                   <td style={{ padding: '10px 12px', color: 'var(--ytg-text)', fontFamily: 'monospace', fontSize: 12, wordBreak: 'break-all', verticalAlign: 'top' }}>{scope}</td>
@@ -139,13 +139,13 @@ export default function Privacy() {
         <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 12 }}>We take the following technical and organisational measures to protect your data, including sensitive information such as OAuth tokens and YouTube Analytics data:</p>
         <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
           {[
-            'Encryption in transit — all data transmitted between your browser, our servers, and third-party APIs is encrypted via TLS 1.2 or higher (HTTPS).',
-            'Encryption at rest — OAuth access tokens and refresh tokens are encrypted at rest in our database using AES-256 encryption. They are never stored or logged in plain text.',
-            'Minimal data retention — we store only the data required to operate the Service. YouTube Analytics data is fetched on-demand and not persisted beyond your session.',
-            'Access controls — access to the production database is restricted to authorised personnel only, using role-based access controls and strong authentication.',
-            'No third-party data sharing — your YouTube and analytics data is never sold, rented, or shared with third parties for advertising or any non-essential purpose.',
-            'Anthropic (Claude API) — when generating AI insights, only anonymised channel metrics are sent. No personally identifiable information, OAuth tokens, or raw Analytics data is included in AI prompts.',
-            'Incident response — in the event of a data breach affecting your personal data, we will notify affected users in accordance with applicable data protection laws.',
+            'Encryption in transit, all data transmitted between your browser, our servers, and third-party APIs is encrypted via TLS 1.2 or higher (HTTPS).',
+            'Encryption at rest, OAuth access tokens and refresh tokens are encrypted at rest in our database using AES-256 encryption. They are never stored or logged in plain text.',
+            'Minimal data retention, we store only the data required to operate the Service. YouTube Analytics data is fetched on-demand and not persisted beyond your session.',
+            'Access controls, access to the production database is restricted to authorised personnel only, using role-based access controls and strong authentication.',
+            'No third-party data sharing, your YouTube and analytics data is never sold, rented, or shared with third parties for advertising or any non-essential purpose.',
+            'Anthropic (Claude API), when generating AI insights, only anonymised channel metrics are sent. No personally identifiable information, OAuth tokens, or raw Analytics data is included in AI prompts.',
+            'Incident response, in the event of a data breach affecting your personal data, we will notify affected users in accordance with applicable data protection laws.',
           ].map((item, i) => (
             <li key={i} style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
           ))}

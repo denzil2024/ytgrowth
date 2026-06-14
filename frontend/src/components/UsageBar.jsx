@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { initPaddleRetain } from '../checkout'
 
-/* Compact sidebar usage widget — shows what's LEFT (not used) so a fresh
+/* Compact sidebar usage widget, shows what's LEFT (not used) so a fresh
    account with 3/3 reads as alive instead of dead-space. Number scales
    with state (green remaining, amber near-limit, red at zero) and sits
    above a remaining-bar + refill-in countdown. Upgrade/Pack CTAs appear
@@ -59,14 +59,14 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
   const showCTA   = (nearLimit || atLimit) && !hasPack
 
   // Free plan is a 5-credit lifetime trial (no monthly refill), so the
-  // "Refills in N days" countdown is wrong for it — reset_date is NULL.
+  // "Refills in N days" countdown is wrong for it, reset_date is NULL.
   // Show trial-appropriate copy instead. Paid keeps the refill countdown.
   const isFreePlan = (usage.plan || 'free') === 'free'
   const refillText = isFreePlan
-    ? (atLimit ? 'Trial used up — upgrade for more' : 'Free trial · no monthly refill')
+    ? (atLimit ? 'Trial used up, upgrade for more' : 'Free trial · no monthly refill')
     : refillLabel(usage.reset_date)
 
-  // Canonical palette — matches Dashboard C tokens.
+  // Canonical palette, matches Dashboard C tokens.
   const C = {
     red:    '#e5251b',
     redHi:  '#ef3a31',
@@ -95,7 +95,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     </span>
   ) : null
 
-  // Quiet, always-present upgrade path for free users — so the nudge exists
+  // Quiet, always-present upgrade path for free users, so the nudge exists
   // before they ever hit the limit (alert mode only fires near/at zero).
   // A text link, not a button: brand red (red is for CTAs), no chrome.
   const UpgradeLink = isFreePlan ? (
@@ -118,7 +118,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     </button>
   ) : null
 
-  /* ── Quiet mode (default). No card chrome — a borderless slim strip so
+  /* ── Quiet mode (default). No card chrome, a borderless slim strip so
         it recedes into the footer instead of stacking as a second box
         next to the What's-new card. ──────────────────────────────────── */
   if (!showCTA) {
@@ -153,7 +153,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     )
   }
 
-  /* ── Alert mode. Only when near/at limit with no pack fallback — i.e.
+  /* ── Alert mode. Only when near/at limit with no pack fallback, i.e.
         exactly when the space and the CTA are earned. A soft tinted card
         (amber draining, red empty) that actually draws the eye, with the
         shout removed: no glow drop-shadow on Upgrade. ─────────────────── */

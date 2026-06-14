@@ -1,4 +1,4 @@
-/* CreditsEmptyModal — shared modal for "you ran out of credits this cycle".
+/* CreditsEmptyModal, shared modal for "you ran out of credits this cycle".
    Distinct from UpsellGate (which is a full-page free-tier lock). This is
    triggered on a 402 response from any paid endpoint, when a user who's
    already paying has simply burned through their monthly allowance.
@@ -11,11 +11,11 @@
    the user already unlocked the feature, they're just out of fuel.
 
    Props:
-     open        — show/hide the modal
-     onClose     — dismiss handler (click-outside + close X)
-     featureName — customises the headline, e.g. "SEO analyses"
-     resetDate   — ISO string; shows "Refills in N days" if provided
-     packBalance — number of pack credits the user still has (hides
+     open       , show/hide the modal
+     onClose    , dismiss handler (click-outside + close X)
+     featureName, customises the headline, e.g. "SEO analyses"
+     resetDate  , ISO string; shows "Refills in N days" if provided
+     packBalance, number of pack credits the user still has (hides
                    Buy-pack CTA if they already have a pack). */
 
 import { useEffect, useState } from 'react'
@@ -127,7 +127,7 @@ export default function CreditsEmptyModal({
           </svg>
         </button>
 
-        {/* Credits-bolt icon — red gradient square, matches UpsellGate's lock */}
+        {/* Credits-bolt icon, red gradient square, matches UpsellGate's lock */}
         <div style={{
           width: 50, height: 50, borderRadius: 14,
           background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
@@ -165,7 +165,7 @@ export default function CreditsEmptyModal({
           </div>
         )}
 
-        {/* Primary CTA — mirrors UpsellGate */}
+        {/* Primary CTA, mirrors UpsellGate */}
         <a
           href="/?tab=monthly#pricing"
           style={{
@@ -187,7 +187,7 @@ export default function CreditsEmptyModal({
           Plans from <span style={{ fontWeight: 700, color: C.text2 }}>$19/mo</span> · cancel anytime
         </div>
 
-        {/* Pack link — hide if user already has pack credits */}
+        {/* Pack link, hide if user already has pack credits */}
         {effectivePack <= 0 && (
           <div>
             <a
@@ -198,7 +198,7 @@ export default function CreditsEmptyModal({
           </div>
         )}
 
-        {/* Trust stack — same testimonial avatars as UpsellGate, tuned to the
+        {/* Trust stack, same testimonial avatars as UpsellGate, tuned to the
             light card (white avatar ring, light divider) so every paywall
             carries the same social proof. */}
         <div style={{

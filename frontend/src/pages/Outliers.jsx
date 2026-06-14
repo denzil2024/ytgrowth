@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
-// Load Geist once — SCOPED to this page. Matches Chat / Competitors / Keywords.
+// Load Geist once, SCOPED to this page. Matches Chat / Competitors / Keywords.
 if (typeof document !== 'undefined' && !document.getElementById('outliers-geist-font')) {
   const link = document.createElement('link')
   link.id = 'outliers-geist-font'
@@ -145,7 +145,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       filter: brightness(1.08); transform: translateY(-1px);
       box-shadow: 0 2px 8px rgba(229,37,27,0.38), 0 8px 24px rgba(229,37,27,0.28);
     }
-    /* Ghost variant — outlined neutral pill. Used for New-search alongside
+    /* Ghost variant, outlined neutral pill. Used for New-search alongside
        the (already red) top Search/Reports pill so we don't stack reds. */
     .out-cta-ghost {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -217,7 +217,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       box-shadow: none; opacity: 0.92;
     }
 
-    /* View tabs — Search / Reports top-level switch (Competitors pattern) */
+    /* View tabs, Search / Reports top-level switch (Competitors pattern) */
     .out-view-btn {
       background: ${C.cardFlat}; color: ${C.text2};
       border: 1px solid ${C.hair}; border-radius: 100px;
@@ -232,7 +232,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       box-shadow: 0 1px 3px rgba(229,37,27,0.25), 0 4px 14px rgba(229,37,27,0.25);
     }
 
-    /* Reports list — matches Competitors tracked accordion grammar exactly:
+    /* Reports list, matches Competitors tracked accordion grammar exactly:
        hairline border, 14px radius, single soft shadow + inset highlight,
        14px gap between rows so they breathe. */
     .out-report-wrapper { position: relative; margin-bottom: 14px; }
@@ -355,12 +355,12 @@ function fmtDuration(seconds) {
 
 /* YouTube serves 3 thumbnail sizes per video. We use the highest one that
    actually exists on a given video:
-     1. maxresdefault.jpg  — 1280x720. Only present if the uploader gave YouTube
+     1. maxresdefault.jpg , 1280x720. Only present if the uploader gave YouTube
                              an HD master; missing on many older or low-quality
                              uploads.
-     2. hqdefault.jpg      — 480x360. ALWAYS present on every YouTube video.
-     3. {stored thumbnail} — whatever the search API returned (~320x180).
-   The onError handler walks this cascade in order — invisible to the user. */
+     2. hqdefault.jpg     , 480x360. ALWAYS present on every YouTube video.
+     3. {stored thumbnail}, whatever the search API returned (~320x180).
+   The onError handler walks this cascade in order, invisible to the user. */
 function ytMaxThumbUrl(videoId) {
   return videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
 }
@@ -380,7 +380,7 @@ function makeThumbOnError(videoId, fallbackUrl) {
   return (e) => _advanceThumb(e.target, videoId, fallbackUrl)
 }
 // YouTube returns a 120x90 grey placeholder (HTTP 200) when maxresdefault
-// doesn't exist — onError never fires for it. Detect the placeholder
+// doesn't exist, onError never fires for it. Detect the placeholder
 // dimensions in onLoad and walk the fallback cascade manually.
 function makeThumbOnLoad(videoId, fallbackUrl) {
   return (e) => {
@@ -443,11 +443,11 @@ const SpinIcon = () => (
   </svg>
 )
 
-/* MetaChip — header meta pill with tinted-circle icon + label. Replaces the
+/* MetaChip, header meta pill with tinted-circle icon + label. Replaces the
    emoji chips per the no-generic-icons rule (Lucide-style inline SVGs,
    semantic fit, soft tinted circle backgrounds). */
 const META_CHIP_ICONS = {
-  // Target — concentric circles + center dot
+  // Target, concentric circles + center dot
   target: (
     <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="7" cy="7" r="5.5"/>
@@ -455,28 +455,28 @@ const META_CHIP_ICONS = {
       <circle cx="7" cy="7" r="0.6" fill="currentColor"/>
     </svg>
   ),
-  // TrendingUp — line going up-right with arrowhead
+  // TrendingUp, line going up-right with arrowhead
   trendingUp: (
     <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="2,10 5.5,6.5 7.5,8.5 12,3.5"/>
       <polyline points="9,3.5 12,3.5 12,6.5"/>
     </svg>
   ),
-  // Layers — stacked diamonds
+  // Layers, stacked diamonds
   layers: (
     <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="7,2 12,5 7,8 2,5"/>
       <polyline points="2,8 7,11 12,8"/>
     </svg>
   ),
-  // Compass — circle with needle
+  // Compass, circle with needle
   compass: (
     <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="7" cy="7" r="5.5"/>
       <polygon points="9,5 6,8 5,9 8,6" fill="currentColor" stroke="none"/>
     </svg>
   ),
-  // Calendar — rectangle with header + 2 markers
+  // Calendar, rectangle with header + 2 markers
   calendar: (
     <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="3" width="10" height="9" rx="1.2"/>
@@ -485,7 +485,7 @@ const META_CHIP_ICONS = {
       <line x1="9" y1="1.5" x2="9" y2="3.5"/>
     </svg>
   ),
-  // Zap — lightning bolt
+  // Zap, lightning bolt
   zap: (
     <svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" stroke="none">
       <polygon points="8.2,1 3,7.6 6.8,7.6 5.4,13 10.6,5.6 7,5.6"/>
@@ -511,18 +511,18 @@ function MetaChip({ tint = 'neutral', icon, children }) {
 }
 
 /* Persistence lives server-side now (outliers_search_cache table). We keep
-   only the tab display preference in localStorage — results/query/intent come
+   only the tab display preference in localStorage, results/query/intent come
    from /outliers/cache so they survive logout and device switches. */
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 export default function Outliers({ channelData, onNavigate, plan, freeTierFeatures }) {
-  // Free-tier feature flag — Outliers is fully gated for free users. All
+  // Free-tier feature flag, Outliers is fully gated for free users. All
   // hooks still declared below (React rules); the actual render-replace
   // happens at the bottom of the component.
   const outliersGated = (plan || 'free') === 'free'
     && (freeTierFeatures?.outliers === 'locked' || freeTierFeatures?.outliers === 'used')
 
-  // Tab is purely a display-state choice now — switching tabs NEVER triggers a
+  // Tab is purely a display-state choice now, switching tabs NEVER triggers a
   // new search. Persisted locally so the user returns to the same tab view.
   const [tab,    setTab]    = useState(() => {
     try { return localStorage.getItem('outliers_tab') || 'video' } catch { return 'video' }
@@ -559,7 +559,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   }
 
   function openReport(r) {
-    // Rehydrate the main view from the saved report — no new charge.
+    // Rehydrate the main view from the saved report, no new charge.
     setResult(r.result || null)
     setQuery(r.query || '')
     setIntentOptions(null)
@@ -578,9 +578,9 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   const inputRef = useRef(null)
 
   // On mount: fetch the server-side cached search. The DB is the source of
-  // truth now — results survive refresh / logout / tab switch.
+  // truth now, results survive refresh / logout / tab switch.
   useEffect(() => {
-    // One-time cleanup — drop any leftover localStorage cache from the old
+    // One-time cleanup, drop any leftover localStorage cache from the old
     // client-persisted version so ghost data doesn't leak into the new flow.
     try { localStorage.removeItem('outliers_v1') } catch {}
     let cancelled = false
@@ -606,7 +606,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result])
 
-  // Persist tab choice (display preference only — not the result).
+  // Persist tab choice (display preference only, not the result).
   useEffect(() => {
     try { localStorage.setItem('outliers_tab', tab) } catch {}
   }, [tab])
@@ -666,7 +666,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   }
 
   // Step 2: the actual search. Backend persists the result to the DB keyed by
-  // channel_id — no more localStorage. confirmedKeyword can be a picked intent
+  // channel_id, no more localStorage. confirmedKeyword can be a picked intent
   // option, a manually-typed intent (up to 160 chars), or empty (search as typed).
   async function runSearch(confirmedKeyword = '', existingId) {
     const q = query.trim()
@@ -719,7 +719,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
     runSearch(trimmed)
   }
 
-  // "New search" / clear — also tells the backend to drop the saved search so
+  // "New search" / clear, also tells the backend to drop the saved search so
   // the next fresh mount doesn't reload it.
   function handleClear() {
     setQuery('')
@@ -734,7 +734,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
 
   /* ─── Render ───────────────────────────────────────────────────────── */
 
-  // Free-tier gate — replaces the entire page content with the shared upsell
+  // Free-tier gate, replaces the entire page content with the shared upsell
   // Intent-based paywall: render the normal page for everyone. Gated users
   // see the full UI, type a query, and only hit the paywall modal when they
   // actually click Run. Backend gate stays in place as defense-in-depth.
@@ -758,7 +758,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   return (
     <div className="out-page" style={{ color: C.text1 }}>
 
-      {/* ══ Page header — H1 + subtitle on the LEFT, Reports toggle on the
+      {/* ══ Page header, H1 + subtitle on the LEFT, Reports toggle on the
            RIGHT. One row, no separate Search/Reports tab pair (the Reports
            pill toggles back to Search when active). Subtitle adapts based
            on view. */}
@@ -828,7 +828,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         </div>
       )}
 
-      {/* ══ Tabs row — tabs LEFT, sort RIGHT. Both use the SAME segmented
+      {/* ══ Tabs row, tabs LEFT, sort RIGHT. Both use the SAME segmented
            control pattern (soft-grey pill background + white active pill +
            .out-tab-btn class) so they look and behave identically. The
            previous .out-sort-group / .out-sort-btn variant felt different
@@ -924,7 +924,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         )}
       </div>
 
-      {/* ══ Intent picker — shown between intent fetch and actual search.
+      {/* ══ Intent picker, shown between intent fetch and actual search.
            Same pattern as SEO Optimizer (three routes, click one to commit). ══ */}
       {intentOptions && !loading && !result && (
         <div className="out-section" style={{ marginBottom: 16, marginTop: 8 }}>
@@ -939,7 +939,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               Your search could go <span style={{ color: '#fb6a60' }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
-              Same words, different niches. Pick the closest — that's the outlier cohort we'll pull.
+              Same words, different niches. Pick the closest, that's the outlier cohort we'll pull.
             </p>
           </div>
 
@@ -992,7 +992,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
             ))}
           </div>
 
-          {/* Manual-intent option — not in SEO Optimizer, unique to Outliers.
+          {/* Manual-intent option, not in SEO Optimizer, unique to Outliers.
               Up to 160 chars of user-typed intent, used verbatim as confirmed_keyword. */}
           <div className="out-card" style={{ padding: '18px 20px', marginTop: 14 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10, gap: 8 }}>
@@ -1093,13 +1093,13 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         </div>
       )}
 
-      {/* ══ Results — one search, three tab views of the same payload ════════ */}
+      {/* ══ Results, one search, three tab views of the same payload ════════ */}
       {!loading && (result?.videos?.length > 0 || result?.channels?.length > 0) && (() => {
         // Each tab reads from its own slice of the payload.
-        // • Videos tab:     result.videos     — ranked by outlier score
-        // • Thumbnails tab: result.thumbnails — ranked by vision click-worthiness
+        // • Videos tab:     result.videos    , ranked by outlier score
+        // • Thumbnails tab: result.thumbnails, ranked by vision click-worthiness
         //   (falls back to result.videos if the vision call failed)
-        // • Channels tab:   result.channels   — the breakout-channel pool
+        // • Channels tab:   result.channels  , the breakout-channel pool
         const raw =
           tab === 'channel'   ? (result.channels || []) :
           tab === 'thumbnail' ? (result.thumbnails || result.videos || []) :
@@ -1164,7 +1164,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
 
       </>)}
 
-      {/* ══ Reports view — past charged /outliers/search runs.
+      {/* ══ Reports view, past charged /outliers/search runs.
            H1 + subtitle now live in the shared page header above; this view
            just renders the report list directly. */}
       {view === 'reports' && (
@@ -1183,7 +1183,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                 No reports yet
               </p>
               <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
-                Run an Outliers search and it'll show up here — so you can always come back to a report you've already paid for.
+                Run an Outliers search and it'll show up here, so you can always come back to a report you've already paid for.
               </p>
             </div>
           ) : (
@@ -1300,7 +1300,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
    Watch / Retention / Eng (those only apply to the user's own videos).
    ──────────────────────────────────────────────────────────────────────── */
 /* ──────────────────────────────────────────────────────────────────────────
-   PatternSynthesisCard — the strategic insight that beats VidIQ.
+   PatternSynthesisCard, the strategic insight that beats VidIQ.
    VidIQ shows you a list of outliers and stops. We synthesise across the
    top winnable subset and answer: what's the pattern, and what should you
    make next. Data comes from backend pattern_synthesis (one Claude call).
@@ -1376,11 +1376,11 @@ function VideoResultCard({ item, kind, onOpen }) {
 
   return (
     <div className="out-grid-card">
-      {/* Thumbnail — YouTube link, matching Videos tab */}
+      {/* Thumbnail, YouTube link, matching Videos tab */}
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
-        {/* Max-resolution thumbnail — uses maxresdefault.jpg (1280x720) where
+        {/* Max-resolution thumbnail, uses maxresdefault.jpg (1280x720) where
             the uploader supplied an HD master, else cascades through
             hqdefault.jpg (480x360, always present) and finally the stored
             search-API thumbnail. Any card always renders the sharpest image
@@ -1395,7 +1395,7 @@ function VideoResultCard({ item, kind, onOpen }) {
             />
           : <div style={{ width: '100%', aspectRatio: '16/9', background: C.cardFlat }}/>
         }
-        {/* SHORT / duration badges — identical to Videos tab. Outlier signal
+        {/* SHORT / duration badges, identical to Videos tab. Outlier signal
             lives in the footer's OUTLIER metric, not on the thumbnail, so the
             thumbnail stays as clean as the Videos tab's. */}
         {isShort && (
@@ -1406,16 +1406,16 @@ function VideoResultCard({ item, kind, onOpen }) {
         )}
       </a>
 
-      {/* Body — identical to Videos tab: title → meta line (3 items separated
+      {/* Body, identical to Videos tab: title → meta line (3 items separated
           by dots, bold values) → footer hairline + 3 metrics + red CTA. */}
       <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        {/* Title — same 16/700/-0.3ls/2-line clamp as Videos tab */}
+        {/* Title, same 16/700/-0.3ls/2-line clamp as Videos tab */}
         <p style={{
           fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{item.title}</p>
 
-        {/* Pattern tag chip — replicable / trending / lucky. Set by the
+        {/* Pattern tag chip, replicable / trending / lucky. Set by the
             cross-outlier synthesis (Claude). Tells the user whether to
             copy this video's pattern or skip it. Only renders when the
             synthesis returned a tag for this video id. */}
@@ -1437,7 +1437,7 @@ function VideoResultCard({ item, kind, onOpen }) {
           )
         })()}
 
-        {/* Channel name — its own line under the title, slightly heavier weight
+        {/* Channel name, its own line under the title, slightly heavier weight
             than the meta line below so it reads as a byline ("who made this"),
             not as a stat. */}
         <p style={{
@@ -1445,7 +1445,7 @@ function VideoResultCard({ item, kind, onOpen }) {
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>{item.channel_name}</p>
 
-        {/* Meta line — views · relTime. 2 items instead of 3 now that channel
+        {/* Meta line, views · relTime. 2 items instead of 3 now that channel
             name has its own line. Matches the Videos tab meta typography. */}
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
@@ -1453,7 +1453,7 @@ function VideoResultCard({ item, kind, onOpen }) {
           {relPublished(item.published_at) || '—'}
         </p>
 
-        {/* Footer — metrics cluster LEFT (not spread across full width) so
+        {/* Footer, metrics cluster LEFT (not spread across full width) so
             the labels sit close to their values and don't feel stranded.
             Winnable is the personalised signal: 0-10 score for how realistic
             this opportunity is for THIS user given their channel size,
@@ -1476,12 +1476,12 @@ function VideoResultCard({ item, kind, onOpen }) {
           const metrics = [
             winnableMetric,
             { label: 'Outlier', sub: '×', display: String(item.outlier_score),                              color: tier.color, tip: 'How many times this video beat its niche cohort\'s median views-per-subscriber. 5×+ is breakout.' },
-            { label: 'VPS',     sub: '',  display: vpsDisplay,                                              color: C.text1,    tip: 'Views per subscriber — normalises out raw channel size so small-channel wins show up.' },
+            { label: 'VPS',     sub: '',  display: vpsDisplay,                                              color: C.text1,    tip: 'Views per subscriber, normalises out raw channel size so small-channel wins show up.' },
             { label: 'Eng',     sub: '',  display: engPct != null ? `${engPct.toFixed(1)}%` : '—',          color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
           ].filter(Boolean)
           return (
         <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          {/* Even-gutter grid — 2 cols when 4 metrics, 3 cols when Winnable
+          {/* Even-gutter grid, 2 cols when 4 metrics, 3 cols when Winnable
               is missing. Keeps consistent rhythm across cards even though
               the metric count varies. */}
           <div style={{
@@ -1523,7 +1523,7 @@ function VideoResultCard({ item, kind, onOpen }) {
   )
 }
 
-/* ─── Channel result card — channel-identity design, NOT a video thumbnail.
+/* ─── Channel result card, channel-identity design, NOT a video thumbnail.
    Purpose: make the Channels tab visually distinct from Videos / Thumbnails
    so users don't feel they're looking at the same results three times.
 
@@ -1535,7 +1535,7 @@ function VideoResultCard({ item, kind, onOpen }) {
      - Channel name + @handle byline
      - 2-line description clamp
      - Meta line (subs · videos)
-     - 3-metric row (Outlier / Hits / Avg views) and red CTA — same footer
+     - 3-metric row (Outlier / Hits / Avg views) and red CTA, same footer
        shape as VideoResultCard for brand consistency
    ──────────────────────────────────────────────────────────────────────── */
 function ChannelResultCard({ item, onOpen }) {
@@ -1548,7 +1548,7 @@ function ChannelResultCard({ item, onOpen }) {
 
   return (
     <div className="out-grid-card">
-      {/* Gradient banner — no video thumbnail; soft red→amber wash that reads
+      {/* Gradient banner, no video thumbnail; soft red→amber wash that reads
           as "channel page" instead of "video card". Small user icon top-right
           reinforces that this is a profile, not content. */}
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
@@ -1566,10 +1566,10 @@ function ChannelResultCard({ item, onOpen }) {
         </svg>
       </a>
 
-      {/* Body — avatar overlaps the banner via negative marginTop */}
+      {/* Body, avatar overlaps the banner via negative marginTop */}
       <div style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
 
-        {/* Channel avatar — 72x72 circle, 4px white ring, overlaps banner.
+        {/* Channel avatar, 72x72 circle, 4px white ring, overlaps banner.
             `position: relative` + absolute-positioned child guarantees the
             image fills the full circle regardless of box-sizing or flex
             quirks (an earlier flex-based centering version was rendering the
@@ -1594,13 +1594,13 @@ function ChannelResultCard({ item, onOpen }) {
           }
         </div>
 
-        {/* Channel name — same 16/700/-0.3ls as VideoResultCard title */}
+        {/* Channel name, same 16/700/-0.3ls as VideoResultCard title */}
         <p style={{
           fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.35, marginBottom: 3, letterSpacing: '-0.3px',
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>{item.channel_name}</p>
 
-        {/* @handle byline — sits where VideoResultCard puts the channel name */}
+        {/* @handle byline, sits where VideoResultCard puts the channel name */}
         {handle ? (
           <p style={{
             fontSize: 13, fontWeight: 500, color: C.text3, marginBottom: 10, letterSpacing: '-0.05px',
@@ -1610,26 +1610,26 @@ function ChannelResultCard({ item, onOpen }) {
           <p style={{ fontSize: 13, color: C.text3, marginBottom: 10 }}>&nbsp;</p>
         )}
 
-        {/* Description — 2-line clamp, fixed minHeight so every card is same height */}
+        {/* Description, 2-line clamp, fixed minHeight so every card is same height */}
         <p style={{
           fontSize: 13, fontWeight: 500, color: C.text3, lineHeight: 1.5, marginBottom: 14,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
           minHeight: 39,
         }}>{item.description || '—'}</p>
 
-        {/* Meta line — subs · videos, same typography as VideoResultCard meta */}
+        {/* Meta line, subs · videos, same typography as VideoResultCard meta */}
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.subscribers)}</span> subs
           <span style={{ margin: '0 8px', color: C.text3 }}>·</span>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.video_count)}</span> videos
         </p>
 
-        {/* Footer — identical to VideoResultCard: flex metrics + full-width red CTA */}
+        {/* Footer, identical to VideoResultCard: flex metrics + full-width red CTA */}
         <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier',  display: `${item.outlier_score}×`,            color: tier.color, tip: 'Their best-performing video in this search beat the niche median by this multiple.' },
-              { label: 'Hits',     display: String(hits),                         color: C.text1,    tip: 'Number of videos from this channel that surfaced in your search — higher = more on-topic.' },
+              { label: 'Hits',     display: String(hits),                         color: C.text1,    tip: 'Number of videos from this channel that surfaced in your search, higher = more on-topic.' },
               { label: 'Avg views', display: fmtNum(item.avg_views_per_video),    color: C.text1,    tip: 'Average views per video across this channel\'s entire catalog.' },
             ].map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
@@ -1749,7 +1749,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
       ]
     : [
         { label: 'Outlier strength',  score: outlierPct,    tip: 'Views per subscriber vs niche median (5× = max).' },
-        { label: 'Engagement',         score: engScore,     tip: 'Likes ÷ views scaled — 5%+ is a ceiling.' },
+        { label: 'Engagement',         score: engScore,     tip: 'Likes ÷ views scaled, 5%+ is a ceiling.' },
         { label: 'Recency',            score: recencyScore, tip: 'Newer videos score higher (0–30 days = max).' },
         { label: 'Niche fit',          score: nicheScore,   tip: 'Whether the posting channel\'s content overlaps your niche.' },
       ]
@@ -1758,7 +1758,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
     ? 'Breakout channel'
     : kind === 'thumbnail' ? 'Winning thumbnail' : 'Outlier video'
 
-  // Max-res header thumbnail — same cascade as VideoResultCard:
+  // Max-res header thumbnail, same cascade as VideoResultCard:
   // maxresdefault (1280x720) → hqdefault (480x360) → stored medium.
   const headerVideoId = isChannel ? item.top_video_id : item.video_id
   const headerThumbHi = ytMaxThumbUrl(headerVideoId)
@@ -1786,7 +1786,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
       <div className="out-modal" onClick={e => e.stopPropagation()}>
         <div style={{ padding: '24px 28px' }}>
 
-          {/* Header — same silhouette as VideoOptimizePanel.jsx:453-477 */}
+          {/* Header, same silhouette as VideoOptimizePanel.jsx:453-477 */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.borderLight}` }}>
             {headerThumb
               ? <img src={headerThumb} alt=""
@@ -1810,7 +1810,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
             </div>
           </div>
 
-          {/* Why Now hero — same "Fix first" card silhouette (white bg, red left-bar) */}
+          {/* Why Now hero, same "Fix first" card silhouette (white bg, red left-bar) */}
           {item.why_now && (
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
               <span style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
@@ -1818,7 +1818,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
             </div>
           )}
 
-          {/* Breakdown Section — same silhouette as "Title Analysis" */}
+          {/* Breakdown Section, same silhouette as "Title Analysis" */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
             <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
               {isChannel ? 'Channel breakdown' : 'Outlier breakdown'}
@@ -1850,14 +1850,14 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
             </div>
           </div>
 
-          {/* 3-col intent grid — same silhouette as Search Intent / Competitor Gap / Emotional Driver */}
+          {/* 3-col intent grid, same silhouette as Search Intent / Competitor Gap / Emotional Driver */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
             <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
               {isChannel ? 'Channel playbook' : 'Outlier playbook'}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
 
-              {/* Amber-tinted — Why it worked / Why this channel. Was blue
+              {/* Amber-tinted, Why it worked / Why this channel. Was blue
                   (off-palette). Amber doubles as the "AI/explainer" accent
                   used elsewhere (Title Scorecard pattern). */}
               <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '12px 14px' }}>
@@ -1869,7 +1869,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                 </p>
               </div>
 
-              {/* Amber — Quick actions / What to do (list) */}
+              {/* Amber, Quick actions / What to do (list) */}
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                 <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'What to do' : 'Quick actions'}
@@ -1890,20 +1890,20 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                 })()}
               </div>
 
-              {/* Green — Why now (same text as hero; keeps the 3-col symmetry) */}
+              {/* Green, Why now (same text as hero; keeps the 3-col symmetry) */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
                 <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   Act on this because
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
-                  {item.why_now || 'This result is fresh in your niche — move on it while the topic is still climbing.'}
+                  {item.why_now || 'This result is fresh in your niche, move on it while the topic is still climbing.'}
                 </p>
               </div>
 
             </div>
           </div>
 
-          {/* Actions Section — same card silhouette, full-width button row */}
+          {/* Actions Section, same card silhouette, full-width button row */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
             <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Shortcuts</p>
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${actionList.length}, minmax(0, 1fr))`, gap: 10 }}>
@@ -1948,7 +1948,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
   )
 }
 
-/* ─── Score ring — outlier variant of VideoOptimizePanel's ScoreRing ──────── */
+/* ─── Score ring, outlier variant of VideoOptimizePanel's ScoreRing ──────── */
 function OutlierRing({ score, color }) {
   const val   = Math.max(0, Math.min(10, score || 0))
   const r     = 34
@@ -1971,7 +1971,7 @@ function OutlierRing({ score, color }) {
   )
 }
 
-/* ─── Bar — copied from VideoOptimizePanel's BreakdownBar ─────────────────── */
+/* ─── Bar, copied from VideoOptimizePanel's BreakdownBar ─────────────────── */
 function OutlierBar({ label, score, tip }) {
   const [showWhy, setShowWhy] = useState(false)
   const color = score >= 70 ? C.green : score >= 40 ? C.amber : C.red
@@ -2000,12 +2000,12 @@ function OutlierBar({ label, score, tip }) {
   )
 }
 
-/* ─── Thumbnails tab — niche visual-pattern report (tab-level, not per-row)
+/* ─── Thumbnails tab, niche visual-pattern report (tab-level, not per-row)
    Copies the Overview "Priority Actions" InsightCard silhouette exactly:
    3px amber top border, 26x26 amber badge, category eyebrow + title +
    outlined "N analysed" pill, hairline at marginLeft:46, 3-cell tinted
    body grid (blue / white+amber bar / green) at the same offset. One row,
-   three cells — no stacked sub-sections, no nested tiles.
+   three cells, no stacked sub-sections, no nested tiles.
    ──────────────────────────────────────────────────────────────────────── */
 function ThumbnailPatternsCard({ patterns, query }) {
   if (!patterns || (!patterns.dominant_style && !(patterns.recommendations || []).length)) {
@@ -2028,7 +2028,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
     <div className="out-card" style={{ padding: 0, marginBottom: 16, borderTop: `3px solid ${C.amber}` }}>
       <div style={{ padding: '16px 22px 18px' }}>
 
-        {/* Header — same 3-column flex (badge | eyebrow+title | pill) as Priority Actions InsightCard.
+        {/* Header, same 3-column flex (badge | eyebrow+title | pill) as Priority Actions InsightCard.
             Whole row is now a button that toggles the body open/closed. */}
         <button
           type="button"
@@ -2078,18 +2078,18 @@ function ThumbnailPatternsCard({ patterns, query }) {
         {!open && null}
         {open && (<>
 
-        {/* Hairline — aligned with the title "What wins in your niche".
+        {/* Hairline, aligned with the title "What wins in your niche".
             Offset = icon badge (26px) + flex gap (12px) = 38px. (No checkbox
             on this card, unlike Dashboard Priority Actions which uses 46.) */}
         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
-        {/* 3-cell body — canonical InsightCard pattern (Dashboard.jsx:1119):
+        {/* 3-cell body, canonical InsightCard pattern (Dashboard.jsx:1119):
             Visual formula (blue / "Why now" slot) · Next thumbnail (white +
             amber bar / "Action" slot) · Why now (green / "Expected outcome"
             slot). Same 1fr 1.4fr 1fr column weights as Priority Actions. */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
 
-          {/* Neutral "Visual formula" — was off-palette blue. Sticks to
+          {/* Neutral "Visual formula", was off-palette blue. Sticks to
               red/amber/green + neutral grey, with the amber "Next thumbnail"
               tile carrying the chromatic anchor in the middle column. */}
           <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px' }}>
@@ -2102,7 +2102,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
             ))}
           </div>
 
-          {/* Amber+bar "Next thumbnail" — the "Action" equivalent in Priority Actions */}
+          {/* Amber+bar "Next thumbnail", the "Action" equivalent in Priority Actions */}
           <div style={{
             background: C.card,
             border: `1px solid ${C.border}`,
@@ -2127,7 +2127,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
             )}
           </div>
 
-          {/* Green "Why now" — same Expected outcome tile in Priority Actions */}
+          {/* Green "Why now", same Expected outcome tile in Priority Actions */}
           {patterns.why_now ? (
             <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>

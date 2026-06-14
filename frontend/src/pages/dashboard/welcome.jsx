@@ -1,6 +1,6 @@
 /* ─── First-time welcome banner ─────────────────────────────────────────────
    Self-contained onboarding banner. Not currently wired into the Dashboard
-   render path — kept here as a future surface the user can reactivate
+   render path, kept here as a future surface the user can reactivate
    without spelunking through git history. */
 import { C, SHELL } from './tokens'
 
@@ -64,7 +64,7 @@ export function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
 
       <div style={{ display: 'flex', gap: 28, alignItems: 'stretch' }}>
 
-        {/* LEFT — score */}
+        {/* LEFT, score */}
         <div style={{ flex: '0 0 auto', width: 200 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.red, flexShrink: 0, animation: 'pulse 2s infinite' }}/>
@@ -86,7 +86,7 @@ export function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
         {/* Divider */}
         <div style={{ width: 1, background: 'rgba(0,0,0,0.07)', alignSelf: 'stretch', flexShrink: 0 }}/>
 
-        {/* CENTER — top priority */}
+        {/* CENTER, top priority */}
         <div style={{ flex: 1 }}>
           <p style={{ fontSize: 12, fontWeight: 600, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Your #1 priority right now</p>
           {top && s ? (
@@ -109,7 +109,7 @@ export function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
         {/* Divider */}
         <div style={{ width: 1, background: 'rgba(0,0,0,0.07)', alignSelf: 'stretch', flexShrink: 0 }}/>
 
-        {/* RIGHT — CTA */}
+        {/* RIGHT, CTA */}
         <div style={{ flex: '0 0 auto', width: 190, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
           <p style={{ fontSize: 12, fontWeight: 600, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Start here</p>
           <button

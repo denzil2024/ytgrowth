@@ -33,7 +33,7 @@ const FEATURE_GROUPS = [
   },
 ]
 
-/* Resources — 4-column mega menu. Verb-based categories, clean labels,
+/* Resources, 4-column mega menu. Verb-based categories, clean labels,
    vertical dividers between columns. Same structural pattern as the
    Features mega menu so the two read as a matched set. */
 const RESOURCES_GROUPS = [
@@ -83,7 +83,7 @@ function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, pan
       </a>
       {open && (
         <>
-          {/* Hover bridge — keeps the panel open while moving the cursor down */}
+          {/* Hover bridge, keeps the panel open while moving the cursor down */}
           <div style={{ position: 'absolute', top: '100%', left: panelLeft, width: panelWidth + 48, height: 14 }} />
           <div style={{
             position: 'absolute', top: 'calc(100% + 10px)', left: panelLeft,
@@ -94,7 +94,7 @@ function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, pan
             animation: 'shFadeUp 0.16s ease both',
             zIndex: 110,
           }}>
-            {/* Columns separated by thin vertical dividers — uses gap-as-divider
+            {/* Columns separated by thin vertical dividers, uses gap-as-divider
                 pattern: each column gets right padding and a right border, the
                 last one omits both. */}
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 0 }}>
@@ -182,7 +182,7 @@ function useStyles() {
         color: #0a0a0f;
         display: flex; flex-direction: column; gap: 4.5px;
       }
-      /* Mobile overlay — full-screen dark sheet to match the Landing
+      /* Mobile overlay, full-screen dark sheet to match the Landing
          mobile menu so the brand surface stays consistent across the
          site. White overlays read as "abandoned" against feature/tool
          pages that already have light bg. */
