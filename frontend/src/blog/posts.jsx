@@ -144,7 +144,7 @@ export const posts = [
 
         <h2>How to Find Your RPM in YouTube Studio</h2>
 
-        <p>Your RPM sits inside the Revenue tab of your Analytics dashboard. Here is exactly how to get to it and what to look for once you are there.</p>
+        <p>Your RPM sits inside the Revenue tab of your <a href="/blog/youtube-analytics">Analytics dashboard</a>. Here is exactly how to get to it and what to look for once you are there.</p>
 
         <ol>
           <li>Open YouTube Studio and click <strong>Analytics</strong> in the left sidebar.</li>
@@ -678,7 +678,7 @@ export const posts = [
 
         <h3>What Specific Problem Am I Trying to Solve?</h3>
 
-        <p>A creator struggling to find video topics needs a keyword research tool. A creator with low CTR needs A/B testing capability. A creator benchmarking against competitors needs external channel data. The problem comes first. The tool follows.</p>
+        <p>A creator struggling to find video topics needs a <a href="/blog/youtube-keyword-research-tools">keyword research tool</a>. A creator with low CTR needs A/B testing capability. A creator benchmarking against competitors needs external channel data. The problem comes first. The tool follows.</p>
 
         <h3>Do I Need Data on My Own Channel or Other Channels?</h3>
 
@@ -1305,7 +1305,7 @@ export const posts = [
 
         <h3>RPM vs CPM</h3>
 
-        <p>RPM is always lower than CPM because YouTube takes 45% of all ad revenue before paying creators. If your CPM is $10, your RPM will be approximately $5.50. RPM is the number that reflects your actual earnings per 1,000 views and is the more useful metric for creators tracking revenue performance.</p>
+        <p><a href="/blog/youtube-rpm">RPM</a> is always lower than CPM because YouTube takes 45% of all ad revenue before paying creators. If your CPM is $10, your RPM will be approximately $5.50. RPM is the number that reflects your actual earnings per 1,000 views and is the more useful metric for creators tracking revenue performance.</p>
 
         <h3>How to Use Revenue Tab Data to Improve Earnings</h3>
 
@@ -2132,7 +2132,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <p>The fastest way to increase search impressions is to research <a href="/blog/youtube-tag-finder">your primary keyword</a> before filming. A video built around a phrase with real monthly search volume will generate impressions from day one. A video built around a topic no one searches for will not appear in search results regardless of its quality.</p>
 
-        <blockquote><strong>Pro Tip:</strong> Open the Inspiration tab in YouTube Studio Analytics and check the Content Gaps section for your niche. Every gap listed is a topic your audience is actively searching for that your channel has not yet covered. These are your highest confidence impression opportunities because the demand is already confirmed by your own audience's search behavior. The <a href="/features/keyword-research">Keyword Explorer</a> in ytgrowth.io surfaces the same gaps with live search volume and competition data so you can prioritize which topics to film first.</blockquote>
+        <blockquote><strong>Pro Tip:</strong> Open the Inspiration tab in <a href="/blog/youtube-analytics">YouTube Studio Analytics</a> and check the Content Gaps section for your niche. Every gap listed is a topic your audience is actively searching for that your channel has not yet covered. These are your highest confidence impression opportunities because the demand is already confirmed by your own audience's search behavior. The <a href="/features/keyword-research">Keyword Explorer</a> in ytgrowth.io surfaces the same gaps with live search volume and competition data so you can prioritize which topics to film first.</blockquote>
 
         <h2>2. Improve CTR With Better Thumbnails</h2>
 
@@ -3966,7 +3966,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <p>This guide is about the plumbing, not the rates. The short version: you keep 55% of long-form ad revenue and roughly 45% of the Shorts ad pool. The rest goes to YouTube.</p>
 
-        <p>RPM is what you take home per 1,000 views after the split. CPM is what advertisers pay before it. They are not the same number, and creators who confuse them always overestimate.</p>
+        <p><a href="/blog/youtube-rpm">RPM</a> is what you take home per 1,000 views after the split. CPM is what advertisers pay before it. They are not the same number, and creators who confuse them always overestimate.</p>
 
         <p>What you earn per 1,000 views swings massively by niche, audience country, and season. Finance and software pay many times what entertainment does.</p>
 
@@ -4610,7 +4610,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
           </tbody>
         </table>
 
-        <p>RPM is always lower than CPM because YouTube takes a 45% cut of all <a href="/blog/youtube-partner-program">ad revenue</a> before paying creators. If the CPM for YouTube on your channel is $10, your RPM will be approximately $5.50.</p>
+        <p><a href="/blog/youtube-rpm">RPM</a> is always lower than CPM because YouTube takes a 45% cut of all <a href="/blog/youtube-partner-program">ad revenue</a> before paying creators. If the CPM for YouTube on your channel is $10, your RPM will be approximately $5.50.</p>
 
         <p>Four factors determine your CPM directly:</p>
 
