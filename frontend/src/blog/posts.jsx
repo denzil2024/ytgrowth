@@ -1079,9 +1079,10 @@ export const posts = [
   },
   {
     slug: 'youtube-analytics',
-    title: 'YouTube Analytics Explained: A Complete Guide to Your Channel Data',
-    excerpt: 'Views tell you the score. CTR, retention, and traffic sources tell you what to fix. A complete breakdown of every tab in YouTube Studio, the metrics that drive growth, and a post-publish routine that turns data into specific decisions before your next upload.',
+    title: 'YouTube Analytics Explained: Every Tab and Metric That Matters',
+    excerpt: 'A complete guide to YouTube Studio analytics: every tab, the metrics that drive growth, reading traffic sources, and checking the public stats of any channel.',
     date: '2026-05-22',
+    updated: '2026-06-14',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-analytics-cover.webp',
     author: 'Denzil',
@@ -1339,6 +1340,27 @@ export const posts = [
         <p>The top searches card is the most actionable section. A search term appearing here means your existing audience is actively looking for that content and not finding it on your channel. That gap is your next video. Type any topic into the search bar to see how much interest it is generating among your audience specifically before committing to filming it.</p>
 
         <p><strong>Note:</strong> Some insights in the Trends tab are limited by country, language, and device. If your audience is geographically diverse, results may reflect the largest geographic segment of your viewers rather than your full audience picture.</p>
+
+        <h2>How to See Another Channel's YouTube Analytics</h2>
+
+        <p>One of the most common questions creators ask is whether they can open another channel's analytics the way they open their own. The honest answer is no, not the private data. The full Studio dashboard, with its exact CTR, retention curves, and revenue figures, is only visible to the person who owns the channel. What you can see is the public performance layer, and for competitor research that layer is usually enough.</p>
+
+        <p>Every public channel exposes a surprising amount through its channel page and individual video pages:</p>
+
+        <ul>
+          <li><strong>Subscriber count and total channel views</strong> from the About tab</li>
+          <li><strong>Per-video view counts</strong> on every public upload, which let you spot the videos outperforming the channel's own average</li>
+          <li><strong>Upload frequency and posting cadence</strong> from the dates on recent videos</li>
+          <li><strong>Title, thumbnail, and tag patterns</strong> that reveal how a competitor packages content for search and browse</li>
+        </ul>
+
+        <p>Reading this for one channel by hand is quick. Doing it across ten competitors, every week, is not. That is the gap a dedicated tool closes. <a href="/features/competitor-analysis">Competitor Analysis</a> tracks rival channels and surfaces their winning title patterns, posting times, and the specific videos breaking out above their baseline, so you benchmark against real numbers instead of guessing. For a fast one-off look at a single channel, the free <a href="/tools/youtube-channel-stats-checker">channel stats checker</a> returns its public subscriber, view, and upload data in seconds.</p>
+
+        <p>There is also a native shortcut hiding in your own dashboard. The <strong>Other channels your audience watches</strong> card in the Audience tab, covered above, is effectively a competitor list YouTube built for you out of your viewers' real behavior. Start there, then run the channels it names through the tools above.</p>
+
+        <h3>Exporting and Sharing Analytics Reports</h3>
+
+        <p>If you manage a channel for a client or want to track performance outside Studio, most analytics reports can be exported. Open any report, look for the download icon in the top right, and pull the data out as a CSV or Google Sheet. YouTube does not send scheduled reports on its own, so for recurring updates you either export on a fixed schedule or feed the numbers into a reporting tool that handles it for you.</p>
 
         <h2>The Most Important YouTube Metrics Ranked by Impact</h2>
 
