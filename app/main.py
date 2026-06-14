@@ -320,9 +320,20 @@ def serve_frontend(full_path: str):
     prerendered = file / "index.html"
     if file.is_dir() and prerendered.is_file():
         return FileResponse(prerendered)
+    # Dead /blog/* URL. Every real post is prerendered to
+    # dist/blog/<slug>/index.html and served above, so anything under blog/
+    # that reaches this point doesn't exist — old WordPress ghosts that Google
+    # found on this domain (/blog/hello-world, /blog/sample-page,
+    # /blog/category/uncategorized, /blog/author/ytgrowth). Returning the SPA
+    # shell with a 200 made these soft-404s that lingered in Search Console.
+    # Return a real 404 so Google drops them. We still serve branded HTML;
+    # BlogPost navigates back to /blog client-side, so users land somewhere.
+    norm = full_path.strip("/")
+    status = 404 if norm.startswith("blog/") else 200
+
     # SPA fallback — inject route-specific SEO meta tags.
     from fastapi.responses import HTMLResponse
     rendered = _render_index_with_meta(full_path)
     if rendered is None:
-        return FileResponse(DIST / "index.html")
-    return HTMLResponse(content=rendered)
+        return FileResponse(DIST / "index.html", status_code=status)
+    return HTMLResponse(content=rendered, status_code=status)
