@@ -161,13 +161,15 @@
          parse, so they stop pulling profitwell.js + paddle.css onto the
          critical path. They fire on first user interaction, OR a 2.5s
          timeout, whichever comes first. See loadThirdParty() in main.jsx. -->
-    <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js) — one load serves both the Google Ads tag
+         (AW-10883831151) and the GA4 analytics property (G-MFMVT6Q5RB). -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10883831151"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'AW-10883831151');
+      gtag('config', 'G-MFMVT6Q5RB');
     </script>
   </head>
   <body>
