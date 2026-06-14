@@ -365,9 +365,10 @@ export const posts = [
   },
   {
     slug: 'youtube-keyword-research-tools',
-    title: 'YouTube Keyword Research Tools Compared: The Best Options for Every Creator',
-    excerpt: 'YouTube processes over 3 billion searches every month. A complete comparison of every major YouTube keyword research tool in 2026, the data each one delivers, and a step-by-step workflow that connects research to actual publish decisions instead of guesswork.',
+    title: 'Best Free YouTube Keyword Research Tools (2026 Comparison)',
+    excerpt: 'The best free YouTube keyword research tools in 2026, the data each one delivers, the paid options worth paying for, and a workflow that turns research into publish decisions.',
     date: '2026-05-25',
+    updated: '2026-06-14',
     category: CATEGORIES.seo,
     cover: '/blog/youtube-keyword-research-tools-cover.jpg',
     author: 'Denzil',

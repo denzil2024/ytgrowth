@@ -330,7 +330,7 @@ const FAQS = [
   },
   {
     q: 'How is this different from VidIQ or TubeBuddy?',
-    a: <>Three differences worth knowing. First, our competition score uses real top-5 channel size + real view ceiling + real freshness. Not a global difficulty estimate. Second, every kept keyword carries a Claude-written content angle so you don’t leave the tool wondering what to make. Third, the momentum label surfaces unclaimed niches (top videos &gt; 6 months old) that legacy tools don’t flag. We’re not trying to replace global volume estimates; we’re replacing vague difficulty scores with a real-data view of who you’d actually compete with.</>,
+    a: <>Three differences worth knowing. First, our competition score uses real top-5 channel size + real view ceiling + real freshness. Not a global difficulty estimate. Second, every kept keyword carries a Claude-written content angle so you don’t leave the tool wondering what to make. Third, the momentum label surfaces unclaimed niches (top videos &gt; 6 months old) that legacy tools don’t flag. We’re not trying to replace global volume estimates; we’re replacing vague difficulty scores with a real-data view of who you’d actually compete with. For a full side-by-side of vidIQ, TubeBuddy, Keyword Tool IO, and the free options, see our <a href="/blog/youtube-keyword-research-tools" style={{ color: 'var(--ytg-accent)', fontWeight: 600 }}>YouTube keyword research tools comparison</a>.</>,
   },
   {
     q: 'Will this work for international / non-English niches?',
