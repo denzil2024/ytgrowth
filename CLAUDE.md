@@ -128,6 +128,12 @@ When adding a new blog post or public route, do everything end-to-end in one pus
 
 Missing the prerender step ships an empty SPA shell to crawlers (broken SEO). The full workflow is non-negotiable.
 
+Slugs must be 2 to 4 words max. Do not slugify the whole keyword phrase (use `best-time-to-post`, not `best-time-to-post-on-youtube`). The full keyword lives in the title and body, which is what ranks. Keep the slug, the sitemap entry, and the cover filename (`<slug>-cover.jpg`) in sync.
+
+## Blog article completeness (do not forget)
+
+Before writing any new article, run an explicit coverage check against the top-ranking competitors: build a matrix of every section each one has, map each to your outline, and confirm the article covers the UNION of everything they collectively cover PLUS what they ignore. Not just the common sections, every section any strong competitor has. Missing a section a competitor ranks for cedes that long-tail. The user flagged this as critical after the first "best time to post" outline shipped with four competitor sections missing.
+
 ## Blog post conclusions
 
 Never end a post with a generic "Final Thoughts" or "Conclusion" heading. The final H2 must be a creative, content-specific line tied to the article's thesis (example: the Chrome-extensions post closes with "Six Tools Beat Twenty"). Generic headings read like a beginner template and waste the most memorable slot in the piece. Still end with a real conclusion, not a sales pitch (the CTA card belongs mid-article). Sweep older posts' generic conclusion headings whenever you touch them.
