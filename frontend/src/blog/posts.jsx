@@ -91,6 +91,238 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-sponsorships',
+    title: 'How to Get Sponsorships on YouTube in 2026 (Even With a Small Channel)',
+    excerpt: 'You do not need 100,000 subscribers to land a brand deal. Here is how YouTube sponsorships work, what to charge, how to build a media kit, and the pitch that gets a 15 to 25 percent reply rate, even on a small channel.',
+    date: '2026-06-15',
+    category: CATEGORIES.monetization,
+    cover: '/blog/youtube-sponsorships-cover.jpg',
+    author: 'Denzil',
+    readTime: '14 min read',
+    content: () => (
+      <>
+        <p>The biggest myth about getting sponsorships on YouTube is that you need a huge channel to land one. You do not. Brands now spend more on small, engaged channels than on big general ones, because a <strong>5,000-subscriber channel in a tight niche</strong> often drives more sales than a 100,000-subscriber lifestyle channel that talks to everyone and converts no one. If your audience trusts you and your niche is clear, you can get sponsored, sometimes with <strong>fewer than 1,000 subscribers</strong>.</p>
+
+        <p>What changes with your size is the type of deal, not whether you qualify. Small channels start with free products, affiliate commissions, and small flat fees; the five-figure cash deals come later. This guide walks the entire path, from how sponsorships work to what to charge, how to build a media kit that sells, where to find brands, and the exact pitch that turns a cold brand into a paying partner, with the honest version of every number so you never walk in under-pricing or over-promising yourself.</p>
+
+        <h2>How YouTube Sponsorships Work</h2>
+
+        <p>A sponsorship is a direct deal between you and a brand: they pay you, in cash or product, to feature them in your content. Unlike <a href="/blog/google-adsense-youtube">AdSense</a>, where YouTube sets the rate and takes a cut, a sponsorship is negotiated directly, which means you set your price and keep all of it. That is why sponsorships out-earn ad revenue for most mid-size creators, and why they are worth pursuing even while your <a href="/blog/youtube-shorts-pay">Shorts</a> and long-form ad income is still small.</p>
+
+        <p>The deal usually runs in five steps: a brand and creator find each other, agree on deliverables and a price, sign a short contract, you publish the sponsored content with proper disclosure, and you get paid (commonly Net 30, meaning 30 days after delivery). Everything in this guide is about doing each of those steps well enough that the brand comes back for a second deal, because the renewal is where sponsorships become real income.</p>
+
+        <h2>Can Small Channels Really Get Sponsored?</h2>
+
+        <p>Yes, and the data backs it up. There is <strong>no hard subscriber minimum</strong> for a direct brand deal, the way there is for the Partner Program. What matters to a brand is whether your audience is the audience they want to reach, and how much that audience trusts you. A tight, engaged niche channel is a precise marketing channel, and that is exactly what brands pay for.</p>
+
+        <p>Here is the honest version of what to expect at each stage:</p>
+
+        <ul>
+          <li><strong>A few hundred to 1,000 subscribers.</strong> Product and gifted deals, plus affiliate commissions. Little or no cash yet, but real experience and portfolio pieces.</li>
+          <li><strong>1,000 to 10,000 subscribers.</strong> Small flat fees ($50 to $500 per video), hybrid deals, and stronger affiliate income. This is where most creators land their first paid deal.</li>
+          <li><strong>10,000 to 50,000 subscribers.</strong> Meaningful cash sponsorships ($500 to $2,500), and brands start approaching you.</li>
+          <li><strong>50,000 and up.</strong> Larger flat fees, long-term ambassador deals, and inbound interest become routine.</li>
+        </ul>
+
+        <p>The lever that moves you up faster is <strong>engagement, not subscriber count</strong>. A channel with a high comment-and-like rate in a buyer-intent <a href="/blog/youtube-niche">niche</a> like finance, tech, or fitness will out-earn a larger channel with a passive, general audience, which is exactly how some creators get sponsors before they ever cross 1,000 subscribers. Brands have caught on: a large share of influencer campaigns now deliberately target creators under 10,000 followers, where the engagement is higher and the rates are cheaper.</p>
+
+        <h2>The Types of YouTube Sponsorship Deals</h2>
+
+        <p>"Sponsorship" covers several different arrangements, and knowing which to ask for at your size is half the battle.</p>
+
+        <ul>
+          <li><strong>Product or gifted deals.</strong> The brand sends a free product in exchange for a mention or review. No cash, but the easiest first deal and a portfolio builder.</li>
+          <li><strong>Affiliate partnerships.</strong> You earn a commission (typically 5 to 30 percent) on every sale through your link. No upfront pay, but it scales with your audience and never expires.</li>
+          <li><strong>Flat-fee integrations.</strong> A 60 to 90 second sponsored segment inside a regular video. This is the bread-and-butter paid deal for most creators.</li>
+          <li><strong>Dedicated videos.</strong> An entire video built around the product. The highest-paying format, usually 25 to 50 percent above an integration.</li>
+          <li><strong>Hybrid deals.</strong> A small flat fee plus an aggressive affiliate rate (20 to 30 percent). The smartest structure for a small channel, because it lowers the brand's risk and rewards you for performance.</li>
+          <li><strong>Long-term ambassadorships.</strong> A multi-video or ongoing partnership. The most stable income, and the goal you are working toward with every one-off deal.</li>
+        </ul>
+
+        <h2>How Much Sponsors Pay and How to Set Your Rate</h2>
+
+        <p>Rates vary enormously across guides because they depend on size, niche, and format. Here is a realistic baseline by channel size for a standard integration:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Channel size</th>
+              <th>Typical flat fee (per video)</th>
+              <th>Typical CPM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>1K to 10K subscribers</strong></td><td>$50 to $500</td><td>$15 to $50</td></tr>
+            <tr><td><strong>10K to 50K subscribers</strong></td><td>$500 to $2,500</td><td>$25 to $75</td></tr>
+            <tr><td><strong>50K to 500K subscribers</strong></td><td>$2,500 to $10,000</td><td>$50 to $150</td></tr>
+            <tr><td><strong>500K and up</strong></td><td>$10,000+</td><td>$100 to $200</td></tr>
+          </tbody>
+        </table>
+
+        <p>Do not pull a number from the air. The standard way to set your rate is a simple formula:</p>
+
+        <blockquote><strong>Your rate = average views per video (last 90 days) × CPM ÷ 1,000.</strong> A channel averaging 20,000 views at a $30 CPM starts at about $600 per integration. Add 25 to 50 percent for a dedicated video, and discount 10 to 20 percent for a multi-video bundle.</blockquote>
+
+        <p>Then adjust for your niche, because advertiser value is not equal across topics. The same view count is worth far more to a finance brand than an entertainment one, the same pattern that drives <a href="/blog/youtube-cpm">YouTube CPM</a> and <a href="/blog/youtube-niche">niche earnings</a>.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Rate multiplier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Finance &amp; B2B SaaS</strong></td><td>1.5x to 2.5x</td></tr>
+            <tr><td><strong>Tech &amp; Education</strong></td><td>1.3x to 1.5x</td></tr>
+            <tr><td><strong>Health &amp; Fitness</strong></td><td>1.3x</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>0.8x to 1x</td></tr>
+            <tr><td><strong>Lifestyle &amp; Entertainment</strong></td><td>0.7x to 1x</td></tr>
+          </tbody>
+        </table>
+
+        <CtaCard
+          to="/features/competitor-analysis"
+          title="Find the brands already sponsoring your niche"
+          sub="Competitor Analysis surfaces the top channels in your niche so you can see who is running sponsored videos and which brands to pitch. Pitching a brand that already sponsors your niche replies 10x more often than a cold guess."
+          button="Try Competitor Analysis →"
+        />
+
+        <h2>Get Your Channel Sponsor-Ready</h2>
+
+        <p>Before you pitch anyone, a brand will look at your channel and decide in seconds whether you are professional enough to trust with their money. Make that easy. Your <a href="/blog/youtube-channel-optimization">channel</a> needs a clear niche, a clean banner and About section that states who you serve, a business email, and consistent, recent uploads. A brand that lands on a tidy, focused channel assumes you will handle their campaign the same way.</p>
+
+        <p>Then build a <strong>media kit</strong>, a one to two page PDF that is your sales sheet. It should include:</p>
+
+        <ul>
+          <li><strong>Who you are.</strong> Channel name, niche, and a one-line description of the audience you reach, so a brand knows within five seconds whether you are a fit.</li>
+          <li><strong>The numbers that matter.</strong> Subscribers, average views, engagement rate, and monthly views. Lead with <strong>engagement</strong> if it is your strongest stat, because that is the number that proves your audience listens.</li>
+          <li><strong>Audience demographics.</strong> Age, gender, and top countries, pulled straight from <a href="/blog/youtube-analytics">YouTube Analytics</a>, so the brand can confirm your viewers are their buyers.</li>
+          <li><strong>Proof you deliver.</strong> Your best-performing videos and any past brand work or testimonials. If you have none yet, write "open to first partnerships" and let your engagement carry the pitch.</li>
+          <li><strong>A rate card.</strong> Your prices by format and your contact details, so an interested brand can act without a round of back-and-forth.</li>
+        </ul>
+
+        <p>Keep it visually clean, two or three colors, white background, and save it as a PDF named professionally. It signals that you treat your channel as a business.</p>
+
+        <h2>How to Find the Right Brands to Pitch</h2>
+
+        <p>The single biggest mistake creators make is cold-pitching random brands. The reply rate on that is brutal. The fix is to pitch brands that have already proven they sponsor channels like yours.</p>
+
+        <ul>
+          <li><strong>Reverse-engineer your niche.</strong> Watch the sponsored videos of similar-sized creators in your space and write down every brand that appears. A brand already sponsoring your niche has a <strong>budget, an approval process, and a proven reason to say yes</strong>, which is why this list converts far better than any cold guess.</li>
+          <li><strong>Pitch products you genuinely use.</strong> Authenticity sells, and when you already rely on a product you can talk about it honestly on camera, which is exactly what turns the brand's customers into buyers. Your own toolkit is a ready-made pitch list.</li>
+          <li><strong>List yourself on sponsorship platforms.</strong> Marketplaces flip the script and let brands come to you. Build a profile with your niche, stats, and rates, and you become discoverable to brands actively shopping for creators like you (the main ones are below).</li>
+          <li><strong>Find the right human on LinkedIn.</strong> A generic contact form is where pitches go to die. Search the brand for "influencer marketing" or "partnerships," find the actual manager, and pitch them directly, because reaching a real person is half the battle won.</li>
+        </ul>
+
+        <blockquote><strong>Pro tip:</strong> the numbers make the case for targeted pitching. Cold-pitching random brands gets a 1 to 3 percent reply rate, while pitching brands that already sponsor your niche gets 15 to 25 percent. For a channel under 10,000 subscribers, plan on 30 to 50 well-researched pitches to land your first deal, often within 30 to 60 days.</blockquote>
+
+        <h2>How to Pitch a Sponsor</h2>
+
+        <p>A good pitch is short, specific, and <strong>about the brand, not you</strong>. Keep it under 150 words, lead with relevance, and make the next step obvious. This five-line structure consistently outperforms long, generic emails:</p>
+
+        <ol>
+          <li><strong>Who you are and what you cover</strong>, in one sentence.</li>
+          <li><strong>A reference to a creator they already sponsor</strong>, plus one stat where you beat them (usually engagement). This is the line that earns the reply.</li>
+          <li><strong>A concrete integration idea</strong>: the format, the hook, and the call to action you would use.</li>
+          <li><strong>A rate range</strong>, given as a band rather than a single number, so there is room to talk.</li>
+          <li><strong>A clear next step</strong>: a short call, or your media kit attached.</li>
+        </ol>
+
+        <p>If you do not hear back, follow up once after about a week, ideally with a reason to reconnect, like an upcoming video that fits their product. One follow-up is professional; three is a nuisance. Never open with your subscriber count, because that invites a comparison you will usually lose. Open with the fit.</p>
+
+        <h2>Negotiating and the Contract</h2>
+
+        <p>When a brand engages, negotiate. Anchor slightly above your target and give a range, because the first number is rarely the final one. And remember that <strong>price is not the only thing to negotiate</strong>. Usage rights, exclusivity, deliverables, and payment terms all carry real value.</p>
+
+        <p>Always get a written agreement, even for a small deal. A sound contract spells out:</p>
+
+        <ul>
+          <li><strong>Deliverables:</strong> exactly what you produce, where it runs, and when.</li>
+          <li><strong>Payment:</strong> the amount and the terms (Net 30 is standard; push back on Net 60).</li>
+          <li><strong>Usage rights:</strong> a limited license to the content, not perpetual rights across all media. This is the most common way brands quietly overreach.</li>
+          <li><strong>Disclosure:</strong> confirmation that the content will be marked as sponsored, which protects you both.</li>
+        </ul>
+
+        <p>Watch for these red flags: perpetual or all-media usage rights for a one-time fee, undefined or open-ended deliverables, automatic renewal clauses, and exclusivity (you cannot work with competitors) with no premium attached. Any of those should raise your price or come out of the contract.</p>
+
+        <h2>Sponsorship Platforms and Networks</h2>
+
+        <p>Platforms connect creators and brands, which is useful when you have no contacts yet. Direct outreach keeps 100 percent of the fee, but marketplaces get you discovered. The notable ones:</p>
+
+        <ul>
+          <li><strong>YouTube BrandConnect.</strong> YouTube's own marketplace, built right into Studio with no middleman taking a cut. It requires <a href="/blog/youtube-partner-program">Partner Program</a> membership, but if you already qualify, it is the cleanest place to start.</li>
+          <li><strong>Collabstr and Channel Pages.</strong> The friendliest options for smaller channels. You build a profile, set your rates, and brands browse by niche, so deals can find you without a single pitch sent.</li>
+          <li><strong>Grapevine, Aspire, GRIN, and Upfluence.</strong> Larger networks built for brands running bigger campaigns. Several set subscriber minimums, so they pay off most once you are past 10,000 subscribers.</li>
+        </ul>
+
+        <p>Most marketplaces take a cut or set minimums, so treat them as one channel among several, not a replacement for direct outreach to the brands you genuinely want.</p>
+
+        <h2>Stay Legal: FTC Disclosure</h2>
+
+        <p><strong>Disclosure is not optional</strong>, and getting it wrong can cost you the audience trust your whole channel runs on. Any time you are paid in cash or product, you must disclose it clearly.</p>
+
+        <ul>
+          <li><strong>Toggle the paid-promotion setting</strong> in YouTube Studio when you upload, which adds the "includes paid promotion" label.</li>
+          <li><strong>Say it plainly in the video</strong>, on camera or in a clear graphic, not buried in the description. A verbal "this video is sponsored by" carries the most weight.</li>
+          <li><strong>Disclose affiliate links too</strong>, with a line like "these are affiliate links and I may earn a commission."</li>
+        </ul>
+
+        <p>This applies even to free-product deals where coverage is expected, and to channels of every size. The rules exist in most major markets (the FTC in the US, the ASA in the UK, and equivalents in the EU, Canada, and Australia), so disclosure is the global default, not a US-only formality.</p>
+
+        <h2>Deliver Well, Earn the Renewal, and Avoid These Mistakes</h2>
+
+        <p><strong>The first deal is a tryout for the second.</strong> Hit the deadline (ideally a day early, because brands remember it), follow the brief exactly, and after it publishes, send the brand a short results report: views, clicks, and any conversions you can see. That single email turns a one-off into a recurring partner, which is where sponsorship income truly compounds.</p>
+
+        <p>The mistakes that cost creators deals and money are consistent and avoidable:</p>
+
+        <ul>
+          <li><strong>Leading with subscriber count</strong> instead of engagement and audience fit, which invites the one comparison a small channel almost always loses.</li>
+          <li><strong>Underpricing the first deal</strong>, because the number you accept becomes the ceiling the brand anchors every future offer to.</li>
+          <li><strong>Promoting products you do not believe in</strong>, which spends the audience trust that made you worth sponsoring, and that trust rarely comes back.</li>
+          <li><strong>Skipping the contract or the disclosure</strong>, either of which can turn a clean deal into a legal or trust problem months later.</li>
+          <li><strong>Giving away perpetual usage rights</strong> for a single-video fee, letting a brand run your work as paid ads forever for the price of one integration.</li>
+        </ul>
+
+        <h2>Sponsorships Are One Stream, Not the Whole River</h2>
+
+        <p>Sponsorships pay well, but the creators who build real income do not rely on any single source. Sponsorships sit alongside ad revenue, affiliate commissions, channel memberships, and your own products, and each one strengthens the others. Your <a href="/blog/youtube-shorts-pay">Shorts</a> and long-form videos build the audience; that audience attracts the sponsors; the sponsorships fund better content. For the full picture of stacking these streams, see the <a href="/blog/youtube-as-a-business">business of YouTube</a> guide.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How many subscribers do you need to get sponsored on YouTube?</h3>
+
+        <p>There is no fixed minimum for a direct brand deal. Product and affiliate deals are possible from a few hundred subscribers, and paid cash deals typically start in the 1,000 to 10,000 range with strong engagement. Brands care more about your engagement rate and niche fit than your raw subscriber count, so a small, focused channel can get sponsored sooner than a large, general one.</p>
+
+        <h3>How much should a small YouTube channel charge for a sponsorship?</h3>
+
+        <p>Use the formula: average views per video times your CPM, divided by 1,000. For most channels under 10,000 subscribers that lands between $50 and $500 per integration, adjusted up for high-value niches like finance or tech. Do not undercharge your first deal, because brands will anchor future offers to it.</p>
+
+        <h3>How do I find brands to sponsor my channel?</h3>
+
+        <p>Start by watching the sponsored videos of similar creators in your niche and noting which brands appear, because those brands already have a budget and a process. Then pitch them directly, ideally through their influencer or partnerships manager on LinkedIn, and list yourself on platforms like BrandConnect and Collabstr. Pitching brands that already sponsor your niche replies far more often than cold-pitching strangers.</p>
+
+        <h3>How do you get sponsored as a small YouTuber with under 1,000 subscribers?</h3>
+
+        <p>Focus on product and affiliate deals first. Reach out to brands you genuinely use, offer an honest review in exchange for the product, and join affiliate programs that pay commission with no subscriber minimum. These build your portfolio and testimonials, which make the jump to paid cash deals much easier once your audience grows.</p>
+
+        <h3>Do you have to disclose a sponsorship on YouTube?</h3>
+
+        <p>Yes, always. Toggle the paid-promotion setting in YouTube Studio, state the sponsorship clearly in the video itself, and disclose affiliate links in the description. This applies to free-product deals too, and to channels of every size. Disclosure is legally required in most major markets and protects the audience trust your channel depends on.</p>
+
+        <h3>How long does it take to get your first sponsorship?</h3>
+
+        <p>For a channel under 10,000 subscribers running a focused outreach effort, expect roughly 30 to 60 days and 30 to 50 well-targeted pitches to land the first paid deal. Product and affiliate deals can come faster. The timeline shortens dramatically once you have one or two completed campaigns to show in your media kit.</p>
+
+        <h2>Pitch the Fit, Not the Follower Count</h2>
+
+        <p>Sponsorships reward the creators who understand what brands are buying, and it is not your subscriber number. It is a trusting, well-defined audience and a creator who is easy to work with. That is why a small, engaged channel in a clear niche can out-earn a much larger one, and why the whole game is <strong>pitching the fit, not the follower count</strong>.</p>
+
+        <p>Get your channel and media kit sponsor-ready, target the brands already spending in your niche, pitch the fit with a short and specific email, and deliver well enough to earn the renewal. Do that, and sponsorships become one of the most reliable income streams on your channel, long before you ever reach the subscriber numbers everyone assumes you need.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-shorts-pay',
     title: 'How Much Do YouTube Shorts Pay in 2026? The Real Numbers (and Why the Payout Isn\'t the Point)',
     excerpt: 'YouTube Shorts pay roughly $0.03 to $0.10 per 1,000 views, about $30 to $100 per million. Here are the real numbers, how the revenue-pool model works, what changes your rate, and why the ad payout is the smallest reason to make Shorts.',
