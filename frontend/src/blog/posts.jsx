@@ -91,6 +91,206 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-shorts-pay',
+    title: 'How Much Do YouTube Shorts Pay in 2026? The Real Numbers (and Why the Payout Isn\'t the Point)',
+    excerpt: 'YouTube Shorts pay roughly $0.03 to $0.10 per 1,000 views, about $30 to $100 per million. Here are the real numbers, how the revenue-pool model works, what changes your rate, and why the ad payout is the smallest reason to make Shorts.',
+    date: '2026-06-15',
+    category: CATEGORIES.monetization,
+    cover: '/blog/youtube-shorts-pay-cover.jpg',
+    author: 'Denzil',
+    readTime: '14 min read',
+    content: () => (
+      <>
+        <p>How much do YouTube Shorts pay? The short, honest answer is <strong>very little, directly</strong>. Most channels earn between <strong>$0.03 and $0.10 for every 1,000 Shorts views</strong>, which works out to roughly <strong>$30 to $100 per million views</strong>. A Short that pulls a million views, the result most creators dream about, earns about the price of a nice dinner.</p>
+
+        <p>That number makes Shorts sound pointless, and if ad revenue were the only thing they paid, it would be. But the payout that matters from Shorts is not the pennies per view. It is the <strong>audience they build</strong>, the subscribers who then watch your long-form videos, which earn ten to a hundred times more per view. This guide gives you the real numbers, exactly how the pay works and what moves it, and how to turn that tiny ad payout into a channel that genuinely earns.</p>
+
+        <h2>How YouTube Shorts Pay Works</h2>
+
+        <p>Shorts do not pay per view the way long-form videos do. Instead, YouTube runs a <strong>revenue-pool model</strong>. It collects all the ad revenue from ads shown between Shorts in the feed, groups it by country, and then distributes it to creators based on each creator's share of total Shorts views in that pool. Your slice of the pool, not a fixed rate per view, is what you get paid on.</p>
+
+        <p>Out of that allocated amount, <strong>you keep 45 percent and YouTube keeps 55 percent</strong>. This is worth noting because it is the reverse of long-form videos, where the creator keeps 55 percent. There is also a catch most guides skip: if your Short uses <strong>licensed music</strong>, the music publishers are paid out of the pool first, which shrinks what reaches you. A Short set to a trending song earns less than the same Short with original or royalty-free audio.</p>
+
+        <blockquote><strong>Ignore the old Shorts Fund.</strong> From 2021 to 2023, YouTube paid creators from a fixed $100 million Shorts Fund. It ended in early 2023 and was replaced by the revenue-share model above. Any guide still telling you to chase the Shorts Fund is out of date, so do not plan around it.</blockquote>
+
+        <h2>How Much YouTube Shorts Pay: The Real Numbers</h2>
+
+        <p>The number to know is <strong>RPM</strong>, your revenue per 1,000 views after YouTube's cut. For Shorts, the CPM advertisers pay sits around $0.50 to $2.00 per 1,000 views, but after the pool split and music costs, the <strong>RPM you keep lands between $0.03 and $0.10 per 1,000 views</strong>, with most channels closer to the bottom of that range. Per individual view, that is a fraction of a cent. For the full mechanics behind these figures, see the guides on <a href="/blog/youtube-rpm">YouTube RPM</a> and <a href="/blog/youtube-cpm">YouTube CPM</a>.</p>
+
+        <p>Here is what that means in practice, across a realistic RPM range:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Shorts views</th>
+              <th>At $0.03 RPM</th>
+              <th>At $0.06 RPM</th>
+              <th>At $0.10 RPM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>100,000</strong></td><td>$3</td><td>$6</td><td>$10</td></tr>
+            <tr><td><strong>500,000</strong></td><td>$15</td><td>$30</td><td>$50</td></tr>
+            <tr><td><strong>1,000,000</strong></td><td>$30</td><td>$60</td><td>$100</td></tr>
+            <tr><td><strong>10,000,000</strong></td><td>$300</td><td>$600</td><td>$1,000</td></tr>
+          </tbody>
+        </table>
+
+        <p>Real creator reports line up with this: a Short with one million views commonly earns around $30, and screenshots of roughly 468,000 views earning about $16 are typical. You can check your own rate in <a href="/blog/youtube-analytics">YouTube Studio</a> under Analytics, then Revenue, where the RPM figure for your Shorts tells you exactly what your audience and niche are worth, which beats any estimate in a blog post.</p>
+
+        <h2>What Affects How Much You Earn</h2>
+
+        <p>That $0.03 to $0.10 range is wide because several things move your rate. Two channels with the same view count can earn very different amounts depending on these factors.</p>
+
+        <p><strong>Audience geography.</strong> Advertisers pay far more to reach some countries than others, and your Shorts pool is grouped by country.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Audience region</th>
+              <th>Typical Shorts RPM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>United States</strong></td><td>$0.03 to $0.08</td></tr>
+            <tr><td><strong>UK, Canada, Australia</strong></td><td>$0.02 to $0.06</td></tr>
+            <tr><td><strong>India, Southeast Asia</strong></td><td>$0.003 to $0.015</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Niche.</strong> The same advertiser demand that drives long-form CPM applies to Shorts. A finance audience is worth several times a general entertainment audience.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Typical Shorts RPM (per 1,000 views)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Finance &amp; Business</strong></td><td>$0.05 to $0.12</td></tr>
+            <tr><td><strong>Tech</strong></td><td>$0.04 to $0.09</td></tr>
+            <tr><td><strong>Education &amp; How-To</strong></td><td>$0.04 to $0.08</td></tr>
+            <tr><td><strong>Health &amp; Fitness</strong></td><td>$0.03 to $0.07</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>$0.02 to $0.05</td></tr>
+            <tr><td><strong>Entertainment &amp; Vlogs</strong></td><td>$0.01 to $0.04</td></tr>
+            <tr><td><strong>Music</strong></td><td>$0.01 to $0.03</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Music usage.</strong> As covered above, licensed music splits your pool with publishers. Using original or royalty-free audio is the single easiest way to protect your RPM. <strong>Seasonality</strong> matters too: advertiser budgets peak in the fourth quarter, so the same views earn more in November and December and least in January. And <strong>ad-friendliness</strong> plays a part, because content advertisers avoid earns a thinner slice of the pool.</p>
+
+        <h2>How Many Views You Need to Get Paid</h2>
+
+        <p>Before any of those numbers apply to you, you have to be eligible to earn. YouTube now offers <strong>two tiers</strong> into the <a href="/blog/youtube-partner-program">Partner Program</a>, and the lower one was added specifically to let smaller creators start earning sooner.</p>
+
+        <ul>
+          <li><strong>Ad-revenue path (full monetization).</strong> 1,000 subscribers, plus either <strong>10 million valid public Shorts views in 90 days</strong> or 4,000 public watch hours in 12 months. This unlocks Shorts ad revenue.</li>
+          <li><strong>Fan-funding path (early tier).</strong> 500 subscribers, three public uploads in the last 90 days, plus either 3 million Shorts views in 90 days or 3,000 watch hours. This unlocks memberships, Super Thanks, and Super Chat, but not ad revenue yet.</li>
+        </ul>
+
+        <p>You also need to be 18 or older, in an eligible country, linked to an AdSense account, and in good standing with no active strikes. Once you qualify, you accept the <strong>Shorts Monetization module</strong> in YouTube Studio to switch ad revenue on. One honest caveat: not every view is a paid view. Only views where an ad is served between Shorts count toward your pool, so your monetizable views are always a subset of your total views.</p>
+
+        <h2>How Long It Takes to Get Monetized</h2>
+
+        <p>For a channel starting from zero, reaching the ad-revenue threshold is a months-long project, not a weekend one. Posting <strong>one to two Shorts a day</strong> on a focused topic, most channels that gain traction hit 1,000 subscribers and 10 million Shorts views in roughly <strong>three to six months</strong>. Faster-moving niches like comedy and entertainment tend to cross the line sooner; education and narrower niches take longer because they grow more slowly.</p>
+
+        <p>The fan-funding tier is reachable much sooner, often within the first couple of months, which is why it is worth treating 500 subscribers as your first milestone rather than waiting for the full 1,000. Either way, consistency is what gets you there, because the Shorts feed rewards channels that publish steadily.</p>
+
+        <h2>Shorts vs Long-Form: Why Shorts Pay 10 to 100x Less</h2>
+
+        <p>The gap is not small, and understanding it is what reframes your whole strategy. Long-form videos earn an RPM of roughly <strong>$1 to $20</strong> or more depending on niche, against the <strong>$0.03 to $0.10</strong> Shorts pay. That is ten to a hundred times more per view.</p>
+
+        <p>Put it in numbers: one million views on a long-form video at a $2 RPM earns about <strong>$2,000</strong>, while one million Shorts views earns about <strong>$30</strong>. The reason is structural. A long-form video runs multiple ads to a viewer who chose to sit and watch, while Shorts share one thin, pooled stream of ad revenue across an enormous volume of fast, low-intent views. No amount of optimization closes that gap, which is exactly why the smart move is to treat Shorts as a feeder, not a destination.</p>
+
+        <CtaCard
+          to="/tools/youtube-money-calculator"
+          title="Estimate what your views are really worth"
+          sub="The free YouTube Money Calculator turns any view count and niche into a realistic earnings range, so you can see what your channel could make across ad revenue and beyond."
+          button="Try the Money Calculator →"
+        />
+
+        <h2>How to Earn More From Shorts</h2>
+
+        <p>Since the ad payout is tiny by design, real Shorts income comes from what you build on top of it. These are the levers that matter, in order of impact.</p>
+
+        <ul>
+          <li><strong>The long-form funnel.</strong> This is the whole game. Use Shorts to reach new viewers and convert them into subscribers, then send them to long-form videos that earn real ad money. A Short that adds 5,000 subscribers is worth far more than its $30 ad payout once those people watch your <a href="/blog/youtube-as-a-business">monetized long-form content</a>. Get more eyes on your Shorts with the tactics in the <a href="/blog/youtube-shorts-algorithm">Shorts algorithm guide</a>.</li>
+          <li><strong>Brand deals and sponsorships.</strong> A single sponsored Short can pay anywhere from $100 to several thousand dollars depending on your audience size, which dwarfs ad revenue at any realistic view count.</li>
+          <li><strong>Affiliate marketing.</strong> Link products you genuinely use in the description and pinned comment. High-volume Shorts can drive meaningful affiliate clicks.</li>
+          <li><strong>Memberships and Super Thanks.</strong> Channel memberships and tips split 70/30 in your favor, a far better rate than the 45 percent ad share, and they are available from the 500-subscriber tier.</li>
+          <li><strong>Merch and YouTube Shopping.</strong> Once you have an engaged audience, your own products or a Shopping integration turn attention directly into revenue.</li>
+        </ul>
+
+        <p>Two quick multipliers on top of all of this: use <strong>original audio</strong> so you keep your full pool share instead of splitting it with music publishers, and lean toward <strong>higher-CPM niches and geographies</strong> if the topic genuinely fits your channel.</p>
+
+        <h2>AI and Mass-Produced Shorts: The Monetization Trap</h2>
+
+        <p>The low barrier to making Shorts has produced a wave of fully automated, AI-generated Shorts channels, and YouTube has drawn a hard line through them. In 2025 it sharpened its rules around <strong>mass-produced, repetitive, and inauthentic content</strong>, and templated AI Shorts with no original input are the exact target.</p>
+
+        <p>A channel that auto-generates near-identical Shorts, an AI voice over scraped clips with no commentary or editing, is not eligible to monetize no matter how many views it racks up. The format being faceless or AI-assisted is fine; the absence of a human adding real value is what gets demonetized. The same discipline from the <a href="/blog/faceless-youtube-channel-ideas">faceless channel guide</a> applies here: use AI as a co-pilot, write original scripts, and add a genuine point of view, or the views you build will never convert to income.</p>
+
+        <h2>What Changed for Shorts Monetization in 2026</h2>
+
+        <p>If you read an older guide, a few things are different now and worth knowing:</p>
+
+        <ul>
+          <li><strong>The 500-subscriber fan-funding tier.</strong> You no longer have to wait for the full 1,000-subscriber threshold to start earning through memberships and tips, which lets smaller channels monetize months earlier.</li>
+          <li><strong>The inauthentic-content crackdown.</strong> The 2025 policy tightening means low-effort AI Shorts farms that once slipped through can no longer monetize, which has raised the bar for everyone.</li>
+          <li><strong>The Shorts Fund is gone for good.</strong> Revenue sharing is the only ad-based path now, so flat per-view bonus payments are a thing of the past.</li>
+        </ul>
+
+        <h2>Is Monetizing Shorts Worth It?</h2>
+
+        <p>Yes, but not for the reason most people expect. The ad money alone is not worth chasing, and it is honest to say so: by most estimates only a small share of Shorts creators rely on Shorts ad revenue as a primary income source. The value is everything that ad payout leads to.</p>
+
+        <p><strong>The case for Shorts:</strong> they are the cheapest, fastest way to reach a brand-new audience on YouTube, they grow subscribers quickly, and they feed the long-form videos and other income streams that genuinely pay. <strong>The case against relying on them:</strong> the direct pay is tiny, the audience is lower-intent than search-driven long-form viewers, the pool model means your rate partly depends on everyone else, and automated channels risk demonetization entirely.</p>
+
+        <p>A few myths worth retiring while you decide. Shorts views do not make you rich on their own. More views do not translate to proportionally more pay, because the pool model and music splits flatten the curve. And the Shorts Fund does not pay anyone anymore. The realistic framing is simple: lean on Shorts for <strong>discovery and growth</strong>, and lean on long-form and the income streams above for <strong>revenue</strong>.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How much do YouTube Shorts pay per 1,000 views?</h3>
+
+        <p>Most channels earn between $0.03 and $0.10 per 1,000 Shorts views after YouTube's cut, with the average closer to $0.05. Your exact rate depends on your audience's location, your niche, whether you use licensed music, and the time of year. Finance and tech audiences in the US sit at the top of that range; entertainment and music in lower-paying regions sit at the bottom.</p>
+
+        <h3>How much do YouTube Shorts pay per view?</h3>
+
+        <p>A fraction of a cent. At a typical $0.05 RPM, a single view is worth about $0.00005, which is why per-view thinking is the wrong way to look at Shorts. The number only becomes meaningful at scale, and even then it is small compared to long-form.</p>
+
+        <h3>How much does YouTube pay for 1 million Shorts views?</h3>
+
+        <p>Roughly $30 to $100 in ad revenue, depending on the same factors above, with most channels landing near $30 to $50. For comparison, a million views on a long-form video can earn $2,000 or more, which is the whole reason to use Shorts to funnel viewers toward your long-form content.</p>
+
+        <h3>How many views do you need to get paid on YouTube Shorts?</h3>
+
+        <p>To earn ad revenue you need 1,000 subscribers plus 10 million valid Shorts views in 90 days, or 4,000 long-form watch hours in 12 months. A lower fan-funding tier opens at 500 subscribers and 3 million Shorts views in 90 days, which unlocks memberships and tips but not ad revenue. There is no per-video view minimum once you are in the program.</p>
+
+        <h3>Do Shorts with low views pay anything?</h3>
+
+        <p>Once you are monetized, every monetizable view adds to your pool share, but at small view counts the amount is negligible, often just a few cents for a video with a thousand views. Low-view Shorts matter for growth and for testing what works, not for the ad income they produce on their own.</p>
+
+        <h3>Does using trending music reduce your Shorts pay?</h3>
+
+        <p>Yes. When a Short uses licensed music, the music publishers are paid from the revenue pool before your share is calculated, so your RPM drops. Using original audio or royalty-free tracks keeps your full creator share, which is one of the simplest ways to protect your earnings.</p>
+
+        <h3>How long does it take to monetize YouTube Shorts?</h3>
+
+        <p>Posting one to two Shorts a day, most channels that gain traction reach the 1,000-subscriber ad-revenue threshold in about three to six months, faster in broad entertainment niches and slower in narrow ones. The 500-subscriber fan-funding tier is usually reachable within the first couple of months.</p>
+
+        <h3>Do international creators get paid for Shorts?</h3>
+
+        <p>Yes, as long as your country is in the Partner Program's eligible list, which covers most major markets. Your RPM will reflect your audience's location rather than yours, so a creator with a largely US audience earns more than one with a largely lower-CPM audience, regardless of where the creator lives.</p>
+
+        <h2>Shorts Build the Audience, Long-Form Pays the Bills</h2>
+
+        <p>So how much do YouTube Shorts pay? Enough to prove the format is monetized, and not enough to build a business on directly. The honest figure is <strong>$0.03 to $0.10 per 1,000 views</strong>, and chasing that number for its own sake is a losing game. The creators who win with Shorts are not the ones with the highest RPM. They are the ones who use Shorts to <strong>build an audience fast</strong>, then convert that audience into long-form viewers, subscribers, customers, and sponsorships that pay many times more.</p>
+
+        <p>Treat the ad payout as a small bonus, keep your content original so it stays monetizable, and point every Short at the bigger picture. Do that, and the pennies per view stop mattering, because the audience those Shorts built is the part that truly pays.</p>
+      </>
+    ),
+  },
+  {
     slug: 'best-time-to-post',
     title: 'The Best Time to Post on YouTube in 2026 (and Why Your Own Data Beats Any Chart)',
     excerpt: 'The best times to post videos and Shorts, broken down by day, content type, and region, plus the one thing every other guide buries: how to read your own YouTube Analytics to find the time that beats every generic chart.',
