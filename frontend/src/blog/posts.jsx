@@ -91,6 +91,198 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-ctr',
+    title: 'What Is a Good Click-Through Rate on YouTube? CTR Benchmarks for 2026',
+    excerpt: 'A good YouTube CTR is roughly 4 to 10 percent, with most channels averaging 4 to 6. But the honest answer depends on your traffic source, niche, and channel size, and in 2026 a high CTR can hurt you if viewers bounce. Here are the real benchmarks and how to read them.',
+    date: '2026-06-15',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-ctr-cover.jpg',
+    author: 'Denzil',
+    readTime: '12 min read',
+    content: () => (
+      <>
+        <p>A good click-through rate on YouTube is <strong>roughly 4 to 10 percent</strong>, and most channels average <strong>4 to 6 percent</strong>. YouTube itself says half of all videos sit between 2 and 10 percent. So if your CTR is around 5 percent, you are in healthy company, and if it is above 8, you are doing better than most.</p>
+
+        <p>That is the headline number, but it is also the least useful part of the answer. A single "good CTR" figure hides everything that matters, because the right benchmark shifts with your <strong>traffic source, your niche, and your channel size</strong>, and in 2026 chasing CTR alone can quietly hurt you. This guide gives you the real benchmarks broken down every way that counts, shows you how to read your own number, and explains the click-and-bounce trap that now gets high-CTR videos demoted.</p>
+
+        <h2>What CTR Is and Why It Matters</h2>
+
+        <p>Click-through rate is the percentage of people who clicked your video after it was shown to them. If your thumbnail appeared 1,000 times and 50 people clicked, that is a 5 percent CTR. YouTube calls these appearances impressions, and CTR is simply clicks divided by impressions.</p>
+
+        <p>It matters because it is the first test every video has to pass. The <a href="/blog/youtube-algorithm">algorithm</a> shows your video to a small group, watches whether they click and stay, and decides from there whether to show it to more people. A strong CTR tells YouTube your packaging is working and earns the video wider distribution. One quick clarification, though: the CTR in your <a href="/blog/youtube-analytics">YouTube Analytics</a> is your <strong>organic impressions CTR</strong>, which is a completely different number from the sub-1 percent CTR of paid YouTube ads. When this guide says 4 to 10 percent, it means organic video CTR, not ad CTR.</p>
+
+        <h2>YouTube CTR Benchmarks and Performance Tiers</h2>
+
+        <p>Here is the honest consensus on where your overall CTR stands, drawn from across the available benchmark data. Treat it as a starting point, not a verdict, because the breakdowns further down matter more than this single number.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Overall CTR</th>
+              <th>What it means</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Below 2%</strong></td><td>Needs work, usually the thumbnail or title</td></tr>
+            <tr><td><strong>2% to 4%</strong></td><td>Below average, room to grow</td></tr>
+            <tr><td><strong>4% to 6%</strong></td><td>Good, the healthy middle most channels live in</td></tr>
+            <tr><td><strong>6% to 10%</strong></td><td>Very good, your packaging is resonating</td></tr>
+            <tr><td><strong>Above 10%</strong></td><td>Exceptional, and rare at scale</td></tr>
+          </tbody>
+        </table>
+
+        <p>The catch is that this overall figure is an average of very different traffic, which is why two creators with the same 5 percent can have completely different problems. To genuinely diagnose your CTR, you have to break it apart.</p>
+
+        <h2>CTR by Traffic Source (the Breakdown That Diagnoses)</h2>
+
+        <p>This is the most important table in the guide. The same video earns wildly different CTRs depending on where it was shown, because the audience's intent changes. Someone who searched for your topic is primed to click; someone scrolling the home feed is not.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Traffic source</th>
+              <th>Typical CTR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>YouTube Search</strong></td><td>8% to 15%</td></tr>
+            <tr><td><strong>External sites</strong></td><td>10% to 20%</td></tr>
+            <tr><td><strong>Suggested videos</strong></td><td>5% to 10%</td></tr>
+            <tr><td><strong>Browse / Home feed</strong></td><td>2% to 6%</td></tr>
+          </tbody>
+        </table>
+
+        <p>Read your CTR by source before you blame your thumbnail. A low overall CTR caused by lots of cold <strong>browse</strong> impressions is a very different problem from a low <strong>search</strong> CTR, which really does point to weak packaging or poor topic match. Subscription and notification impressions usually run higher than all of these, because that audience already chose you, so do not compare them to browse.</p>
+
+        <h2>CTR by Niche</h2>
+
+        <p>Advertiser value is not the only thing that varies by niche; click behavior does too. Visual, high-energy niches pull higher CTRs than text-heavy or slow-burn ones, so judge yourself against your category, not the platform average.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Typical CTR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Gaming</strong></td><td>5% to 10%</td></tr>
+            <tr><td><strong>Entertainment &amp; Comedy</strong></td><td>5% to 9%</td></tr>
+            <tr><td><strong>Tech &amp; Reviews</strong></td><td>4% to 8%</td></tr>
+            <tr><td><strong>Beauty &amp; Lifestyle</strong></td><td>4% to 8%</td></tr>
+            <tr><td><strong>Finance &amp; Business</strong></td><td>4% to 9%</td></tr>
+            <tr><td><strong>Education &amp; How-To</strong></td><td>3% to 7%</td></tr>
+            <tr><td><strong>Vlogs</strong></td><td>2% to 6%</td></tr>
+          </tbody>
+        </table>
+
+        <p>If your niche sits at the lower end, do not read it as failure. A 4 percent CTR in education or vlogs is the equivalent of a 7 percent in gaming, because the audiences browse and click differently. What matters is beating the typical range for <strong>your</strong> category, not the platform-wide number.</p>
+
+        <h2>CTR by Channel Size</h2>
+
+        <p>Here is the counterintuitive part: <strong>CTR usually falls as your channel grows</strong>. A small channel shows mostly to subscribers and a tight niche audience who reliably click. A large channel gets pushed to millions of colder, broader viewers, which drags the average down even as the channel succeeds. A falling CTR alongside rising views is a sign of growth, not failure.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Channel size</th>
+              <th>Typical CTR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Under 1,000 subscribers</strong></td><td>6% to 12%</td></tr>
+            <tr><td><strong>1K to 10K</strong></td><td>5% to 10%</td></tr>
+            <tr><td><strong>10K to 100K</strong></td><td>4% to 8%</td></tr>
+            <tr><td><strong>100K to 1M</strong></td><td>3% to 7%</td></tr>
+            <tr><td><strong>1M and up</strong></td><td>2% to 6%</td></tr>
+          </tbody>
+        </table>
+
+        <blockquote><strong>Pro tip:</strong> do not panic when your CTR slips as the channel grows. The moment a video breaks out of your subscriber base and into the broad home feed, it is being shown to people who have never heard of you, and a lower CTR on far more impressions is a much bigger win than a high CTR on a tiny audience. Track total clicks, not just the percentage.</blockquote>
+
+        <h2>CTR by Content Type and Video Age</h2>
+
+        <p>Format matters too. <strong>Long-form videos</strong> live and die by the thumbnail, so they sit in the 3 to 10 percent range. <strong>Shorts</strong> run lower (often 2 to 6 percent) because they surface in a fast vertical feed where the thumbnail does far less work than the first second of the video. Live streams and long podcasts tend to sit lowest, in the 1 to 5 percent range.</p>
+
+        <p>Age matters as well. A new video often spikes to <strong>8 to 12 percent in its first 48 hours</strong> because YouTube shows it to your most loyal subscribers first, then settles to 4 to 6 percent as it reaches colder audiences, and drifts to 3 to 4 percent once it is old back-catalogue content. This is why you compare a video to others at the same age, and why the <a href="/blog/best-time-to-post">first 48 hours</a> matter so much.</p>
+
+        <CtaCard
+          to="/features/thumbnail-iq"
+          title="Score your thumbnail's click appeal before you publish"
+          sub="Thumbnail IQ rates how well your thumbnail competes for the click, so you can fix a weak one before it costs you the first-hour push that decides a video's reach. Free to try."
+          button="Try Thumbnail IQ →"
+        />
+
+        <h2>How to Find Your CTR in YouTube Studio</h2>
+
+        <p>You do not have to guess at any of this, because YouTube shows you your real number. Open <a href="/blog/youtube-analytics">YouTube Studio</a>, go to <strong>Analytics, then the Reach tab</strong>, and look for <strong>Impressions click-through rate</strong>. You will see it for the whole channel and for each individual video, and you can change the date range to spot trends.</p>
+
+        <p>One rule before you read too much into it: wait for enough data. A CTR based on 100 impressions is noise. Give a video at least <strong>1,000 to 2,000 impressions</strong> before you trust its CTR, and always check the by-source breakdown in the same report so you know whether a low number is a packaging problem or just cold browse traffic.</p>
+
+        <h2>Quality CTR: Why a High Click-Through Rate Can Hurt You</h2>
+
+        <p>This is the part that changed, and the part most creators miss. In 2026, YouTube does not just count the click. It watches <strong>what happens in the first 30 seconds after it</strong>, and it weighs the two together. A clickbait thumbnail that earns a 10 percent CTR but sends 80 percent of viewers bouncing in the first half-minute now performs <strong>worse</strong> than an honest 5 percent CTR where viewers stay and watch.</p>
+
+        <p>The reason is simple: a click followed by an immediate exit tells YouTube the video failed to deliver what the packaging promised, and the algorithm reads that as a bad viewer experience worth suppressing. So the goal is never CTR on its own. It is a <strong>click your video genuinely earns and then keeps</strong>, which means your thumbnail and title must promise something the first thirty seconds immediately pay off. Chase CTR and <a href="/blog/youtube-thumbnail-ideas">retention</a> together, never CTR alone.</p>
+
+        <blockquote><strong>Rule of thumb:</strong> if your CTR is high but your average view duration is poor, do not celebrate the CTR, fix the gap between what the thumbnail promised and what the video delivered. A moderate CTR with strong retention beats a high CTR with weak retention every single time.</blockquote>
+
+        <h2>How to Improve Your YouTube CTR</h2>
+
+        <p>If your CTR is genuinely low for your source and niche, these are the levers that move it, in order of impact.</p>
+
+        <ul>
+          <li><strong>Fix the thumbnail first.</strong> It does the heavy lifting, and eye-tracking shows viewers look at it far longer than the title. Use one clear idea, high contrast, and bold readable text of three words or fewer, then run the squint test, because most impressions are seen at thumbnail size on a phone. Our <a href="/blog/youtube-thumbnail-ideas">thumbnail frameworks</a> guide goes deep on this.</li>
+          <li><strong>Write a title that completes the thumbnail.</strong> The two should work as a pair, not repeat each other: the thumbnail shows, the <a href="/blog/youtube-title">title</a> adds the curiosity or the specifics. A title that answers the question the thumbnail raises earns the click.</li>
+          <li><strong>A/B test with Test and Compare.</strong> YouTube's built-in tool lets you run up to three thumbnails and picks the winner by watch-time share, not raw clicks, which protects you from a clickbait thumbnail that wins the click and loses the viewer. Tools like our <a href="/blog/thumbnail-tester">thumbnail testers</a> roundup help you predict the winner before you publish.</li>
+          <li><strong>Match your niche's conventions, then beat them.</strong> Study the thumbnails of the top videos in your niche to learn what your audience expects, then make yours 10 percent clearer or more striking rather than reinventing the format entirely.</li>
+          <li><strong>Benchmark against yourself, not other channels.</strong> The only comparison that reliably teaches you anything is your own past videos at the same age and traffic source. Find your best performers, work out why they clicked, and repeat the pattern.</li>
+        </ul>
+
+        <h2>Common CTR Myths</h2>
+
+        <ul>
+          <li><strong>"A low CTR always means a bad thumbnail."</strong> Not necessarily. It can simply mean a lot of cold browse impressions or a topic with low demand. Check the by-source breakdown before you redesign anything.</li>
+          <li><strong>"Higher CTR is always better."</strong> False, and it is the most expensive myth here. A high CTR with poor retention gets a video demoted, because the click was not earned honestly.</li>
+          <li><strong>"There is one good CTR number."</strong> There is not. A 4 percent on browse and a 4 percent on search are not the same result, and a number that is great for a 1M channel is mediocre for a new one.</li>
+          <li><strong>"CTR matters more than watch time."</strong> It does not. CTR gets the click; <a href="/blog/more-views-on-youtube">watch time and retention</a> decide how far the video travels. They work together, and watch time wins ties.</li>
+        </ul>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What is a good click-through rate on YouTube?</h3>
+
+        <p>A good organic CTR is between 4 and 10 percent, with most channels averaging 4 to 6 percent and YouTube reporting that half of all videos fall between 2 and 10 percent. Anything above 6 percent is strong, and above 10 percent is exceptional. The right target depends on your traffic source, niche, and channel size, so judge each video against similar ones rather than the platform average.</p>
+
+        <h3>What is a good CTR for a new or small channel?</h3>
+
+        <p>Higher than average, often 6 to 12 percent, because a small channel shows mostly to subscribers and a tight niche audience who reliably click. As you grow and YouTube pushes your videos to colder, broader audiences, your CTR will naturally fall into the 3 to 6 percent range even as your views climb. That decline is a sign of reach, not a problem.</p>
+
+        <h3>Why did my YouTube CTR suddenly drop?</h3>
+
+        <p>The most common cause is a shift in your traffic mix: when a video starts getting pushed to the home feed or suggested, those colder impressions pull the average down. It can also be a weaker thumbnail or title, a less compelling topic, or simple seasonality. Check your CTR by traffic source to see whether the drop is real or just more cold impressions.</p>
+
+        <h3>Does CTR matter more than watch time?</h3>
+
+        <p>No. CTR earns the click, but watch time and retention decide whether YouTube expands a video's reach. The two work together, and since 2026 the algorithm explicitly pairs them, so a high CTR with poor retention performs worse than a moderate CTR with strong retention. Optimize for both, and let watch time break the tie.</p>
+
+        <h3>How many impressions do I need before my CTR is reliable?</h3>
+
+        <p>Wait for at least 1,000 to 2,000 impressions before reading much into a video's CTR, because small samples swing wildly. For channel-level trends, look across a 28 or 90 day window rather than a single video, and always check the by-source breakdown so you are comparing like with like.</p>
+
+        <h3>Is a high CTR always a good thing?</h3>
+
+        <p>No. A high CTR paired with viewers bouncing in the first 30 seconds signals clickbait to YouTube and gets the video suppressed. The CTR you want is one your video earns honestly and then keeps, where the thumbnail and title promise something the opening immediately delivers. Aim for a click that turns into a watch, not just a click.</p>
+
+        <h2>Earn the Click, Then Keep the Viewer</h2>
+
+        <p>So what is a good click-through rate on YouTube? Around 4 to 10 percent overall, but the number that matters is the one measured against your own traffic source, niche, and channel size, and only when it comes with the retention to back it up. A 5 percent CTR that holds viewers will always beat a 10 percent CTR that loses them in seconds.</p>
+
+        <p>Read your CTR by source so you diagnose the right problem, fix the thumbnail and title as a pair, test before you commit, and judge every video against your own best work. Do that, and CTR stops being a number you worry about and becomes what it should be: <strong>a sign that your packaging earns the click and your content keeps the viewer.</strong></p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-sponsorships',
     title: 'How to Get Sponsorships on YouTube in 2026 (Even With a Small Channel)',
     excerpt: 'You do not need 100,000 subscribers to land a brand deal. Here is how YouTube sponsorships work, what to charge, how to build a media kit, and the pitch that gets a 15 to 25 percent reply rate, even on a small channel.',
