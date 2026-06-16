@@ -119,6 +119,56 @@ an AI audit on top of the same data and tells you specifically what to
 change, in what order, and why. The Channel Audit alone replaces the kind
 of report a YouTube growth consultant would charge $300–$500 for.
 
+## Guides and articles
+
+In-depth guides on growing, optimizing, and monetizing a YouTube
+channel. Full archive at https://ytgrowth.io/blog.
+
+- [Best Microphone for YouTube: Every Setup and Budget (2026)](https://ytgrowth.io/blog/best-youtube-mic)
+- [Copyright-Free Music for YouTube: The Best Free and Royalty-Free Sources (2026)](https://ytgrowth.io/blog/copyright-free-music)
+- [What Is a Good Click-Through Rate on YouTube? CTR Benchmarks for 2026](https://ytgrowth.io/blog/youtube-ctr)
+- [How to Get Sponsorships on YouTube in 2026 (Even With a Small Channel)](https://ytgrowth.io/blog/youtube-sponsorships)
+- [How Much Do YouTube Shorts Pay in 2026? The Real Numbers (and Why the Payout Isn\'t the Point)](https://ytgrowth.io/blog/youtube-shorts-pay)
+- [The Best Time to Post on YouTube in 2026 (and Why Your Own Data Beats Any Chart)](https://ytgrowth.io/blog/best-time-to-post)
+- [Faceless YouTube Channel Ideas: The Niches That Pay and How to Stay Monetized in 2026](https://ytgrowth.io/blog/faceless-youtube-channel-ideas)
+- [The Best Chrome Extensions for YouTube Creators in 2026 (and How to Choose Them)](https://ytgrowth.io/blog/chrome-extensions-for-youtube)
+- [YouTube RPM Explained: What It Means, What Affects It, and How to Increase It](https://ytgrowth.io/blog/youtube-rpm)
+- [Best Free YouTube Keyword Research Tools (2026 Comparison)](https://ytgrowth.io/blog/youtube-keyword-research-tools)
+- [Best YouTube Analytics Tools: A Complete Guide for Creators and Brands](https://ytgrowth.io/blog/youtube-analytics-tools)
+- [YouTube Analytics Explained: Every Tab and Metric That Matters](https://ytgrowth.io/blog/youtube-analytics)
+- [YouTube Description Template: How to Write Video and Channel Descriptions That Work](https://ytgrowth.io/blog/youtube-description-template)
+- [How to Write a YouTube Title That Ranks and Gets Clicked](https://ytgrowth.io/blog/youtube-title)
+- [How to Get More Views on YouTube: 11 Strategies That Work in 2026](https://ytgrowth.io/blog/more-views-on-youtube)
+- [YouTube Channel Audit: A Step-by-Step Guide to Finding What Is Holding Your Channel Back](https://ytgrowth.io/blog/youtube-channel-audit)
+- [TubeBuddy vs vidIQ: Which YouTube Growth Tool Is Right for You in 2026?](https://ytgrowth.io/blog/tubebuddy-vs-vidiq)
+- [Why Is My YouTube Channel Not Growing? 10 Reasons and How to Fix Each One](https://ytgrowth.io/blog/youtube-channel-not-growing)
+- [YouTube Trends: How to Find What\'s Trending and Use It Before It Peaks (2026)](https://ytgrowth.io/blog/youtube-trends)
+- [Google AdSense for YouTube: How It Works, Setup, and Getting Paid (2026)](https://ytgrowth.io/blog/google-adsense-youtube)
+- [vidIQ Review (2026): Is It Worth It, and the Free Alternative](https://ytgrowth.io/blog/vidiq-review)
+- [YouTube Video Ideas for Beginners: 10 Ideas That Work With Zero Subscribers](https://ytgrowth.io/blog/youtube-video-ideas)
+- [YouTube CPM Rates: The Best Niches and How to Maximize Your Ad Revenue](https://ytgrowth.io/blog/youtube-cpm)
+- [YouTube Tags for Views: The Best Tags to Use and How to Find Them](https://ytgrowth.io/blog/youtube-tags)
+- [YouTube Tag Finder: How to Find the Right Keywords for More Views](https://ytgrowth.io/blog/youtube-tag-finder)
+- [YouTube Shorts Tagging: How to Use Hashtags and Metadata for More Views](https://ytgrowth.io/blog/shorts-tagging)
+- [Video Tagging Best Practices: How to Signal Relevance to YouTube and Google in One Workflow](https://ytgrowth.io/blog/video-tagging)
+- [The YouTube Competitor Analysis Method That Finds Algorithm Winners](https://ytgrowth.io/blog/youtube-competitor-analysis)
+- [Beyond the Red Arrow: 22+ YouTube Thumbnail Frameworks That Force the Click](https://ytgrowth.io/blog/youtube-thumbnail-ideas)
+- [Stop Guessing Clicks: 6 Best AI Thumbnail Testers to Predict CTR Before You Upload](https://ytgrowth.io/blog/thumbnail-tester)
+- [Stop Getting Ignored: The Beginner's Guide to Designing High-CTR YouTube Thumbnails](https://ytgrowth.io/blog/youtube-maker)
+- [YouTube Thumbnail Size in 2026: The Specs, Safe Zones, and Mobile Rules That Drive Clicks](https://ytgrowth.io/blog/youtube-thumbnail-size)
+- [Beyond the 4,000-Hour Wall: A Strategic Guide to Accelerating YouTube Watch Time (Without Buying Fake Views)](https://ytgrowth.io/blog/youtube-watch-hours)
+- [The Profitable YouTube Niche Guide: How to Find Your High-CPM Angle in 2026](https://ytgrowth.io/blog/youtube-niche)
+- [The Business of YouTube: How to Launch a Channel and Monetize from Day One (Not Day 180)](https://ytgrowth.io/blog/youtube-as-a-business)
+- [The 2026 YouTube Channel Optimization Blueprint: Balancing Algorithm Searchability with Human Clickability](https://ytgrowth.io/blog/youtube-channel-optimization)
+- [Beyond the Scroll: A 5-Step Guide to Mastering the YouTube Shorts Algorithm in 2026](https://ytgrowth.io/blog/youtube-shorts-algorithm)
+- [The 2026 YouTube Growth Blueprint: How to Engineer Views and Subscribers From Zero](https://ytgrowth.io/blog/grow-youtube-channel)
+- [YouTube Algorithm 2026: How Discovery Works (Stop Gaming the Bot)](https://ytgrowth.io/blog/youtube-algorithm)
+- [What is YouTube SEO? The Complete Guide to Ranking Videos in 2026](https://ytgrowth.io/blog/what-is-youtube-seo)
+- [The 2026 YouTube SEO Blueprint: Engineering Retention and CTR to Dominate the Algorithm](https://ytgrowth.io/blog/youtube-seo-best-practices)
+- [The 5-Pillar YouTube SEO Tool Stack to Dominate the Algorithm (And the Secret CTR Stack)](https://ytgrowth.io/blog/seo-tools-for-youtube)
+- [How to Monetize Your YouTube Channel in 2026](https://ytgrowth.io/blog/youtube-partner-program)
+- [Stop Searching for Generators: The 6-Step Roadmap to 1,000 Free YouTube Subscribers](https://ytgrowth.io/blog/free-subs-on-youtube)
+
 ## Important links
 
 - Landing page: https://ytgrowth.io/
