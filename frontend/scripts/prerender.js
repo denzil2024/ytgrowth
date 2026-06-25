@@ -124,6 +124,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Tag Generator 2026: Free Video Tags from Any Keyword',
     description: 'Free YouTube tag generator. Enter your topic and get a clean set of relevant tags and variations, trimmed to fit YouTube\'s 500-character limit. Copy and paste, no signup.',
   },
+  '/tools/youtube-hashtag-generator': {
+    title:       'YouTube Hashtag Generator 2026: Free Relevant Hashtags by Keyword',
+    description: 'Free YouTube hashtag generator. Enter your topic and get relevant hashtags for your title or description. Keep the best 3 to 5, copy and paste. No signup, runs in your browser.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
@@ -225,6 +229,7 @@ async function buildRoutes() {
     '/tools/youtube-shorts-money-calculator',
     '/tools/youtube-description-generator',
     '/tools/youtube-tag-generator',
+    '/tools/youtube-hashtag-generator',
     '/youtube-stats',
     '/youtube-stats/gaming',
     '/youtube-stats/tech',
