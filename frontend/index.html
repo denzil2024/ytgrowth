@@ -170,6 +170,11 @@
          (AW-10883831151) and the GA4 analytics property (G-MFMVT6Q5RB). -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10883831151"></script>
     <script>
+      // Owner analytics opt-out. Load any page once with ?ytg_notrack=1 to stop
+      // your own visits being recorded in GA4 + Google Ads on this browser.
+      // ?ytg_track=1 re-enables. Persists in localStorage, so it survives a
+      // dynamic IP and works on every device you opt in on.
+      (function(){try{var p=new URLSearchParams(location.search);if(p.has('ytg_notrack'))localStorage.setItem('ytg_notrack','1');if(p.has('ytg_track'))localStorage.removeItem('ytg_notrack');if(localStorage.getItem('ytg_notrack')==='1'){window['ga-disable-AW-10883831151']=true;window['ga-disable-G-MFMVT6Q5RB']=true;}}catch(e){}})();
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
