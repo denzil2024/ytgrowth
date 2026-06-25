@@ -43,7 +43,7 @@ function toTitleCase(str) {
 const FORMATS = {
   listicle: [
     'Top 7 {X} mistakes new creators make',
-    '5 {X} habits that actually work',
+    '5 {X} habits that work',
     '10 {X} rules every beginner should know',
     'The 3 {X} tools I use every single day',
     '7 {X} questions everyone asks (answered)',
@@ -90,7 +90,7 @@ const FORMATS = {
     'Common {x} traps and how to avoid them',
   ],
   comparison: [
-    '{cap} vs alternatives: which actually works?',
+    '{cap} vs alternatives: which works?',
     'I tested 5 {x} methods. The winner surprised me.',
     'Cheap vs expensive: does {x} gear matter?',
     'Old-school {x} vs new-school: which wins?',
@@ -146,7 +146,7 @@ const FORMATS = {
     'Everyone gets this {x} thing wrong',
     'If you\'re into {x}, save this',
     '3 {x} red flags you can\'t miss',
-    '{cap} life hack you\'ll actually use',
+    '{cap} life hack you\'ll use',
     'POV: you\'re a {x} pro now',
   ],
 }

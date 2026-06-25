@@ -501,7 +501,7 @@ export default function YoutubeThumbnailDownloader() {
               Studying thumbnails is good. <span style={{ color: 'var(--ytg-accent)' }}>Designing better ones is better.</span>
             </h2>
             <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              You downloaded a thumbnail to learn from it. The next step is knowing whether your own thumbnails actually compete on the metrics that drive clicks.
+              You downloaded a thumbnail to learn from it. The next step is knowing whether your own thumbnails compete on the metrics that drive clicks.
             </p>
           </div>
 
@@ -512,7 +512,7 @@ export default function YoutubeThumbnailDownloader() {
                 body: 'Two-layer scoring (algorithmic + AI vision) against the actual top performers in your niche. Know whether your design is competitive before you upload, not after the CTR data comes in three days later.',
                 href: '/features/thumbnail-iq' },
               { label: 'AI Channel Audit',
-                title: 'Find what is actually broken',
+                title: 'Find what is broken',
                 body: 'A 10-dimension audit of your last 20 videos, CTR, retention, and posting habits. Tells you which videos are SEO-underperformers and which thumbnails are losing the click war.',
                 href: '/features/channel-audit' },
               { label: 'SEO Studio',

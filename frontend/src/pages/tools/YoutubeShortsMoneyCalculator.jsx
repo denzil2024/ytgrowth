@@ -116,7 +116,7 @@ function fmtViews(n) {
 }
 
 const FAQS = [
-  { q: 'How much do YouTube Shorts actually pay?',
+  { q: 'How much do YouTube Shorts pay?',
     a: "Far less per view than long-form. Typical Shorts RPM is roughly $0.04 to $0.10 per 1,000 views for a tier-1 audience, versus $3 to $30 for long-form videos. That is because Shorts have no mid-rolls and no skippable in-stream ads. Revenue comes from a shared pool funded by ads running between Shorts in the feed, and creators receive 45% of the portion allocated to them. A Short with 1 million views might earn $40 to $100; the same million views on a long-form video in the right niche could earn thousands." },
   { q: 'How is Shorts revenue calculated?',
     a: "YouTube pools the ad money generated in the Shorts feed, sets aside the share owed to music licensing, and then distributes the rest to eligible creators based on their share of total Shorts views (specifically views on monetizing Shorts). From that allocated pool, creators keep 45%. Because it is a pooled, view-share model rather than ads-on-your-specific-video, your exact RPM moves with overall advertiser demand, your audience country, and how much licensed music your Shorts use." },
@@ -174,7 +174,7 @@ export default function YoutubeShortsMoneyCalculator() {
         <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1, animation: 'smcFadeUp 0.5s ease both' }}>
           <Eyebrow>Free tool</Eyebrow>
           <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : isTablet ? 56 : 64, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2.2px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
-            How much do YouTube Shorts <span style={{ color: 'var(--ytg-accent)' }}>actually pay?</span>
+            How much do YouTube Shorts <span style={{ color: 'var(--ytg-accent)' }}>pay?</span>
           </h1>
           <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 28px', textWrap: 'pretty' }}>
             A realistic YouTube Shorts money calculator built on the real shared-pool RPM, not the inflated numbers most calculators show. Shorts pay far less per view than long-form, and this shows you roughly how much.
@@ -267,7 +267,7 @@ export default function YoutubeShortsMoneyCalculator() {
           <div style={{ marginBottom: 48, maxWidth: 720 }}>
             <Eyebrow>How it works</Eyebrow>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, textWrap: 'balance' }}>
-              How Shorts money <span style={{ color: 'var(--ytg-accent)' }}>actually works.</span>
+              How Shorts money <span style={{ color: 'var(--ytg-accent)' }}>works.</span>
             </h2>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
@@ -299,7 +299,7 @@ export default function YoutubeShortsMoneyCalculator() {
           <div className="smc-grid-3">
             {[
               { label: 'AI Channel Audit', title: 'Find the leaks', body: 'A 10-dimension audit of your last 20 videos, CTR, and retention, with a prioritized list of what to fix to convert Shorts reach into long-form views.', href: '/features/channel-audit' },
-              { label: 'Title Generator', title: 'Write titles that pull', body: 'Generate and score titles for your long-form uploads so the viewers your Shorts send actually click through and stay.', href: '/tools/youtube-title-generator' },
+              { label: 'Title Generator', title: 'Write titles that pull', body: 'Generate and score titles for your long-form uploads so the viewers your Shorts send click through and stay.', href: '/tools/youtube-title-generator' },
               { label: 'SEO Studio', title: 'Rank for searches that pay', body: 'Score titles and descriptions against the top-ranking videos in your niche, so your long-form earns the high-RPM search and suggested traffic.', href: '/features/seo-studio' },
             ].map((card, i) => (
               <a key={i} href={card.href} style={{ display: 'block', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: 30, boxShadow: 'var(--ytg-shadow-sm)', textDecoration: 'none', transition: 'transform 0.18s, box-shadow 0.18s, border-color 0.18s' }}
@@ -326,7 +326,7 @@ export default function YoutubeShortsMoneyCalculator() {
             Stop counting pennies. <span style={{ color: '#ff3b30' }}>Build real revenue.</span>
           </h2>
           <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'rgba(255,255,255,0.68)', lineHeight: 1.7, marginBottom: 32, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
-            Connect your channel for a free AI audit and get a plan to turn Shorts reach into long-form watch time, the part that actually pays.
+            Connect your channel for a free AI audit and get a plan to turn Shorts reach into long-form watch time, the part that pays.
           </p>
           <a href="/auth/login" className="smc-btn smc-btn-lg">Get my free audit →</a>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', marginTop: 16 }}>Free trial · no card · upgrade anytime</p>

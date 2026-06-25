@@ -96,7 +96,7 @@ function generateNames(keyword, second, tones) {
 const EXAMPLES = ['fitness', 'finance', 'cooking', 'tech reviews', 'productivity', 'travel', 'gaming', 'photography']
 
 const FAQS = [
-  { q: 'Are these channel names actually available on YouTube?',
+  { q: 'Are these channel names available on YouTube?',
     a: "This generator creates name ideas from pattern templates. It does not check real-time YouTube handle or display name availability. Once you find a name you like, copy it and check directly inside YouTube Studio (Settings → Channel → Basic info) where YouTube validates handles in real time. Note that the handle (@yourname) is what determines uniqueness, not the channel display name. Two channels can share the same display name, but every handle is globally unique." },
   { q: 'How do I pick the right name from this list?',
     a: "Three rules. One: easy to spell and easy to say out loud, because viewers will recommend you verbally and type your name into search. Two: related to your niche so the algorithm and viewers can categorize you instantly. Three: not too narrow. \"BeginnerYogaForRunners\" boxes you in if you ever pivot. \"FlowAcademy\" gives you room to expand. Pick a name you can grow into at 100K subscribers, not just one that fits where you are at zero." },
@@ -616,7 +616,7 @@ export default function YoutubeChannelNameGenerator() {
           <div style={{ marginBottom: 48, maxWidth: 720 }}>
             <Eyebrow>How naming works</Eyebrow>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, textWrap: 'balance' }}>
-              What makes a YouTube name <span style={{ color: 'var(--ytg-accent)' }}>actually stick.</span>
+              What makes a YouTube name <span style={{ color: 'var(--ytg-accent)' }}>stick.</span>
             </h2>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>

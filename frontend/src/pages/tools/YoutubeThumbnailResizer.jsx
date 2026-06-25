@@ -339,11 +339,11 @@ const FAQS = [
     a: <>YouTube's official upload spec is 1280×720, but creators often need higher-resolution exports for other use cases. Full HD (1920×1080) is what most embed players and blog features want. 4K (3840×2160) is for archival masters you'll re-export from in a year when YouTube inevitably bumps the spec or you need a bigger crop. The HD preset is what you upload to YouTube. The other two cover everything else.</>,
   },
   {
-    q: 'What does the 2 MB cap actually do?',
+    q: 'What does the 2 MB cap do?',
     a: <>YouTube silently rejects thumbnail uploads larger than 2 MB. Many tools quietly skip this check and you find out only when the upload fails. On the HD preset, this tool starts JPG quality at 92% and steps it down automatically until the file fits under 2 MB. You can override the auto-quality with the slider if you want to try a different point on the size/quality curve. Full HD and 4K presets don't enforce the cap because they're not for direct YouTube upload.</>,
   },
   {
-    q: 'Is my image actually private?',
+    q: 'Is my image private?',
     a: <>Yes, verifiably. The entire resize runs in your browser via HTML5 Canvas. The image never touches our server, never gets logged, never gets stored anywhere. Open the Network tab in your browser's DevTools while you use the tool: you'll see zero outbound requests with image data. Drop in a private screenshot, a draft thumbnail, an internal mockup, anything. It stays on your device.</>,
   },
   {
@@ -356,7 +356,7 @@ const FAQS = [
   },
   {
     q: 'Can I upscale a small source image to 4K?',
-    a: <>You can, but the output won't actually be sharper than the source. The tool scales the pixels up using high-quality bilinear interpolation, but no algorithm can invent detail that wasn't there. If you upload a 640×360 thumbnail and pick the 4K preset, you'll get a 3840×2160 file that looks like a stretched 360p image. For genuinely higher detail, use a higher-resolution source.</>,
+    a: <>You can, but the output won't be sharper than the source. The tool scales the pixels up using high-quality bilinear interpolation, but no algorithm can invent detail that wasn't there. If you upload a 640×360 thumbnail and pick the 4K preset, you'll get a 3840×2160 file that looks like a stretched 360p image. For genuinely higher detail, use a higher-resolution source.</>,
   },
   {
     q: 'Will the resized thumbnail rank better than my original?',
@@ -723,7 +723,7 @@ export default function YoutubeThumbnailResizer() {
               <span className="ytr-eyebrow-text">YouTube spec</span>
             </span>
             <h2 className="ytr-h2" style={{ fontSize: isMobile ? 28 : 38, color: 'var(--ytg-text)' }}>
-              The numbers that <span style={{ color: 'var(--ytg-accent)' }}>actually matter</span> on upload.
+              The numbers that <span style={{ color: 'var(--ytg-accent)' }}>matter</span> on upload.
             </h2>
           </div>
           <div style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', overflow: 'hidden' }}>

@@ -193,7 +193,7 @@ const FAQS = [
   { q: 'How accurate is this YouTube money calculator?',
     a: "The numbers are realistic estimates based on industry-reported RPM ranges by niche and audience country. Real earnings vary with watch time, mid-roll placement, ad blocker rates, season (Q4 ads pay roughly 30–40% more than Q1), the percentage of your viewers watching with YouTube Premium, and whether your videos qualify for skippable in-stream ads. Treat the output as a sensible range, not a precise paycheck. Most channels land somewhere inside the low–high band shown, and some land outside it for niche-specific reasons." },
   { q: 'What is RPM vs CPM, and which one matters?',
-    a: "CPM (Cost Per Mille) is what advertisers pay per 1,000 ad impressions. It's their cost, not your income. RPM (Revenue Per Mille) is what you actually take home per 1,000 video views, after YouTube's 45% cut, after the views that never saw an ad, after the videos that ran without monetization at all. RPM is always significantly lower than CPM. Usually 30–50% of it. RPM is the only number you should care about as a creator, and it's what this calculator estimates." },
+    a: "CPM (Cost Per Mille) is what advertisers pay per 1,000 ad impressions. It's their cost, not your income. RPM (Revenue Per Mille) is what you take home per 1,000 video views, after YouTube's 45% cut, after the views that never saw an ad, after the videos that ran without monetization at all. RPM is always significantly lower than CPM. Usually 30–50% of it. RPM is the only number you should care about as a creator, and it's what this calculator estimates." },
   { q: "Why does my niche change the result so much?",
     a: 'Advertisers bid wildly different amounts depending on the audience they want to reach. A finance viewer might be worth $40 to a credit card or brokerage advertiser because that viewer might sign up for a $200/month product. A kids-content viewer is worth a fraction of that. Fewer advertisers compete for the slot, and the products being sold are lower-margin. Niche is the single biggest lever in YouTube earnings, often bigger than view count. A 100K/month finance channel can out-earn a 1M/month gaming channel.' },
   { q: "Why does audience country matter so much?",
@@ -214,7 +214,7 @@ const FAQS = [
     a: "Most full-time creators have 4–6 income streams, not just ads: (1) brand sponsorships and integrations. Often the biggest line item, paying roughly $20–$50 per 1,000 views in tier-1 niches; (2) affiliate marketing (Amazon, Skillshare, software referrals); (3) selling your own digital products (courses, templates, presets); (4) memberships via YouTube Channel Memberships or Patreon; (5) merchandise; (6) Super Chat, Super Thanks, Super Stickers during live streams. A channel earning $2,000/month from ads might be earning $8,000/month total once you count the rest." },
   { q: 'How do I increase my RPM without growing my view count?',
     a: 'Three high-impact moves: (1) Lengthen your videos past 8 minutes so they qualify for mid-rolls. And add 2–3 mid-roll slots manually in YouTube Studio rather than relying on auto-placement; (2) Pivot your content angle toward higher-RPM topics within your existing niche (a beauty channel covering luxury skincare earns multiples more than one covering drugstore hauls); (3) Improve your audience country mix by creating English-first content with hooks that travel internationally rather than geo-locked references. None of these require more views. They just earn more from the views you already have.' },
-  { q: 'How do I actually grow these numbers?',
+  { q: 'How do I grow these numbers?',
     a: "Two levers: (1) get more views by ranking better in YouTube search and suggested, and (2) earn higher RPM through longer-form videos with strategic mid-rolls and a higher-paying niche pivot. YTGrowth's free AI audit looks at both. It tells you which of your videos are SEO-underperformers, which titles and thumbnails are losing the click war, and which video lengths are leaving ad slots on the table. It costs nothing to run on a free account." },
   { q: 'Is this calculator free? Will you sell my data?',
     a: "Yes, free forever. And no data collection beyond what your browser sends to any website. The calculator runs entirely in your browser; no inputs are sent to our servers, no email required, no signup gate. We built it as a genuine free tool because creators deserve a realistic estimate before they pour months into a niche. If you want a real, personalised growth plan beyond just an earnings estimate, you can connect your channel for a free AI audit. But that's entirely optional." },
@@ -270,7 +270,7 @@ export default function YoutubeMoneyCalculator() {
         <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1, animation: 'ymcFadeUp 0.5s ease both' }}>
           <Eyebrow>Free tool</Eyebrow>
           <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : isTablet ? 56 : 64, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2.2px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
-            What does a YouTube channel <span style={{ color: 'var(--ytg-accent)' }}>actually earn?</span>
+            What does a YouTube channel <span style={{ color: 'var(--ytg-accent)' }}>earn?</span>
           </h1>
           <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 28px', textWrap: 'pretty' }}>
             A realistic YouTube money calculator built on real RPM ranges by niche and audience country. Not the inflated "potential earnings" most calculators show.
@@ -393,7 +393,7 @@ export default function YoutubeMoneyCalculator() {
           <div style={{ marginBottom: 48, maxWidth: 720 }}>
             <Eyebrow>How it works</Eyebrow>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, textWrap: 'balance' }}>
-              How YouTube earnings <span style={{ color: 'var(--ytg-accent)' }}>actually work.</span>
+              How YouTube earnings <span style={{ color: 'var(--ytg-accent)' }}>work.</span>
             </h2>
           </div>
 
@@ -423,7 +423,7 @@ export default function YoutubeMoneyCalculator() {
           <div style={{ marginBottom: 44, textAlign: 'center', maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
             <Eyebrow>Grow your earnings</Eyebrow>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>
-              How to actually <span style={{ color: 'var(--ytg-accent)' }}>move these numbers.</span>
+              How to <span style={{ color: 'var(--ytg-accent)' }}>move these numbers.</span>
             </h2>
             <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
               The estimate above changes when you move two levers: more views (rank better) and more RPM (more mid-rolls, longer watch time). Both are coachable.

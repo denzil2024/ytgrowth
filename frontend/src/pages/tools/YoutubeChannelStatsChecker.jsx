@@ -563,7 +563,7 @@ export default function YoutubeChannelStatsChecker() {
                 })()}
               </div>
 
-              {/* Category tabs, only categories that actually have rows */}
+              {/* Category tabs, only categories that have rows */}
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
                 {filledCats.map(cat => {
                   const isActive = cat === activeCat

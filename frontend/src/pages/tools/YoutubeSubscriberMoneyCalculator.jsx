@@ -206,7 +206,7 @@ const TARGETS = [500, 1000, 3000, 5000, 10000]
 /* ── FAQ data ───────────────────────────────────────────────────────────── */
 const FAQS = [
   { q: 'How does this subscriber-to-money calculator work?',
-    a: "It uses three inputs to estimate your earnings: subscriber count, how many videos you upload per month, and a niche-and-country RPM range. Subscribers don't equal income directly. What matters is how many of those subs actually watch your uploads (the reach coefficient) plus the discovery views from search and suggested. We multiply your effective monthly views by realistic RPM ranges per niche and country to give you a low-to-high earnings estimate." },
+    a: "It uses three inputs to estimate your earnings: subscriber count, how many videos you upload per month, and a niche-and-country RPM range. Subscribers don't equal income directly. What matters is how many of those subs watch your uploads (the reach coefficient) plus the discovery views from search and suggested. We multiply your effective monthly views by realistic RPM ranges per niche and country to give you a low-to-high earnings estimate." },
   { q: 'Why are subscribers a bad direct measure of income?',
     a: "Most subscribers do not watch your videos. The platform-wide average is roughly 10-25% of subs watching any given upload. The rest are dormant, watch occasionally, or never come back. A 100k channel with sleeping subs can earn less than a 20k channel with high engagement. Income tracks views, not the badge count on your channel page." },
   { q: 'What is the reach coefficient this calculator uses?',
@@ -504,7 +504,7 @@ export default function YoutubeSubscriberMoneyCalculator() {
               Move your reach coefficient, <span style={{ color: 'var(--ytg-accent)' }}>not just your sub count.</span>
             </h2>
             <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              The fastest way to grow income is not more subs. It's more of your existing subs actually watching. Three levers that move that number.
+              The fastest way to grow income is not more subs. It's more of your existing subs watching. Three levers that move that number.
             </p>
           </div>
 
@@ -519,7 +519,7 @@ export default function YoutubeSubscriberMoneyCalculator() {
                 body: 'Sub-views alone cap your income. Stack discovery views from search and suggested by scoring every title against the actual top-ranking videos in your niche.',
                 href: '/features/seo-studio' },
               { label: 'Thumbnail IQ',
-                title: 'Make subs actually click',
+                title: 'Make subs click',
                 body: 'CTR drives whether your existing subscribers see the video at all. Score your thumbnails against the top performers in your niche on contrast, face presence, and text density.',
                 href: '/features/thumbnail-iq' },
             ].map((card, i) => (
