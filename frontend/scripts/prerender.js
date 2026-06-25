@@ -113,11 +113,11 @@ const META_BY_ROUTE = {
     description: 'Free YouTube title generator and analyzer. Get a dozen click-worthy title ideas from your topic, then score any title on length, numbers, power words, and keyword position. No signup.',
   },
   '/tools/youtube-shorts-money-calculator': {
-    title:       'YouTube Shorts Money Calculator 2026: Free Shorts Earnings Estimator',
+    title:       'YouTube Shorts Money Calculator 2026: Free Earnings Tool',
     description: 'Free YouTube Shorts money calculator. Estimate real Shorts ad earnings from the shared-pool RPM by views and audience country. See why Shorts pay far less than long-form. No signup.',
   },
   '/tools/youtube-description-generator': {
-    title:       'YouTube Description Generator 2026: Free SEO Description Template',
+    title:       'YouTube Description Generator 2026: Free SEO Template',
     description: 'Free YouTube description generator and template. Build an SEO-friendly description with a keyword hook, timestamps, links, and hashtags in seconds. No signup, runs in your browser.',
   },
   '/tools/youtube-tag-generator': {
@@ -125,11 +125,11 @@ const META_BY_ROUTE = {
     description: 'Free YouTube tag generator. Enter your topic and get a clean set of relevant tags and variations, trimmed to fit YouTube\'s 500-character limit. Copy and paste, no signup.',
   },
   '/tools/youtube-hashtag-generator': {
-    title:       'YouTube Hashtag Generator 2026: Free Relevant Hashtags by Keyword',
+    title:       'YouTube Hashtag Generator 2026: Free Hashtags by Keyword',
     description: 'Free YouTube hashtag generator. Enter your topic and get relevant hashtags for your title or description. Keep the best 3 to 5, copy and paste. No signup, runs in your browser.',
   },
   '/tools/youtube-chapter-generator': {
-    title:       'YouTube Chapter Generator 2026: Free Timestamps & Chapter Maker',
+    title:       'YouTube Chapter Generator 2026: Free Timestamp Maker',
     description: 'Free YouTube chapter and timestamp generator. Build a chapter block that passes YouTube\'s rules (starts at 0:00, 3+ chapters, 10s apart) with live validation. Copy and paste, no signup.',
   },
   '/youtube-stats': {
