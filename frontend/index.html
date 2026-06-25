@@ -5,6 +5,19 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Ezoic JavaScript (Standalone) integration. Must sit as high as
+         possible in <head>, must NOT be deferred, lazy-loaded, or
+         conditionally injected, or the "Check Connection" step fails. The
+         header script alone shows no ads anywhere: ads only render where an
+         ezoic-pub-ad-placeholder div + showAds() call is added (blog and
+         public pages only, never the logged-in app). -->
+    <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
+    <script>
+      window.ezstandalone = window.ezstandalone || {};
+      ezstandalone.cmd = ezstandalone.cmd || [];
+    </script>
+    <script src="//ezoicanalytics.com/analytics.js"></script>
+
     <!-- ── SEO + AI discoverability ────────────────────────────────── -->
     <title>YTGrowth: VidIQ, TubeBuddy &amp; Viewstats Alternative</title>
     <meta name="description" content="YouTube channel audit, SEO, and competitor analysis. A VidIQ alternative, TubeBuddy alternative, and Viewstats alternative that prescribes what to fix next." />
