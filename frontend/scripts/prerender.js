@@ -116,6 +116,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Shorts Money Calculator 2026: Free Shorts Earnings Estimator',
     description: 'Free YouTube Shorts money calculator. Estimate real Shorts ad earnings from the shared-pool RPM by views and audience country. See why Shorts pay far less than long-form. No signup.',
   },
+  '/tools/youtube-description-generator': {
+    title:       'YouTube Description Generator 2026: Free SEO Description Template',
+    description: 'Free YouTube description generator and template. Build an SEO-friendly description with a keyword hook, timestamps, links, and hashtags in seconds. No signup, runs in your browser.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
@@ -215,6 +219,7 @@ async function buildRoutes() {
     '/tools/youtube-video-ideas-generator',
     '/tools/youtube-title-generator',
     '/tools/youtube-shorts-money-calculator',
+    '/tools/youtube-description-generator',
     '/youtube-stats',
     '/youtube-stats/gaming',
     '/youtube-stats/tech',

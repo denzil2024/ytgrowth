@@ -49,6 +49,7 @@ const RESOURCES_GROUPS = [
     label: 'Brainstorm',
     items: [
       { href: '/tools/youtube-title-generator',        label: 'Title Generator' },
+      { href: '/tools/youtube-description-generator',  label: 'Description Generator' },
       { href: '/tools/youtube-channel-name-generator', label: 'Channel Name Generator' },
       { href: '/tools/youtube-video-ideas-generator',  label: 'Video Ideas Generator' },
     ],
