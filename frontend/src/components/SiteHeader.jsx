@@ -41,6 +41,7 @@ const RESOURCES_GROUPS = [
     label: 'Calculators',
     items: [
       { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
+      { href: '/tools/youtube-shorts-money-calculator',     label: 'Shorts Money Calculator' },
       { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
     ],
   },

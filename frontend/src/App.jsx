@@ -31,6 +31,7 @@ const YoutubeThumbnailResizer          = lazy(() => import('./pages/tools/Youtub
 const YoutubeChannelNameGenerator      = lazy(() => import('./pages/tools/YoutubeChannelNameGenerator'))
 const YoutubeVideoIdeasGenerator       = lazy(() => import('./pages/tools/YoutubeVideoIdeasGenerator'))
 const YoutubeTitleGenerator            = lazy(() => import('./pages/tools/YoutubeTitleGenerator'))
+const YoutubeShortsMoneyCalculator     = lazy(() => import('./pages/tools/YoutubeShortsMoneyCalculator'))
 const YoutubeStats                     = lazy(() => import('./pages/YoutubeStats'))
 const YoutubeStatsCategory             = lazy(() => import('./pages/YoutubeStatsCategory'))
 const YoutubeStatsCountry              = lazy(() => import('./pages/YoutubeStatsCountry'))
@@ -70,6 +71,7 @@ function App() {
           <Route path="/tools/youtube-channel-name-generator"      element={<YoutubeChannelNameGenerator />} />
           <Route path="/tools/youtube-video-ideas-generator"       element={<YoutubeVideoIdeasGenerator />} />
           <Route path="/tools/youtube-title-generator"             element={<YoutubeTitleGenerator />} />
+          <Route path="/tools/youtube-shorts-money-calculator"     element={<YoutubeShortsMoneyCalculator />} />
           <Route path="/youtube-stats"                             element={<YoutubeStats />} />
           <Route path="/youtube-stats/country/:countrySlug/:categorySlug" element={<YoutubeStatsCountryCategory />} />
           <Route path="/youtube-stats/country/:slug"               element={<YoutubeStatsCountry />} />
