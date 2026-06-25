@@ -128,6 +128,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Hashtag Generator 2026: Free Relevant Hashtags by Keyword',
     description: 'Free YouTube hashtag generator. Enter your topic and get relevant hashtags for your title or description. Keep the best 3 to 5, copy and paste. No signup, runs in your browser.',
   },
+  '/tools/youtube-chapter-generator': {
+    title:       'YouTube Chapter Generator 2026: Free Timestamps & Chapter Maker',
+    description: 'Free YouTube chapter and timestamp generator. Build a chapter block that passes YouTube\'s rules (starts at 0:00, 3+ chapters, 10s apart) with live validation. Copy and paste, no signup.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
@@ -230,6 +234,7 @@ async function buildRoutes() {
     '/tools/youtube-description-generator',
     '/tools/youtube-tag-generator',
     '/tools/youtube-hashtag-generator',
+    '/tools/youtube-chapter-generator',
     '/youtube-stats',
     '/youtube-stats/gaming',
     '/youtube-stats/tech',
