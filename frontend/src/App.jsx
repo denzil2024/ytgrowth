@@ -33,6 +33,7 @@ const YoutubeVideoIdeasGenerator       = lazy(() => import('./pages/tools/Youtub
 const YoutubeTitleGenerator            = lazy(() => import('./pages/tools/YoutubeTitleGenerator'))
 const YoutubeShortsMoneyCalculator     = lazy(() => import('./pages/tools/YoutubeShortsMoneyCalculator'))
 const YoutubeDescriptionGenerator      = lazy(() => import('./pages/tools/YoutubeDescriptionGenerator'))
+const YoutubeTagGenerator              = lazy(() => import('./pages/tools/YoutubeTagGenerator'))
 const YoutubeStats                     = lazy(() => import('./pages/YoutubeStats'))
 const YoutubeStatsCategory             = lazy(() => import('./pages/YoutubeStatsCategory'))
 const YoutubeStatsCountry              = lazy(() => import('./pages/YoutubeStatsCountry'))
@@ -74,6 +75,7 @@ function App() {
           <Route path="/tools/youtube-title-generator"             element={<YoutubeTitleGenerator />} />
           <Route path="/tools/youtube-shorts-money-calculator"     element={<YoutubeShortsMoneyCalculator />} />
           <Route path="/tools/youtube-description-generator"        element={<YoutubeDescriptionGenerator />} />
+          <Route path="/tools/youtube-tag-generator"               element={<YoutubeTagGenerator />} />
           <Route path="/youtube-stats"                             element={<YoutubeStats />} />
           <Route path="/youtube-stats/country/:countrySlug/:categorySlug" element={<YoutubeStatsCountryCategory />} />
           <Route path="/youtube-stats/country/:slug"               element={<YoutubeStatsCountry />} />

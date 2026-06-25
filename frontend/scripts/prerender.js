@@ -120,6 +120,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Description Generator 2026: Free SEO Description Template',
     description: 'Free YouTube description generator and template. Build an SEO-friendly description with a keyword hook, timestamps, links, and hashtags in seconds. No signup, runs in your browser.',
   },
+  '/tools/youtube-tag-generator': {
+    title:       'YouTube Tag Generator 2026: Free Video Tags from Any Keyword',
+    description: 'Free YouTube tag generator. Enter your topic and get a clean set of relevant tags and variations, trimmed to fit YouTube\'s 500-character limit. Copy and paste, no signup.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
@@ -220,6 +224,7 @@ async function buildRoutes() {
     '/tools/youtube-title-generator',
     '/tools/youtube-shorts-money-calculator',
     '/tools/youtube-description-generator',
+    '/tools/youtube-tag-generator',
     '/youtube-stats',
     '/youtube-stats/gaming',
     '/youtube-stats/tech',

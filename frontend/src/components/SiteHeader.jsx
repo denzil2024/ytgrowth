@@ -50,6 +50,7 @@ const RESOURCES_GROUPS = [
     items: [
       { href: '/tools/youtube-title-generator',        label: 'Title Generator' },
       { href: '/tools/youtube-description-generator',  label: 'Description Generator' },
+      { href: '/tools/youtube-tag-generator',          label: 'Tag Generator' },
       { href: '/tools/youtube-channel-name-generator', label: 'Channel Name Generator' },
       { href: '/tools/youtube-video-ideas-generator',  label: 'Video Ideas Generator' },
     ],
