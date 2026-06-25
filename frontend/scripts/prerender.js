@@ -108,6 +108,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Video Ideas Generator 2026: Free Topic & Content Idea Tool',
     description: 'Free YouTube video ideas generator and topic generator. 90+ proven content idea formats across 9 categories. No signup, no AI hallucinations, instant results.',
   },
+  '/tools/youtube-title-generator': {
+    title:       'YouTube Title Generator 2026: Free Title Ideas + CTR Analyzer',
+    description: 'Free YouTube title generator and analyzer. Get a dozen click-worthy title ideas from your topic, then score any title on length, numbers, power words, and keyword position. No signup.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
@@ -205,6 +209,7 @@ async function buildRoutes() {
     '/tools/youtube-thumbnail-resizer',
     '/tools/youtube-channel-name-generator',
     '/tools/youtube-video-ideas-generator',
+    '/tools/youtube-title-generator',
     '/youtube-stats',
     '/youtube-stats/gaming',
     '/youtube-stats/tech',
