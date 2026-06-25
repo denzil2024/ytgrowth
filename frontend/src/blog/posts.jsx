@@ -2575,7 +2575,7 @@ export const posts = [
             <tr><td><strong>YouTube Studio</strong></td><td>Full own-channel data</td><td>No competitor data</td></tr>
             <tr><td><strong>Social Blade</strong></td><td>Public channel trends, 90 days</td><td>No video-level data</td></tr>
             <tr><td><strong>vidIQ</strong></td><td>5 keywords per search, 3 competitors</td><td>Limited research depth</td></tr>
-            <tr><td><strong>ytgrowth.io</strong></td><td>3 analyses, core SEO tools, 1 channel</td><td>Limited analysis volume</td></tr>
+            <tr><td><strong>ytgrowth.io</strong></td><td>Free trial, core SEO tools, 1 channel</td><td>Limited trial volume</td></tr>
           </tbody>
         </table>
 

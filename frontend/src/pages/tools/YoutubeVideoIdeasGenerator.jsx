@@ -769,7 +769,7 @@ export default function YoutubeVideoIdeasGenerator() {
           </p>
           <a href="/auth/login" className="vig-btn vig-btn-lg">Get my free audit →</a>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', marginTop: 16 }}>
-            Free forever plan · no card · 3 audits per month
+            Free trial · no card · upgrade anytime
           </p>
         </div>
       </section>

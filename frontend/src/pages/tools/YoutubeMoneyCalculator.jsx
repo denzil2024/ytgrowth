@@ -336,7 +336,7 @@ export default function YoutubeMoneyCalculator() {
                   Get my free audit →
                 </a>
                 <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', textAlign: 'center', marginTop: 10 }}>
-                  Free forever plan · 3 audits/month · no card
+                  Free trial · no card · upgrade anytime
                 </p>
               </div>
             </div>
@@ -475,7 +475,7 @@ export default function YoutubeMoneyCalculator() {
           </p>
           <a href="/auth/login" className="ymc-btn ymc-btn-lg">Get my free audit →</a>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', marginTop: 16 }}>
-            Free forever plan · no card · 3 audits per month
+            Free trial · no card · upgrade anytime
           </p>
         </div>
       </section>

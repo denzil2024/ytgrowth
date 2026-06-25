@@ -315,7 +315,7 @@ const DATA_INPUTS = [
 ]
 
 const PLAN_LIMITS = [
-  { plan: 'Free',    actions: '5',   note: 'Lifetime limit · 3 audits' },
+  { plan: 'Free',    actions: '5',   note: 'Trial · first audit free' },
   { plan: 'Solo',    actions: '8',   note: '20 audits / month · 3 channels' },
   { plan: 'Growth',  actions: '12',  note: '50 audits / month · 5 channels' },
   { plan: 'Agency',  actions: '15',  note: '150 audits / month · 10 pooled channels' },
@@ -340,7 +340,7 @@ const FAQS = [
   },
   {
     q: 'How often should I re-audit?',
-    a: <>After you’ve changed something. Re-auditing without shipping new videos or updates won’t move the score because the underlying data hasn’t changed. The most useful pattern is: audit → work through priority actions → publish 2–3 new videos that apply the fixes → re-audit and watch the score delta. Most users see meaningful score movement after 4–6 weeks of consistent application. Free tier gets 3 lifetime audits, Solo gets 20/month, Growth gets 50/month, Agency gets 150/month.</>,
+    a: <>After you’ve changed something. Re-auditing without shipping new videos or updates won’t move the score because the underlying data hasn’t changed. The most useful pattern is: audit → work through priority actions → publish 2–3 new videos that apply the fixes → re-audit and watch the score delta. Most users see meaningful score movement after 4–6 weeks of consistent application. The free trial includes your first audit free, Solo gets 20/month, Growth gets 50/month, Agency gets 150/month.</>,
   },
   {
     q: 'Can I see what changed between audits?',
@@ -391,7 +391,7 @@ export default function ChannelAudit() {
             <a href="#how" className="ca-btn-ghost" style={{ padding: '15px 26px', fontSize: 15 }}>See how it works</a>
           </div>
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginTop: 22 }}>
-            Free tier · 3 audits on the house · no credit card · ~60 seconds per run
+            Free trial · first audit free · no credit card · ~60 seconds per run
           </p>
         </div>
       </section>
@@ -705,7 +705,7 @@ export default function ChannelAudit() {
             See which lever your channel is missing
           </h2>
           <p style={{ fontSize: isMobile ? 15 : 17, color: 'var(--ytg-text-2)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
-            ~60 seconds end-to-end. Free tier gives you 3 lifetime audits. No credit card. Most users find their #1 fix in the first 5 minutes of reading the result.
+            ~60 seconds end-to-end. Your first audit is free. No credit card. Most users find their #1 fix in the first 5 minutes of reading the result.
           </p>
           <a href="/auth/login" className="ca-btn ca-btn-lg">Audit my channel free →</a>
         </div>

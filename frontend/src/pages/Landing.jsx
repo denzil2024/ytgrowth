@@ -1762,7 +1762,7 @@ export default function Landing() {
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>5 free analyses</p>
                 <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Full access to our best features, then upgrade</p>
-                {['Full channel audit (free, refresh weekly)', '5 analyses to spend on the tools below', 'Outliers, find proven winning videos', 'Competitor Analysis (1 rival)', 'SEO Studio (full)'].map((f, i) => (
+                {['Full channel audit (first one free)', '5 analyses to spend on the tools below', 'Outliers, find proven winning videos', 'Competitor Analysis (1 rival)', 'SEO Studio (full)'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
                 <div style={{ borderTop: '1px solid rgba(10,10,15,0.07)', marginTop: 6, paddingTop: 12 }}>

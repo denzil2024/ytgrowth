@@ -82,7 +82,7 @@ interpretation step that most creators outsource.
 ## Pricing
 
 Free tier:
-- 1 channel · 3 lifetime AI analyses · limited Thumbnail IQ ·
+- 1 channel · free trial, first audit free · limited Thumbnail IQ ·
   view-only Keyword Explorer · no Competitor Analysis.
 
 Solo, $19/month or $190/year (~$15.83/month equivalent):
