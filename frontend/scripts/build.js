@@ -34,6 +34,11 @@ console.log('[build] vite build')
 execSync('vite build', { stdio: 'inherit' })
 console.log('[build] prerender')
 execSync('node scripts/prerender.js', { stdio: 'inherit' })
+console.log('[build] inject-ezoic')
+// Adds the Ezoic header script to the built pages AFTER prerender, so
+// sa.min.js never executes during the Puppeteer snapshot (which would freeze
+// its localhost-scoped runtime into every static page). See inject-ezoic.js.
+execSync('node scripts/inject-ezoic.js', { stdio: 'inherit' })
 console.log('[build] verify')
 // Hard-fails the build if any expected route is missing from dist/. Without
 // this guard, a developer who accidentally runs `vite build` (which cleans
