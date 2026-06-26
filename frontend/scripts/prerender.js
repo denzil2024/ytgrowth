@@ -132,6 +132,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Chapter Generator 2026: Free Timestamp Maker',
     description: 'Free YouTube chapter and timestamp generator. Build a chapter block that passes YouTube\'s rules (starts at 0:00, 3+ chapters, 10s apart) with live validation. Copy and paste, no signup.',
   },
+  '/tools/youtube-thumbnail-tester': {
+    title:       'YouTube Thumbnail Tester 2026: Free A/B Compare Tool',
+    description: 'Free YouTube thumbnail tester. Compare two thumbnails side by side at the real size viewers see in the feed, mobile, and suggested. Pick the winner before you post. Images stay in your browser.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
@@ -235,6 +239,7 @@ async function buildRoutes() {
     '/tools/youtube-tag-generator',
     '/tools/youtube-hashtag-generator',
     '/tools/youtube-chapter-generator',
+    '/tools/youtube-thumbnail-tester',
     '/youtube-stats',
     '/youtube-stats/gaming',
     '/youtube-stats/tech',

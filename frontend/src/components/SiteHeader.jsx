@@ -60,6 +60,7 @@ const RESOURCES_GROUPS = [
   {
     label: 'Thumbnails',
     items: [
+      { href: '/tools/youtube-thumbnail-tester',     label: 'Thumbnail Tester (A/B)' },
       { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
       { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
     ],
