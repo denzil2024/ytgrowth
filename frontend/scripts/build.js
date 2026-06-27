@@ -39,6 +39,12 @@ console.log('[build] inject-ezoic')
 // sa.min.js never executes during the Puppeteer snapshot (which would freeze
 // its localhost-scoped runtime into every static page). See inject-ezoic.js.
 execSync('node scripts/inject-ezoic.js', { stdio: 'inherit' })
+console.log('[build] defer-fonts')
+// Converts the baked render-blocking Google Fonts links into the non-blocking
+// media-swap pattern. Runs after prerender so the swap survives the snapshot
+// (see defer-fonts.js). Cuts ~1.4s of render-blocking + LCP delay flagged by
+// PageSpeed.
+execSync('node scripts/defer-fonts.js', { stdio: 'inherit' })
 console.log('[build] verify')
 // Hard-fails the build if any expected route is missing from dist/. Without
 // this guard, a developer who accidentally runs `vite build` (which cleans
