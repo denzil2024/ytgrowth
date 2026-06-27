@@ -101,15 +101,30 @@ const FEATURES = [
 ]
 
 const RESOURCES = [
-  { label: 'Top YouTube Channels',                href: '/youtube-stats' },
-  { label: 'Blog',                                href: '/blog' },
-  { label: 'YouTube Money Calculator',            href: '/tools/youtube-money-calculator' },
-  { label: 'YouTube Subscriber Money Calculator', href: '/tools/youtube-subscriber-money-calculator' },
-  { label: 'YouTube Channel Name Generator',      href: '/tools/youtube-channel-name-generator' },
-  { label: 'YouTube Video Ideas Generator',       href: '/tools/youtube-video-ideas-generator' },
-  { label: 'YouTube Thumbnail Resizer',           href: '/tools/youtube-thumbnail-resizer' },
-  { label: 'YouTube Thumbnail Downloader',        href: '/tools/youtube-thumbnail-downloader' },
-  { label: 'YouTube Channel Stats Checker',       href: '/tools/youtube-channel-stats-checker' },
+  { label: 'Top YouTube Channels', href: '/youtube-stats' },
+  { label: 'Blog',                 href: '/blog' },
+]
+
+/* Every free tool gets a static, crawlable link here. The header mega menu
+   only renders its tool links on hover (conditional), so the footer is the
+   one place crawlers reliably see them, prevents Ahrefs "orphan page" flags.
+   Keep this list in sync with the tool routes in App.jsx. Labels drop the
+   "YouTube" prefix since the column heading already supplies the context. */
+const TOOLS = [
+  { label: 'Money Calculator',            href: '/tools/youtube-money-calculator' },
+  { label: 'Subscriber Money Calculator', href: '/tools/youtube-subscriber-money-calculator' },
+  { label: 'Shorts Money Calculator',     href: '/tools/youtube-shorts-money-calculator' },
+  { label: 'Title Generator',             href: '/tools/youtube-title-generator' },
+  { label: 'Description Generator',        href: '/tools/youtube-description-generator' },
+  { label: 'Tag Generator',               href: '/tools/youtube-tag-generator' },
+  { label: 'Hashtag Generator',           href: '/tools/youtube-hashtag-generator' },
+  { label: 'Chapter Generator',           href: '/tools/youtube-chapter-generator' },
+  { label: 'Channel Name Generator',      href: '/tools/youtube-channel-name-generator' },
+  { label: 'Video Ideas Generator',       href: '/tools/youtube-video-ideas-generator' },
+  { label: 'Thumbnail Tester',            href: '/tools/youtube-thumbnail-tester' },
+  { label: 'Thumbnail Resizer',           href: '/tools/youtube-thumbnail-resizer' },
+  { label: 'Thumbnail Downloader',        href: '/tools/youtube-thumbnail-downloader' },
+  { label: 'Channel Stats Checker',       href: '/tools/youtube-channel-stats-checker' },
 ]
 
 const COMPANY = [
@@ -177,6 +192,15 @@ export default function LandingFooter() {
             ))}
           </div>
 
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Free tools</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28, alignItems: 'center' }}>
+            {TOOLS.map((l, i) => (
+              <a key={i} href={l.href} style={{ color: 'rgba(255,255,255,0.72)', textDecoration: 'none', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500, fontSize: 15, letterSpacing: '-0.1px' }}>
+                {l.label}
+              </a>
+            ))}
+          </div>
+
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Resources</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28, alignItems: 'center' }}>
             {RESOURCES.map((l, i) => (
@@ -206,7 +230,7 @@ export default function LandingFooter() {
   return (
     <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '56px 64px 36px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr 1fr', gap: 36, marginBottom: 44 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr 1fr 1fr', gap: 36, marginBottom: 44 }}>
           {/* Brand block */}
           <div>
             <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginBottom: 14 }}>
@@ -217,10 +241,11 @@ export default function LandingFooter() {
             </p>
           </div>
 
-          <Col heading="Features"  links={FEATURES} />
-          <Col heading="Resources" links={RESOURCES} />
-          <Col heading="Company"   links={COMPANY} />
-          <Col heading="Legal"     links={LEGAL} />
+          <Col heading="Features"   links={FEATURES} />
+          <Col heading="Free tools" links={TOOLS} />
+          <Col heading="Resources"  links={RESOURCES} />
+          <Col heading="Company"    links={COMPANY} />
+          <Col heading="Legal"      links={LEGAL} />
         </div>
 
         {/* Bottom strip */}
