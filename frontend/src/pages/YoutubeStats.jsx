@@ -422,7 +422,7 @@ export default function YoutubeStats() {
                     <a key={c.channel_id || rank} href={href} target="_blank" rel="noopener noreferrer" className="yts-row">
                       <span className={`yts-row-rank${rank <= 3 ? ' top3' : ''}`}>#{rank}</span>
                       {c.thumbnail
-                        ? <img src={c.thumbnail} alt="" className="yts-row-thumb" loading="lazy" />
+                        ? <img src={c.thumbnail} alt={c.title || "YouTube channel avatar"} className="yts-row-thumb" loading="lazy" />
                         : <div className="yts-row-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 700, color: 'var(--ytg-text-2)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
                       }
                       <div style={{ minWidth: 0 }}>

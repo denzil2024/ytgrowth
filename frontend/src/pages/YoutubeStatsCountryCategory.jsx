@@ -228,7 +228,7 @@ export default function YoutubeStatsCountryCategory() {
 
           <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 30 : 50, lineHeight: isMobile ? 1.1 : 1.05, letterSpacing: isMobile ? '-0.6px' : '-1.8px', color: 'var(--ytg-text)', marginBottom: 20, textWrap: 'balance', display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 18, flexWrap: 'wrap' }}>
             <img
-              src={country.flagSrc} alt=""
+              src={country.flagSrc} alt={`${country.label} flag`}
               width={isMobile ? 36 : 50} height={isMobile ? 27 : 38}
               style={{ borderRadius: 4, boxShadow: '0 1px 3px rgba(10,10,15,0.18)', display: 'block', flexShrink: 0 }}
             />
@@ -289,7 +289,7 @@ export default function YoutubeStatsCountryCategory() {
                   <a key={c.channel_id || rank} href={href} target="_blank" rel="noopener noreferrer" className="yts-row">
                     <span className={`yts-row-rank${rank <= 3 ? ' top3' : ''}`}>#{rank}</span>
                     {c.thumbnail
-                      ? <img src={c.thumbnail} alt="" className="yts-row-thumb" loading="lazy" />
+                      ? <img src={c.thumbnail} alt={c.title || "YouTube channel avatar"} className="yts-row-thumb" loading="lazy" />
                       : <div className="yts-row-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 700, color: 'var(--ytg-text-2)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
                     }
                     <div style={{ minWidth: 0 }}>
@@ -413,7 +413,7 @@ export default function YoutubeStatsCountryCategory() {
               {otherCountries.map(c => (
                 <a key={c.id} href={`/youtube-stats/country/${c.id}/${category.id}`} className="yts-related-card">
                   <div className="yts-related-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <img src={c.flagSrc} alt="" width={20} height={15} style={{ borderRadius: 2, boxShadow: '0 1px 2px rgba(10,10,15,0.15)', flexShrink: 0 }} />
+                    <img src={c.flagSrc} alt={`${c.label} flag`} width={20} height={15} style={{ borderRadius: 2, boxShadow: '0 1px 2px rgba(10,10,15,0.15)', flexShrink: 0 }} />
                     <span>{c.label}</span>
                   </div>
                   <div className="yts-related-meta">{category.label} →</div>

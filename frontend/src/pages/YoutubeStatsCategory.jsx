@@ -343,7 +343,7 @@ export default function YoutubeStatsCategory() {
                   <a key={c.channel_id || rank} href={href} target="_blank" rel="noopener noreferrer" className="yts-row">
                     <span className={`yts-row-rank${rank <= 3 ? ' top3' : ''}`}>#{rank}</span>
                     {c.thumbnail
-                      ? <img src={c.thumbnail} alt="" className="yts-row-thumb" loading="lazy" />
+                      ? <img src={c.thumbnail} alt={c.title || "YouTube channel avatar"} className="yts-row-thumb" loading="lazy" />
                       : <div className="yts-row-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 700, color: 'var(--ytg-text-2)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
                     }
                     <div style={{ minWidth: 0 }}>
@@ -488,7 +488,7 @@ export default function YoutubeStatsCategory() {
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.30)' }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}
               >
-                <img src={co.flagSrc} alt="" width={36} height={27} loading="lazy" style={{ borderRadius: 4, boxShadow: '0 1px 3px rgba(10,10,15,0.15)', display: 'block' }} />
+                <img src={co.flagSrc} alt={`${co.label} flag`} width={36} height={27} loading="lazy" style={{ borderRadius: 4, boxShadow: '0 1px 3px rgba(10,10,15,0.15)', display: 'block' }} />
                 <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 13.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', textAlign: 'center' }}>
                   {co.label}
                 </span>
