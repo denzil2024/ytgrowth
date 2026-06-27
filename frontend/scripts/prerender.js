@@ -90,7 +90,7 @@ const META_BY_ROUTE = {
   },
   '/tools/youtube-channel-stats-checker': {
     title:       'YouTube Channel Stats Checker 2026: Free Live Statistics & Analytics',
-    description: 'Free YouTube channel stats and statistics checker. Live subscriber count, total views, monthly uploads, and engagement for any public YouTube channel. No login.',
+    description: 'Free YouTube channel stats checker. Live subscriber count, total views, monthly uploads, and engagement for any public channel. No login.',
   },
   '/tools/youtube-thumbnail-downloader': {
     title:       'YouTube Thumbnail Downloader 2026: Free HD Image Grabber & Saver',
@@ -98,47 +98,47 @@ const META_BY_ROUTE = {
   },
   '/tools/youtube-thumbnail-resizer': {
     title:       'YouTube Thumbnail Resizer 2026: Free Image & Size Converter',
-    description: 'Free YouTube thumbnail resizer and size converter. Resize any image or photo to HD (1280x720), Full HD, or 4K. Auto-fits under YouTube\'s 2MB cap, runs in your browser.',
+    description: 'Free YouTube thumbnail resizer. Resize any image to HD (1280x720), Full HD, or 4K. Auto-fits under YouTube\'s 2MB cap, runs in your browser.',
   },
   '/tools/youtube-channel-name-generator': {
     title:       'YouTube Name Generator 2026: Free Channel Name Ideas for YouTubers',
-    description: 'Free YouTube channel name generator and name ideas tool. 60+ creative name suggestions for YouTubers, vloggers, and gaming channels. No signup, no AI hallucinations.',
+    description: 'Free YouTube channel name generator. 60+ creative name ideas for YouTubers, vloggers, and gaming channels. No signup, no AI hallucinations.',
   },
   '/tools/youtube-video-ideas-generator': {
     title:       'YouTube Video Ideas Generator 2026: Free Topic & Content Idea Tool',
-    description: 'Free YouTube video ideas generator and topic generator. 90+ proven content idea formats across 9 categories. No signup, no AI hallucinations, instant results.',
+    description: 'Free YouTube video ideas generator. 90+ proven content idea formats across 9 categories. No signup, no AI hallucinations, instant results.',
   },
   '/tools/youtube-title-generator': {
     title:       'YouTube Title Generator 2026: Free Title Ideas + CTR Analyzer',
-    description: 'Free YouTube title generator and analyzer. Get a dozen click-worthy title ideas from your topic, then score any title on length, numbers, power words, and keyword position. No signup.',
+    description: 'Free YouTube title generator and analyzer. Get a dozen click-worthy title ideas, then score any title on length, numbers, power words, and keyword fit.',
   },
   '/tools/youtube-shorts-money-calculator': {
     title:       'YouTube Shorts Money Calculator 2026: Free Earnings Tool',
-    description: 'Free YouTube Shorts money calculator. Estimate real Shorts ad earnings from the shared-pool RPM by views and audience country. See why Shorts pay far less than long-form. No signup.',
+    description: 'Free YouTube Shorts money calculator. Estimate Shorts ad earnings from the shared-pool RPM by views and country, and see why they pay less than long-form.',
   },
   '/tools/youtube-description-generator': {
     title:       'YouTube Description Generator 2026: Free SEO Template',
-    description: 'Free YouTube description generator and template. Build an SEO-friendly description with a keyword hook, timestamps, links, and hashtags in seconds. No signup, runs in your browser.',
+    description: 'Free YouTube description generator and template. Build an SEO-friendly description with a keyword hook, timestamps, links, and hashtags in seconds.',
   },
   '/tools/youtube-tag-generator': {
     title:       'YouTube Tag Generator 2026: Free Video Tags from Any Keyword',
-    description: 'Free YouTube tag generator. Enter your topic and get a clean set of relevant tags and variations, trimmed to fit YouTube\'s 500-character limit. Copy and paste, no signup.',
+    description: 'Free YouTube tag generator. Enter your topic and get relevant tags and variations, trimmed to fit YouTube\'s 500-character limit.',
   },
   '/tools/youtube-hashtag-generator': {
     title:       'YouTube Hashtag Generator 2026: Free Hashtags by Keyword',
-    description: 'Free YouTube hashtag generator. Enter your topic and get relevant hashtags for your title or description. Keep the best 3 to 5, copy and paste. No signup, runs in your browser.',
+    description: 'Free YouTube hashtag generator. Enter your topic and get relevant hashtags for your title or description. Keep the best 3 to 5 and paste them in.',
   },
   '/tools/youtube-chapter-generator': {
     title:       'YouTube Chapter Generator 2026: Free Timestamp Maker',
-    description: 'Free YouTube chapter and timestamp generator. Build a chapter block that passes YouTube\'s rules (starts at 0:00, 3+ chapters, 10s apart) with live validation. Copy and paste, no signup.',
+    description: 'Free YouTube chapter generator. Build a chapter block that passes YouTube\'s rules (starts at 0:00, 3+ chapters, 10s apart) with live validation.',
   },
   '/tools/youtube-thumbnail-tester': {
     title:       'YouTube Thumbnail Tester 2026: Free A/B Compare Tool',
-    description: 'Free YouTube thumbnail tester. Compare two thumbnails side by side at the real size viewers see in the feed, mobile, and suggested. Pick the winner before you post. Images stay in your browser.',
+    description: 'Free YouTube thumbnail tester. Compare two thumbnails side by side at the real feed size, on mobile and suggested. Pick the winner before you post.',
   },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
-    description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
+    description: 'Top YouTube channels and creators ranked by live subscriber count across 14 niches. Free statistics, updated daily, no signup.',
   },
 }
 
@@ -168,7 +168,7 @@ for (const country of COUNTRY_META) {
   for (const cat of CATEGORY_META) {
     META_BY_ROUTE[`/youtube-stats/country/${country.id}/${cat.id}`] = {
       title:       `Top 50 ${cat.label} YouTube Channels in ${country.label} 2026 | YTGrowth`,
-      description: `The top 50 ${cat.label.toLowerCase()} YouTube channels in ${country.label} right now, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.`,
+      description: `The top 50 ${cat.label.toLowerCase()} YouTube channels in ${country.label}, ranked by live subscriber count from YouTube's API. Updated daily, free.`,
     }
   }
 }

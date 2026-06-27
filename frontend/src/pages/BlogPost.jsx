@@ -3,6 +3,7 @@ import { Link, useParams, Navigate } from 'react-router-dom'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 import { getPostBySlug, getRelatedPosts, formatPostDate } from '../blog/posts.jsx'
+import { BLOG_SEO } from '../blog/seoMeta'
 
 /* Single blog post. Same visual DNA as feature pages: white hero,
  * stepped backgrounds, eyebrow pill, DM Sans h1, card-styled CTA.
@@ -812,11 +813,15 @@ export default function BlogPost() {
 
   useEffect(() => {
     if (!post) return
-    document.title = `${post.title} | YTGrowth Blog`
+    // SEO title + description come from the per-slug override map (kept <=60 /
+    // <=155 for clean SERP display); fall back to the on-page title/excerpt for
+    // any post without an explicit override.
+    const seo = BLOG_SEO[post.slug] || {}
+    document.title = seo.title || `${post.title} | YTGrowth Blog`
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = post.excerpt
+    meta.content = seo.description || post.excerpt
 
     // BlogPosting + BreadcrumbList JSON-LD, packed into one @graph so a
     // single <script> tag carries both. Baked into the prerendered HTML at

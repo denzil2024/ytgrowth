@@ -11,7 +11,7 @@ export const CATEGORY_META = [
     label: 'Gaming',
     blurb: 'The biggest gaming channels on YouTube. Esports, Let’s Plays, walkthroughs, and reaction streams.',
     seoTitle:       'Top 50 Gaming YouTube Channels 2026: Live Subscriber Rankings',
-    seoDescription: "The top 50 gaming YouTube channels right now, ranked by live subscriber count from YouTube's official API. Esports, Let's Plays, speedruns, reaction streams. Updated daily.",
+    seoDescription: "The top 50 gaming YouTube channels, ranked by live subscriber count from YouTube's API. Esports, Let's Plays, speedruns, reaction streams.",
     intro: [
       "Gaming is YouTube's largest single category by hours watched. The biggest gaming channels routinely cross 50 million subscribers and post billions of lifetime views, fuelled by an audience that watches streams, Let's Plays, walkthroughs, esports highlights, and reaction content for hours at a time.",
       "What separates the top channels is volume and consistency. The leaders ship multiple videos per week, lean into long-form (often 20+ minutes), and build their identity around a specific game franchise or play-style before branching out. Mid-rolls on long videos make gaming one of the better RPM categories despite the per-view CPMs being lower than tier-1 niches like finance.",
@@ -40,7 +40,7 @@ export const CATEGORY_META = [
     label: 'Tech & Reviews',
     blurb: 'Reviewers, tear-downs, and software/hardware explainers. The channels brand sponsorships fight over.',
     seoTitle:       'Top 50 Tech YouTube Channels 2026: Reviewers, Explainers, Tear-Downs',
-    seoDescription: "The top 50 tech YouTube channels right now, ranked by live subscriber count from YouTube's official API. Hardware reviews, software explainers, tear-downs. Updated daily.",
+    seoDescription: "The top 50 tech YouTube channels, ranked by live subscriber count from YouTube's API. Hardware reviews, software explainers, tear-downs.",
     intro: [
       "Tech is one of YouTube's most lucrative niches. Top tech reviewers routinely command $30+ RPMs because the audience skews towards high-income tier-1 markets and the topics overlap with high-CPM ad categories: software, gadgets, financial tools, learning platforms.",
       "The category divides into three lanes: consumer reviews (phones, laptops, headphones), enthusiast deep-dives (custom PCs, dev tools, server setups), and explainer journalism (how does this work, why this happened). The biggest channels operate at production-studio scale, but solo creators with a sharp angle still break through every year.",
@@ -69,7 +69,7 @@ export const CATEGORY_META = [
     label: 'Beauty & Makeup',
     blurb: 'Tutorials, reviews, GRWMs, and brand collabs. Some of YouTube\'s longest-running creator empires.',
     seoTitle:       'Top 50 Beauty YouTube Channels 2026: Makeup, Skincare, GRWM Rankings',
-    seoDescription: "The top 50 beauty and makeup YouTube channels, ranked by live subscriber count from YouTube's official API. Tutorials, reviews, GRWMs, get-ready-with-me. Updated daily.",
+    seoDescription: "The top 50 beauty and makeup YouTube channels, ranked by live subscriber count from YouTube's API. Tutorials, reviews, GRWMs.",
     intro: [
       "Beauty is one of YouTube's foundational creator categories. The biggest channels were built over a decade and have evolved from tutorials into multi-platform brand empires, often launching successful makeup or skincare lines that dwarf their YouTube ad revenue.",
       "What still works in 2026: tutorials with actual technique (not just product showcases), brutally honest reviews, get-ready-with-me long-form, and luxury-brand deep-dives that double as aspirational content. The category has shifted from 'how to apply' towards 'what's actually worth your money', which has favoured reviewers with clear taste and spending power over pure demo channels.",
@@ -98,7 +98,7 @@ export const CATEGORY_META = [
     label: 'Finance & Investing',
     blurb: 'Personal finance, markets, real estate, and side-hustle channels. The highest-RPM corner of YouTube.',
     seoTitle:       'Top 50 Finance YouTube Channels 2026: Investing, Markets, Money',
-    seoDescription: "The top 50 personal finance and investing YouTube channels, ranked by live subscriber count from YouTube's official API. Markets, real estate, side hustles. Updated daily.",
+    seoDescription: "The top 50 personal finance and investing YouTube channels, ranked by live subscriber count from YouTube's API. Markets, real estate, side hustles.",
     intro: [
       "Finance has the highest RPM of any major YouTube category. Brokerages, neobanks, credit cards, tax software, and online business platforms all bid heavily for finance audiences, which pushes effective RPMs into the $20–$50 range against a YouTube average of $3–$8.",
       "The audience splits into personal finance (budgeting, debt, retirement), active investing (markets, options, crypto), real estate, entrepreneurship and side hustles. The top channels in each lane have been at it for 5–10 years and have built credibility through consistency and through being correct (or at least useful) when many of their peers were not.",
@@ -127,7 +127,7 @@ export const CATEGORY_META = [
     label: 'Cooking & Food',
     blurb: 'Recipes, restaurant reviews, food science, and pro-chef teaching channels.',
     seoTitle:       'Top 50 Cooking YouTube Channels 2026: Recipes, Chefs, Food Science',
-    seoDescription: "The top 50 cooking and food YouTube channels, ranked by live subscriber count from YouTube's official API. Recipes, restaurant reviews, pro chefs, food science. Updated daily.",
+    seoDescription: "The top 50 cooking and food YouTube channels, ranked by live subscriber count from YouTube's API. Recipes, restaurant reviews, pro chefs.",
     intro: [
       "Cooking is one of the most evergreen categories on YouTube. People search for specific recipes year after year, and a single high-quality recipe video can bring in views for a decade. The biggest cooking channels combine that long-tail SEO benefit with personality-driven content: trips to markets, technique deep-dives, restaurant reviews, and chef-vs-chef showdowns.",
       "The most successful new cooking creators of the last few years have leaned into specificity (regional cuisines, single ingredients, single techniques) rather than trying to be a general recipe channel. The general lane is occupied by 5–10 entrenched giants. The niches around them are still wide open.",
@@ -156,7 +156,7 @@ export const CATEGORY_META = [
     label: 'Fitness & Health',
     blurb: 'Workouts, nutrition, mobility, and physique transformations across every training style.',
     seoTitle:       'Top 50 Fitness YouTube Channels 2026: Workouts, Nutrition, Training',
-    seoDescription: "The top 50 fitness and health YouTube channels, ranked by live subscriber count from YouTube's official API. Workouts, nutrition, mobility, training plans. Updated daily.",
+    seoDescription: "The top 50 fitness and health YouTube channels, ranked by live subscriber count from YouTube's API. Workouts, nutrition, training plans.",
     intro: [
       "Fitness on YouTube has split into two camps. One camp is workout-along videos: bodyweight, yoga, HIIT, low-impact, anything a viewer can press play and follow in their living room. The other is education and entertainment: technique, programming, nutrition science, and athlete-following content that viewers consume but do not necessarily train along to.",
       "The workout-along camp is dominated by a handful of long-running channels with massive subscriber bases. The education camp has had more turnover and is where most new full-time creators have broken through in the past 5 years, often by combining specific expertise (a sport, a body part, a population) with evidence-based commentary.",
@@ -185,7 +185,7 @@ export const CATEGORY_META = [
     label: 'Music',
     blurb: 'Artists, labels, music video channels, and instrument-teaching channels with the biggest reach.',
     seoTitle:       'Top 50 Music YouTube Channels 2026: Artists, Videos, Lessons',
-    seoDescription: "The top 50 music YouTube channels, ranked by live subscriber count from YouTube's official API. Artists, music videos, instrument lessons, music education. Updated daily.",
+    seoDescription: "The top 50 music YouTube channels, ranked by live subscriber count from YouTube's API. Artists, music videos, instrument lessons.",
     intro: [
       "Music dominates YouTube subscriber rankings. Major label channels (T-Series, Vevo-distributed artist channels, label-owned imprints) routinely sit in the platform's top 20, fuelled by music video premieres that pull billions of views.",
       "Beyond the labels, music YouTube includes instrument tutorial channels, music theory and production education, reaction channels, and independent artists building direct-to-fan careers. The economics are very different from other niches: per-view RPMs are low, but the content has long tails (a music video earns for years) and music feeds into Spotify streams, merch, ticket sales, and royalties.",
@@ -214,7 +214,7 @@ export const CATEGORY_META = [
     label: 'Education & Science',
     blurb: 'Explainers, lectures, and visualised science. The format that makes "edutainment" a real category.',
     seoTitle:       'Top 50 Education YouTube Channels 2026: Science, Explainers, Lectures',
-    seoDescription: "The top 50 education and science YouTube channels, ranked by live subscriber count from YouTube's official API. Explainers, science visualisations, lectures, edutainment. Updated daily.",
+    seoDescription: "The top 50 education and science YouTube channels, ranked by live subscriber count from YouTube's API. Explainers, lectures, edutainment.",
     intro: [
       "Education on YouTube has matured from textbook lectures into genuinely cinematic explainer content. The biggest channels in the category use 3D animation, original photography, and tightly-scripted narration to make subjects (physics, biology, history, mathematics) feel like documentaries.",
       "What separates the top channels from the long tail is production discipline: they ship less frequently (often once a month for the highest-end channels) but each upload is a multi-week project with research, scripting, and animation work that compounds across the channel's identity. RPMs in education skew above the YouTube average because the audience is older and more affluent than the platform mean.",
@@ -243,7 +243,7 @@ export const CATEGORY_META = [
     label: 'Vlogs',
     blurb: 'Daily vlogs, family channels, and lifestyle creators with audiences that show up for every upload.',
     seoTitle:       'Top 50 Vlog YouTube Channels 2026: Daily Vlogs, Family, Lifestyle',
-    seoDescription: "The top 50 vlog YouTube channels, ranked by live subscriber count from YouTube's official API. Daily vlogs, family channels, lifestyle creators. Updated daily.",
+    seoDescription: "The top 50 vlog YouTube channels, ranked by live subscriber count from YouTube's API. Daily vlogs, family channels, lifestyle creators.",
     intro: [
       "Vlogs are the original YouTube format. The category includes daily vlogs (life as it happens), family channels (multi-person, often multi-generational), and lifestyle creators who build narrative around a specific lifestyle aesthetic.",
       "What sustains a top vlog channel is parasocial connection: viewers follow the creators across years and genuinely care about the people on screen. The format is high-volume (the best channels ship 3–7 videos per week) and high-burn, many top vloggers have stepped back from daily uploads after multi-year runs because the cadence is unsustainable. The ones still at it run small production teams that handle editing and post-production.",
@@ -272,7 +272,7 @@ export const CATEGORY_META = [
     label: 'Travel',
     blurb: 'Trip vlogs, destination guides, gear reviews, and budget-travel channels for every type of traveller.',
     seoTitle:       'Top 50 Travel YouTube Channels 2026: Destinations, Vlogs, Guides',
-    seoDescription: "The top 50 travel YouTube channels, ranked by live subscriber count from YouTube's official API. Destination guides, trip vlogs, budget travel, gear reviews. Updated daily.",
+    seoDescription: "The top 50 travel YouTube channels, ranked by live subscriber count from YouTube's API. Destination guides, trip vlogs, budget travel.",
     intro: [
       "Travel on YouTube splits into two formats. Destination videos (city guides, country overviews, hotel reviews) earn through search: viewers planning a trip find the video and watch through. Trip vlogs earn through follow: viewers keep up with a creator across countries and cultures.",
       "The destination format has long lifetimes per video (a Tokyo guide from 2019 still earns in 2026), but takes substantial production effort. The vlog format earns faster but burns out the creator. Top travel channels usually run both formats in parallel, plus occasional gear reviews and budget-tip content for SEO.",
@@ -301,7 +301,7 @@ export const CATEGORY_META = [
     label: 'Comedy',
     blurb: 'Sketches, parodies, stand-up, and reaction comedy. High velocity, high subscriber retention.',
     seoTitle:       'Top 50 Comedy YouTube Channels 2026: Sketches, Parodies, Reactions',
-    seoDescription: "The top 50 comedy YouTube channels, ranked by live subscriber count from YouTube's official API. Sketches, parodies, stand-up, reaction comedy. Updated daily.",
+    seoDescription: "The top 50 comedy YouTube channels, ranked by live subscriber count from YouTube's API. Sketches, parodies, stand-up, reaction comedy.",
     intro: [
       "Comedy on YouTube ranges from high-production sketch teams (Smosh, Try Guys, Rhett & Link) to single-creator parody and impressions channels to reaction-and-commentary channels. The category retains audiences extraordinarily well, once viewers find a creator they think is funny, they follow that creator across years and platforms.",
       "What does not work as well in 2026: pure prank content (platform crackdowns and audience fatigue), low-effort meme reactions, and overly long sketch episodes. What does work: tightly-edited sketches under 8 minutes, character-based recurring formats, and original short-form comedy that translates between YouTube proper and Shorts.",
@@ -330,7 +330,7 @@ export const CATEGORY_META = [
     label: 'Sports',
     blurb: 'Highlights, analysis, athlete channels, and league-owned channels that pull seven-figure views per upload.',
     seoTitle:       'Top 50 Sports YouTube Channels 2026: Highlights, Analysis, Athletes',
-    seoDescription: "The top 50 sports YouTube channels, ranked by live subscriber count from YouTube's official API. Highlights, analysis, athlete channels, league channels. Updated daily.",
+    seoDescription: "The top 50 sports YouTube channels, ranked by live subscriber count from YouTube's API. Highlights, analysis, athlete and league channels.",
     intro: [
       "Sports on YouTube is dominated by two types of channels. League-owned and team-owned channels (NBA, NFL clubs, Premier League clubs) post highlights, behind-the-scenes content, and full-game replays. Independent creator channels handle analysis, commentary, history deep-dives, and athlete-following content.",
       "The independent lane has produced some of the fastest-growing channels of the past 5 years, because the audience for sports is gigantic and the official channels are often slow, formulaic, or constrained by league media rules. Channels that move quickly with sharper editorial angles routinely outperform official accounts in engagement per upload.",
@@ -359,7 +359,7 @@ export const CATEGORY_META = [
     label: 'Entertainment',
     blurb: 'Pop culture, TV, film, celebrity, and reaction channels. Where YouTube and traditional media collide.',
     seoTitle:       'Top 50 Entertainment YouTube Channels 2026: Pop Culture, TV, Film',
-    seoDescription: "The top 50 entertainment YouTube channels, ranked by live subscriber count from YouTube's official API. Pop culture, TV, film, celebrity, reactions. Updated daily.",
+    seoDescription: "The top 50 entertainment YouTube channels, ranked by live subscriber count from YouTube's API. Pop culture, TV, film, reactions.",
     intro: [
       "Entertainment is YouTube's broadest and busiest category. It includes TV-show recaps, film analysis, celebrity news, reaction channels, late-night-style commentary, pop-culture deep-dives, and the long tail of clip-aggregation channels that chop and re-edit other media.",
       "The category is highly competitive: established media companies and traditional TV networks all run YouTube channels here, and individual creators have to find specific angles that those institutions can't or don't cover. The independent channels that do well usually combine fast turnaround on news with editorial taste, a perspective viewers can't get from the official sources.",
@@ -388,7 +388,7 @@ export const CATEGORY_META = [
     label: 'News & Politics',
     blurb: 'Daily news, talk shows, and political commentary. Some of the most-watched live streams on the platform.',
     seoTitle:       'Top 50 News YouTube Channels 2026: Politics, Daily News, Commentary',
-    seoDescription: "The top 50 news and politics YouTube channels, ranked by live subscriber count from YouTube's official API. Daily news, political commentary, talk shows, live streams. Updated daily.",
+    seoDescription: "The top 50 news and politics YouTube channels, ranked by live subscriber count from YouTube's API. Daily news, commentary, talk shows.",
     intro: [
       "News and politics on YouTube has become one of the most-watched categories, dominated by traditional news networks (CNN, Fox News, MSNBC, BBC) running parallel YouTube channels alongside their broadcast operations, and by independent commentary channels that have built audiences larger than many cable shows.",
       "The independent commentary lane has been one of YouTube's biggest growth stories of the past 5 years. Channels that combine clear editorial perspective with fast turnaround and live-streaming during major events routinely match or exceed the viewership of established cable news on the same topics.",

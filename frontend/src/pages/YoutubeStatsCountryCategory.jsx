@@ -169,7 +169,7 @@ export default function YoutubeStatsCountryCategory() {
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = `The top 50 ${category.label.toLowerCase()} YouTube channels in ${country.label} right now, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.`
+    meta.content = `The top 50 ${category.label.toLowerCase()} YouTube channels in ${country.label}, ranked by live subscriber count from YouTube's API. Updated daily, free.`
   }, [country, category])
 
   useEffect(() => {

@@ -251,7 +251,7 @@ export default function YoutubeStats() {
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.'
+    meta.content = 'Top YouTube channels and creators ranked by live subscriber count across 14 niches. Free statistics, updated daily, no signup.'
   }, [])
 
   useEffect(() => {

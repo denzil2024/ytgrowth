@@ -531,7 +531,7 @@ export default function Blog() {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
     meta.content = page === 1
-      ? 'YouTube growth tactics, channel deep-dives, and creator playbooks from the YTGrowth team.'
+      ? 'YouTube growth tactics, channel deep-dives, and creator playbooks from the YTGrowth team: SEO, thumbnails, monetization, and the algorithm, explained.'
       : `More posts from the YTGrowth blog, page ${page} of ${totalPages}. YouTube growth tactics, channel deep-dives, and creator playbooks.`
   }, [page, totalPages])
 
