@@ -1735,7 +1735,7 @@ export const posts = [
 
         <p><strong>YouTube RPM stands for Revenue Per Mille</strong>, the amount you earn for every 1,000 views across your entire channel after YouTube takes its cut and every revenue source is counted. Mille is the Latin word for thousand, so RPM is simply your earnings per thousand views.</p>
 
-        <img src="/blog/youtube-rpm-rpm-page.png" alt="YouTube Studio Revenue tab showing RPM, CPM, and monthly revenue breakdown across all monetization sources" />
+        <img src="/blog/youtube-rpm-rpm-page.webp" alt="YouTube Studio Revenue tab showing RPM, CPM, and monthly revenue breakdown across all monetization sources" />
 
         <p>The formula is:</p>
 
@@ -1792,7 +1792,7 @@ export const posts = [
 
         <p>Every monetized creator notices that their dashboard shows two different numbers for CPM and RPM, with <strong>CPM sitting higher than RPM every single time</strong>. That gap is not a discrepancy. It is the system working exactly as designed.</p>
 
-        <img src="/blog/youtube-rpm-cpm-vs-rpm.png" alt="Side-by-side CPM and RPM comparison showing the consistent gap between advertiser cost and creator earnings inside YouTube Studio" />
+        <img src="/blog/youtube-rpm-cpm-vs-rpm.webp" alt="Side-by-side CPM and RPM comparison showing the consistent gap between advertiser cost and creator earnings inside YouTube Studio" />
 
         <p>CPM is what advertisers pay YouTube per 1,000 ad impressions before anything is deducted. RPM is what you receive per 1,000 total views after YouTube takes its 45% revenue share, after views where no ad ran, and after non-monetized playbacks are counted. A channel showing $12 CPM might show $5 RPM. That difference is normal.</p>
 
@@ -1817,7 +1817,7 @@ export const posts = [
 
         <p>Average RPM varies more by content category than most creators expect. <strong>The same 100,000 views can generate $100 on one channel and $2,000 on another.</strong> The difference is entirely down to what those views are worth to advertisers and how many revenue streams the channel has active.</p>
 
-        <img src="/blog/youtube-rpm-rpm-by-niche.png" alt="RPM benchmarks across major YouTube content categories, finance and B2B at the top, vlogging and entertainment at the bottom" />
+        <img src="/blog/youtube-rpm-rpm-by-niche.webp" alt="RPM benchmarks across major YouTube content categories, finance and B2B at the top, vlogging and entertainment at the bottom" />
 
         <p>Here are the verified benchmarks across the main content categories in 2026:</p>
 
@@ -1854,7 +1854,7 @@ export const posts = [
 
         <p>The highest RPM numbers follow a consistent pattern driven by one factor: <strong>how much a single converted viewer is worth to an advertiser</strong>.</p>
 
-        <img src="/blog/youtube-rpm-highest-rpm.png" alt="The five highest-RPM YouTube niches with global and US-audience benchmark ranges side by side" />
+        <img src="/blog/youtube-rpm-highest-rpm.webp" alt="The five highest-RPM YouTube niches with global and US-audience benchmark ranges side by side" />
 
         <p>A credit card company acquiring one customer through a YouTube ad can generate thousands of dollars in lifetime revenue. A gaming peripheral brand acquiring one customer generates a one-time purchase of $80. That economic gap is why the highest RPM benchmarks look the way they do.</p>
 
@@ -1891,7 +1891,7 @@ export const posts = [
 
         <p>Where your viewers are located is the single biggest variable in your RPM outside of niche. <strong>A US viewer generates three to five times more revenue per view than a viewer from a lower-CPM region.</strong> Check your audience geography breakdown in the Revenue tab inside YouTube Studio. If the majority of your views come from outside tier-one markets, your RPM will reflect that regardless of how strong your content is.</p>
 
-        <img src="/blog/youtube-rpm-geography.png" alt="YouTube audience geography breakdown showing the revenue impact of tier-one country viewers versus lower-CPM regions" />
+        <img src="/blog/youtube-rpm-geography.webp" alt="YouTube audience geography breakdown showing the revenue impact of tier-one country viewers versus lower-CPM regions" />
 
         <h3>Video Length and Mid-Roll Ad Placement</h3>
 
@@ -1907,7 +1907,7 @@ export const posts = [
 
         <p>This is the factor that separates RPM from CPM most clearly. A channel with active memberships, Super Thanks enabled, and consistent Super Chat during live streams will show a higher RPM than a channel of identical size and niche relying on ads alone, because <strong>RPM counts every revenue source</strong>. In low-CPM months like January and February, membership revenue stabilises your RPM in a way that ad revenue alone cannot.</p>
 
-        <img src="/blog/youtube-rpm-diversity.png" alt="RPM revenue source breakdown comparing ads-only channels to channels using memberships, Super Thanks, and Premium revenue" />
+        <img src="/blog/youtube-rpm-diversity.webp" alt="RPM revenue source breakdown comparing ads-only channels to channels using memberships, Super Thanks, and Premium revenue" />
 
         <h3>Seasonality</h3>
 
@@ -2036,7 +2036,7 @@ export const posts = [
 
         <p>The <strong>Inspiration tab inside YouTube Studio Analytics</strong> is the most underused YouTube keyword tool available to any creator. It shows you topics your existing audience is actively searching for, content gaps your channel has not covered yet, and rising queries in your niche pulling views on other channels. All of it is free and updated continuously based on your actual audience data.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-youtube-studio.png" alt="YouTube Studio Inspiration tab surfacing audience search demand, content gaps, and rising queries in your niche" />
+        <img src="/blog/youtube-keyword-research-tools-youtube-studio.webp" alt="YouTube Studio Inspiration tab surfacing audience search demand, content gaps, and rising queries in your niche" />
 
         <p>The <strong>search terms report</strong> under the Content tab shows you which exact phrases viewers typed into YouTube before finding your videos. That data tells you which keywords are already sending you traffic and which related terms you have not yet built content around.</p>
 
@@ -2054,7 +2054,7 @@ export const posts = [
 
         <p><a href="/blog/vidiq-review">vidIQ</a> is built specifically for YouTube and is one of the most widely used options for pre-publish keyword decisions. Its keyword score combines estimated search volume and competition into a single number, giving you a quick read on whether a topic is worth targeting before you film.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-vidiq.png" alt="vidIQ keyword research surfacing search volume, competition score, and related keyword clusters for a topic" />
+        <img src="/blog/youtube-keyword-research-tools-vidiq.webp" alt="vidIQ keyword research surfacing search volume, competition score, and related keyword clusters for a topic" />
 
         <p>When you search a term, <strong>vidiq keyword research</strong> surfaces related keywords, tag suggestions, and competitor videos already ranking for that phrase. The browser extension integrates directly with YouTube so the data sits alongside your upload workflow rather than in a separate dashboard. For creators who want to validate a topic idea quickly and see what the competition looks like, it covers the core need well.</p>
 
@@ -2064,7 +2064,7 @@ export const posts = [
 
         <p><a href="/blog/tubebuddy-vs-vidiq">TubeBuddy</a> takes a different approach. Its keyword explorer sits directly inside YouTube Studio via a browser extension and grades every keyword with an SEO score that factors in search volume, competition, and your channel's existing strength in that topic area.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-tubebuddy.png" alt="TubeBuddy keyword explorer grading a keyword with an SEO score that factors in channel strength alongside search volume" />
+        <img src="/blog/youtube-keyword-research-tools-tubebuddy.webp" alt="TubeBuddy keyword explorer grading a keyword with an SEO score that factors in channel strength alongside search volume" />
 
         <p>The <strong>channel strength element</strong> is what makes TubeBuddy's keyword data more contextual than most tools. A keyword that is highly competitive for a 500k subscriber channel may be very winnable for a 5k subscriber channel in the same niche, and TubeBuddy's scoring reflects that difference. It also flags keyword opportunities directly on competitor videos as you browse, which speeds up gap research considerably.</p>
 
@@ -2074,7 +2074,7 @@ export const posts = [
 
         <p><strong>Keyword tool io YouTube</strong> pulls long-tail keyword suggestions directly from YouTube's autocomplete, which means every result reflects something real viewers have typed into the search bar. It supports multiple languages and countries, making it useful for creators targeting non-English audiences or regional search behavior.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-keyword-tool.png" alt="Keyword Tool IO surfacing long-tail YouTube autocomplete suggestions across multiple languages and countries" />
+        <img src="/blog/youtube-keyword-research-tools-keyword-tool.webp" alt="Keyword Tool IO surfacing long-tail YouTube autocomplete suggestions across multiple languages and countries" />
 
         <p>The limitation on the free plan is significant. Search volume, competition data, and trend signals are all locked behind the paid tier. On the free version you get keyword ideas without the data needed to prioritize them, which makes it a starting point for brainstorming rather than a complete research workflow.</p>
 
@@ -2082,7 +2082,7 @@ export const posts = [
 
         <p>The gap that vidIQ, TubeBuddy, and keyword tool io all share is that <strong>their keyword data exists in isolation from your channel</strong>. They tell you what is searchable across YouTube but not what is most relevant to your specific audience or where your channel has the strongest case for ranking.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-ytgrowth.png" alt="YTGrowth Keyword Explorer pairing search volume and competition data with channel audit findings" />
+        <img src="/blog/youtube-keyword-research-tools-ytgrowth.webp" alt="YTGrowth Keyword Explorer pairing search volume and competition data with channel audit findings" />
 
         <p>ytgrowth.io's <a href="/features/keyword-research">Keyword Explorer</a> closes that gap. It surfaces search volume and competition data alongside your <a href="/features/channel-audit">channel audit</a> findings, so keyword decisions are informed by what your audience is already responding to, which topics your competitors are ignoring, and where your channel has existing traction to build from. <strong>A keyword decision made with that context is a fundamentally different decision from one made against a generic search volume score.</strong></p>
 
@@ -2121,7 +2121,7 @@ export const posts = [
 
         <p>What <strong>google keyword planner for YouTube</strong> can tell you is whether a topic has broad search demand across Google. If a keyword pulls strong monthly search volume on Google, there is a reasonable case that related intent exists on YouTube as well. For creators in niches where Google and YouTube searches overlap heavily, such as tutorials, how-to content, and product reviews, it is a useful supplementary signal.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-keyword-planner.png" alt="Google Keyword Planner returning monthly search volume and bid data for a YouTube content topic" />
+        <img src="/blog/youtube-keyword-research-tools-keyword-planner.webp" alt="Google Keyword Planner returning monthly search volume and bid data for a YouTube content topic" />
 
         <p>What it cannot tell you is YouTube-specific search volume, how competitive a keyword is on YouTube, or how that keyword performs against your channel's existing content. Google Keyword Planner measures advertiser demand, not viewer behavior on YouTube. The numbers it returns reflect what businesses are bidding on in Google Ads, which correlates loosely with YouTube search demand but is not the same data set.</p>
 
@@ -2139,7 +2139,7 @@ export const posts = [
 
         <p>Google Trends has a filter that restricts results to YouTube search data specifically, making it a genuinely different data set from its default web search view. You enter a keyword, switch the source to YouTube Search, and see how interest in that topic has moved over time, how it compares to related terms, and which regions are driving the most searches.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-google-trends.png" alt="Google Trends filtered to YouTube Search showing 90-day trend movement and related rising queries for a topic" />
+        <img src="/blog/youtube-keyword-research-tools-google-trends.webp" alt="Google Trends filtered to YouTube Search showing 90-day trend movement and related rising queries for a topic" />
 
         <p>It does not show raw search volume numbers, but the directional data is reliable and free. A topic with a clear upward trend on Google Trends YouTube is worth validating further with a paid tool. A topic in decline is worth reconsidering regardless of what other tools show.</p>
 
@@ -2147,7 +2147,7 @@ export const posts = [
 
         <p>Typing a keyword into the YouTube search bar and reading the autocomplete suggestions is the simplest <strong>YouTube keyword tool free</strong> available to any creator. Every suggestion reflects real searches made by real viewers. Adding a letter after your main keyword cycles through variations and surfaces long-tail phrases you may not have considered.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-autocomplete.png" alt="YouTube search bar autocomplete surfacing long-tail variations of a seed keyword based on real viewer searches" />
+        <img src="/blog/youtube-keyword-research-tools-autocomplete.webp" alt="YouTube search bar autocomplete surfacing long-tail variations of a seed keyword based on real viewer searches" />
 
         <p>It takes two minutes and requires nothing beyond a YouTube account. The limitation is that it gives you no volume or competition data, so it works best as a brainstorming layer before you move to a tool with proper metrics.</p>
 
@@ -2155,7 +2155,7 @@ export const posts = [
 
         <p>RyRob's free keyword tool pulls YouTube-specific suggestions for a seed keyword and returns a list of related phrases without requiring a signup or payment. It is limited in depth but useful for beginners who want a quick expansion of a topic idea before committing to a paid platform.</p>
 
-        <img src="/blog/youtube-keyword-research-tools-ryrob.png" alt="RyRob free YouTube keyword tool returning a list of related long-tail phrases for a seed keyword without signup" />
+        <img src="/blog/youtube-keyword-research-tools-ryrob.webp" alt="RyRob free YouTube keyword tool returning a list of related long-tail phrases for a seed keyword without signup" />
 
         <p>The honest ceiling on all three of these tools is the same. They tell you what people are searching for but not how competitive those searches are or whether your specific channel can rank for them. They are the right starting point and the wrong finishing point for a serious keyword research workflow.</p>
 
