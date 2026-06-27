@@ -171,15 +171,17 @@
          (AW-10883831151) and the GA4 analytics property (G-MFMVT6Q5RB). -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10883831151"></script>
     <script>
-      // Analytics suppression. Two independent reasons to disable GA4 + Ads:
+      // Analytics suppression, shared by GA4 + Ads AND Ahrefs below. Two
+      // independent reasons NOT to record a visit:
       //   1. Non-production host. localhost, 127.0.0.1, LAN IPs and Railway
-      //      preview domains all fire the PROD gtag IDs otherwise, so every
+      //      preview domains all fire the PROD tags otherwise, so every
       //      dev/preview page view pollutes real traffic. Only ytgrowth.io
       //      (and www) is treated as production.
       //   2. Owner opt-out. Load any page once with ?ytg_notrack=1 to stop
       //      your own visits being recorded on this browser; ?ytg_track=1
       //      re-enables. Persists in localStorage, so it survives a dynamic
       //      IP and works on every device you opt in on.
+      // window.__ytgTrack is the single source of truth: true = record.
       (function(){try{
         var h=location.hostname;
         var isProd=(h==='ytgrowth.io'||h==='www.ytgrowth.io');
@@ -187,13 +189,20 @@
         if(p.has('ytg_notrack'))localStorage.setItem('ytg_notrack','1');
         if(p.has('ytg_track'))localStorage.removeItem('ytg_notrack');
         var optedOut=localStorage.getItem('ytg_notrack')==='1';
-        if(!isProd||optedOut){window['ga-disable-AW-10883831151']=true;window['ga-disable-G-MFMVT6Q5RB']=true;}
-      }catch(e){}})();
+        window.__ytgTrack=(isProd&&!optedOut);
+        if(!window.__ytgTrack){window['ga-disable-AW-10883831151']=true;window['ga-disable-G-MFMVT6Q5RB']=true;}
+      }catch(e){window.__ytgTrack=false;}})();
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'AW-10883831151');
       gtag('config', 'G-MFMVT6Q5RB');
+    </script>
+
+    <!-- Ahrefs Web Analytics. Injected only when window.__ytgTrack is true,
+         so dev/preview hosts and the owner opt-out skip it just like GA. -->
+    <script>
+      (function(){try{if(!window.__ytgTrack)return;var s=document.createElement('script');s.src='https://analytics.ahrefs.com/analytics.js';s.setAttribute('data-key','NYeHh1Ga901GDZ9oU9W3aQ');s.async=true;document.head.appendChild(s);}catch(e){}})();
     </script>
   </head>
   <body>
