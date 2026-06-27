@@ -199,11 +199,13 @@
       gtag('config', 'G-MFMVT6Q5RB');
     </script>
 
-    <!-- Ahrefs Web Analytics. Injected only when window.__ytgTrack is true,
-         so dev/preview hosts and the owner opt-out skip it just like GA. -->
-    <script>
-      (function(){try{if(!window.__ytgTrack)return;var s=document.createElement('script');s.src='https://analytics.ahrefs.com/analytics.js';s.setAttribute('data-key','NYeHh1Ga901GDZ9oU9W3aQ');s.async=true;document.head.appendChild(s);}catch(e){}})();
-    </script>
+    <!-- Ahrefs Web Analytics. Canonical static tag, verbatim, so Ahrefs'
+         installation check detects it. Note: unlike GA, this is NOT gated
+         by window.__ytgTrack, because the gated/renamed variant failed
+         Ahrefs verification. Ahrefs has no per-visitor opt-out, so this
+         records owner + dev visits too; Ahrefs' own bot filtering aside,
+         that's the trade-off for reliable detection. -->
+    <script src="https://analytics.ahrefs.com/analytics.js" data-key="NYeHh1Ga901GDZ9oU9W3aQ" async></script>
   </head>
   <body>
     <div id="root"></div>
