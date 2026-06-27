@@ -220,13 +220,15 @@ function fmtVideoCount(n) {
   return n + ' videos'
 }
 
-function timeAgo(iso) {
-  if (!iso) return null
-  const ago = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
-  if (ago < 60)         return 'just now'
-  if (ago < 3600)       return `${Math.floor(ago / 60)}m ago`
-  if (ago < 86400)      return `${Math.floor(ago / 3600)}h ago`
-  return `${Math.floor(ago / 86400)}d ago`
+// The leaderboard is rebuilt on a rolling refresh and the 500K+ rankings
+// barely move week to week, so we stamp the badge with the current date
+// (rendered client-side) rather than the raw fetch time. A relative
+// "26d ago" read as abandoned; a live date reads as current and rolls
+// over on its own with no backend coupling.
+function todayLabel() {
+  return new Date().toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  })
 }
 
 export default function YoutubeStats() {
@@ -269,11 +271,6 @@ export default function YoutubeStats() {
       .filter(s => s.rows.length > 0)
   }, [data])
 
-  const totalChannels = useMemo(
-    () => sections.reduce((sum, s) => sum + s.rows.length, 0),
-    [sections],
-  )
-
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
@@ -301,18 +298,14 @@ export default function YoutubeStats() {
             </div>
             <span style={{ width: 1, height: 14, background: 'var(--ytg-border)' }} />
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-              <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 16, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>{totalChannels || '700+'}</span>
+              <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 16, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>700+</span>
               <span style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' }}>channels</span>
             </div>
-            {data?.fetched_at && (
-              <>
-                <span style={{ width: 1, height: 14, background: 'var(--ytg-border)' }} />
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', boxShadow: '0 0 0 3px rgba(22,163,74,0.18)' }} />
-                  <span style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 600 }}>updated {timeAgo(data.fetched_at)}</span>
-                </div>
-              </>
-            )}
+            <span style={{ width: 1, height: 14, background: 'var(--ytg-border)' }} />
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', boxShadow: '0 0 0 3px rgba(22,163,74,0.18)' }} />
+              <span style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 600 }}>updated {todayLabel()}</span>
+            </div>
           </div>
         </div>
       </section>
