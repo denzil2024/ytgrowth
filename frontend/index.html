@@ -171,11 +171,24 @@
          (AW-10883831151) and the GA4 analytics property (G-MFMVT6Q5RB). -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10883831151"></script>
     <script>
-      // Owner analytics opt-out. Load any page once with ?ytg_notrack=1 to stop
-      // your own visits being recorded in GA4 + Google Ads on this browser.
-      // ?ytg_track=1 re-enables. Persists in localStorage, so it survives a
-      // dynamic IP and works on every device you opt in on.
-      (function(){try{var p=new URLSearchParams(location.search);if(p.has('ytg_notrack'))localStorage.setItem('ytg_notrack','1');if(p.has('ytg_track'))localStorage.removeItem('ytg_notrack');if(localStorage.getItem('ytg_notrack')==='1'){window['ga-disable-AW-10883831151']=true;window['ga-disable-G-MFMVT6Q5RB']=true;}}catch(e){}})();
+      // Analytics suppression. Two independent reasons to disable GA4 + Ads:
+      //   1. Non-production host. localhost, 127.0.0.1, LAN IPs and Railway
+      //      preview domains all fire the PROD gtag IDs otherwise, so every
+      //      dev/preview page view pollutes real traffic. Only ytgrowth.io
+      //      (and www) is treated as production.
+      //   2. Owner opt-out. Load any page once with ?ytg_notrack=1 to stop
+      //      your own visits being recorded on this browser; ?ytg_track=1
+      //      re-enables. Persists in localStorage, so it survives a dynamic
+      //      IP and works on every device you opt in on.
+      (function(){try{
+        var h=location.hostname;
+        var isProd=(h==='ytgrowth.io'||h==='www.ytgrowth.io');
+        var p=new URLSearchParams(location.search);
+        if(p.has('ytg_notrack'))localStorage.setItem('ytg_notrack','1');
+        if(p.has('ytg_track'))localStorage.removeItem('ytg_notrack');
+        var optedOut=localStorage.getItem('ytg_notrack')==='1';
+        if(!isProd||optedOut){window['ga-disable-AW-10883831151']=true;window['ga-disable-G-MFMVT6Q5RB']=true;}
+      }catch(e){}})();
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
