@@ -85,7 +85,7 @@ const META_BY_ROUTE = {
     description: 'Free YouTube calculator for channel earnings, ad revenue, and income. AdSense, CPM, RPM, and views-to-money math by niche. Monthly and yearly estimates.',
   },
   '/tools/youtube-subscriber-money-calculator': {
-    title:       'YouTube Subscriber Money Calculator 2026: Free Earnings Per Sub Estimator',
+    title:       'YouTube Subscriber Money Calculator 2026: Per-Sub Earnings',
     description: 'Free YouTube subscriber money calculator. Estimate earnings, ad revenue, and pay per subscriber. View-per-sub ratios, niche CPM, monthly and yearly income.',
   },
   '/tools/youtube-channel-stats-checker': {
