@@ -266,7 +266,7 @@ export default function YoutubeStatsCategory() {
   }, [category.id])
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
 
       <SiteHeader />
       <FaqSchema items={category.faqs} />

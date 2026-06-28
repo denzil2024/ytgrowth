@@ -256,7 +256,7 @@ export default function YoutubeTitleGenerator() {
   const analysis = useMemo(() => (draft.trim() ? scoreTitle(draft, draftKeyword) : null), [draft, draftKeyword])
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
 
       <SiteHeader />
       <FaqSchema items={FAQS} />

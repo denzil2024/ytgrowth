@@ -1,4 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import {
+  Gauge, Search, KeyRound, TrendingUp, Swords, Image,
+  DollarSign, Coins, Wallet, Type, AlignLeft, Tags, Hash,
+  ListOrdered, Badge as BadgeIcon, Lightbulb, Columns2, Crop, Download,
+  Trophy, BarChart3, BookOpen, Handshake, Mail,
+} from 'lucide-react'
 import { openCheckout } from '../checkout'
 import LandingFooter from '../components/LandingFooter'
 import AuthErrorModal from '../components/AuthErrorModal'
@@ -40,6 +46,9 @@ function useGlobalStyles() {
       body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
       @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
       @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+      /* Centered variant keeps the -50% X shift so the mega panel stays centered
+         under the pill (a plain translateY keyframe would clobber the centering). */
+      @keyframes fadeUpCenter { from{opacity:0;transform:translate(-50%,12px)} to{opacity:1;transform:translate(-50%,0)} }
       @keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
       @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
       .section-animate { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
@@ -109,6 +118,27 @@ function useGlobalStyles() {
         text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px;
       }
       .ytg-nav-link:hover { color: rgba(10,10,15,0.88); }
+
+      /* Center nav capsule, Windsor-style: links live inside one outlined pill. */
+      .ytg-pill {
+        position: relative;
+        display: flex; align-items: center; gap: 2px;
+        padding: 4px 6px;
+        border: 1px solid rgba(10,10,15,0.12);
+        border-radius: 999px;
+        background: transparent;
+      }
+      .ytg-pill-item {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 8px 15px;
+        border-radius: 999px;
+        font-size: 15px; font-weight: 500;
+        color: rgba(10,10,15,0.55);
+        text-decoration: none; letter-spacing: -0.1px;
+        white-space: nowrap; cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+      }
+      .ytg-pill-item:hover { background: rgba(10,10,15,0.05); color: #0a0a0f; }
 
       .ytg-faq-item {
         border-bottom: 1px solid var(--ytg-border);
@@ -461,22 +491,22 @@ const FEATURE_GROUPS = [
   {
     label: 'Audit & strategy',
     items: [
-      { href: '/features/channel-audit', label: 'Channel Audit', desc: '10-dimension AI audit of your channel' },
+      { href: '/features/channel-audit', label: 'Channel Audit', desc: '10-dimension AI audit of your channel', Icon: Gauge },
     ],
   },
   {
     label: 'SEO & discovery',
     items: [
-      { href: '/features/seo-studio',       label: 'SEO Studio',       desc: 'Score + rewrite titles and descriptions' },
-      { href: '/features/keyword-research', label: 'Keyword Research', desc: 'YouTube-native search volume + difficulty' },
-      { href: '/features/outliers',         label: 'Outliers',         desc: 'Find viral videos and breakout channels' },
+      { href: '/features/seo-studio',       label: 'SEO Studio',       desc: 'Score + rewrite titles and descriptions', Icon: Search },
+      { href: '/features/keyword-research', label: 'Keyword Research', desc: 'YouTube-native search volume + difficulty', Icon: KeyRound },
+      { href: '/features/outliers',         label: 'Outliers',         desc: 'Find viral videos and breakout channels', Icon: TrendingUp },
     ],
   },
   {
     label: 'Compete & convert',
     items: [
-      { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
-      { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
+      { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps', Icon: Swords },
+      { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche', Icon: Image },
     ],
   },
 ]
@@ -489,47 +519,84 @@ const RESOURCES_GROUPS = [
   {
     label: 'Calculators',
     items: [
-      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
-      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
+      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator', Icon: DollarSign },
+      { href: '/tools/youtube-shorts-money-calculator',     label: 'Shorts Money Calculator',  Icon: Coins },
+      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator', Icon: Wallet },
     ],
   },
   {
     label: 'Brainstorm',
     items: [
-      { href: '/tools/youtube-channel-name-generator', label: 'Channel Name Generator' },
-      { href: '/tools/youtube-video-ideas-generator',  label: 'Video Ideas Generator' },
+      { href: '/tools/youtube-title-generator',        label: 'Title Generator',        Icon: Type },
+      { href: '/tools/youtube-description-generator',  label: 'Description Generator',   Icon: AlignLeft },
+      { href: '/tools/youtube-tag-generator',          label: 'Tag Generator',          Icon: Tags },
+      { href: '/tools/youtube-hashtag-generator',      label: 'Hashtag Generator',      Icon: Hash },
+      { href: '/tools/youtube-chapter-generator',      label: 'Chapter Generator',      Icon: ListOrdered },
+      { href: '/tools/youtube-channel-name-generator', label: 'Channel Name Generator', Icon: BadgeIcon },
+      { href: '/tools/youtube-video-ideas-generator',  label: 'Video Ideas Generator',  Icon: Lightbulb },
     ],
   },
   {
     label: 'Thumbnails',
     items: [
-      { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
-      { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
+      { href: '/tools/youtube-thumbnail-tester',     label: 'Thumbnail Tester (A/B)', Icon: Columns2 },
+      { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer',      Icon: Crop },
+      { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader',   Icon: Download },
     ],
   },
   {
     label: 'Insights',
     items: [
-      { href: '/youtube-stats',                       label: 'Top YouTube Channels' },
-      { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
-      { href: '/blog',                                label: 'Blog' },
+      { href: '/youtube-stats',                       label: 'Top YouTube Channels',  Icon: Trophy },
+      { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker', Icon: BarChart3 },
+      { href: '/blog',                                label: 'Blog',                  Icon: BookOpen },
     ],
   },
 ]
 const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.items || [])
 
+/* Company, a small single-column menu (no eyebrow label). */
+const COMPANY_GROUPS = [
+  {
+    label: '',
+    items: [
+      { href: '/affiliate', label: 'Affiliates', desc: 'Earn 30% recurring', Icon: Handshake },
+      { href: '/contact',   label: 'Contact',    desc: 'Talk to the team',   Icon: Mail },
+    ],
+  },
+]
+
 /* ─── Mega-menu component, VidIQ pattern: clean titles, no descriptions ─ */
-function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
+function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3 }) {
   const [open, setOpen] = useState(false)
-  // Panel width scales with column count.
-  const panelWidth = columns === 4 ? 980 : columns === 3 ? 820 : 720
+  const [leftOffset, setLeftOffset] = useState(-14)
+  const wrapRef = useRef(null)
+  const closeTimer = useRef(null)
+  const panelWidth = columns === 4 ? 1000 : columns === 3 ? 860 : 260
+  // Open the panel directly under its own trigger. If a wide panel would spill
+  // off the right edge, shift it left just enough to stay on screen.
+  const position = () => {
+    const el = wrapRef.current
+    if (!el || typeof window === 'undefined') return
+    const triggerLeft = el.getBoundingClientRect().left
+    const vw = document.documentElement.clientWidth
+    const margin = 16
+    const desired = triggerLeft - 14
+    const clamped = Math.min(Math.max(margin, desired), vw - panelWidth - margin)
+    setLeftOffset(clamped - triggerLeft)
+  }
+  // Open instantly; close on a short delay so moving from the trigger down into
+  // the panel doesn't snap it shut before you can click a tool.
+  const show = () => { if (closeTimer.current) clearTimeout(closeTimer.current); position(); setOpen(true) }
+  const hide = () => { closeTimer.current = setTimeout(() => setOpen(false), 180) }
   return (
     <div
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      ref={wrapRef}
+      onMouseEnter={show}
+      onMouseLeave={hide}
       style={{ position: 'relative' }}
     >
-      <a href={groups[0].items[0].href} className="ytg-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
+      <a href={groups[0].items[0].href} className="ytg-pill-item">
         {trigger}
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
           <path d="M2 3.5l3 3 3-3"/>
@@ -537,55 +604,54 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, pan
       </a>
       {open && (
         <>
-          {/* Hover bridge so cursor can move from trigger to panel without closing */}
-          <div style={{ position: 'absolute', top: '100%', left: panelLeft, width: panelWidth + 48, height: 14 }} />
+          {/* Hover bridge: spans the panel width and overlaps up into the pill
+              so there's no dead gap between the trigger and the panel. */}
+          <div style={{ position: 'absolute', top: 'calc(100% - 10px)', height: 28, left: leftOffset, width: panelWidth }} />
           <div style={{
-            position: 'absolute', top: 'calc(100% + 10px)', left: panelLeft,
-            background: '#ffffff', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 18,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.13)',
-            padding: '36px 40px 26px',
-            width: panelWidth,
+            position: 'absolute', top: 'calc(100% + 12px)', left: leftOffset, width: panelWidth,
+            background: '#ffffff', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 28,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.07), 0 24px 64px rgba(0,0,0,0.12)',
+            padding: '24px 26px 18px',
             animation: 'fadeUp 0.16s ease both',
             zIndex: 110,
           }}>
-            {/* Columns separated by thin vertical dividers. Each column gets
-                horizontal padding so the divider sits in the visual gutter. */}
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 0 }}>
-              {groups.map((group, gi) => {
-                const isLast = gi === groups.length - 1
-                return (
-                  <div key={gi} style={{
-                    paddingLeft:  gi === 0 ? 0 : 28,
-                    paddingRight: isLast ? 0 : 28,
-                    borderRight:  isLast ? 'none' : '1px solid rgba(10,10,15,0.08)',
-                  }}>
-                    <p style={{
-                      fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-                      color: 'rgba(10,10,15,0.38)', marginBottom: 14, whiteSpace: 'nowrap',
-                    }}>{group.label}</p>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      {group.items.map((item, i) => (
-                        <a
-                          key={i} href={item.href}
-                          style={{
-                            display: 'block',
-                            padding: '8px 0',
-                            fontSize: 14.5, fontWeight: 500,
-                            color: '#0a0a0f', letterSpacing: '-0.15px',
-                            textDecoration: 'none',
-                            whiteSpace: 'nowrap',
-                            transition: 'color 0.13s',
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-accent)' }}
-                          onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
-                        >
-                          {item.label}
-                        </a>
-                      ))}
-                    </div>
+            {/* Icon cards, grouped by category. Tinted-circle Lucide icon +
+                title (+ one-line description on Features). */}
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, columnGap: 14 }}>
+              {groups.map((group, gi) => (
+                <div key={gi}>
+                  {group.label && <p style={{
+                    fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                    color: 'rgba(10,10,15,0.38)', margin: '0 0 8px 10px', whiteSpace: 'nowrap',
+                  }}>{group.label}</p>}
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {group.items.map((item, i) => (
+                      <a
+                        key={i} href={item.href}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 11,
+                          padding: '9px 10px', borderRadius: 12,
+                          textDecoration: 'none', transition: 'background 0.14s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,48,42,0.05)' }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+                      >
+                        <span style={{
+                          flexShrink: 0, width: 34, height: 34, borderRadius: '50%',
+                          background: 'rgba(229,48,42,0.08)',
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          <item.Icon size={17} strokeWidth={1.9} color="#e5302a" />
+                        </span>
+                        <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                          <span style={{ fontSize: 14, fontWeight: 600, color: '#0a0a0f', letterSpacing: '-0.15px', whiteSpace: 'nowrap', lineHeight: 1.3 }}>{item.label}</span>
+                          {item.desc && <span style={{ fontSize: 12, fontWeight: 450, color: 'rgba(10,10,15,0.5)', letterSpacing: '-0.05px', lineHeight: 1.35, marginTop: 1 }}>{item.desc}</span>}
+                        </span>
+                      </a>
+                    ))}
                   </div>
-                )
-              })}
+                </div>
+              ))}
             </div>
 
             {viewAllHref && (
@@ -626,6 +692,16 @@ function ResourcesNavDropdown() {
       columns={4}
       viewAllHref="/blog"
       viewAllLabel="Read the latest from the blog →"
+    />
+  )
+}
+
+function CompanyNavDropdown() {
+  return (
+    <MegaMenu
+      trigger="Company"
+      groups={COMPANY_GROUPS}
+      columns={1}
     />
   )
 }
@@ -905,7 +981,7 @@ export default function Landing() {
   }, [])
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
 
       {/* ── AUTH ERROR. Paywall-style modal, replaces the old toast ─────── */}
       <AuthErrorModal
@@ -918,29 +994,33 @@ export default function Landing() {
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        background: 'rgba(244,244,246,0.92)', backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(10,10,15,0.1)',
-        boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.08)' : 'none',
+        background: '#ffffff',
+        borderBottom: '1px solid rgba(10,10,15,0.08)',
+        boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.06)' : 'none',
         transition: 'box-shadow 0.3s ease',
-        height: 60, display: 'flex', alignItems: 'center',
-        justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px 0 80px',
+        height: isMobile ? 60 : 68, display: 'flex', alignItems: 'center',
+        justifyContent: isMobile ? 'space-between' : 'center', gap: isMobile ? 0 : 22,
+        padding: isMobile ? '0 20px' : '0 32px',
+        fontFamily: "'Manrope', 'Inter', system-ui, sans-serif",
       }}>
-        <Logo size={26} />
+        {/* Equal-flex sides keep the pill centered on the viewport so the
+            mega-menus open dead-center; logo and CTA hug the pill. */}
+        <div style={{ flex: isMobile ? '0 0 auto' : 1, display: 'flex', alignItems: 'center', minWidth: 0, justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
+          <a href="/" aria-label="ytgrowth home" style={{ display: 'inline-flex', textDecoration: 'none' }}>
+            <BrandLockup height={28} />
+          </a>
+        </div>
 
         {!isMobile && (
-          <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
+          <div className="ytg-pill">
             <FeaturesNavDropdown />
             <ResourcesNavDropdown />
-            {['How it works', 'Pricing', 'FAQ'].map((l, i) => (
-              <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
-            ))}
-            <a href="/affiliate" className="ytg-nav-link">Affiliates</a>
-            <a href="/contact" className="ytg-nav-link">Contact</a>
+            <a href="#pricing" className="ytg-pill-item">Pricing</a>
+            <CompanyNavDropdown />
           </div>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ flex: isMobile ? '0 0 auto' : 1, display: 'flex', alignItems: 'center', gap: 8, justifyContent: isMobile ? 'flex-end' : 'flex-start' }}>
           {isMobile ? (
             <button
               onClick={() => setMobileMenuOpen(o => !o)}
@@ -959,13 +1039,13 @@ export default function Landing() {
               )}
             </button>
           ) : loggedIn ? (
-            <a href="/dashboard" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 14 }}>
+            <a href="/dashboard" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 14, fontFamily: "'Manrope', 'Inter', system-ui, sans-serif" }}>
               Dashboard
             </a>
           ) : (
             <>
-              <a href="/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 100 }}>Log in</a>
-              <a href="/auth/login" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 14 }}>
+              <a href="/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 100, fontFamily: "'Manrope', 'Inter', system-ui, sans-serif" }}>Log in</a>
+              <a href="/auth/login" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 14, fontFamily: "'Manrope', 'Inter', system-ui, sans-serif" }}>
                 Get started free
               </a>
             </>
@@ -989,25 +1069,20 @@ export default function Landing() {
         {/* Resources */}
         <div className="ytg-mm-section">
           <span className="ytg-mm-label">Resources</span>
-          <a href="/tools/youtube-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">YouTube Money Calculator</a>
-          <a href="/tools/youtube-subscriber-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Subscriber Money Calculator</a>
-          <a href="/tools/youtube-channel-name-generator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Channel Name Generator</a>
-          <a href="/tools/youtube-video-ideas-generator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Video Ideas Generator</a>
-          <a href="/tools/youtube-thumbnail-resizer" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Thumbnail Resizer</a>
-          <a href="/tools/youtube-thumbnail-downloader" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Thumbnail Downloader</a>
-          <a href="/tools/youtube-channel-stats-checker" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Channel Stats Checker</a>
-          <a href="/blog" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Blog</a>
+          {RESOURCES_NAV_ITEMS.map((item, i) => (
+            <a key={i} href={item.href} onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
+              {item.label}
+            </a>
+          ))}
         </div>
 
-        {/* Explore */}
+        {/* Company */}
         <div className="ytg-mm-section">
-          <span className="ytg-mm-label">Explore</span>
+          <span className="ytg-mm-label">Company</span>
           {[
-            { label: 'How it works', href: '#how-it-works' },
-            { label: 'Pricing',      href: '#pricing' },
-            { label: 'FAQ',          href: '#faq' },
-            { label: 'Affiliates',   href: '/affiliate' },
-            { label: 'Contact',      href: '/contact' },
+            { label: 'Pricing',    href: '#pricing' },
+            { label: 'Affiliates', href: '/affiliate' },
+            { label: 'Contact',    href: '/contact' },
           ].map((l, i) => (
             <a key={i} href={l.href} onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
               {l.label}
@@ -2175,7 +2250,9 @@ export default function Landing() {
       </div>
 
       {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
-      <div style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
+      {/* Lifted dark (distinct from the near-black footer below) so the CTA
+          reads as its own band instead of merging into the footer. */}
+      <div style={{ background: '#191922', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: isMobile ? '38%' : '42%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: isMobile ? 600 : 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.20) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20 }}>

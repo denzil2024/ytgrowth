@@ -200,7 +200,7 @@ export default function YoutubeStatsCountryCategory() {
   const otherCountries  = COUNTRY_META.filter(c => c.id !== country.id)
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
 
       <SiteHeader />
       <FaqSchema items={faqs} />
