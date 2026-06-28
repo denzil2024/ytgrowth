@@ -44,9 +44,14 @@ def scrape_autocomplete(seed_keyword: str) -> list[str]:
             print(f"Autocomplete error for '{query}': {e}")
             return []
 
+    # Preserve query order (seed first, then a-z, then prefixes) by iterating
+    # futures in submission order rather than completion order. The seed's own
+    # suggestions come back first, which is a real demand-ranking signal the
+    # keyword tool relies on for sorting.
     with ThreadPoolExecutor(max_workers=10) as pool:
-        for batch in as_completed([pool.submit(fetch, q) for q in queries]):
-            for item in batch.result():
+        futures = [pool.submit(fetch, q) for q in queries]
+        for fut in futures:
+            for item in fut.result():
                 if item not in seen:
                     seen.add(item)
                     results.append(item)

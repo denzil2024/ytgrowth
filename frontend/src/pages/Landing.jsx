@@ -1005,9 +1005,9 @@ export default function Landing() {
       }}>
         {/* Equal-flex sides keep the pill centered on the viewport so the
             mega-menus open dead-center; logo and CTA hug the pill. */}
-        <div style={{ flex: isMobile ? '0 0 auto' : 1, display: 'flex', alignItems: 'center', minWidth: 0, justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
+        <div style={{ flex: isMobile ? '0 0 auto' : '0 1 auto', display: 'flex', alignItems: 'center', minWidth: 0 }}>
           <a href="/" aria-label="ytgrowth home" style={{ display: 'inline-flex', textDecoration: 'none' }}>
-            <BrandLockup height={28} />
+            <BrandLockup height={24} />
           </a>
         </div>
 
@@ -1020,7 +1020,7 @@ export default function Landing() {
           </div>
         )}
 
-        <div style={{ flex: isMobile ? '0 0 auto' : 1, display: 'flex', alignItems: 'center', gap: 8, justifyContent: isMobile ? 'flex-end' : 'flex-start' }}>
+        <div style={{ flex: isMobile ? '0 0 auto' : '0 1 auto', display: 'flex', alignItems: 'center', gap: 8 }}>
           {isMobile ? (
             <button
               onClick={() => setMobileMenuOpen(o => !o)}

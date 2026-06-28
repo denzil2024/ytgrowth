@@ -3,7 +3,7 @@ import {
   Gauge, Search, KeyRound, TrendingUp, Swords, Image,
   DollarSign, Coins, Wallet, Type, AlignLeft, Tags, Hash,
   ListOrdered, Badge, Lightbulb, Columns2, Crop, Download,
-  Trophy, BarChart3, BookOpen, Handshake, Mail,
+  Trophy, BarChart3, BookOpen, Handshake, Mail, ScanSearch,
 } from 'lucide-react'
 import BrandLockup from './BrandLockup'
 
@@ -75,6 +75,7 @@ const RESOURCES_GROUPS = [
     label: 'Insights',
     items: [
       { href: '/youtube-stats',                       label: 'Top YouTube Channels',  Icon: Trophy },
+      { href: '/tools/youtube-keyword-research',      label: 'Keyword Research',      Icon: ScanSearch },
       { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker', Icon: BarChart3 },
       { href: '/blog',                                label: 'Blog',                  Icon: BookOpen },
     ],
@@ -200,15 +201,11 @@ function useStyles() {
         background: transparent;
       }
 
-      /* Equal-flex sides center the pill on the viewport. Logo hugs the pill's
-         left, CTA hugs its right; outer slack falls to the screen edges. */
-      .sh-side { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
-      .sh-side-start { justify-content: flex-end; }
-      .sh-side-end   { justify-content: flex-start; }
-      @media (max-width: 768px) {
-        .sh-side-start { justify-content: flex-start; }
-        .sh-side-end   { justify-content: flex-end; }
-      }
+      /* Natural-width sides so the whole logo + pill + CTA group centers as one
+         cluster (balanced left-to-right), instead of pinning just the pill and
+         leaving the wider CTA side to lean the header right. Can shrink on
+         narrow desktops; on mobile the nav switches to space-between. */
+      .sh-side { flex: 0 1 auto; display: flex; align-items: center; gap: 10px; min-width: 0; }
       .sh-pill-item {
         display: inline-flex; align-items: center; gap: 4px;
         padding: 8px 16px;
@@ -315,7 +312,7 @@ export default function SiteHeader() {
             mega-menus open dead-center), with the logo and CTA hugging it. */}
         <div className="sh-side sh-side-start">
           <a href="/" className="sh-brand" aria-label="ytgrowth home">
-            <BrandLockup height={28} />
+            <BrandLockup height={24} />
           </a>
         </div>
 

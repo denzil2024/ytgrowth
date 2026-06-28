@@ -110,6 +110,7 @@ const RESOURCES = [
    Keep this list in sync with the tool routes in App.jsx. Labels drop the
    "YouTube" prefix since the column heading already supplies the context. */
 const TOOLS = [
+  { label: 'Keyword Research',            href: '/tools/youtube-keyword-research' },
   { label: 'Money Calculator',            href: '/tools/youtube-money-calculator' },
   { label: 'Subscriber Money Calculator', href: '/tools/youtube-subscriber-money-calculator' },
   { label: 'Shorts Money Calculator',     href: '/tools/youtube-shorts-money-calculator' },

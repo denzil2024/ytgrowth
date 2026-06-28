@@ -92,6 +92,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Channel Stats Checker 2026: Free Live Statistics & Analytics',
     description: 'Free YouTube channel stats checker. Live subscriber count, total views, monthly uploads, and engagement for any public channel. No login.',
   },
+  '/tools/youtube-keyword-research': {
+    title:       'Free YouTube Keyword Research Tool 2026: Competition & Volume',
+    description: 'Free YouTube keyword research tool. See the real competition for any keyword: ranking channel size, view ceiling, and how crowded the term is. No login.',
+  },
   '/tools/youtube-thumbnail-downloader': {
     title:       'YouTube Thumbnail Downloader 2026: Free HD Image Grabber & Saver',
     description: 'Free YouTube thumbnail downloader and grabber. Download or get any thumbnail from a YouTube video URL in HD, Max Res, JPG, or PNG. No watermark, no signup.',
@@ -229,6 +233,7 @@ async function buildRoutes() {
     '/tools/youtube-money-calculator',
     '/tools/youtube-subscriber-money-calculator',
     '/tools/youtube-channel-stats-checker',
+    '/tools/youtube-keyword-research',
     '/tools/youtube-thumbnail-downloader',
     '/tools/youtube-thumbnail-resizer',
     '/tools/youtube-channel-name-generator',
