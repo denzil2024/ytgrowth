@@ -9,12 +9,6 @@ function useGlobalStyles() {
   useEffect(() => {
     if (document.getElementById('ytg-styles')) return
 
-    const link = document.createElement('link')
-    link.id = 'ytg-font'
-    link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap'
-    document.head.appendChild(link)
-
     const style = document.createElement('style')
     style.id = 'ytg-styles'
     style.textContent = `

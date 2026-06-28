@@ -158,9 +158,18 @@
     }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <!-- Self-hosted fonts. Replaces the render-blocking Google Fonts CSS
+         (googleapis -> gstatic chain) that was the bulk of the mobile LCP
+         render delay. The variable woff2 files cover every weight; @font-face
+         is inlined so there's no external font stylesheet to block render, and
+         DM Sans (the hero/LCP face) is preloaded so it's ready by first paint,
+         which avoids the fallback->web-font swap (no CLS). -->
+    <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin/>
+    <style>
+      @font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 100 1000; font-display: swap; src: url('/fonts/dm-sans-latin.woff2') format('woff2'); }
+      @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/inter-latin.woff2') format('woff2'); }
+      @font-face { font-family: 'Plus Jakarta Sans'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('/fonts/plus-jakarta-latin.woff2') format('woff2'); }
+    </style>
     <!-- Paddle and Affonso are loaded lazily from main.jsx, not on initial
          parse, so they stop pulling profitwell.js + paddle.css onto the
          critical path. They fire on first user interaction, OR a 2.5s

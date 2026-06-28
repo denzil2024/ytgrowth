@@ -30,11 +30,6 @@ function useBreakpoint() {
 function useStyles() {
   useEffect(() => {
     if (document.getElementById('sst-styles')) return
-    const link = document.createElement('link')
-    link.id = 'sst-font'
-    link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap'
-    document.head.appendChild(link)
 
     const style = document.createElement('style')
     style.id = 'sst-styles'

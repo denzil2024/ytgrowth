@@ -156,9 +156,18 @@
     }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <!-- Self-hosted fonts. Replaces the render-blocking Google Fonts CSS
+         (googleapis -> gstatic chain) that was the bulk of the mobile LCP
+         render delay. The variable woff2 files cover every weight; @font-face
+         is inlined so there's no external font stylesheet to block render, and
+         DM Sans (the hero/LCP face) is preloaded so it's ready by first paint,
+         which avoids the fallback->web-font swap (no CLS). -->
+    <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin="">
+    <style>
+      @font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 100 1000; font-display: swap; src: url('/fonts/dm-sans-latin.woff2') format('woff2'); }
+      @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/inter-latin.woff2') format('woff2'); }
+      @font-face { font-family: 'Plus Jakarta Sans'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('/fonts/plus-jakarta-latin.woff2') format('woff2'); }
+    </style>
     <!-- Paddle and Affonso are loaded lazily from main.jsx, not on initial
          parse, so they stop pulling profitwell.js + paddle.css onto the
          critical path. They fire on first user interaction, OR a 2.5s
@@ -202,12 +211,12 @@
          records owner + dev visits too; Ahrefs' own bot filtering aside,
          that's the trade-off for reliable detection. -->
     <script src="https://analytics.ahrefs.com/analytics.js" data-key="NYeHh1Ga901GDZ9oU9W3aQ" async=""></script>
-    <script type="module" crossorigin="" src="/assets/index-BV_mFqi7.js"></script>
+    <script type="module" crossorigin="" src="/assets/index-CDI8KhoP.js"></script>
     <link rel="modulepreload" crossorigin="" href="/assets/chunk-DECur_0Z.js">
     <link rel="modulepreload" crossorigin="" href="/assets/preload-helper-D4M6sveU.js">
     <link rel="modulepreload" crossorigin="" href="/assets/jsx-runtime-CP2iHdEU.js">
     <link rel="stylesheet" crossorigin="" href="/assets/index-DsOhRAW1.css">
-  <link rel="modulepreload" as="script" crossorigin="" href="/assets/Landing-D_fb9L7s.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/checkout-k-r5LEgt.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/BrandLockup-DYLf7yyr.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/LandingFooter-Dzl_cNZV.js"><script type="text/javascript" async="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/10883831151/?random=1782634942126&amp;cv=11&amp;fst=1782634942126&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;en=gtag.config&amp;gtm=45be66o1v9203910369za200zd9203910369xec&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115938465~115938468~118395333~119027224~119576891~119576895&amp;u_w=800&amp;u_h=600&amp;url=http%3A%2F%2Flocalhost%3A4173%2F&amp;rcb=15&amp;frm=0&amp;tiba=YTGrowth%3A%20VidIQ%2C%20TubeBuddy%20%26%20Viewstats%20Alternative&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=541735053.1782634942&amp;uaa=x86&amp;uab=64&amp;uafvl=Chromium%3B147.0.7727.57%7CNot.A%252FBrand%3B8.0.0.0&amp;uamb=0&amp;uam=&amp;uap=Windows&amp;uapv=19.0.0&amp;uaw=0&amp;data=event%3Dgtag.config&amp;ept=9&amp;rfmt=3&amp;fmt=4"></script><link id="ytg-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&amp;family=Inter:wght@300;400;500;600;700;800&amp;display=swap"><style id="ytg-styles">
+  <link rel="modulepreload" as="script" crossorigin="" href="/assets/Landing-C5nxZORc.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/checkout-k-r5LEgt.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/BrandLockup-DYLf7yyr.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/LandingFooter-Dzl_cNZV.js"><style id="ytg-styles">
       :root {
         --ytg-bg: #f4f4f6;
         --ytg-text: #0a0a0f;
@@ -524,7 +533,7 @@
         .ytg-hero-trust { gap: 10px; }
         .ytg-hero-ph { margin-top: 24px; }
       }
-    </style><link rel="modulepreload" as="script" crossorigin="" href="/assets/YoutubeStatsCategory-DwkYdsfU.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/FaqSchema-6pGC9OLo.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/SiteHeader-_wkE5NMY.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/youtubeStatsCountries-0rEweDeL.js"><script type="text/javascript" async="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/10883831151/?random=1782635042023&amp;cv=11&amp;fst=1782635042023&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;en=gtag.config&amp;gtm=45be66o1v9203910369za200zb9255464893zd9255464893xec&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115938465~115938468~119027224~119576891~119576895&amp;u_w=800&amp;u_h=600&amp;url=http%3A%2F%2Flocalhost%3A4173%2Fyoutube-stats%2Feducation&amp;rcb=19&amp;frm=0&amp;tiba=YTGrowth%3A%20VidIQ%2C%20TubeBuddy%20%26%20Viewstats%20Alternative&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=541735053.1782634942&amp;uaa=x86&amp;uab=64&amp;uafvl=Chromium%3B147.0.7727.57%7CNot.A%252FBrand%3B8.0.0.0&amp;uamb=0&amp;uam=&amp;uap=Windows&amp;uapv=19.0.0&amp;uaw=0&amp;data=event%3Dgtag.config&amp;ept=9&amp;rfmt=3&amp;fmt=4"></script><style id="sh-styles">
+    </style><script type="text/javascript" async="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/10883831151/?random=1782637534485&amp;cv=11&amp;fst=1782637534485&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;en=gtag.config&amp;gtm=45be66o1v9203910369za200zd9203910369xec&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115938466~115938468~118395335~119027224~119576891~119576895&amp;u_w=800&amp;u_h=600&amp;url=http%3A%2F%2Flocalhost%3A4173%2F&amp;rcb=5&amp;frm=0&amp;tiba=YTGrowth%3A%20VidIQ%2C%20TubeBuddy%20%26%20Viewstats%20Alternative&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=1871659560.1782637534&amp;uaa=x86&amp;uab=64&amp;uafvl=Chromium%3B147.0.7727.57%7CNot.A%252FBrand%3B8.0.0.0&amp;uamb=0&amp;uam=&amp;uap=Windows&amp;uapv=19.0.0&amp;uaw=0&amp;data=event%3Dgtag.config&amp;ept=9&amp;rfmt=3&amp;fmt=4"></script><link rel="modulepreload" as="script" crossorigin="" href="/assets/YoutubeStatsCategory-LIR9Ky6U.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/FaqSchema-6pGC9OLo.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/SiteHeader-_wkE5NMY.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/youtubeStatsCountries-0rEweDeL.js"><script type="text/javascript" async="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/10883831151/?random=1782637614507&amp;cv=11&amp;fst=1782637614507&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;en=gtag.config&amp;gtm=45be66o1v9203910369za200zb9255464893zd9255464893xec&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115938466~115938468~119027224~119576891~119576895&amp;u_w=800&amp;u_h=600&amp;url=http%3A%2F%2Flocalhost%3A4173%2Fyoutube-stats%2Feducation&amp;rcb=11&amp;frm=0&amp;tiba=YTGrowth%3A%20VidIQ%2C%20TubeBuddy%20%26%20Viewstats%20Alternative&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=1871659560.1782637534&amp;uaa=x86&amp;uab=64&amp;uafvl=Chromium%3B147.0.7727.57%7CNot.A%252FBrand%3B8.0.0.0&amp;uamb=0&amp;uam=&amp;uap=Windows&amp;uapv=19.0.0&amp;uaw=0&amp;data=event%3Dgtag.config&amp;ept=9&amp;rfmt=3&amp;fmt=4"></script><style id="sh-styles">
       .sh-nav {
         position: sticky; top: 0; z-index: 100;
         height: 60px;
@@ -605,7 +614,7 @@
         color: rgba(255,255,255,0.62); letter-spacing: -0.1px;
       }
       @keyframes shFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
-    </style><link id="yts-font" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&amp;family=Inter:wght@300;400;500;600;700;800&amp;display=swap"><style id="yts-styles">
+    </style><style id="yts-styles">
       :root {
         --ytg-bg: #f4f4f6; --ytg-bg-2: #ecedf1; --ytg-bg-3: #e6e7ec;
         --ytg-text: #0a0a0f; --ytg-text-2: rgba(10,10,15,0.62); --ytg-text-3: rgba(10,10,15,0.40);

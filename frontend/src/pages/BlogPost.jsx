@@ -137,12 +137,6 @@ function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, pan
 function useStyles() {
   useEffect(() => {
     if (document.getElementById('bp-styles')) return
-    const link = document.createElement('link')
-    link.id = 'bp-font'
-    link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap'
-    document.head.appendChild(link)
-
     const style = document.createElement('style')
     style.id = 'bp-styles'
     style.textContent = `
