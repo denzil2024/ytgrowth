@@ -307,6 +307,33 @@ function useGlobalStyles() {
       .ytg-creator-avatar-fallback { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 17px; flex-shrink: 0; }
       @keyframes ytg-shimmer { 0%,100%{opacity:0.45} 50%{opacity:0.9} }
       .ytg-shimmer { animation: ytg-shimmer 1.6s ease-in-out infinite; background: rgba(10,10,15,0.07); border-radius: 50%; }
+
+      /* ── Hero: responsive via CSS, not JS. The prerendered markup bakes the
+         desktop viewport (useBreakpoint defaults to 1280 to avoid a hydration
+         mismatch), so without this the hero repainted from desktop to mobile
+         after hydration, causing the LCP delay + layout shift PageSpeed flagged
+         on mobile. These rules reproduce the exact isMobile/isTablet values so
+         the static HTML is correct on every viewport with no JS re-render. ── */
+      .ytg-hero { padding: 110px 48px 90px; }
+      .ytg-hero-h1 { font-size: 72px; line-height: 1.02; letter-spacing: -2.5px; }
+      .ytg-hero-sub { font-size: 19px; }
+      .ytg-hero-cta { flex-direction: row; width: auto; }
+      .ytg-hero-cta .ytg-btn-primary, .ytg-hero-cta .ytg-btn-ghost { width: auto; }
+      .ytg-hero-trust { gap: 18px; }
+      .ytg-hero-ph { margin-top: 28px; }
+      @media (max-width: 1024px) {
+        .ytg-hero-h1 { font-size: 62px; }
+      }
+      @media (max-width: 768px) {
+        .ytg-hero { padding: 48px 24px 60px; }
+        .ytg-hero-h1 { font-size: 34px; line-height: 1.1; letter-spacing: -0.6px; }
+        .ytg-hero-sub { font-size: 16px; }
+        .ytg-hero-cta { flex-direction: column; width: 100%; }
+        .ytg-hero-cta .ytg-btn-primary, .ytg-hero-cta .ytg-btn-ghost { width: 100%; }
+        .ytg-hero-cta .ytg-btn-ghost { opacity: 0.85; }
+        .ytg-hero-trust { gap: 10px; }
+        .ytg-hero-ph { margin-top: 24px; }
+      }
     `
     document.head.appendChild(style)
   }, [])
@@ -1008,7 +1035,7 @@ export default function Landing() {
       </div>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <div id="hero" style={{ position: 'relative', padding: isMobile ? '48px 24px 60px' : '110px 48px 90px', overflow: 'hidden', background: '#ffffff' }}>
+      <div id="hero" className="ytg-hero" style={{ position: 'relative', overflow: 'hidden', background: '#ffffff' }}>
 
         {/* Subtle red radial glow. Warms the hero without competing with content */}
         <div aria-hidden="true" style={{
@@ -1025,25 +1052,25 @@ export default function Landing() {
             <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>The AI YouTube growth tool</span>
           </div>
 
-          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : isTablet ? 62 : 72, lineHeight: isMobile ? 1.1 : 1.02, letterSpacing: isMobile ? '-0.6px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
+          <h1 className="ytg-hero-h1" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
             The AI that audits your channel like a <span style={{ color: 'var(--ytg-accent)' }}>$500/hour consultant</span>
           </h1>
 
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 32px', textWrap: 'pretty' }}>
+          <p className="ytg-hero-sub" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 32px', textWrap: 'pretty' }}>
             A 10-dimension YouTube channel audit, SEO tool, and competitor analyzer in one. The VidIQ alternative, TubeBuddy alternative, and Viewstats alternative that turns raw analytics into a prioritized action plan.
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 28, flexDirection: isMobile ? 'column' : 'row', width: isMobile ? '100%' : 'auto' }}>
-            <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '15px 32px', width: isMobile ? '100%' : 'auto', justifyContent: 'center' }}>
+          <div className="ytg-hero-cta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 28 }}>
+            <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '15px 32px', justifyContent: 'center' }}>
               Analyse my channel free <Arrow />
             </a>
-            <a href="#pricing" className="ytg-btn-ghost" style={{ fontSize: 16, padding: '15px 32px', width: isMobile ? '100%' : 'auto', justifyContent: 'center', opacity: isMobile ? 0.85 : 1 }}>
+            <a href="#pricing" className="ytg-btn-ghost" style={{ fontSize: 16, padding: '15px 32px', justifyContent: 'center' }}>
               See pricing
             </a>
           </div>
 
           {/* Trust row. Small green-check pills, mobile-wraps naturally */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: isMobile ? 10 : 18, rowGap: 10 }}>
+          <div className="ytg-hero-trust" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', rowGap: 10 }}>
             {['No credit card required', '5 free analyses on signup', 'Cancel anytime'].map((t, i) => (
               <div key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>
                 <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
@@ -1056,7 +1083,7 @@ export default function Landing() {
           </div>
 
           {/* Product Hunt badge */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: isMobile ? 24 : 28 }}>
+          <div className="ytg-hero-ph" style={{ display: 'flex', justifyContent: 'center' }}>
             <a
               href="https://www.producthunt.com/products/ytgrowth?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-ytgrowth"
               target="_blank"
