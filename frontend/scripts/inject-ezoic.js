@@ -41,6 +41,17 @@ const EZOIC = `
     </script>
     <script src="//ezoicanalytics.com/analytics.js"></script>`
 
+// Gated OFF until Ezoic actually approves the account. Pre-approval the
+// scripts serve zero ads (no revenue to protect) but still load ~400KB of
+// render-blocking, main-thread JS (sa.min.js -> ezorca, identity, ID5, ezodn)
+// that tanks the mobile PageSpeed score. The ezoic-site-verification meta in
+// index.html stays, so approval can still proceed. Re-enable once live:
+//   EZOIC_ENABLED=1 npm run build
+if (!process.env.EZOIC_ENABLED) {
+  console.log('[inject-ezoic] skipped: Ezoic not yet approved. Set EZOIC_ENABLED=1 to re-enable once the account is live.')
+  process.exit(0)
+}
+
 const files = globSync('**/index.html', { cwd: DIST }).map((f) => join(DIST, f))
 
 let injected = 0
