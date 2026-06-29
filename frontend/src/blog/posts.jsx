@@ -5901,7 +5901,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
     title: 'vidIQ Review (2026): Is It Worth It, and the Free Alternative',
     excerpt: 'An honest vidIQ review for 2026: what the extension does, what the plans cost, where users hit billing and accuracy issues, and how to cover the same jobs free.',
     date: '2026-05-18',
-    updated: '2026-06-14',
+    updated: '2026-06-29',
     category: CATEGORIES.seo,
     cover: '/blog/vidiq-review-cover.webp',
     author: 'Denzil',
@@ -5944,7 +5944,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Daily Ideas</h3>
 
-        <p>Consistently rated vidIQ's single best feature. It is an AI feed that proposes specific video topics every day, generated from your channel history cross-referenced with current trends in your niche. For a creator whose hardest weekly problem is deciding what to film at all, this removes the blank page. Some users report channels moving from under 100 views a day to thousands by working this feed consistently, though results vary heavily by niche, execution, and how good the rest of the upload is.</p>
+        <p>Consistently rated vidIQ's single best feature. It is an AI feed that proposes specific video topics every day, generated from your channel history cross-referenced with current trends in your niche. For a creator whose hardest weekly problem is deciding what to film at all, this removes the blank page.</p>
+
+        <p>Some users report channels moving from under 100 views a day to thousands by working this feed consistently, though results vary heavily by niche, execution, and how good the rest of the upload is.</p>
 
         <p>The caveat is causality again: a topic suggestion is a starting point, not a guarantee. The feed tells you what is being searched. It does not film, title, or thumbnail the video for you.</p>
 
@@ -5954,7 +5956,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Video Outliers</h3>
 
-        <p>Outliers surface videos that massively overperformed a channel's own average: the one upload that did 10x the channel norm. This is one of the most genuinely useful research signals on the platform, because an outlier is a proven, validated topic and format that already beat expectations for a creator in your space. Studying a competitor's outliers tells you what their audience rewarded, not what the creator hoped would work.</p>
+        <p>Outliers surface videos that massively overperformed a channel's own average: the one upload that did 10x the channel norm. This is one of the most genuinely useful research signals on the platform, because an outlier is a proven, validated topic and format that already beat expectations for a creator in your space.</p>
+
+        <p>Studying a competitor's outliers tells you what their audience rewarded, not what the creator hoped would work.</p>
 
         <p>It is a strong feature and one of the better reasons to look at vidIQ. The same job, finding the videos that broke a channel's pattern, is also exactly what a dedicated outliers view is built for, so it is worth knowing this is replicable elsewhere.</p>
 
@@ -5980,7 +5984,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>AI Tools and AI Coach</h3>
 
-        <p>vidIQ bundles AI generation for titles, descriptions, and tags, plus an AI Coach that answers channel-strategy questions in plain language. The generators are a reasonable first draft accelerator. The honest read across reviews is that the AI output is generic without heavy editing: usable as a starting point, weak as a finished product. The AI Coach is pitched hard on the higher tiers and is the feature whose value is most debated by paying users.</p>
+        <p>vidIQ bundles AI generation for titles, descriptions, and tags, plus an AI Coach that answers channel-strategy questions in plain language. The generators are a reasonable first draft accelerator. The honest read across reviews is that the AI output is generic without heavy editing: usable as a starting point, weak as a finished product.</p>
+
+        <p>The AI Coach is pitched hard on the higher tiers and is the feature whose value is most debated by paying users.</p>
 
         <img src="/blog/vidiq-review-ai-coach.webp" alt="vidIQ AI Coach answering a channel-strategy question in plain language" />
 
@@ -6009,7 +6015,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h2>What vidIQ Feels Like to Use</h2>
 
-        <p>The extension is the easy part. It installs in seconds and the overlay appears on YouTube with no setup, which is why most people's first impression of vidIQ is positive. The web platform is a heavier experience: a dense dashboard with a lot of panels, scores, and upsell prompts competing for attention at once. It is not hard to learn, but it is busy, and new creators often report spending the first few sessions figuring out which numbers matter versus which are there to push an upgrade.</p>
+        <p>The extension is the easy part. It installs in seconds and the overlay appears on YouTube with no setup, which is why most people's first impression of vidIQ is positive.</p>
+
+        <p>The web platform is a heavier experience: a dense dashboard with a lot of panels, scores, and upsell prompts competing for attention at once. It is not hard to learn, but it is busy, and new creators often report spending the first few sessions figuring out which numbers matter versus which are there to push an upgrade.</p>
 
         <p>The learning curve is short for the extension and moderate for the platform. None of it is technically difficult. The friction is volume of information, not complexity.</p>
 
@@ -6038,7 +6046,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <p>The pricing gap between monthly and annual is the part vidIQ does not advertise loudly. Boost on a rolling monthly plan is roughly $39, but commit to a full year up front and the effective rate drops to around $16.58 a month. That is less a discount and more a lock-in: you save only by paying twelve months in advance, before you know whether the tool works for your channel.</p>
 
-        <p>The honest read: the free tier is real but deliberately capped to push you toward Boost, and Boost on the monthly plan costs roughly the same as a full Adobe or streaming subscription every month. The vidiq prices are not unreasonable for an agency or a full-time creator. For a beginner channel with no revenue yet, that figure is the friction point. If you want the wider context, we previously compared the <a href="/blog/seo-tools-for-youtube">main YouTube SEO tools</a> side by side.</p>
+        <p>The honest read: the free tier is real but deliberately capped to push you toward Boost, and Boost on the monthly plan costs roughly the same as a full Adobe or streaming subscription every month. The vidiq prices are not unreasonable for an agency or a full-time creator.</p>
+
+        <p>For a beginner channel with no revenue yet, that figure is the friction point. If you want the wider context, we previously compared the <a href="/blog/seo-tools-for-youtube">main YouTube SEO tools</a> side by side.</p>
 
         <blockquote><strong>Pro Tip:</strong> Always start on the monthly plan, never the annual one, no matter how good the discount looks. Use it for one full month against your real workflow. The annual rate only saves money if the tool still earns its place after you know whether it works for your channel, and you cannot know that on day one.</blockquote>
 
@@ -6106,6 +6116,8 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
         <h3>Keyword Research</h3>
 
         <p>The reason people pay vidIQ is to know what to make a video about. YTGrowth's <a href="/features/keyword-research">keyword research</a> pulls live search data and competition for the phrases you are considering, which is the same job the locked vidIQ keyword tab is doing, without the Boost paywall in front of it.</p>
+
+        <p>And if you want a starting point with no account at all, the free <a href="/tools/youtube-keyword-research">keyword research tool</a> gives scored keyword ideas straight from YouTube autocomplete in seconds, the same first move vidIQ gates behind its keyword tab.</p>
 
         <img src="/blog/seo-tools-for-youtube-keyword-tool.webp" alt="A keyword research view showing live search volume and competition for YouTube phrases" />
 
