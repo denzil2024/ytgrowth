@@ -1007,7 +1007,7 @@ export default function Landing() {
             mega-menus open dead-center; logo and CTA hug the pill. */}
         <div style={{ flex: isMobile ? '0 0 auto' : '0 1 auto', display: 'flex', alignItems: 'center', minWidth: 0 }}>
           <a href="/" aria-label="ytgrowth home" style={{ display: 'inline-flex', textDecoration: 'none' }}>
-            <BrandLockup height={24} />
+            <BrandLockup height={30} />
           </a>
         </div>
 

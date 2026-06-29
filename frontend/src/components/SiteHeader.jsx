@@ -312,7 +312,7 @@ export default function SiteHeader() {
             mega-menus open dead-center), with the logo and CTA hugging it. */}
         <div className="sh-side sh-side-start">
           <a href="/" className="sh-brand" aria-label="ytgrowth home">
-            <BrandLockup height={24} />
+            <BrandLockup height={30} />
           </a>
         </div>
 
