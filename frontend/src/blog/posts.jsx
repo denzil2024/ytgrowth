@@ -2705,14 +2705,14 @@ export const posts = [
   },
   {
     slug: 'youtube-analytics',
-    title: 'YouTube Analytics Explained: Every Tab and Metric That Matters',
-    excerpt: 'A complete guide to YouTube Studio analytics: every tab, the metrics that drive growth, reading traffic sources, and checking the public stats of any channel.',
+    title: 'YouTube Analytics Explained: Every Metric That Matters (2026)',
+    excerpt: 'A complete guide to YouTube Studio analytics: every tab, how to read the audience retention graph, Shorts metrics, and 2026 benchmarks for CTR and retention.',
     date: '2026-05-22',
-    updated: '2026-06-14',
+    updated: '2026-06-29',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-analytics-cover.webp',
     author: 'Denzil',
-    readTime: '14 min read',
+    readTime: '20 min read',
     content: () => (
       <>
         <p>YouTube gives every creator access to a full performance dashboard the moment they upload a video. Most creators open it, check their view count, and close it without acting on anything else.</p>
@@ -2939,7 +2939,7 @@ export const posts = [
 
         <h2>5. The Trends Tab</h2>
 
-        <p>The Trends tab shows you what your audience and viewers across YouTube are <a href="/blog/youtube-trends">actively searching for right now</a>. It is the only tab in YouTube Studio built entirely around content discovery rather than performance review, making it the most useful starting point for planning your next video before you open any keyword research tool.</p>
+        <p>The Trends tab shows you what your audience and viewers across YouTube are <a href="/blog/youtube-trends">actively searching for right now</a>. It is the only tab in YouTube Studio built entirely around content discovery rather than performance review, making it the most useful starting point for planning your next video before you open any <a href="/tools/youtube-keyword-research">keyword research tool</a>.</p>
 
         <img src="/blog/youtube-analytics-trends-tab.webp" alt="YouTube Studio Trends tab showing top searches from the channel audience, saved search terms, and similar-channel content" />
 
@@ -2967,6 +2967,111 @@ export const posts = [
 
         <p><strong>Note:</strong> Some insights in the Trends tab are limited by country, language, and device. If your audience is geographically diverse, results may reflect the largest geographic segment of your viewers rather than your full audience picture.</p>
 
+        <h2>How to Read the Audience Retention Graph</h2>
+
+        <p>The five tabs above give you the channel-level picture. The single most important video-level report sits one click deeper: open any individual video, then open its Engagement tab, and you reach the audience retention graph.</p>
+
+        <p>It is the closest thing YouTube gives you to watching a viewer's finger hover over the back button second by second, and it explains more about why a video did or did not take off than any other chart in Studio.</p>
+
+        <p>Two numbers sit above the curve, and they are the ones to internalize first:</p>
+
+        <ul>
+          <li><strong>Average view duration (AVD):</strong> the average time a viewer spends watching before they leave, shown as minutes and seconds. It is the raw attention number, and alongside CTR it is one of the two metrics with the most direct pull on how widely the algorithm distributes a video.</li>
+          <li><strong>Average percentage viewed:</strong> AVD expressed as a share of the video's length. A ten-minute video with a four-minute AVD has an average percentage viewed of 40%. This is the fairer comparison across videos of different lengths, and it is the retention figure most creators mean when they talk about their retention.</li>
+        </ul>
+
+        <p>The graph itself plots what percentage of viewers are still watching at every moment of the video. It almost always starts near 100% and falls from there. Your job is reading the shape of the fall, not the starting point.</p>
+
+        <h3>The Intro Drop: Your First 30 Seconds</h3>
+
+        <p>Every retention curve drops fastest in the opening seconds, because that is the moment viewers decide whether the video delivers what the thumbnail promised. A steep cliff in the first 30 seconds is the most common and most fixable retention problem on the platform.</p>
+
+        <p>If you lose 30% or more of viewers before the 30-second mark, the <a href="/blog/youtube-title">packaging set an expectation</a> the intro did not immediately pay off. Cut the throat-clearing, open on the payoff or the question the video answers, and earn the slower build later once attention is locked in.</p>
+
+        <h3>Dips: Where Viewers Leave</h3>
+
+        <p>A sudden drop partway through the curve marks a moment viewers chose to leave. Hover over the dip to read the timestamp, then watch your own video from 30 seconds before that point. The cause is usually one of three things: a slow tangent, a promise the video set up but did not deliver, or a natural stopping point such as a verbal summary that signals the value is over.</p>
+
+        <p>Note the pattern and tighten or cut that beat in your next edit. A single recurring dip fixed across future uploads compounds into real <a href="/blog/youtube-watch-hours">watch-time gains</a> over a year of publishing.</p>
+
+        <h3>Spikes: Moments Worth Repeating</h3>
+
+        <p>An upward bump means the curve briefly rose above its own trend, which only happens when viewers rewind to rewatch a moment, or when a clip gets shared and sends new viewers straight to that timestamp. Spikes are gold.</p>
+
+        <p>They tell you exactly which demonstration, reveal, or line landed hard enough that people wanted it twice. Study what you did there and build more of it into future videos, because it is a repeatable formula your audience has already voted for.</p>
+
+        <h3>Absolute vs Relative Retention</h3>
+
+        <p>YouTube offers two views of the same data. Absolute retention is your own curve in isolation. Relative retention compares your video against all YouTube videos of similar length, so you can see whether your intro and pacing hold attention better or worse than the platform norm.</p>
+
+        <p>Use absolute retention to find your specific dips and spikes, and use relative retention to judge whether your numbers are genuinely strong or just average for the format. The key moments markers on the graph flag the biggest spikes and drops automatically, so you can jump straight to the parts worth studying.</p>
+
+        <h2>Shorts Analytics: Viewed vs Swiped Away</h2>
+
+        <p>Shorts do not play by long-form rules, and their most important metric does not appear anywhere in the standard reports. To find it, open the Content tab, click the <strong>Shorts</strong> chip at the top, and look for <strong>Viewed vs Swiped away</strong>.</p>
+
+        <p>This single ratio decides a Short's fate. Out of everyone the feed showed your Short to, it measures how many stayed to watch versus how many flicked past it in the first instant. It is the Shorts equivalent of click-through rate, except you cannot fix it with a thumbnail. The opening frame and the first second are the entire pitch, so that is where the work goes.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Swiped-Away Rate</th>
+              <th>What It Means</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>10% to 30%</strong></td><td>Healthy. Your opening frame is earning the watch.</td></tr>
+            <tr><td><strong>30% to 40%</strong></td><td>Watch closely. The hook is soft or the audience match is loose.</td></tr>
+            <tr><td><strong>Above 40%</strong></td><td>Red flag. The first frame is not compelling or you are reaching the wrong viewers.</td></tr>
+          </tbody>
+        </table>
+
+        <p>Two more Shorts numbers matter alongside it:</p>
+
+        <ul>
+          <li><strong>Shorts retention:</strong> aim to hold above 80% through the first three seconds, the swipe-or-stay moment, and finish with an average percentage viewed above 70%. Shorts standards run far higher than long-form because the format is built to loop, and a strong loop multiplies watch time on every play.</li>
+          <li><strong>Likes, comments, and shares in the first hours:</strong> early engagement velocity tells the feed whether to keep widening distribution, so a Short that sparks comments out of the gate tends to keep getting served.</li>
+        </ul>
+
+        <h2>What Counts as Good? 2026 Benchmarks</h2>
+
+        <p>"Is my CTR good?" has no answer without context, but creators ask it constantly, so here are the ranges that hold across most niches in 2026. Treat them as a compass, not a scoreboard. A 4% CTR paired with strong retention beats an 8% CTR that collapses after the intro, because YouTube weighs the whole picture rather than any single number.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Needs work</th>
+              <th>Solid</th>
+              <th>Strong</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Impressions CTR</strong></td><td>Below 4%</td><td>4% to 7%</td><td>7% to 10%+</td></tr>
+            <tr><td><strong>Average percentage viewed (long-form)</strong></td><td>Below 35%</td><td>40% to 55%</td><td>55%+</td></tr>
+            <tr><td><strong>Intro retention (first 30 seconds)</strong></td><td>Below 70% remaining</td><td>70% to 85%</td><td>85%+</td></tr>
+            <tr><td><strong>Shorts swiped-away rate</strong></td><td>Above 40%</td><td>30% to 40%</td><td>Below 30%</td></tr>
+          </tbody>
+        </table>
+
+        <p>Three caveats keep these honest. Longer videos naturally show a lower average percentage viewed than short ones, so judge a 20-minute video against other long videos, not against a 4-minute one. Search traffic usually retains better than browse or suggested traffic, because search viewers arrived with intent.</p>
+
+        <p>And a brand-new channel sits below these ranges while the algorithm is still learning who to show you to, which is normal and not a verdict. For the full breakdown of click-through rate specifically, the dedicated guide on <a href="/blog/youtube-ctr">what counts as a good YouTube CTR</a> goes deeper than the row above.</p>
+
+        <h2>Engagement, End Screens, and Advanced Mode</h2>
+
+        <p>Retention tells you whether people watched. The engagement metrics tell you whether they cared, and they sit in the same video-level Engagement tab.</p>
+
+        <ul>
+          <li><strong>Likes, comments, and shares</strong> are the clearest signal of how strongly a video connected. Shares matter most of the three, because a share pulls a brand-new viewer onto the platform on your behalf. Sort your videos by comment count and read the recurring questions: they are a direct editorial brief for your next round of videos.</li>
+          <li><strong>End screen and card click-through</strong> shows whether viewers act on your in-video prompts. A low end-screen CTR usually means the screen appears too late, lingers too briefly, or asks for the wrong next step. Point it at the one video you most want watched next rather than a wall of options.</li>
+          <li><strong>Subscribers gained per video</strong> tells you which topics convert watchers into followers. A video that pulls big views but few subscribers is reaching people who liked one thing, not your channel, which is useful context before you build a whole series around it.</li>
+        </ul>
+
+        <p>Once the basics are second nature, <strong>Advanced mode</strong> (the button in the top right of any report) is where the real comparison work happens. You can put two videos side by side to see which intro held better, compare this month against last to isolate what changed, and build groups of videos, by format, series, or topic, so you measure a content type as a whole instead of one upload at a time.</p>
+
+        <p>Comparing a tutorial group against a vlog group often reveals which format your channel should lean into long before any single video makes the case.</p>
+
         <h2>How to See Another Channel's YouTube Analytics</h2>
 
         <p>One of the most common questions creators ask is whether they can open another channel's analytics the way they open their own. The honest answer is no, not the private data. The full Studio dashboard, with its exact CTR, retention curves, and revenue figures, is only visible to the person who owns the channel. What you can see is the public performance layer, and for competitor research that layer is usually enough.</p>
@@ -2980,7 +3085,9 @@ export const posts = [
           <li><strong>Title, thumbnail, and tag patterns</strong> that reveal how a competitor packages content for search and browse</li>
         </ul>
 
-        <p>Reading this for one channel by hand is quick. Doing it across ten competitors, every week, is not. That is the gap a dedicated tool closes. <a href="/features/competitor-analysis">Competitor Analysis</a> tracks rival channels and surfaces their winning title patterns, posting times, and the specific videos breaking out above their baseline, so you benchmark against real numbers instead of guessing. For a fast one-off look at a single channel, the free <a href="/tools/youtube-channel-stats-checker">channel stats checker</a> returns its public subscriber, view, and upload data in seconds.</p>
+        <p>Reading this for one channel by hand is quick. Doing it across ten competitors, every week, is not. That is the gap a dedicated tool closes. <a href="/features/competitor-analysis">Competitor Analysis</a> tracks rival channels and surfaces their winning title patterns, posting times, and the specific videos breaking out above their baseline, so you benchmark against real numbers instead of guessing.</p>
+
+        <p>For a fast one-off look at a single channel, the free <a href="/tools/youtube-channel-stats-checker">channel stats checker</a> returns its public subscriber, view, and upload data in seconds.</p>
 
         <p>There is also a native shortcut hiding in your own dashboard. The <strong>Other channels your audience watches</strong> card in the Audience tab, covered above, is effectively a competitor list YouTube built for you out of your viewers' real behavior. Start there, then run the channels it names through the tools above.</p>
 
@@ -3141,7 +3248,7 @@ export const posts = [
 
         <p>CTR tells you whether your packaging is working. Average view duration tells you whether your content is holding attention. Traffic sources tell you whether viewers are finding you through search. Those three metrics answer the most important questions about your channel's growth before you touch anything else.</p>
 
-        <p>Run the post-publish routine in Section 10 after every upload. Check your search terms report monthly for confirmed content opportunities. Review your Audience tab quarterly to confirm the algorithm is serving your content to the right people. That process applied consistently turns YouTube channel statistics from a passive report into an active growth system.</p>
+        <p>Run the post-publish routine above after every upload. Check your search terms report monthly for confirmed content opportunities. Review your Audience tab quarterly to confirm the algorithm is serving your content to the right people. That process applied consistently turns YouTube channel statistics from a passive report into an active growth system.</p>
 
         <p>For a deeper level of benchmarking beyond what YouTube Studio provides, the <a href="/features/channel-audit">Channel Audit</a> in ytgrowth.io compares your CTR, retention, traffic sources, and content patterns against competing channels in your niche, giving you the context YouTube Studio alone cannot provide.</p>
       </>
