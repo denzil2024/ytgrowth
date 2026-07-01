@@ -153,7 +153,7 @@ export default function Dashboard() {
   const [replyPosted, setReplyPosted] = useState(false)
   const [replyPostError, setReplyPostError] = useState('')
   // Top Search Terms card. Real YouTube Analytics data, the queries
-  // viewers actually typed to find the user's videos in the last 28 days.
+  // viewers typed to find the user's videos in the last 28 days.
   // Cached per-channel for 24h. Null while loading or when there's no
   // search traffic.
   const [topSearchTerms, setTopSearchTerms] = useState(null)
@@ -211,7 +211,7 @@ export default function Dashboard() {
   }
 
   // Onboarding step signals: mark "optimized a video" / "found an idea"
-  // when the user actually visits those surfaces (by any path), so the
+  // when the user visits those surfaces (by any path), so the
   // getting-started flow checks them off. Bump obVer to re-derive.
   useEffect(() => {
     const cid = data?.channel?.channel_id
@@ -356,7 +356,7 @@ export default function Dashboard() {
       .catch(() => {})
 
     // Load Top Search Terms: backend hits YouTube Analytics for the
-    // queries viewers actually typed to find this channel's videos in
+    // queries viewers typed to find this channel's videos in
     // the last 28 days. Cached per-channel for 24h. Card hides when
     // there's no search traffic to surface.
     fetch('/dashboard/top-search-terms', { credentials: 'include' })
@@ -911,7 +911,7 @@ export default function Dashboard() {
                 // the progress card is the most important thing on the page, so
                 // it sits at the TOP of the column. It used to render far below
                 // the feed and milestones, leaving new users scrolling to find
-                // the one thing actually working. analyzingAI always coincides
+                // the one thing working. analyzingAI always coincides
                 // with insights=null (re-audit nulls it), so this is the single
                 // render site for the card.
                 if (analyzingAI) {

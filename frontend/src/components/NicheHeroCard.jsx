@@ -546,7 +546,7 @@ function EmptyOutlier({ reason, onNavigate }) {
           </p>
           <p className="nh-reason">
             We do not auto-pick a query for you here. Auto-picks land on off-niche results.
-            Type the topic you actually want to study and the full set lands here.
+            Type the topic you want to study and the full set lands here.
           </p>
           <div className="nh-bottom-row">
             <span />

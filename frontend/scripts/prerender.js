@@ -21,6 +21,7 @@ import { dirname, join, resolve } from 'node:path'
 import puppeteer from 'puppeteer'
 import { CATEGORY_META } from '../src/data/youtubeStatsCategories.js'
 import { COUNTRY_META }  from '../src/data/youtubeStatsCountries.js'
+import { NICHES }        from '../src/data/youtubeEarnings.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = dirname(__filename)
@@ -79,6 +80,10 @@ const META_BY_ROUTE = {
   '/features/outliers': {
     title:       'YouTube Outlier Finder: Spot Viral Videos in Your Niche',
     description: "Find YouTube videos that hit 5x, 10x, or 50x their channel's normal views in your niche. Outlier score, breakout channels, top thumbnails.",
+  },
+  '/tools': {
+    title:       'Free YouTube Tools 2026: Calculators, Generators & Analyzers',
+    description: 'Every free YTGrowth tool in one place: YouTube money calculators, title, description, tag and hashtag generators, thumbnail tester, keyword research, channel stats, and more. No login.',
   },
   '/tools/youtube-money-calculator': {
     title:       'YouTube Earnings Calculator 2026: Free Revenue & Income Estimator',
@@ -177,6 +182,18 @@ for (const country of COUNTRY_META) {
   }
 }
 
+/* /youtube-earnings/:niche pages — per-niche creator-earnings landing pages.
+ * Label mirrors the runtime page: category label if the niche maps to a
+ * /youtube-stats category, else the niche's own label. Title/description match
+ * NicheEarnings.jsx exactly so the prerendered head matches the React head. */
+for (const n of NICHES) {
+  const label = (CATEGORY_META.find(c => c.id === n.key)?.label) || n.label
+  META_BY_ROUTE[`/youtube-earnings/${n.key}`] = {
+    title:       `How Much Do ${label} YouTubers Make in 2026?`,
+    description: `What ${label.toLowerCase()} YouTubers earn in 2026: real RPM and CPM by niche, earnings per million views, and a free calculator.`,
+  }
+}
+
 /* Discover blog slugs from the source data file. We slice from
  * `export const posts = [` so we never pick up the CATEGORIES `slug:` keys
  * that live above it. The line-anchored regex avoids matching slug strings
@@ -230,6 +247,7 @@ async function buildRoutes() {
     '/features/thumbnail-iq',
     '/features/keyword-research',
     '/features/outliers',
+    '/tools',
     '/tools/youtube-money-calculator',
     '/tools/youtube-subscriber-money-calculator',
     '/tools/youtube-channel-stats-checker',
@@ -245,6 +263,7 @@ async function buildRoutes() {
     '/tools/youtube-hashtag-generator',
     '/tools/youtube-chapter-generator',
     '/tools/youtube-thumbnail-tester',
+    ...NICHES.map(n => `/youtube-earnings/${n.key}`),
     '/youtube-stats',
     '/youtube-stats/gaming',
     '/youtube-stats/tech',

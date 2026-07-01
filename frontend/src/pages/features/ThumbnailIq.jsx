@@ -3,22 +3,23 @@ import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import { injectFaqJsonLd } from '../../utils/seo'
 
-/* Thumbnail IQ. Fully custom landing page.
- *
- * Built around the *actual* product (see app/thumbnail.py + routers/
- * thumbnail_routes.py): a two-layer scorer. Layer 1 is deterministic CV
- * (OpenCV face detection, pytesseract OCR, WCAG contrast, k-means dominant
- * colors, HSV vibrancy) producing 60 algorithm points across 7 components.
- * Layer 2 is Claude Sonnet 4.6 vision against the user's thumbnail + the
- * top 3 benchmark thumbnails for the same keyword + format + size bracket,
- * scoring 6 psychological dimensions for 40 points. Combined 0–100 score,
- * benchmarked against the cached niche pool of top performers.
- *
- * Background rhythm matches Landing.jsx and the Channel Audit / Competitor
- * Analysis / SEO Studio pages: white > dark > light > dark > white > dark >
- * light > dark > white > light. All classes use the .tiq- prefix to avoid
- * collision with the in-app product page.
- */
+/* Thumbnail IQ feature page. Migrated to the editorial design language
+   (Fraunces + Barlow, sharp flat cards, warm paper, restrained red). The old
+   white→dark→light rhythm is now predominantly warm paper; the scorecard and
+   niche-benchmark stay dark "app preview" panes (on-dark accents use warm gold
+   #e6b35c, since red goes muddy on near-black). Foreign green/amber/blue tints
+   neutralised to ink/accent/gold; mock thumbnails + the niche palette swatch
+   are warm/brand-toned rather than rainbow; output icons are neutral ink; body
+   italics removed; bottom CTA removed. ALL copy, FAQs, the 13 scoring
+   dimensions, and product detail preserved. Classes use the .tiq- prefix to
+   avoid collision with the in-app product page. See
+   project_design_language_editorial. */
+
+const SERIF = "'Fraunces', Georgia, serif"
+const SANS  = "'Barlow', system-ui, sans-serif"
+/* On-dark accent. Red goes muddy on near-black, so the dark "app preview"
+   panes use a warm gold (the Zennara-lineage on-dark tone) instead. */
+const GOLD = '#e6b35c'
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -33,129 +34,67 @@ function useBreakpoint() {
 function useStyles() {
   useEffect(() => {
     if (document.getElementById('tiq-styles')) return
-
     const style = document.createElement('style')
     style.id = 'tiq-styles'
     style.textContent = `
       :root {
-        --ytg-bg:           #f4f4f6;
-        --ytg-bg-2:         #ecedf1;
-        --ytg-bg-3:         #e6e7ec;
-        --ytg-text:         #0a0a0f;
-        --ytg-text-2:       rgba(10,10,15,0.62);
-        --ytg-text-3:       rgba(10,10,15,0.40);
-        --ytg-text-4:       rgba(10,10,15,0.30);
-        --ytg-nav:          rgba(244,244,246,0.92);
-        --ytg-card:         #ffffff;
-        --ytg-border:       rgba(10,10,15,0.09);
-        --ytg-accent:       #e5302a;
-        --ytg-accent-text:  #c22b25;
-        --ytg-accent-light: rgba(229,48,42,0.07);
-        --ytg-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
-        --ytg-shadow:       0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.11);
-        --ytg-shadow-lg:    0 4px 16px rgba(0,0,0,0.11), 0 24px 60px rgba(0,0,0,0.14);
-        --ytg-shadow-xl:    0 8px 28px rgba(0,0,0,0.13), 0 40px 100px rgba(0,0,0,0.17);
+        --yte-bg: #f6f4ef; --yte-bg-2: #efece4; --yte-surface: #ffffff;
+        --yte-ink: #14130f; --yte-soft: #5c574e; --yte-muted: #8a8378;
+        --yte-line: rgba(20,19,15,0.12); --yte-line-2: rgba(20,19,15,0.22);
+        --yte-accent: #e5302a; --yte-accent-soft: rgba(229,48,42,0.07); --yte-dark: #0d0d12;
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
-      ::-webkit-scrollbar { width: 12px; height: 12px }
-      ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb {
-        background-color: rgba(10,10,15,0.28);
-        border-radius: 10px;
-        border: 3px solid transparent;
-        background-clip: content-box;
-      }
-      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }@keyframes fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+      html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+      body { background: var(--yte-bg); color: var(--yte-ink); font-family: ${SANS}; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+      @keyframes tiqFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
 
-      .tiq-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-accent); color: #fff; font-size: 15px; font-weight: 700; padding: 15px 30px; border-radius: 100px; border: none; cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(229,48,42,0.34); transition: filter 0.18s, transform 0.18s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
-      .tiq-btn:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.16), 0 12px 36px rgba(229,48,42,0.42); }
-      .tiq-btn-lg { font-size: 16px; padding: 17px 38px; }
-      .tiq-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-card); color: var(--ytg-text-2); font-size: 15px; font-weight: 600; padding: 14px 26px; border-radius: 100px; border: 1px solid var(--ytg-border); cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: var(--ytg-shadow-sm); transition: color 0.15s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
-      .tiq-btn-ghost:hover { color: var(--ytg-text); box-shadow: var(--ytg-shadow); }
+      .tiq-wrap { max-width: 1120px; margin: 0 auto; }
+      .tiq-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+      .tiq-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
+      .tiq-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
+      .tiq-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.05; }
+      .tiq-h1 em { font-style: italic; color: var(--yte-accent); }
+      .tiq-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
+      .tiq-h2 em { font-style: italic; color: var(--yte-accent); }
+      .tiq-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
-      .tiq-eyebrow {
-        display: inline-flex; align-items: center; gap: 8px;
-        font-size: 11px; font-weight: 700;
-        letter-spacing: 0.08em; text-transform: uppercase;
-        padding: 5px 13px; border-radius: 100px; margin-bottom: 16px;
-      }
-      .tiq-eyebrow.light { color: var(--ytg-accent-text); background: var(--ytg-accent-light); }
-      .tiq-eyebrow.dark  { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
+      .tiq-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 30px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
+      .tiq-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+      .tiq-btn-lg { font-size: 13px; padding: 17px 36px; }
+      .tiq-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 28px; border-radius: 0; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yte-soft); text-decoration: none; background: var(--yte-surface); border: 1px solid var(--yte-line); transition: color 0.15s, border-color 0.15s; }
+      .tiq-ghost:hover { color: var(--yte-ink); border-color: var(--yte-line-2); }
 
-      .tiq-h1 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -2px; line-height: 1.05; text-wrap: balance; }
-      .tiq-h2 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -1.4px; line-height: 1.08; text-wrap: balance; }
-
-      .tiq-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
-      .tiq-nav-link:hover { color: var(--ytg-text-2); }
-
-      .tiq-faq-item { border-bottom: 1px solid var(--ytg-border); }
-      .tiq-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: inherit; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; font-size: 16.5px; font-weight: 700; color: var(--ytg-text); letter-spacing: -0.2px; line-height: 1.45; }
-      .tiq-faq-q:hover { color: var(--ytg-accent); }
-      .tiq-faq-icon { transition: transform 0.2s; flex-shrink: 0; color: var(--ytg-text-3); margin-top: 4px; }
-      .tiq-faq-icon.open { transform: rotate(45deg); color: var(--ytg-accent); }
-      .tiq-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; display: none; }
+      .tiq-faq-item { border-bottom: 1px solid var(--yte-line); }
+      .tiq-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${SERIF}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
+      .tiq-faq-q:hover { color: var(--yte-accent); }
+      .tiq-faq-q.open { color: var(--yte-accent); }
+      .tiq-faq-plus { flex-shrink: 0; font-family: ${SANS}; font-size: 26px; font-weight: 300; color: var(--yte-accent); line-height: 1; transition: transform 0.2s; }
+      .tiq-faq-plus.open { transform: rotate(45deg); }
+      .tiq-faq-a { font-family: ${SANS}; font-size: 15.5px; color: var(--yte-soft); line-height: 1.78; padding: 0 0 24px 0; max-width: 720px; display: none; }
       .tiq-faq-a.open { display: block; }
+      .tiq-faq-a b { font-weight: 600; color: var(--yte-ink); }
 
       @media (max-width: 900px) {
-        .tiq-grid-2 { grid-template-columns: 1fr !important; gap: 32px !important; }
+        .tiq-grid-2 { grid-template-columns: 1fr !important; gap: 36px !important; }
         .tiq-grid-3 { grid-template-columns: 1fr !important; }
         .tiq-grid-4 { grid-template-columns: 1fr 1fr !important; }
       }
       @media (max-width: 600px) {
         .tiq-grid-4 { grid-template-columns: 1fr !important; }
       }
+      @media (max-width: 768px) {
+        .tiq-section-pad { padding-left: 22px !important; padding-right: 22px !important; }
+      }
     `
     document.head.appendChild(style)
   }, [])
 }
 
-function Logo({ size = 28 }) {
+function Eyebrow({ children, center }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
-      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
-    </svg>
-  )
-}
-
-const FEATURE_NAV = [
-  { href: '/features/channel-audit',       label: 'Channel Audit',       desc: '10-category AI audit of your channel' },
-  { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
-  { href: '/features/seo-studio',          label: 'SEO Studio',          desc: 'Score + rewrite titles and descriptions' },
-  { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
-  { href: '/features/keyword-research',    label: 'Keyword Research',    desc: 'YouTube-native search volume + difficulty' },
-  { href: '/features/outliers',            label: 'Outliers',            desc: 'Find viral videos and breakout channels' },
-]
-
-function FeaturesDropdown() {
-  const [open, setOpen] = useState(false)
-  return (
-    <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} style={{ position: 'relative' }}>
-      <a href="/#features" className="tiq-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
-        Features
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
-          <path d="M2 3.5l3 3 3-3"/>
-        </svg>
-      </a>
-      {open && (
-        <>
-          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
-          <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: -20, zIndex: 200, background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14, boxShadow: 'var(--ytg-shadow-lg)', padding: 8, minWidth: 340, animation: 'fadeUp 0.16s ease both' }}>
-            {FEATURE_NAV.map((item, i) => (
-              <a key={i} href={item.href} style={{ display: 'block', padding: '11px 14px', borderRadius: 9, textDecoration: 'none', transition: 'background 0.12s' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
-                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-2)', lineHeight: 1.45 }}>{item.desc}</p>
-              </a>
-            ))}
-          </div>
-        </>
-      )}
+    <div className="tiq-eyebrow" style={center ? { justifyContent: 'center' } : undefined}>
+      <span aria-hidden="true" className="tiq-eyebrow-rule" />
+      <span className="tiq-eyebrow-text">{children}</span>
     </div>
   )
 }
@@ -164,70 +103,66 @@ function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="tiq-faq-item">
-      <button className="tiq-faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
+      <button className={`tiq-faq-q${open ? ' open' : ''}`} onClick={() => setOpen(o => !o)} aria-expanded={open}>
         <span style={{ flex: 1 }}>{q}</span>
-        <span className={`tiq-faq-icon${open ? ' open' : ''}`}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><path d="M8 2v12M2 8h12"/></svg>
-        </span>
+        <span aria-hidden="true" className={`tiq-faq-plus${open ? ' open' : ''}`}>+</span>
       </button>
       <div className={`tiq-faq-a${open ? ' open' : ''}`}>{a}</div>
     </div>
   )
 }
 
-/* ── Visual: Combined scorecard (algorithm 60 + vision 40 = 100) ──────── */
+/* ── Visual: Combined scorecard (algorithm 60 + vision 40 = 100, dark) ──── */
 function ThumbnailScorecardVisual() {
+  const rows = [
+    { label: 'Contrast (stddev 87)',    score: 100 },
+    { label: 'Face coverage 24%',       score: 100 },
+    { label: 'Text readability (WCAG)', score: 70 },
+    { label: 'Feed distinctiveness',    score: 80 },
+  ]
   return (
-    <div style={{ background: '#111114', borderRadius: 18, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 26 }}>
+    <div style={{ background: 'var(--yte-ink)', padding: 26 }}>
       {/* Faux thumbnail strip */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 18 }}>
-        <div style={{ width: 96, height: 54, borderRadius: 7, background: 'linear-gradient(135deg, #ff3b30 0%, #f59e0b 50%, #4a7cf7 100%)', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', bottom: 4, left: 5, right: 5, fontSize: 8, fontWeight: 800, color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,0.6)', letterSpacing: '-0.3px' }}>I TRIED THIS FOR 30 DAYS</div>
+        <div style={{ width: 96, height: 54, background: 'linear-gradient(135deg, #e6b35c 0%, #2a241a 100%)', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', bottom: 4, left: 5, right: 5, fontFamily: SANS, fontSize: 8, fontWeight: 700, color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,0.6)', letterSpacing: '-0.3px' }}>I TRIED THIS FOR 30 DAYS</div>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.85)', fontWeight: 600, marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>I tried this for 30 days...</p>
-          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>1280×720 · listicle · micro channel</p>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'rgba(255,255,255,0.85)', fontWeight: 600, marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>I tried this for 30 days...</p>
+          <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>1280×720 · listicle · micro channel</p>
         </div>
       </div>
       {/* Score header */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 18 }}>
-        <span style={{ fontSize: 46, fontWeight: 800, color: '#4ade80', letterSpacing: '-2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>78</span>
-        <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.35)' }}>/100</span>
-        <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 800, color: '#4ade80', background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.3)', padding: '3px 9px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Stands out</span>
+        <span style={{ fontFamily: SERIF, fontSize: 48, fontWeight: 400, color: GOLD, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>78</span>
+        <span style={{ fontFamily: SANS, fontSize: 18, color: 'rgba(255,255,255,0.35)' }}>/100</span>
+        <span style={{ marginLeft: 'auto', fontFamily: SANS, fontSize: 10, fontWeight: 700, color: GOLD, border: '1px solid rgba(230,179,92,0.4)', padding: '4px 10px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Stands out</span>
       </div>
       {/* Layer 1 + Layer 2 split */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
-        <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px' }}>
-          <p style={{ fontSize: 9.5, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Layer 1 · algorithm</p>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', fontVariantNumeric: 'tabular-nums' }}>48</span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>/60</span>
+        {[
+          { l: 'Layer 1 · algorithm', n: 48, d: 60, sub: 'OpenCV · OCR · WCAG' },
+          { l: 'Layer 2 · vision AI', n: 30, d: 40, sub: 'Sonnet 4.6 vs niche' },
+        ].map((c, i) => (
+          <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 14px' }}>
+            <p style={{ fontFamily: SANS, fontSize: 9.5, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>{c.l}</p>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+              <span style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', letterSpacing: '-0.5px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{c.n}</span>
+              <span style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>/{c.d}</span>
+            </div>
+            <p style={{ fontFamily: SANS, fontSize: 10.5, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{c.sub}</p>
           </div>
-          <p style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>OpenCV · OCR · WCAG</p>
-        </div>
-        <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px' }}>
-          <p style={{ fontSize: 9.5, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Layer 2 · vision AI</p>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', fontVariantNumeric: 'tabular-nums' }}>30</span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>/40</span>
-          </div>
-          <p style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>Sonnet 4.6 vs niche</p>
-        </div>
+        ))}
       </div>
       {/* Component bars */}
-      {[
-        { label: 'Contrast (stddev 87)',      score: 100, color: '#4ade80' },
-        { label: 'Face coverage 24%',         score: 100, color: '#4ade80' },
-        { label: 'Text readability (WCAG)',   score: 70,  color: '#f59e0b' },
-        { label: 'Feed distinctiveness',      score: 80,  color: '#4ade80' },
-      ].map((row, i) => (
+      {rows.map((row, i) => (
         <div key={i} style={{ marginBottom: i < 3 ? 11 : 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-            <span style={{ fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.6)' }}>{row.label}</span>
-            <span style={{ fontSize: 12.5, fontWeight: 700, color: row.color, fontVariantNumeric: 'tabular-nums' }}>{row.score}</span>
+            <span style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.6)' }}>{row.label}</span>
+            <span style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 700, color: 'rgba(255,255,255,0.85)', fontVariantNumeric: 'tabular-nums' }}>{row.score}</span>
           </div>
-          <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 100, overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: `${row.score}%`, background: row.color, borderRadius: 100 }} />
+          <div style={{ height: 4, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${row.score}%`, background: GOLD }} />
           </div>
         </div>
       ))}
@@ -235,50 +170,50 @@ function ThumbnailScorecardVisual() {
   )
 }
 
-/* ── Visual: Niche benchmark comparison (your thumb vs top 3) ─────────── */
+/* ── Visual: Niche benchmark comparison (your thumb vs top 3, dark) ─────── */
 function BenchmarkVisual() {
   return (
-    <div style={{ background: '#111114', borderRadius: 18, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
-        <p style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Niche benchmark · listicle · micro</p>
-        <span style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', background: 'rgba(74,124,247,0.12)', border: '1px solid rgba(74,124,247,0.28)', padding: '2px 8px', borderRadius: 100 }}>10 top performers</span>
+    <div style={{ background: 'var(--yte-ink)', padding: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14, gap: 12 }}>
+        <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Niche benchmark · listicle · micro</p>
+        <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: GOLD, letterSpacing: '0.04em', flexShrink: 0 }}>10 top performers</span>
       </div>
       {/* Your thumb row */}
-      <p style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Yours</p>
-      <div style={{ display: 'flex', gap: 10, marginBottom: 16, paddingBottom: 14, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div style={{ width: 84, height: 47, borderRadius: 6, background: 'linear-gradient(135deg, #ff3b30 0%, #f59e0b 60%, #4a7cf7 100%)', flexShrink: 0 }} />
-        <div style={{ flex: 1, fontSize: 11, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
-          <p>Contrast <span style={{ color: '#4ade80', fontWeight: 700 }}>87</span> · benchmark avg 64 → <span style={{ color: '#4ade80' }}>+36%</span></p>
-          <p>Face <span style={{ color: '#4ade80', fontWeight: 700 }}>yes (24%)</span> · 80% of top performers also have a face</p>
+      <p style={{ fontFamily: SANS, fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Yours</p>
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16, paddingBottom: 14, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ width: 84, height: 47, background: 'linear-gradient(135deg, #e6b35c 0%, #2a241a 100%)', flexShrink: 0 }} />
+        <div style={{ flex: 1, fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
+          <p>Contrast <span style={{ color: GOLD, fontWeight: 700 }}>87</span> · benchmark avg 64 → <span style={{ color: GOLD }}>+36%</span></p>
+          <p>Face <span style={{ color: GOLD, fontWeight: 700 }}>yes (24%)</span> · 80% of top performers also have a face</p>
         </div>
       </div>
       {/* Top 3 benchmark thumbnails */}
-      <p style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Top 3 by velocity</p>
+      <p style={{ fontFamily: SANS, fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Top 3 by velocity</p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 14 }}>
         {[
-          { g: 'linear-gradient(135deg, #4a7cf7 0%, #111 70%)', v: '12.4K/d' },
-          { g: 'linear-gradient(135deg, #f59e0b 0%, #ff3b30 100%)', v: '9.1K/d' },
-          { g: 'linear-gradient(135deg, #4ade80 0%, #4a7cf7 100%)', v: '6.7K/d' },
+          { g: 'linear-gradient(135deg, #b98a3e 0%, #1a160e 70%)', v: '12.4K/d' },
+          { g: 'linear-gradient(135deg, #e6b35c 0%, #3a2f1e 100%)', v: '9.1K/d' },
+          { g: 'linear-gradient(135deg, #6b6052 0%, #1a160e 100%)', v: '6.7K/d' },
         ].map((b, i) => (
           <div key={i}>
-            <div style={{ aspectRatio: '16/9', borderRadius: 6, background: b.g, marginBottom: 4 }} />
-            <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>{b.v}</p>
+            <div style={{ aspectRatio: '16/9', background: b.g, marginBottom: 4 }} />
+            <p style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>{b.v}</p>
           </div>
         ))}
       </div>
       {/* Niche averages */}
-      <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 8, padding: '10px 12px' }}>
-        <p style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Niche signature</p>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(255,255,255,0.6)', marginBottom: 4 }}>
+      <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)', padding: '10px 12px' }}>
+        <p style={{ fontFamily: SANS, fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Niche signature</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.6)', marginBottom: 4 }}>
           <span>Face rate</span><span style={{ fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>80%</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>
           <span>Text-overlay rate</span><span style={{ fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>90%</span>
         </div>
-        <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', marginBottom: 4 }}>Common color palette</p>
+        <p style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(255,255,255,0.5)', marginBottom: 4 }}>Common color palette</p>
         <div style={{ display: 'flex', gap: 4 }}>
-          {['#ff3b30', '#f59e0b', '#1a1a2e', '#4a7cf7', '#fff', '#4ade80'].map((c, i) => (
-            <div key={i} style={{ width: 18, height: 18, borderRadius: 4, background: c, border: '1px solid rgba(255,255,255,0.12)' }} />
+          {['#e5302a', '#e6b35c', '#1a1a2e', '#3a2f1e', '#f6f4ef', '#8a8378'].map((c, i) => (
+            <div key={i} style={{ width: 18, height: 18, background: c, border: '1px solid rgba(255,255,255,0.14)' }} />
           ))}
         </div>
       </div>
@@ -328,8 +263,8 @@ const ICON_PATHS = {
 
 function OutputIcon({ name }) {
   return (
-    <div style={{ width: 38, height: 38, borderRadius: 10, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#e5302a" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+    <div style={{ width: 38, height: 38, background: 'rgba(20,19,15,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="var(--yte-ink)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
         <path d={ICON_PATHS[name]}/>
       </svg>
     </div>
@@ -353,8 +288,8 @@ const FAQS = [
     a: <>For your keyword + format + size bracket we fetch the top 50 YouTube videos via the official Data API, filter for above-median view velocity, last-12-months only, &gt;10K views, format match (tutorial / listicle / story / comparison / revelation), and channel-size bracket match (nano &lt;10K, micro &lt;100K, mid &lt;1M, macro 1M+). The top 10 by velocity become your benchmark pool. We run Layer 1 on each of their thumbnails and average the metrics. The pool is cached for 30 days and shared across users on the same niche, so your run isn’t paying for someone else’s benchmark build.</>,
   },
   {
-    q: 'What does "channel size bracket" actually do?',
-    a: <>Comparing a 5K-sub thumbnail against MrBeast’s feed is useless. The benchmark pool only includes top performers in <i>your</i> size bracket (nano / micro / mid / macro), so the score reflects what actually wins among channels that real viewers see alongside yours. A 78 on Thumbnail IQ for a nano channel means the thumbnail beats the average top-performing nano thumbnail in your niche. A target you can actually hit.</>,
+    q: 'What does "channel size bracket" do?',
+    a: <>Comparing a 5K-sub thumbnail against MrBeast’s feed is useless. The benchmark pool only includes top performers in <b>your</b> size bracket (nano / micro / mid / macro), so the score reflects what really wins among channels that real viewers see alongside yours. A 78 on Thumbnail IQ for a nano channel means the thumbnail beats the average top-performing nano thumbnail in your niche. A target you can genuinely hit.</>,
   },
   {
     q: 'How accurate is the face detection. Can it tell emotion?',
@@ -386,13 +321,37 @@ const FAQS = [
   },
   {
     q: 'Are my thumbnails stored? Can other users see them?',
-    a: <>Your uploaded thumbnail is stored on our infrastructure so the analysis can rehydrate when you reopen it later, and so the version-history panel can compare iterations. It is never shown to other users and never used as benchmark data for other channels. The benchmark pool only ever contains <i>public</i> thumbnails from the YouTube API. Videos that are already published and ranking. You can permanently clear an upload from the analysis history at any time.</>,
+    a: <>Your uploaded thumbnail is stored on our infrastructure so the analysis can rehydrate when you reopen it later, and so the version-history panel can compare iterations. It is never shown to other users and never used as benchmark data for other channels. The benchmark pool only ever contains <b>public</b> thumbnails from the YouTube API. Videos that are already published and ranking. You can permanently clear an upload from the analysis history at any time.</>,
   },
   {
-    q: 'What does "feed distinctiveness" actually measure?',
+    q: 'What does "feed distinctiveness" measure?',
     a: <>It’s the highest-impact Layer 2 dimension. We show Claude your thumbnail alongside the actual top 3 benchmark thumbnails (by view velocity) for your exact niche, format, and size bracket. And ask: would this stand out, blend in, or disappear in that feed? The score is anchored to the visual context a real viewer would see your thumbnail in, which is the only honest way to judge "click-worthiness". Generic best-practice advice can’t do this.</>,
   },
 ]
+
+/* Layer-divider label: accent eyebrow text + hairline rule + points count */
+function LayerDivider({ label, points }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+      <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
+      <span style={{ flex: 1, height: 1, background: 'var(--yte-line)' }} />
+      <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-muted)', letterSpacing: '0.04em', fontVariantNumeric: 'tabular-nums' }}>{points}</span>
+    </div>
+  )
+}
+
+function DimensionCard({ index, d }) {
+  return (
+    <div style={{ background: 'var(--yte-surface)', padding: '22px 24px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+        <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)' }}>{String(index).padStart(2, '0')}</span>
+        <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px', flex: 1 }}>{d.name}</p>
+        <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: 'var(--yte-muted)', letterSpacing: '0.06em', textTransform: 'uppercase', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{d.weight} pts</span>
+      </div>
+      <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{d.what}</p>
+    </div>
+  )
+}
 
 /* ─── Page ─────────────────────────────────────────────────────────────── */
 export default function ThumbnailIq() {
@@ -400,42 +359,43 @@ export default function ThumbnailIq() {
   useEffect(() => { injectFaqJsonLd(FAQS) }, [])
   const { isMobile } = useBreakpoint()
 
-  return (
-    <div style={{ background: 'var(--ytg-bg)', minHeight: '100vh' }}>
+  const H2 = isMobile ? 30 : 42
 
-      {/* ════ NAV - shared SiteHeader ════════════════════════════════════ */}
+  return (
+    <div style={{ background: 'var(--yte-bg)', minHeight: '100vh', fontFamily: SANS, color: 'var(--yte-ink)' }}>
+
+      {/* ════ NAV ════ */}
       <SiteHeader />
 
-      {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
-        <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
-          <span className="tiq-eyebrow light">Thumbnail IQ</span>
-          <h1 className="tiq-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
-            The only thumbnail score that <span style={{ color: 'var(--ytg-accent)' }}>compares against your actual niche feed.</span>
+      {/* ════ 1. HERO ════ */}
+      <section className="tiq-section-pad" style={{ padding: isMobile ? '60px 22px 48px' : '104px 48px 64px', background: 'var(--yte-bg)' }}>
+        <div className="tiq-wrap" style={{ animation: 'tiqFadeUp 0.5s ease both' }}>
+          <Eyebrow>Thumbnail IQ</Eyebrow>
+          <h1 className="tiq-h1" style={{ fontSize: isMobile ? 34 : 56, marginBottom: 22, maxWidth: 940, textWrap: 'balance' }}>
+            The only thumbnail score that <em>compares against your real niche feed.</em>
           </h1>
-          <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 36px' }}>
-            Two layers, one number. Layer 1 measures contrast, faces, text coverage, WCAG readability, vibrancy with real computer vision. Layer 2 hands the image to Claude vision and asks if it can stand out against the top 3 thumbnails actually winning in your keyword + format + size bracket. Free creators get one full run per cycle.
+          <p className="tiq-lead" style={{ fontSize: isMobile ? 16 : 17.5, maxWidth: 720, marginBottom: 32, textWrap: 'pretty' }}>
+            Two layers, one number. Layer 1 measures contrast, faces, text coverage, WCAG readability, vibrancy with real computer vision. Layer 2 hands the image to Claude vision and asks if it can stand out against the top 3 thumbnails really winning in your keyword + format + size bracket. Free creators get one full run per cycle.
           </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <a href="/auth/login" className="tiq-btn tiq-btn-lg">Score a thumbnail →</a>
-            <a href="#how" className="tiq-btn-ghost" style={{ padding: '15px 26px', fontSize: 15 }}>See how it works</a>
+            <a href="#how" className="tiq-ghost">See how it works</a>
           </div>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginTop: 22 }}>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', marginTop: 22, letterSpacing: '0.03em' }}>
             Free plan unlocks one full analysis · ~25 seconds per run · re-upload revised versions for side-by-side history
           </p>
         </div>
       </section>
 
-      {/* ════ 2. SCORECARD VISUAL. Dark, SPLIT (text L, visual R) ══════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div className="tiq-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      {/* ════ 2. SCORECARD (split) ════ */}
+      <section className="tiq-section-pad" style={{ padding: isMobile ? '64px 22px' : '88px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="tiq-grid-2 tiq-wrap" style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 56, alignItems: 'center' }}>
           <div>
-            <span className="tiq-eyebrow dark">The 0–100 score</span>
-            <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              One number that fuses pixel measurements <span style={{ color: '#ff3b30' }}>with niche-aware judgement.</span>
+            <Eyebrow>The 0–100 score</Eyebrow>
+            <h2 className="tiq-h2" style={{ fontSize: H2, marginBottom: 18 }}>
+              One number that fuses pixel measurements <em>with niche-aware judgement.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
+            <p className="tiq-lead" style={{ fontSize: 17, marginBottom: 24 }}>
               Layer 1 contributes up to 60 deterministic points (contrast, face, text, readability, vibrancy, dimensions, file size). Layer 2 contributes up to 40 vision points (emotion, text psychology, color psychology, composition, title-thumbnail fit, feed distinctiveness). Same scale every time. So an 81 next month is genuinely better than tonight’s 78.
             </p>
             {[
@@ -444,100 +404,71 @@ export default function ThumbnailIq() {
               'Same scale every run. Track improvement across versions',
               'Compared against your niche, not generic best practice',
             ].map((b, i) => (
-              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4ade80" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
-                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6 }}>{b}</span>
+              <div key={i} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', marginBottom: 11 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--yte-accent)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
+                <span style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.6 }}>{b}</span>
               </div>
             ))}
           </div>
-          <div>
-            <ThumbnailScorecardVisual />
-          </div>
+          <div><ThumbnailScorecardVisual /></div>
         </div>
       </section>
 
-      {/* ════ 3. THE 13 DIMENSIONS. Light ══════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
-            <span className="tiq-eyebrow light">Thirteen scoring dimensions</span>
-            <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 16 }}>
-              We measure what should be measured. <span style={{ color: 'var(--ytg-accent)' }}>and judge what should be judged.</span>
+      {/* ════ 3. THE 13 DIMENSIONS ════ */}
+      <section className="tiq-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
+        <div className="tiq-wrap">
+          <div style={{ maxWidth: 780, marginBottom: 44 }}>
+            <Eyebrow>Thirteen scoring dimensions</Eyebrow>
+            <h2 className="tiq-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              We measure what should be measured. <em>And judge what should be judged.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
+            <p className="tiq-lead" style={{ fontSize: 17 }}>
               Seven Layer 1 components run pixel-level computer vision (60 points). Six Layer 2 dimensions run Claude Sonnet 4.6 vision against your niche feed (40 points). Each one returns a score, a one-sentence verdict referencing exact visual elements, and a concrete fix when below 8.
             </p>
           </div>
 
           {/* Layer 1 grid */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Layer 1 · algorithm</span>
-            <span style={{ flex: 1, height: 1, background: 'var(--ytg-border)' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>60 points · 7 components</span>
-          </div>
-          <div className="tiq-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 36 }}>
+          <LayerDivider label="Layer 1 · algorithm" points="60 points · 7 components" />
+          <div className="tiq-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)', marginBottom: 40 }}>
             {ALGORITHM_DIMENSIONS.map((d, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '20px 22px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{String(i + 1).padStart(2, '0')}</span>
-                  </div>
-                  <p style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', flex: 1 }}>{d.name}</p>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--ytg-text-3)', background: 'var(--ytg-bg-2)', padding: '2px 7px', borderRadius: 100, letterSpacing: '0.04em', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{d.weight} pts</span>
-                </div>
-                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>{d.what}</p>
-              </div>
+              <DimensionCard key={i} index={i + 1} d={d} />
             ))}
           </div>
 
           {/* Layer 2 grid */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Layer 2 · vision AI</span>
-            <span style={{ flex: 1, height: 1, background: 'var(--ytg-border)' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>40 points · 6 dimensions</span>
-          </div>
-          <div className="tiq-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <LayerDivider label="Layer 2 · vision AI" points="40 points · 6 dimensions" />
+          <div className="tiq-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {VISION_DIMENSIONS.map((d, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '20px 22px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{String(i + 8).padStart(2, '0')}</span>
-                  </div>
-                  <p style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', flex: 1 }}>{d.name}</p>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--ytg-text-3)', background: 'var(--ytg-bg-2)', padding: '2px 7px', borderRadius: 100, letterSpacing: '0.04em', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{d.weight} pts</span>
-                </div>
-                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>{d.what}</p>
-              </div>
+              <DimensionCard key={i} index={i + 8} d={d} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════ 4. NICHE BENCHMARK COMPARISON. Dark, SPLIT (visual L, text R) ═ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div className="tiq-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      {/* ════ 4. NICHE BENCHMARK (split) ════ */}
+      <section className="tiq-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="tiq-grid-2 tiq-wrap" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div style={{ order: isMobile ? 1 : 0 }}>
             <BenchmarkVisual />
           </div>
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <span className="tiq-eyebrow dark">Niche-aware benchmarking</span>
-            <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              Compared against the channels <span style={{ color: '#ff3b30' }}>you’ll actually be next to.</span>
+            <Eyebrow>Niche-aware benchmarking</Eyebrow>
+            <h2 className="tiq-h2" style={{ fontSize: H2, marginBottom: 18 }}>
+              Compared against the channels <em>you’ll really be next to.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 22 }}>
+            <p className="tiq-lead" style={{ fontSize: 17, marginBottom: 22 }}>
               For every analysis we build a benchmark pool: top 50 niche videos → above-median velocity → last 12 months → &gt;10K views → format match → size-bracket match. The top 10 by velocity become the comparison set. Layer 1 runs on each of their thumbnails, the metrics are averaged, and your face %, text %, contrast, vibrancy are compared head-to-head. The pool is cached per-niche for 30 days and shared across users. So most runs hit a warm cache.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
               {[
-                { label: 'Format-aware',     color: '#ff3b30', body: 'Tutorial / listicle / story / comparison / revelation. Pulled separately.' },
-                { label: 'Size-bracketed',   color: '#4a7cf7', body: 'Nano / micro / mid / macro. Your peers, not MrBeast.' },
-                { label: 'Velocity-ranked',  color: '#f59e0b', body: 'Views per day since publish. Recent winners, not stale viral hits.' },
-                { label: 'Cached & shared',  color: '#4ade80', body: '30-day pool TTL across users. Most runs hit a warm pool.' },
+                { label: 'Format-aware',     body: 'Tutorial / listicle / story / comparison / revelation. Pulled separately.' },
+                { label: 'Size-bracketed',   body: 'Nano / micro / mid / macro. Your peers, not MrBeast.' },
+                { label: 'Velocity-ranked',  body: 'Views per day since publish. Recent winners, not stale viral hits.' },
+                { label: 'Cached & shared',  body: '30-day pool TTL across users. Most runs hit a warm pool.' },
               ].map((p, i) => (
-                <div key={i} style={{ borderLeft: `2px solid ${p.color}`, paddingLeft: 12 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: p.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
-                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>{p.body}</p>
+                <div key={i} style={{ borderLeft: '2px solid var(--yte-accent)', paddingLeft: 12 }}>
+                  <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-soft)', lineHeight: 1.6 }}>{p.body}</p>
                 </div>
               ))}
             </div>
@@ -545,15 +476,15 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS. White, with arrow connectors ════════════ */}
-      <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
+      {/* ════ 5. HOW IT WORKS ════ */}
+      <section id="how" className="tiq-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
-            <span className="tiq-eyebrow light">How it works</span>
-            <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 42 }}>
-              From upload to scored verdict in under 30 seconds
+          <div style={{ maxWidth: 720, marginBottom: 44 }}>
+            <Eyebrow>How it works</Eyebrow>
+            <h2 className="tiq-h2" style={{ fontSize: H2, textWrap: 'balance' }}>
+              From upload to scored verdict in <em>under 30 seconds.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginTop: 14, maxWidth: 580, margin: '14px auto 0' }}>
+            <p className="tiq-lead" style={{ fontSize: 17, marginTop: 14, maxWidth: 600 }}>
               Five stages. Re-upload a revised version anytime. The version-history panel tracks the score across iterations so you can see exactly what moved the needle.
             </p>
           </div>
@@ -566,27 +497,16 @@ export default function ThumbnailIq() {
               { n: '05', t: 'Combined result',       b: 'Score 0–100, per-dimension verdict + fix, biggest win, biggest fix, emotion label, feed-position tag, percentile vs peers, version saved to history.' },
             ]
             const Card = ({ s }) => (
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{s.n}</span>
-                  </div>
-                </div>
-                <p style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 10, letterSpacing: '-0.2px' }}>{s.t}</p>
-                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>{s.b}</p>
+              <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.06em', marginBottom: 14 }}>{s.n}</div>
+                <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
+                <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{s.b}</p>
               </div>
             )
-            const Arrow = () => (
-              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: 26, height: 26, borderRadius: '50%', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', color: 'var(--ytg-accent)' }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2 6h8M7 3l3 3-3 3"/>
-                </svg>
-              </div>
-            )
-            const ArrowDown = () => (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: '50%', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', color: 'var(--ytg-accent)', margin: '8px auto' }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 2v8M3 7l3 3 3-3"/>
+            const Arrow = ({ down }) => (
+              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', color: 'var(--yte-muted)', margin: down ? '8px auto' : 0 }}>
+                <svg width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  {down ? <path d="M6 2v8M3 7l3 3 3-3"/> : <path d="M2 6h8M7 3l3 3-3 3"/>}
                 </svg>
               </div>
             )
@@ -596,14 +516,14 @@ export default function ThumbnailIq() {
                   {steps.map((s, i) => (
                     <div key={i}>
                       <Card s={s} />
-                      {i < steps.length - 1 && <ArrowDown />}
+                      {i < steps.length - 1 && <Arrow down />}
                     </div>
                   ))}
                 </div>
               )
             }
             return (
-              <div style={{ display: 'flex', alignItems: 'stretch', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'stretch', gap: 10 }}>
                 {steps.flatMap((s, i) => {
                   const items = [<Card key={`c${i}`} s={s} />]
                   if (i < steps.length - 1) items.push(<Arrow key={`a${i}`} />)
@@ -615,46 +535,45 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 6. SEVEN OUTPUT BLOCKS. Dark ══════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 44px' }}>
-            <span className="tiq-eyebrow dark">Output structure</span>
-            <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
-              Seven distinct output blocks. <span style={{ color: '#ff3b30' }}>Every one is fixable.</span>
+      {/* ════ 6. SEVEN OUTPUT BLOCKS ════ */}
+      <section className="tiq-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div style={{ maxWidth: 1180, margin: '0 auto' }}>
+          <div style={{ maxWidth: 760, marginBottom: 40 }}>
+            <Eyebrow>Output structure</Eyebrow>
+            <h2 className="tiq-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              Seven distinct output blocks. <em>Every one is fixable.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
+            <p className="tiq-lead" style={{ fontSize: 17 }}>
               The studio doesn’t hand you a number and a vague verdict. Each block renders separately so you can scan, iterate, re-upload. And the history panel keeps every version side by side.
             </p>
           </div>
-          <div className="tiq-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+          <div className="tiq-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {PIPELINE_OUTPUTS.map((p, i) => (
-              <div key={i} style={{ background: '#111114', borderRadius: 14, border: '1px solid rgba(255,255,255,0.09)', padding: '22px 22px 24px' }}>
+              <div key={i} style={{ background: 'var(--yte-surface)', padding: '22px 22px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                   <OutputIcon name={p.icon} />
-                  <p style={{ fontSize: 14.5, fontWeight: 700, color: '#fff', letterSpacing: '-0.2px' }}>{p.title}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.1px' }}>{p.title}</p>
                 </div>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>{p.body}</p>
+                <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{p.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════ 7. WHAT POWERS IT. Light grey, split ═════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
+      {/* ════ 7. WHAT POWERS IT (split) ════ */}
+      <section className="tiq-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
         <div className="tiq-grid-2" style={{ maxWidth: 1140, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div>
-            <span className="tiq-eyebrow light">What powers it</span>
-            <h2 className="tiq-h2" style={{ fontSize: isMobile ? 28 : 38, marginBottom: 16 }}>
-              Open-source CV + Sonnet 4.6 vision. <span style={{ color: 'var(--ytg-accent)' }}>Public data only.</span>
+            <Eyebrow>What powers it</Eyebrow>
+            <h2 className="tiq-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 16, textWrap: 'balance' }}>
+              Open-source CV + Sonnet 4.6 vision. <em>Public data only.</em>
             </h2>
-            <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
+            <p className="tiq-lead" style={{ fontSize: 15 }}>
               Layer 1 runs entirely on our infrastructure. No third-party scoring API, no per-image fees. Layer 2 calls Claude Sonnet 4.6 with your thumbnail and the top 3 benchmark images. Benchmark thumbnails come from the official YouTube Data API; the same public images anyone visiting those channels can see. Each analysis spends one credit on paid plans; free tier gets one full analysis per cycle.
             </p>
           </div>
-          <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 16, boxShadow: 'var(--ytg-shadow-lg)', padding: '24px 28px' }}>
+          <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '26px 28px' }}>
             {[
               { k: 'Face detection',         v: 'OpenCV Haar cascade · frontal-face classifier' },
               { k: 'Text OCR',                v: 'pytesseract · sparse-text page mode (psm 11)' },
@@ -663,96 +582,74 @@ export default function ThumbnailIq() {
               { k: 'Niche benchmark',         v: 'YouTube Data API · top 10 by view velocity, 30-day cache' },
               { k: 'Vision model',            v: 'Claude Sonnet 4.6 · 4-image input · ~12s on warm cache' },
             ].map((row, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '11px 0', borderBottom: i < 5 ? '1px solid var(--ytg-border)' : 'none', alignItems: 'baseline' }}>
-                <p style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.1px', flexShrink: 0 }}>{row.k}</p>
-                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-2)', lineHeight: 1.55, textAlign: 'right' }}>{row.v}</p>
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '11px 0', borderBottom: i < 5 ? '1px solid var(--yte-line)' : 'none', alignItems: 'baseline' }}>
+                <p style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.1px', flexShrink: 0 }}>{row.k}</p>
+                <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-soft)', lineHeight: 1.55, textAlign: 'right' }}>{row.v}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS. Dark ═════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 44px' }}>
-            <span className="tiq-eyebrow dark">By plan</span>
-            <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
-              How many thumbnail scores you get each month
+      {/* ════ 8. PLAN LIMITS ════ */}
+      <section className="tiq-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ maxWidth: 720, marginBottom: 40 }}>
+            <Eyebrow>By plan</Eyebrow>
+            <h2 className="tiq-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              How many thumbnail scores you get <em>each month.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
+            <p className="tiq-lead" style={{ fontSize: 17 }}>
               Free creators get one full two-layer analysis per cycle so you can try the engine on a real thumbnail. Paid plans charge one credit per run. The same engine, no feature differences. Each re-uploaded version is a fresh analysis and a fresh credit.
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 14 }}>
+          <div className="tiq-grid-4" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {PLAN_LIMITS.map((p, i) => {
               const isAccent = p.plan === 'Growth'
               return (
-                <div key={i} style={{
-                  background: isAccent ? '#1a1018' : '#111114',
-                  borderRadius: 16,
-                  border: isAccent ? '1px solid rgba(229,48,42,0.45)' : '1px solid rgba(255,255,255,0.09)',
-                  boxShadow: isAccent ? '0 8px 32px rgba(229,48,42,0.18)' : '0 2px 8px rgba(0,0,0,0.4)',
-                  padding: '24px 22px 22px',
-                  position: 'relative',
-                }}>
+                <div key={i} style={{ background: 'var(--yte-surface)', padding: '24px 22px 22px', position: 'relative', boxShadow: isAccent ? 'inset 0 2px 0 var(--yte-accent)' : 'none' }}>
                   {isAccent && (
-                    <span style={{ position: 'absolute', top: -10, right: 16, fontSize: 9, fontWeight: 800, color: '#fff', background: '#ff3b30', padding: '3px 10px', borderRadius: 100, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Most popular</span>
+                    <span style={{ position: 'absolute', top: 0, right: 16, fontFamily: SANS, fontSize: 9, fontWeight: 700, color: '#fff', background: 'var(--yte-accent)', padding: '3px 9px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Most popular</span>
                   )}
-                  <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
-                    <p style={{ fontSize: 38, fontWeight: 800, color: '#fff', letterSpacing: '-1.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{p.runs}</p>
-                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{p.plan === 'Free' ? 'analysis' : 'analyses'}</p>
+                    <p style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{p.runs}</p>
+                    <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)' }}>{p.plan === 'Free' ? 'analysis' : 'analyses'}</p>
                   </div>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 14 }}>{p.plan === 'Free' ? 'per cycle' : 'included per month'}</p>
-                  <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 12 }} />
-                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55 }}>{p.note}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', marginBottom: 14 }}>{p.plan === 'Free' ? 'per cycle' : 'included per month'}</p>
+                  <div style={{ height: 1, background: 'var(--yte-line)', marginBottom: 12 }} />
+                  <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-soft)', lineHeight: 1.55 }}>{p.note}</p>
                 </div>
               )
             })}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 22, flexWrap: 'wrap' }}>
-            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)' }}>Same two-layer engine across every plan, including free.</p>
-            <a href="/#pricing" style={{ fontSize: 12.5, color: '#ff3b30', textDecoration: 'none', fontWeight: 600 }}>See full pricing →</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 18, flexWrap: 'wrap' }}>
+            <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)' }}>Same two-layer engine across every plan, including free.</p>
+            <a href="/#pricing" style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-accent)', textDecoration: 'none', fontWeight: 600 }}>See full pricing →</a>
           </div>
         </div>
       </section>
 
-      {/* ════ 9. FAQ. White ════════════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
-        <div className="tiq-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
+      {/* ════ 9. FAQ ════ */}
+      <section className="tiq-section-pad" style={{ padding: isMobile ? '64px 22px 80px' : '104px 48px 120px', background: 'var(--yte-bg)' }}>
+        <div className="tiq-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 64, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
-            <span className="tiq-eyebrow light">FAQ</span>
-            <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 40, marginBottom: 16 }}>
-              Questions about the scoring engine, answered honestly.
+            <Eyebrow>FAQ</Eyebrow>
+            <h2 className="tiq-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 16, textWrap: 'balance' }}>
+              The scoring engine, <em>answered honestly.</em>
             </h2>
-            <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
+            <p className="tiq-lead" style={{ fontSize: 14.5 }}>
               Real answers from how the product behaves. The two layers, the niche pool, the size brackets, version history, and what won’t work.
             </p>
-            <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
+            <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
             </a>
           </div>
-          <div>
+          <div style={{ borderTop: '1px solid var(--yte-line)' }}>
             {FAQS.map((item, i) => (
               <FaqItem key={i} q={item.q} a={item.a} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ════ 10. BOTTOM CTA. Light ════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-          <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 44, marginBottom: 16 }}>
-            Score your next thumbnail against the niche
-          </h2>
-          <p style={{ fontSize: isMobile ? 15 : 17, color: 'var(--ytg-text-2)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.7 }}>
-            Free plan unlocks one full two-layer analysis. Solo gets 20 / month, Growth 50, Agency 150 pooled. Most users move their score 12+ points within the first three iterations.
-          </p>
-          <a href="/auth/login" className="tiq-btn tiq-btn-lg">Score a thumbnail →</a>
         </div>
       </section>
 

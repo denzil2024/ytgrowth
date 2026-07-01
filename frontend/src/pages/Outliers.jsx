@@ -354,7 +354,7 @@ function fmtDuration(seconds) {
 }
 
 /* YouTube serves 3 thumbnail sizes per video. We use the highest one that
-   actually exists on a given video:
+   exists on a given video:
      1. maxresdefault.jpg , 1280x720. Only present if the uploader gave YouTube
                              an HD master; missing on many older or low-quality
                              uploads.
@@ -737,7 +737,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   // Free-tier gate, replaces the entire page content with the shared upsell
   // Intent-based paywall: render the normal page for everyone. Gated users
   // see the full UI, type a query, and only hit the paywall modal when they
-  // actually click Run. Backend gate stays in place as defense-in-depth.
+  // click Run. Backend gate stays in place as defense-in-depth.
 
   // Derived state used by both the header block and the tabs row below
   // (sort + New-search). Declared here so both sites share one source of
@@ -1269,7 +1269,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           open={creditsOut}
           onClose={() => setCreditsOut(false)}
           title="Unlock Outlier Scoring"
-          description="See the thumbnails, titles, and channels actually winning in your niche right now, with a ranked outlier score so you know which to copy and which to ignore."
+          description="See the thumbnails, titles, and channels winning in your niche right now, with a ranked outlier score so you know which to copy and which to ignore."
           bullets={[
             'Top outlier videos in your niche, ranked by performance vs. subs',
             'Winning thumbnail patterns distilled into a reusable formula',
@@ -1458,7 +1458,7 @@ function VideoResultCard({ item, kind, onOpen }) {
             Winnable is the personalised signal: 0-10 score for how realistic
             this opportunity is for THIS user given their channel size,
             niche overlap, and how fresh the wave is. Colour-coded so green
-            chips draw the eye to videos the user can actually catch. */}
+            chips draw the eye to videos the user can catch. */}
         {(() => {
           const ws        = typeof item.winnable_score === 'number' ? item.winnable_score : null
           const wsColor   = ws == null ? C.text3 : ws >= 7 ? C.green : ws >= 4 ? C.amber : C.red

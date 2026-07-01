@@ -18,7 +18,16 @@ import FaqSchema from '../../components/FaqSchema'
      web-hosting, OBS overlays, etc.).
    - Drop / click / paste support. Image stays in the browser, pure
      HTML5 Canvas, no upload, no server.
+
+   Migrated to the editorial design language (Fraunces + Barlow, sharp flat
+   cards, warm paper, restrained red). ALL canvas/resize/encode logic and
+   content are preserved verbatim; only the skin changed. Preset + format
+   selectors are quiet (active = ink, never red, see feedback_quiet_toggles).
+   See project_design_language_editorial.
 */
+
+const SERIF = "'Fraunces', Georgia, serif"
+const SANS  = "'Barlow', system-ui, sans-serif"
 
 const PRESETS = [
   { id: 'hd',     label: 'HD',         sub: '1280×720',   w: 1280, h: 720,  badge: '720p',  recommended: true,  cap: 2 * 1024 * 1024,
@@ -42,200 +51,77 @@ function useBreakpoint() {
 function useGlobalStyles() {
   useEffect(() => {
     if (document.getElementById('ytr-styles')) return
-
     const style = document.createElement('style')
     style.id = 'ytr-styles'
     style.textContent = `
       :root {
-        --ytg-bg:           #f4f4f6;
-        --ytg-bg-2:         #ecedf1;
-        --ytg-bg-3:         #e6e7ec;
-        --ytg-text:         #0a0a0f;
-        --ytg-text-2:       rgba(10,10,15,0.62);
-        --ytg-text-3:       rgba(10,10,15,0.40);
-        --ytg-text-4:       rgba(10,10,15,0.30);
-        --ytg-nav:          rgba(244,244,246,0.92);
-        --ytg-card:         #ffffff;
-        --ytg-border:       rgba(10,10,15,0.09);
-        --ytg-accent:       #e5302a;
-        --ytg-accent-text:  #c22b25;
-        --ytg-accent-light: rgba(229,48,42,0.07);
-        --ytg-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
-        --ytg-shadow:       0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.11);
-        --ytg-shadow-lg:    0 4px 16px rgba(0,0,0,0.11), 0 24px 60px rgba(0,0,0,0.14);
-        --ytg-shadow-xl:    0 8px 28px rgba(0,0,0,0.13), 0 40px 100px rgba(0,0,0,0.17);
+        --yte-bg: #f6f4ef; --yte-bg-2: #efece4; --yte-surface: #ffffff;
+        --yte-ink: #14130f; --yte-soft: #5c574e; --yte-muted: #8a8378;
+        --yte-line: rgba(20,19,15,0.12); --yte-line-2: rgba(20,19,15,0.22);
+        --yte-accent: #e5302a; --yte-accent-soft: rgba(229,48,42,0.07); --yte-dark: #0d0d12;
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; }
-      ::-webkit-scrollbar { width: 12px; height: 12px }
-      ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb { background-color: rgba(10,10,15,0.28); border-radius: 10px; border: 3px solid transparent; background-clip: content-box; }
-      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }
-      @keyframes ytrFadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+      html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+      body { background: var(--yte-bg); color: var(--yte-ink); font-family: ${SANS}; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+      @keyframes ytrFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
 
-      .ytr-btn {
-        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        background: var(--ytg-accent); color: #fff;
-        font-size: 15px; font-weight: 700; font-family: 'Inter', system-ui, sans-serif;
-        padding: 14px 28px; border-radius: 100px; border: none;
-        cursor: pointer; text-decoration: none; letter-spacing: -0.2px; white-space: nowrap;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,48,42,0.32);
-        transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
-      }
-      .ytr-btn:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,48,42,0.42); }
-      .ytr-btn-lg { font-size: 16px; padding: 17px 36px; }
-      .ytr-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; filter: none !important; }
+      .ytr-wrap { max-width: 1040px; margin: 0 auto; }
+      .ytr-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+      .ytr-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
+      .ytr-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
+      .ytr-h1 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; color: var(--yte-ink); }
+      .ytr-h1 em { font-style: italic; color: var(--yte-accent); }
+      .ytr-h2 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; color: var(--yte-ink); }
+      .ytr-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ytr-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
-      .ytr-btn-ghost {
-        display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-        background: transparent; color: var(--ytg-text-2);
-        font-size: 13px; font-weight: 600; font-family: 'Inter', system-ui, sans-serif;
-        padding: 9px 16px; border-radius: 100px;
-        border: 1px solid var(--ytg-border);
-        cursor: pointer; text-decoration: none; letter-spacing: -0.1px;
-        transition: color 0.15s, border-color 0.15s, background 0.15s;
-      }
-      .ytr-btn-ghost:hover { color: var(--ytg-text); border-color: var(--ytg-text-3); background: rgba(10,10,15,0.02); }
+      .ytr-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 28px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; white-space: nowrap; }
+      .ytr-btn:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      .ytr-btn-lg { font-size: 13px; padding: 17px 36px; }
+      .ytr-btn:disabled { background: rgba(20,19,15,0.10); color: var(--yte-muted); cursor: not-allowed; transform: none; filter: none; }
 
-      .ytr-eyebrow {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: #ffffff; border: 1px solid rgba(10,10,15,0.09);
-        border-radius: 100px; padding: 5px 12px 5px 10px; margin-bottom: 22px;
-        box-shadow: 0 1px 2px rgba(10,10,15,0.04);
-      }
-      .ytr-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ytg-accent); box-shadow: 0 0 0 3px rgba(229,48,42,0.12); }
-      .ytr-eyebrow-text { font-size: 11px; font-weight: 700; color: var(--ytg-text-2); text-transform: uppercase; letter-spacing: 0.09em; }
-
-      .ytr-h1 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -2px; line-height: 1.05; text-wrap: balance; }
-      .ytr-h2 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -1.4px; line-height: 1.08; text-wrap: balance; }
+      .ytr-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: transparent; color: var(--yte-soft); font-family: ${SANS}; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 22px; border-radius: 0; border: 1px solid var(--yte-line); cursor: pointer; text-decoration: none; transition: color 0.15s, border-color 0.15s; }
+      .ytr-btn-ghost:hover { color: var(--yte-ink); border-color: var(--yte-line-2); }
 
       /* Drop zone */
-      .ytr-drop {
-        border: 2px dashed var(--ytg-border);
-        background: var(--ytg-card);
-        border-radius: 18px;
-        padding: 56px 32px;
-        text-align: center;
-        transition: border-color 0.18s, background 0.18s;
-        cursor: pointer;
-        position: relative;
-      }
-      .ytr-drop.drag {
-        border-color: var(--ytg-accent);
-        background: var(--ytg-accent-light);
-      }
-      .ytr-drop:hover { border-color: var(--ytg-text-3); }
+      .ytr-drop { border: 1.5px dashed var(--yte-line-2); background: var(--yte-surface); border-radius: 0; padding: 56px 32px; text-align: center; transition: border-color 0.18s, background 0.18s; cursor: pointer; position: relative; }
+      .ytr-drop.drag { border-color: var(--yte-accent); background: var(--yte-accent-soft); }
+      .ytr-drop:hover { border-color: var(--yte-ink); }
 
-      /* Preset selector */
-      .ytr-presets {
-        display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-        margin-bottom: 18px;
-      }
-      .ytr-preset {
-        position: relative;
-        cursor: pointer;
-        background: var(--ytg-card);
-        border: 1.5px solid var(--ytg-border);
-        border-radius: 12px;
-        padding: 14px 14px 13px;
-        text-align: left;
-        transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
-      }
-      .ytr-preset:hover { border-color: var(--ytg-text-3); transform: translateY(-1px); }
-      .ytr-preset.active {
-        border-color: var(--ytg-accent);
-        background: linear-gradient(0deg, rgba(229,48,42,0.04), rgba(229,48,42,0.04)), var(--ytg-card);
-        box-shadow: 0 0 0 3px rgba(229,48,42,0.10);
-      }
-      .ytr-preset-label { font-size: 14px; font-weight: 800; color: var(--ytg-text); letter-spacing: -0.2px; }
-      .ytr-preset-sub   { font-size: 12px; color: var(--ytg-text-2); margin-top: 2px; font-variant-numeric: tabular-nums; }
-      .ytr-preset-badge {
-        position: absolute; top: 10px; right: 10px;
-        font-size: 10px; font-weight: 800; letter-spacing: 0.04em;
-        color: var(--ytg-text-3);
-        background: var(--ytg-bg-2);
-        border-radius: 6px;
-        padding: 2px 6px;
-      }
-      .ytr-preset.active .ytr-preset-badge { color: var(--ytg-accent-text); background: var(--ytg-accent-light); }
-      .ytr-preset-rec {
-        position: absolute; top: -8px; left: 14px;
-        font-size: 9.5px; font-weight: 800; letter-spacing: 0.08em;
-        color: #fff;
-        background: var(--ytg-accent);
-        border-radius: 6px;
-        padding: 2px 7px;
-        text-transform: uppercase;
-      }
+      /* Preset selector: quiet, active = ink */
+      .ytr-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+      .ytr-preset { position: relative; cursor: pointer; background: var(--yte-surface); border: 1px solid var(--yte-line); border-radius: 0; padding: 15px 14px 13px; text-align: left; transition: border-color 0.18s, background 0.18s; }
+      .ytr-preset:hover { border-color: var(--yte-line-2); }
+      .ytr-preset.active { border-color: var(--yte-ink); background: var(--yte-bg-2); }
+      .ytr-preset-label { font-family: ${SANS}; font-size: 14px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.1px; }
+      .ytr-preset-sub { font-family: ${SANS}; font-size: 12px; color: var(--yte-muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+      .ytr-preset-badge { position: absolute; top: 12px; right: 12px; font-family: ${SANS}; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: var(--yte-muted); background: var(--yte-bg-2); padding: 2px 6px; }
+      .ytr-preset.active .ytr-preset-badge { color: var(--yte-ink); background: rgba(20,19,15,0.08); }
+      .ytr-preset-rec { position: absolute; top: -9px; left: 14px; font-family: ${SANS}; font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: #fff; background: var(--yte-accent); padding: 2px 7px; text-transform: uppercase; }
 
       /* Quality slider */
-      .ytr-quality {
-        display: flex; align-items: center; gap: 14px;
-        margin-top: 10px;
-        padding: 12px 14px;
-        background: var(--ytg-bg-2);
-        border-radius: 10px;
-      }
-      .ytr-quality-label { font-size: 12px; font-weight: 700; color: var(--ytg-text-2); letter-spacing: -0.05px; min-width: 72px; }
-      .ytr-quality input[type="range"] {
-        flex: 1; height: 4px; appearance: none; background: rgba(10,10,15,0.12); border-radius: 4px; outline: none;
-      }
-      .ytr-quality input[type="range"]::-webkit-slider-thumb {
-        appearance: none; width: 16px; height: 16px; border-radius: 50%;
-        background: var(--ytg-accent); cursor: pointer;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.20);
-      }
-      .ytr-quality input[type="range"]::-moz-range-thumb {
-        width: 16px; height: 16px; border-radius: 50%; border: 0;
-        background: var(--ytg-accent); cursor: pointer;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.20);
-      }
-      .ytr-quality-value { font-size: 12.5px; font-weight: 700; color: var(--ytg-text); min-width: 40px; text-align: right; font-variant-numeric: tabular-nums; }
+      .ytr-quality { display: flex; align-items: center; gap: 14px; padding: 13px 16px; background: var(--yte-surface); border: 1px solid var(--yte-line); }
+      .ytr-quality-label { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.1em; min-width: 78px; }
+      .ytr-quality input[type="range"] { flex: 1; height: 3px; appearance: none; background: var(--yte-line); border-radius: 0; outline: none; }
+      .ytr-quality input[type="range"]::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; border-radius: 0; background: var(--yte-accent); cursor: pointer; }
+      .ytr-quality input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 0; border: 0; background: var(--yte-accent); cursor: pointer; }
+      .ytr-quality-value { font-family: ${SANS}; font-size: 12.5px; font-weight: 700; color: var(--yte-ink); min-width: 40px; text-align: right; font-variant-numeric: tabular-nums; }
 
       /* Result card */
-      .ytr-result-card {
-        background: var(--ytg-card);
-        border: 1px solid var(--ytg-border);
-        border-radius: 18px;
-        box-shadow: var(--ytg-shadow-lg);
-        overflow: hidden;
-      }
-      .ytr-result-canvas-wrap {
-        width: 100%;
-        aspect-ratio: 16/9;
-        background: #0a0a0f;
-        display: flex; align-items: center; justify-content: center;
-      }
+      .ytr-result-card { background: var(--yte-surface); border: 1px solid var(--yte-line); border-radius: 0; overflow: hidden; }
+      .ytr-result-canvas-wrap { width: 100%; aspect-ratio: 16/9; background: #0a0a0f; display: flex; align-items: center; justify-content: center; }
       .ytr-result-canvas-wrap canvas { width: 100%; height: 100%; object-fit: contain; }
 
-      /* Format toggle */
-      .ytr-format-toggle {
-        display: inline-flex;
-        background: var(--ytg-bg-2);
-        border-radius: 100px;
-        padding: 3px;
-      }
-      .ytr-format-toggle button {
-        appearance: none; background: transparent; border: 0; cursor: pointer;
-        font-family: 'Inter', sans-serif;
-        font-size: 12px; font-weight: 700;
-        color: var(--ytg-text-2);
-        padding: 6px 14px; border-radius: 100px;
-        transition: background 0.15s, color 0.15s;
-      }
-      .ytr-format-toggle button.active {
-        background: #ffffff; color: var(--ytg-text);
-        box-shadow: 0 1px 2px rgba(10,10,15,0.10);
-      }
+      /* Format toggle: quiet seg, active = ink */
+      .ytr-format-toggle { display: inline-flex; border: 1px solid var(--yte-line); }
+      .ytr-format-toggle button { appearance: none; background: var(--yte-surface); border: 0; cursor: pointer; font-family: ${SANS}; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: var(--yte-muted); padding: 8px 16px; transition: background 0.15s, color 0.15s; }
+      .ytr-format-toggle button + button { border-left: 1px solid var(--yte-line); }
+      .ytr-format-toggle button.active { background: var(--yte-ink); color: #fff; }
 
-      .ytr-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
-      .ytr-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
+      .ytr-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--yte-line); border: 1px solid var(--yte-line); }
+      .ytr-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--yte-line); border: 1px solid var(--yte-line); }
 
-      .ytr-faq-answer {
-        display: grid; grid-template-rows: 0fr; opacity: 0;
-        transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
-      }
+      .ytr-faq-answer { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease; }
       .ytr-faq-answer.open { grid-template-rows: 1fr; opacity: 1; }
       .ytr-faq-answer-inner { overflow: hidden; }
 
@@ -248,7 +134,7 @@ function useGlobalStyles() {
         .ytr-presets { grid-template-columns: 1fr; }
       }
       @media (max-width: 768px) {
-        .ytr-section-pad { padding-left: 20px !important; padding-right: 20px !important; }
+        .ytr-section-pad { padding-left: 22px !important; padding-right: 22px !important; }
         .ytr-drop { padding: 40px 20px; }
       }
     `
@@ -355,7 +241,7 @@ const FAQS = [
   },
   {
     q: 'Will the resized thumbnail rank better than my original?',
-    a: <>The resize itself is a technical fix, not a CTR boost. What ranks thumbnails is composition, contrast, and the curiosity gap they create with the title. Once you have a properly sized thumbnail, the next move is scoring it against the top videos in your niche. <a href="/features/thumbnail-iq" style={{ color: 'var(--ytg-accent)', fontWeight: 600 }}>Thumbnail IQ</a> runs face detection, contrast analysis, and a vision-model curiosity-gap read so you know whether your design is competitive before you publish.</>,
+    a: <>The resize itself is a technical fix, not a CTR boost. What ranks thumbnails is composition, contrast, and the curiosity gap they create with the title. Once you have a properly sized thumbnail, the next move is scoring it against the top videos in your niche. <a href="/features/thumbnail-iq" style={{ color: 'var(--yte-accent)', fontWeight: 600 }}>Thumbnail IQ</a> runs face detection, contrast analysis, and a vision-model curiosity-gap read so you know whether your design is competitive before you publish.</>,
   },
   {
     q: 'Does this tool work offline?',
@@ -366,17 +252,15 @@ const FAQS = [
 function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
-    <div style={{ borderBottom: '1px solid var(--ytg-border)' }}>
+    <div style={{ borderBottom: '1px solid var(--yte-line)' }}>
       <button onClick={() => setOpen(o => !o)}
-        style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', padding: '22px 0', fontFamily: 'inherit', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, fontSize: 16.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', lineHeight: 1.45 }}>
+        style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', padding: '22px 0', fontFamily: SERIF, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, fontSize: 20, fontWeight: 400, color: open ? 'var(--yte-accent)' : 'var(--yte-ink)', letterSpacing: '-0.2px', lineHeight: 1.3, transition: 'color 0.2s' }}>
         <span style={{ flex: 1 }}>{q}</span>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" style={{ transform: open ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0, color: open ? 'var(--ytg-accent)' : 'var(--ytg-text-3)', marginTop: 4 }}>
-          <path d="M8 2v12M2 8h12"/>
-        </svg>
+        <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: open ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
       </button>
       <div className={`ytr-faq-answer${open ? ' open' : ''}`}>
         <div className="ytr-faq-answer-inner">
-          <div style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.78, padding: '0 0 22px 0', maxWidth: 760 }}>{a}</div>
+          <div style={{ fontFamily: SANS, fontSize: 15.5, color: 'var(--yte-soft)', lineHeight: 1.78, padding: '0 0 22px 0', maxWidth: 760 }}>{a}</div>
         </div>
       </div>
     </div>
@@ -517,33 +401,35 @@ export default function YoutubeThumbnailResizer() {
     return null
   }, [result])
 
+  const H2 = isMobile ? 28 : 42
+
   return (
-    <div style={{ background: 'var(--ytg-bg)', minHeight: '100vh' }}>
+    <div style={{ background: 'var(--yte-bg)', minHeight: '100vh', fontFamily: SANS, color: 'var(--yte-ink)' }}>
 
       <SiteHeader />
       <FaqSchema items={FAQS} />
 
       {/* HERO */}
-      <section className="ytr-section-pad" style={{ padding: isMobile ? '56px 24px 32px' : '88px 48px 48px', textAlign: 'center', background: '#ffffff' }}>
-        <div style={{ maxWidth: 880, margin: '0 auto', animation: 'ytrFadeUp 0.5s ease both' }}>
-          <span className="ytr-eyebrow">
-            <span className="ytr-eyebrow-dot" />
+      <section className="ytr-section-pad" style={{ padding: isMobile ? '60px 22px 40px' : '104px 48px 48px', background: 'var(--yte-bg)' }}>
+        <div className="ytr-wrap" style={{ animation: 'ytrFadeUp 0.5s ease both' }}>
+          <div className="ytr-eyebrow">
+            <span aria-hidden="true" className="ytr-eyebrow-rule" />
             <span className="ytr-eyebrow-text">Free · Browser-based · Private</span>
-          </span>
-          <h1 className="ytr-h1" style={{ fontSize: isMobile ? 36 : 56, color: 'var(--ytg-text)', marginBottom: 18 }}>
-            YouTube thumbnail resizer. <span style={{ color: 'var(--ytg-accent)' }}>HD, Full HD, 4K.</span>
+          </div>
+          <h1 className="ytr-h1" style={{ fontSize: isMobile ? 34 : 56, marginBottom: 20, maxWidth: 860, textWrap: 'balance' }}>
+            YouTube thumbnail resizer. <em>HD, Full HD, 4K.</em>
           </h1>
-          <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 12px' }}>
+          <p className="ytr-lead" style={{ fontSize: isMobile ? 16 : 17.5, maxWidth: 720, marginBottom: 12, textWrap: 'pretty' }}>
             Drop any image, pick a quality, and get a perfectly sized thumbnail. The HD preset auto-compresses under YouTube's 2 MB upload cap. Full HD and 4K give you higher-detail exports for blog use, channel banners, and archival.
           </p>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', maxWidth: 720, margin: '0 auto' }}>
-            Runs entirely in your browser using HTML5 Canvas. Your image never leaves your device. <a href="#privacy" style={{ color: 'var(--ytg-text-2)', textDecoration: 'underline' }}>How we know.</a>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-muted)', maxWidth: 720 }}>
+            Runs entirely in your browser using HTML5 Canvas. Your image never leaves your device. <a href="#privacy" style={{ color: 'var(--yte-soft)', textDecoration: 'underline' }}>How we know.</a>
           </p>
         </div>
       </section>
 
       {/* TOOL */}
-      <section className="ytr-section-pad" style={{ padding: isMobile ? '0 20px 64px' : '0 48px 88px', background: '#ffffff' }}>
+      <section className="ytr-section-pad" style={{ padding: isMobile ? '8px 22px 64px' : '0 48px 88px', background: 'var(--yte-bg)' }}>
         <div style={{ maxWidth: 760, margin: '0 auto' }}>
 
           {/* Preset selector */}
@@ -575,7 +461,7 @@ export default function YoutubeThumbnailResizer() {
               <button
                 onClick={() => { setAutoQuality(true); setQuality(0.92) }}
                 className="ytr-btn-ghost"
-                style={{ padding: '6px 12px', fontSize: 11, marginLeft: 6 }}
+                style={{ padding: '7px 12px', marginLeft: 6 }}
                 title={preset.cap ? 'Auto-step down to fit under 2 MB' : 'Reset to 92%'}
               >
                 {autoQuality ? 'Auto' : 'Reset'}
@@ -584,7 +470,7 @@ export default function YoutubeThumbnailResizer() {
           )}
 
           {/* Drop zone or result */}
-          <div style={{ marginTop: 18 }}>
+          <div style={{ marginTop: 12 }}>
             {!result && (
               <div
                 className={`ytr-drop${drag ? ' drag' : ''}`}
@@ -602,20 +488,20 @@ export default function YoutubeThumbnailResizer() {
                   style={{ display: 'none' }}
                   onChange={(e) => handleFile(e.target.files?.[0])}
                 />
-                <div style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: 16, background: 'var(--ytg-accent-light)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+                <div style={{ display: 'inline-flex', width: 52, height: 52, background: 'var(--yte-accent-soft)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e5302a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
-                <p style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 6 }}>
+                <p style={{ fontFamily: SANS, fontSize: 17, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 6 }}>
                   Drop an image, click to choose, or paste from clipboard
                 </p>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)' }}>
-                  JPG, PNG, GIF, WebP, BMP · up to 80 MB · output: <strong style={{ color: 'var(--ytg-text-2)' }}>{preset.label} ({preset.sub})</strong>
+                <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-muted)' }}>
+                  JPG, PNG, GIF, WebP, BMP · up to 80 MB · output: <strong style={{ color: 'var(--yte-soft)', fontWeight: 600 }}>{preset.label} ({preset.sub})</strong>
                 </p>
               </div>
             )}
 
             {error && (
-              <div style={{ marginTop: 14, padding: '14px 18px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 12, color: '#991b1b', fontSize: 14, fontWeight: 500 }}>
+              <div style={{ marginTop: 14, padding: '14px 18px', background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.28)', color: '#991b1b', fontFamily: SANS, fontSize: 14, fontWeight: 500 }}>
                 {error}
               </div>
             )}
@@ -626,11 +512,11 @@ export default function YoutubeThumbnailResizer() {
                   <div className="ytr-result-canvas-wrap">
                     <canvas ref={canvasRef} />
                   </div>
-                  <div style={{ padding: '20px 24px', display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ padding: '20px 24px', display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--yte-line)' }}>
                     <div style={{ minWidth: 0, textAlign: 'left' }}>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 360 }}>{result.sourceName}</p>
-                      <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)' }}>
-                        {result.originalDims.w}×{result.originalDims.h} ({formatBytes(result.sourceSize)}) → <strong style={{ color: 'var(--ytg-text-2)' }}>{result.preset.w}×{result.preset.h} ({formatBytes(result.blob.size)})</strong>
+                      <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 360 }}>{result.sourceName}</p>
+                      <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)' }}>
+                        {result.originalDims.w}×{result.originalDims.h} ({formatBytes(result.sourceSize)}) → <strong style={{ color: 'var(--yte-soft)', fontWeight: 600 }}>{result.preset.w}×{result.preset.h} ({formatBytes(result.blob.size)})</strong>
                         {result.format === 'jpg' && (<span> · q{Math.round(result.quality * 100)}</span>)}
                       </p>
                     </div>
@@ -642,22 +528,22 @@ export default function YoutubeThumbnailResizer() {
                 </div>
 
                 {upscaleWarning && (
-                  <div style={{ marginTop: 12, padding: '10px 14px', background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 10, color: '#854d0e', fontSize: 13, fontWeight: 500 }}>
+                  <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(217,119,6,0.08)', border: '1px solid rgba(217,119,6,0.32)', color: '#854d0e', fontFamily: SANS, fontSize: 13, fontWeight: 500 }}>
                     ⚠ {upscaleWarning}
                   </div>
                 )}
 
                 {result.preset.cap && result.blob.size > result.preset.cap && (
-                  <div style={{ marginTop: 12, padding: '10px 14px', background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 10, color: '#854d0e', fontSize: 13, fontWeight: 500 }}>
+                  <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(217,119,6,0.08)', border: '1px solid rgba(217,119,6,0.32)', color: '#854d0e', fontFamily: SANS, fontSize: 13, fontWeight: 500 }}>
                     ⚠ {formatBytes(result.blob.size)} is above YouTube's 2 MB cap. Switch to JPG, lower the quality slider, or pick a smaller preset.
                   </div>
                 )}
 
-                <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 22 }}>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 22 }}>
                   <button onClick={onDownload} className="ytr-btn ytr-btn-lg" disabled={working || !result.blob}>
                     Download {result.preset.label} {result.format === 'png' ? 'PNG' : 'JPG'} →
                   </button>
-                  <button onClick={reset} className="ytr-btn-ghost" style={{ padding: '14px 22px' }}>
+                  <button onClick={reset} className="ytr-btn-ghost">
                     Resize another
                   </button>
                 </div>
@@ -668,37 +554,37 @@ export default function YoutubeThumbnailResizer() {
       </section>
 
       {/* QUALITY PRESETS, explained */}
-      <section className="ytr-section-pad" style={{ padding: isMobile ? '64px 20px' : '96px 48px', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-            <span className="ytr-eyebrow">
-              <span className="ytr-eyebrow-dot" />
+      <section className="ytr-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="ytr-wrap">
+          <div style={{ maxWidth: 720, marginBottom: 40 }}>
+            <div className="ytr-eyebrow">
+              <span aria-hidden="true" className="ytr-eyebrow-rule" />
               <span className="ytr-eyebrow-text">Three presets, one tool</span>
-            </span>
-            <h2 className="ytr-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 14, color: 'var(--ytg-text)' }}>
-              Pick the resolution your <span style={{ color: 'var(--ytg-accent)' }}>workflow needs.</span>
+            </div>
+            <h2 className="ytr-h2" style={{ fontSize: H2, marginBottom: 14, textWrap: 'balance' }}>
+              Pick the resolution your <em>workflow needs.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
+            <p className="ytr-lead" style={{ fontSize: 17 }}>
               YouTube's upload spec is 1280×720, but a thumbnail rarely lives in just one place. Embed players, blog hero images, channel banner crops, social previews, every destination wants something a little different. Three presets cover all of them.
             </p>
           </div>
           <div className="ytr-grid-3">
             {PRESETS.map((p, i) => (
-              <div key={i} style={{ position: 'relative', background: 'var(--ytg-card)', borderRadius: 18, border: `1px solid ${p.recommended ? 'rgba(229,48,42,0.20)' : 'var(--ytg-border)'}`, boxShadow: p.recommended ? '0 0 0 1px rgba(229,48,42,0.10), var(--ytg-shadow-sm)' : 'var(--ytg-shadow-sm)', padding: 28 }}>
+              <div key={i} style={{ position: 'relative', background: 'var(--yte-surface)', padding: 28 }}>
                 {p.recommended && (
-                  <span style={{ position: 'absolute', top: -10, left: 28, fontSize: 10, fontWeight: 800, letterSpacing: '0.08em', color: '#fff', background: 'var(--ytg-accent)', borderRadius: 6, padding: '3px 9px', textTransform: 'uppercase' }}>For YouTube</span>
+                  <span style={{ position: 'absolute', top: -1, left: 28, fontFamily: SANS, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#fff', background: 'var(--yte-accent)', padding: '4px 9px', textTransform: 'uppercase' }}>For YouTube</span>
                 )}
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
-                  <p style={{ fontSize: 18, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>{p.label}</p>
-                  <p style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-text-3)', letterSpacing: '0.08em', fontFamily: 'monospace' }}>{p.badge.toUpperCase()}</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, marginTop: p.recommended ? 12 : 0 }}>
+                  <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.2px' }}>{p.label}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, color: 'var(--yte-muted)', letterSpacing: '0.08em' }}>{p.badge.toUpperCase()}</p>
                 </div>
-                <p style={{ fontSize: 28, fontWeight: 800, fontFamily: 'DM Sans, sans-serif', color: 'var(--ytg-text)', letterSpacing: '-1px', marginBottom: 6, fontVariantNumeric: 'tabular-nums' }}>
-                  {p.w}<span style={{ color: 'var(--ytg-text-3)' }}>×</span>{p.h}
+                <p style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.5px', marginBottom: 8, fontVariantNumeric: 'tabular-nums' }}>
+                  {p.w}<span style={{ color: 'var(--yte-muted)' }}>×</span>{p.h}
                 </p>
-                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginBottom: 14 }}>{p.note}</p>
-                <div style={{ paddingTop: 14, borderTop: '1px solid var(--ytg-border)', display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--ytg-text-3)' }}>
+                <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.7, marginBottom: 16 }}>{p.note}</p>
+                <div style={{ paddingTop: 14, borderTop: '1px solid var(--yte-line)', display: 'flex', alignItems: 'center', gap: 8, fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)' }}>
                   {p.cap ? (
-                    <><span style={{ color: 'var(--ytg-accent-text)', fontWeight: 700 }}>≤ 2 MB</span> · auto-compressed for upload</>
+                    <><span style={{ color: 'var(--yte-accent)', fontWeight: 700 }}>≤ 2 MB</span> · auto-compressed for upload</>
                   ) : (
                     <>No file-size cap · use as a master export</>
                   )}
@@ -710,24 +596,24 @@ export default function YoutubeThumbnailResizer() {
       </section>
 
       {/* SPECS COMPARISON */}
-      <section className="ytr-section-pad" style={{ padding: isMobile ? '64px 20px' : '96px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)' }}>
+      <section className="ytr-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
         <div style={{ maxWidth: 980, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 40px' }}>
-            <span className="ytr-eyebrow">
-              <span className="ytr-eyebrow-dot" />
+          <div style={{ maxWidth: 720, marginBottom: 36 }}>
+            <div className="ytr-eyebrow">
+              <span aria-hidden="true" className="ytr-eyebrow-rule" />
               <span className="ytr-eyebrow-text">YouTube spec</span>
-            </span>
-            <h2 className="ytr-h2" style={{ fontSize: isMobile ? 28 : 38, color: 'var(--ytg-text)' }}>
-              The numbers that <span style={{ color: 'var(--ytg-accent)' }}>matter</span> on upload.
+            </div>
+            <h2 className="ytr-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', textWrap: 'balance' }}>
+              The numbers that <em>matter</em> on upload.
             </h2>
           </div>
-          <div style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead style={{ background: 'var(--ytg-bg)' }}>
+              <thead style={{ background: 'var(--yte-bg-2)' }}>
                 <tr>
-                  <th style={{ padding: '14px 22px', textAlign: 'left', fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-text-3)' }}>Field</th>
-                  <th style={{ padding: '14px 22px', textAlign: 'left', fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-text-3)' }}>YouTube requires</th>
-                  <th style={{ padding: '14px 22px', textAlign: 'left', fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-text-3)' }}>This tool ships</th>
+                  <th style={{ padding: '14px 22px', textAlign: 'left', fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--yte-muted)' }}>Field</th>
+                  <th style={{ padding: '14px 22px', textAlign: 'left', fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--yte-muted)' }}>YouTube requires</th>
+                  <th style={{ padding: '14px 22px', textAlign: 'left', fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--yte-muted)' }}>This tool ships</th>
                 </tr>
               </thead>
               <tbody>
@@ -738,10 +624,10 @@ export default function YoutubeThumbnailResizer() {
                   { f: 'Format',      y: 'JPG, PNG, GIF, BMP',          t: 'JPG (default) or PNG' },
                   { f: 'Color space', y: 'sRGB',                        t: 'sRGB (default browser canvas)' },
                 ].map((row, i) => (
-                  <tr key={i} style={{ borderTop: '1px solid var(--ytg-border)' }}>
-                    <td style={{ padding: '16px 22px', fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>{row.f}</td>
-                    <td style={{ padding: '16px 22px', fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.55 }}>{row.y}</td>
-                    <td style={{ padding: '16px 22px', fontSize: 14, color: 'var(--ytg-accent-text)', fontWeight: 600, lineHeight: 1.55 }}>{row.t}</td>
+                  <tr key={i} style={{ borderTop: '1px solid var(--yte-line)' }}>
+                    <td style={{ padding: '16px 22px', fontFamily: SANS, fontSize: 14, fontWeight: 600, color: 'var(--yte-ink)' }}>{row.f}</td>
+                    <td style={{ padding: '16px 22px', fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', lineHeight: 1.55 }}>{row.y}</td>
+                    <td style={{ padding: '16px 22px', fontFamily: SANS, fontSize: 14, color: 'var(--yte-accent)', fontWeight: 600, lineHeight: 1.55 }}>{row.t}</td>
                   </tr>
                 ))}
               </tbody>
@@ -751,17 +637,17 @@ export default function YoutubeThumbnailResizer() {
       </section>
 
       {/* PRIVACY / WHY US */}
-      <section id="privacy" className="ytr-section-pad" style={{ padding: isMobile ? '64px 20px' : '96px 48px', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-            <span className="ytr-eyebrow">
-              <span className="ytr-eyebrow-dot" />
+      <section id="privacy" className="ytr-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="ytr-wrap">
+          <div style={{ maxWidth: 720, marginBottom: 40 }}>
+            <div className="ytr-eyebrow">
+              <span aria-hidden="true" className="ytr-eyebrow-rule" />
               <span className="ytr-eyebrow-text">Why this tool exists</span>
-            </span>
-            <h2 className="ytr-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 14, color: 'var(--ytg-text)' }}>
-              Most resizers <span style={{ color: 'var(--ytg-accent)' }}>upload your image.</span> This one doesn't.
+            </div>
+            <h2 className="ytr-h2" style={{ fontSize: H2, marginBottom: 14, textWrap: 'balance' }}>
+              Most resizers <em>upload your image.</em> This one doesn't.
             </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
+            <p className="ytr-lead" style={{ fontSize: 17 }}>
               Search for a thumbnail resizer and you'll find dozens of sites that send your file to a server you don't control, log it, and serve you ads while you wait. Drafts, internal mockups, screenshots, none of that should leave your machine. This tool runs entirely on your device.
             </p>
           </div>
@@ -772,60 +658,29 @@ export default function YoutubeThumbnailResizer() {
               { num: '03', title: 'Auto-fits under 2 MB', body: 'On the HD preset, JPG quality steps down progressively until your file passes YouTube\'s upload cap. No more "thumbnail too large" errors.' },
               { num: '04', title: 'Works offline', body: 'Once the page is loaded, no internet needed. Drop, switch, download, repeat, the whole loop runs locally.' },
             ].map((c, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 16, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: 26 }}>
-                <p style={{ fontSize: 12, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.06em', fontFamily: 'monospace', marginBottom: 14 }}>{c.num}</p>
-                <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.3px', marginBottom: 8 }}>{c.title}</p>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-2)', lineHeight: 1.68 }}>{c.body}</p>
+              <div key={i} style={{ background: 'var(--yte-surface)', padding: 26 }}>
+                <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.08em', marginBottom: 14 }}>{c.num}</p>
+                <p style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px', marginBottom: 8, lineHeight: 1.2 }}>{c.title}</p>
+                <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.68 }}>{c.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA INTO THUMBNAIL IQ */}
-      <section style={{ padding: isMobile ? '0 16px 0' : '0 48px 0', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 980, margin: '0 auto', paddingTop: isMobile ? 56 : 88, paddingBottom: isMobile ? 56 : 88 }}>
-          <div style={{
-            borderRadius: isMobile ? 18 : 24,
-            border: '1px solid var(--ytg-border)',
-            boxShadow: 'var(--ytg-shadow-lg)',
-            padding: isMobile ? '40px 24px 36px' : '64px 56px',
-            textAlign: 'center',
-            background: 'var(--ytg-card)',
-            position: 'relative', overflow: 'hidden',
-          }}>
-            <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 460, height: 220, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-            <span className="ytr-eyebrow" style={{ position: 'relative' }}>
-              <span className="ytr-eyebrow-dot" />
-              <span className="ytr-eyebrow-text">Next step</span>
-            </span>
-            <h2 className="ytr-h2" style={{ fontSize: isMobile ? 28 : 38, marginBottom: 14, position: 'relative' }}>
-              Sized correctly is step one. <br />
-              <span style={{ color: 'var(--ytg-accent)' }}>Sized to win the click is step two.</span>
-            </h2>
-            <p style={{ fontSize: isMobile ? 14 : 16, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 580, margin: '0 auto 26px', position: 'relative' }}>
-              A 1280×720 thumbnail still has to earn the click. Score yours against the top videos in your niche on contrast, face presence, text density, and curiosity-gap signals.
-            </p>
-            <a href="/features/thumbnail-iq" className="ytr-btn ytr-btn-lg" style={{ position: 'relative' }}>
-              Score it with Thumbnail IQ →
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ */}
-      <section className="ytr-section-pad" style={{ padding: isMobile ? '64px 20px' : '96px 48px', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
+      <section className="ytr-section-pad" style={{ padding: isMobile ? '60px 22px' : '104px 48px', background: 'var(--yte-bg)' }}>
         <div style={{ maxWidth: 880, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <span className="ytr-eyebrow">
-              <span className="ytr-eyebrow-dot" />
+          <div style={{ marginBottom: 32 }}>
+            <div className="ytr-eyebrow">
+              <span aria-hidden="true" className="ytr-eyebrow-rule" />
               <span className="ytr-eyebrow-text">Frequently asked</span>
-            </span>
-            <h2 className="ytr-h2" style={{ fontSize: isMobile ? 28 : 36, color: 'var(--ytg-text)' }}>
-              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
+            </div>
+            <h2 className="ytr-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', textWrap: 'balance' }}>
+              Resizing, <em>answered.</em>
             </h2>
           </div>
-          <div>
+          <div style={{ borderTop: '1px solid var(--yte-line)' }}>
             {FAQS.map((f, i) => <FaqItem key={i} q={f.q} a={f.a} />)}
           </div>
         </div>

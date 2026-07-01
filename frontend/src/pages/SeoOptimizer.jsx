@@ -3399,7 +3399,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           open={creditsOut}
           onClose={() => setCreditsOut(false)}
           title="Unlock SEO Studio"
-          description="Rewrite your titles, descriptions, and tags against the videos actually winning in your niche, with AI-scored keywords and three direction-picked title suggestions."
+          description="Rewrite your titles, descriptions, and tags against the videos winning in your niche, with AI-scored keywords and three direction-picked title suggestions."
           bullets={[
             'AI-scored title alternatives with SEO, CTR, and hook breakdowns',
             'Description generator trained on your channel and your niche',

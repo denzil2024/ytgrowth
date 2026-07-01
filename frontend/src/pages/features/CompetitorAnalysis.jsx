@@ -3,15 +3,16 @@ import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import { injectFaqJsonLd } from '../../utils/seo'
 
-/* Competitor Analysis. Fully custom landing page.
- *
- * Built around the *actual* product (see app/competitors.py): a 7-dimension
- * AI competitive analysis powered by Claude Sonnet 4.6 with output in
- * threatLevel + topTopics + titlePatterns + gapsToExploit + topVideosToStudy
- * + videoIdeas + winningMoves. Background rhythm mirrors Landing.jsx and the
- * Channel Audit page (white → dark → light → dark → white → dark → light →
- * dark → white → light).
- */
+/* Competitor Analysis feature page. Migrated to the editorial design language
+   (Fraunces + Barlow, sharp flat cards, warm paper, restrained red). Old
+   white→dark→light rhythm is now predominantly warm paper; the competitor
+   card stays a dark "app preview" pane (on-dark accents use coral, not raw
+   red). Foreign blue/green tints neutralised to ink/accent, output icons are
+   neutral ink, bottom CTA removed. ALL copy and product detail preserved.
+   See project_design_language_editorial. */
+
+const SERIF = "'Fraunces', Georgia, serif"
+const SANS  = "'Barlow', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -26,129 +27,66 @@ function useBreakpoint() {
 function useStyles() {
   useEffect(() => {
     if (document.getElementById('cmp-styles')) return
-
     const style = document.createElement('style')
     style.id = 'cmp-styles'
     style.textContent = `
       :root {
-        --ytg-bg:           #f4f4f6;
-        --ytg-bg-2:         #ecedf1;
-        --ytg-bg-3:         #e6e7ec;
-        --ytg-text:         #0a0a0f;
-        --ytg-text-2:       rgba(10,10,15,0.62);
-        --ytg-text-3:       rgba(10,10,15,0.40);
-        --ytg-text-4:       rgba(10,10,15,0.30);
-        --ytg-nav:          rgba(244,244,246,0.92);
-        --ytg-card:         #ffffff;
-        --ytg-border:       rgba(10,10,15,0.09);
-        --ytg-accent:       #e5302a;
-        --ytg-accent-text:  #c22b25;
-        --ytg-accent-light: rgba(229,48,42,0.07);
-        --ytg-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
-        --ytg-shadow:       0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.11);
-        --ytg-shadow-lg:    0 4px 16px rgba(0,0,0,0.11), 0 24px 60px rgba(0,0,0,0.14);
-        --ytg-shadow-xl:    0 8px 28px rgba(0,0,0,0.13), 0 40px 100px rgba(0,0,0,0.17);
+        --yte-bg: #f6f4ef; --yte-bg-2: #efece4; --yte-surface: #ffffff;
+        --yte-ink: #14130f; --yte-soft: #5c574e; --yte-muted: #8a8378;
+        --yte-line: rgba(20,19,15,0.12); --yte-line-2: rgba(20,19,15,0.22);
+        --yte-accent: #e5302a; --yte-accent-soft: rgba(229,48,42,0.07); --yte-dark: #0d0d12;
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
-      ::-webkit-scrollbar { width: 12px; height: 12px }
-      ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb {
-        background-color: rgba(10,10,15,0.28);
-        border-radius: 10px;
-        border: 3px solid transparent;
-        background-clip: content-box;
-      }
-      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }@keyframes fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+      html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+      body { background: var(--yte-bg); color: var(--yte-ink); font-family: ${SANS}; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+      @keyframes cmpFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
 
-      .cmp-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-accent); color: #fff; font-size: 15px; font-weight: 700; padding: 15px 30px; border-radius: 100px; border: none; cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(229,48,42,0.34); transition: filter 0.18s, transform 0.18s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
-      .cmp-btn:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.16), 0 12px 36px rgba(229,48,42,0.42); }
-      .cmp-btn-lg { font-size: 16px; padding: 17px 38px; }
-      .cmp-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-card); color: var(--ytg-text-2); font-size: 15px; font-weight: 600; padding: 14px 26px; border-radius: 100px; border: 1px solid var(--ytg-border); cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: var(--ytg-shadow-sm); transition: color 0.15s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
-      .cmp-btn-ghost:hover { color: var(--ytg-text); box-shadow: var(--ytg-shadow); }
+      .cmp-wrap { max-width: 1120px; margin: 0 auto; }
+      .cmp-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+      .cmp-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
+      .cmp-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
+      .cmp-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.05; }
+      .cmp-h1 em { font-style: italic; color: var(--yte-accent); }
+      .cmp-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
+      .cmp-h2 em { font-style: italic; color: var(--yte-accent); }
+      .cmp-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
-      .cmp-eyebrow {
-        display: inline-flex; align-items: center; gap: 8px;
-        font-size: 11px; font-weight: 700;
-        letter-spacing: 0.08em; text-transform: uppercase;
-        padding: 5px 13px; border-radius: 100px; margin-bottom: 16px;
-      }
-      .cmp-eyebrow.light { color: var(--ytg-accent-text); background: var(--ytg-accent-light); }
-      .cmp-eyebrow.dark  { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
+      .cmp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 30px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
+      .cmp-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+      .cmp-btn-lg { font-size: 13px; padding: 17px 36px; }
+      .cmp-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 28px; border-radius: 0; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yte-soft); text-decoration: none; background: var(--yte-surface); border: 1px solid var(--yte-line); transition: color 0.15s, border-color 0.15s; }
+      .cmp-ghost:hover { color: var(--yte-ink); border-color: var(--yte-line-2); }
 
-      .cmp-h1 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -2px; line-height: 1.05; text-wrap: balance; }
-      .cmp-h2 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -1.4px; line-height: 1.08; text-wrap: balance; }
-
-      .cmp-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
-      .cmp-nav-link:hover { color: var(--ytg-text-2); }
-
-      .cmp-faq-item { border-bottom: 1px solid var(--ytg-border); }
-      .cmp-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: inherit; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; font-size: 16.5px; font-weight: 700; color: var(--ytg-text); letter-spacing: -0.2px; line-height: 1.45; }
-      .cmp-faq-q:hover { color: var(--ytg-accent); }
-      .cmp-faq-icon { transition: transform 0.2s; flex-shrink: 0; color: var(--ytg-text-3); margin-top: 4px; }
-      .cmp-faq-icon.open { transform: rotate(45deg); color: var(--ytg-accent); }
-      .cmp-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; display: none; }
+      .cmp-faq-item { border-bottom: 1px solid var(--yte-line); }
+      .cmp-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${SERIF}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
+      .cmp-faq-q:hover { color: var(--yte-accent); }
+      .cmp-faq-q.open { color: var(--yte-accent); }
+      .cmp-faq-plus { flex-shrink: 0; font-family: ${SANS}; font-size: 26px; font-weight: 300; color: var(--yte-accent); line-height: 1; transition: transform 0.2s; }
+      .cmp-faq-plus.open { transform: rotate(45deg); }
+      .cmp-faq-a { font-family: ${SANS}; font-size: 15.5px; color: var(--yte-soft); line-height: 1.78; padding: 0 0 24px 0; max-width: 720px; display: none; }
       .cmp-faq-a.open { display: block; }
 
       @media (max-width: 900px) {
-        .cmp-grid-2 { grid-template-columns: 1fr !important; gap: 32px !important; }
+        .cmp-grid-2 { grid-template-columns: 1fr !important; gap: 36px !important; }
         .cmp-grid-3 { grid-template-columns: 1fr !important; }
         .cmp-grid-4 { grid-template-columns: 1fr 1fr !important; }
       }
       @media (max-width: 600px) {
         .cmp-grid-4 { grid-template-columns: 1fr !important; }
       }
+      @media (max-width: 768px) {
+        .cmp-section-pad { padding-left: 22px !important; padding-right: 22px !important; }
+      }
     `
     document.head.appendChild(style)
   }, [])
 }
 
-function Logo({ size = 28 }) {
+function Eyebrow({ children, center }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
-      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
-    </svg>
-  )
-}
-
-const FEATURE_NAV = [
-  { href: '/features/channel-audit',       label: 'Channel Audit',       desc: '10-category AI audit of your channel' },
-  { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
-  { href: '/features/seo-studio',          label: 'SEO Studio',          desc: 'Score + rewrite titles and descriptions' },
-  { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
-  { href: '/features/keyword-research',    label: 'Keyword Research',    desc: 'YouTube-native search volume + difficulty' },
-  { href: '/features/outliers',            label: 'Outliers',            desc: 'Find viral videos and breakout channels' },
-]
-
-function FeaturesDropdown() {
-  const [open, setOpen] = useState(false)
-  return (
-    <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} style={{ position: 'relative' }}>
-      <a href="/#features" className="cmp-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
-        Features
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
-          <path d="M2 3.5l3 3 3-3"/>
-        </svg>
-      </a>
-      {open && (
-        <>
-          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
-          <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: -20, zIndex: 200, background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14, boxShadow: 'var(--ytg-shadow-lg)', padding: 8, minWidth: 340, animation: 'fadeUp 0.16s ease both' }}>
-            {FEATURE_NAV.map((item, i) => (
-              <a key={i} href={item.href} style={{ display: 'block', padding: '11px 14px', borderRadius: 9, textDecoration: 'none', transition: 'background 0.12s' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
-                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-2)', lineHeight: 1.45 }}>{item.desc}</p>
-              </a>
-            ))}
-          </div>
-        </>
-      )}
+    <div className="cmp-eyebrow" style={center ? { justifyContent: 'center' } : undefined}>
+      <span aria-hidden="true" className="cmp-eyebrow-rule" />
+      <span className="cmp-eyebrow-text">{children}</span>
     </div>
   )
 }
@@ -157,35 +95,33 @@ function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="cmp-faq-item">
-      <button className="cmp-faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
+      <button className={`cmp-faq-q${open ? ' open' : ''}`} onClick={() => setOpen(o => !o)} aria-expanded={open}>
         <span style={{ flex: 1 }}>{q}</span>
-        <span className={`cmp-faq-icon${open ? ' open' : ''}`}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><path d="M8 2v12M2 8h12"/></svg>
-        </span>
+        <span aria-hidden="true" className={`cmp-faq-plus${open ? ' open' : ''}`}>+</span>
       </button>
       <div className={`cmp-faq-a${open ? ' open' : ''}`}>{a}</div>
     </div>
   )
 }
 
-/* ── Visual: Competitor card with threat level + summary (dark) ────────── */
+/* ── Visual: Competitor card (dark focal pane) ─────────────────────────── */
 function CompetitorCardVisual() {
   return (
-    <div style={{ background: '#111114', borderRadius: 18, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 26 }}>
+    <div style={{ background: 'var(--yte-ink)', padding: 26 }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 16, fontWeight: 800, color: 'rgba(255,255,255,0.7)' }}>T</div>
+          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'rgba(255,255,255,0.75)' }}>T</div>
           <div>
-            <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', letterSpacing: '-0.2px' }}>TechCreator Pro</p>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>142K subs · 4.6% avg CTR · posts every 4 days</p>
+            <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: '#fff', letterSpacing: '-0.1px' }}>TechCreator Pro</p>
+            <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>142K subs · 4.6% avg CTR · posts every 4 days</p>
           </div>
         </div>
-        <span style={{ fontSize: 10, fontWeight: 800, color: '#ff3b30', background: 'rgba(229,48,42,0.12)', border: '1px solid rgba(229,48,42,0.35)', padding: '4px 10px', borderRadius: 100, letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0 }}>High threat</span>
+        <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: '#e6b35c', background: 'rgba(230,179,92,0.12)', border: '1px solid rgba(230,179,92,0.3)', padding: '4px 10px', letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0 }}>High threat</span>
       </div>
       {/* Summary */}
-      <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>AI assessment</p>
-      <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, marginBottom: 18 }}>
+      <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>AI assessment</p>
+      <p style={{ fontFamily: SANS, fontSize: 14, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, marginBottom: 18 }}>
         TechCreator Pro publishes twice the cadence you do, but their topic mix is narrow. They ignore tutorials entirely, and that&apos;s where 64% of search volume in your shared niche lives. They&apos;re beatable on tutorial content within 60 days.
       </p>
       {/* Stats row */}
@@ -195,23 +131,23 @@ function CompetitorCardVisual() {
           { k: '4.2K',  l: 'Avg views / video' },
           { k: '2.1M', l: 'Total views' },
         ].map((s, i) => (
-          <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '11px 13px' }}>
-            <p style={{ fontSize: 17, fontWeight: 800, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1, marginBottom: 4, fontVariantNumeric: 'tabular-nums' }}>{s.k}</p>
-            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{s.l}</p>
+          <div key={i} style={{ background: 'rgba(255,255,255,0.05)', padding: '11px 13px' }}>
+            <p style={{ fontFamily: SERIF, fontSize: 20, fontWeight: 400, color: '#fff', letterSpacing: '-0.4px', lineHeight: 1, marginBottom: 5, fontVariantNumeric: 'tabular-nums' }}>{s.k}</p>
+            <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{s.l}</p>
           </div>
         ))}
       </div>
       {/* Top videos to study */}
-      <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Top videos to study</p>
+      <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 10 }}>Top videos to study</p>
       {[
         { title: 'I tested every YouTube AI tool so you don’t have to', views: '124K', why: 'List + curiosity hook · pulled new subs from 4 niches' },
         { title: 'My exact YouTube setup in 2026 (under $500)',          views: '88K',  why: 'Specificity + price hook · evergreen format' },
       ].map((v, i) => (
-        <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ width: 56, height: 32, background: 'linear-gradient(135deg, rgba(229,48,42,0.25), rgba(74,124,247,0.18))', borderRadius: 5, flexShrink: 0 }} />
+        <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ width: 56, height: 32, background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.85)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 2 }}>{v.title}</p>
-            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{v.views} views · {v.why}</p>
+            <p style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.85)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 2 }}>{v.title}</p>
+            <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{v.views} views · {v.why}</p>
           </div>
         </div>
       ))}
@@ -219,37 +155,22 @@ function CompetitorCardVisual() {
   )
 }
 
-/* ── Visual: Gap to exploit card (dark cards on dark bg) ───────────────── */
+/* ── Visual: Gap to exploit cards (light, sharp) ───────────────────────── */
 function GapVisual() {
   const gaps = [
-    {
-      gap: 'Tutorial content. 0 videos in last 90 days',
-      action: 'Ship a 6-part "How to X in 2026" series. Their audience is searching for these terms but landing on smaller channels.',
-      impact: 'HIGH',
-      impactColor: '#ff3b30',
-    },
-    {
-      gap: 'Posting Tuesday 4pm-2.3x their average CTR',
-      action: 'Match the slot for your next 3 uploads. Their audience is conditioned to watch on Tuesday.',
-      impact: 'MED',
-      impactColor: '#f59e0b',
-    },
-    {
-      gap: '"Beginner" keyword absent from any title',
-      action: 'Their audience skews intermediate. Beginner-targeted titles in the same niche get 5x search volume on YouTube.',
-      impact: 'HIGH',
-      impactColor: '#ff3b30',
-    },
+    { gap: 'Tutorial content. 0 videos in last 90 days', action: 'Ship a 6-part "How to X in 2026" series. Their audience is searching for these terms but landing on smaller channels.', impact: 'HIGH', high: true },
+    { gap: 'Posting Tuesday 4pm-2.3x their average CTR', action: 'Match the slot for your next 3 uploads. Their audience is conditioned to watch on Tuesday.', impact: 'MED', high: false },
+    { gap: '"Beginner" keyword absent from any title', action: 'Their audience skews intermediate. Beginner-targeted titles in the same niche get 5x search volume on YouTube.', impact: 'HIGH', high: true },
   ]
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       {gaps.map((g, i) => (
-        <div key={i} style={{ background: '#111114', borderRadius: 14, border: '1px solid rgba(255,255,255,0.09)', borderLeft: `3px solid ${g.impactColor}`, padding: '16px 18px' }}>
+        <div key={i} style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', borderLeft: '3px solid var(--yte-accent)', padding: '16px 18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
-            <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', letterSpacing: '-0.2px', lineHeight: 1.4 }}>{g.gap}</p>
-            <span style={{ fontSize: 10, fontWeight: 800, color: g.impactColor, border: `1.5px solid ${g.impactColor}`, padding: '2px 8px', borderRadius: 100, letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0 }}>{g.impact}</span>
+            <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.1px', lineHeight: 1.4 }}>{g.gap}</p>
+            <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: g.high ? 'var(--yte-accent)' : 'var(--yte-muted)', border: `1.5px solid ${g.high ? 'var(--yte-accent)' : 'var(--yte-line-2)'}`, padding: '2px 8px', letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0 }}>{g.impact}</span>
           </div>
-          <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.6)', lineHeight: 1.65 }}><span style={{ color: '#4ade80', fontWeight: 700 }}>How to capture: </span>{g.action}</p>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-soft)', lineHeight: 1.6 }}><span style={{ color: 'var(--yte-accent)', fontWeight: 700 }}>How to capture: </span>{g.action}</p>
         </div>
       ))}
     </div>
@@ -268,7 +189,7 @@ const DIMENSIONS = [
 ]
 
 const OUTPUT_PARTS = [
-  { icon: 'shield',  title: 'Threat level',           body: 'Low / Medium / High based on subscriber overlap, topic similarity, and posting velocity. So you know which competitors actually pull your audience vs which look similar but aren’t.' },
+  { icon: 'shield',  title: 'Threat level',           body: 'Low / Medium / High based on subscriber overlap, topic similarity, and posting velocity. So you know which competitors pull your audience vs which look similar but aren’t.' },
   { icon: 'clip',    title: 'Top topics + view data', body: 'The 5–8 topic clusters that drive their views, with avg views per topic and video count per topic. Tells you what to model and what to ignore.' },
   { icon: 'tag',     title: 'Title patterns',         body: 'Average title length, dominant title formats, top keywords across all 30 uploads, and the power words they rely on. Steal what works.' },
   { icon: 'gap',     title: 'Gaps to exploit',        body: 'A ranked list of opportunities. Each gap comes with an exact "how to capture" action and an estimated impact tag (low / med / high).' },
@@ -289,8 +210,8 @@ const ICON_PATHS = {
 
 function OutputIcon({ name }) {
   return (
-    <div style={{ width: 38, height: 38, borderRadius: 10, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#e5302a" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+    <div style={{ width: 38, height: 38, background: 'rgba(20,19,15,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="var(--yte-ink)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
         <path d={ICON_PATHS[name]}/>
       </svg>
     </div>
@@ -319,7 +240,7 @@ const FAQS = [
   },
   {
     q: 'What counts as a "high threat" competitor?',
-    a: <>The AI scores threat level (low / medium / high) based on three things: how much subscriber overlap is likely (similar niche signal), topic similarity to your channel, and their posting velocity. A creator with 142K subs publishing 2x your cadence in your exact topic gets HIGH. A 1M-sub creator who only tangentially overlaps is usually MEDIUM or LOW because they&apos;re not actually pulling your audience.</>,
+    a: <>The AI scores threat level (low / medium / high) based on three things: how much subscriber overlap is likely (similar niche signal), topic similarity to your channel, and their posting velocity. A creator with 142K subs publishing 2x your cadence in your exact topic gets HIGH. A 1M-sub creator who only tangentially overlaps is usually MEDIUM or LOW because they&apos;re not pulling your audience.</>,
   },
   {
     q: 'Will this work for shorts-first channels?',
@@ -331,7 +252,7 @@ const FAQS = [
   },
   {
     q: 'Will the audit benchmark my channel against their stats?',
-    a: <>Yes. Every analysis carries your channel context (subs, avg views, posting cadence) into the prompt, so insights are framed relative to where you actually are. "Their avg views are 4.2K, yours are 1.8K. These 3 of their topics consistently outperform that gap" is what you get, not "they get 4.2K average views" with no context.</>,
+    a: <>Yes. Every analysis carries your channel context (subs, avg views, posting cadence) into the prompt, so insights are framed relative to where you are. "Their avg views are 4.2K, yours are 1.8K. These 3 of their topics consistently outperform that gap" is what you get, not "they get 4.2K average views" with no context.</>,
   },
   {
     q: 'Are the "video ideas" generated by AI safe to publish?',
@@ -353,43 +274,44 @@ export default function CompetitorAnalysis() {
   useEffect(() => { injectFaqJsonLd(FAQS) }, [])
   const { isMobile } = useBreakpoint()
 
-  return (
-    <div style={{ background: 'var(--ytg-bg)', minHeight: '100vh' }}>
+  const H2 = isMobile ? 30 : 42
 
-      {/* ════ NAV - shared SiteHeader ════════════════════════════════════ */}
+  return (
+    <div style={{ background: 'var(--yte-bg)', minHeight: '100vh', fontFamily: SANS, color: 'var(--yte-ink)' }}>
+
+      {/* ════ NAV ════ */}
       <SiteHeader />
 
-      {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
-        <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
-          <span className="cmp-eyebrow light">Competitor Analysis</span>
-          <h1 className="cmp-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
-            See exactly what your rivals are doing right. <span style={{ color: 'var(--ytg-accent)' }}>and where they&apos;re leaving openings.</span>
+      {/* ════ 1. HERO ════ */}
+      <section className="cmp-section-pad" style={{ padding: isMobile ? '60px 22px 48px' : '104px 48px 64px', background: 'var(--yte-bg)' }}>
+        <div className="cmp-wrap" style={{ animation: 'cmpFadeUp 0.5s ease both' }}>
+          <Eyebrow>Competitor Analysis</Eyebrow>
+          <h1 className="cmp-h1" style={{ fontSize: isMobile ? 34 : 56, marginBottom: 22, maxWidth: 900, textWrap: 'balance' }}>
+            See exactly what your rivals are doing right. <em>And where they’re leaving openings.</em>
           </h1>
-          <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 36px' }}>
+          <p className="cmp-lead" style={{ fontSize: isMobile ? 16 : 17.5, maxWidth: 720, marginBottom: 32, textWrap: 'pretty' }}>
             Pick 2–10 channels in your niche. YTGrowth pulls their last 30 uploads, runs a 7-dimension AI analysis, and returns a ranked list of content gaps, winning patterns, and ready-to-publish video ideas. With a threat level for each rival so you know which ones to focus on.
           </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <a href="/auth/login" className="cmp-btn cmp-btn-lg">Analyze a competitor →</a>
-            <a href="#how" className="cmp-btn-ghost" style={{ padding: '15px 26px', fontSize: 15 }}>See how it works</a>
+            <a href="#how" className="cmp-ghost">See how it works</a>
           </div>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginTop: 22 }}>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', marginTop: 22, letterSpacing: '0.03em' }}>
             Solo plan and above · ~60 seconds per analysis · re-run anytime to capture fresh data
           </p>
         </div>
       </section>
 
-      {/* ════ 2. COMPETITOR SUMMARY VISUAL. Dark, SPLIT (text L, visual R) ═ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div className="cmp-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      {/* ════ 2. COMPETITOR SUMMARY (split) ════ */}
+      <section className="cmp-section-pad" style={{ padding: isMobile ? '64px 22px' : '88px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="cmp-grid-2 cmp-wrap" style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 56, alignItems: 'center' }}>
           <div>
-            <span className="cmp-eyebrow dark">What you get per competitor</span>
-            <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              A complete read on every rival. <span style={{ color: '#ff3b30' }}>not just their numbers, but their playbook.</span>
+            <Eyebrow>What you get per competitor</Eyebrow>
+            <h2 className="cmp-h2" style={{ fontSize: H2, marginBottom: 18 }}>
+              A complete read on every rival. <em>Not just their numbers, but their playbook.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
-              Each competitor returns a structured report: a threat-level tag, a 2–3 sentence AI assessment naming the actual opportunity against them, their headline stats, and the top 5 videos worth deconstructing. Each with a "why it worked" one-liner.
+            <p className="cmp-lead" style={{ fontSize: 17, marginBottom: 24 }}>
+              Each competitor returns a structured report: a threat-level tag, a 2–3 sentence AI assessment naming the real opportunity against them, their headline stats, and the top 5 videos worth deconstructing. Each with a "why it worked" one-liner.
             </p>
             {[
               'Threat level scored from subscriber overlap + topic match + posting velocity',
@@ -397,71 +319,66 @@ export default function CompetitorAnalysis() {
               'Top 5 videos by views with deconstruction notes',
               'Re-fetched on demand so the analysis stays current',
             ].map((b, i) => (
-              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4ade80" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
-                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6 }}>{b}</span>
+              <div key={i} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', marginBottom: 11 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--yte-accent)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
+                <span style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.6 }}>{b}</span>
               </div>
             ))}
           </div>
-          <div>
-            <CompetitorCardVisual />
-          </div>
+          <div><CompetitorCardVisual /></div>
         </div>
       </section>
 
-      {/* ════ 3. THE 7 DIMENSIONS. Light ═══════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
-            <span className="cmp-eyebrow light">Seven dimensions analyzed</span>
-            <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 16 }}>
-              We don&apos;t just count their videos. <span style={{ color: 'var(--ytg-accent)' }}>We map their playbook.</span>
+      {/* ════ 3. THE 7 DIMENSIONS ════ */}
+      <section className="cmp-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
+        <div className="cmp-wrap">
+          <div style={{ maxWidth: 760, marginBottom: 44 }}>
+            <Eyebrow>Seven dimensions analyzed</Eyebrow>
+            <h2 className="cmp-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              We don’t just count their videos. <em>We map their playbook.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Every competitor analysis runs the same seven dimensions over their last 30 uploads. The AI cross-references each one against your channel&apos;s context. So the output isn&apos;t a description of them, it&apos;s a list of moves you can actually take.
+            <p className="cmp-lead" style={{ fontSize: 17 }}>
+              Every competitor analysis runs the same seven dimensions over their last 30 uploads. The AI cross-references each one against your channel’s context. So the output isn’t a description of them, it’s a list of moves you can take.
             </p>
           </div>
-          <div className="cmp-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div className="cmp-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {DIMENSIONS.map((d, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '20px 22px' }}>
+              <div key={i} style={{ background: 'var(--yte-surface)', padding: '22px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{String(i + 1).padStart(2, '0')}</span>
-                  </div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px' }}>{d.name}</p>
+                  <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)' }}>{String(i + 1).padStart(2, '0')}</span>
+                  <p style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px' }}>{d.name}</p>
                 </div>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>{d.what}</p>
+                <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{d.what}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════ 4. GAPS TO EXPLOIT. Dark, SPLIT (visual L, text R) ═══════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div className="cmp-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      {/* ════ 4. GAPS TO EXPLOIT (split) ════ */}
+      <section className="cmp-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="cmp-grid-2 cmp-wrap" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div style={{ order: isMobile ? 1 : 0 }}>
             <GapVisual />
           </div>
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <span className="cmp-eyebrow dark">The gap report</span>
-            <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              Every gap comes with the <span style={{ color: '#ff3b30' }}>exact action to take.</span>
+            <Eyebrow>The gap report</Eyebrow>
+            <h2 className="cmp-h2" style={{ fontSize: H2, marginBottom: 18 }}>
+              Every gap comes with the <em>exact action to take.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 22 }}>
-              The gap report is the highest-leverage output. Each entry names a specific opening. A topic they ignore, a slot they don&apos;t cover, a keyword they&apos;ve never used. Paired with the move you should make and an impact tag (low / med / high). No vague advice; this is what you publish next.
+            <p className="cmp-lead" style={{ fontSize: 17, marginBottom: 22 }}>
+              The gap report is the highest-leverage output. Each entry names a specific opening. A topic they ignore, a slot they don’t cover, a keyword they’ve never used. Paired with the move you should make and an impact tag (low / med / high). No vague advice; this is what you publish next.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
               {[
-                { label: 'Gap',           color: '#ff3b30', body: 'The specific opening, named with their data.' },
-                { label: 'How to capture', color: '#4ade80', body: 'The exact action to take. Specific, not generic.' },
-                { label: 'Impact',        color: '#f59e0b', body: 'Low / med / high. Based on the size of the opening.' },
-                { label: 'Re-runnable',   color: '#4a7cf7', body: 'Re-analyze anytime to refresh against their newest uploads.' },
+                { label: 'Gap',            body: 'The specific opening, named with their data.' },
+                { label: 'How to capture', body: 'The exact action to take. Specific, not generic.' },
+                { label: 'Impact',         body: 'Low / med / high. Based on the size of the opening.' },
+                { label: 'Re-runnable',    body: 'Re-analyze anytime to refresh against their newest uploads.' },
               ].map((p, i) => (
-                <div key={i} style={{ borderLeft: `2px solid ${p.color}`, paddingLeft: 12 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: p.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
-                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>{p.body}</p>
+                <div key={i} style={{ borderLeft: '2px solid var(--yte-accent)', paddingLeft: 12 }}>
+                  <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.6 }}>{p.body}</p>
                 </div>
               ))}
             </div>
@@ -469,16 +386,14 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS. White, with arrow connectors ════════════ */}
-      <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
+      {/* ════ 5. HOW IT WORKS ════ */}
+      <section id="how" className="cmp-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
-            <span className="cmp-eyebrow light">How it works</span>
-            <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 42 }}>
-              From rival channel to publishable idea in under 60 seconds
-            </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginTop: 14, maxWidth: 560, margin: '14px auto 0' }}>
-              Five stages, all of them yours to control. Re-run any analysis anytime to capture a competitor&apos;s newest uploads.
+          <div style={{ maxWidth: 720, marginBottom: 44 }}>
+            <Eyebrow>How it works</Eyebrow>
+            <h2 className="cmp-h2" style={{ fontSize: H2, textWrap: 'balance' }}>From rival channel to <em>publishable idea</em> in under 60 seconds.</h2>
+            <p className="cmp-lead" style={{ fontSize: 17, marginTop: 14, maxWidth: 560 }}>
+              Five stages, all of them yours to control. Re-run any analysis anytime to capture a competitor’s newest uploads.
             </p>
           </div>
           {(() => {
@@ -490,27 +405,16 @@ export default function CompetitorAnalysis() {
               { n: '05', t: 'You see the result',  b: 'Threat level, summary, top topics, title patterns, ranked gaps with how-to-capture moves, top videos to study, and ready-to-publish ideas.' },
             ]
             const Card = ({ s }) => (
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{s.n}</span>
-                  </div>
-                </div>
-                <p style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 10, letterSpacing: '-0.2px' }}>{s.t}</p>
-                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>{s.b}</p>
+              <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.06em', marginBottom: 14 }}>{s.n}</div>
+                <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
+                <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{s.b}</p>
               </div>
             )
-            const Arrow = () => (
-              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: 26, height: 26, borderRadius: '50%', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', color: 'var(--ytg-accent)' }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2 6h8M7 3l3 3-3 3"/>
-                </svg>
-              </div>
-            )
-            const ArrowDown = () => (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: '50%', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', color: 'var(--ytg-accent)', margin: '8px auto' }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 2v8M3 7l3 3 3-3"/>
+            const Arrow = ({ down }) => (
+              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', color: 'var(--yte-muted)', margin: down ? '8px auto' : 0 }}>
+                <svg width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  {down ? <path d="M6 2v8M3 7l3 3 3-3"/> : <path d="M2 6h8M7 3l3 3-3 3"/>}
                 </svg>
               </div>
             )
@@ -520,14 +424,14 @@ export default function CompetitorAnalysis() {
                   {steps.map((s, i) => (
                     <div key={i}>
                       <Card s={s} />
-                      {i < steps.length - 1 && <ArrowDown />}
+                      {i < steps.length - 1 && <Arrow down />}
                     </div>
                   ))}
                 </div>
               )
             }
             return (
-              <div style={{ display: 'flex', alignItems: 'stretch', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'stretch', gap: 10 }}>
                 {steps.flatMap((s, i) => {
                   const items = [<Card key={`c${i}`} s={s} />]
                   if (i < steps.length - 1) items.push(<Arrow key={`a${i}`} />)
@@ -539,46 +443,45 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 6. SEVEN OUTPUT PARTS. Dark ═══════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 44px' }}>
-            <span className="cmp-eyebrow dark">Output structure</span>
-            <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
-              Seven distinct output blocks. <span style={{ color: '#ff3b30' }}>Every one is actionable.</span>
+      {/* ════ 6. SEVEN OUTPUT PARTS ════ */}
+      <section className="cmp-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div style={{ maxWidth: 1180, margin: '0 auto' }}>
+          <div style={{ maxWidth: 760, marginBottom: 40 }}>
+            <Eyebrow>Output structure</Eyebrow>
+            <h2 className="cmp-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              Seven distinct output blocks. <em>Every one is actionable.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              We don&apos;t hand you a wall of text. The AI returns a structured report, and the dashboard renders each block in its own card so you can scan, mark, and action without re-reading.
+            <p className="cmp-lead" style={{ fontSize: 17 }}>
+              We don’t hand you a wall of text. The AI returns a structured report, and the dashboard renders each block in its own card so you can scan, mark, and action without re-reading.
             </p>
           </div>
-          <div className="cmp-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+          <div className="cmp-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {OUTPUT_PARTS.map((p, i) => (
-              <div key={i} style={{ background: '#111114', borderRadius: 14, border: '1px solid rgba(255,255,255,0.09)', padding: '22px 22px 24px' }}>
+              <div key={i} style={{ background: 'var(--yte-surface)', padding: '22px 22px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                   <OutputIcon name={p.icon} />
-                  <p style={{ fontSize: 14.5, fontWeight: 700, color: '#fff', letterSpacing: '-0.2px' }}>{p.title}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.1px' }}>{p.title}</p>
                 </div>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>{p.body}</p>
+                <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{p.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════ 7. WHAT POWERS IT. Light ═════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
+      {/* ════ 7. WHAT POWERS IT (split) ════ */}
+      <section className="cmp-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
         <div className="cmp-grid-2" style={{ maxWidth: 1140, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div>
-            <span className="cmp-eyebrow light">What powers it</span>
-            <h2 className="cmp-h2" style={{ fontSize: isMobile ? 28 : 38, marginBottom: 16 }}>
-              Public data only. <span style={{ color: 'var(--ytg-accent)' }}>Read-only API.</span> No scraping.
+            <Eyebrow>What powers it</Eyebrow>
+            <h2 className="cmp-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 16, textWrap: 'balance' }}>
+              Public data only. <em>Read-only API.</em> No scraping.
             </h2>
-            <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
+            <p className="cmp-lead" style={{ fontSize: 15 }}>
               We use the official YouTube Data API to read public information. The same data anyone visiting the channel can see. No private analytics, no impersonation, no terms-of-service grey areas. Each analysis costs one credit and the data is saved per channel so it feeds your channel audit context too.
             </p>
           </div>
-          <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 16, boxShadow: 'var(--ytg-shadow-lg)', padding: '24px 28px' }}>
+          <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '26px 28px' }}>
             {[
               { k: 'Last 30 uploads',          v: 'Titles, durations, dates, views, likes, comments, thumbnails' },
               { k: 'Channel metadata',          v: 'Subscribers, total views, video count, channel age, channel keywords' },
@@ -587,98 +490,75 @@ export default function CompetitorAnalysis() {
               { k: 'Your channel context',      v: 'Your subs, avg views, posting cadence, niche keywords' },
               { k: 'AI model',                  v: 'Claude Sonnet 4.6 · 8K-token analysis · ~30s' },
             ].map((row, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '11px 0', borderBottom: i < 5 ? '1px solid var(--ytg-border)' : 'none', alignItems: 'baseline' }}>
-                <p style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.1px', flexShrink: 0 }}>{row.k}</p>
-                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-2)', lineHeight: 1.55, textAlign: 'right' }}>{row.v}</p>
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '11px 0', borderBottom: i < 5 ? '1px solid var(--yte-line)' : 'none', alignItems: 'baseline' }}>
+                <p style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.1px', flexShrink: 0 }}>{row.k}</p>
+                <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-soft)', lineHeight: 1.55, textAlign: 'right' }}>{row.v}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS. Dark ═════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 44px' }}>
-            <span className="cmp-eyebrow dark">By plan</span>
-            <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
-              How many rivals you can track at once
+      {/* ════ 8. PLAN LIMITS ════ */}
+      <section className="cmp-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ maxWidth: 720, marginBottom: 40 }}>
+            <Eyebrow>By plan</Eyebrow>
+            <h2 className="cmp-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              How many rivals you can <em>track at once.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
+            <p className="cmp-lead" style={{ fontSize: 17 }}>
               Re-run any tracked competitor anytime. Counts are per-channel, so multi-channel accounts on Agency can run a full competitor stack per channel under their pooled credit allowance.
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 14 }}>
+          <div className="cmp-grid-4" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {PLAN_LIMITS.map((p, i) => {
               const isAccent = p.plan === 'Growth'
               const isLocked = p.plan === 'Free'
               return (
-                <div key={i} style={{
-                  background: isAccent ? '#1a1018' : '#111114',
-                  borderRadius: 16,
-                  border: isAccent ? '1px solid rgba(229,48,42,0.45)' : '1px solid rgba(255,255,255,0.09)',
-                  boxShadow: isAccent ? '0 8px 32px rgba(229,48,42,0.18)' : '0 2px 8px rgba(0,0,0,0.4)',
-                  padding: '24px 22px 22px',
-                  position: 'relative',
-                  opacity: isLocked ? 0.66 : 1,
-                }}>
+                <div key={i} style={{ background: 'var(--yte-surface)', padding: '24px 22px 22px', position: 'relative', opacity: isLocked ? 0.62 : 1, boxShadow: isAccent ? 'inset 0 2px 0 var(--yte-accent)' : 'none' }}>
                   {isAccent && (
-                    <span style={{ position: 'absolute', top: -10, right: 16, fontSize: 9, fontWeight: 800, color: '#fff', background: '#ff3b30', padding: '3px 10px', borderRadius: 100, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Most popular</span>
+                    <span style={{ position: 'absolute', top: 0, right: 16, fontFamily: SANS, fontSize: 9, fontWeight: 700, color: '#fff', background: 'var(--yte-accent)', padding: '3px 9px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Most popular</span>
                   )}
-                  <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
-                    <p style={{ fontSize: 38, fontWeight: 800, color: '#fff', letterSpacing: '-1.5px', lineHeight: 1 }}>{p.rivals}</p>
-                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>competitors</p>
+                    <p style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1 }}>{p.rivals}</p>
+                    <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)' }}>competitors</p>
                   </div>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 14 }}>tracked at once</p>
-                  <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 12 }} />
-                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55 }}>{p.note}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', marginBottom: 14 }}>tracked at once</p>
+                  <div style={{ height: 1, background: 'var(--yte-line)', marginBottom: 12 }} />
+                  <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-soft)', lineHeight: 1.55 }}>{p.note}</p>
                 </div>
               )
             })}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 22, flexWrap: 'wrap' }}>
-            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)' }}>Same 7-dimension analysis across all paid plans.</p>
-            <a href="/#pricing" style={{ fontSize: 12.5, color: '#ff3b30', textDecoration: 'none', fontWeight: 600 }}>See full pricing →</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 18, flexWrap: 'wrap' }}>
+            <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)' }}>Same 7-dimension analysis across all paid plans.</p>
+            <a href="/#pricing" style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-accent)', textDecoration: 'none', fontWeight: 600 }}>See full pricing →</a>
           </div>
         </div>
       </section>
 
-      {/* ════ 9. FAQ. White ════════════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
-        <div className="cmp-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
+      {/* ════ 9. FAQ ════ */}
+      <section className="cmp-section-pad" style={{ padding: isMobile ? '64px 22px 80px' : '104px 48px 120px', background: 'var(--yte-bg)' }}>
+        <div className="cmp-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 64, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
-            <span className="cmp-eyebrow light">FAQ</span>
-            <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 40, marginBottom: 16 }}>
-              Questions about competitive intelligence, answered honestly.
+            <Eyebrow>FAQ</Eyebrow>
+            <h2 className="cmp-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 16, textWrap: 'balance' }}>
+              Competitive intelligence, <em>answered honestly.</em>
             </h2>
-            <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Real answers from how the product behaves. Including the limits, the privacy boundaries, and what it won&apos;t do.
+            <p className="cmp-lead" style={{ fontSize: 14.5 }}>
+              Real answers from how the product behaves. Including the limits, the privacy boundaries, and what it won’t do.
             </p>
-            <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
+            <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
             </a>
           </div>
-          <div>
+          <div style={{ borderTop: '1px solid var(--yte-line)' }}>
             {FAQS.map((item, i) => (
               <FaqItem key={i} q={item.q} a={item.a} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ════ 10. BOTTOM CTA. Light ════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-          <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 44, marginBottom: 16 }}>
-            Find the openings your rivals are leaving
-          </h2>
-          <p style={{ fontSize: isMobile ? 15 : 17, color: 'var(--ytg-text-2)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
-            ~60 seconds per analysis. Solo plan adds 2 competitors, Growth adds 5, Agency adds 10. Most users find their first publishable idea inside 10 minutes of reading the report.
-          </p>
-          <a href="/auth/login" className="cmp-btn cmp-btn-lg">Analyze a competitor →</a>
         </div>
       </section>
 

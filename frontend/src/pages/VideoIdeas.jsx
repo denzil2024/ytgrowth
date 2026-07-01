@@ -852,7 +852,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f1f1f6', border: `1px solid ${C.border}`, borderRadius: 100, padding: '2px 8px' }}>10 ranked</span>
         </div>
         {[
-          ['My First 10K Subs · The 3 Things That Actually Worked',           92],
+          ['My First 10K Subs · The 3 Things That Worked',           92],
           ['I Posted Daily for 30 Days, Honest Results',                      87],
           ['The Thumbnail Formula That Tripled My CTR',                        84],
           ['Why Your Intro Is Killing Your Retention (Fix in 60s)',            79],

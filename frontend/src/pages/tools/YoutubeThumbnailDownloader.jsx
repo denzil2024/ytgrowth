@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
@@ -6,10 +6,15 @@ import FaqSchema from '../../components/FaqSchema'
 /* ─── Free SEO tool: YouTube Thumbnail Downloader ─────────────────────────
    /tools/youtube-thumbnail-downloader. Targets the "youtube thumbnail
    downloader" search keyword (very high volume, tool-intent).
-   Visual DNA = Landing.jsx + YoutubeMoneyCalculator.jsx parity. DM Sans
-   for headlines, Inter for body, eyebrow pills (dot + text), Landing's
-   FAQ pattern. No design drift.
-   100% client-side. No backend, no API call, no Anthropic credits. */
+
+   Migrated to the editorial design language (Fraunces + Barlow, sharp flat
+   cards, warm paper, restrained red). The video-ID extraction, thumbnail
+   load/error detection, download, and copy logic are preserved verbatim;
+   only the skin changed. 100% client-side, zero API. See
+   project_design_language_editorial. */
+
+const SERIF = "'Fraunces', Georgia, serif"
+const SANS  = "'Barlow', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -21,141 +26,61 @@ function useBreakpoint() {
   return { isMobile: width <= 768, isTablet: width <= 1024 }
 }
 
-function Logo({ size = 28 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
-      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
-    </svg>
-  )
-}
-
 function useGlobalStyles() {
   useEffect(() => {
     if (document.getElementById('ytg-ytd-styles')) return
-
     const style = document.createElement('style')
     style.id = 'ytg-ytd-styles'
     style.textContent = `
       :root {
-        --ytg-bg:           #f4f4f6;
-        --ytg-bg-2:         #ecedf1;
-        --ytg-bg-3:         #e6e7ec;
-        --ytg-text:         #0a0a0f;
-        --ytg-text-2:       rgba(10,10,15,0.62);
-        --ytg-text-3:       rgba(10,10,15,0.40);
-        --ytg-nav:          rgba(244,244,246,0.92);
-        --ytg-card:         #ffffff;
-        --ytg-border:       rgba(10,10,15,0.09);
-        --ytg-border-2:     rgba(10,10,15,0.16);
-        --ytg-accent:       #e5302a;
-        --ytg-accent-text:  #c22b25;
-        --ytg-accent-light: rgba(229,48,42,0.07);
-        --ytg-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
-        --ytg-shadow:       0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.11);
-        --ytg-shadow-lg:    0 4px 16px rgba(0,0,0,0.11), 0 24px 60px rgba(0,0,0,0.14);
+        --yte-bg: #f6f4ef; --yte-bg-2: #efece4; --yte-surface: #ffffff;
+        --yte-ink: #14130f; --yte-soft: #5c574e; --yte-muted: #8a8378;
+        --yte-line: rgba(20,19,15,0.12); --yte-line-2: rgba(20,19,15,0.22);
+        --yte-accent: #e5302a; --yte-accent-soft: rgba(229,48,42,0.07); --yte-dark: #0d0d12;
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
-      ::-webkit-scrollbar { width: 12px; height: 12px }
-      ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb {
-        background-color: rgba(10,10,15,0.28);
-        border-radius: 10px;
-        border: 3px solid transparent;
-        background-clip: content-box;
-      }
-      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }@keyframes ytdFadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+      html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+      body { background: var(--yte-bg); color: var(--yte-ink); font-family: ${SANS}; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+      @keyframes ytdFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+      @keyframes ytdSpin { to { transform: rotate(360deg) } }
 
-      .ytd-btn {
-        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        background: var(--ytg-accent); color: #fff;
-        font-size: 15px; font-weight: 700; font-family: 'Inter', system-ui, sans-serif;
-        padding: 14px 28px; border-radius: 100px; border: none;
-        cursor: pointer; text-decoration: none; letter-spacing: -0.2px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,48,42,0.32);
-        transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
-        white-space: nowrap;
-      }
-      .ytd-btn:hover {
-        filter: brightness(1.07); transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,48,42,0.42);
-      }
-      .ytd-btn-lg { font-size: 16px; padding: 17px 36px; }
-      .ytd-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; filter: none !important; }
+      .ytd-wrap { max-width: 1040px; margin: 0 auto; }
+      .ytd-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+      .ytd-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
+      .ytd-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
+      .ytd-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
+      .ytd-h1 em { font-style: italic; color: var(--yte-accent); }
+      .ytd-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
+      .ytd-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ytd-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
-      .ytd-btn-ghost {
-        display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-        background: transparent; color: var(--ytg-text-2);
-        font-size: 13px; font-weight: 600; font-family: 'Inter', system-ui, sans-serif;
-        padding: 9px 16px; border-radius: 100px;
-        border: 1px solid var(--ytg-border);
-        cursor: pointer; text-decoration: none; letter-spacing: -0.1px;
-        transition: color 0.15s, border-color 0.15s, background 0.15s;
-      }
-      .ytd-btn-ghost:hover {
-        color: var(--ytg-text); border-color: var(--ytg-border-2);
-        background: rgba(10,10,15,0.03);
-      }
+      .ytd-input { width: 100%; padding: 14px 16px; font-size: 15px; font-weight: 500; font-family: ${SANS}; color: var(--yte-ink); background: var(--yte-surface); border: 1px solid var(--yte-line); border-radius: 0; outline: none; transition: border-color 0.15s; -webkit-appearance: none; }
+      .ytd-input:focus { border-color: var(--yte-accent); }
+      .ytd-input::placeholder { color: var(--yte-muted); }
 
-      .ytd-eyebrow {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: #ffffff;
-        border: 1px solid rgba(10,10,15,0.09);
-        border-radius: 100px;
-        padding: 5px 12px 5px 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 1px 2px rgba(10,10,15,0.04);
-      }
-      .ytd-eyebrow-dot {
-        width: 6px; height: 6px; border-radius: 50%;
-        background: var(--ytg-accent);
-        box-shadow: 0 0 0 3px rgba(229,48,42,0.12);
-      }
-      .ytd-eyebrow-text {
-        font-size: 11px; font-weight: 700; color: var(--ytg-text-2);
-        text-transform: uppercase; letter-spacing: 0.09em;
-      }
+      .ytd-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 28px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; white-space: nowrap; }
+      .ytd-btn:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      .ytd-btn:disabled { background: rgba(20,19,15,0.10); color: var(--yte-muted); cursor: not-allowed; transform: none; filter: none; }
 
-      .ytd-nav-link {
-        font-size: 15px; color: rgba(10,10,15,0.52); font-weight: 500;
-        text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px;
-      }
-      .ytd-nav-link:hover { color: rgba(10,10,15,0.88); }
+      .ytd-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: transparent; color: var(--yte-soft); font-family: ${SANS}; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 11px 14px; border-radius: 0; border: 1px solid var(--yte-line); cursor: pointer; text-decoration: none; transition: color 0.15s, border-color 0.15s; }
+      .ytd-btn-ghost:hover:not(:disabled) { color: var(--yte-ink); border-color: var(--yte-line-2); }
+      .ytd-btn-ghost:disabled { color: var(--yte-muted); opacity: 0.5; cursor: not-allowed; }
 
-      .ytd-input {
-        width: 100%; padding: 16px 18px;
-        font-size: 15px; font-weight: 500; font-family: inherit;
-        color: var(--ytg-text);
-        background: #ffffff; border: 1px solid var(--ytg-border);
-        border-radius: 14px; outline: none;
-        transition: border-color 0.15s, box-shadow 0.15s;
-      }
-      .ytd-input:focus {
-        border-color: rgba(229,48,42,0.45);
-        box-shadow: 0 0 0 4px rgba(229,48,42,0.10);
-      }
-      .ytd-input::placeholder { color: var(--ytg-text-3); }
+      .ytd-grow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--yte-line); border: 1px solid var(--yte-line); }
+      @media (max-width: 760px) { .ytd-grow-grid { grid-template-columns: 1fr; } }
+      .ytd-grow-card { display: block; text-decoration: none; background: var(--yte-surface); padding: 28px; transition: background 0.15s; }
+      .ytd-grow-card:hover { background: var(--yte-bg-2); }
 
-      .ytd-faq-answer {
-        display: grid; grid-template-rows: 0fr; opacity: 0;
-        transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
-      }
+      .ytd-thumb-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      @media (max-width: 760px) { .ytd-thumb-grid { grid-template-columns: 1fr; } }
+
+      .ytd-faq-answer { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease; }
       .ytd-faq-answer.open { grid-template-rows: 1fr; opacity: 1; }
       .ytd-faq-answer-inner { overflow: hidden; }
 
-      .ytd-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
-      .ytd-thumb-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-
-      @media (max-width: 900px) {
-        .ytd-grid-3 { grid-template-columns: 1fr; }
-        .ytd-thumb-grid { grid-template-columns: 1fr; }
-      }
       @media (max-width: 768px) {
-        .ytd-section-pad { padding-left: 20px !important; padding-right: 20px !important; }
-        .ytd-cta-pad { padding: 70px 24px !important; }
+        .ytd-section-pad { padding-left: 22px !important; padding-right: 22px !important; }
+        .ytd-cta-pad { padding: 76px 24px !important; }
       }
     `
     document.head.appendChild(style)
@@ -220,11 +145,37 @@ const FAQS = [
     a: "CTR (click-through rate) is one of YouTube's primary ranking signals. A weak thumbnail kills a well-optimized video before a single person clicks. Studying high-performing thumbnails in your niche is one of the most leveraged things you can do as a creator. If you want to go further than just downloading examples, YTGrowth's Thumbnail IQ scores your own thumbnails against the top performers in your niche on contrast, face presence, text density, and AI vision analysis. That tells you whether your design is competitive before you upload." },
 ]
 
+const HOW_IT_WORKS = [
+  { h: 'YouTube exposes thumbnails publicly',
+    p: "Every YouTube video has its thumbnail hosted on Google's public CDN at a predictable URL based on the video ID. We do nothing more than build that URL for you, fetch the image directly to your browser, and let you download it. No backend, no API key, no rate limits." },
+  { h: 'Four standard resolutions, on demand',
+    p: "Google generates up to four versions of every thumbnail: HD (1280×720), SD (640×480), High (480×360), and Medium (320×180). HD is only available for videos uploaded at HD or above. The High and Medium variants are generated for every video on the platform, so they always work." },
+  { h: 'Why creators study competitor thumbnails',
+    p: "Click-through rate is one of YouTube's primary ranking signals. The thumbnail is doing more for your views than your title in most cases. Saving the thumbnails of the top-performing videos in your niche is one of the cheapest research moves you can make: build a moodboard, look for patterns, see what hooks land, then design against the same standard." },
+  { h: 'Use the thumbnails responsibly',
+    p: "Thumbnails are owned by the creator who uploaded them. Use them for personal study, internal moodboards, or fair-use commentary. Don't republish someone else's thumbnail in your own video, blog, or commercial work without permission. If you're not the original creator, get consent or have a clear fair-use rationale." },
+]
+
+const GROW = [
+  { label: 'Thumbnail IQ',
+    title: 'Score your own thumbnails',
+    body: 'Two-layer scoring (algorithmic + AI vision) against the actual top performers in your niche. Know whether your design is competitive before you upload, not after the CTR data comes in three days later.',
+    href: '/features/thumbnail-iq' },
+  { label: 'AI Channel Audit',
+    title: 'Find what is broken',
+    body: 'A 10-dimension audit of your last 20 videos, CTR, retention, and posting habits. Tells you which videos are SEO-underperformers and which thumbnails are losing the click war.',
+    href: '/features/channel-audit' },
+  { label: 'SEO Studio',
+    title: 'Match the thumbnail to a winning title',
+    body: 'A killer thumbnail with a weak title still loses. Score every title against the actual top-ranking videos in your niche so the SEO work goes into keywords with real search volume.',
+    href: '/features/seo-studio' },
+]
+
 /* ── Eyebrow component ──────────────────────────────────────────────────── */
-function Eyebrow({ children }) {
+function Eyebrow({ children, center }) {
   return (
-    <div className="ytd-eyebrow">
-      <span aria-hidden="true" className="ytd-eyebrow-dot" />
+    <div className="ytd-eyebrow" style={center ? { justifyContent: 'center' } : undefined}>
+      <span aria-hidden="true" className="ytd-eyebrow-rule" />
       <span className="ytd-eyebrow-text">{children}</span>
     </div>
   )
@@ -276,30 +227,16 @@ function ThumbnailCard({ videoId, size }) {
   }
 
   return (
-    <div style={{
-      background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)',
-      borderRadius: 18, overflow: 'hidden', boxShadow: 'var(--ytg-shadow-sm)',
-      display: 'flex', flexDirection: 'column',
-      transition: 'box-shadow 0.18s, transform 0.18s',
-    }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--ytg-shadow)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.transform = 'translateY(0)' }}
-    >
+    <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       {/* Image area */}
-      <div style={{
-        position: 'relative', width: '100%', aspectRatio: '16 / 9',
-        background: '#0a0a0f',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        overflow: 'hidden',
-      }}>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', background: '#0a0a0f', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         {state === 'loading' && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ width: 24, height: 24, border: '2.5px solid rgba(255,255,255,0.15)', borderTop: '2.5px solid #fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-            <style>{'@keyframes spin { to { transform: rotate(360deg) } }'}</style>
+            <div style={{ width: 24, height: 24, border: '2.5px solid rgba(255,255,255,0.15)', borderTop: '2.5px solid #fff', borderRadius: '50%', animation: 'ytdSpin 0.8s linear infinite' }} />
           </div>
         )}
         {state === 'error' && (
-          <div style={{ textAlign: 'center', padding: 18, color: 'rgba(255,255,255,0.62)', fontSize: 13, lineHeight: 1.6 }}>
+          <div style={{ textAlign: 'center', padding: 18, color: 'rgba(255,255,255,0.62)', fontFamily: SANS, fontSize: 13, lineHeight: 1.6 }}>
             Not available at this resolution
           </div>
         )}
@@ -309,42 +246,28 @@ function ThumbnailCard({ videoId, size }) {
           alt={`${size.label} thumbnail`}
           onLoad={onLoad}
           onError={() => setState('error')}
-          style={{
-            width: '100%', height: '100%', objectFit: 'cover',
-            display: state === 'ok' ? 'block' : 'none',
-          }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: state === 'ok' ? 'block' : 'none' }}
         />
       </div>
 
       {/* Meta + actions */}
       <div style={{ padding: '16px 18px 18px' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
-          <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 17, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>
+          <span style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px' }}>
             {size.label}
           </span>
-          <span style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+          <span style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
             {size.dims}
           </span>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button
-            onClick={handleDownload}
-            disabled={state !== 'ok'}
-            className="ytd-btn"
-            style={{ flex: 1, padding: '10px 16px', fontSize: 13, borderRadius: 100 }}
-          >
+          <button onClick={handleDownload} disabled={state !== 'ok'} className="ytd-btn" style={{ flex: 1, padding: '11px 14px' }}>
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M7 1.5v9M3 7l4 4 4-4M2 12.5h10"/>
             </svg>
             Download
           </button>
-          <button
-            onClick={handleCopy}
-            disabled={state !== 'ok'}
-            className="ytd-btn-ghost"
-            style={{ padding: '9px 14px' }}
-            title="Copy image URL"
-          >
+          <button onClick={handleCopy} disabled={state !== 'ok'} className="ytd-btn-ghost" title="Copy image URL">
             {copied ? (
               <>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -395,28 +318,29 @@ export default function YoutubeThumbnailDownloader() {
     }, 80)
   }
 
+  const H1 = isMobile ? 34 : isTablet ? 50 : 58
+  const H2 = isMobile ? 28 : 42
+
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
+    <div style={{ fontFamily: SANS, background: 'var(--yte-bg)', color: 'var(--yte-ink)', overflowX: 'clip' }}>
 
       {/* ── NAV, shared SiteHeader ── */}
       <SiteHeader />
       <FaqSchema items={FAQS} />
 
       {/* ══ HERO + INPUT ══ */}
-      <section className="ytd-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '120vw', maxWidth: 1400, height: 620, background: 'radial-gradient(ellipse at center top, rgba(229,48,42,0.07) 0%, rgba(229,48,42,0.02) 40%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-
-        <div style={{ maxWidth: 880, margin: '0 auto', position: 'relative', zIndex: 1, animation: 'ytdFadeUp 0.5s ease both' }}>
+      <section className="ytd-section-pad" style={{ padding: isMobile ? '60px 22px 48px' : '104px 48px 64px', background: 'var(--yte-bg)' }}>
+        <div className="ytd-wrap" style={{ animation: 'ytdFadeUp 0.5s ease both' }}>
           <Eyebrow>Free tool</Eyebrow>
-          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : isTablet ? 56 : 64, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2.2px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
-            Download any YouTube thumbnail in <span style={{ color: 'var(--ytg-accent)' }}>seconds.</span>
+          <h1 className="ytd-h1" style={{ fontSize: H1, marginBottom: 22, maxWidth: 820, textWrap: 'balance' }}>
+            Download any YouTube thumbnail in <em>seconds.</em>
           </h1>
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 620, margin: '0 auto 32px', textWrap: 'pretty' }}>
+          <p className="ytd-lead" style={{ fontSize: isMobile ? 16 : 17.5, marginBottom: 28, maxWidth: 620, textWrap: 'pretty' }}>
             Paste a YouTube URL. Get every available thumbnail size, including the full HD source, in one click.
           </p>
 
           {/* Input form */}
-          <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, maxWidth: 640, margin: '0 auto', flexDirection: isMobile ? 'column' : 'row' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, maxWidth: 640, flexDirection: isMobile ? 'column' : 'row' }}>
             <input
               type="text"
               value={inputUrl}
@@ -425,15 +349,15 @@ export default function YoutubeThumbnailDownloader() {
               className="ytd-input"
               autoFocus
             />
-            <button type="submit" className="ytd-btn" style={{ padding: '14px 28px', whiteSpace: 'nowrap' }}>
+            <button type="submit" className="ytd-btn">
               Get thumbnails
             </button>
           </form>
 
           {error && (
-            <p style={{ fontSize: 13.5, color: 'var(--ytg-accent)', marginTop: 14, fontWeight: 500 }}>{error}</p>
+            <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-accent)', marginTop: 14, fontWeight: 500 }}>{error}</p>
           )}
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginTop: error ? 10 : 18, fontWeight: 500 }}>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', marginTop: error ? 10 : 18, fontWeight: 600, letterSpacing: '0.04em' }}>
             No signup. No email. Free forever.
           </p>
         </div>
@@ -441,11 +365,11 @@ export default function YoutubeThumbnailDownloader() {
 
       {/* ══ RESULTS ══ */}
       {videoId && (
-        <section ref={resultsRef} className="ytd-section-pad" style={{ padding: isMobile ? '24px 20px 80px' : '40px 48px 110px', background: 'var(--ytg-bg)' }}>
-          <div style={{ maxWidth: 1080, margin: '0 auto' }}>
-            <div style={{ marginBottom: 28, textAlign: 'center' }}>
-              <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Video ID</p>
-              <p style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', letterSpacing: '0.5px' }}>{videoId}</p>
+        <section ref={resultsRef} className="ytd-section-pad" style={{ padding: isMobile ? '8px 22px 80px' : '12px 48px 96px', background: 'var(--yte-bg)' }}>
+          <div className="ytd-wrap">
+            <div style={{ marginBottom: 24, display: 'flex', alignItems: 'baseline', gap: 12 }}>
+              <span style={{ fontFamily: SANS, fontSize: 11, color: 'var(--yte-muted)', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Video ID</span>
+              <span style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', fontSize: 15, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '0.5px' }}>{videoId}</span>
             </div>
 
             <div className="ytd-thumb-grid">
@@ -458,29 +382,20 @@ export default function YoutubeThumbnailDownloader() {
       )}
 
       {/* ══ HOW IT WORKS ══ */}
-      <section className="ytd-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
-          <div style={{ marginBottom: 48, maxWidth: 720 }}>
+      <section className="ytd-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="ytd-wrap">
+          <div style={{ marginBottom: 40, maxWidth: 720 }}>
             <Eyebrow>How it works</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, textWrap: 'balance' }}>
-              The simplest way to grab a <span style={{ color: 'var(--ytg-accent)' }}>YouTube thumbnail.</span>
+            <h2 className="ytd-h2" style={{ fontSize: H2, textWrap: 'balance' }}>
+              The simplest way to grab a <em>YouTube thumbnail.</em>
             </h2>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-            {[
-              { h: 'YouTube exposes thumbnails publicly',
-                p: "Every YouTube video has its thumbnail hosted on Google's public CDN at a predictable URL based on the video ID. We do nothing more than build that URL for you, fetch the image directly to your browser, and let you download it. No backend, no API key, no rate limits." },
-              { h: 'Four standard resolutions, on demand',
-                p: "Google generates up to four versions of every thumbnail: HD (1280×720), SD (640×480), High (480×360), and Medium (320×180). HD is only available for videos uploaded at HD or above. The High and Medium variants are generated for every video on the platform, so they always work." },
-              { h: 'Why creators study competitor thumbnails',
-                p: "Click-through rate is one of YouTube's primary ranking signals. The thumbnail is doing more for your views than your title in most cases. Saving the thumbnails of the top-performing videos in your niche is one of the cheapest research moves you can make: build a moodboard, look for patterns, see what hooks land, then design against the same standard." },
-              { h: 'Use the thumbnails responsibly',
-                p: "Thumbnails are owned by the creator who uploaded them. Use them for personal study, internal moodboards, or fair-use commentary. Don't republish someone else's thumbnail in your own video, blog, or commercial work without permission. If you're not the original creator, get consent or have a clear fair-use rationale." },
-            ].map((row, i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 12 : 56, paddingTop: i === 0 ? 0 : 28, borderTop: i === 0 ? 'none' : '1px solid var(--ytg-border)' }}>
-                <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 20 : 22, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.5px', lineHeight: 1.25 }}>{row.h}</h3>
-                <p style={{ fontSize: 15.5, color: 'var(--ytg-text-2)', lineHeight: 1.75 }}>{row.p}</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {HOW_IT_WORKS.map((row, i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
+                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
           </div>
@@ -488,138 +403,60 @@ export default function YoutubeThumbnailDownloader() {
       </section>
 
       {/* ══ HOW TO GROW ══ */}
-      <section className="ytd-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-          <div style={{ marginBottom: 44, textAlign: 'center', maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
+      <section className="ytd-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
+        <div className="ytd-wrap">
+          <div style={{ marginBottom: 32, maxWidth: 720 }}>
             <Eyebrow>Beyond downloading</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>
-              Studying thumbnails is good. <span style={{ color: 'var(--ytg-accent)' }}>Designing better ones is better.</span>
+            <h2 className="ytd-h2" style={{ fontSize: H2, marginBottom: 12, textWrap: 'balance' }}>
+              Studying thumbnails is good. <em>Designing better ones is better.</em>
             </h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
+            <p className="ytd-lead" style={{ fontSize: 17 }}>
               You downloaded a thumbnail to learn from it. The next step is knowing whether your own thumbnails compete on the metrics that drive clicks.
             </p>
           </div>
 
-          <div className="ytd-grid-3">
-            {[
-              { label: 'Thumbnail IQ',
-                title: 'Score your own thumbnails',
-                body: 'Two-layer scoring (algorithmic + AI vision) against the actual top performers in your niche. Know whether your design is competitive before you upload, not after the CTR data comes in three days later.',
-                href: '/features/thumbnail-iq' },
-              { label: 'AI Channel Audit',
-                title: 'Find what is broken',
-                body: 'A 10-dimension audit of your last 20 videos, CTR, retention, and posting habits. Tells you which videos are SEO-underperformers and which thumbnails are losing the click war.',
-                href: '/features/channel-audit' },
-              { label: 'SEO Studio',
-                title: 'Match the thumbnail to a winning title',
-                body: 'A killer thumbnail with a weak title still loses. Score every title against the actual top-ranking videos in your niche so the SEO work goes into keywords with real search volume.',
-                href: '/features/seo-studio' },
-            ].map((card, i) => (
-              <a key={i} href={card.href}
-                style={{ display: 'block', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: 30, boxShadow: 'var(--ytg-shadow-sm)', textDecoration: 'none', transition: 'transform 0.18s, box-shadow 0.18s, border-color 0.18s' }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)'; e.currentTarget.style.borderColor = 'var(--ytg-border-2)' }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}
-              >
-                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>{card.label}</p>
-                <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 20, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px', marginBottom: 12, lineHeight: 1.25 }}>{card.title}</h3>
-                <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.65 }}>{card.body}</p>
+          <div className="ytd-grow-grid">
+            {GROW.map((card, i) => (
+              <a key={i} href={card.href} className="ytd-grow-card">
+                <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{card.label}</div>
+                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{card.title}</h3>
+                <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{card.body}</p>
               </a>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══ DARK CTA ══ */}
-      <section className="ytd-section-pad ytd-cta-pad" style={{ padding: isMobile ? '88px 24px' : '120px 48px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', position: 'relative', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: '42%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: isMobile ? 600 : 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.20) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 820, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 22 }}>
-            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.78)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Free AI audit</span>
-          </div>
-          <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#ffffff', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>
-            Stop studying. <span style={{ color: '#ff3b30' }}>Start scoring.</span>
-          </h2>
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'rgba(255,255,255,0.68)', lineHeight: 1.7, marginBottom: 32, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
-            Connect your channel for a free AI audit and find out exactly which of your thumbnails are losing the click war, with a real prioritized fix list.
-          </p>
-          <a href="/auth/login" className="ytd-btn ytd-btn-lg">Get my free audit →</a>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', marginTop: 16 }}>
-            Free trial · no card · upgrade anytime
-          </p>
-        </div>
-      </section>
-
       {/* ══ FAQ ══ */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 20px' : '110px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: '-10%', left: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1160, margin: '0 auto', position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '340px 1fr', gap: isMobile ? 40 : 88, alignItems: 'start' }}>
+      <div className="ytd-section-pad" style={{ background: 'var(--yte-bg)', padding: isMobile ? '60px 22px' : '104px 48px' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 36 : 80, alignItems: 'start' }}>
 
-          <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
+          <div>
             <Eyebrow>Frequently asked</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
-              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
-            </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
-              Everything creators ask about thumbnails, downloads, and copyright. Still unsure? <a href="/contact" style={{ color: 'var(--ytg-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
+            <h2 className="ytd-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 14, textWrap: 'balance' }}>Thumbnails, <em>answered.</em></h2>
+            <p className="ytd-lead" style={{ fontSize: 14.5, maxWidth: 300 }}>
+              Everything creators ask about thumbnails, downloads, and copyright. Still unsure? <a href="/contact" style={{ color: 'var(--yte-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
             </p>
           </div>
 
-          <div style={{ borderTop: '1px solid rgba(10,10,15,0.10)' }}>
+          <div style={{ borderTop: '1px solid var(--yte-line)' }}>
             {FAQS.map((item, i) => {
               const isOpen = openFaq === i
-              const num = String(i + 1).padStart(2, '0')
               return (
-                <div key={i} style={{ borderBottom: '1px solid rgba(10,10,15,0.10)', position: 'relative' }}>
-                  {isOpen && (
-                    <div aria-hidden="true" style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 2, background: 'var(--ytg-accent)', borderRadius: 2 }} />
-                  )}
+                <div key={i} style={{ borderBottom: '1px solid var(--yte-line)' }}>
                   <div
                     onClick={() => setOpenFaq(isOpen ? null : i)}
                     role="button" tabIndex={0}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
-                    style={{
-                      display: 'flex', alignItems: 'flex-start',
-                      gap: isMobile ? 14 : 20,
-                      padding: isMobile ? '20px 0' : '24px 0',
-                      paddingLeft: isOpen ? (isMobile ? 16 : 22) : 0,
-                      cursor: 'pointer',
-                      transition: 'padding-left 0.25s ease',
-                      userSelect: 'none',
-                    }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
                   >
-                    <span style={{
-                      fontSize: isMobile ? 12 : 13, fontWeight: 700,
-                      color: isOpen ? 'var(--ytg-accent)' : 'var(--ytg-text-3)',
-                      fontVariantNumeric: 'tabular-nums',
-                      lineHeight: 1.5, flexShrink: 0,
-                      width: isMobile ? 22 : 28, paddingTop: 2,
-                      transition: 'color 0.2s',
-                    }}>{num}</span>
-                    <span style={{
-                      flex: 1,
-                      fontSize: isMobile ? 15 : 16, fontWeight: 600,
-                      color: 'var(--ytg-text)', lineHeight: 1.45,
-                      letterSpacing: '-0.2px',
-                    }}>{item.q}</span>
-                    <span aria-hidden="true" style={{
-                      width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.05)',
-                      border: `1px solid ${isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.10)'}`,
-                      transition: 'background 0.2s, border-color 0.2s',
-                      marginTop: 1,
-                    }}>
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M1 5h8" stroke={isOpen ? '#ffffff' : 'var(--ytg-text-2)'} strokeWidth="1.8" strokeLinecap="round" />
-                        {!isOpen && <path d="M5 1v8" stroke="var(--ytg-text-2)" strokeWidth="1.8" strokeLinecap="round" />}
-                      </svg>
-                    </span>
+                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`ytd-faq-answer${isOpen ? ' open' : ''}`}>
                     <div className="ytd-faq-answer-inner">
-                      <div style={{ paddingLeft: isMobile ? 36 : 48, paddingRight: isMobile ? 40 : 48, paddingBottom: isMobile ? 22 : 26 }}>
-                        <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, margin: 0 }}>{item.a}</p>
+                      <div style={{ paddingBottom: isMobile ? 22 : 26, maxWidth: 680 }}>
+                        <p style={{ fontFamily: SANS, fontSize: isMobile ? 14.5 : 15.5, color: 'var(--yte-soft)', lineHeight: 1.78, margin: 0 }}>{item.a}</p>
                       </div>
                     </div>
                   </div>

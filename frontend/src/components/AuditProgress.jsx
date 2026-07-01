@@ -54,7 +54,7 @@ const STAGES = [
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
     ),
-    weight: 0.42,  // the long one, Claude is actually running here
+    weight: 0.42,  // the long one, Claude is running here
   },
   {
     label: 'Writing your Priority Actions',

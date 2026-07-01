@@ -15,7 +15,9 @@
 
 const RED = '#e5251b'
 const INK = '#17171c'
-const FONT = "'DM Sans', system-ui, sans-serif"
+/* Wordmark set in the global UI sans (Barlow), not a bespoke font, so it
+   coheres with the rest of the site and adds zero extra font weight. */
+const FONT = "'Barlow', system-ui, sans-serif"
 const WEIGHT = 600
 
 export default function BrandLockup({ height = 30, tone = 'dark' }) {

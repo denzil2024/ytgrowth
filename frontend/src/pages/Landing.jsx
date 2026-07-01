@@ -7,8 +7,27 @@ import {
 } from 'lucide-react'
 import { openCheckout } from '../checkout'
 import LandingFooter from '../components/LandingFooter'
+import SiteHeader from '../components/SiteHeader'
+
+/* Editorial design tokens for the in-progress Landing rebuild (Fraunces +
+   Barlow, warm paper, gold on dark). Sections migrate one at a time; until a
+   section is rebuilt it still uses the old --ytg- tokens. */
+const ED_SERIF  = "'Fraunces', Georgia, serif"
+const ED_SANS   = "'Barlow', system-ui, sans-serif"
+const ED_INK    = '#14130f'
+const ED_SOFT   = '#5c574e'
+const ED_MUTED  = '#8a8378'
+const ED_ACCENT = '#e5302a'
+const ED_GOLD   = '#e6b35c'
+const ED_LINE   = 'rgba(20,19,15,0.12)'
 import AuthErrorModal from '../components/AuthErrorModal'
 import BrandLockup from '../components/BrandLockup'
+import HeroDashboardPreview from '../components/landing/HeroDashboardPreview'
+import ChannelAuditPreview from '../components/landing/ChannelAuditPreview'
+import CompetitorPreview from '../components/landing/CompetitorPreview'
+import ThumbnailPreview from '../components/landing/ThumbnailPreview'
+import WeeklyReportPreview from '../components/landing/WeeklyReportPreview'
+import { posts, formatPostDate } from '../blog/posts.jsx'
 
 /* ─── inject font + global styles into <head> once ─────────────────────── */
 function useGlobalStyles() {
@@ -65,38 +84,34 @@ function useGlobalStyles() {
       ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }
 
       .ytg-btn-primary {
-        display: inline-flex; align-items: center; gap: 10px;
-        padding: 14px 30px; border-radius: 100px; font-weight: 700;
-        font-size: 15px; text-decoration: none;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        padding: 14px 28px; border-radius: 0; font-weight: 700;
+        font-size: 12.5px; text-decoration: none;
         background: var(--ytg-accent);
-        color: #fff; transition: all 0.18s ease; cursor: pointer;
-        border: none; font-family: 'Inter', system-ui, sans-serif;
-        letter-spacing: -0.2px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 4px 14px rgba(229,48,42,0.32);
+        color: #fff; transition: filter 0.18s, transform 0.18s; cursor: pointer;
+        border: none; font-family: 'Barlow', system-ui, sans-serif;
+        letter-spacing: 0.08em; text-transform: uppercase;
       }
       .ytg-btn-primary:hover {
-        filter: brightness(1.07);
+        filter: brightness(1.06);
         transform: translateY(-1px);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15), 0 8px 28px rgba(229,48,42,0.42);
       }
 
       .ytg-btn-ghost {
-        display: inline-flex; align-items: center; gap: 10px;
-        padding: 14px 30px; border-radius: 100px; font-weight: 600;
-        font-size: 15px; text-decoration: none;
-        background: var(--ytg-card);
-        color: var(--ytg-text-2);
-        border: 1px solid var(--ytg-border-2);
-        transition: all 0.18s ease; cursor: pointer;
-        font-family: 'Inter', system-ui, sans-serif;
-        box-shadow: var(--ytg-shadow);
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        padding: 14px 28px; border-radius: 0; font-weight: 700;
+        font-size: 12.5px; text-decoration: none;
+        background: transparent;
+        color: #5c574e;
+        border: 1px solid rgba(20,19,15,0.18);
+        transition: color 0.15s, border-color 0.15s; cursor: pointer;
+        font-family: 'Barlow', system-ui, sans-serif;
+        letter-spacing: 0.08em; text-transform: uppercase;
       }
       .ytg-btn-ghost:hover {
-        background: var(--ytg-card);
-        color: var(--ytg-text);
-        border-color: var(--ytg-border-2);
-        transform: translateY(-1px);
-        box-shadow: var(--ytg-shadow-lg);
+        background: transparent;
+        color: #14130f;
+        border-color: rgba(20,19,15,0.32);
       }
 
       .ytg-feature-card {
@@ -249,25 +264,25 @@ function useGlobalStyles() {
         transform: translateY(-2px);
       }
       .ytg-pricing-card {
-        background: var(--ytg-card);
-        border: 1px solid var(--ytg-border);
-        border-radius: 24px;
-        padding: 32px 28px;
-        box-shadow: var(--ytg-shadow-lg);
-        transition: box-shadow 0.2s, transform 0.2s;
+        background: #ffffff;
+        border: 1px solid rgba(20,19,15,0.12);
+        border-radius: 0;
+        padding: 30px 28px;
+        transition: border-color 0.2s;
+        font-family: 'Barlow', system-ui, sans-serif;
       }
       .ytg-pricing-card:hover {
-        box-shadow: var(--ytg-shadow-xl);
-        transform: translateY(-2px);
+        border-color: rgba(20,19,15,0.22);
       }
       .ytg-pricing-card-featured {
-        background: var(--ytg-accent-light);
-        border: 1px solid var(--ytg-accent-border);
-        border-radius: 24px;
-        padding: 32px 28px;
+        background: #ffffff;
+        border: 1px solid rgba(20,19,15,0.12);
+        border-radius: 0;
+        padding: 30px 28px;
         position: relative;
         overflow: hidden;
-        box-shadow: var(--ytg-shadow-xl);
+        box-shadow: inset 0 2px 0 var(--ytg-accent);
+        font-family: 'Barlow', system-ui, sans-serif;
       }
 
       /* ── Mobile nav menu ─────────────────────────────────── */
@@ -309,8 +324,8 @@ function useGlobalStyles() {
         .ytg-feature-card { border-radius: 20px; padding: 22px; }
         .ytg-step-card { border-radius: 20px; padding: 22px; }
         .ytg-testimonial-card { border-radius: 20px; padding: 22px 24px; }
-        .ytg-pricing-card { border-radius: 20px; padding: 28px 24px; }
-        .ytg-pricing-card-featured { border-radius: 20px; padding: 28px 24px; }
+        .ytg-pricing-card { border-radius: 0; padding: 28px 24px; }
+        .ytg-pricing-card-featured { border-radius: 0; padding: 28px 24px; }
         .ytg-faq-card { border-radius: 16px; }
         .ytg-objection-card { border-radius: 14px; padding: 18px 16px; }
         .ytg-btn-primary { padding: 13px 26px !important; font-size: 14px !important; }
@@ -340,9 +355,9 @@ function useGlobalStyles() {
          the static HTML is correct on every viewport with no JS re-render. ── */
       .ytg-hero { padding: 110px 48px 90px; }
       .ytg-hero-h1 { font-size: 72px; line-height: 1.02; letter-spacing: -2.5px; }
-      .ytg-hero-sub { font-size: 19px; }
+      .ytg-hero-sub { font-size: 17.5px; }
       .ytg-hero-cta { flex-direction: row; width: auto; }
-      .ytg-hero-cta .ytg-btn-primary, .ytg-hero-cta .ytg-btn-ghost { width: auto; }
+      .ytg-hero-cta .ytg-btn-primary, .ytg-hero-cta .ytg-btn-ghost, .ytg-hero-cta a { width: auto; }
       .ytg-hero-trust { gap: 18px; }
       .ytg-hero-ph { margin-top: 28px; }
       @media (max-width: 1024px) {
@@ -401,9 +416,9 @@ function CycleToggle({ value, onChange }) {
   return (
     <div style={{
       display: 'inline-flex',
-      background: '#f4f4f6',
-      border: '1px solid rgba(10,10,15,0.06)',
-      borderRadius: 100,
+      background: '#efece4',
+      border: '1px solid rgba(20,19,15,0.10)',
+      borderRadius: 0,
       padding: 3,
       gap: 2,
       marginBottom: 14,
@@ -417,16 +432,17 @@ function CycleToggle({ value, onChange }) {
           onClick={() => onChange(val)}
           style={{
             padding: '5px 14px',
-            borderRadius: 100,
+            borderRadius: 0,
             border: 'none',
             cursor: 'pointer',
-            fontFamily: "'Inter', system-ui, sans-serif",
-            fontSize: 11.5,
+            fontFamily: "'Barlow', system-ui, sans-serif",
+            fontSize: 11,
             fontWeight: 700,
-            background: value === val ? '#ff3b30' : 'transparent',
-            color: value === val ? '#fff' : 'var(--ytg-text-3)',
+            textTransform: 'uppercase',
+            background: value === val ? '#14130f' : 'transparent',
+            color: value === val ? '#fff' : '#8a8378',
             transition: 'all 0.15s',
-            letterSpacing: '-0.05px',
+            letterSpacing: '0.04em',
           }}
         >
           {label}
@@ -437,11 +453,10 @@ function CycleToggle({ value, onChange }) {
 }
 
 /* ─── Check icon ────────────────────────────────────────────────────────── */
-function Check({ color = 'var(--ytg-check)' }) {
+function Check({ color = '#e5302a' }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" flexShrink="0" style={{ flexShrink: 0 }}>
-      <circle cx="8" cy="8" r="7" fill={`${color}18`} stroke={`${color}40`}/>
-      <path d="M5 8l2 2 4-4" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <svg width="15" height="15" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, marginTop: 1 }}>
+      <path d="M2.5 7.2 5.4 10l6.1-6" stroke={color} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   )
 }
@@ -633,15 +648,15 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3 }) {
                           padding: '9px 10px', borderRadius: 12,
                           textDecoration: 'none', transition: 'background 0.14s',
                         }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,48,42,0.05)' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)' }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                       >
                         <span style={{
                           flexShrink: 0, width: 34, height: 34, borderRadius: '50%',
-                          background: 'rgba(229,48,42,0.08)',
+                          background: 'rgba(20,19,15,0.05)',
                           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                         }}>
-                          <item.Icon size={17} strokeWidth={1.9} color="#e5302a" />
+                          <item.Icon size={17} strokeWidth={1.9} color="#14130f" />
                         </span>
                         <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                           <span style={{ fontSize: 14, fontWeight: 600, color: '#0a0a0f', letterSpacing: '-0.15px', whiteSpace: 'nowrap', lineHeight: 1.3 }}>{item.label}</span>
@@ -724,7 +739,7 @@ function Badge({ children }) {
 const SECTIONS = [
   { id: 'hero',         label: 'Top' },
   { id: 'features',    label: 'Features' },
-  { id: 'how-it-works',label: 'How it works' },
+  { id: 'all-in-one',  label: 'All in one' },
   { id: 'pricing',     label: 'Pricing' },
   { id: 'faq',         label: 'FAQ' },
 ]
@@ -819,80 +834,56 @@ function Testimonials({ isMobile }) {
   const total = reviewsData.total_reviews
 
   return (
-    <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+    <div className="section-animate" style={{ background: '#ffffff', borderTop: '1px solid ' + ED_LINE, borderBottom: '1px solid ' + ED_LINE, padding: isMobile ? '64px 24px' : '96px 48px' }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
           {avg != null && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 18, flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', gap: 3 }}>
-                {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
+                {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 19, color: ED_GOLD }}>★</span>)}
               </div>
-              <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)' }} />
-              <span style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>{avg} / 5</span>
+              <div style={{ width: 1, height: 22, background: ED_LINE }} />
+              <span style={{ fontFamily: ED_SERIF, fontSize: 24, fontWeight: 400, color: ED_INK, letterSpacing: '-0.5px' }}>{avg} / 5</span>
               {total != null && (
                 <>
-                  <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)' }} />
-                  <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on {total}+ reviews</span>
+                  <div style={{ width: 1, height: 22, background: ED_LINE }} />
+                  <span style={{ fontFamily: ED_SANS, fontSize: 14, fontWeight: 500, color: ED_MUTED }}>Based on {total}+ reviews</span>
                 </>
               )}
             </div>
           )}
-          <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12, textWrap: 'balance' }}>The YouTube growth tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
-          <p style={{ fontSize: 15, color: 'rgba(10,10,15,0.6)', lineHeight: 1.72 }}>Real channels. Real numbers.</p>
+          <h2 style={{ fontFamily: ED_SERIF, fontWeight: 300, fontSize: 'clamp(34px, 4.4vw, 54px)', letterSpacing: '-0.01em', color: ED_INK, lineHeight: 1.08, marginBottom: 12, textWrap: 'balance' }}>The YouTube growth tool creators <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>recommend.</em></h2>
+          <p style={{ fontFamily: ED_SANS, fontSize: 15, color: ED_SOFT, lineHeight: 1.72 }}>Real channels. Real numbers.</p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 1, background: ED_LINE, border: '1px solid ' + ED_LINE }}>
           {list.map((r, i) => (
             <a key={i} href={r.platform_url || '#'} target="_blank" rel="noopener noreferrer"
-              style={{ textDecoration: 'none', color: 'inherit', display: 'block', background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.06)', padding: 28, boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.1), 0 32px 64px rgba(0,0,0,0.14)' }}>
+              style={{ textDecoration: 'none', color: 'inherit', display: 'block', background: '#ffffff', padding: 28 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 {r.avatar
                   ? <img src={r.avatar} alt={r.name} style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                  : <div style={{ width: 46, height: 46, borderRadius: '50%', background: '#e5251b', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, flexShrink: 0 }}>{(r.name || '?')[0]}</div>
+                  : <div style={{ width: 46, height: 46, borderRadius: '50%', background: ED_ACCENT, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: ED_SERIF, fontSize: 18, fontWeight: 400, flexShrink: 0 }}>{(r.name || '?')[0]}</div>
                 }
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</p>
-                  {r.handle_or_title && <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', marginTop: 2, marginBottom: 0 }}>{r.handle_or_title}</p>}
+                  <p style={{ fontFamily: ED_SANS, fontSize: 14, fontWeight: 600, color: ED_INK, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</p>
+                  {r.handle_or_title && <p style={{ fontFamily: ED_SANS, fontSize: 12, color: ED_MUTED, marginTop: 2, marginBottom: 0 }}>{r.handle_or_title}</p>}
                 </div>
                 {r.platform && (
-                  <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 6, padding: '4px 8px', fontSize: 12, fontWeight: 700, color: 'rgba(10,10,15,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{r.platform}</span>
+                  <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 700, color: ED_MUTED, border: '1px solid ' + ED_LINE, padding: '3px 8px', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{r.platform}</span>
                 )}
               </div>
               <div style={{ display: 'flex', gap: 3, marginTop: 14, marginBottom: 14 }}>
-                {[...Array(r.rating || 5)].map((_, j) => <span key={j} style={{ fontSize: 14, color: '#f59e0b' }}>★</span>)}
+                {[...Array(r.rating || 5)].map((_, j) => <span key={j} style={{ fontSize: 14, color: ED_GOLD }}>★</span>)}
               </div>
               {r.metric && (
-                <div style={{ background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.14)', borderRadius: 8, padding: '8px 14px', marginBottom: 14 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#c22b25' }}>{r.metric}</span>
+                <div style={{ background: 'rgba(229,48,42,0.07)', borderLeft: '2px solid ' + ED_ACCENT, padding: '8px 14px', marginBottom: 14 }}>
+                  <span style={{ fontFamily: ED_SANS, fontSize: 14, fontWeight: 700, color: ED_ACCENT }}>{r.metric}</span>
                 </div>
               )}
-              <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.65)', lineHeight: 1.75, margin: 0 }}>{r.quote}</p>
+              <p style={{ fontFamily: ED_SANS, fontSize: 14, color: ED_SOFT, lineHeight: 1.75, margin: 0 }}>{r.quote}</p>
             </a>
           ))}
         </div>
-      </div>
-    </div>
-  )
-}
-
-function FounderPricingBand({ isMobile }) {
-  return (
-    <div className="section-animate" style={{
-      background: '#e8e9ee',
-      borderTop: '1px solid rgba(10,10,15,0.06)',
-      borderBottom: '1px solid rgba(10,10,15,0.06)',
-      padding: isMobile ? '48px 24px' : '64px 64px',
-    }}>
-      <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
-          <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
-          <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Early access</span>
-        </div>
-        <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 38, fontWeight: 800, letterSpacing: '-1.3px', color: '#0a0a0f', lineHeight: 1.12, marginBottom: 14, textWrap: 'balance' }}>
-          Founder pricing <span style={{ color: 'var(--ytg-accent)' }}>while we&rsquo;re early.</span>
-        </h2>
-        <p style={{ fontSize: isMobile ? 15 : 16, color: 'rgba(10,10,15,0.6)', lineHeight: 1.7, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
-          YTGrowth is new. Pricing today is lower than it will be once reviews roll in. Lock in the founder rate for the lifetime of your subscription.
-        </p>
       </div>
     </div>
   )
@@ -991,168 +982,46 @@ export default function Landing() {
       />
 
 
-      {/* ── NAV ─────────────────────────────────────────────────────────── */}
-      <nav style={{
-        position: 'sticky', top: 0, zIndex: 100,
-        background: '#ffffff',
-        borderBottom: '1px solid rgba(10,10,15,0.08)',
-        boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.06)' : 'none',
-        transition: 'box-shadow 0.3s ease',
-        height: isMobile ? 60 : 68, display: 'flex', alignItems: 'center',
-        justifyContent: isMobile ? 'space-between' : 'center', gap: isMobile ? 0 : 22,
-        padding: isMobile ? '0 20px' : '0 32px',
-        fontFamily: "'Manrope', 'Inter', system-ui, sans-serif",
-      }}>
-        {/* Equal-flex sides keep the pill centered on the viewport so the
-            mega-menus open dead-center; logo and CTA hug the pill. */}
-        <div style={{ flex: isMobile ? '0 0 auto' : '0 1 auto', display: 'flex', alignItems: 'center', minWidth: 0 }}>
-          <a href="/" aria-label="ytgrowth home" style={{ display: 'inline-flex', textDecoration: 'none' }}>
-            <BrandLockup height={30} />
-          </a>
-        </div>
-
-        {!isMobile && (
-          <div className="ytg-pill">
-            <FeaturesNavDropdown />
-            <ResourcesNavDropdown />
-            <a href="#pricing" className="ytg-pill-item">Pricing</a>
-            <CompanyNavDropdown />
-          </div>
-        )}
-
-        <div style={{ flex: isMobile ? '0 0 auto' : '0 1 auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-          {isMobile ? (
-            <button
-              onClick={() => setMobileMenuOpen(o => !o)}
-              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileMenuOpen}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: '#0a0a0f', display: 'flex', flexDirection: 'column', gap: 4.5 }}
-            >
-              {mobileMenuOpen ? (
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-              ) : (
-                <>
-                  <span style={{ display: 'block', width: 20, height: 2, background: '#0a0a0f', borderRadius: 2 }} />
-                  <span style={{ display: 'block', width: 20, height: 2, background: '#0a0a0f', borderRadius: 2 }} />
-                  <span style={{ display: 'block', width: 14, height: 2, background: '#0a0a0f', borderRadius: 2 }} />
-                </>
-              )}
-            </button>
-          ) : loggedIn ? (
-            <a href="/dashboard" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 14, fontFamily: "'Manrope', 'Inter', system-ui, sans-serif" }}>
-              Dashboard
-            </a>
-          ) : (
-            <>
-              <a href="/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 100, fontFamily: "'Manrope', 'Inter', system-ui, sans-serif" }}>Log in</a>
-              <a href="/auth/login" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 14, fontFamily: "'Manrope', 'Inter', system-ui, sans-serif" }}>
-                Get started free
-              </a>
-            </>
-          )}
-        </div>
-      </nav>
-
-      {/* Mobile menu overlay. Proper section hierarchy */}
-      <div className={`ytg-mobile-menu${mobileMenuOpen ? ' open' : ''}`} style={{ top: 60 }}>
-
-        {/* Features */}
-        <div className="ytg-mm-section">
-          <span className="ytg-mm-label">Features</span>
-          {FEATURE_NAV_ITEMS.map((item, i) => (
-            <a key={i} href={item.href} onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
-              {item.label}
-            </a>
-          ))}
-        </div>
-
-        {/* Resources */}
-        <div className="ytg-mm-section">
-          <span className="ytg-mm-label">Resources</span>
-          {RESOURCES_NAV_ITEMS.map((item, i) => (
-            <a key={i} href={item.href} onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
-              {item.label}
-            </a>
-          ))}
-        </div>
-
-        {/* Company */}
-        <div className="ytg-mm-section">
-          <span className="ytg-mm-label">Company</span>
-          {[
-            { label: 'Pricing',    href: '#pricing' },
-            { label: 'Affiliates', href: '/affiliate' },
-            { label: 'Contact',    href: '/contact' },
-          ].map((l, i) => (
-            <a key={i} href={l.href} onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
-              {l.label}
-            </a>
-          ))}
-        </div>
-
-        {/* CTA. Pinned at bottom */}
-        <div className="ytg-mm-cta-row">
-          {loggedIn ? (
-            <a href="/dashboard" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Dashboard</a>
-          ) : (
-            <>
-              <a href="/auth/login" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Get started free</a>
-              <a href="/auth/login" className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center' }}>Log in</a>
-            </>
-          )}
-        </div>
-      </div>
+      {/* ── NAV. Shared editorial SiteHeader (logged-in aware) ──────────── */}
+      <SiteHeader loggedIn={loggedIn} />
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <div id="hero" className="ytg-hero" style={{ position: 'relative', overflow: 'hidden', background: '#ffffff' }}>
+      <div id="hero" className="ytg-hero" style={{ position: 'relative', overflow: 'hidden', background: '#f6f4ef' }}>
 
-        {/* Subtle red radial glow. Warms the hero without competing with content */}
-        <div aria-hidden="true" style={{
-          position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-          width: '120vw', maxWidth: 1400, height: 620,
-          background: 'radial-gradient(ellipse at center top, rgba(229,48,42,0.07) 0%, rgba(229,48,42,0.02) 40%, transparent 70%)',
-          pointerEvents: 'none', zIndex: 0,
-        }}/>
-
-        <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
-          {/* Live badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: '7px 17px', marginBottom: 24, boxShadow: 'var(--ytg-shadow)' }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', animation: 'pulse 2s infinite', boxShadow: '0 0 0 3px rgba(22,163,74,0.15)' }} />
-            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>The AI YouTube growth tool</span>
+        <div className="ytg-hero-grid" style={{ maxWidth: 1240, margin: '0 auto', padding: isMobile ? '0 4px' : '0 32px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.02fr', gap: isMobile ? 44 : 52, alignItems: 'center', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
+          <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
+          {/* Eyebrow */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
+            <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+            <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>AI YouTube growth platform</span>
           </div>
 
-          <h1 className="ytg-hero-h1" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
-            The AI that audits your channel like a <span style={{ color: 'var(--ytg-accent)' }}>$500/hour consultant</span>
+          <h1 className="ytg-hero-h1" style={{ fontFamily: ED_SERIF, fontWeight: 300, color: ED_INK, fontSize: 'clamp(34px, 4.8vw, 60px)', marginBottom: 20, textWrap: 'balance', letterSpacing: '-0.01em', lineHeight: 1.06 }}>
+            Your analytics already know why you're stuck. <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>Now you will too.</em>
           </h1>
 
-          <p className="ytg-hero-sub" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 32px', textWrap: 'pretty' }}>
-            A 10-dimension YouTube channel audit, SEO tool, and competitor analyzer in one. The VidIQ alternative, TubeBuddy alternative, and Viewstats alternative that turns raw analytics into a prioritized action plan.
+          <p className="ytg-hero-sub" style={{ fontFamily: ED_SANS, color: ED_SOFT, lineHeight: 1.7, maxWidth: 660, margin: isMobile ? '0 auto 28px' : '0 0 32px', textWrap: 'pretty' }}>
+            YouTube Studio gives you fifty charts and zero answers. YTGrowth reads every one, pinpoints what's holding your channel back, and hands you a ranked plan, starting with the single fix that moves the needle most. The vidIQ, TubeBuddy, and Viewstats alternative built around your next move, not another dashboard.
           </p>
 
-          <div className="ytg-hero-cta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 28 }}>
-            <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '15px 32px', justifyContent: 'center' }}>
-              Analyse my channel free <Arrow />
-            </a>
-            <a href="#pricing" className="ytg-btn-ghost" style={{ fontSize: 16, padding: '15px 32px', justifyContent: 'center' }}>
-              See pricing
-            </a>
+          <div className="ytg-hero-cta" style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 26 }}>
+            <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: ED_ACCENT, color: '#fff', fontFamily: ED_SANS, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '17px 34px', textDecoration: 'none', transition: 'filter 0.18s, transform 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+            >Audit my channel free →</a>
+            <a href="#pricing" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#ffffff', color: ED_SOFT, fontFamily: ED_SANS, fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '17px 30px', textDecoration: 'none', border: '1px solid rgba(20,19,15,0.14)', transition: 'color 0.15s, border-color 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = ED_INK; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.28)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = ED_SOFT; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.14)' }}
+            >See pricing</a>
           </div>
 
-          {/* Trust row. Small green-check pills, mobile-wraps naturally */}
-          <div className="ytg-hero-trust" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', rowGap: 10 }}>
-            {['No credit card required', '5 free analyses on signup', 'Cancel anytime'].map((t, i) => (
-              <div key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                  <circle cx="8" cy="8" r="7" fill="rgba(22,163,74,0.11)" stroke="rgba(22,163,74,0.28)" strokeWidth="1"/>
-                  <path d="M5 8l2 2 4-4" stroke="#16a34a" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                {t}
-              </div>
-            ))}
-          </div>
+          {/* Trust line */}
+          <p style={{ fontFamily: ED_SANS, fontSize: 13, fontWeight: 500, color: ED_MUTED, letterSpacing: '0.02em' }}>
+            No card required &nbsp;·&nbsp; 5 free audits when you sign up &nbsp;·&nbsp; Cancel anytime
+          </p>
 
           {/* Product Hunt badge */}
-          <div className="ytg-hero-ph" style={{ display: 'flex', justifyContent: 'center' }}>
+          <div className="ytg-hero-ph" style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 18, flexWrap: 'wrap', marginTop: isMobile ? 26 : 30 }}>
             <a
               href="https://www.producthunt.com/products/ytgrowth?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-ytgrowth"
               target="_blank"
@@ -1165,324 +1034,54 @@ export default function Landing() {
                 src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1132935&theme=light&t=1777325565998"
               />
             </a>
+
+            {/* Creator social proof: overlapping avatars (from the in-app gate) */}
+            <div style={{ display: 'flex', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 9 : 11 }}>
+              <div style={{ display: 'flex' }}>
+                {['sophie', 'james', 'priya', 'amara', 'marcus'].map((name, i, arr) => (
+                  <img
+                    key={name}
+                    src={`/avatars/${name}.jpg`}
+                    alt=""
+                    width="32" height="32"
+                    style={{ width: 30, height: 30, borderRadius: '50%', border: '2px solid #f6f4ef', marginLeft: i === 0 ? 0 : -9, objectFit: 'cover', position: 'relative', zIndex: arr.length - i, boxShadow: '0 1px 3px rgba(20,19,15,0.12)' }}
+                  />
+                ))}
+              </div>
+              <span style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 500, color: ED_SOFT, lineHeight: 1.35, maxWidth: isMobile ? 240 : 150, textAlign: isMobile ? 'center' : 'left' }}>
+                Trusted by over <b style={{ fontWeight: 700, color: ED_INK }}>300k creators</b> like you
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Product mockup. Premium white priority card with dimensional floating accents */}
-        <div style={{
-          maxWidth: isMobile ? '100%' : 1080,
-          margin: isMobile ? '52px 0 0' : '80px auto 0',
-          position: 'relative',
-          padding: isMobile ? '0 6px' : '0 32px',
-        }}>
-          {/* Dark ambient wash behind the card. Adds depth without a hard frame */}
-          {!isMobile && (
-            <div aria-hidden="true" style={{
-              position: 'absolute',
-              top: 60, left: 0, right: 0, bottom: -30,
-              background: 'radial-gradient(ellipse 80% 90% at 50% 50%, rgba(15,10,22,0.18) 0%, rgba(229,37,27,0.10) 40%, transparent 75%)',
-              filter: 'blur(8px)',
-              pointerEvents: 'none',
-              zIndex: 0,
-            }}/>
-          )}
-
-          {/* Main card */}
-          <div style={{
-            position: 'relative',
-            zIndex: 1,
-            background: '#ffffff',
-            border: '1px solid rgba(10,10,15,0.05)',
-            borderRadius: isMobile ? 20 : 24,
-            padding: isMobile ? '22px 18px 20px' : '34px 40px 32px',
-            boxShadow: isMobile
-              ? '0 2px 6px rgba(0,0,0,0.04), 0 16px 44px rgba(0,0,0,0.09), 0 48px 96px rgba(229,37,27,0.08)'
-              : '0 2px 6px rgba(0,0,0,0.05), 0 24px 64px rgba(0,0,0,0.12), 0 72px 140px rgba(229,37,27,0.12)',
-          }}>
-            {/* Subtle top gradient seam */}
-            <div aria-hidden="true" style={{
-              position: 'absolute', top: 0, left: 0, right: 0, height: 3,
-              background: 'linear-gradient(90deg, transparent 0%, rgba(229,37,27,0.35) 50%, transparent 100%)',
-              borderRadius: '22px 22px 0 0',
-            }}/>
-
-            {/* Channel header */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: isMobile ? 13 : 16,
-              paddingBottom: isMobile ? 16 : 22,
-              borderBottom: '1px solid #f0f0f5',
-            }}>
-              {/* Avatar with subtle red rim */}
-              <div style={{
-                position: 'relative', flexShrink: 0,
-                padding: isMobile ? 2.5 : 3, borderRadius: '50%',
-                background: 'linear-gradient(135deg, #ff3b30 0%, #a50f07 100%)',
-                boxShadow: isMobile ? '0 2px 6px rgba(229,37,27,0.2)' : '0 4px 12px rgba(229,37,27,0.25)',
-              }}>
-                <img
-                  src="/avatars/sophie.webp" alt=""
-                  width="80" height="80"
-                  style={{
-                    width: isMobile ? 44 : 54, height: isMobile ? 44 : 54,
-                    borderRadius: '50%', objectFit: 'cover',
-                    display: 'block', border: '2px solid #ffffff',
-                  }}
-                />
-              </div>
-
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: isMobile ? 15 : 17, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px', lineHeight: 1.2 }}>Sophie Brandt</p>
-                <p style={{ fontSize: isMobile ? 12 : 13, color: '#6a6a78', marginTop: 3, lineHeight: 1.3 }}>
-                  {isMobile ? 'Travel · 42K subscribers' : 'Travel · 42K subscribers · 187K views'}
-                </p>
-              </div>
-
-              {/* Score ring with gradient stroke */}
-              <div style={{ position: 'relative', flexShrink: 0 }}>
-                <svg width={isMobile ? 54 : 66} height={isMobile ? 54 : 66} viewBox="0 0 66 66">
-                  <defs>
-                    <linearGradient id="heroScoreGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#4ade80"/>
-                      <stop offset="100%" stopColor="#16a34a"/>
-                    </linearGradient>
-                  </defs>
-                  <circle cx="33" cy="33" r="27" fill="none" stroke="#ececf2" strokeWidth={isMobile ? 5.5 : 6}/>
-                  <circle cx="33" cy="33" r="27" fill="none" stroke="url(#heroScoreGrad)" strokeWidth={isMobile ? 5.5 : 6} strokeDasharray="122.1 170" strokeLinecap="round" transform="rotate(-90 33 33)"/>
-                </svg>
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: isMobile ? 15 : 18, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>72</span>
-                </div>
-              </div>
-
-              {!isMobile && (
-                <span style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 7,
-                  background: 'linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%)',
-                  border: '1px solid rgba(22,163,74,0.3)',
-                  borderRadius: 999, padding: '6px 14px', flexShrink: 0,
-                  boxShadow: '0 0 18px rgba(22,163,74,0.15)',
-                }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', boxShadow: '0 0 7px #16a34a' }}/>
-                  <span style={{ fontSize: 11, fontWeight: 800, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Healthy</span>
-                </span>
-              )}
-            </div>
-
-            {/* Priority action body */}
-            <div style={{ paddingTop: isMobile ? 18 : 24 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: isMobile ? 12 : 18 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
-                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#d97706', boxShadow: '0 0 10px rgba(217,119,6,0.6)' }}/>
-                  <span style={{ fontSize: isMobile ? 10.5 : 11.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Priority this week</span>
-                </span>
-                <span style={{ flex: 1, height: 1, background: '#ececf2' }}/>
-                <span style={{
-                  fontSize: isMobile ? 10 : 11, fontWeight: 800,
-                  color: '#ffffff',
-                  background: 'linear-gradient(180deg, #f59e0b 0%, #d97706 100%)',
-                  padding: isMobile ? '4px 11px' : '5px 12px', borderRadius: 999,
-                  letterSpacing: '0.08em', textTransform: 'uppercase',
-                  boxShadow: '0 2px 10px rgba(217,119,6,0.4)',
-                }}>{isMobile ? 'High' : 'High impact'}</span>
-              </div>
-
-              <h3 style={{
-                fontSize: isMobile ? 16 : 22,
-                fontWeight: 700, color: '#0a0a0f',
-                letterSpacing: '-0.4px', lineHeight: 1.35,
-                marginBottom: isMobile ? 14 : 22,
-                textWrap: 'balance',
-              }}>
-                {isMobile
-                  ? 'Watch time is short. Rewrite openings to hook viewers in the first 15 seconds.'
-                  : 'Watch time is critically short. Rewrite openings to hook viewers in the first 15 seconds.'}
-              </h3>
-
-              {/* Detail grid. 3-col on desktop, single Action card on mobile */}
-              {isMobile ? (
-                <>
-                  <div style={{
-                    background: 'linear-gradient(180deg, #fffbf4 0%, #ffffff 100%)',
-                    border: '1px solid #f4e6c8',
-                    borderLeft: '3px solid #d97706',
-                    borderRadius: 12,
-                    padding: '13px 15px',
-                    boxShadow: '0 2px 10px rgba(217,119,6,0.08)',
-                  }}>
-                    <p style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 7 }}>Action</p>
-                    <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.5, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the payoff.</p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 14, paddingTop: 14, borderTop: '1px solid #f0f0f5', fontSize: 12, color: '#6a6a78', lineHeight: 1.4 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 5 }}>
-                      <span style={{ color: '#4a7cf7', fontWeight: 800 }}>38s</span>
-                      <span>avg watch</span>
-                    </span>
-                    <span style={{ width: 1, height: 12, background: '#e4e4ea', flexShrink: 0 }}/>
-                    <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 5 }}>
-                      <span style={{ color: '#16a34a', fontWeight: 800 }}>+40%</span>
-                      <span>expected</span>
-                    </span>
-                  </div>
-
-                  {/* Next up preview. Mobile compact version */}
-                  <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #f0f0f5' }}>
-                    <p style={{ fontSize: 10, fontWeight: 800, color: '#9a9aa8', letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 9 }}>Next up · 8 more</p>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                      {[
-                        { rank: 2, label: 'Posting cadence', sev: 'Medium', sevColor: '#d97706' },
-                        { rank: 3, label: 'Thumbnail SEO',   sev: 'Low',    sevColor: '#6b7280' },
-                      ].map((item, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', background: '#fafafc', border: '1px solid #ececf2', borderRadius: 10 }}>
-                          <span style={{
-                            width: 20, height: 20, borderRadius: 5,
-                            background: '#eceff3', color: '#6a6a78',
-                            fontSize: 10.5, fontWeight: 900,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexShrink: 0,
-                          }}>{item.rank}</span>
-                          <span style={{ fontSize: 12.5, fontWeight: 700, color: '#3a3a44', flex: 1, letterSpacing: '-0.1px' }}>{item.label}</span>
-                          <span style={{
-                            fontSize: 9.5, fontWeight: 700, color: item.sevColor,
-                            border: `1.5px solid ${item.sevColor}`, padding: '2px 8px',
-                            borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase',
-                            flexShrink: 0,
-                          }}>{item.sev}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr 1fr', gap: 12 }}>
-                  <div style={{
-                    background: 'linear-gradient(180deg, rgba(79,134,247,0.08) 0%, rgba(79,134,247,0.03) 100%)',
-                    border: '1px solid rgba(79,134,247,0.2)',
-                    borderRadius: 14, padding: '18px 20px',
-                  }}>
-                    <p style={{ fontSize: 11, fontWeight: 800, color: '#4a7cf7', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 10 }}>Why now</p>
-                    <p style={{ fontSize: 13.5, color: '#2a2a34', lineHeight: 1.55 }}>Avg watch 38s vs 2:30 niche. Viewers bail in the first 15 seconds.</p>
-                  </div>
-                  <div style={{
-                    background: 'linear-gradient(180deg, #fffbf4 0%, #ffffff 100%)',
-                    border: '1px solid #f4e6c8',
-                    borderLeft: '3px solid #d97706',
-                    borderRadius: 14,
-                    padding: '18px 20px',
-                    boxShadow: '0 4px 20px rgba(217,119,6,0.12)',
-                  }}>
-                    <p style={{ fontSize: 11, fontWeight: 800, color: '#d97706', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 10 }}>Action</p>
-                    <p style={{ fontSize: 13.5, color: '#0a0a0f', lineHeight: 1.55, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the most visual moment or payoff.</p>
-                  </div>
-                  <div style={{
-                    background: 'linear-gradient(180deg, rgba(22,163,74,0.08) 0%, rgba(22,163,74,0.03) 100%)',
-                    border: '1px solid rgba(22,163,74,0.24)',
-                    borderRadius: 14, padding: '18px 20px',
-                  }}>
-                    <p style={{ fontSize: 11, fontWeight: 800, color: '#16a34a', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 10 }}>Expected outcome</p>
-                    <p style={{ fontSize: 13.5, color: '#2a2a34', lineHeight: 1.55 }}>+40% watch time in 3 weeks. Algorithm picks the channel up again.</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Next up preview. Desktop only, teases depth without bloating the card */}
-              {!isMobile && (
-                <div style={{ marginTop: 20, paddingTop: 18, borderTop: '1px solid #f0f0f5' }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 800, color: '#9a9aa8', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 10 }}>Next up · 8 more insights</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {[
-                      { rank: 2, label: 'Posting cadence', text: 'Upload frequency below niche average. 0.5×/wk vs 2–3×/wk', sev: 'Medium', sevColor: '#d97706' },
-                      { rank: 3, label: 'Thumbnail SEO', text: 'Text contrast low on last 4 uploads. CTR 2.7% vs 5.1% niche', sev: 'Low',    sevColor: '#6b7280' },
-                    ].map((item, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', background: '#fafafc', border: '1px solid #ececf2', borderRadius: 10 }}>
-                        <span style={{
-                          width: 22, height: 22, borderRadius: 6,
-                          background: '#eceff3', color: '#6a6a78',
-                          fontSize: 11, fontWeight: 900,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          flexShrink: 0,
-                        }}>{item.rank}</span>
-                        <span style={{ fontSize: 10.5, fontWeight: 800, color: '#8a8a98', letterSpacing: '0.09em', textTransform: 'uppercase', minWidth: 125, flexShrink: 0 }}>{item.label}</span>
-                        <span style={{ fontSize: 13, color: '#5a5a68', flex: 1, lineHeight: 1.4 }}>{item.text}</span>
-                        <span style={{
-                          fontSize: 10, fontWeight: 700, color: item.sevColor,
-                          border: `1.5px solid ${item.sevColor}`, padding: '2px 9px',
-                          borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase',
-                          flexShrink: 0,
-                        }}>{item.sev}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
+        <HeroDashboardPreview isMobile={isMobile} />
         </div>
       </div>
 
-      {/* ── STATS BAR. Elevated white stat cards with descriptive sub-line ─ */}
+      {/* ── STATS BAR. Connected hairline strip, Fraunces serif figures ─── */}
       <div className="section-animate" style={{
-        background: '#f4f4f6',
-        borderTop: '1px solid rgba(10,10,15,0.06)',
-        borderBottom: '1px solid rgba(10,10,15,0.06)',
-        padding: isMobile ? '28px 20px' : '52px 64px',
+        background: '#ffffff',
+        borderTop: '1px solid ' + ED_LINE,
+        borderBottom: '1px solid ' + ED_LINE,
       }}>
         <div style={{
           maxWidth: 1240, margin: '0 auto',
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)',
-          gap: isMobile ? 10 : 14,
+          gap: 1, background: ED_LINE,
         }}>
           {[
-            ['10',       'Audit dimensions',     'Traffic, retention, CTR, and 7 more'],
+            ['10',       'Audit dimensions',      'Traffic, retention, CTR, and 7 more'],
             ['3',        'Competitor benchmarks', "See who's winning and what's working"],
-            ['2-layer',  'Thumbnail scoring',    'Algorithm + vision model in one pass'],
-            ['Weekly',   'Automated reports',    'One priority action, every Monday'],
-            ['7+',       'Core growth tools',    'Audit, SEO, keywords, ideas, thumbnails'],
+            ['2-layer',  'Thumbnail scoring',     'Algorithm + vision model in one pass'],
+            ['Weekly',   'Automated reports',     'One priority action, every Monday'],
+            ['7+',       'Core growth tools',     'Audit, SEO, keywords, ideas, thumbnails'],
           ].map(([stat, label, desc], i) => (
-            <div
-              key={i}
-              className="ytg-stat-card-premium"
-              style={{
-                position: 'relative',
-                background: 'linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%)',
-                border: '1px solid rgba(10,10,15,0.06)',
-                borderRadius: 16,
-                padding: isMobile ? '20px 18px' : '28px 22px 24px',
-                textAlign: 'center',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
-                display: 'flex', flexDirection: 'column', alignItems: 'center',
-                overflow: 'hidden',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-              }}
-            >
-              {/* Subtle red gradient seam on top edge. Brand signature */}
-              <div aria-hidden="true" style={{
-                position: 'absolute', top: 0, left: '10%', right: '10%', height: 2,
-                background: 'linear-gradient(90deg, transparent 0%, rgba(229,37,27,0.3) 50%, transparent 100%)',
-              }}/>
-              <p style={{
-                fontSize: isMobile ? 28 : 34, fontWeight: 800,
-                background: 'linear-gradient(180deg, #ef3a30 0%, #c41c13 100%)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text', color: 'var(--ytg-accent)',
-                letterSpacing: '-1.2px', lineHeight: 1,
-                marginBottom: 10,
-              }}>{stat}</p>
-              <p style={{
-                fontSize: 11, fontWeight: 800,
-                color: 'rgba(10,10,15,0.62)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.12em',
-                marginBottom: 12,
-              }}>{label}</p>
-              <p style={{
-                fontSize: 12.5, fontWeight: 500,
-                color: 'rgba(10,10,15,0.5)',
-                lineHeight: 1.55,
-                maxWidth: 220,
-                letterSpacing: '-0.1px',
-              }}>{desc}</p>
+            <div key={i} style={{ background: '#ffffff', padding: isMobile ? '24px 22px' : '34px 28px 32px' }}>
+              <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: isMobile ? 32 : 38, color: ED_INK, letterSpacing: '-0.5px', lineHeight: 1, marginBottom: 12 }}>{stat}</p>
+              <p style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 700, color: ED_MUTED, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>{label}</p>
+              <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 450, color: ED_SOFT, lineHeight: 1.55, maxWidth: 220 }}>{desc}</p>
             </div>
           ))}
         </div>
@@ -1491,319 +1090,219 @@ export default function Landing() {
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
 
       {/* Section 1. Channel Audit */}
-      <div id="features" className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 24px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center', position: 'relative', zIndex: 1 }}>
-          {/* Text */}
+      <div id="features" className="section-animate" style={{ background: '#f6f4ef', borderTop: '1px solid ' + ED_LINE, borderBottom: '1px solid ' + ED_LINE, padding: isMobile ? '64px 24px' : '96px 48px' }}>
+        {/* Text left (headline + lead + bullets + hero-style CTA), white
+            audit preview right. Mirrors the approved hero composition. */}
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.04fr', gap: isMobile ? 36 : 72, alignItems: 'center' }}>
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16 }}>
-              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>YouTube Channel Audit</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+              <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>YouTube Channel Audit</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: '#ffffff', textWrap: 'balance' }}>10 dimensions. <span style={{ color: '#ff3b30' }}>One brutal honest assessment.</span></h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.58)', lineHeight: 1.72, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why. Traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
+            <h2 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(34px, 4.4vw, 54px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.08, color: ED_INK, textWrap: 'balance' }}>10 dimensions. <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>One brutally honest assessment.</em></h2>
+            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginTop: 18, marginBottom: 26 }}>This is the read a $500/hour consultant would give your channel, in about 30 seconds. Most tools stop at a score. YTGrowth shows you why, then hands you one ranked to-do list: traffic, retention, CTR, SEO, and how you stack up against the channels beating you.</p>
             {[
               'Traffic source breakdown. Search vs browse vs external',
               'Competitor benchmarking against channels in your niche',
               'Audience demographics and device profile',
               'Exact priority actions ranked by impact',
             ].map((t, i) => (
-              <FeatureBulletRow key={i} onDark>{t}</FeatureBulletRow>
+              <div key={i} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', marginBottom: 11 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={ED_ACCENT} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
+                <span style={{ fontFamily: ED_SANS, fontSize: 15, color: ED_SOFT, lineHeight: 1.6 }}>{t}</span>
+              </div>
             ))}
+            <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 22, background: ED_ACCENT, color: '#fff', fontFamily: ED_SANS, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '16px 32px', textDecoration: 'none', transition: 'filter 0.18s, transform 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+            >Run my free audit →</a>
+            <p style={{ fontFamily: ED_SANS, fontSize: 12.5, color: ED_MUTED, marginTop: 13 }}>Your first audit is free. No card required.</p>
           </div>
-          {/* Visual */}
-          <div style={{ background: '#111114', borderRadius: 20, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 28 }}>
+          <ChannelAuditPreview isMobile={isMobile} />
+        </div>
+
+        {/* Channel Audit reviews, full-width below the build. Tied to the
+            audit feature (Gauge). PLACEHOLDER quotes — swap for real ones. */}
+        <div style={{ maxWidth: 1160, margin: isMobile ? '40px auto 0' : '60px auto 0' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 1, background: ED_LINE, border: '1px solid ' + ED_LINE }}>
             {[
-              { label: 'CTR Health',          score: 82, pct: '82%' },
-              { label: 'Audience Retention',  score: 67, pct: '67%' },
-              { label: 'Content Strategy',    score: 71, pct: '71%' },
-              { label: 'SEO Discovery',       score: 54, pct: '54%' },
-              { label: 'Posting Consistency', score: 90, pct: '90%' },
-            ].map((row, i) => {
-              const color = row.score >= 75 ? '#4ade80' : row.score >= 60 ? '#60a5fa' : row.score >= 40 ? '#f59e0b' : '#ff3b30'
-              return (
-                <div key={i} style={{ marginBottom: i < 4 ? 16 : 0 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.6)' }}>{row.label}</span>
-                    <span style={{ fontSize: 14, fontWeight: 700, color }}>{row.score}</span>
-                  </div>
-                  <div style={{ height: 5, background: 'rgba(255,255,255,0.07)', borderRadius: 100, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: row.pct, background: color, borderRadius: 100 }} />
-                  </div>
+              { av: 'blessing', name: 'Level up with Blessing', handle: '@LevelupwithBlessing · 31K', metric: '+38% watch time', quote: "I'd stared at my own analytics for months with no clue what was wrong. The audit just said it: your intros. I fixed three and watch time finally moved." },
+              { av: 'adnane', name: 'ADN7', handle: '@Adnanehm7 · 48.7K', metric: 'Retention up 22%', quote: "It's blunt, which is exactly what I needed. It showed me where I was losing people and what to fix first, no fifty-tab spreadsheet to decode." },
+              { av: 'tberry', name: 'Tberry AI', handle: '@TberryAI · 1K', metric: 'CTR 3% → 6%', quote: "Ran it expecting fluff and got a ranked to-do list instead. I did the top item first and my click-through climbed within a couple of uploads." },
+            ].map((r, i) => (
+              <div key={i} style={{ background: '#fff', padding: isMobile ? '24px 22px' : '28px 26px', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', gap: 2.5, marginBottom: 16 }}>
+                  {[...Array(5)].map((_, s) => <svg key={s} width="14" height="14" viewBox="0 0 20 20" fill={ED_GOLD}><path d="M10 1.5l2.6 5.3 5.9.86-4.25 4.14 1 5.86L10 15.9l-5.25 2.76 1-5.86L1.5 7.66l5.9-.86z" /></svg>)}
                 </div>
-              )
-            })}
-            <div style={{ borderLeft: '3px solid var(--ytg-accent)', background: 'rgba(229,48,42,0.08)', borderRadius: 8, padding: '12px 16px', marginTop: 16 }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>Priority fix</p>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>SEO Discovery at 54. Competitors average 6.8% CTR. Fix thumbnail text contrast first.</p>
-            </div>
+                <p style={{ fontFamily: ED_SANS, fontSize: 14.5, color: ED_INK, lineHeight: 1.62, flex: 1, marginBottom: 20 }}>{r.quote}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 11, paddingTop: 16, borderTop: '1px solid ' + ED_LINE }}>
+                  <img src={`/avatars/${r.av}.jpg`} alt="" width="34" height="34" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontFamily: ED_SANS, fontSize: 13, fontWeight: 600, color: ED_INK, lineHeight: 1.2 }}>{r.name}</p>
+                    <p style={{ fontFamily: ED_SANS, fontSize: 11.5, color: ED_MUTED, marginTop: 2 }}>{r.handle}</p>
+                  </div>
+                  <span style={{ fontFamily: ED_SANS, fontSize: 12, fontWeight: 700, color: ED_ACCENT, whiteSpace: 'nowrap' }}>{r.metric}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* Section 2. Competitor Intelligence */}
-      <div className="section-animate" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
-          {/* Visual. Left on desktop */}
-          <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(10,10,15,0.05)', border: '2px solid rgba(10,10,15,0.08)', flexShrink: 0 }} />
-                <div>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>TechCreator Pro</p>
-                  <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>142K subscribers</p>
-                </div>
-              </div>
-              <span style={{ background: 'rgba(229,48,42,0.08)', color: 'var(--ytg-accent)', fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(229,48,42,0.25)' }}>HIGH</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
-              <div style={{ borderLeft: '3px solid #d97706', background: 'rgba(217,119,6,0.05)', borderRadius: 8, padding: '12px 14px' }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Content Gap</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.55 }}>Tutorial content. 0 videos in last 90 days</p>
-              </div>
-              <div style={{ borderLeft: '3px solid #16a34a', background: 'rgba(22,163,74,0.05)', borderRadius: 8, padding: '12px 14px' }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#15803d', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Title Opportunity</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.55 }}>How to [niche topic] in 2026 (Step by Step). Avg 84K views for this format in your niche</p>
-              </div>
-            </div>
+      <div className="section-animate" style={{ background: '#ffffff', borderTop: '1px solid ' + ED_LINE, borderBottom: '1px solid ' + ED_LINE, padding: isMobile ? '64px 24px' : '96px 48px' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 44 : 72, alignItems: 'center' }}>
+          {/* Visual. Left on desktop. White editorial competitor preview,
+              same skin as the hero + audit previews. */}
+          <div style={{ order: isMobile ? 1 : 0 }}>
+            <CompetitorPreview isMobile={isMobile} />
           </div>
           {/* Text. Right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
-              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Competitive Edge</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+              <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Competitive Edge</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: 'var(--ytg-text)', textWrap: 'balance' }}>Find the gaps your competitors <span style={{ color: 'var(--ytg-accent)' }}>leave open.</span></h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then shows you how to own those gaps.</p>
+            <h2 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(34px, 4.4vw, 54px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.08, marginBottom: 18, color: ED_INK, textWrap: 'balance' }}>Find the gaps your competitors <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>leave open.</em></h2>
+            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginBottom: 26 }}>Point YTGrowth at any competitor and it maps the topics they skip, the title patterns driving their views, and the audience they're leaving underserved. Then it shows you how to take that ground before they do.</p>
             {[
               'Topic gap analysis from real video data',
               'Title pattern and keyword extraction',
               'Threat level assessment per competitor',
               'Ready-to-use video ideas from gap analysis',
             ].map((t, i) => (
-              <FeatureBulletRow key={i}>{t}</FeatureBulletRow>
+              <div key={i} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', marginBottom: 11 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={ED_ACCENT} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
+                <span style={{ fontFamily: ED_SANS, fontSize: 15, color: ED_SOFT, lineHeight: 1.6 }}>{t}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Selling point: proof the gap is real. Real videos winning in the
+            exact gap the tracked competitor leaves open. */}
+        <div style={{ maxWidth: 1160, margin: isMobile ? '52px auto 0' : '76px auto 0' }}>
+          <div style={{ marginBottom: isMobile ? 26 : 34, maxWidth: 660 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+              <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Proof, not a guess</span>
+            </div>
+            <h3 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(26px, 3vw, 36px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.12, color: ED_INK, textWrap: 'balance' }}>The hooks they won't touch are <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>quietly winning.</em></h3>
+            <p style={{ fontFamily: ED_SANS, fontSize: 16, color: ED_SOFT, lineHeight: 1.7, marginTop: 14 }}>These are real videos winning the exact angle your competitor refuses to cover. YTGrowth surfaces every one the moment you add a rival, then shows you the pattern to copy.</p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 18 : 22 }}>
+            {[
+              { img: 'yt-jZQ_clu2DTY.jpg', views: '225K views', tag: 'Tutorial hook', channel: 'Level up with Blessing', url: 'https://www.youtube.com/watch?v=jZQ_clu2DTY' },
+              { img: 'yt-rTQzixWplRQ.jpg', views: '83K views', tag: 'Story hook', channel: 'Tales by Titus254', url: 'https://www.youtube.com/watch?v=rTQzixWplRQ' },
+              { img: 'yt-O2HgyToWu9Q.jpg', views: '315K views', tag: 'Curiosity hook', channel: 'Vaibhav Sisinty', url: 'https://www.youtube.com/watch?v=O2HgyToWu9Q' },
+            ].map((v, i) => (
+              <a key={i} href={v.url} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', background: '#fff', border: '1px solid ' + ED_LINE, overflow: 'hidden', transition: 'transform 0.18s, box-shadow 0.18s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 18px 40px rgba(20,19,15,0.13)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+              >
+                <div style={{ aspectRatio: '16 / 9', overflow: 'hidden', background: '#000' }}>
+                  <img src={`/blog/${v.img}`} alt={v.channel + ' thumbnail'} loading="lazy" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <div style={{ padding: '13px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 5 }}>
+                    <span style={{ fontFamily: ED_SERIF, fontSize: 19, fontWeight: 400, color: ED_INK, letterSpacing: '-0.4px', fontVariantNumeric: 'tabular-nums' }}>{v.views}</span>
+                    <span style={{ fontFamily: ED_SANS, fontSize: 10, fontWeight: 700, color: ED_ACCENT, border: '1px solid rgba(229,48,42,0.3)', padding: '3px 9px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{v.tag}</span>
+                  </div>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 500, color: ED_MUTED }}>{v.channel}</p>
+                </div>
+              </a>
             ))}
           </div>
         </div>
       </div>
 
       {/* Section 3. Thumbnail IQ */}
-      <div className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 24px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      <div className="section-animate" style={{ background: '#f6f4ef', borderTop: '1px solid ' + ED_LINE, borderBottom: '1px solid ' + ED_LINE, padding: isMobile ? '64px 24px' : '96px 48px' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 44 : 72, alignItems: 'center' }}>
           {/* Text */}
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16 }}>
-              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Thumbnail Intelligence</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+              <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Thumbnail Intelligence</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: '#ffffff', textWrap: 'balance' }}>Scored against the videos <span style={{ color: '#ff3b30' }}>actually winning in your niche.</span></h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.58)', lineHeight: 1.72, marginBottom: 28 }}>Two layers of analysis. A deterministic algorithm checking contrast, text clarity, face detection, and composition, then a vision model comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
+            <h2 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(34px, 4.4vw, 54px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.08, marginBottom: 18, color: ED_INK, textWrap: 'balance' }}>Scored against the videos <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>winning in your niche.</em></h2>
+            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginBottom: 26 }}>Two passes on every thumbnail. An algorithm checks contrast, text clarity, faces, and composition; a vision model weighs it against the top-performing videos in your exact niche. You get a score out of 100 and a punch list of what to change before you hit publish.</p>
             {[
               'Layer 1. Algorithm, instant, free',
               'Layer 2. YTGrowth vision vs real niche benchmarks',
               'Benchmarked by velocity, recency, and channel size bracket',
               'Full history. Every thumbnail scored',
             ].map((t, i) => (
-              <FeatureBulletRow key={i} onDark>{t}</FeatureBulletRow>
-            ))}
-          </div>
-          {/* Visual */}
-          <div style={{ background: '#111114', borderRadius: 20, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 28 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 20 }}>
-              <span style={{ fontSize: 52, fontWeight: 800, color: '#4ade80', letterSpacing: '-2px', lineHeight: 1 }}>74</span>
-              <span style={{ fontSize: 20, fontWeight: 400, color: 'rgba(255,255,255,0.35)' }}>/100</span>
-            </div>
-            {[
-              { label: 'Algorithm score', value: '42 / 60' },
-              { label: 'Vision score',    value: '32 / 40' },
-            ].map((row, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '12px 0' }}>
-                <span style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>{row.label}</span>
-                <span style={{ fontSize: 14, fontWeight: 600, color: '#ffffff' }}>{row.value}</span>
+              <div key={i} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', marginBottom: 11 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={ED_ACCENT} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
+                <span style={{ fontFamily: ED_SANS, fontSize: 15, color: ED_SOFT, lineHeight: 1.6 }}>{t}</span>
               </div>
             ))}
-            <div style={{ borderLeft: '3px solid var(--ytg-accent)', background: 'rgba(229,48,42,0.08)', borderRadius: 8, padding: '12px 16px', marginTop: 16 }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>Priority fix</p>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55 }}>Text too small for mobile. Increase font weight or reduce to 4 words max.</p>
-            </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 12 }}>Top thumbnails in your niche average 81/100</p>
+            <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 22, background: ED_ACCENT, color: '#fff', fontFamily: ED_SANS, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '16px 32px', textDecoration: 'none', transition: 'filter 0.18s, transform 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+            >Score my thumbnail free →</a>
+            <p style={{ fontFamily: ED_SANS, fontSize: 12.5, color: ED_MUTED, marginTop: 13 }}>Layer 1 is free. No card required.</p>
           </div>
+          {/* Visual. White editorial thumbnail-scoring preview. */}
+          <ThumbnailPreview isMobile={isMobile} />
         </div>
       </div>
 
       {/* Section 4. Weekly Report */}
-      <div className="section-animate" style={{ background: '#e6e7ec', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
-          {/* Visual. Left on desktop */}
-          <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--ytg-text)' }}>Week of Apr 7 – Apr 13</span>
-              <span style={{ background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.6)', color: '#16a34a', fontSize: 12, fontWeight: 600, borderRadius: 20, padding: '3px 10px' }}>Latest</span>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
-              {[
-                { val: '+124 subs',  delta: '↑ this week',   dc: '#16a34a' },
-                { val: '+8.2K views', delta: '↑ vs last week', dc: '#16a34a' },
-                { val: 'CTR 4.8%',   delta: '↑ +0.6%',       dc: '#16a34a' },
-                { val: 'Score 71',   delta: '→ steady',       dc: 'var(--ytg-text-3)' },
-              ].map((pill, i) => (
-                <div key={i} style={{ background: 'var(--ytg-bg)', border: '1px solid var(--ytg-border)', borderRadius: 10, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 18, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.5px', lineHeight: 1 }}>{pill.val}</p>
-                  <p style={{ fontSize: 12, fontWeight: 600, color: pill.dc, marginTop: 3 }}>{pill.delta}</p>
-                </div>
-              ))}
-            </div>
-            <div style={{ borderLeft: '3px solid var(--ytg-accent)', background: 'rgba(229,48,42,0.04)', borderRadius: 8, padding: '14px 16px' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>Priority this week</p>
-              <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.6 }}>Upload on Tuesday before 10am. Your last 3 best weeks all started with a Tuesday upload.</p>
-            </div>
+      <div className="section-animate" style={{ background: '#ffffff', borderTop: '1px solid ' + ED_LINE, borderBottom: '1px solid ' + ED_LINE, padding: isMobile ? '64px 24px' : '96px 48px' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 44 : 72, alignItems: 'center' }}>
+          {/* Visual. Left on desktop. White editorial weekly-digest preview. */}
+          <div style={{ order: isMobile ? 1 : 0 }}>
+            <WeeklyReportPreview isMobile={isMobile} />
           </div>
           {/* Text. Right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
-              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Automated Intelligence</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+              <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Automated Intelligence</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: 'var(--ytg-text)', textWrap: 'balance' }}>Your channel's weekly performance, <span style={{ color: 'var(--ytg-accent)' }}>in your inbox.</span></h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, marginBottom: 28 }}>Every week YTGrowth generates a performance report. Key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
+            <h2 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(34px, 4.4vw, 54px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.08, marginBottom: 18, color: ED_INK, textWrap: 'balance' }}>Your channel's weekly performance, <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>in your inbox.</em></h2>
+            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginBottom: 26 }}>Every Monday, one short report: what moved, your biggest win, what to watch, and the single action worth doing this week. It lands in your inbox and stays in your dashboard, even if you never open the email.</p>
             {[
               'Subscribers, views, retention, channel score',
               'Week-on-week delta on every metric',
               'One priority action per week',
               'Full history in your dashboard',
             ].map((t, i) => (
-              <FeatureBulletRow key={i}>{t}</FeatureBulletRow>
+              <div key={i} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', marginBottom: 11 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={ED_ACCENT} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
+                <span style={{ fontFamily: ED_SANS, fontSize: 15, color: ED_SOFT, lineHeight: 1.6 }}>{t}</span>
+              </div>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
-      <div id="how-it-works" className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div className="section-animate" style={{ textAlign: 'center', marginBottom: 56 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20 }}>
-              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>How it works</span>
+        {/* Selling point: the report compounds into a track record of wins */}
+        <div style={{ maxWidth: 1160, margin: isMobile ? '52px auto 0' : '76px auto 0' }}>
+          <div style={{ marginBottom: isMobile ? 26 : 34, maxWidth: 680 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+              <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>It compounds</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#ffffff', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>From zero to action plan<br /><span style={{ color: '#ff3b30' }}>in 30 seconds.</span></h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.58)', maxWidth: 620, margin: '0 auto', lineHeight: 1.72 }}>How to grow your YouTube channel without setup, configuration, or API keys. Just connect and go.</p>
+            <h3 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(26px, 3vw, 36px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.12, color: ED_INK, textWrap: 'balance' }}>One Monday is a nudge. <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>A year of them is a different channel.</em></h3>
+            <p style={{ fontFamily: ED_SANS, fontSize: 16, color: ED_SOFT, lineHeight: 1.7, marginTop: 14 }}>Every report ends with one action. They stack up in your dashboard into a record of exactly what moved the needle, week after week.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 18 : 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', gap: 1, background: ED_LINE, border: '1px solid ' + ED_LINE }}>
             {[
-              {
-                n: '01', t: 'Connect your channel', d: 'Sign in with Google and grant read-only access. We never post, edit, or store your content.',
-                card: (
-                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 14, padding: 0, marginBottom: 22, overflow: 'hidden' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', borderBottom: '1px solid rgba(10,10,15,0.06)', background: '#fafafb' }}>
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#febc2e' }} />
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840' }} />
-                      <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 600, color: 'var(--ytg-text-4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Sign-in</span>
-                    </div>
-                    <div style={{ padding: 18 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
-                        <Logo size={32} iconOnly />
-                        <div>
-                          <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>YTGrowth</p>
-                          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>wants YouTube read access</p>
-                        </div>
-                      </div>
-                      <div style={{ background: '#f4f4f6', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 12, color: 'var(--ytg-text-3)' }}>Read-only · No posting · Fully secure</div>
-                      <div style={{ display: 'flex', gap: 7 }}>
-                        <div style={{ flex: 1, background: '#f4f4f6', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>Cancel</div>
-                        <div style={{ flex: 1, background: '#ff3b30', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: '#fff', fontWeight: 700 }}>Allow</div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              },
-              {
-                n: '02', t: 'We scan everything', d: '12+ metrics analyzed automatically: retention, watch time, upload cadence, engagement, and your top competitors.',
-                card: (
-                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 14, padding: 0, marginBottom: 22, overflow: 'hidden' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', borderBottom: '1px solid rgba(10,10,15,0.06)', background: '#fafafb' }}>
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#febc2e' }} />
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840' }} />
-                      <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', animation: 'pulse 1.5s ease-in-out infinite' }} />
-                        <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--ytg-text-4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Live</span>
-                      </span>
-                    </div>
-                    <div style={{ padding: 18 }}>
-                    <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Analyzing your channel</p>
-                    {[{ l: 'Channel metrics', w: '100%', c: '#0a84ff' }, { l: 'Video performance', w: '100%', c: '#0a84ff' }, { l: 'Competitor data', w: '72%', c: '#0a84ff' }, { l: 'Generating insights', w: '38%', c: '#f59e0b' }].map((item, i) => (
-                      <div key={i} style={{ marginBottom: i < 3 ? 11 : 0 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-                          <span style={{ fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>{item.l}</span>
-                          <span style={{ fontSize: 12, color: item.c, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{item.w}</span>
-                        </div>
-                        <div style={{ background: 'rgba(10,10,15,0.07)', borderRadius: 100, height: 3, overflow: 'hidden' }}>
-                          <div style={{ width: item.w, height: '100%', background: item.c, borderRadius: 100 }} />
-                        </div>
-                      </div>
-                    ))}
-                    </div>
-                  </div>
-                )
-              },
-              {
-                n: '03', t: 'Get your action plan', d: 'Every issue ranked by impact with one specific action. Concrete steps based on your actual channel data.',
-                card: (
-                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 14, padding: 0, marginBottom: 22, overflow: 'hidden' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', borderBottom: '1px solid rgba(10,10,15,0.06)', background: '#fafafb' }}>
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#febc2e' }} />
-                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840' }} />
-                      <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 600, color: 'var(--ytg-text-4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Results</span>
-                    </div>
-                    <div style={{ padding: 18 }}>
-                    <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>3 priority actions</p>
-                    {[
-                      { dot: '#ef4444', bg: 'rgba(239,68,68,0.10)', bd: 'rgba(239,68,68,0.25)', tx: '#b91c1c', t: 'Rewrite video openings', s: 'Critical' },
-                      { dot: '#f59e0b', bg: 'rgba(245,158,11,0.12)', bd: 'rgba(245,158,11,0.30)', tx: '#b45309', t: 'Post 1 video per week', s: 'High' },
-                      { dot: '#0a84ff', bg: 'rgba(10,132,255,0.10)', bd: 'rgba(10,132,255,0.25)', tx: '#0369a1', t: 'Add like CTA at 30%', s: 'Medium' },
-                    ].map((item, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '9px 12px', background: '#f4f4f6', border: '1px solid rgba(10,10,15,0.06)', borderRadius: 9, marginBottom: i < 2 ? 7 : 0 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.dot, flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500, flex: 1 }}>{item.t}</span>
-                        <span style={{ fontSize: 10, fontWeight: 800, color: item.tx, background: item.bg, border: `1px solid ${item.bd}`, padding: '2px 8px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{item.s}</span>
-                      </div>
-                    ))}
-                    </div>
-                  </div>
-                )
-              },
-            ].map((step, i) => (
-              isMobile ? (
-                <div key={i} style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: 16,
-                  padding: '20px 20px 0',
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                    <div style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontWeight: 700, fontSize: 11, color: 'rgba(255,255,255,0.55)', fontVariantNumeric: 'tabular-nums' }}>{step.n}</span>
-                    </div>
-                    <p style={{ fontWeight: 700, fontSize: 17, color: '#ffffff', margin: 0, letterSpacing: '-0.3px', lineHeight: 1.3 }}>{step.t}</p>
-                  </div>
-                  <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.58)', lineHeight: 1.65, marginBottom: 18, margin: '0 0 18px' }}>{step.d}</p>
-                  {step.card}
-                </div>
-              ) : (
-                <div key={i} className="ytg-step-card">
-                  {step.card}
-                  <div style={{ width: 36, height: 36, background: 'var(--ytg-card-2)', border: '1px solid var(--ytg-border-2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                    <span style={{ fontWeight: 700, fontSize: 12, color: 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>{step.n}</span>
-                  </div>
-                  <p style={{ fontWeight: 700, fontSize: 16, color: 'var(--ytg-text)', marginBottom: 9, letterSpacing: '-0.3px' }}>{step.t}</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.72, marginBottom: 0 }}>{step.d}</p>
-                </div>
-              )
+              { wk: 'Mar 17', action: 'Rewrote weak intros', result: 'Retention +6%' },
+              { wk: 'Mar 24', action: 'Moved uploads to Tuesday', result: 'Views +14%' },
+              { wk: 'Mar 31', action: 'Tightened thumbnail text', result: 'CTR +0.7 pts' },
+              { wk: 'Apr 7', action: 'Leaned into the series', result: '+124 subscribers' },
+            ].map((w, i) => (
+              <div key={i} style={{ background: '#fff', padding: isMobile ? '20px 22px' : '22px 24px', display: 'flex', flexDirection: 'column', gap: 11 }}>
+                <span style={{ fontFamily: ED_SANS, fontSize: 10.5, fontWeight: 700, color: ED_MUTED, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Week of {w.wk}</span>
+                <span style={{ fontFamily: ED_SANS, fontSize: 14.5, fontWeight: 500, color: ED_INK, lineHeight: 1.4, flex: 1 }}>{w.action}</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT }}>
+                  <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 8V2M2.5 4.5 5 2l2.5 2.5" /></svg>
+                  {w.result}
+                </span>
+              </div>
             ))}
           </div>
         </div>
@@ -1812,26 +1311,56 @@ export default function Landing() {
       {/* ── TESTIMONIALS. Renders only when reviews.json has 3+ entries ── */}
       <Testimonials isMobile={isMobile} />
 
-      {/* ── FOUNDER PRICING BAND ─────────────────────────────────────────── */}
-      <FounderPricingBand isMobile={isMobile} />
+      {/* ── LATEST FROM THE BLOG. Real posts, blog order ────────────────── */}
+      <div className="section-animate" style={{ background: '#f6f4ef', borderTop: '1px solid ' + ED_LINE, borderBottom: '1px solid ' + ED_LINE, padding: isMobile ? '64px 24px' : '96px 48px' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 20, marginBottom: isMobile ? 32 : 44, flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+                <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>From the blog</span>
+              </div>
+              <h2 style={{ fontFamily: ED_SERIF, fontWeight: 300, fontSize: 'clamp(30px, 3.6vw, 44px)', letterSpacing: '-0.01em', color: ED_INK, lineHeight: 1.08, textWrap: 'balance' }}>Sharpen your edge <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>between uploads.</em></h2>
+            </div>
+            <a href="/blog" style={{ fontFamily: ED_SANS, fontSize: 13, fontWeight: 700, color: ED_INK, textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none', borderBottom: '2px solid ' + ED_ACCENT, paddingBottom: 3, whiteSpace: 'nowrap' }}>All articles →</a>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 24 : 28 }}>
+            {posts.slice(0, 3).map((p) => (
+              <a key={p.slug} href={`/blog/${p.slug}`} style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', background: '#fff', border: '1px solid ' + ED_LINE, overflow: 'hidden', transition: 'transform 0.18s, box-shadow 0.18s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 18px 40px rgba(20,19,15,0.12)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+              >
+                <div style={{ aspectRatio: '16 / 9', overflow: 'hidden', background: '#efe9df' }}>
+                  {p.cover && <img src={p.cover} alt={p.title} loading="lazy" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.currentTarget.style.display = 'none' }} />}
+                </div>
+                <div style={{ padding: isMobile ? '20px 22px 22px' : '22px 24px 24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontFamily: ED_SANS, fontSize: 10.5, fontWeight: 700, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.12em' }}>{p.category?.label}</span>
+                  <h3 style={{ fontFamily: ED_SERIF, fontSize: 21, fontWeight: 400, color: ED_INK, letterSpacing: '-0.3px', lineHeight: 1.18, margin: '10px 0' }}>{p.title}</h3>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 14, color: ED_SOFT, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 14 }}>{p.excerpt}</p>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 12, fontWeight: 500, color: ED_MUTED, marginTop: 'auto' }}>{formatPostDate(p.date)} · {p.readTime}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* ── PRICING ─────────────────────────────────────────────────────── */}
-      <div id="pricing" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '0%', left: '50%', transform: 'translateX(-50%)', width: 1000, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
+      <div id="pricing" style={{ background: '#f6f4ef', borderTop: '1px solid ' + ED_LINE, borderBottom: '1px solid ' + ED_LINE, padding: isMobile ? '64px 20px' : '96px 48px', position: 'relative', overflow: 'hidden', fontFamily: ED_SANS }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div className="section-animate" style={{ textAlign: 'center', marginBottom: 48 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
-              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Pricing</span>
+          <div className="section-animate" style={{ textAlign: 'center', marginBottom: 40 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+              <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Pricing</span>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>One good video idea <span style={{ color: 'var(--ytg-accent)' }}>pays for a year.</span></h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.72, maxWidth: 640, margin: '0 auto' }}>The best YouTube tools for creators in one suite. AI-powered analysis across 5 tools that finds what's working in your niche, then tells you how to do more of it.</p>
+            <h2 style={{ fontFamily: ED_SERIF, fontWeight: 300, fontSize: 'clamp(34px, 4.4vw, 54px)', letterSpacing: '-0.01em', color: ED_INK, lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>One good video idea <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>pays for a year.</em></h2>
+            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, maxWidth: 640, margin: '0 auto' }}>The best YouTube tools for creators in one suite. AI-powered analysis across 5 tools that finds what's working in your niche, then tells you how to do more of it.</p>
           </div>
 
           {/* Tab switcher */}
-          <div style={{ overflowX: isMobile ? 'auto' : 'visible', marginBottom: isMobile ? 32 : 52, display: 'flex', justifyContent: isMobile ? 'flex-start' : 'center', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', paddingLeft: isMobile ? 20 : 0 }}> {/* IMPROVED: paddingLeft on mobile to prevent first tab clip */}
-            <div style={{ display: 'inline-flex', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: 4, gap: 2, flexWrap: 'nowrap', flexShrink: 0, margin: isMobile ? '0 auto' : undefined }}>
+          <div style={{ overflowX: isMobile ? 'auto' : 'visible', marginBottom: isMobile ? 32 : 48, display: 'flex', justifyContent: isMobile ? 'flex-start' : 'center', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', paddingLeft: isMobile ? 20 : 0 }}>
+            <div style={{ display: 'inline-flex', background: '#efece4', border: '1px solid rgba(20,19,15,0.10)', borderRadius: 0, padding: 4, gap: 2, flexWrap: 'nowrap', flexShrink: 0, margin: isMobile ? '0 auto' : undefined }}>
               {[
                 ['subscription', 'Subscription'],
                 ['lifetime',     'Lifetime'],
@@ -1839,10 +1368,10 @@ export default function Landing() {
                 ['packs',        isMobile ? 'Packs' : 'Analysis Packs'],
               ].map(([val, label]) => (
                 <button key={val} onClick={() => setPricingTab(val)} style={{
-                  padding: '9px 18px', borderRadius: 100, border: 'none', cursor: 'pointer',
-                  fontFamily: "'Inter', system-ui, sans-serif", fontSize: isMobile ? 11 : 13, fontWeight: 600,
-                  background: pricingTab === val ? '#ff3b30' : 'transparent',
-                  color: pricingTab === val ? '#fff' : 'var(--ytg-text-3)',
+                  padding: '9px 18px', borderRadius: 0, border: 'none', cursor: 'pointer',
+                  fontFamily: ED_SANS, fontSize: isMobile ? 11 : 12.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em',
+                  background: pricingTab === val ? '#14130f' : 'transparent',
+                  color: pricingTab === val ? '#fff' : '#8a8378',
                   transition: 'all 0.2s', whiteSpace: 'nowrap',
                 }}>{label}</button>
               ))}
@@ -1855,7 +1384,7 @@ export default function Landing() {
               {/* Free. No toggle (no cycle to choose) */}
               <div className="ytg-pricing-card">
                 <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
-                <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
+                <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1, marginBottom: 4 }}>$0</p>
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>5 free analyses</p>
                 <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Full access to our best features, then upgrade</p>
                 {['Full channel audit (first one free)', '5 analyses to spend on the tools below', 'Outliers, find proven winning videos', 'Competitor Analysis (1 rival)', 'SEO Studio (full)'].map((f, i) => (
@@ -1875,13 +1404,13 @@ export default function Landing() {
                     <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo</p>
                     <CycleToggle value={cycle.solo} onChange={v => setCycle(c => ({ ...c, solo: v }))} />
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
-                      <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>{yr ? '$190' : '$19'}</p>
+                      <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>{yr ? '$190' : '$19'}</p>
                       <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
                     </div>
                     {yr ? (
                       <>
                         <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$15.83 / month equivalent</p>
-                        <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $38</p>
+                        <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You save $38</p>
                       </>
                     ) : (
                       <>
@@ -1902,20 +1431,19 @@ export default function Landing() {
                 const yr = cycle.growth === 'yearly'
                 return (
                   <div className="ytg-pricing-card-featured">
-                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                       <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth</p>
-                      <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', border: '1px solid var(--ytg-accent-border)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{yr ? 'Best value' : 'Most popular'}</span>
+                      <span style={{ fontFamily: ED_SANS, fontSize: 10, fontWeight: 700, color: '#fff', background: ED_ACCENT, padding: '4px 9px', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{yr ? 'Best value' : 'Most popular'}</span>
                     </div>
                     <CycleToggle value={cycle.growth} onChange={v => setCycle(c => ({ ...c, growth: v }))} />
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
-                      <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>{yr ? '$490' : '$49'}</p>
+                      <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>{yr ? '$490' : '$49'}</p>
                       <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
                     </div>
                     {yr ? (
                       <>
                         <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$40.83 / month equivalent</p>
-                        <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $98</p>
+                        <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You save $98</p>
                       </>
                     ) : (
                       <>
@@ -1939,13 +1467,13 @@ export default function Landing() {
                     <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency</p>
                     <CycleToggle value={cycle.agency} onChange={v => setCycle(c => ({ ...c, agency: v }))} />
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
-                      <p style={{ fontWeight: 800, fontSize: yr ? 38 : 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>{yr ? '$1,490' : '$149'}</p>
+                      <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: yr ? 38 : 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>{yr ? '$1,490' : '$149'}</p>
                       <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
                     </div>
                     {yr ? (
                       <>
                         <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$124.17 / month equivalent</p>
-                        <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $298</p>
+                        <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You save $298</p>
                       </>
                     ) : (
                       <>
@@ -1974,7 +1502,7 @@ export default function Landing() {
                   <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Solo</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$149</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$149</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~8 months of Solo</p>
@@ -1982,19 +1510,18 @@ export default function Landing() {
                   {['Full channel audit (up to 3 channels)', '20 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', 'One-time payment, no subscription'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <p style={{ fontSize: 12, color: '#ff3b30', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 12, color: ED_ACCENT, fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
                   <button onClick={() => openCheckout('solo_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
 
                 <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                     <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Growth</p>
-                    <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', border: '1px solid var(--ytg-accent-border)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Best deal</span>
+                    <span style={{ fontFamily: ED_SANS, fontSize: 10, fontWeight: 700, color: '#fff', background: ED_ACCENT, padding: '4px 9px', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Best deal</span>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$349</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$349</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~7 months of Growth</p>
@@ -2002,7 +1529,7 @@ export default function Landing() {
                   {['Full channel audit (up to 5 channels)', '50 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails', 'One-time payment, no subscription'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
-                  <p style={{ fontSize: 12, color: '#ff3b30', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 12, color: ED_ACCENT, fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
                   <button onClick={() => openCheckout('growth_lifetime')} className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
 
@@ -2010,7 +1537,7 @@ export default function Landing() {
                   <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Agency</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Manage your whole roster of channels, forever.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$897</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$897</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~6 months of Agency</p>
@@ -2018,7 +1545,7 @@ export default function Landing() {
                   {['Full channel audit (up to 10 channels, pooled)', '150 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 10 rivals)', 'Thumbnail IQ (maximum credits)', 'Weekly reports + priority support', 'One-time payment, no subscription'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <p style={{ fontSize: 12, color: '#ff3b30', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 12, color: ED_ACCENT, fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
                   <button onClick={() => openCheckout('agency_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
               </div>
@@ -2036,11 +1563,11 @@ export default function Landing() {
                   <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Solo</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$169</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$169</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Solo + 60 bonus analyses</p>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You're getting $190+ in value</p>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You're getting $190+ in value</p>
                   {['Full channel audit (up to 3 channels)', '20 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', '+60 bonus analyses, on us. Never expire'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
@@ -2048,18 +1575,17 @@ export default function Landing() {
                 </div>
 
                 <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                     <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Growth</p>
-                    <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', border: '1px solid var(--ytg-accent-border)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Most popular</span>
+                    <span style={{ fontFamily: ED_SANS, fontSize: 10, fontWeight: 700, color: '#fff', background: ED_ACCENT, padding: '4px 9px', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Most popular</span>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$389</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$389</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Growth + 75 bonus analyses</p>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You're getting $490+ in value</p>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You're getting $490+ in value</p>
                   {['Full channel audit (up to 5 channels)', '50 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer + Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails', '+75 bonus analyses, on us. Never expire'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
@@ -2070,11 +1596,11 @@ export default function Landing() {
                   <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Agency</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow your whole roster, start with ammo loaded.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$949</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$949</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Agency + 150 bonus analyses</p>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You're getting $1,100+ in value</p>
+                  <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You're getting $1,100+ in value</p>
                   {['Full channel audit (up to 10 channels, pooled)', '150 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer + Video Ideas', 'Competitor Analysis (up to 10 rivals)', 'Thumbnail IQ (maximum credits)', 'Weekly reports + priority support', '+150 bonus analyses, on us. Never expire'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
@@ -2095,7 +1621,7 @@ export default function Landing() {
                   <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Quick Boost</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>A top-up when you run low mid-sprint.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$15</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$15</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>20 AI analyses</p>
@@ -2107,14 +1633,13 @@ export default function Landing() {
                 </div>
 
                 <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                     <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Power Pack</p>
-                    <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', border: '1px solid var(--ytg-accent-border)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Most popular</span>
+                    <span style={{ fontFamily: ED_SANS, fontSize: 10, fontWeight: 700, color: '#fff', background: ED_ACCENT, padding: '4px 9px', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Most popular</span>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Two solid months of deep dives.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$42</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$42</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>60 AI analyses</p>
@@ -2129,7 +1654,7 @@ export default function Landing() {
                   <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Full Arsenal</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Go deep. Analyse everything. Leave nothing unturned.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$99</p>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$99</p>
                     <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>150 AI analyses</p>
@@ -2150,25 +1675,24 @@ export default function Landing() {
       </div>
 
       {/* ── FAQ ─────────────────────────────────────────────────────────── */}
-      <div id="faq" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
+      <div id="faq" style={{ background: '#ffffff', borderTop: '1px solid ' + ED_LINE, borderBottom: '1px solid ' + ED_LINE, padding: isMobile ? '64px 20px' : '96px 48px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '340px 1fr', gap: isMobile ? 40 : 88, alignItems: 'start' }}>
           {/* Header column */}
-          <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
-              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Frequently asked</span>
+          <div style={{ textAlign: isMobile ? 'center' : 'left', position: isMobile ? 'static' : 'sticky', top: 100 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 18, justifyContent: isMobile ? 'center' : 'flex-start' }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
+              <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Frequently asked</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
-              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
+            <h2 style={{ fontFamily: ED_SERIF, fontWeight: 300, fontSize: 'clamp(34px, 4.4vw, 54px)', letterSpacing: '-0.01em', color: ED_INK, lineHeight: 1.06, marginBottom: 14, textWrap: 'balance' }}>
+              Questions <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>answered.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
-              Everything you want to know before you decide. Still unsure? <a href="/contact" style={{ color: 'var(--ytg-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
+            <p style={{ fontFamily: ED_SANS, fontSize: 15, color: ED_SOFT, lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
+              Everything you want to know before you decide. Still unsure? <a href="/contact" style={{ color: ED_ACCENT, fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
             </p>
           </div>
 
           {/* FAQ list */}
-          <div style={{ borderTop: '1px solid rgba(10,10,15,0.10)' }}>
+          <div style={{ borderTop: '1px solid ' + ED_LINE }}>
             {[
               { q: 'Is YTGrowth worth it when my channel is under 1,000 subscribers?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision. Right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
               { q: 'What happens when I run out of AI analyses before my month resets?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
@@ -2182,9 +1706,9 @@ export default function Landing() {
               const isOpen = openFaq === i
               const num = String(i + 1).padStart(2, '0')
               return (
-                <div key={i} style={{ borderBottom: '1px solid rgba(10,10,15,0.10)', position: 'relative' }}>
+                <div key={i} style={{ borderBottom: '1px solid ' + ED_LINE, position: 'relative' }}>
                   {isOpen && (
-                    <div aria-hidden="true" style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 2, background: 'var(--ytg-accent)', borderRadius: 2 }} />
+                    <div aria-hidden="true" style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 2, background: ED_ACCENT }} />
                   )}
                   <div
                     onClick={() => setOpenFaq(isOpen ? null : i)}
@@ -2194,8 +1718,8 @@ export default function Landing() {
                     style={{
                       display: 'flex',
                       alignItems: 'flex-start',
-                      gap: isMobile ? 14 : 20,
-                      padding: isMobile ? '20px 0' : '24px 0',
+                      gap: isMobile ? 14 : 18,
+                      padding: isMobile ? '20px 0' : '22px 0',
                       paddingLeft: isOpen ? (isMobile ? 16 : 22) : 0,
                       cursor: 'pointer',
                       transition: 'padding-left 0.25s ease',
@@ -2203,42 +1727,35 @@ export default function Landing() {
                     }}
                   >
                     <span style={{
-                      fontSize: isMobile ? 12 : 13,
-                      fontWeight: 700,
-                      color: isOpen ? 'var(--ytg-accent)' : 'var(--ytg-text-3)',
+                      fontFamily: ED_SANS,
+                      fontSize: 12, fontWeight: 700,
+                      color: isOpen ? ED_ACCENT : ED_MUTED,
                       fontVariantNumeric: 'tabular-nums',
-                      lineHeight: 1.5,
-                      flexShrink: 0,
+                      lineHeight: 1.6, flexShrink: 0,
                       width: isMobile ? 22 : 28,
-                      paddingTop: 2,
+                      paddingTop: isMobile ? 3 : 4,
                       transition: 'color 0.2s',
                     }}>{num}</span>
                     <span style={{
                       flex: 1,
-                      fontSize: isMobile ? 15 : 16,
-                      fontWeight: 600,
-                      color: 'var(--ytg-text)',
-                      lineHeight: 1.45,
-                      letterSpacing: '-0.2px',
+                      fontFamily: ED_SERIF,
+                      fontSize: isMobile ? 18 : 20, fontWeight: 400,
+                      color: isOpen ? ED_ACCENT : ED_INK,
+                      lineHeight: 1.3, letterSpacing: '-0.2px',
+                      transition: 'color 0.2s',
                     }}>{item.q}</span>
                     <span aria-hidden="true" style={{
-                      width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.05)',
-                      border: `1px solid ${isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.10)'}`,
-                      transition: 'background 0.2s, border-color 0.2s',
-                      marginTop: 1,
-                    }}>
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M1 5h8" stroke={isOpen ? '#ffffff' : 'var(--ytg-text-2)'} strokeWidth="1.8" strokeLinecap="round" />
-                        {!isOpen && <path d="M5 1v8" stroke="var(--ytg-text-2)" strokeWidth="1.8" strokeLinecap="round" />}
-                      </svg>
-                    </span>
+                      flexShrink: 0, fontFamily: ED_SANS,
+                      fontSize: 26, fontWeight: 300, color: ED_ACCENT, lineHeight: 1,
+                      marginTop: isMobile ? 1 : 3,
+                      transform: isOpen ? 'rotate(45deg)' : 'none',
+                      transition: 'transform 0.2s',
+                    }}>+</span>
                   </div>
                   <div className={`ytg-faq-answer${isOpen ? ' open' : ''}`}>
                     <div className="ytg-faq-answer-inner">
-                      <div style={{ paddingLeft: isMobile ? 36 : 48, paddingRight: isMobile ? 40 : 48, paddingBottom: isMobile ? 22 : 26, paddingTop: 0 }}>
-                        <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, margin: 0 }}>{item.a}</p>
+                      <div style={{ paddingLeft: isMobile ? 36 : 46, paddingRight: isMobile ? 20 : 40, paddingBottom: isMobile ? 22 : 26, paddingTop: 0 }}>
+                        <p style={{ fontFamily: ED_SANS, fontSize: isMobile ? 14.5 : 15, color: ED_SOFT, lineHeight: 1.75, margin: 0 }}>{item.a}</p>
                       </div>
                     </div>
                   </div>
@@ -2246,35 +1763,6 @@ export default function Landing() {
               )
             })}
           </div>
-        </div>
-      </div>
-
-      {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
-      {/* Lifted dark (distinct from the near-black footer below) so the CTA
-          reads as its own band instead of merging into the footer. */}
-      <div style={{ background: '#191922', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: isMobile ? '38%' : '42%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: isMobile ? 600 : 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.20) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20 }}>
-            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Get started</span>
-          </div>
-          <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 40 : 60, letterSpacing: isMobile ? '-1.4px' : '-2.2px', color: '#ffffff', marginBottom: 18, lineHeight: 1.04, textWrap: 'balance' }}>
-            Stop making videos<br />
-            <span style={{ color: '#ff3b30' }}>nobody finds.</span>
-          </h2>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.55)', lineHeight: 1.72, maxWidth: 620, margin: '0 auto 40px' }}>
-            Start free. Run your first AI analysis on the house. See exactly what's holding your channel back.
-          </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center' }}>
-            <a href="/auth/login" className="ytg-btn-primary">
-              Start free <Arrow />
-            </a>
-            <button onClick={() => { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); setPricingTab('lifetime') }} className="ytg-btn-ghost" style={{ background: 'rgba(255,255,255,0.06)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.14)', boxShadow: 'none' }}>
-              View lifetime deals
-            </button>
-          </div>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 18 }}>No credit card · Lifetime deals capped at 500.</p>
         </div>
       </div>
 

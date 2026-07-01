@@ -96,7 +96,7 @@ export function fmtDuration(seconds) {
 }
 
 /* YouTube serves 3 thumbnail sizes per video. We use the highest one that
-   actually exists on a given video:
+   exists on a given video:
      1. maxresdefault.jpg , 1280x720. Only present if the uploader gave YouTube
                              an HD master; missing on many older or low-quality
                              uploads.

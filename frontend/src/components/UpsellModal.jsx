@@ -2,7 +2,7 @@
    Same visual DNA as the page-takeover version (lock icon, title,
    description, bullets, teaser, CTA, trust stack), just floating over
    the existing page so users see the feature UI first and only meet
-   the gate when they actually click Run. */
+   the gate when they click Run. */
 
 import { useEffect } from 'react'
 import UpsellGate from './UpsellGate'

@@ -1832,7 +1832,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
 
                     {/* Visual signal row, 3 most-recent videos as real
                          thumbnails. Show, not tell. Renders only when we
-                         actually have video data on the analysis. */}
+                         have video data on the analysis. */}
                     {(() => {
                       const vids = Array.isArray(comp.top_5_videos) ? comp.top_5_videos.slice(0, 3) : []
                       if (vids.length === 0) return null

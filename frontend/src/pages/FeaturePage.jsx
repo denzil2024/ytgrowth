@@ -310,7 +310,7 @@ export default function FeaturePage({
           <div style={{ maxWidth: 1160, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 52 }}>
               <span className="ftr-section-label">How it works</span>
-              <h2 className="ftr-h2" style={{ fontSize: isMobile ? 28 : 38 }}>Up and running in under 5 minutes</h2>
+              <h2 className="ftr-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)' }}>Up and running in under 5 minutes</h2>
             </div>
             <div className="ftr-grid-3">
               {howItWorks.map((step, i) => (
@@ -331,7 +331,7 @@ export default function FeaturePage({
           <div style={{ maxWidth: 920, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 44 }}>
               <span className="ftr-section-label">What you get</span>
-              <h2 className="ftr-h2" style={{ fontSize: isMobile ? 28 : 38 }}>Everything in one place</h2>
+              <h2 className="ftr-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)' }}>Everything in one place</h2>
             </div>
             <div style={{ background: 'var(--ytg-card)', borderRadius: 20, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: isMobile ? '28px 24px' : '40px 48px' }}>
               {whatYouGet.map((item, i) => (
@@ -354,7 +354,7 @@ export default function FeaturePage({
           <div style={{ maxWidth: 1160, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 44 }}>
               <span className="ftr-section-label">Who it's for</span>
-              <h2 className="ftr-h2" style={{ fontSize: isMobile ? 28 : 38 }}>Built for serious creators</h2>
+              <h2 className="ftr-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)' }}>Built for serious creators</h2>
             </div>
             <div className="ftr-grid-3">
               {whoItsFor.map((p, i) => (

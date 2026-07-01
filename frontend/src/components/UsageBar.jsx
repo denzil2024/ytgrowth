@@ -155,7 +155,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
 
   /* ── Alert mode. Only when near/at limit with no pack fallback, i.e.
         exactly when the space and the CTA are earned. A soft tinted card
-        (amber draining, red empty) that actually draws the eye, with the
+        (amber draining, red empty) that draws the eye, with the
         shout removed: no glow drop-shadow on Upgrade. ─────────────────── */
   const alertBg  = atLimit ? 'rgba(229,37,27,0.05)'  : 'rgba(217,119,6,0.06)'
   const alertBdr = atLimit ? 'rgba(229,37,27,0.18)'  : 'rgba(217,119,6,0.20)'

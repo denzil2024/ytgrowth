@@ -3,14 +3,17 @@ import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import { injectFaqJsonLd } from '../../utils/seo'
 
-/* Channel Audit. Fully custom landing page.
- *
- * Built around the *actual* product (see app/insights.py): an AI audit
- * powered by Claude Sonnet 4.6 over 8 weighted scoring categories +
- * 2 informational ones, with priority actions structured as
- * problem / why-now / action / expected-outcome. Background rhythm
- * mirrors Landing.jsx (white → dark → light → dark → light → white).
- */
+/* Channel Audit feature page. Migrated to the editorial design language
+   (Fraunces + Barlow, sharp flat cards, warm paper, restrained red). The old
+   white→dark→light rhythm is now predominantly warm paper; the product
+   visuals (score ring, sample priority-action card) are kept as distinct
+   focal panes. Foreign blue/green tints are neutralised to ink/accent
+   (see feedback_no_red_icons / no green-blue), data icons are neutral ink,
+   and the bottom CTA band was removed (feedback_no_dark_cta_band). ALL copy
+   and product detail are preserved. See project_design_language_editorial. */
+
+const SERIF = "'Fraunces', Georgia, serif"
+const SANS  = "'Barlow', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -25,129 +28,68 @@ function useBreakpoint() {
 function useStyles() {
   useEffect(() => {
     if (document.getElementById('ca-styles')) return
-
     const style = document.createElement('style')
     style.id = 'ca-styles'
     style.textContent = `
       :root {
-        --ytg-bg:           #f4f4f6;
-        --ytg-bg-2:         #ecedf1;
-        --ytg-bg-3:         #e6e7ec;
-        --ytg-text:         #0a0a0f;
-        --ytg-text-2:       rgba(10,10,15,0.62);
-        --ytg-text-3:       rgba(10,10,15,0.40);
-        --ytg-text-4:       rgba(10,10,15,0.30);
-        --ytg-nav:          rgba(244,244,246,0.92);
-        --ytg-card:         #ffffff;
-        --ytg-border:       rgba(10,10,15,0.09);
-        --ytg-accent:       #e5302a;
-        --ytg-accent-text:  #c22b25;
-        --ytg-accent-light: rgba(229,48,42,0.07);
-        --ytg-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
-        --ytg-shadow:       0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.11);
-        --ytg-shadow-lg:    0 4px 16px rgba(0,0,0,0.11), 0 24px 60px rgba(0,0,0,0.14);
-        --ytg-shadow-xl:    0 8px 28px rgba(0,0,0,0.13), 0 40px 100px rgba(0,0,0,0.17);
+        --yte-bg: #f6f4ef; --yte-bg-2: #efece4; --yte-surface: #ffffff;
+        --yte-ink: #14130f; --yte-soft: #5c574e; --yte-muted: #8a8378;
+        --yte-line: rgba(20,19,15,0.12); --yte-line-2: rgba(20,19,15,0.22);
+        --yte-accent: #e5302a; --yte-accent-soft: rgba(229,48,42,0.07); --yte-dark: #0d0d12;
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
-      ::-webkit-scrollbar { width: 12px; height: 12px }
-      ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb {
-        background-color: rgba(10,10,15,0.28);
-        border-radius: 10px;
-        border: 3px solid transparent;
-        background-clip: content-box;
-      }
-      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }@keyframes fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+      html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+      body { background: var(--yte-bg); color: var(--yte-ink); font-family: ${SANS}; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+      @keyframes caFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
 
-      .ca-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-accent); color: #fff; font-size: 15px; font-weight: 700; padding: 15px 30px; border-radius: 100px; border: none; cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(229,48,42,0.34); transition: filter 0.18s, transform 0.18s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
-      .ca-btn:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.16), 0 12px 36px rgba(229,48,42,0.42); }
-      .ca-btn-lg { font-size: 16px; padding: 17px 38px; }
-      .ca-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-card); color: var(--ytg-text-2); font-size: 15px; font-weight: 600; padding: 14px 26px; border-radius: 100px; border: 1px solid var(--ytg-border); cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: var(--ytg-shadow-sm); transition: color 0.15s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
-      .ca-btn-ghost:hover { color: var(--ytg-text); box-shadow: var(--ytg-shadow); }
+      .ca-wrap { max-width: 1120px; margin: 0 auto; }
+      .ca-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+      .ca-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
+      .ca-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
+      .ca-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.05; }
+      .ca-h1 em { font-style: italic; color: var(--yte-accent); }
+      .ca-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
+      .ca-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ca-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
-      .ca-eyebrow {
-        display: inline-flex; align-items: center; gap: 8px;
-        font-size: 11px; font-weight: 700;
-        letter-spacing: 0.08em; text-transform: uppercase;
-        padding: 5px 13px; border-radius: 100px; margin-bottom: 16px;
-      }
-      .ca-eyebrow.light { color: var(--ytg-accent-text); background: var(--ytg-accent-light); }
-      .ca-eyebrow.dark  { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
+      .ca-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 30px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
+      .ca-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+      .ca-btn-lg { font-size: 13px; padding: 17px 36px; }
+      .ca-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 28px; border-radius: 0; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yte-soft); text-decoration: none; background: var(--yte-surface); border: 1px solid var(--yte-line); transition: color 0.15s, border-color 0.15s; }
+      .ca-ghost:hover { color: var(--yte-ink); border-color: var(--yte-line-2); }
 
-      .ca-h1 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -2px; line-height: 1.05; text-wrap: balance; }
-      .ca-h2 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -1.4px; line-height: 1.08; text-wrap: balance; }
+      .ca-card { background: var(--yte-surface); border: 1px solid var(--yte-line); }
 
-      .ca-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
-      .ca-nav-link:hover { color: var(--ytg-text-2); }
-
-      .ca-faq-item { border-bottom: 1px solid var(--ytg-border); }
-      .ca-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: inherit; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; font-size: 16.5px; font-weight: 700; color: var(--ytg-text); letter-spacing: -0.2px; line-height: 1.45; }
-      .ca-faq-q:hover { color: var(--ytg-accent); }
-      .ca-faq-icon { transition: transform 0.2s; flex-shrink: 0; color: var(--ytg-text-3); margin-top: 4px; }
-      .ca-faq-icon.open { transform: rotate(45deg); color: var(--ytg-accent); }
-      .ca-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; display: none; }
+      .ca-faq-item { border-bottom: 1px solid var(--yte-line); }
+      .ca-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${SERIF}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
+      .ca-faq-q:hover { color: var(--yte-accent); }
+      .ca-faq-q.open { color: var(--yte-accent); }
+      .ca-faq-plus { flex-shrink: 0; font-family: ${SANS}; font-size: 26px; font-weight: 300; color: var(--yte-accent); line-height: 1; transition: transform 0.2s; }
+      .ca-faq-plus.open { transform: rotate(45deg); }
+      .ca-faq-a { font-family: ${SANS}; font-size: 15.5px; color: var(--yte-soft); line-height: 1.78; padding: 0 0 24px 0; max-width: 720px; display: none; }
       .ca-faq-a.open { display: block; }
 
       @media (max-width: 900px) {
-        .ca-grid-2 { grid-template-columns: 1fr !important; gap: 32px !important; }
+        .ca-grid-2 { grid-template-columns: 1fr !important; gap: 36px !important; }
         .ca-grid-3 { grid-template-columns: 1fr !important; }
         .ca-grid-4 { grid-template-columns: 1fr 1fr !important; }
       }
       @media (max-width: 600px) {
         .ca-grid-4 { grid-template-columns: 1fr !important; }
       }
+      @media (max-width: 768px) {
+        .ca-section-pad { padding-left: 22px !important; padding-right: 22px !important; }
+      }
     `
     document.head.appendChild(style)
   }, [])
 }
 
-function Logo({ size = 28 }) {
+function Eyebrow({ children, center }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
-      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
-    </svg>
-  )
-}
-
-const FEATURE_NAV = [
-  { href: '/features/channel-audit',       label: 'Channel Audit',       desc: '10-category AI audit of your channel' },
-  { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
-  { href: '/features/seo-studio',          label: 'SEO Studio',          desc: 'Score + rewrite titles and descriptions' },
-  { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
-  { href: '/features/keyword-research',    label: 'Keyword Research',    desc: 'YouTube-native search volume + difficulty' },
-  { href: '/features/outliers',            label: 'Outliers',            desc: 'Find viral videos and breakout channels' },
-]
-
-function FeaturesDropdown() {
-  const [open, setOpen] = useState(false)
-  return (
-    <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} style={{ position: 'relative' }}>
-      <a href="/#features" className="ca-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
-        Features
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
-          <path d="M2 3.5l3 3 3-3"/>
-        </svg>
-      </a>
-      {open && (
-        <>
-          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
-          <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: -20, zIndex: 200, background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14, boxShadow: 'var(--ytg-shadow-lg)', padding: 8, minWidth: 340, animation: 'fadeUp 0.16s ease both' }}>
-            {FEATURE_NAV.map((item, i) => (
-              <a key={i} href={item.href} style={{ display: 'block', padding: '11px 14px', borderRadius: 9, textDecoration: 'none', transition: 'background 0.12s' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
-                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-2)', lineHeight: 1.45 }}>{item.desc}</p>
-              </a>
-            ))}
-          </div>
-        </>
-      )}
+    <div className="ca-eyebrow" style={center ? { justifyContent: 'center' } : undefined}>
+      <span aria-hidden="true" className="ca-eyebrow-rule" />
+      <span className="ca-eyebrow-text">{children}</span>
     </div>
   )
 }
@@ -156,82 +98,80 @@ function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="ca-faq-item">
-      <button className="ca-faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
+      <button className={`ca-faq-q${open ? ' open' : ''}`} onClick={() => setOpen(o => !o)} aria-expanded={open}>
         <span style={{ flex: 1 }}>{q}</span>
-        <span className={`ca-faq-icon${open ? ' open' : ''}`}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><path d="M8 2v12M2 8h12"/></svg>
-        </span>
+        <span aria-hidden="true" className={`ca-faq-plus${open ? ' open' : ''}`}>+</span>
       </button>
       <div className={`ca-faq-a${open ? ' open' : ''}`}>{a}</div>
     </div>
   )
 }
 
-/* ── Visual: Score ring + AI assessment (dark) ─────────────────────────── */
+/* ── Visual: Score ring + AI assessment (dark focal pane) ──────────────── */
 function ScoreVisual() {
   const score = 67
   const circumference = 2 * Math.PI * 50
   const offset = circumference - (score / 100) * circumference
   return (
-    <div style={{ background: '#111114', borderRadius: 22, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 32, display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap' }}>
+    <div style={{ background: 'var(--yte-ink)', padding: 32, display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap' }}>
       {/* Score ring */}
       <div style={{ flexShrink: 0, position: 'relative', width: 140, height: 140 }}>
         <svg width="140" height="140" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="9" />
-          <circle cx="60" cy="60" r="50" fill="none" stroke="#60a5fa" strokeWidth="9" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 60 60)" />
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="9" />
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.92)" strokeWidth="9" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 60 60)" />
         </svg>
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 44, fontWeight: 800, color: '#fff', letterSpacing: '-1.5px', lineHeight: 1 }}>{score}</span>
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>/ 100</span>
+          <span style={{ fontFamily: SERIF, fontSize: 46, fontWeight: 400, color: '#fff', letterSpacing: '-1px', lineHeight: 1 }}>{score}</span>
+          <span style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>/ 100</span>
         </div>
       </div>
-      <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(255,255,255,0.08)' }} />
+      <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(255,255,255,0.1)' }} />
       {/* AI assessment */}
       <div style={{ flex: 1, minWidth: 220 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>AI assessment · Sample</p>
-        <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,0.88)', lineHeight: 1.78 }}>
-          Your channel is publishing consistently and your last 5 videos hold retention above 50%, but Browse + Suggested traffic combined sits at 31%. YouTube isn’t pushing you. The bottleneck is packaging, not content. Fixing thumbnail contrast on your next 3 uploads should move CTR from 3.4% to ~5%.
+        <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 10 }}>AI assessment · Sample</p>
+        <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'rgba(255,255,255,0.85)', lineHeight: 1.78 }}>
+          Your channel is publishing consistently and your last 5 videos hold retention above 50%, but Browse + Suggested traffic combined sits at 31%. YouTube isn't pushing you. The bottleneck is packaging, not content. Fixing thumbnail contrast on your next 3 uploads should move CTR from 3.4% to ~5%.
         </p>
-        <p style={{ fontSize: 11, fontWeight: 600, color: '#60a5fa', marginTop: 14, letterSpacing: '0.04em' }}>▲ +6 from last audit · 9 priority actions</p>
+        <p style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 600, color: '#e6b35c', marginTop: 14, letterSpacing: '0.04em' }}>▲ +6 from last audit · 9 priority actions</p>
       </div>
     </div>
   )
 }
 
-/* ── Visual: Sample priority action card (dark) ────────────────────────── */
+/* ── Visual: Sample priority action card (light, sharp) ────────────────── */
 function PriorityActionVisual() {
   return (
-    <div style={{ background: '#ffffff', borderRadius: 16, borderTop: '3px solid #ff3b30', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: '20px 24px 24px' }}>
+    <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', borderTop: '3px solid var(--yte-accent)', padding: '20px 24px 24px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
-          <input type="checkbox" readOnly style={{ width: 15, height: 15, accentColor: '#16a34a' }} />
-          <div style={{ width: 26, height: 26, borderRadius: 8, background: '#ff3b30', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff' }}>1</span>
+          <input type="checkbox" readOnly style={{ width: 15, height: 15, accentColor: '#14130f' }} />
+          <div style={{ width: 26, height: 26, background: 'var(--yte-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 700, color: '#fff' }}>1</span>
           </div>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: '#ff3b30', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>CTR Health</p>
-          <p style={{ fontSize: 14.5, fontWeight: 700, color: '#0a0a0f', lineHeight: 1.55 }}>
-            Browse + Suggested traffic at 31%, well below the 40% threshold for healthy algo push. Your packaging (titles + thumbnails) isn’t earning impressions.
+          <p style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>CTR Health</p>
+          <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 600, color: 'var(--yte-ink)', lineHeight: 1.5 }}>
+            Browse + Suggested traffic at 31%, well below the 40% threshold for healthy algo push. Your packaging (titles + thumbnails) isn't earning impressions.
           </p>
         </div>
-        <span style={{ fontSize: 10, fontWeight: 700, color: '#ff3b30', padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: '1.5px solid #ff3b30', flexShrink: 0 }}>HIGH</span>
+        <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: 'var(--yte-accent)', padding: '3px 9px', letterSpacing: '0.08em', textTransform: 'uppercase', border: '1.5px solid var(--yte-accent)', flexShrink: 0 }}>HIGH</span>
       </div>
-      <div style={{ height: 1, background: 'rgba(10,10,15,0.09)', marginBottom: 14, marginLeft: 46 }} />
+      <div style={{ height: 1, background: 'var(--yte-line)', marginBottom: 14, marginLeft: 46 }} />
       {/* Body */}
       <div className="ca-grid-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
-        <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
-          <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.7 }}>If browse + suggested stays under 40% for another 30 days, the algorithm classifies your videos as “low-value” and stops surfacing them entirely.</p>
+        <div style={{ background: 'var(--yte-bg-2)', padding: '12px 14px' }}>
+          <p style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: 'var(--yte-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.6 }}>If browse + suggested stays under 40% for another 30 days, the algorithm classifies your videos as "low-value" and stops surfacing them entirely.</p>
         </div>
-        <div style={{ background: '#fff', border: '1px solid rgba(10,10,15,0.09)', borderLeft: '3px solid #ff3b30', borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: '#ff3b30', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
-          <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.7 }}>Re-do thumbnails on your last 3 uploads using high-contrast text (4.5:1 minimum) and a face occupying 35–50% of frame. Score each in Thumbnail IQ before applying.</p>
+        <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', borderLeft: '3px solid var(--yte-accent)', padding: '12px 16px' }}>
+          <p style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-ink)', lineHeight: 1.6 }}>Re-do thumbnails on your last 3 uploads using high-contrast text (4.5:1 minimum) and a face occupying 35–50% of frame. Score each in Thumbnail IQ before applying.</p>
         </div>
-        <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: '#16a34a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
-          <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.7 }}>CTR climbs from 3.4% to ~5%, browse share rises to 38–45% within 14–21 days as the algorithm re-tests your videos.</p>
+        <div style={{ background: 'var(--yte-bg-2)', padding: '12px 14px' }}>
+          <p style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: 'var(--yte-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.6 }}>CTR climbs from 3.4% to ~5%, browse share rises to 38–45% within 14–21 days as the algorithm re-tests your videos.</p>
         </div>
       </div>
     </div>
@@ -287,10 +227,10 @@ const ICON_PATHS = {
   eye:      'M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5zM8 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
 }
 
-function DataIcon({ name, color = '#e5302a' }) {
+function DataIcon({ name }) {
   return (
-    <div style={{ width: 38, height: 38, borderRadius: 10, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke={color} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+    <div style={{ width: 38, height: 38, background: 'rgba(20,19,15,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="var(--yte-ink)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
         <path d={ICON_PATHS[name]}/>
       </svg>
     </div>
@@ -318,7 +258,7 @@ const PLAN_LIMITS = [
 
 const FAQS = [
   {
-    q: 'How is the channel score actually calculated?',
+    q: 'How is the channel score calculated?',
     a: <>It’s a deterministic weighted formula across 8 categories. Not an AI guess. CTR Health and Audience Retention each count 20%, Content Strategy and Posting Consistency each count 15%, Engagement Quality and SEO Discoverability each count 10%, Video Length and Traffic Source Intelligence each count 5%. The same data always produces the same score, so improvements between audits are real and measurable. Audience Profile and Content Shareability are scored too but kept informational. They’re context for the actions, not part of the headline number.</>,
   },
   {
@@ -339,7 +279,7 @@ const FAQS = [
   },
   {
     q: 'Can I see what changed between audits?',
-    a: <>Yes. The score ring shows a delta arrow (▲ +6 from last audit) on the Overview tab once you’ve run more than one. Category scores get the same treatment, so you can see which areas actually improved versus which regressed. Priority actions you marked done stay tracked, so the next audit knows what you already worked on and prioritizes new bottlenecks instead of repeating fixes.</>,
+    a: <>Yes. The score ring shows a delta arrow (▲ +6 from last audit) on the Overview tab once you’ve run more than one. Category scores get the same treatment, so you can see which areas improved versus which regressed. Priority actions you marked done stay tracked, so the next audit knows what you already worked on and prioritizes new bottlenecks instead of repeating fixes.</>,
   },
   {
     q: 'Does the audit work for Shorts-only channels?',
@@ -365,42 +305,43 @@ export default function ChannelAudit() {
   useEffect(() => { injectFaqJsonLd(FAQS) }, [])
   const { isMobile } = useBreakpoint()
 
-  return (
-    <div style={{ background: 'var(--ytg-bg)', minHeight: '100vh' }}>
+  const H2 = isMobile ? 30 : 42
 
-      {/* ════ NAV - shared SiteHeader ════════════════════════════════════ */}
+  return (
+    <div style={{ background: 'var(--yte-bg)', minHeight: '100vh', fontFamily: SANS, color: 'var(--yte-ink)' }}>
+
+      {/* ════ NAV ════ */}
       <SiteHeader />
 
-      {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
-        <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
-          <span className="ca-eyebrow light">AI Channel Audit</span>
-          <h1 className="ca-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
-            10 categories. <span style={{ color: 'var(--ytg-accent)' }}>One ranked list of fixes.</span><br/>No more guessing.
+      {/* ════ 1. HERO ════ */}
+      <section className="ca-section-pad" style={{ padding: isMobile ? '60px 22px 48px' : '104px 48px 64px', background: 'var(--yte-bg)' }}>
+        <div className="ca-wrap" style={{ animation: 'caFadeUp 0.5s ease both' }}>
+          <Eyebrow>AI Channel Audit</Eyebrow>
+          <h1 className="ca-h1" style={{ fontSize: isMobile ? 34 : 56, marginBottom: 22, maxWidth: 880, textWrap: 'balance' }}>
+            10 categories. <em>One ranked list of fixes.</em> No more guessing.
           </h1>
-          <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 700, margin: '0 auto 36px' }}>
-            YTGrowth pulls your full YouTube data, runs it through an AI tuned on the signals YouTube’s recommendation engine actually rewards, and returns a prioritized list of fixes. Each with the specific problem, why it matters now, the exact action to take, and the metric you’ll see move.
+          <p className="ca-lead" style={{ fontSize: isMobile ? 16 : 17.5, maxWidth: 700, marginBottom: 32, textWrap: 'pretty' }}>
+            YTGrowth pulls your full YouTube data, runs it through an AI tuned on the signals YouTube’s recommendation engine rewards, and returns a prioritized list of fixes. Each with the specific problem, why it matters now, the exact action to take, and the metric you’ll see move.
           </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <a href="/auth/login" className="ca-btn ca-btn-lg">Audit my channel free →</a>
-            <a href="#how" className="ca-btn-ghost" style={{ padding: '15px 26px', fontSize: 15 }}>See how it works</a>
+            <a href="#how" className="ca-ghost">See how it works</a>
           </div>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginTop: 22 }}>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', marginTop: 22, letterSpacing: '0.03em' }}>
             Free trial · first audit free · no credit card · ~60 seconds per run
           </p>
         </div>
       </section>
 
-      {/* ════ 2. SCORE + ASSESSMENT. Dark, SPLIT layout (text L, visual R) ═ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div className="ca-grid-2" style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      {/* ════ 2. SCORE + ASSESSMENT (split) ════ */}
+      <section className="ca-section-pad" style={{ padding: isMobile ? '64px 22px' : '88px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="ca-grid-2 ca-wrap" style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 56, alignItems: 'center' }}>
           <div>
-            <span className="ca-eyebrow dark">What you get</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              A single weighted score, with the <span style={{ color: '#ff3b30' }}>actual reason it’s where it is.</span>
+            <Eyebrow>What you get</Eyebrow>
+            <h2 className="ca-h2" style={{ fontSize: H2, marginBottom: 18 }}>
+              A single weighted score, with the <em>actual reason it’s where it is.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
+            <p className="ca-lead" style={{ fontSize: 17, marginBottom: 24 }}>
               The deterministic formula means score changes between audits are real, not noise. The AI assessment paragraph is what most users read first. Plain English, naming the specific lever holding the channel back.
             </p>
             {[
@@ -409,73 +350,68 @@ export default function ChannelAudit() {
               'Eight scored categories, each colour-coded by health',
               'Updates instantly when you re-audit after shipping fixes',
             ].map((b, i) => (
-              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4ade80" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
-                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6 }}>{b}</span>
+              <div key={i} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', marginBottom: 11 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--yte-accent)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
+                <span style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.6 }}>{b}</span>
               </div>
             ))}
           </div>
-          <div>
-            <ScoreVisual />
-          </div>
+          <div><ScoreVisual /></div>
         </div>
       </section>
 
-      {/* ════ 3. THE 10 CATEGORIES. Light gray ═════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
-            <span className="ca-eyebrow light">The 10 categories</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 16 }}>
-              Every dimension of channel health, <span style={{ color: 'var(--ytg-accent)' }}>weighted by what YouTube actually rewards.</span>
+      {/* ════ 3. THE 10 CATEGORIES ════ */}
+      <section className="ca-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
+        <div className="ca-wrap">
+          <div style={{ maxWidth: 760, marginBottom: 44 }}>
+            <Eyebrow>The 10 categories</Eyebrow>
+            <h2 className="ca-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              Every dimension of channel health, <em>weighted by what YouTube rewards.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
+            <p className="ca-lead" style={{ fontSize: 17 }}>
               Eight categories carry weight in the headline score; two more (Audience Profile and Content Shareability) are scored for context but don’t inflate or deflate the number. Weights aren’t arbitrary. They reflect how heavily each lever moves the recommendation engine.
             </p>
           </div>
-          <div className="ca-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div className="ca-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {CATEGORIES.map((cat, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '20px 22px' }}>
+              <div key={i} style={{ background: 'var(--yte-surface)', padding: '22px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10, gap: 12 }}>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px' }}>{cat.name}</p>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: cat.weight === 'Info' ? 'var(--ytg-text-3)' : 'var(--ytg-accent)', background: cat.weight === 'Info' ? '#f1f1f6' : 'var(--ytg-accent-light)', border: '1px solid ' + (cat.weight === 'Info' ? 'var(--ytg-border)' : 'rgba(229,48,42,0.18)'), padding: '2px 10px', borderRadius: 100, letterSpacing: '0.04em', whiteSpace: 'nowrap' }}>
+                  <p style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px' }}>{cat.name}</p>
+                  <span style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap', color: cat.weight === 'Info' ? 'var(--yte-muted)' : 'var(--yte-accent)', background: cat.weight === 'Info' ? 'rgba(20,19,15,0.05)' : 'var(--yte-accent-soft)', padding: '3px 9px' }}>
                     {cat.weight === 'Info' ? 'Info only' : `Weight · ${cat.weight}`}
                   </span>
                 </div>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>{cat.what}</p>
+                <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{cat.what}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════ 4. PRIORITY ACTION ANATOMY. Dark, SPLIT (visual L, text R) ══ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div className="ca-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
-          {/* Visual on left */}
+      {/* ════ 4. PRIORITY ACTION ANATOMY (split) ════ */}
+      <section className="ca-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="ca-grid-2 ca-wrap" style={{ display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: 56, alignItems: 'center' }}>
           <div style={{ order: isMobile ? 1 : 0 }}>
             <PriorityActionVisual />
           </div>
-          {/* Text on right */}
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <span className="ca-eyebrow dark">Priority action anatomy</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              Every fix is structured like <span style={{ color: '#ff3b30' }}>a real diagnosis.</span>
+            <Eyebrow>Priority action anatomy</Eyebrow>
+            <h2 className="ca-h2" style={{ fontSize: H2, marginBottom: 18 }}>
+              Every fix is structured like <em>a real diagnosis.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 26 }}>
-              Each priority action has four parts. You don’t just learn what’s wrong. You learn why it matters now, exactly what to do, and what number to watch. Check them off as you ship; the next audit measures the delta against what you actually completed.
+            <p className="ca-lead" style={{ fontSize: 17, marginBottom: 26 }}>
+              Each priority action has four parts. You don’t just learn what’s wrong. You learn why it matters now, exactly what to do, and what number to watch. Check them off as you ship; the next audit measures the delta against what you completed.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
               {[
-                { label: 'Problem',          color: '#ff3b30', body: 'The specific issue, with a real number from your data.' },
-                { label: 'Why now',          color: '#4a7cf7', body: 'What breaks if you don’t fix it in the next 14–30 days.' },
-                { label: 'Action',           color: '#ffffff', body: 'The exact, do-able step. No vague advice.' },
-                { label: 'Expected outcome', color: '#4ade80', body: 'The metric that will move, and roughly by how much.' },
+                { label: 'Problem',          body: 'The specific issue, with a real number from your data.' },
+                { label: 'Why now',          body: 'What breaks if you don’t fix it in the next 14–30 days.' },
+                { label: 'Action',           body: 'The exact, do-able step. No vague advice.' },
+                { label: 'Expected outcome', body: 'The metric that will move, and roughly by how much.' },
               ].map((p, i) => (
-                <div key={i} style={{ borderLeft: `2px solid ${p.color}`, paddingLeft: 12 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: p.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
-                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: p.body }} />
+                <div key={i} style={{ borderLeft: '2px solid var(--yte-accent)', paddingLeft: 12 }}>
+                  <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.6 }}>{p.body}</p>
                 </div>
               ))}
             </div>
@@ -483,15 +419,13 @@ export default function ChannelAudit() {
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS. White, with arrow connectors ════════════ */}
-      <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
+      {/* ════ 5. HOW IT WORKS ════ */}
+      <section id="how" className="ca-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
-            <span className="ca-eyebrow light">How it works</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42 }}>
-              One audit, ~60 seconds, end-to-end
-            </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginTop: 14, maxWidth: 580, margin: '14px auto 0' }}>
+          <div style={{ maxWidth: 720, marginBottom: 44 }}>
+            <Eyebrow>How it works</Eyebrow>
+            <h2 className="ca-h2" style={{ fontSize: H2 }}>One audit, <em>~60 seconds, end-to-end.</em></h2>
+            <p className="ca-lead" style={{ fontSize: 17, marginTop: 14, maxWidth: 580 }}>
               Five stages from sign-in to ranked action list. Steps 2–4 run in parallel, so most users see the result within 60 seconds.
             </p>
           </div>
@@ -499,32 +433,21 @@ export default function ChannelAudit() {
             const steps = [
               { n: '01', t: 'Connect your channel', b: 'Sign in with the Google account that owns your YouTube channel. Read-only access via the official YouTube Data API. We never touch your videos, comments, or settings.' },
               { n: '02', t: 'Data pull begins',     b: 'Last 20 videos, 90 days of analytics, traffic sources, demographics, engagement signals. Pulled in parallel. Takes 15–25 seconds.' },
-              { n: '03', t: 'Algorithm signals',    b: 'We compute the metrics YouTube’s recommendation engine actually rewards. Browse %, session-keeper, audience-builder ratio, watch-time leader.' },
+              { n: '03', t: 'Algorithm signals',    b: 'We compute the metrics YouTube’s recommendation engine rewards. Browse %, session-keeper, audience-builder ratio, watch-time leader.' },
               { n: '04', t: 'AI runs the audit',    b: 'Claude Sonnet 4.6 reads the full data plus any stored competitor analyses and produces score, summary, and priority actions in ~30 seconds.' },
               { n: '05', t: 'You see the result',   b: 'Score ring + AI assessment, score breakdown across 8 weighted categories, priority actions you can check off as you ship them, plus quick wins.' },
             ]
             const Card = ({ s }) => (
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: 0, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{s.n}</span>
-                  </div>
-                </div>
-                <p style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 10, letterSpacing: '-0.2px' }}>{s.t}</p>
-                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: s.b }} />
+              <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.06em', marginBottom: 14 }}>{s.n}</div>
+                <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
+                <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{s.b}</p>
               </div>
             )
-            const Arrow = () => (
-              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: 26, height: 26, borderRadius: '50%', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', color: 'var(--ytg-accent)' }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2 6h8M7 3l3 3-3 3"/>
-                </svg>
-              </div>
-            )
-            const ArrowDown = () => (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: '50%', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', color: 'var(--ytg-accent)', margin: '8px auto' }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 2v8M3 7l3 3 3-3"/>
+            const Arrow = ({ down }) => (
+              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', color: 'var(--yte-muted)', margin: down ? '8px auto' : 0 }}>
+                <svg width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  {down ? <path d="M6 2v8M3 7l3 3 3-3"/> : <path d="M2 6h8M7 3l3 3-3 3"/>}
                 </svg>
               </div>
             )
@@ -534,14 +457,14 @@ export default function ChannelAudit() {
                   {steps.map((s, i) => (
                     <div key={i}>
                       <Card s={s} />
-                      {i < steps.length - 1 && <ArrowDown />}
+                      {i < steps.length - 1 && <Arrow down />}
                     </div>
                   ))}
                 </div>
               )
             }
             return (
-              <div style={{ display: 'flex', alignItems: 'stretch', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'stretch', gap: 10 }}>
                 {steps.flatMap((s, i) => {
                   const items = [<Card key={`c${i}`} s={s} />]
                   if (i < steps.length - 1) items.push(<Arrow key={`a${i}`} />)
@@ -553,156 +476,129 @@ export default function ChannelAudit() {
         </div>
       </section>
 
-      {/* ════ 6. ALGORITHM LEVERS. Dark ════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 44px' }}>
-            <span className="ca-eyebrow dark">Algorithm levers it surfaces</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
-              We pre-compute the metrics <span style={{ color: '#ff3b30' }}>YouTube’s recommendation engine actually weights.</span>
+      {/* ════ 6. ALGORITHM LEVERS ════ */}
+      <section className="ca-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ maxWidth: 760, marginBottom: 40 }}>
+            <Eyebrow>Algorithm levers it surfaces</Eyebrow>
+            <h2 className="ca-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              We pre-compute the metrics <em>YouTube’s recommendation engine weights.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
+            <p className="ca-lead" style={{ fontSize: 17 }}>
               Most YouTube tools score you on vanity metrics. Views, likes, subs. The algorithm doesn’t care about those directly. It cares about these four signals, in this order. The audit reads each one off your real data and builds priority actions specifically to move them.
             </p>
           </div>
-          <div className="ca-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div className="ca-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {ALGO_LEVERS.map((lever, i) => (
-              <div key={i} style={{ background: '#111114', borderRadius: 16, border: '1px solid rgba(255,255,255,0.09)', padding: '24px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div key={i} style={{ background: 'var(--yte-surface)', padding: '26px 28px', display: 'flex', flexDirection: 'column', gap: 13 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(229,48,42,0.12)', border: '1px solid rgba(229,48,42,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontSize: 13, fontWeight: 800, color: '#ff3b30', letterSpacing: 0, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{String(i + 1).padStart(2, '0')}</span>
-                  </div>
-                  <p style={{ fontSize: 17, fontWeight: 700, color: '#fff', letterSpacing: '-0.3px', lineHeight: 1.3, marginTop: 4 }}>{lever.name}</p>
+                  <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 700, color: 'var(--yte-accent)', marginTop: 5 }}>{String(i + 1).padStart(2, '0')}</span>
+                  <p style={{ fontFamily: SERIF, fontSize: 20, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.25 }}>{lever.name}</p>
                 </div>
-                <div style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 6, background: 'rgba(74,222,128,0.07)', border: '1px solid rgba(74,222,128,0.18)', borderRadius: 100, padding: '4px 11px' }}>
-                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80' }} />
-                  <span style={{ fontSize: 11.5, fontWeight: 600, color: '#4ade80', letterSpacing: '-0.05px' }}>{lever.benchmark}</span>
+                <div style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 7, background: 'rgba(20,19,15,0.05)', padding: '5px 11px' }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--yte-ink)' }} />
+                  <span style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 600, color: 'var(--yte-soft)' }}>{lever.benchmark}</span>
                 </div>
-                <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }} dangerouslySetInnerHTML={{ __html: lever.what }} />
+                <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{lever.what}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════ 7. WHAT DATA FEEDS IT. Light, 3-col icon grid ════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 44px' }}>
-            <span className="ca-eyebrow light">Full transparency</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 16 }}>
-              Exactly what we pull from your channel
+      {/* ════ 7. WHAT DATA FEEDS IT ════ */}
+      <section className="ca-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
+        <div className="ca-wrap">
+          <div style={{ maxWidth: 720, marginBottom: 40 }}>
+            <Eyebrow>Full transparency</Eyebrow>
+            <h2 className="ca-h2" style={{ fontSize: H2, marginBottom: 16 }}>
+              Exactly what we pull from your channel.
             </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
+            <p className="ca-lead" style={{ fontSize: 17 }}>
               Read-only access via the official YouTube Data API. Nine data sources feed every audit. We never write, edit, or store anything outside our analytics tables.
             </p>
           </div>
-          <div className="ca-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+          <div className="ca-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {DATA_INPUTS.map((d, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 16, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 22px 24px' }}>
+              <div key={i} style={{ background: 'var(--yte-surface)', padding: '22px 22px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
                   <DataIcon name={d.icon} />
-                  <p style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px' }}>{d.label}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.1px' }}>{d.label}</p>
                 </div>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: d.body }} />
+                <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{d.body}</p>
               </div>
             ))}
           </div>
-          <div style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '14px 22px', marginTop: 18, display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#16a34a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+          <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '14px 22px', marginTop: 12, display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--yte-ink)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
               <path d="M11 4.5v-1A2.5 2.5 0 0 0 8.5 1h-3A2.5 2.5 0 0 0 3 3.5v1M2 4.5h10v8H2zM7 7v3"/>
             </svg>
-            <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', letterSpacing: '-0.1px' }}>
-              <span style={{ fontWeight: 700, color: 'var(--ytg-text)' }}>Read-only OAuth scope.</span> Revoke access anytime from your Google account settings.
+            <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)' }}>
+              <span style={{ fontWeight: 600, color: 'var(--yte-ink)' }}>Read-only OAuth scope.</span> Revoke access anytime from your Google account settings.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS. Dark ═════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 44px' }}>
-            <span className="ca-eyebrow dark">By plan</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
-              Same audit. <span style={{ color: '#ff3b30' }}>More fixes per run as you scale.</span>
+      {/* ════ 8. PLAN LIMITS ════ */}
+      <section className="ca-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ maxWidth: 720, marginBottom: 40 }}>
+            <Eyebrow>By plan</Eyebrow>
+            <h2 className="ca-h2" style={{ fontSize: H2, marginBottom: 16, textWrap: 'balance' }}>
+              Same audit. <em>More fixes per run as you scale.</em>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
+            <p className="ca-lead" style={{ fontSize: 17 }}>
               Higher tiers don’t unlock different categories. Every plan reads the same 10 dimensions. They unlock more depth: more priority actions returned per audit, more audits per month, more channels under one account.
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 14 }}>
+          <div className="ca-grid-4" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 1, background: 'var(--yte-line)', border: '1px solid var(--yte-line)' }}>
             {PLAN_LIMITS.map((p, i) => {
               const isAccent = p.plan === 'Growth'
               return (
-                <div key={i} style={{
-                  background: isAccent ? '#1a1018' : '#111114',
-                  borderRadius: 16,
-                  border: isAccent ? '1px solid rgba(229,48,42,0.45)' : '1px solid rgba(255,255,255,0.09)',
-                  boxShadow: isAccent ? '0 8px 32px rgba(229,48,42,0.18)' : '0 2px 8px rgba(0,0,0,0.4)',
-                  padding: '24px 22px 22px',
-                  position: 'relative',
-                }}>
+                <div key={i} style={{ background: 'var(--yte-surface)', padding: '24px 22px 22px', position: 'relative', boxShadow: isAccent ? 'inset 0 2px 0 var(--yte-accent)' : 'none' }}>
                   {isAccent && (
-                    <span style={{ position: 'absolute', top: -10, right: 16, fontSize: 9, fontWeight: 800, color: '#fff', background: '#ff3b30', padding: '3px 10px', borderRadius: 100, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Most popular</span>
+                    <span style={{ position: 'absolute', top: 0, right: 16, fontFamily: SANS, fontSize: 9, fontWeight: 700, color: '#fff', background: 'var(--yte-accent)', padding: '3px 9px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Most popular</span>
                   )}
-                  <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
-                    <p style={{ fontSize: 38, fontWeight: 800, color: '#fff', letterSpacing: '-1.5px', lineHeight: 1 }}>{p.actions}</p>
-                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>priority actions</p>
+                    <p style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1 }}>{p.actions}</p>
+                    <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)' }}>priority actions</p>
                   </div>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 14 }}>per audit</p>
-                  <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 12 }} />
-                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55 }}>{p.note}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', marginBottom: 14 }}>per audit</p>
+                  <div style={{ height: 1, background: 'var(--yte-line)', marginBottom: 12 }} />
+                  <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-soft)', lineHeight: 1.55 }}>{p.note}</p>
                 </div>
               )
             })}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 22, flexWrap: 'wrap' }}>
-            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)' }}>Same scoring formula across all plans.</p>
-            <a href="/#pricing" style={{ fontSize: 12.5, color: '#ff3b30', textDecoration: 'none', fontWeight: 600 }}>See full pricing →</a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 18, flexWrap: 'wrap' }}>
+            <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)' }}>Same scoring formula across all plans.</p>
+            <a href="/#pricing" style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-accent)', textDecoration: 'none', fontWeight: 600 }}>See full pricing →</a>
           </div>
         </div>
       </section>
 
-      {/* ════ 9. FAQ. White ════════════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
-        <div className="ca-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
-          {/* Left: heading panel */}
+      {/* ════ 9. FAQ ════ */}
+      <section className="ca-section-pad" style={{ padding: isMobile ? '64px 22px 80px' : '104px 48px 120px', background: 'var(--yte-bg)' }}>
+        <div className="ca-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 64, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
-            <span className="ca-eyebrow light">FAQ</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 40, marginBottom: 16 }}>
-              Questions about the audit, answered honestly.
+            <Eyebrow>FAQ</Eyebrow>
+            <h2 className="ca-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 16, textWrap: 'balance' }}>
+              The audit, <em>answered honestly.</em>
             </h2>
-            <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Real answers from how the product actually behaves. Including the unflattering ones (when it won’t work, what it doesn’t do, where the limits are).
+            <p className="ca-lead" style={{ fontSize: 14.5 }}>
+              Real answers from how the product behaves. Including the unflattering ones (when it won’t work, what it doesn’t do, where the limits are).
             </p>
-            <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
+            <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
             </a>
           </div>
-          {/* Right: questions */}
-          <div>
+          <div style={{ borderTop: '1px solid var(--yte-line)' }}>
             {FAQS.map((item, i) => (
               <FaqItem key={i} q={item.q} a={item.a} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ════ 10. BOTTOM CTA. Light ════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-          <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 44, marginBottom: 16 }}>
-            See which lever your channel is missing
-          </h2>
-          <p style={{ fontSize: isMobile ? 15 : 17, color: 'var(--ytg-text-2)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
-            ~60 seconds end-to-end. Your first audit is free. No credit card. Most users find their #1 fix in the first 5 minutes of reading the result.
-          </p>
-          <a href="/auth/login" className="ca-btn ca-btn-lg">Audit my channel free →</a>
         </div>
       </section>
 

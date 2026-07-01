@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
@@ -7,7 +7,18 @@ import FaqSchema from '../../components/FaqSchema'
    /tools/youtube-thumbnail-tester. Zero YouTube-API cost: images are read in
    the browser with FileReader and never leave the device. Renders the user's
    own real thumbnails inside CSS mockups of real YouTube layouts (does not
-   generate fake images). Visual DNA mirrors the other tool pages. */
+   generate fake images).
+
+   Migrated to the editorial design language (Fraunces + Barlow, sharp flat
+   cards, warm paper, restrained red). ALL canvas analysis/scoring logic and
+   content are preserved verbatim; only the page chrome changed. The mock
+   YouTube tiles deliberately keep YouTube's own styling (Roboto, real greys)
+   so the thumbnail is shown in a realistic context. The context toggle and
+   pick buttons are quiet (active = ink, never red, see feedback_quiet_toggles).
+   See project_design_language_editorial. */
+
+const SERIF = "'Fraunces', Georgia, serif"
+const SANS  = "'Barlow', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -22,71 +33,59 @@ function useBreakpoint() {
 function useGlobalStyles() {
   useEffect(() => {
     if (document.getElementById('ytg-ab-styles')) return
-
     const style = document.createElement('style')
     style.id = 'ytg-ab-styles'
     style.textContent = `
       :root {
-        --ytg-bg:           #f4f4f6;
-        --ytg-bg-2:         #ecedf1;
-        --ytg-bg-3:         #e6e7ec;
-        --ytg-text:         #0a0a0f;
-        --ytg-text-2:       rgba(10,10,15,0.62);
-        --ytg-text-3:       rgba(10,10,15,0.40);
-        --ytg-card:         #ffffff;
-        --ytg-border:       rgba(10,10,15,0.09);
-        --ytg-border-2:     rgba(10,10,15,0.16);
-        --ytg-accent:       #e5302a;
-        --ytg-accent-text:  #c22b25;
-        --ytg-accent-light: rgba(229,48,42,0.07);
-        --ytg-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
-        --ytg-shadow:       0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.11);
-        --ytg-shadow-lg:    0 4px 16px rgba(0,0,0,0.11), 0 24px 60px rgba(0,0,0,0.14);
+        --yte-bg: #f6f4ef; --yte-bg-2: #efece4; --yte-surface: #ffffff;
+        --yte-ink: #14130f; --yte-soft: #5c574e; --yte-muted: #8a8378;
+        --yte-line: rgba(20,19,15,0.12); --yte-line-2: rgba(20,19,15,0.22);
+        --yte-accent: #e5302a; --yte-accent-soft: rgba(229,48,42,0.07); --yte-dark: #0d0d12;
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
-      ::-webkit-scrollbar { width: 12px; height: 12px }
-      ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb { background-color: rgba(10,10,15,0.28); border-radius: 10px; border: 3px solid transparent; background-clip: content-box; }
-      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }
-      @keyframes abFadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+      html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+      body { background: var(--yte-bg); color: var(--yte-ink); font-family: ${SANS}; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+      @keyframes abFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
 
-      .ab-btn {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: var(--ytg-accent); color: #fff;
-        font-size: 15px; font-weight: 700; font-family: 'Inter', system-ui, sans-serif;
-        padding: 14px 28px; border-radius: 100px; border: none;
-        cursor: pointer; text-decoration: none; letter-spacing: -0.2px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,48,42,0.32);
-        transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
-      }
-      .ab-btn:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,48,42,0.42); }
-      .ab-btn-lg { font-size: 16px; padding: 17px 36px; }
+      .ab-wrap { max-width: 1040px; margin: 0 auto; }
+      .ab-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+      .ab-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
+      .ab-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
+      .ab-h1 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; color: var(--yte-ink); }
+      .ab-h1 em { font-style: italic; color: var(--yte-accent); }
+      .ab-h2 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; color: var(--yte-ink); }
+      .ab-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ab-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
-      .ab-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid rgba(10,10,15,0.09); border-radius: 100px; padding: 5px 12px 5px 10px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(10,10,15,0.04); }
-      .ab-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ytg-accent); box-shadow: 0 0 0 3px rgba(229,48,42,0.12); }
-      .ab-eyebrow-text { font-size: 11px; font-weight: 700; color: var(--ytg-text-2); text-transform: uppercase; letter-spacing: 0.09em; }
+      /* Quiet view toggle. Active = ink, never red. */
+      .ab-seg { display: inline-flex; border: 1px solid var(--yte-line); background: var(--yte-surface); flex-wrap: wrap; }
+      .ab-seg button { font-family: ${SANS}; font-size: 13px; font-weight: 600; letter-spacing: 0.01em; color: var(--yte-muted); background: transparent; border: none; padding: 9px 18px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+      .ab-seg button + button { border-left: 1px solid var(--yte-line); }
+      .ab-seg button:hover { color: var(--yte-ink); }
+      .ab-seg button.active { background: var(--yte-ink); color: #fff; }
 
-      /* Quiet view toggle. Soft-grey active, never red. */
-      .ab-seg { display: inline-flex; background: var(--ytg-bg-3); border: 1px solid var(--ytg-border); border-radius: 12px; padding: 4px; gap: 4px; flex-wrap: wrap; }
-      .ab-seg button { font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: -0.1px; color: var(--ytg-text-2); background: transparent; border: none; padding: 8px 16px; border-radius: 9px; cursor: pointer; transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
-      .ab-seg button.active { background: var(--ytg-accent); color: #fff; box-shadow: 0 1px 3px rgba(229,48,42,0.28); }
-
-      .ab-title-input { width: 100%; font-family: 'Roboto', 'Inter', system-ui, sans-serif; border: none; background: transparent; outline: none; color: #0f0f0f; padding: 0; resize: none; }
+      /* Title input keeps YouTube's own typography (this is a mock tile). */
+      .ab-title-input { width: 100%; font-family: 'Roboto', 'Barlow', system-ui, sans-serif; border: none; background: transparent; outline: none; color: #0f0f0f; padding: 0; resize: none; }
       .ab-title-input:focus { background: rgba(10,10,15,0.03); border-radius: 4px; }
 
-      .ab-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 100%; cursor: pointer; color: var(--ytg-text-3); text-align: center; padding: 12px; background: var(--ytg-bg-3); transition: background 0.15s; }
-      .ab-drop:hover { background: #dfe0e6; }
+      .ab-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 100%; cursor: pointer; color: var(--yte-muted); text-align: center; padding: 12px; background: var(--yte-bg-2); transition: background 0.15s; }
+      .ab-drop:hover { background: #e4e0d6; }
+
+      /* Quiet pick button: ghost when unpicked, ink when picked. */
+      .ab-pick { width: 100%; font-family: ${SANS}; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; border: 1px solid var(--yte-line); background: var(--yte-surface); color: var(--yte-soft); }
+      .ab-pick:hover { border-color: var(--yte-line-2); color: var(--yte-ink); }
+      .ab-pick.picked { background: var(--yte-ink); color: #fff; border-color: var(--yte-ink); }
 
       .ab-faq-answer { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
       .ab-faq-answer.open { grid-template-rows: 1fr; opacity: 1; }
       .ab-faq-answer-inner { overflow: hidden; }
 
-      .ab-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+      .ab-grow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--yte-line); border: 1px solid var(--yte-line); }
+      @media (max-width: 760px) { .ab-grow-grid { grid-template-columns: 1fr; } }
+      .ab-grow-card { display: block; text-decoration: none; background: var(--yte-surface); padding: 28px; transition: background 0.15s; }
+      .ab-grow-card:hover { background: var(--yte-bg-2); }
 
-      @media (max-width: 900px) { .ab-grid-3 { grid-template-columns: 1fr; } }
-      @media (max-width: 768px) { .ab-section-pad { padding-left: 20px !important; padding-right: 20px !important; } .ab-cta-pad { padding: 70px 24px !important; } }
+      @media (max-width: 768px) { .ab-section-pad { padding-left: 22px !important; padding-right: 22px !important; } .ab-cta-pad { padding: 76px 24px !important; } }
     `
     document.head.appendChild(style)
   }, [])
@@ -208,16 +207,32 @@ const FAQS = [
     a: "Free forever, no signup, no email. It runs entirely in your browser. We built it as a genuine free tool because the thumbnail is the single biggest lever on click-through rate, and most creators never check theirs at the size that matters. If you want your thumbnails scored against the top performers in your niche on contrast, faces, and text density, you can connect your channel for a free AI audit with Thumbnail IQ, but that is entirely optional." },
 ]
 
-function Eyebrow({ children }) {
+const HOW_IT_WORKS = [
+  { h: 'It has to read at thumb size', p: "Viewers see your thumbnail as a small tile, not a full-screen image. If the focal point, text, or expression does not land at 250 pixels wide (and far smaller on mobile), it does not land at all. Comparing both options at real size is the whole game." },
+  { h: 'Contrast separates you from the feed', p: "Your thumbnail competes against a wall of other tiles on YouTube's white or dark background. High contrast and a bold, distinct color palette make yours the one the eye stops on. Side by side, the higher-contrast option usually wins." },
+  { h: 'One focal point beats a busy scene', p: "A single clear subject, often a face with a strong expression, reads instantly. A cluttered composition turns to noise when shrunk. Use the comparison to see which option keeps a clean focal point at small size." },
+  { h: 'Title and thumbnail work as a pair', p: "Viewers read both together in a fraction of a second. Edit the mock titles here so you are testing the real package, not the image alone. The best combination is the one where the title adds what the thumbnail cannot say." },
+]
+
+const GROW = [
+  { label: 'Thumbnail IQ', title: 'Score against the winners', body: 'Rate your thumbnail on contrast, faces, and text density against the top performers in your niche before you upload.', href: '/features/thumbnail-iq' },
+  { label: 'Title Generator', title: 'Pair it with a title that pulls', body: 'Generate and score titles against the CTR signals that move clicks, so the package wins together.', href: '/tools/youtube-title-generator' },
+  { label: 'AI Channel Audit', title: 'See your real CTR', body: 'A 10-dimension audit shows which videos are losing the click war and what to change first.', href: '/features/channel-audit' },
+]
+
+function Eyebrow({ children, center }) {
   return (
-    <div className="ab-eyebrow">
-      <span aria-hidden="true" className="ab-eyebrow-dot" />
+    <div className="ab-eyebrow" style={center ? { justifyContent: 'center' } : undefined}>
+      <span aria-hidden="true" className="ab-eyebrow-rule" />
       <span className="ab-eyebrow-text">{children}</span>
     </div>
   )
 }
 
-/* One mock YouTube result card showing the user's uploaded thumbnail. */
+/* One mock YouTube result card showing the user's uploaded thumbnail. The
+   inner tile keeps YouTube's own styling (Roboto, real greys) on purpose so
+   the thumbnail is seen in a realistic context; only the card frame around it
+   uses the editorial system. */
 function MockCard({ label, img, title, onTitle, onFile, picked, onPick, ctx }) {
   const horizontal = ctx.layout === 'horizontal'
   const thumbW = ctx.w
@@ -231,34 +246,34 @@ function MockCard({ label, img, title, onTitle, onFile, picked, onPick, ctx }) {
       ) : (
         <label className="ab-drop">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M17 8l-5-5-5 5" /><path d="M12 3v12" /></svg>
-          <span style={{ fontSize: 12, fontWeight: 600 }}>Upload thumbnail {label}</span>
-          <span style={{ fontSize: 10.5 }}>1280x720, JPG or PNG</span>
+          <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 600 }}>Upload thumbnail {label}</span>
+          <span style={{ fontFamily: SANS, fontSize: 10.5 }}>1280x720, JPG or PNG</span>
           <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => onFile(e.target.files && e.target.files[0])} />
         </label>
       )}
       {/* Mock duration stamp, as on real YouTube */}
-      {img && <span style={{ position: 'absolute', right: 6, bottom: 6, background: 'rgba(0,0,0,0.8)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '1px 4px', borderRadius: 4, fontFamily: 'Roboto, Inter, sans-serif' }}>10:24</span>}
+      {img && <span style={{ position: 'absolute', right: 6, bottom: 6, background: 'rgba(0,0,0,0.8)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '1px 4px', borderRadius: 4, fontFamily: 'Roboto, sans-serif' }}>10:24</span>}
     </div>
   )
 
   const meta = (
     <div style={{ minWidth: 0, flex: horizontal ? 1 : undefined, paddingTop: horizontal ? 0 : 10, display: 'flex', gap: 10 }}>
-      {!horizontal && <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--ytg-bg-3)', flexShrink: 0 }} />}
+      {!horizontal && <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#e6e7ec', flexShrink: 0 }} />}
       <div style={{ minWidth: 0, flex: 1 }}>
         <textarea className="ab-title-input" rows={2} value={title} onChange={(e) => onTitle(e.target.value)}
           style={{ fontSize: titleSize, fontWeight: 600, lineHeight: 1.3, color: '#0f0f0f', maxHeight: titleSize * 2.8, overflow: 'hidden' }} />
-        <div style={{ fontSize: 12.5, color: '#606060', fontFamily: 'Roboto, Inter, sans-serif', marginTop: 2 }}>Your Channel</div>
-        <div style={{ fontSize: 12.5, color: '#606060', fontFamily: 'Roboto, Inter, sans-serif' }}>12K views · 2 days ago</div>
+        <div style={{ fontSize: 12.5, color: '#606060', fontFamily: 'Roboto, sans-serif', marginTop: 2 }}>Your Channel</div>
+        <div style={{ fontSize: 12.5, color: '#606060', fontFamily: 'Roboto, sans-serif' }}>12K views · 2 days ago</div>
       </div>
     </div>
   )
 
   return (
-    <div style={{ background: '#fff', border: `1px solid ${picked ? 'var(--ytg-accent)' : 'var(--ytg-border)'}`, boxShadow: picked ? '0 0 0 3px var(--ytg-accent-light), var(--ytg-shadow)' : 'var(--ytg-shadow-sm)', borderRadius: 16, padding: 18, transition: 'border-color 0.15s, box-shadow 0.15s' }}>
+    <div style={{ background: 'var(--yte-surface)', border: `1px solid ${picked ? 'var(--yte-ink)' : 'var(--yte-line)'}`, padding: 18, transition: 'border-color 0.15s' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 15, fontWeight: 800, color: 'var(--ytg-text)' }}>Thumbnail {label}</span>
+        <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Thumbnail {label}</span>
         {img && (
-          <label style={{ fontSize: 12, fontWeight: 600, color: 'var(--ytg-accent-text)', cursor: 'pointer' }}>
+          <label style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--yte-accent)', cursor: 'pointer' }}>
             Replace
             <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => onFile(e.target.files && e.target.files[0])} />
           </label>
@@ -273,10 +288,7 @@ function MockCard({ label, img, title, onTitle, onFile, picked, onPick, ctx }) {
         </div>
       </div>
 
-      <button onClick={onPick}
-        style={{ width: '100%', fontFamily: 'inherit', fontSize: 13.5, fontWeight: 700, padding: '11px', borderRadius: 10, cursor: 'pointer', border: 'none', background: 'var(--ytg-accent)', color: '#fff', boxShadow: picked ? '0 0 0 3px var(--ytg-accent-light), 0 4px 14px rgba(229,48,42,0.32)' : '0 1px 3px rgba(229,48,42,0.28)', transition: 'box-shadow 0.15s, filter 0.15s' }}
-        onMouseEnter={(e) => { e.currentTarget.style.filter = 'brightness(1.06)' }}
-        onMouseLeave={(e) => { e.currentTarget.style.filter = 'none' }}>
+      <button onClick={onPick} className={`ab-pick${picked ? ' picked' : ''}`}>
         {picked ? 'Your pick ✓' : "I'd click this one"}
       </button>
     </div>
@@ -320,41 +332,42 @@ export default function YoutubeThumbnailTester() {
     reader.readAsDataURL(file)
   }
 
+  const H2 = isMobile ? 28 : 42
+
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
+    <div style={{ fontFamily: SANS, background: 'var(--yte-bg)', color: 'var(--yte-ink)', overflowX: 'clip' }}>
 
       <SiteHeader />
       <FaqSchema items={FAQS} />
 
       {/* ══ HERO ══ */}
-      <section className="ab-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '120vw', maxWidth: 1400, height: 620, background: 'radial-gradient(ellipse at center top, rgba(229,48,42,0.07) 0%, rgba(229,48,42,0.02) 40%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1, animation: 'abFadeUp 0.5s ease both' }}>
+      <section className="ab-section-pad" style={{ padding: isMobile ? '60px 22px 40px' : '104px 48px 48px', background: 'var(--yte-bg)' }}>
+        <div className="ab-wrap" style={{ animation: 'abFadeUp 0.5s ease both' }}>
           <Eyebrow>Free tool</Eyebrow>
-          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : 60, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2.2px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
-            Test your thumbnails <span style={{ color: 'var(--ytg-accent)' }}>before you post.</span>
+          <h1 className="ab-h1" style={{ fontSize: isMobile ? 34 : 56, marginBottom: 22, maxWidth: 860, textWrap: 'balance' }}>
+            Test your thumbnails <em>before you post.</em>
           </h1>
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 660, margin: '0 auto 28px', textWrap: 'pretty' }}>
+          <p className="ab-lead" style={{ fontSize: isMobile ? 16 : 17.5, maxWidth: 660, marginBottom: 14, textWrap: 'pretty' }}>
             Load two thumbnails and see them side by side at the real size viewers see in the feed, on mobile, and in suggested. Pick the one that wins the small-tile test.
           </p>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', fontWeight: 500 }}>No signup. Your images never leave your browser.</p>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>No signup. Your images never leave your browser.</p>
         </div>
       </section>
 
       {/* ══ TOOL ══ */}
-      <section id="tool" className="ab-section-pad" style={{ padding: isMobile ? '40px 20px 80px' : '56px 48px 110px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+      <section id="tool" className="ab-section-pad" style={{ padding: isMobile ? '8px 22px 80px' : '12px 48px 96px', background: 'var(--yte-bg)' }}>
+        <div className="ab-wrap">
           {/* Context toggle */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
             <div className="ab-seg" role="tablist">
               {Object.entries(CONTEXTS).map(([key, c]) => (
                 <button key={key} className={ctxKey === key ? 'active' : ''} onClick={() => setCtxKey(key)} role="tab" aria-selected={ctxKey === key}>{c.label}</button>
               ))}
             </div>
           </div>
-          <p style={{ textAlign: 'center', fontSize: 12.5, color: 'var(--ytg-text-3)', marginBottom: 28 }}>Each thumbnail is shown at its true display width in this surface. Edit the titles to test the full package.</p>
+          <p style={{ textAlign: 'center', fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', marginBottom: 28 }}>Each thumbnail is shown at its true display width in this surface. Edit the titles to test the full package.</p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 22, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12, alignItems: 'start' }}>
             <MockCard label="A" img={imgs[0]} title={titles[0]} ctx={ctx}
               onTitle={(v) => setTitles((t) => [v, t[1]])} onFile={(f) => onFile(0, f)}
               picked={picked === 0} onPick={() => setPicked(picked === 0 ? null : 0)} />
@@ -364,49 +377,49 @@ export default function YoutubeThumbnailTester() {
           </div>
 
           {/* ── ANALYSIS ─────────────────────────────────────────────── */}
-          <div style={{ marginTop: 22, background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 18, boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 30 }}>
+          <div style={{ marginTop: 12, background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: isMobile ? 22 : 30 }}>
             {!analysis ? (
-              <div style={{ textAlign: 'center', color: 'var(--ytg-text-3)', padding: '18px 0' }}>
-                <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 17, fontWeight: 700, color: 'var(--ytg-text-2)', marginBottom: 6 }}>Upload both thumbnails to analyze</div>
-                <div style={{ fontSize: 13.5, lineHeight: 1.6, maxWidth: 440, margin: '0 auto' }}>We read each image in your browser and score contrast, color, brightness, and clarity, then call the stronger one with the reasons.</div>
+              <div style={{ textAlign: 'center', padding: '18px 0' }}>
+                <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 8 }}>Upload both thumbnails to analyze</div>
+                <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-muted)', lineHeight: 1.6, maxWidth: 440, margin: '0 auto' }}>We read each image in your browser and score contrast, color, brightness, and clarity, then call the stronger one with the reasons.</div>
               </div>
             ) : (
               <>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Our pick</div>
-                    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 22 : 26, fontWeight: 800, letterSpacing: '-0.8px', color: 'var(--ytg-text)' }}>
-                      {analysis.winner === 'tie' ? 'Too close to call' : `Thumbnail ${analysis.winner} wins`}
+                    <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 6 }}>Our pick</div>
+                    <div className="ab-h2" style={{ fontSize: isMobile ? 24 : 30 }}>
+                      {analysis.winner === 'tie' ? 'Too close to call' : <>Thumbnail <em>{analysis.winner}</em> wins</>}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: 10 }}>
+                  <div style={{ display: 'flex', gap: 8 }}>
                     {[['A', analysis.sa.overall], ['B', analysis.sb.overall]].map(([lbl, sc]) => {
                       const win = analysis.winner === lbl
                       return (
-                        <div key={lbl} style={{ textAlign: 'center', minWidth: 62, padding: '8px 12px', borderRadius: 12, background: win ? 'var(--ytg-accent)' : 'var(--ytg-bg-3)', color: win ? '#fff' : 'var(--ytg-text-2)' }}>
-                          <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, lineHeight: 1 }}>{sc}</div>
-                          <div style={{ fontSize: 11, fontWeight: 700, marginTop: 3, opacity: 0.85 }}>{lbl}</div>
+                        <div key={lbl} style={{ textAlign: 'center', minWidth: 62, padding: '10px 14px', background: win ? 'var(--yte-ink)' : 'var(--yte-bg-2)', color: win ? '#fff' : 'var(--yte-muted)' }}>
+                          <div style={{ fontFamily: SERIF, fontSize: 26, fontWeight: 400, lineHeight: 1 }}>{sc}</div>
+                          <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, marginTop: 4, opacity: 0.8, letterSpacing: '0.06em' }}>{lbl}</div>
                         </div>
                       )
                     })}
                   </div>
                 </div>
 
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.6, marginBottom: 20 }}>{reasonText(analysis.sa, analysis.sb, analysis.winner)}</p>
+                <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65, marginBottom: 22 }}>{reasonText(analysis.sa, analysis.sb, analysis.winner)}</p>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   {METRICS.map(([key, label]) => {
                     const av = analysis.sa[key], bv = analysis.sb[key], aWin = av >= bv
                     return (
                       <div key={key}>
-                        <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ytg-text-2)', marginBottom: 6 }}>{label}</div>
+                        <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 600, color: 'var(--yte-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>{label}</div>
                         {[['A', av, aWin], ['B', bv, !aWin]].map(([lbl, v, win]) => (
-                          <div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                            <span style={{ width: 14, fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)' }}>{lbl}</span>
-                            <div style={{ flex: 1, height: 8, borderRadius: 100, background: 'var(--ytg-bg-3)', overflow: 'hidden' }}>
-                              <div style={{ width: `${v}%`, height: '100%', borderRadius: 100, background: win ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.22)', transition: 'width 0.3s ease' }} />
+                          <div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 }}>
+                            <span style={{ width: 14, fontFamily: SANS, fontSize: 11, fontWeight: 700, color: 'var(--yte-muted)' }}>{lbl}</span>
+                            <div style={{ flex: 1, height: 6, background: 'var(--yte-bg-2)', overflow: 'hidden' }}>
+                              <div style={{ width: `${v}%`, height: '100%', background: win ? 'var(--yte-accent)' : 'var(--yte-line-2)', transition: 'width 0.3s ease' }} />
                             </div>
-                            <span style={{ width: 26, fontSize: 12, fontWeight: 700, textAlign: 'right', color: win ? 'var(--ytg-accent-text)' : 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>{v}</span>
+                            <span style={{ width: 26, fontFamily: SANS, fontSize: 12, fontWeight: 700, textAlign: 'right', color: win ? 'var(--yte-accent)' : 'var(--yte-muted)', fontVariantNumeric: 'tabular-nums' }}>{v}</span>
                           </div>
                         ))}
                       </div>
@@ -414,7 +427,7 @@ export default function YoutubeThumbnailTester() {
                   })}
                 </div>
 
-                <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', lineHeight: 1.6, marginTop: 18 }}>
+                <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', lineHeight: 1.6, marginTop: 20 }}>
                   Scored on the visual signals that help a thumbnail pop at small size. A guide, not a guarantee. The real test is YouTube's live Test and Compare with your actual audience.
                 </p>
               </>
@@ -424,24 +437,19 @@ export default function YoutubeThumbnailTester() {
       </section>
 
       {/* ══ HOW IT WORKS ══ */}
-      <section id="how-it-works" className="ab-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
-          <div style={{ marginBottom: 48, maxWidth: 720 }}>
+      <section id="how-it-works" className="ab-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="ab-wrap">
+          <div style={{ marginBottom: 40, maxWidth: 720 }}>
             <Eyebrow>What wins the click</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, textWrap: 'balance' }}>
-              The test your thumbnail <span style={{ color: 'var(--ytg-accent)' }}>has to pass.</span>
+            <h2 className="ab-h2" style={{ fontSize: H2, textWrap: 'balance' }}>
+              The test your thumbnail <em>has to pass.</em>
             </h2>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-            {[
-              { h: 'It has to read at thumb size', p: "Viewers see your thumbnail as a small tile, not a full-screen image. If the focal point, text, or expression does not land at 250 pixels wide (and far smaller on mobile), it does not land at all. Comparing both options at real size is the whole game." },
-              { h: 'Contrast separates you from the feed', p: "Your thumbnail competes against a wall of other tiles on YouTube's white or dark background. High contrast and a bold, distinct color palette make yours the one the eye stops on. Side by side, the higher-contrast option usually wins." },
-              { h: 'One focal point beats a busy scene', p: "A single clear subject, often a face with a strong expression, reads instantly. A cluttered composition turns to noise when shrunk. Use the comparison to see which option keeps a clean focal point at small size." },
-              { h: 'Title and thumbnail work as a pair', p: "Viewers read both together in a fraction of a second. Edit the mock titles here so you are testing the real package, not the image alone. The best combination is the one where the title adds what the thumbnail cannot say." },
-            ].map((row, i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 12 : 56, paddingTop: i === 0 ? 0 : 28, borderTop: i === 0 ? 'none' : '1px solid var(--ytg-border)' }}>
-                <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 20 : 22, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.5px', lineHeight: 1.25 }}>{row.h}</h3>
-                <p style={{ fontSize: 15.5, color: 'var(--ytg-text-2)', lineHeight: 1.75 }}>{row.p}</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {HOW_IT_WORKS.map((row, i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
+                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
           </div>
@@ -449,88 +457,52 @@ export default function YoutubeThumbnailTester() {
       </section>
 
       {/* ══ HOW TO GROW (3 cards) ══ */}
-      <section className="ab-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-          <div style={{ marginBottom: 44, textAlign: 'center', maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
+      <section className="ab-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
+        <div className="ab-wrap">
+          <div style={{ marginBottom: 32, maxWidth: 720 }}>
             <Eyebrow>Beyond the eye test</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>
-              Trust your gut, then <span style={{ color: 'var(--ytg-accent)' }}>check the data.</span>
+            <h2 className="ab-h2" style={{ fontSize: H2, marginBottom: 12, textWrap: 'balance' }}>
+              Trust your gut, then <em>check the data.</em>
             </h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>The side-by-side test picks your best two. YTGrowth scores them against what is winning in your niche.</p>
+            <p className="ab-lead" style={{ fontSize: 17 }}>The side-by-side test picks your best two. YTGrowth scores them against what is winning in your niche.</p>
           </div>
-          <div className="ab-grid-3">
-            {[
-              { label: 'Thumbnail IQ', title: 'Score against the winners', body: 'Rate your thumbnail on contrast, faces, and text density against the top performers in your niche before you upload.', href: '/features/thumbnail-iq' },
-              { label: 'Title Generator', title: 'Pair it with a title that pulls', body: 'Generate and score titles against the CTR signals that move clicks, so the package wins together.', href: '/tools/youtube-title-generator' },
-              { label: 'AI Channel Audit', title: 'See your real CTR', body: 'A 10-dimension audit shows which videos are losing the click war and what to change first.', href: '/features/channel-audit' },
-            ].map((card, i) => (
-              <a key={i} href={card.href} style={{ display: 'block', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: 30, boxShadow: 'var(--ytg-shadow-sm)', textDecoration: 'none', transition: 'transform 0.18s, box-shadow 0.18s, border-color 0.18s' }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)'; e.currentTarget.style.borderColor = 'var(--ytg-border-2)' }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>{card.label}</p>
-                <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 20, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px', marginBottom: 12, lineHeight: 1.25 }}>{card.title}</h3>
-                <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.65 }}>{card.body}</p>
+          <div className="ab-grow-grid">
+            {GROW.map((card, i) => (
+              <a key={i} href={card.href} className="ab-grow-card">
+                <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{card.label}</div>
+                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{card.title}</h3>
+                <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{card.body}</p>
               </a>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══ DARK CTA ══ */}
-      <section className="ab-section-pad ab-cta-pad" style={{ padding: isMobile ? '88px 24px' : '120px 48px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', position: 'relative', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: '42%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: isMobile ? 600 : 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.20) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 820, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 22 }}>
-            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.78)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Free AI audit</span>
-          </div>
-          <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#ffffff', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>
-            You picked a winner. <span style={{ color: '#ff3b30' }}>Make every thumbnail one.</span>
-          </h2>
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'rgba(255,255,255,0.68)', lineHeight: 1.7, marginBottom: 32, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
-            Connect your channel for a free AI audit that scores your thumbnails, titles, and SEO against the videos winning in your niche.
-          </p>
-          <a href="/auth/login" className="ab-btn ab-btn-lg">Get my free audit →</a>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', marginTop: 16 }}>Free trial · no card · upgrade anytime</p>
-        </div>
-      </section>
-
       {/* ══ FAQ ══ */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 20px' : '110px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: '-10%', left: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1160, margin: '0 auto', position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '340px 1fr', gap: isMobile ? 40 : 88, alignItems: 'start' }}>
-          <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
+      <div className="ab-section-pad" style={{ background: 'var(--yte-bg)', padding: isMobile ? '60px 22px' : '104px 48px' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 36 : 80, alignItems: 'start' }}>
+          <div>
             <Eyebrow>Frequently asked</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
-              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
-            </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
-              Everything creators ask about testing thumbnails. Still unsure? <a href="/contact" style={{ color: 'var(--ytg-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
+            <h2 className="ab-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 14, textWrap: 'balance' }}>Testing, <em>answered.</em></h2>
+            <p className="ab-lead" style={{ fontSize: 14.5, maxWidth: 300 }}>
+              Everything creators ask about testing thumbnails. Still unsure? <a href="/contact" style={{ color: 'var(--yte-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
             </p>
           </div>
-          <div style={{ borderTop: '1px solid rgba(10,10,15,0.10)' }}>
+          <div style={{ borderTop: '1px solid var(--yte-line)' }}>
             {FAQS.map((item, i) => {
               const isOpen = openFaq === i
-              const num = String(i + 1).padStart(2, '0')
               return (
-                <div key={i} style={{ borderBottom: '1px solid rgba(10,10,15,0.10)', position: 'relative' }}>
-                  {isOpen && <div aria-hidden="true" style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 2, background: 'var(--ytg-accent)', borderRadius: 2 }} />}
+                <div key={i} style={{ borderBottom: '1px solid var(--yte-line)' }}>
                   <div onClick={() => setOpenFaq(isOpen ? null : i)} role="button" tabIndex={0}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
-                    style={{ display: 'flex', alignItems: 'flex-start', gap: isMobile ? 14 : 20, padding: isMobile ? '20px 0' : '24px 0', paddingLeft: isOpen ? (isMobile ? 16 : 22) : 0, cursor: 'pointer', transition: 'padding-left 0.25s ease', userSelect: 'none' }}>
-                    <span style={{ fontSize: isMobile ? 12 : 13, fontWeight: 700, color: isOpen ? 'var(--ytg-accent)' : 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums', lineHeight: 1.5, flexShrink: 0, width: isMobile ? 22 : 28, paddingTop: 2, transition: 'color 0.2s' }}>{num}</span>
-                    <span style={{ flex: 1, fontSize: isMobile ? 15 : 16, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.45, letterSpacing: '-0.2px' }}>{item.q}</span>
-                    <span aria-hidden="true" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.05)', border: `1px solid ${isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.10)'}`, transition: 'background 0.2s, border-color 0.2s', marginTop: 1 }}>
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M1 5h8" stroke={isOpen ? '#ffffff' : 'var(--ytg-text-2)'} strokeWidth="1.8" strokeLinecap="round" />
-                        {!isOpen && <path d="M5 1v8" stroke="var(--ytg-text-2)" strokeWidth="1.8" strokeLinecap="round" />}
-                      </svg>
-                    </span>
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}>
+                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`ab-faq-answer${isOpen ? ' open' : ''}`}>
                     <div className="ab-faq-answer-inner">
-                      <div style={{ paddingLeft: isMobile ? 36 : 48, paddingRight: isMobile ? 40 : 48, paddingBottom: isMobile ? 22 : 26 }}>
-                        <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, margin: 0 }}>{item.a}</p>
+                      <div style={{ paddingBottom: isMobile ? 22 : 26, maxWidth: 680 }}>
+                        <p style={{ fontFamily: SANS, fontSize: isMobile ? 14.5 : 15.5, color: 'var(--yte-soft)', lineHeight: 1.78, margin: 0 }}>{item.a}</p>
                       </div>
                     </div>
                   </div>

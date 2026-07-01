@@ -498,7 +498,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
         }}>
           <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>AI rewrite · Score 88</p>
           <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>
-            0 to 10K Subs in 90 Days: The 3 Things That Actually Moved the Needle
+            0 to 10K Subs in 90 Days: The 3 Things That Moved the Needle
           </p>
         </div>
       </div>

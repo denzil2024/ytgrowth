@@ -1,106 +1,101 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
 
-/* ─── Free SEO tool: YouTube Title Generator + Analyzer ───────────────────
-   /tools/youtube-title-generator. Zero YouTube-API cost: generation and
-   scoring run entirely client-side. Visual DNA mirrors YoutubeMoneyCalculator
-   (Landing.jsx system: DM Sans headlines, Inter body, --ytg-* tokens, eyebrow
-   pills, numbered FAQ). Quiet grey view toggle, never red. No design drift. */
+/* ─── Free tool: YouTube Title Generator + Analyzer ───────────────────────
+   /tools/youtube-title-generator. Generation and CTR scoring run entirely
+   client-side (zero API). Migrated to the editorial design language
+   (Fraunces + Barlow, sharp flat cards, warm paper, restrained red). The
+   generate/analyze logic and all content are preserved from the original;
+   only the skin changed. Mode toggle stays quiet-grey, never red (see
+   feedback_quiet_toggles). See project_design_language_editorial. */
+
+const SERIF = "'Fraunces', Georgia, serif"
+const SANS  = "'Barlow', system-ui, sans-serif"
 
 function useBreakpoint() {
-  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
+  const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
   useEffect(() => {
-    const handler = () => setWidth(window.innerWidth)
-    window.addEventListener('resize', handler)
-    return () => window.removeEventListener('resize', handler)
+    const h = () => setW(window.innerWidth)
+    window.addEventListener('resize', h)
+    return () => window.removeEventListener('resize', h)
   }, [])
-  return { isMobile: width <= 768, isTablet: width <= 1024 }
+  return { isMobile: w <= 768 }
 }
 
 function useGlobalStyles() {
   useEffect(() => {
-    if (document.getElementById('ytg-tg-styles')) return
-
+    if (document.getElementById('tg-styles')) return
     const style = document.createElement('style')
-    style.id = 'ytg-tg-styles'
+    style.id = 'tg-styles'
     style.textContent = `
       :root {
-        --ytg-bg:           #f4f4f6;
-        --ytg-bg-2:         #ecedf1;
-        --ytg-bg-3:         #e6e7ec;
-        --ytg-text:         #0a0a0f;
-        --ytg-text-2:       rgba(10,10,15,0.62);
-        --ytg-text-3:       rgba(10,10,15,0.40);
-        --ytg-nav:          rgba(244,244,246,0.92);
-        --ytg-card:         #ffffff;
-        --ytg-border:       rgba(10,10,15,0.09);
-        --ytg-border-2:     rgba(10,10,15,0.16);
-        --ytg-accent:       #e5302a;
-        --ytg-accent-text:  #c22b25;
-        --ytg-accent-light: rgba(229,48,42,0.07);
-        --ytg-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
-        --ytg-shadow:       0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.11);
-        --ytg-shadow-lg:    0 4px 16px rgba(0,0,0,0.11), 0 24px 60px rgba(0,0,0,0.14);
-        --ytg-good:         #1a9d5a;
-        --ytg-ok:           #c98a00;
+        --yte-bg: #f6f4ef; --yte-bg-2: #efece4; --yte-surface: #ffffff;
+        --yte-ink: #14130f; --yte-soft: #5c574e; --yte-muted: #8a8378;
+        --yte-line: rgba(20,19,15,0.12); --yte-line-2: rgba(20,19,15,0.22);
+        --yte-accent: #e5302a; --yte-accent-soft: rgba(229,48,42,0.07); --yte-dark: #0d0d12;
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
-      ::-webkit-scrollbar { width: 12px; height: 12px }
-      ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb { background-color: rgba(10,10,15,0.28); border-radius: 10px; border: 3px solid transparent; background-clip: content-box; }
-      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }
-      @keyframes tgFadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+      html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+      body { background: var(--yte-bg); color: var(--yte-ink); font-family: ${SANS}; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+      @keyframes tgFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
 
-      .tg-btn {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: var(--ytg-accent); color: #fff;
-        font-size: 15px; font-weight: 700; font-family: 'Inter', system-ui, sans-serif;
-        padding: 14px 28px; border-radius: 100px; border: none;
-        cursor: pointer; text-decoration: none; letter-spacing: -0.2px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,48,42,0.32);
-        transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
-      }
-      .tg-btn:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,48,42,0.42); }
-      .tg-btn-lg { font-size: 16px; padding: 17px 36px; }
-      .tg-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+      .tg-wrap { max-width: 920px; margin: 0 auto; }
+      .tg-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+      .tg-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
+      .tg-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
+      .tg-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
+      .tg-h1 em { font-style: italic; color: var(--yte-accent); }
+      .tg-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
+      .tg-h2 em { font-style: italic; color: var(--yte-accent); }
+      .tg-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
-      .tg-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid rgba(10,10,15,0.09); border-radius: 100px; padding: 5px 12px 5px 10px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(10,10,15,0.04); }
-      .tg-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ytg-accent); box-shadow: 0 0 0 3px rgba(229,48,42,0.12); }
-      .tg-eyebrow-text { font-size: 11px; font-weight: 700; color: var(--ytg-text-2); text-transform: uppercase; letter-spacing: 0.09em; }
+      .tg-label { display: block; font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 9px; }
+      .tg-input { width: 100%; padding: 13px 14px; font-size: 15px; font-weight: 500; font-family: ${SANS}; color: var(--yte-ink); background: var(--yte-bg); border: 1px solid var(--yte-line); border-radius: 0; outline: none; transition: border-color 0.15s, background 0.15s; -webkit-appearance: none; }
+      .tg-input:focus { border-color: var(--yte-accent); background: #fff; }
+      textarea.tg-input { resize: vertical; min-height: 92px; line-height: 1.5; }
 
-      .tg-input { width: 100%; padding: 12px 14px; font-size: 14px; font-weight: 500; font-family: inherit; color: var(--ytg-text); background: #fafafb; border: 1px solid var(--ytg-border); border-radius: 10px; outline: none; transition: border-color 0.15s, background 0.15s; -webkit-appearance: none; }
-      .tg-input:focus { border-color: rgba(10,10,15,0.28); background: #fff; }
-      textarea.tg-input { resize: vertical; min-height: 96px; line-height: 1.5; }
+      .tg-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 24px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
+      .tg-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+      .tg-btn:disabled { background: rgba(20,19,15,0.10); color: var(--yte-muted); cursor: not-allowed; transform: none; filter: none; }
 
-      /* Quiet view toggle. Soft-grey active, never red. */
-      .tg-seg { display: inline-flex; background: var(--ytg-bg-3); border: 1px solid var(--ytg-border); border-radius: 12px; padding: 4px; gap: 4px; }
-      .tg-seg button { font-family: inherit; font-size: 13.5px; font-weight: 600; letter-spacing: -0.1px; color: var(--ytg-text-2); background: transparent; border: none; padding: 8px 18px; border-radius: 9px; cursor: pointer; transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
-      .tg-seg button.active { background: #fff; color: var(--ytg-text); box-shadow: var(--ytg-shadow-sm); }
+      /* Quiet mode toggle: soft active, never red */
+      .tg-seg { display: inline-flex; border: 1px solid var(--yte-line); background: var(--yte-surface); }
+      .tg-seg button { font-family: ${SANS}; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--yte-muted); background: transparent; border: none; padding: 10px 20px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+      .tg-seg button + button { border-left: 1px solid var(--yte-line); }
+      .tg-seg button.active { background: var(--yte-ink); color: #fff; }
 
-      .tg-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 100px; letter-spacing: 0.01em; }
+      .tg-tool { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 12px; align-items: start; }
+      @media (max-width: 820px) { .tg-tool { grid-template-columns: 1fr; } }
+      .tg-pane { background: var(--yte-surface); border: 1px solid var(--yte-line); padding: 28px; }
+      .tg-pane-dark { background: var(--yte-ink); padding: 28px; color: #fff; }
+
+      .tg-titlerow { width: 100%; text-align: left; display: flex; align-items: flex-start; gap: 12px; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 13px 0; cursor: pointer; font-family: ${SANS}; transition: opacity 0.15s; }
+      .tg-titlerow:hover { opacity: 0.78; }
+      .tg-chip { display: inline-flex; align-items: center; font-family: ${SANS}; font-size: 11.5px; font-weight: 700; padding: 3px 8px; flex-shrink: 0; letter-spacing: 0.02em; }
+
+      .tg-grow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--yte-line); border: 1px solid var(--yte-line); }
+      @media (max-width: 760px) { .tg-grow-grid { grid-template-columns: 1fr; } }
+      .tg-grow-card { display: block; text-decoration: none; background: var(--yte-surface); padding: 28px; transition: background 0.15s; }
+      .tg-grow-card:hover { background: var(--yte-bg-2); }
 
       .tg-faq-answer { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
       .tg-faq-answer.open { grid-template-rows: 1fr; opacity: 1; }
       .tg-faq-answer-inner { overflow: hidden; }
 
-      .tg-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
-      .tg-tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
-
-      @media (max-width: 900px) { .tg-grid-3 { grid-template-columns: 1fr; } .tg-tool-grid { grid-template-columns: 1fr; } }
-      @media (max-width: 768px) { .tg-section-pad { padding-left: 20px !important; padding-right: 20px !important; } .tg-cta-pad { padding: 70px 24px !important; } }
+      @media (max-width: 768px) { .tg-section-pad { padding-left: 22px !important; padding-right: 22px !important; } .tg-cta-pad { padding: 76px 24px !important; } }
     `
     document.head.appendChild(style)
   }, [])
 }
 
 /* ── Generation data (client-side, zero API) ─────────────────────────────── */
-// No "actually" anywhere (house rule). Frames mirror what ranks on YouTube.
 const NUMBERS = [3, 5, 7, 9, 10, 11, 13, 15, 21]
 const POWER_WORDS = ['Proven', 'Simple', 'Fast', 'Honest', 'Brutal', 'Essential', 'Hidden', 'Powerful', 'Smart', 'Effortless', 'Foolproof', 'Underrated']
+
+function cap(s) { return s.replace(/\b\w/g, (c) => c.toUpperCase()) }
+function pick(arr, seed) { return arr[seed % arr.length] }
 
 const TEMPLATES = [
   (t, n, p) => `How to ${t} (Even If You're a Beginner)`,
@@ -119,13 +114,6 @@ const TEMPLATES = [
   (t, n, p) => `${n} ${cap(t)} Hacks I Wish I Knew Sooner`,
 ]
 
-function cap(s) {
-  return s.replace(/\b\w/g, (c) => c.toUpperCase())
-}
-function pick(arr, seed) {
-  return arr[seed % arr.length]
-}
-
 function generateTitles(topic) {
   const t = topic.trim().toLowerCase().replace(/\s+/g, ' ')
   if (!t) return []
@@ -135,18 +123,15 @@ function generateTitles(topic) {
     const p = pick(POWER_WORDS, i * 5 + t.length)
     out.push(fn(t, n, p))
   })
-  // De-dupe and cap to a clean dozen.
   return Array.from(new Set(out)).slice(0, 12)
 }
 
-/* ── Scoring (shared by generated chips + analyzer) ──────────────────────── */
 function scoreTitle(title, keyword = '') {
   const s = title.trim()
   const len = s.length
   const checks = []
   let score = 0
 
-  // Length: 40-60 is the sweet spot before search/suggested truncation.
   let lenPts = 6
   if (len >= 40 && len <= 60) lenPts = 30
   else if (len >= 30 && len < 70) lenPts = 20
@@ -158,8 +143,6 @@ function scoreTitle(title, keyword = '') {
   if (hasNum) score += 18
   checks.push({ key: 'number', label: 'Has a number', pass: hasNum, hint: hasNum ? 'Numbers set a clear expectation and lift click-through.' : 'A specific number (7, 10, 2026) tends to raise CTR.' })
 
-  // Stem match (no trailing boundary) so plurals and variants count:
-  // 'mistake' hits "Mistakes", 'kill' hits "Killing", 'power' hits "Powerful".
   const POWER_STEMS = ['proven', 'simple', 'fast', 'honest', 'brutal', 'essential', 'hidden', 'power', 'smart', 'effortless', 'foolproof', 'underrated', 'secret', 'mistake', 'truth', 'stop', 'best', 'worst', 'kill', 'ultimate', 'easy', 'free', 'surprising', 'shocking', 'crazy', 'insane', 'genius', 'wrong', 'avoid', 'quit', 'ruin', 'viral', 'instant', 'nobody', 'everyone']
   const hasPower = POWER_STEMS.some((w) => new RegExp('\\b' + w, 'i').test(s))
   if (hasPower) score += 20
@@ -179,7 +162,6 @@ function scoreTitle(title, keyword = '') {
   const hasCuriosity = /\b(how|why|what|this|stop|never|before)\b/i.test(s)
   if (hasCuriosity) score += 8
 
-  // Penalty for shouting.
   const caps = (s.match(/[A-Z]/g) || []).length
   if (len > 0 && caps / len > 0.5) {
     score -= 12
@@ -191,13 +173,26 @@ function scoreTitle(title, keyword = '') {
   return { score, band, checks, len }
 }
 
-function bandColor(band) {
-  if (band === 'Strong') return { fg: '#0f7a43', bg: 'rgba(26,157,90,0.12)' }
-  if (band === 'Fair') return { fg: '#9a6a00', bg: 'rgba(201,138,0,0.13)' }
-  return { fg: 'var(--ytg-accent-text)', bg: 'var(--ytg-accent-light)' }
+/* Band colors tuned for the warm light surface + the dark output panel. */
+function bandColor(band, onDark = false) {
+  if (band === 'Strong') return onDark ? { fg: '#5dd39e', bg: 'rgba(93,211,158,0.16)' } : { fg: '#0f7a43', bg: 'rgba(15,122,67,0.12)' }
+  if (band === 'Fair')   return onDark ? { fg: '#e9b949', bg: 'rgba(233,185,73,0.16)' } : { fg: '#9a6a00', bg: 'rgba(201,138,0,0.13)' }
+  return onDark ? { fg: '#e6b35c', bg: 'rgba(230,179,92,0.16)' } : { fg: '#c22b25', bg: 'rgba(229,48,42,0.10)' }
 }
 
-/* ── FAQ ─────────────────────────────────────────────────────────────────── */
+const HOW_IT_WORKS = [
+  { h: 'Length that survives truncation', p: 'YouTube cuts titles off in search, suggested, and on mobile, often near 55 to 60 characters. Keep the promise and the keyword inside the first 50 and nothing important disappears. The score rewards 40 to 60 and flags anything that will get clipped.' },
+  { h: 'A number sets a concrete expectation', p: "'7 mistakes' tells the viewer exactly what they get and how long it takes to skim. Concrete beats vague, and the year (2026) signals freshness. Numbers are one of the most reliable click-through levers, so the analyzer counts them." },
+  { h: 'A power word adds curiosity or stakes', p: 'Words like Proven, Secret, Mistake, or Honest raise the emotional temperature of a title without lengthening the core promise. They give the viewer a reason to care, not just to know.' },
+  { h: 'Brackets give you a second hook', p: 'An add-on like (Step by Step) or (2026 Update) separates a bonus from the main claim and reliably lifts clicks across large title datasets. The score gives credit for one, used with purpose.' },
+]
+
+const GROW = [
+  { label: 'SEO Studio', title: 'Title vs the top results', body: 'Score your title against the videos already ranking for your keyword, so you optimize toward what is winning in your niche, not a generic checklist.', href: '/features/seo-studio' },
+  { label: 'Thumbnail IQ', title: 'Win the look, not just the read', body: 'The title and thumbnail work as a pair. Score your thumbnail on contrast, faces, and text density against the top performers before you upload.', href: '/features/thumbnail-iq' },
+  { label: 'AI Channel Audit', title: 'Find what is holding you back', body: 'A 10-dimension audit across your last 20 videos, CTR, and retention, with a prioritized list of what to fix first.', href: '/features/channel-audit' },
+]
+
 const FAQS = [
   { q: 'What makes a good YouTube title?',
     a: "A good title sets a clear, specific expectation and gives the viewer a reason to click in the half-second they spend deciding. The strongest titles usually do three things at once: they name the payoff (what the viewer gets), they add a hook (a number, a power word, or a bracketed twist like 'Step by Step'), and they stay short enough that nothing gets cut off in search or suggested. This tool scores each of those signals so you can see where a title is strong and where it is leaving clicks on the table." },
@@ -224,18 +219,17 @@ const FAQS = [
 function Eyebrow({ children }) {
   return (
     <div className="tg-eyebrow">
-      <span aria-hidden="true" className="tg-eyebrow-dot" />
+      <span aria-hidden="true" className="tg-eyebrow-rule" />
       <span className="tg-eyebrow-text">{children}</span>
     </div>
   )
 }
 
-/* ── Main component ──────────────────────────────────────────────────────── */
 export default function YoutubeTitleGenerator() {
   useGlobalStyles()
-  const { isMobile, isTablet } = useBreakpoint()
+  const { isMobile } = useBreakpoint()
 
-  const [mode, setMode] = useState('generate') // 'generate' | 'analyze'
+  const [mode, setMode] = useState('generate')
   const [topic, setTopic] = useState('')
   const [titles, setTitles] = useState([])
   const [copied, setCopied] = useState(-1)
@@ -243,154 +237,137 @@ export default function YoutubeTitleGenerator() {
   const [draftKeyword, setDraftKeyword] = useState('')
   const [openFaq, setOpenFaq] = useState(0)
 
-  const onGenerate = () => {
-    setTitles(generateTitles(topic))
-    setCopied(-1)
-  }
+  const onGenerate = () => { setTitles(generateTitles(topic)); setCopied(-1) }
   const copy = (text, i) => {
     try { navigator.clipboard.writeText(text) } catch (e) { /* no-op */ }
     setCopied(i)
     setTimeout(() => setCopied((c) => (c === i ? -1 : c)), 1400)
   }
-
   const analysis = useMemo(() => (draft.trim() ? scoreTitle(draft, draftKeyword) : null), [draft, draftKeyword])
 
-  return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
+  const H1 = isMobile ? 34 : 54
+  const H2 = isMobile ? 28 : 40
 
+  return (
+    <div style={{ fontFamily: SANS, background: 'var(--yte-bg)', color: 'var(--yte-ink)', overflowX: 'clip' }}>
       <SiteHeader />
       <FaqSchema items={FAQS} />
 
       {/* ══ HERO ══ */}
-      <section className="tg-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '120vw', maxWidth: 1400, height: 620, background: 'radial-gradient(ellipse at center top, rgba(229,48,42,0.07) 0%, rgba(229,48,42,0.02) 40%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1, animation: 'tgFadeUp 0.5s ease both' }}>
+      <section className="tg-section-pad" style={{ padding: isMobile ? '60px 22px 40px' : '104px 48px 48px', background: 'var(--yte-bg)' }}>
+        <div className="tg-wrap" style={{ animation: 'tgFadeUp 0.5s ease both' }}>
           <Eyebrow>Free tool</Eyebrow>
-          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : isTablet ? 56 : 64, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2.2px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
-            Write YouTube titles that <span style={{ color: 'var(--ytg-accent)' }}>get the click.</span>
+          <h1 className="tg-h1" style={{ fontSize: H1, marginBottom: 22, maxWidth: 780, textWrap: 'balance' }}>
+            Write YouTube titles that <em>get the click.</em>
           </h1>
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 660, margin: '0 auto 28px', textWrap: 'pretty' }}>
-            Generate a dozen title ideas from your topic, then score any title against the signals that move click-through: length, numbers, power words, and keyword position.
-          </p>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', fontWeight: 500 }}>No signup. No email. Runs in your browser.</p>
+          <div style={{ maxWidth: 640 }}>
+            <p className="tg-lead" style={{ fontSize: isMobile ? 16 : 17.5, marginBottom: 14, textWrap: 'pretty' }}>
+              Generate a dozen title ideas from your topic, then score any title against the signals that move click-through: length, numbers, power words, and keyword position.
+            </p>
+            <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>No signup. No email. Free forever.</p>
+          </div>
         </div>
       </section>
 
       {/* ══ TOOL ══ */}
-      <section id="tool" className="tg-section-pad" style={{ padding: isMobile ? '40px 20px 80px' : '56px 48px 110px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
-
-          {/* Quiet view toggle */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
+      <section className="tg-section-pad" style={{ padding: isMobile ? '8px 22px 64px' : '0 48px 88px', background: 'var(--yte-bg)' }}>
+        <div className="tg-wrap">
+          <div style={{ marginBottom: 18 }}>
             <div className="tg-seg" role="tablist">
               <button className={mode === 'generate' ? 'active' : ''} onClick={() => setMode('generate')} role="tab" aria-selected={mode === 'generate'}>Generate titles</button>
               <button className={mode === 'analyze' ? 'active' : ''} onClick={() => setMode('analyze')} role="tab" aria-selected={mode === 'analyze'}>Analyze a title</button>
             </div>
           </div>
 
-          <div className="tg-tool-grid">
-
-            {/* LEFT column */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: isMobile ? 26 : 36 }}>
-                {mode === 'generate' ? (
-                  <>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Your video topic or keyword</label>
+          <div className="tg-tool">
+            {/* INPUT pane */}
+            <div className="tg-pane" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {mode === 'generate' ? (
+                <>
+                  <div>
+                    <label className="tg-label">Your video topic or keyword</label>
                     <input className="tg-input" value={topic} placeholder="e.g. editing in capcut" onChange={(e) => setTopic(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') onGenerate() }} />
-                    <button className="tg-btn" onClick={onGenerate} disabled={!topic.trim()} style={{ width: '100%', justifyContent: 'center', marginTop: 16, borderRadius: 14 }}>Generate titles →</button>
-                    <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 16, lineHeight: 1.6 }}>
-                      Twelve proven title frames, filled with your topic. Tap any result to copy it, then make it yours. Adapt the wording so it sounds like you, not a template.
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Paste your title</label>
+                  </div>
+                  <button className="tg-btn" onClick={onGenerate} disabled={!topic.trim()}>Generate titles →</button>
+                  <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', lineHeight: 1.6 }}>
+                    Twelve proven title frames, filled with your topic and scored. Tap any result to copy it, then make it yours so it sounds like you, not a template.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="tg-label">Paste your title</label>
                     <textarea className="tg-input" value={draft} placeholder="e.g. 7 CapCut Editing Tricks That Really Work" onChange={(e) => setDraft(e.target.value)} />
-                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '18px 0 8px' }}>Main keyword (optional)</label>
+                  </div>
+                  <div>
+                    <label className="tg-label">Main keyword (optional)</label>
                     <input className="tg-input" value={draftKeyword} placeholder="e.g. capcut editing" onChange={(e) => setDraftKeyword(e.target.value)} />
-                    <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 16, lineHeight: 1.6 }}>
-                      The score updates as you type. Add your keyword to also check that it sits near the front, where it survives truncation.
-                    </p>
-                  </>
-                )}
-              </div>
-
-              {/* Grow CTA */}
-              <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Score against real rivals</p>
-                <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.5, marginBottom: 8, letterSpacing: '-0.2px' }}>A checklist is a start. The top-ranking titles are the bar.</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.65, marginBottom: 18 }}>
-                  YTGrowth's SEO Studio scores your title against the videos already ranking for your keyword, so you optimize toward what is winning in your niche, not a generic rule.
-                </p>
-                <a href="/auth/login" className="tg-btn" style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 14, borderRadius: 14 }}>Get my free audit →</a>
-                <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', textAlign: 'center', marginTop: 10 }}>Free trial · no card · upgrade anytime</p>
-              </div>
+                  </div>
+                  <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', lineHeight: 1.6 }}>
+                    The score updates as you type. Add your keyword to also check it sits near the front, where it survives truncation.
+                  </p>
+                </>
+              )}
             </div>
 
-            {/* RIGHT column */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {/* OUTPUT pane (dark, the focal block) */}
+            <div className="tg-pane-dark">
               {mode === 'generate' ? (
-                <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 20 : 24, minHeight: 320 }}>
-                  {titles.length === 0 ? (
-                    <div style={{ height: '100%', minHeight: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', color: 'var(--ytg-text-3)', padding: 24 }}>
-                      <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 17, fontWeight: 700, color: 'var(--ytg-text-2)', marginBottom: 6 }}>Your titles will appear here</div>
-                      <div style={{ fontSize: 13.5, lineHeight: 1.6, maxWidth: 320 }}>Enter a topic on the left and hit Generate. Each title comes scored so you can pick the strongest.</div>
-                    </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                      {titles.map((t, i) => {
-                        const sc = scoreTitle(t, topic)
-                        const col = bandColor(sc.band)
-                        return (
-                          <button key={i} onClick={() => copy(t, i)} title="Click to copy"
-                            style={{ textAlign: 'left', display: 'flex', alignItems: 'flex-start', gap: 12, background: copied === i ? 'var(--ytg-accent-light)' : '#fafafb', border: '1px solid var(--ytg-border)', borderRadius: 12, padding: '12px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s, border-color 0.15s' }}
-                            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ytg-border-2)' }}
-                            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--ytg-border)' }}>
-                            <span style={{ flex: 1, fontSize: 14.5, fontWeight: 500, color: 'var(--ytg-text)', lineHeight: 1.45 }}>{t}</span>
-                            <span className="tg-chip" style={{ color: col.fg, background: col.bg, flexShrink: 0, marginTop: 1 }}>{sc.score}</span>
-                            <span style={{ fontSize: 11.5, fontWeight: 700, color: copied === i ? 'var(--ytg-accent-text)' : 'var(--ytg-text-3)', flexShrink: 0, width: 38, textAlign: 'right', marginTop: 2 }}>{copied === i ? 'Copied' : 'Copy'}</span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  )}
-                </div>
+                titles.length === 0 ? (
+                  <div style={{ minHeight: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                    <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', marginBottom: 8 }}>Your titles appear here</div>
+                    <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: 300 }}>Enter a topic and hit generate. Each title comes scored so you can pick the strongest.</div>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6 }}>12 titles · tap to copy</div>
+                    {titles.map((t, i) => {
+                      const sc = scoreTitle(t, topic)
+                      const col = bandColor(sc.band, true)
+                      return (
+                        <button key={i} onClick={() => copy(t, i)} className="tg-titlerow" title="Click to copy">
+                          <span style={{ flex: 1, fontFamily: SANS, fontSize: 14.5, fontWeight: 500, color: '#fff', lineHeight: 1.4 }}>{t}</span>
+                          <span className="tg-chip" style={{ color: col.fg, background: col.bg, marginTop: 1 }}>{sc.score}</span>
+                          <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, color: copied === i ? '#5dd39e' : 'rgba(255,255,255,0.45)', flexShrink: 0, width: 42, textAlign: 'right', marginTop: 3, letterSpacing: '0.04em', textTransform: 'uppercase' }}>{copied === i ? 'Copied' : 'Copy'}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )
               ) : (
-                <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 24 : 30, minHeight: 320 }}>
-                  {!analysis ? (
-                    <div style={{ height: '100%', minHeight: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', color: 'var(--ytg-text-3)', padding: 24 }}>
-                      <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 17, fontWeight: 700, color: 'var(--ytg-text-2)', marginBottom: 6 }}>Your score will appear here</div>
-                      <div style={{ fontSize: 13.5, lineHeight: 1.6, maxWidth: 320 }}>Paste a title on the left to see its score and a breakdown of what is helping and hurting.</div>
+                !analysis ? (
+                  <div style={{ minHeight: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+                    <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', marginBottom: 8 }}>Your score appears here</div>
+                    <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: 300 }}>Paste a title to see its score and a breakdown of what is helping and hurting.</div>
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 22 }}>
+                      <div className="tg-chip" style={{ fontFamily: SERIF, fontSize: 44, fontWeight: 400, letterSpacing: '-1.5px', lineHeight: 1, padding: 0, background: 'transparent', color: bandColor(analysis.band, true).fg }}>{analysis.score}</div>
+                      <div>
+                        <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', letterSpacing: '-0.3px' }}>{analysis.band}</div>
+                        <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'rgba(255,255,255,0.5)' }}>out of 100 · {analysis.len} characters</div>
+                      </div>
                     </div>
-                  ) : (
-                    <>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 22 }}>
-                        <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 46, fontWeight: 800, letterSpacing: '-2px', lineHeight: 1, color: bandColor(analysis.band).fg }}>{analysis.score}</div>
-                        <div>
-                          <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 20, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>{analysis.band}</div>
-                          <div style={{ fontSize: 12.5, color: 'var(--ytg-text-3)' }}>out of 100 · {analysis.len} characters</div>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                        {analysis.checks.map((c) => (
-                          <div key={c.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 11 }}>
-                            <span aria-hidden="true" style={{ width: 18, height: 18, borderRadius: '50%', flexShrink: 0, marginTop: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: c.pass ? 'rgba(26,157,90,0.13)' : 'var(--ytg-accent-light)' }}>
-                              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                                {c.pass
-                                  ? <path d="M1.5 5.2l2.2 2.2L8.5 2.6" stroke="#1a9d5a" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                                  : <path d="M2.2 2.2l5.6 5.6M7.8 2.2l-5.6 5.6" stroke="var(--ytg-accent)" strokeWidth="1.7" strokeLinecap="round" />}
-                              </svg>
-                            </span>
-                            <div>
-                              <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ytg-text)', letterSpacing: '-0.1px' }}>{c.label}</div>
-                              <div style={{ fontSize: 12.5, color: 'var(--ytg-text-2)', lineHeight: 1.5 }}>{c.hint}</div>
-                            </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
+                      {analysis.checks.map((c) => (
+                        <div key={c.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 11 }}>
+                          <span aria-hidden="true" style={{ width: 18, height: 18, flexShrink: 0, marginTop: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: c.pass ? 'rgba(93,211,158,0.18)' : 'rgba(230,179,92,0.18)' }}>
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                              {c.pass
+                                ? <path d="M1.5 5.2l2.2 2.2L8.5 2.6" stroke="#5dd39e" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                                : <path d="M2.2 2.2l5.6 5.6M7.8 2.2l-5.6 5.6" stroke="#e6b35c" strokeWidth="1.7" strokeLinecap="round" />}
+                            </svg>
+                          </span>
+                          <div>
+                            <div style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: '#fff' }}>{c.label}</div>
+                            <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'rgba(255,255,255,0.58)', lineHeight: 1.5 }}>{c.hint}</div>
                           </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )
               )}
             </div>
           </div>
@@ -398,113 +375,69 @@ export default function YoutubeTitleGenerator() {
       </section>
 
       {/* ══ HOW IT WORKS ══ */}
-      <section id="how-it-works" className="tg-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
-          <div style={{ marginBottom: 48, maxWidth: 720 }}>
+      <section className="tg-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="tg-wrap">
+          <div style={{ marginBottom: 40, maxWidth: 680 }}>
             <Eyebrow>What the score measures</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, textWrap: 'balance' }}>
-              What makes a title <span style={{ color: 'var(--ytg-accent)' }}>get clicked.</span>
-            </h2>
+            <h2 className="tg-h2" style={{ fontSize: H2, textWrap: 'balance' }}>What makes a title <em>get clicked.</em></h2>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-            {[
-              { h: 'Length that survives truncation', p: 'YouTube cuts titles off in search, suggested, and on mobile, often near 55 to 60 characters. Keep the promise and the keyword inside the first 50 and nothing important disappears. The score rewards 40 to 60 and flags anything that will get clipped.' },
-              { h: 'A number sets a concrete expectation', p: "'7 mistakes' tells the viewer exactly what they get and how long it takes to skim. Concrete beats vague, and the year (2026) signals freshness. Numbers are one of the most reliable click-through levers, so the analyzer counts them." },
-              { h: 'A power word adds curiosity or stakes', p: 'Words like Proven, Secret, Mistake, or Honest raise the emotional temperature of a title without lengthening the core promise. They give the viewer a reason to care, not just to know.' },
-              { h: 'Brackets give you a second hook', p: 'An add-on like (Step by Step) or (2026 Update) separates a bonus from the main claim and reliably lifts clicks across large title datasets. The score gives credit for one, used with purpose.' },
-            ].map((row, i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 12 : 56, paddingTop: i === 0 ? 0 : 28, borderTop: i === 0 ? 'none' : '1px solid var(--ytg-border)' }}>
-                <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 20 : 22, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.5px', lineHeight: 1.25 }}>{row.h}</h3>
-                <p style={{ fontSize: 15.5, color: 'var(--ytg-text-2)', lineHeight: 1.75 }}>{row.p}</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {HOW_IT_WORKS.map((row, i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
+                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══ HOW TO GROW (3 cards) ══ */}
-      <section className="tg-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-          <div style={{ marginBottom: 44, textAlign: 'center', maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
+      {/* ══ BEYOND THE TITLE (grow cards) ══ */}
+      <section className="tg-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-bg)' }}>
+        <div className="tg-wrap">
+          <div style={{ marginBottom: 32, maxWidth: 680 }}>
             <Eyebrow>Beyond the title</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>
-              The title gets the click. <span style={{ color: 'var(--ytg-accent)' }}>Then what?</span>
-            </h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>A great title only matters if the thumbnail earns the look and the video keeps the viewer. YTGrowth scores all three.</p>
+            <h2 className="tg-h2" style={{ fontSize: H2, marginBottom: 12, textWrap: 'balance' }}>The title gets the click. <em>Then what?</em></h2>
+            <p className="tg-lead" style={{ fontSize: 17 }}>A great title only matters if the thumbnail earns the look and the video keeps the viewer. YTGrowth scores all three.</p>
           </div>
-          <div className="tg-grid-3">
-            {[
-              { label: 'SEO Studio', title: 'Title vs the top results', body: 'Score your title against the videos already ranking for your keyword, so you optimize toward what is winning in your niche, not a generic checklist.', href: '/features/seo-studio' },
-              { label: 'Thumbnail IQ', title: 'Win the look, not just the read', body: 'The title and thumbnail work as a pair. Score your thumbnail on contrast, faces, and text density against the top performers before you upload.', href: '/features/thumbnail-iq' },
-              { label: 'AI Channel Audit', title: 'Find what is holding you back', body: 'A 10-dimension audit across your last 20 videos, CTR, and retention, with a prioritized list of what to fix first.', href: '/features/channel-audit' },
-            ].map((card, i) => (
-              <a key={i} href={card.href} style={{ display: 'block', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: 30, boxShadow: 'var(--ytg-shadow-sm)', textDecoration: 'none', transition: 'transform 0.18s, box-shadow 0.18s, border-color 0.18s' }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)'; e.currentTarget.style.borderColor = 'var(--ytg-border-2)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>{card.label}</p>
-                <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 20, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px', marginBottom: 12, lineHeight: 1.25 }}>{card.title}</h3>
-                <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.65 }}>{card.body}</p>
+          <div className="tg-grow-grid">
+            {GROW.map((c, i) => (
+              <a key={i} href={c.href} className="tg-grow-card">
+                <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{c.label}</div>
+                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{c.title}</h3>
+                <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{c.body}</p>
               </a>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══ DARK CTA ══ */}
-      <section className="tg-section-pad tg-cta-pad" style={{ padding: isMobile ? '88px 24px' : '120px 48px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', position: 'relative', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: '42%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: isMobile ? 600 : 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.20) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 820, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 22 }}>
-            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.78)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Free AI audit</span>
-          </div>
-          <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#ffffff', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>
-            A strong title is step one. <span style={{ color: '#ff3b30' }}>Grow the rest.</span>
-          </h2>
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'rgba(255,255,255,0.68)', lineHeight: 1.7, marginBottom: 32, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
-            Connect your channel for a free AI audit and get titles, thumbnails, and SEO scored against the videos winning in your niche.
-          </p>
-          <a href="/auth/login" className="tg-btn tg-btn-lg">Get my free audit →</a>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', marginTop: 16 }}>Free trial · no card · upgrade anytime</p>
-        </div>
-      </section>
-
       {/* ══ FAQ ══ */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 20px' : '110px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', top: '-10%', left: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1160, margin: '0 auto', position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '340px 1fr', gap: isMobile ? 40 : 88, alignItems: 'start' }}>
-          <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
+      <div className="tg-section-pad" style={{ background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)', padding: isMobile ? '60px 22px' : '104px 48px' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 36 : 80, alignItems: 'start' }}>
+          <div>
             <Eyebrow>Frequently asked</Eyebrow>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
-              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
-            </h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
-              Everything creators ask about writing titles that rank and get the click. Still unsure? <a href="/contact" style={{ color: 'var(--ytg-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
+            <h2 className="tg-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 14, textWrap: 'balance' }}>Titles, <em>answered.</em></h2>
+            <p className="tg-lead" style={{ fontSize: 14.5, maxWidth: 300 }}>
+              Everything creators ask about titles that rank and get the click. Still unsure? <a href="/contact" style={{ color: 'var(--yte-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
             </p>
           </div>
-          <div style={{ borderTop: '1px solid rgba(10,10,15,0.10)' }}>
+          <div style={{ borderTop: '1px solid var(--yte-line)' }}>
             {FAQS.map((item, i) => {
               const isOpen = openFaq === i
-              const num = String(i + 1).padStart(2, '0')
               return (
-                <div key={i} style={{ borderBottom: '1px solid rgba(10,10,15,0.10)', position: 'relative' }}>
-                  {isOpen && <div aria-hidden="true" style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 2, background: 'var(--ytg-accent)', borderRadius: 2 }} />}
+                <div key={i} style={{ borderBottom: '1px solid var(--yte-line)' }}>
                   <div onClick={() => setOpenFaq(isOpen ? null : i)} role="button" tabIndex={0}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
-                    style={{ display: 'flex', alignItems: 'flex-start', gap: isMobile ? 14 : 20, padding: isMobile ? '20px 0' : '24px 0', paddingLeft: isOpen ? (isMobile ? 16 : 22) : 0, cursor: 'pointer', transition: 'padding-left 0.25s ease', userSelect: 'none' }}>
-                    <span style={{ fontSize: isMobile ? 12 : 13, fontWeight: 700, color: isOpen ? 'var(--ytg-accent)' : 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums', lineHeight: 1.5, flexShrink: 0, width: isMobile ? 22 : 28, paddingTop: 2, transition: 'color 0.2s' }}>{num}</span>
-                    <span style={{ flex: 1, fontSize: isMobile ? 15 : 16, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.45, letterSpacing: '-0.2px' }}>{item.q}</span>
-                    <span aria-hidden="true" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.05)', border: `1px solid ${isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.10)'}`, transition: 'background 0.2s, border-color 0.2s', marginTop: 1 }}>
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M1 5h8" stroke={isOpen ? '#ffffff' : 'var(--ytg-text-2)'} strokeWidth="1.8" strokeLinecap="round" />
-                        {!isOpen && <path d="M5 1v8" stroke="var(--ytg-text-2)" strokeWidth="1.8" strokeLinecap="round" />}
-                      </svg>
-                    </span>
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
+                  >
+                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`tg-faq-answer${isOpen ? ' open' : ''}`}>
                     <div className="tg-faq-answer-inner">
-                      <div style={{ paddingLeft: isMobile ? 36 : 48, paddingRight: isMobile ? 40 : 48, paddingBottom: isMobile ? 22 : 26 }}>
-                        <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, margin: 0 }}>{item.a}</p>
+                      <div style={{ paddingBottom: isMobile ? 22 : 26, maxWidth: 680 }}>
+                        <p style={{ fontFamily: SANS, fontSize: isMobile ? 14.5 : 15.5, color: 'var(--yte-soft)', lineHeight: 1.78, margin: 0 }}>{item.a}</p>
                       </div>
                     </div>
                   </div>
