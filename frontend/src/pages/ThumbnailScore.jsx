@@ -3,14 +3,21 @@ import { ChevronDown, Upload, Lightbulb } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
-// Load Geist once, SCOPED to this page (each page owns its font loading, never global)
-if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-geist-font')) {
+// Load the editorial app fonts once, SCOPED to this page (each page owns its
+// font loading, never global). Cormorant Garamond = display H1 + score numbers,
+// Barlow = body/UI, Barlow Condensed = labels/buttons. Mirrors SeoOptimizer.
+if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-editorial-font')) {
   const link = document.createElement('link')
-  link.id = 'thumb-iq-geist-font'
+  link.id = 'thumb-iq-editorial-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
   document.head.appendChild(link)
 }
+
+// Cormorant display face, used for the H1 and every big number/score, matches
+// the shipped SeoOptimizer / Overview treatment (weight 500).
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const COND  = "'Barlow Condensed', sans-serif"
 
 /* Dark, mirrors the shipped app-shell / Competitors dark system.
    Defined above the injected stylesheet so it can interpolate ${C.*}.
@@ -18,7 +25,9 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-geist-
 const C = {
   red:    '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)', redHi:   '#7a5b14',
   green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#2d7a4f',
-  amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#b07d1a',
+  // "amber" kept as a token name but remapped to the warm gold accent family
+  // so no foreign orange survives (mid/neutral states read as gold, not orange).
+  amber:  '#c9a030', amberBg: 'rgba(201,160,48,0.13)', amberBdr: 'rgba(201,160,48,0.32)', amberHi: '#7a5b14',
   text1:  '#14130f', text2: '#6b6862', text3: '#6b6862',
   border: 'rgba(20,19,15,0.08)',
   card:        'linear-gradient(180deg, var(--yd-surface) 0%, var(--yd-surface) 100%)',
@@ -28,8 +37,9 @@ const C = {
   hairHi:      'rgba(20,19,15,0.16)',
   wash:        'rgba(20,19,15,0.04)',
   washActive:  'rgba(20,19,15,0.06)',
-  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
-  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+  // Flat editorial system: cards are hairline + radius 0, NO shadow.
+  cardShadow:     'none',
+  cardShadowLift: 'none',
 }
 
 /* ─── Inject styles once ─────────────────────────────────────────────────── */
@@ -50,14 +60,14 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
     .tiq-card {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       box-shadow: ${C.cardShadow};
       transition: box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), border-color 0.2s cubic-bezier(0.2,0.7,0.3,1);
     }
     .tiq-section { animation: thumbFadeUp 0.28s ease both; }
     .tiq-upload-zone {
       border: 2px dashed ${C.hairHi};
-      border-radius: 14px;
+      border-radius: 0;
       padding: 36px 32px;
       text-align: center;
       transition: border-color 0.2s cubic-bezier(0.2,0.7,0.3,1), background 0.2s;
@@ -85,11 +95,11 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       padding: 4px;
       background: ${C.cardFlat};
       border: 1px solid ${C.hair};
-      border-radius: 100px;
+      border-radius: 0;
       width: fit-content;
     }
     .tiq-tab-btn {
-      padding: 7px 16px; border-radius: 100px;
+      padding: 7px 16px; border-radius: 0;
       border: 1px solid transparent;
       background: transparent; color: ${C.text2};
       cursor: pointer; font-family: inherit;
@@ -111,7 +121,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
     .tiq-acc-header {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       box-shadow: ${C.cardShadow};
       padding: 14px 20px;
       display: flex;
@@ -129,7 +139,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       transform: translateY(-1px);
     }
     .tiq-acc-header.open {
-      border-radius: 14px 14px 0 0;
+      border-radius: 0;
       border-bottom-color: ${C.hair};
       transform: none;
     }
@@ -137,7 +147,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
     .tiq-acc-body {
       border: 1px solid ${C.hair};
       border-top: none;
-      border-radius: 0 0 14px 14px;
+      border-radius: 0;
       background: rgba(20,19,15,0.02);
       padding: 24px 20px 28px;
       box-shadow: ${C.cardShadow};
@@ -150,7 +160,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       right: 12px;
       width: 26px;
       height: 26px;
-      border-radius: 8px;
+      border-radius: 0;
       border: 1px solid transparent;
       background: transparent;
       color: ${C.text3};
@@ -173,32 +183,28 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
     /* "Open report" button, red pill, primary CTA */
     .tiq-btn-report {
       background: #c9a030;
-      color: #fff;
+      color: var(--yd-on-gold);
       border: none;
-      border-radius: 100px;
-      padding: 8px 15px;
-      font-size: 12.5px;
+      border-radius: 0;
+      padding: 9px 16px;
+      font-size: 12px;
       font-weight: 600;
-      font-family: inherit;
-      letter-spacing: -0.05px;
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       cursor: pointer;
       white-space: nowrap;
-      transition: filter 0.18s cubic-bezier(0.2,0.7,0.3,1),
-                  transform 0.18s cubic-bezier(0.2,0.7,0.3,1),
-                  box-shadow 0.18s cubic-bezier(0.2,0.7,0.3,1);
+      transition: filter 0.18s cubic-bezier(0.2,0.7,0.3,1);
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 1px 3px rgba(201,160,48,0.28);
+      box-shadow: none;
     }
     .tiq-btn-report:hover {
       filter: brightness(1.08);
-      transform: translateY(-1px);
     }
     .tiq-btn-report.open {
       background: #7a5b14;
-      box-shadow: none;
-      transform: none;
     }
   `
   document.head.appendChild(s)
@@ -209,12 +215,12 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
        context goes neutral so red can stay semantic for action. ─────────── */
 /* (dark C palette defined above the injected stylesheet) */
 
-// Canonical thresholds: ≥75 green / ≥50 amber / <50 red (matches
-// Dashboard.jsx:1212 and SeoOptimizer.jsx:275). 4-tier + orange tier
-// removed so the same score renders identically across every page.
+// Canonical tiers, matches the shipped SeoOptimizer scale exactly
+// (score >= 75 green / >= 50 neutral grey / else gold-danger). The old amber
+// mid-tier and gold "danger" were pre-editorial and clashed; killed here.
 function scoreColor(s, max = 100) {
   const pct = s / max * 100
-  return pct >= 75 ? C.green : pct >= 50 ? C.amber : C.red
+  return pct >= 75 ? C.greenHi : pct >= 50 ? C.text2 : C.redHi
 }
 function scoreLabel(s, max = 100) {
   const pct = s / max * 100
@@ -237,11 +243,11 @@ function ScoreRing({ score, max = 100, label, size = 120, strokeW = 8 }) {
         transform={`rotate(-90 ${cx} ${cx})`}
         style={{ transition: 'stroke-dasharray 1s cubic-bezier(0.34,1.56,0.64,1)' }}
       />
-      <text x={cx} y={cx - 6} textAnchor="middle" fill={col}
-        fontSize={size * 0.195} fontWeight="700" fontFamily="Geist,Inter,sans-serif"
+      <text x={cx} y={cx - 4} textAnchor="middle" fill={col}
+        fontSize={size * 0.28} fontWeight="500" fontFamily={SERIF}
         style={{ fontVariantNumeric: 'tabular-nums' }}>{score}</text>
-      <text x={cx} y={cx + 14} textAnchor="middle" fill={C.text3}
-        fontSize="10" fontFamily="Geist,Inter,sans-serif">{label}</text>
+      <text x={cx} y={cx + 15} textAnchor="middle" fill={C.text3}
+        fontSize="10" fontFamily="'Barlow', sans-serif">{label}</text>
     </svg>
   )
 }
@@ -261,7 +267,7 @@ function Badge({ text, color, bg, bdr }) {
     <span style={{
       display: 'inline-flex', alignItems: 'center',
       background: bg, color, border: `1px solid ${bdr}`,
-      fontSize: 12, fontWeight: 600, padding: '4px 11px', borderRadius: 20,
+      fontSize: 12, fontWeight: 600, padding: '4px 11px', borderRadius: 0,
       letterSpacing: '0.03em',
     }}>{text}</span>
   )
@@ -427,8 +433,8 @@ function L1Row({ keyName, data, benchComp }) {
   if (bench) {
     const diff = bench.pct_diff ?? 0
     if (diff >= 0)       indicator = { icon: '✓', color: C.greenHi, label: `Niche avg: ${bench.benchmark}/${max}` }
-    else if (diff > -20) indicator = { icon: '⚠', color: C.amberHi, label: `Niche avg: ${bench.benchmark}/${max}` }
-    else                 indicator = { icon: '✗', color: '#7a5b14',   label: `Niche avg: ${bench.benchmark}/${max}` }
+    else if (diff > -20) indicator = { icon: '·', color: C.text2,  label: `Niche avg: ${bench.benchmark}/${max}` }
+    else                 indicator = { icon: '✗', color: '#7a5b14', label: `Niche avg: ${bench.benchmark}/${max}` }
   }
 
   return (
@@ -467,7 +473,7 @@ function L1Row({ keyName, data, benchComp }) {
       {open && explanation && (
         <div style={{ paddingBottom: 14, display: 'grid', gridTemplateColumns: fix ? '1fr 1fr' : '1fr', gap: 8 }}>
           {/* Why, charcoal-neutral tint. Reasoning context goes neutral so red stays semantic for the actionable Fix. */}
-          <div style={{ background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '11px 13px' }}>
+          <div style={{ background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 0, padding: '11px 13px' }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why</p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>{explanation}</p>
           </div>
@@ -476,9 +482,9 @@ function L1Row({ keyName, data, benchComp }) {
             <div style={{
               background: 'linear-gradient(160deg, rgba(201,160,48,0.07) 0%, rgba(201,160,48,0.025) 100%)',
               border: '1px solid rgba(201,160,48,0.22)',
-              borderRadius: 12,
+              borderRadius: 0,
               padding: '11px 14px',
-              boxShadow: '0 1px 2px rgba(201,160,48,0.05), 0 8px 22px rgba(201,160,48,0.08)',
+              boxShadow: 'none',
             }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Fix</p>
               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{fix}</p>
@@ -543,12 +549,12 @@ function L2Row({ dimKey, dim }) {
           )}
           {hasFix && (
             <div style={{
-              background: 'rgba(217,119,6,0.06)',
-              border: '1px solid rgba(217,119,6,0.18)',
-              borderRadius: 10,
+              background: 'rgba(201,160,48,0.07)',
+              border: '1px solid rgba(201,160,48,0.22)',
+              borderRadius: 0,
               padding: '10px 12px',
             }}>
-              <p style={{ fontSize: 12, fontWeight: 600, color: C.amberHi, marginBottom: 4,
+              <p style={{ fontSize: 12, fontWeight: 600, color: '#7a5b14', marginBottom: 4,
                           letterSpacing: '0.06em', textTransform: 'uppercase' }}>Fix</p>
               <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.6 }}>{dim.fix}</p>
             </div>
@@ -566,7 +572,7 @@ function LinkedIdeaCard({ idea }) {
     <div style={{
       background: 'rgba(20,19,15,0.035)',
       border: '1px solid rgba(15,15,19,0.08)',
-      borderRadius: 12, padding: '12px 14px', marginBottom: 16,
+      borderRadius: 0, padding: '12px 14px', marginBottom: 16,
       display: 'flex', alignItems: 'flex-start', gap: 12,
     }}>
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -587,7 +593,7 @@ function LinkedIdeaCard({ idea }) {
         display: 'inline-flex', alignItems: 'center', gap: 5,
         fontSize: 11, fontWeight: 600, color: C.greenHi,
         background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-        borderRadius: 100, padding: '3px 9px',
+        borderRadius: 0, padding: '3px 9px',
         letterSpacing: '0.04em',
         fontVariantNumeric: 'tabular-nums',
       }}>
@@ -628,7 +634,7 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
               onClick={() => onSelect(item)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 10,
-                padding: '7px 10px', borderRadius: 8, cursor: 'pointer',
+                padding: '7px 10px', borderRadius: 0, cursor: 'pointer',
                 border: `1px solid ${isActive ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.06)'}`,
                 background: isActive ? C.cardFlat : C.surfaceInput,
                 transition: 'background 0.12s',
@@ -638,8 +644,8 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
             >
               {item.thumbnail_b64
                 ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
-                       style={{ width: 48, height: 27, borderRadius: 4, objectFit: 'cover', flexShrink: 0 }}/>
-                : <div style={{ width: 48, height: 27, borderRadius: 4, background: '#e8e4dc', flexShrink: 0 }}/>
+                       style={{ width: 48, height: 27, borderRadius: 0, objectFit: 'cover', flexShrink: 0 }}/>
+                : <div style={{ width: 48, height: 27, borderRadius: 0, background: '#e8e4dc', flexShrink: 0 }}/>
               }
               <span style={{ fontSize: 12, fontWeight: 500, color: col, flexShrink: 0,
                              fontVariantNumeric: 'tabular-nums' }}>{score}/{max}</span>
@@ -654,7 +660,7 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
               </span>
               {item.linked_video_idea?.thumbnail_ready && (
                 <span style={{ fontSize: 12, fontWeight: 500, color: '#2d7a4f',
-                               background: '#dcfce7', borderRadius: 20, padding: '2px 6px', flexShrink: 0 }}>
+                               background: '#dcfce7', borderRadius: 0, padding: '2px 6px', flexShrink: 0 }}>
                   Ready
                 </span>
               )}
@@ -695,7 +701,7 @@ function Dropdown({ value, onChange, options, placeholder }) {
         style={{
           width: '100%', boxSizing: 'border-box', textAlign: 'left',
           border: `1px solid ${open ? 'rgba(201,160,48,0.35)' : C.border}`,
-          borderRadius: 10,
+          borderRadius: 0,
           padding: '12px 40px 12px 14px', fontSize: 13, fontWeight: 500,
           color: selected ? C.text1 : C.text3,
           background: C.cardFlat, fontFamily: 'inherit', outline: 'none',
@@ -707,7 +713,7 @@ function Dropdown({ value, onChange, options, placeholder }) {
           {selected ? selected.label : placeholder}
         </span>
         {selected?.meta && (
-          <span style={{ fontSize: 11, fontWeight: 600, color: C.amberHi, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 100, padding: '2px 8px', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+          <span style={{ fontSize: 11, fontWeight: 600, color: C.amberHi, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 0, padding: '2px 8px', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
             {selected.meta}
           </span>
         )}
@@ -721,7 +727,7 @@ function Dropdown({ value, onChange, options, placeholder }) {
           position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
           background: C.cardFlat,
           border: `1px solid rgba(0,0,0,0.1)`,
-          borderRadius: 12,
+          borderRadius: 0,
           boxShadow: '0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.16)',
           maxHeight: 320, overflowY: 'auto', overflowX: 'hidden',
           padding: 6, zIndex: 20,
@@ -740,7 +746,7 @@ function Dropdown({ value, onChange, options, placeholder }) {
                   style={{
                     width: '100%', boxSizing: 'border-box', textAlign: 'left',
                     display: 'flex', alignItems: 'center', gap: 12,
-                    padding: '12px 14px', border: 'none', borderRadius: 8,
+                    padding: '12px 14px', border: 'none', borderRadius: 0,
                     background: isSelected ? 'rgba(201,160,48,0.05)' : 'transparent',
                     cursor: 'pointer', fontFamily: 'inherit',
                   }}>
@@ -748,7 +754,7 @@ function Dropdown({ value, onChange, options, placeholder }) {
                     {opt.label}
                   </span>
                   {opt.meta && (
-                    <span style={{ fontSize: 11, fontWeight: 600, color: C.amberHi, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 100, padding: '2px 9px', flexShrink: 0, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px' }}>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: C.amberHi, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 0, padding: '2px 9px', flexShrink: 0, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px' }}>
                       {opt.meta}
                     </span>
                   )}
@@ -867,7 +873,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           />
 
           {selectedIdea && (
-            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 3, background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '12px 14px' }}>
+            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 3, background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 0, padding: '12px 14px' }}>
               <p style={{ fontSize: 12.5, color: C.greenHi, fontWeight: 600, letterSpacing: '-0.1px' }}>
                 Using competitor-researched keyword: &quot;{selectedIdea.targetKeyword}&quot;
               </p>
@@ -897,7 +903,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           placeholder="e.g. how to save money in your 20s"
           style={{
             width: '100%', boxSizing: 'border-box',
-            border: `1px solid ${C.border}`, borderRadius: 10,
+            border: `1px solid ${C.border}`, borderRadius: 0,
             padding: '12px 14px', fontSize: 14,
             color: selectedIdea ? C.text3 : C.text1,
             background: selectedIdea ? C.cardFlat : C.surfaceInput,
@@ -924,12 +930,12 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
       {!hasIdeas && !bannerDismissed && (
         <div style={{
           marginBottom: 14, background: C.amberBg, border: `1px solid ${C.amberBdr}`,
-          borderRadius: 12, padding: '12px 14px',
+          borderRadius: 0, padding: '12px 14px',
           display: 'flex', alignItems: 'flex-start', gap: 12,
         }}>
           <div style={{
             width: 28, height: 28, borderRadius: 99,
-            background: 'rgba(217,119,6,0.14)',
+            background: 'rgba(201,160,48,0.14)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>
@@ -1010,12 +1016,12 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
         disabled={!canUpload}
         style={{
           marginTop: 14, width: '100%',
-          padding: '11px 16px',
+          padding: '12px 16px',
           background: canUpload ? C.red : '#e0e0e6',
-          color: canUpload ? '#fff' : C.text3,
-          border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 600,
+          color: canUpload ? 'var(--yd-on-gold)' : C.text3,
+          border: 'none', borderRadius: 0, fontSize: 13, fontWeight: 600,
           cursor: canUpload ? 'pointer' : 'not-allowed',
-          fontFamily: 'inherit', letterSpacing: '0.01em', transition: 'filter 0.15s',
+          fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em', transition: 'filter 0.15s',
         }}
         onMouseEnter={e => { if (canUpload) e.currentTarget.style.filter = 'brightness(1.1)' }}
         onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
@@ -1332,7 +1338,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
+            <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>Thumbnail IQ</h1>
             <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, lineHeight: 1.5, letterSpacing: '-0.05px' }}>
               See how your thumbnail performs before you publish
               <span> · Benchmarked against real top-ranked channels</span>
@@ -1359,7 +1365,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
 
       {/* Error banner */}
       {error && (
-        <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
+        <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 0,
                       padding: '12px 16px', marginBottom: 20, fontSize: 14, color: '#7a5b14' }}>
           {error}
         </div>
@@ -1430,9 +1436,9 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
 
                     {item.thumbnail_b64
                       ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
-                             style={{ width: 64, height: 36, borderRadius: 8, objectFit: 'cover',
+                             style={{ width: 64, height: 36, borderRadius: 0, objectFit: 'cover',
                                       flexShrink: 0, boxShadow: '0 1px 3px rgba(15,15,25,0.08), 0 4px 12px rgba(15,15,25,0.08)' }}/>
-                      : <div style={{ width: 64, height: 36, borderRadius: 8, background: '#e8e4dc', flexShrink: 0 }}/>
+                      : <div style={{ width: 64, height: 36, borderRadius: 0, background: '#e8e4dc', flexShrink: 0 }}/>
                     }
 
                     {/* Left: keyword + chips */}
@@ -1446,7 +1452,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                         {item.linked_video_idea?.thumbnail_ready && (
                           <span style={{ fontSize: 11, fontWeight: 600, color: C.greenHi,
                                          background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-                                         borderRadius: 100, padding: '2px 8px', flexShrink: 0, letterSpacing: '-0.05px' }}>
+                                         borderRadius: 0, padding: '2px 8px', flexShrink: 0, letterSpacing: '-0.05px' }}>
                             Thumbnail Ready
                           </span>
                         )}
@@ -1456,18 +1462,18 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                             place 700 still earns its keep) but the chip chrome is neutral, not coloured-border. */}
                         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2,
                                        background: C.cardFlat, border: `1px solid ${col}33`,
-                                       borderRadius: 100, padding: '3px 10px', fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
+                                       borderRadius: 0, padding: '3px 10px', fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
                           <span style={{ fontSize: 13, fontWeight: 600, color: col, letterSpacing: '-0.2px' }}>{score}</span>
                           <span style={{ color: C.text3, fontWeight: 500 }}>/{max}</span>
                         </span>
                         {/* Verdict pill */}
-                        <span style={{ fontSize: 10, fontWeight: 600, color: col, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '3px 9px', borderRadius: 100, border: `1px solid ${col}55` }}>
+                        <span style={{ fontSize: 10, fontWeight: 600, color: col, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '3px 9px', borderRadius: 0, border: `1px solid ${col}55` }}>
                           {scoreLabel(score, max)}
                         </span>
                         {item.format && (
                           <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3,
                                          background: 'rgba(20,19,15,0.060)', border: '1px solid rgba(10,10,15,0.07)',
-                                         borderRadius: 100, padding: '3px 9px', fontSize: 11, color: C.text2, fontWeight: 500, letterSpacing: '-0.05px' }}>
+                                         borderRadius: 0, padding: '3px 9px', fontSize: 11, color: C.text2, fontWeight: 500, letterSpacing: '-0.05px' }}>
                             {item.format}
                           </span>
                         )}
@@ -1494,10 +1500,10 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                   {isOpen && itemL1 && (
                     <div className="tiq-acc-body">
                       <LinkedIdeaCard idea={itemLinked} />
-                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 20 }}>
                         {/* Left: image + inline AI-tag pills + Biggest Win/Fix below to fill the column height */}
                         <div>
-                          <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${C.border}`, background: C.cardFlat }}>
+                          <div style={{ borderRadius: 0, overflow: 'hidden', border: `1px solid ${C.border}`, background: C.cardFlat }}>
                             {item.thumbnail_b64
                               ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
                                      style={{ width: '100%', display: 'block', aspectRatio: '16/9', objectFit: 'cover' }}/>
@@ -1528,7 +1534,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                           {itemL2 && (itemL2.biggestWin || itemL2.biggestFix) && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
                               {itemL2.biggestWin && (
-                                <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '12px 16px' }}>
+                                <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 0, padding: '12px 16px' }}>
                                   <p style={{ fontSize: 10, fontWeight: 600, color: C.greenHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest win</p>
                                   <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestWin}</p>
                                 </div>
@@ -1537,9 +1543,9 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                                 <div style={{
                                   background: 'linear-gradient(160deg, rgba(201,160,48,0.07) 0%, rgba(201,160,48,0.025) 100%)',
                                   border: '1px solid rgba(201,160,48,0.22)',
-                                  borderRadius: 12,
+                                  borderRadius: 0,
                                   padding: '12px 16px',
-                                  boxShadow: '0 1px 2px rgba(201,160,48,0.05), 0 8px 22px rgba(201,160,48,0.08)',
+                                  boxShadow: 'none',
                                 }}>
                                   <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest fix</p>
                                   <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestFix}</p>
@@ -1636,7 +1642,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       {/* ── NEW TAB: results ─────────────────────────────────────────────── */}
       {activeTab === 'new' && (state === 'ready1' || state === 'analyzing' || state === 'ready2') && l1 && (
         <div className="tiq-section">
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 20 }}>
 
             {/* LEFT, thumbnail, AI-tag pill strip inline at the bottom of the card, then Win/Fix stacked below to fill the column */}
             <div>
@@ -1692,7 +1698,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
               {state === 'ready2' && l2 && (l2.biggestWin || l2.biggestFix) && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
                   {l2.biggestWin && (
-                    <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '14px 18px' }}>
+                    <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 0, padding: '14px 18px' }}>
                       <p style={{ fontSize: 10, fontWeight: 600, color: C.greenHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest win</p>
                       <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestWin}</p>
                     </div>
@@ -1701,9 +1707,9 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                     <div style={{
                       background: 'linear-gradient(160deg, rgba(201,160,48,0.07) 0%, rgba(201,160,48,0.025) 100%)',
                       border: '1px solid rgba(201,160,48,0.22)',
-                      borderRadius: 12,
+                      borderRadius: 0,
                       padding: '14px 18px',
-                      boxShadow: '0 1px 2px rgba(201,160,48,0.05), 0 8px 22px rgba(201,160,48,0.08)',
+                      boxShadow: 'none',
                     }}>
                       <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest fix</p>
                       <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestFix}</p>
@@ -1716,9 +1722,10 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
               <button
                 onClick={() => { setAnalysis(null); setMarkedReady(false); setState('idle') }}
                 style={{
-                  marginTop: 12, background: 'none', cursor: 'pointer', fontFamily: 'inherit',
-                  border: `1px solid ${C.border}`, borderRadius: 100,
-                  padding: '6px 14px', fontSize: 12, fontWeight: 500, color: C.text2,
+                  marginTop: 12, background: 'none', cursor: 'pointer',
+                  fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em',
+                  border: `1px solid ${C.border}`, borderRadius: 0,
+                  padding: '8px 16px', fontSize: 12, fontWeight: 600, color: C.text2,
                   transition: 'background 0.12s, border-color 0.12s',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.background = '#f4f4f7'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)' }}
@@ -1773,7 +1780,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                         ].map(s => (
                           <div key={s.label}>
                             <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>{s.label}</p>
-                            <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{s.value}</p>
+                            <p style={{ fontFamily: SERIF, fontSize: 27, fontWeight: 500, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em', lineHeight: 1 }}>{s.value}</p>
                             {s.sub && <p style={{ fontSize: 11, color: C.text3, marginTop: 4, fontWeight: 500 }}>{s.sub}</p>}
                           </div>
                         ))}
@@ -1819,10 +1826,10 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                     onClick={handleAnalyze}
                     style={{
                       width: '100%',
-                      padding: '11px 16px',
+                      padding: '12px 16px',
                       background: C.red, color: 'var(--yd-on-gold)',
-                      border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 600,
-                      cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.01em',
+                      border: 'none', borderRadius: 0, fontSize: 13, fontWeight: 600,
+                      cursor: 'pointer', fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em',
                       transition: 'filter 0.15s',
                     }}
                     onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
@@ -1850,7 +1857,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                   {markedReady ? (
                     <div style={{
                       background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-                      borderRadius: 12, padding: '12px 16px', textAlign: 'center',
+                      borderRadius: 0, padding: '12px 16px', textAlign: 'center',
                     }}>
                       <p style={{ fontSize: 14, fontWeight: 600, color: C.greenHi }}>
                         ✓ Idea marked as Thumbnail Ready · {finalScore}/100
@@ -1862,12 +1869,12 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       disabled={markingReady}
                       style={{
                         width: '100%',
-                        padding: '11px 16px',
+                        padding: '12px 16px',
                         background: markingReady ? '#e0e0e6' : C.green,
-                        color: '#fff', border: 'none', borderRadius: 100,
-                        fontSize: 14, fontWeight: 600,
+                        color: '#fff', border: 'none', borderRadius: 0,
+                        fontSize: 13, fontWeight: 600,
                         cursor: markingReady ? 'not-allowed' : 'pointer',
-                        fontFamily: 'inherit', letterSpacing: '0.01em', transition: 'filter 0.15s',
+                        fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em', transition: 'filter 0.15s',
                       }}
                       onMouseEnter={e => { if (!markingReady) e.currentTarget.style.filter = 'brightness(1.08)' }}
                       onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
@@ -1883,11 +1890,11 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 <div style={{ marginTop: 8 }}>
                   <div id="tiq-share-card" style={{
                     background: 'linear-gradient(135deg, var(--yd-paper) 0%, var(--yd-surface) 100%)',
-                    borderRadius: 16, padding: '24px', display: 'flex', gap: 16, alignItems: 'flex-start',
+                    borderRadius: 0, padding: '24px', display: 'flex', gap: 16, alignItems: 'flex-start',
                   }}>
                     {analysis.thumbnail_b64 && (
                       <img src={`data:image/jpeg;base64,${analysis.thumbnail_b64}`} alt=""
-                           style={{ width: 80, height: 45, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }}/>
+                           style={{ width: 80, height: 45, borderRadius: 0, objectFit: 'cover', flexShrink: 0 }}/>
                     )}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
@@ -1896,26 +1903,26 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                         <span style={{ fontSize: 12, color: 'rgba(20,19,15,0.2)' }}>·</span>
                         <span style={{ fontSize: 12, color: 'rgba(20,19,15,0.4)' }}>Thumbnail IQ</span>
                       </div>
-                      <p style={{ fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 8,
-                                  fontVariantNumeric: 'tabular-nums' }}>
-                        {finalScore}<span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(20,19,15,0.5)' }}>/100</span>
+                      <p style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 500, color: C.text1, marginBottom: 8,
+                                  fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+                        {finalScore}<span style={{ fontSize: 16, fontWeight: 500, color: 'rgba(20,19,15,0.4)' }}>/100</span>
                       </p>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                         {l2.emotionLabel && (
                           <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(20,19,15,0.7)',
-                                         background: 'rgba(20,19,15,0.1)', borderRadius: 6, padding: '3px 8px' }}>
+                                         background: 'rgba(20,19,15,0.1)', borderRadius: 0, padding: '3px 8px' }}>
                             {l2.emotionLabel}
                           </span>
                         )}
                         {l2.feedPosition && (
                           <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(20,19,15,0.7)',
-                                         background: 'rgba(20,19,15,0.1)', borderRadius: 6, padding: '3px 8px' }}>
+                                         background: 'rgba(20,19,15,0.1)', borderRadius: 0, padding: '3px 8px' }}>
                             {l2.feedPosition}
                           </span>
                         )}
                         {keyword && (
                           <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(20,19,15,0.5)',
-                                         background: 'rgba(20,19,15,0.07)', borderRadius: 6, padding: '3px 8px' }}>
+                                         background: 'rgba(20,19,15,0.07)', borderRadius: 0, padding: '3px 8px' }}>
                             &quot;{keyword}&quot;
                           </span>
                         )}
@@ -1925,8 +1932,8 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                   <button
                     onClick={handleCopyCard}
                     style={{ marginTop: 8, width: '100%', background: C.cardFlat, border: `1px solid ${C.border}`,
-                             borderRadius: 10, padding: '10px', fontSize: 12, fontWeight: 600,
-                             color: C.text2, cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s' }}
+                             borderRadius: 0, padding: '11px', fontSize: 12, fontWeight: 600,
+                             color: C.text2, cursor: 'pointer', fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em', transition: 'background 0.15s' }}
                     onMouseEnter={e => { e.currentTarget.style.background = '#e8e4dc' }}
                     onMouseLeave={e => { e.currentTarget.style.background = C.cardFlat }}
                   >
