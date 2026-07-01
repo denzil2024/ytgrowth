@@ -2,15 +2,18 @@ import { useState, useEffect, useRef } from 'react'
 import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
-// Geist loaded page-scoped, matches Chat / Competitors / Keywords / Outliers /
-// Video Review / Weekly Report / My Videos.
-if (typeof document !== 'undefined' && !document.getElementById('vi-geist-font')) {
+// Editorial app fonts, page-scoped. Cormorant Garamond = display H1 + big
+// numbers, Barlow = body/UI, Barlow Condensed = labels/buttons. Mirrors
+// SeoOptimizer (the canonical editorial app page).
+if (typeof document !== 'undefined' && !document.getElementById('vi-editorial-font')) {
   const link = document.createElement('link')
-  link.id = 'vi-geist-font'
+  link.id = 'vi-editorial-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
   document.head.appendChild(link)
 }
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const COND  = "'Barlow Condensed', sans-serif"
 
 /* Dark, mirrors the shipped app-shell / Competitors dark system.
    Defined above the injected stylesheet so it can interpolate ${C.*}.
@@ -18,7 +21,8 @@ if (typeof document !== 'undefined' && !document.getElementById('vi-geist-font')
 const C = {
   red:    '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)', redHi:   '#7a5b14',
   green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#2d7a4f',
-  amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#b07d1a',
+  // "amber" remapped to the warm gold accent family, no foreign orange survives.
+  amber:  '#c9a030', amberBg: 'rgba(201,160,48,0.13)', amberBdr: 'rgba(201,160,48,0.32)', amberHi: '#7a5b14',
   blue:   '#8a8378', blueBg:  'rgba(79,134,247,0.14)', blueBdr: 'rgba(79,134,247,0.34)',
   text1:  '#14130f',
   text2:  '#6b6862',
@@ -32,8 +36,9 @@ const C = {
   hairHi:      'rgba(20,19,15,0.16)',
   wash:        'rgba(20,19,15,0.04)',
   washActive:  'rgba(20,19,15,0.06)',
-  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
-  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+  // Flat editorial system: cards are hairline + radius 0, NO shadow.
+  cardShadow:     'none',
+  cardShadowLift: 'none',
 }
 
 /* ─── Styles injected once, matches the Overview/Videos/Outliers design
@@ -56,7 +61,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
     .vi-idea-card {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 12px;
+      border-radius: 0;
       overflow: hidden;
       margin-bottom: 12px;
       box-shadow: ${C.cardShadow};
@@ -81,7 +86,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       background: linear-gradient(90deg, rgba(20,19,15,0.04) 25%, rgba(20,19,15,0.08) 50%, rgba(20,19,15,0.04) 75%);
       background-size: 200% 100%;
       animation: viSkeleton 1.4s ease infinite;
-      border-radius: 8px;
+      border-radius: 0;
     }
     @keyframes viSkeleton {
       0%   { background-position: 200% 0 }
@@ -97,9 +102,9 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       padding: 20px; animation: viFadeUp 0.2s ease both;
     }
     .vi-modal {
-      background: ${C.card}; border-radius: 16px;
+      background: ${C.card}; border-radius: 0;
       border: 1px solid ${C.hair};
-      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.18);
       width: 100%; max-width: 440px; overflow: hidden;
     }
   `
@@ -170,16 +175,16 @@ function LightbulbIcon() {
 }
 
 function ScorePill({ score }) {
-  // Standard app scoreColor thresholds: ≥75 green, 55–74 amber, <55 red
-  // (matches Overview's Score breakdown and SeoOptimizer's score rings).
-  const color = score >= 75 ? C.green : score >= 55 ? C.amber : C.red
-  const bg    = score >= 75 ? C.greenBg : score >= 55 ? C.amberBg : C.redBg
-  const bdr   = score >= 75 ? C.greenBdr : score >= 55 ? C.amberBdr : C.redBdr
+  // Canonical tiers, matches SeoOptimizer: >=75 green, 55-74 neutral grey,
+  // else gold-danger. No amber mid-tier.
+  const color = score >= 75 ? C.greenHi : score >= 55 ? C.text2 : C.redHi
+  const bg    = score >= 75 ? C.greenBg : score >= 55 ? C.wash : C.redBg
+  const bdr   = score >= 75 ? C.greenBdr : score >= 55 ? C.hair : C.redBdr
   return (
     <span style={{
-      fontSize: 14, fontWeight: 700, color,
+      fontSize: 14, fontWeight: 600, color,
       background: bg, border: `1px solid ${bdr}`,
-      borderRadius: 8, padding: '4px 10px',
+      borderRadius: 0, padding: '4px 10px',
       whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums',
     }}>
       {score}
@@ -198,7 +203,7 @@ function SourceBadge({ source }) {
       fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
       color: tone.color, background: tone.bg,
       border: `1px solid ${tone.bdr}`,
-      borderRadius: 100, padding: '2px 9px',
+      borderRadius: 0, padding: '2px 9px',
     }}>{tone.label}</span>
   )
 }
@@ -211,7 +216,7 @@ function KeywordPill({ keyword }) {
       fontSize: 12, fontWeight: 500,
       color: C.text2, background: C.cardFlat,
       border: `1px solid ${C.border}`,
-      borderRadius: 20, padding: '5px 11px',
+      borderRadius: 0, padding: '5px 11px',
     }}>
       {keyword}
     </span>
@@ -227,22 +232,22 @@ function SkeletonCard({ index }) {
       <div style={{ padding: '16px 22px 18px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
-            <div className="vi-skeleton" style={{ width: 15, height: 15, borderRadius: 3 }} />
-            <div className="vi-skeleton" style={{ width: 26, height: 26, borderRadius: 8 }} />
+            <div className="vi-skeleton" style={{ width: 15, height: 15, borderRadius: 0 }} />
+            <div className="vi-skeleton" style={{ width: 26, height: 26, borderRadius: 0 }} />
           </div>
           <div style={{ flex: 1 }}>
             <div className="vi-skeleton" style={{ height: 10, width: 140, marginBottom: 7 }} />
             <div className="vi-skeleton" style={{ height: 14, width: '72%' }} />
           </div>
-          <div className="vi-skeleton" style={{ width: 58, height: 22, borderRadius: 20, flexShrink: 0 }} />
+          <div className="vi-skeleton" style={{ width: 58, height: 22, borderRadius: 0, flexShrink: 0 }} />
         </div>
         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8, marginLeft: 46 }}>
-          <div className="vi-skeleton" style={{ height: 78, borderRadius: 10 }} />
-          <div className="vi-skeleton" style={{ height: 78, borderRadius: 10 }} />
+          <div className="vi-skeleton" style={{ height: 78, borderRadius: 0 }} />
+          <div className="vi-skeleton" style={{ height: 78, borderRadius: 0 }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 14, marginLeft: 46 }}>
-          <div className="vi-skeleton" style={{ width: 168, height: 36, borderRadius: 100 }} />
+          <div className="vi-skeleton" style={{ width: 168, height: 36, borderRadius: 0 }} />
         </div>
       </div>
     </div>
@@ -287,7 +292,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
           </ul>
           <div style={{
             fontSize: 12.5, color: C.text3, background: '#f6f6f9',
-            border: `1px solid ${C.border}`, borderRadius: 10,
+            border: `1px solid ${C.border}`, borderRadius: 0,
             padding: '9px 12px', lineHeight: 1.55, marginBottom: 18,
           }}>
             Your existing ideas will be replaced.
@@ -297,9 +302,9 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
             <button
               onClick={onCancel}
               style={{
-                padding: '10px 18px', borderRadius: 100,
+                padding: '11px 18px', borderRadius: 0,
                 border: `1px solid ${C.border}`, background: C.cardFlat, color: C.text2,
-                fontSize: 14, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+                fontSize: 12.5, fontWeight: 600, fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em', cursor: 'pointer',
                 transition: 'background 0.15s, border-color 0.15s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = '#f6f6f9' }}
@@ -308,10 +313,10 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
             <button
               onClick={onConfirm}
               style={{
-                padding: '10px 20px', borderRadius: 100, border: 'none',
+                padding: '11px 20px', borderRadius: 0, border: 'none',
                 background: C.red, color: 'var(--yd-on-gold)',
-                fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
-                letterSpacing: '0.01em', cursor: 'pointer',
+                fontSize: 12.5, fontWeight: 600, fontFamily: COND,
+                textTransform: 'uppercase', letterSpacing: '0.06em', cursor: 'pointer',
                 transition: 'filter 0.15s',
               }}
               onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)' }}
@@ -344,9 +349,9 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
     : Math.max(65, 85 - (idea.rank - 1) * 2)
 
   const sevLabel = score >= 75 ? 'Strong' : score >= 60 ? 'Solid' : 'Weak'
-  const sevColor = score >= 75 ? C.green : score >= 60 ? C.amber : C.red
-  const sevBg    = score >= 75 ? 'rgba(22,163,74,0.08)' : score >= 60 ? 'rgba(217,119,6,0.08)' : 'rgba(201,160,48,0.07)'
-  const sevBdr   = score >= 75 ? 'rgba(22,163,74,0.22)' : score >= 60 ? 'rgba(217,119,6,0.22)' : 'rgba(201,160,48,0.18)'
+  const sevColor = score >= 75 ? C.greenHi : score >= 60 ? C.text2 : C.redHi
+  const sevBg    = score >= 75 ? 'rgba(22,163,74,0.08)' : score >= 60 ? 'rgba(20,19,15,0.04)' : 'rgba(201,160,48,0.07)'
+  const sevBdr   = score >= 75 ? 'rgba(22,163,74,0.22)' : score >= 60 ? 'rgba(20,19,15,0.10)' : 'rgba(201,160,48,0.20)'
 
   const proof = Array.isArray(idea.top_competing_videos) ? idea.top_competing_videos : []
   const hasProof = proof.length > 0
@@ -365,7 +370,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
   // Severity stripe color for the 3px top accent.
   const stripeColor = done
     ? 'rgba(20,19,15,0.08)'
-    : (score >= 75 ? C.green : score >= 60 ? C.amber : C.red)
+    : (score >= 75 ? C.greenHi : score >= 60 ? C.text2 : C.redHi)
 
   return (
     <div className={`vi-idea-card${done ? ' done' : ''}`}>
@@ -381,18 +386,18 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
           <div style={{
             flexShrink: 0,
-            width: 26, height: 26, borderRadius: 7,
+            width: 26, height: 26, borderRadius: 0,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            background: done ? 'rgba(22,163,74,0.10)' : 'rgba(217,119,6,0.10)',
-            border: done ? '1px solid rgba(22,163,74,0.22)' : '1px solid rgba(217,119,6,0.22)',
+            background: done ? 'rgba(22,163,74,0.10)' : 'rgba(201,160,48,0.10)',
+            border: done ? '1px solid rgba(22,163,74,0.22)' : '1px solid rgba(201,160,48,0.22)',
           }}>
             {done
               ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-              : <span style={{ fontSize: 11.5, fontWeight: 700, color: C.amberHi, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
+              : <span style={{ fontSize: 11.5, fontWeight: 600, color: C.amberHi, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
             }
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 700, color: C.text2,
+            fontSize: 11, fontWeight: 600, color: C.text2,
             letterSpacing: '0.12em', textTransform: 'uppercase',
           }}>Video Idea</span>
           {idea.targetKeyword && (
@@ -410,7 +415,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             <span style={{
               fontSize: 10.5, fontWeight: 600, color: sevColor,
               background: sevBg, border: `1px solid ${sevBdr}`,
-              padding: '3px 9px', borderRadius: 100,
+              padding: '3px 9px', borderRadius: 0,
               letterSpacing: '0.08em', textTransform: 'uppercase',
               fontVariantNumeric: 'tabular-nums',
             }}>{sevLabel} · {score}</span>
@@ -486,7 +491,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                       style={{
                         display: 'block',
                         textDecoration: 'none', color: 'inherit',
-                        borderRadius: 10, overflow: 'hidden',
+                        borderRadius: 0, overflow: 'hidden',
                         border: '1px solid rgba(20,19,15,0.08)',
                         background: C.cardFlat,
                         transition: 'transform 0.14s, box-shadow 0.14s, border-color 0.14s',
@@ -515,8 +520,8 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                         <span style={{
                           position: 'absolute', bottom: 7, right: 7,
                           background: 'rgba(0,0,0,0.78)', color: '#fff',
-                          fontSize: 11, fontWeight: 700,
-                          padding: '3px 7px', borderRadius: 5,
+                          fontSize: 11, fontWeight: 600,
+                          padding: '3px 7px', borderRadius: 0,
                           fontVariantNumeric: 'tabular-nums',
                           letterSpacing: '-0.05px',
                           backdropFilter: 'blur(2px)',
@@ -547,7 +552,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
               <div style={{
                 background: 'rgba(20,19,15,0.04)',
                 border: '1px dashed rgba(15,15,19,0.10)',
-                borderRadius: 10,
+                borderRadius: 0,
                 padding: '12px 14px',
                 marginBottom: 14,
                 display: 'flex', alignItems: 'center', gap: 8,
@@ -577,16 +582,16 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                 onClick={() => onUseSeo(idea.title)}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '8px 14px', borderRadius: 100,
+                  padding: '9px 15px', borderRadius: 0,
                   border: 'none', cursor: 'pointer',
                   background: C.red, color: 'var(--yd-on-gold)',
-                  fontFamily: 'inherit',
-                  fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
-                  boxShadow: '0 1px 3px rgba(201,160,48,0.30)',
-                  transition: 'filter 0.14s ease, transform 0.14s ease',
+                  fontFamily: COND, textTransform: 'uppercase',
+                  fontSize: 12, fontWeight: 600, letterSpacing: '0.06em',
+                  boxShadow: 'none',
+                  transition: 'filter 0.14s ease',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
               >
                 Use in SEO Studio
                 <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/></svg>
@@ -598,11 +603,11 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   aria-label={open ? 'Hide angle' : 'Show angle'}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 4,
-                    padding: '7px 12px', borderRadius: 100,
-                    border: '1px solid rgba(20,19,15,0.08)',
+                    padding: '8px 13px', borderRadius: 0,
+                    border: '1px solid rgba(20,19,15,0.12)',
                     background: C.cardFlat, color: C.text2,
-                    fontFamily: 'inherit',
-                    fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
+                    fontFamily: COND, textTransform: 'uppercase',
+                    fontSize: 12, fontWeight: 600, letterSpacing: '0.06em',
                     cursor: 'pointer',
                     transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
                   }}
@@ -619,14 +624,14 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             {open && idea.angle && (
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #f1f1f4' }}>
                 <div style={{
-                  background: 'rgba(217,119,6,0.05)',
-                  border: '1px solid rgba(217,119,6,0.14)',
+                  background: 'rgba(201,160,48,0.05)',
+                  border: '1px solid rgba(201,160,48,0.16)',
                   borderLeft: `3px solid ${C.amber}`,
-                  borderRadius: '0 10px 10px 0',
+                  borderRadius: 0,
                   padding: '12px 16px',
                 }}>
                   <p style={{ fontSize: 9.5, fontWeight: 600, color: C.amberHi, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why this works</p>
-                  <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', lineHeight: 1.65 }}>{idea.angle}</p>
+                  <p style={{ fontSize: 14, fontWeight: 400, color: C.text1, letterSpacing: '-0.01em', lineHeight: 1.65 }}>{idea.angle}</p>
                 </div>
               </div>
             )}
@@ -842,14 +847,14 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
     const viTeaser = (
       <div style={{
         background: C.cardFlat, border: `1px solid ${C.border}`,
-        borderRadius: 16, padding: '22px 24px',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+        borderRadius: 0, padding: '22px 24px',
+        boxShadow: 'none',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
           <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
             Fresh ideas · ranked by opportunity
           </p>
-          <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f1f1f6', border: `1px solid ${C.border}`, borderRadius: 100, padding: '2px 8px' }}>10 ranked</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f1f1f6', border: `1px solid ${C.border}`, borderRadius: 0, padding: '2px 8px' }}>10 ranked</span>
         </div>
         {[
           ['My First 10K Subs · The 3 Things That Worked',           92],
@@ -857,20 +862,20 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           ['The Thumbnail Formula That Tripled My CTR',                        84],
           ['Why Your Intro Is Killing Your Retention (Fix in 60s)',            79],
         ].map(([t, score], i) => {
-          const col = score >= 85 ? C.green : score >= 70 ? C.amber : C.red
+          const col = score >= 85 ? C.greenHi : score >= 70 ? C.text2 : C.redHi
           return (
             <div key={i} style={{
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '10px 0',
               borderTop: i === 0 ? 'none' : `1px solid ${C.border}`,
             }}>
-              <div style={{ width: 22, height: 22, borderRadius: 6, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: '#fff' }}>{i + 1}</span>
+              <div style={{ width: 22, height: 22, borderRadius: 0, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <span style={{ fontSize: 10, fontWeight: 600, color: '#fff' }}>{i + 1}</span>
               </div>
               <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>{t}</p>
               <span style={{
-                fontSize: 11, fontWeight: 700, color: col,
-                padding: '2px 8px', borderRadius: 100,
+                fontSize: 11, fontWeight: 600, color: col,
+                padding: '2px 8px', borderRadius: 0,
                 border: `1.5px solid ${col}`,
               }}>{score}</span>
             </div>
@@ -905,11 +910,11 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           coordinating with the Feed column. */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 22, gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>
             Video Ideas
           </h1>
           <p style={{
-            fontSize: 14, color: C.text2, fontWeight: 500,
+            fontSize: 14, color: C.text2, fontWeight: 400,
             letterSpacing: '-0.005em', lineHeight: 1.45,
             margin: 0,
           }}>
@@ -930,17 +935,17 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               disabled={refreshing}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '8px 15px', borderRadius: 100, border: 'none',
-                fontSize: 12.5, fontWeight: 600, fontFamily: 'inherit',
-                letterSpacing: '-0.01em',
+                padding: '9px 16px', borderRadius: 0, border: 'none',
+                fontSize: 12, fontWeight: 600, fontFamily: COND,
+                textTransform: 'uppercase', letterSpacing: '0.06em',
                 background: refreshing ? '#e0e0e6' : C.red,
-                color: refreshing ? C.text3 : '#fff',
+                color: refreshing ? C.text3 : 'var(--yd-on-gold)',
                 cursor: refreshing ? 'not-allowed' : 'pointer',
-                boxShadow: refreshing ? 'none' : '0 1px 3px rgba(201,160,48,0.28)',
-                transition: 'filter 0.15s, transform 0.15s',
+                boxShadow: 'none',
+                transition: 'filter 0.15s',
               }}
-              onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-              onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' } }}
+              onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.filter = 'brightness(1.08)' } }}
+              onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.filter = 'none' } }}
             >
               {refreshing ? <><SpinIcon /> Generating</> : <>
                 <svg width="12" height="12" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -961,7 +966,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       {stale && !loading && (
         <div style={{
           fontSize: 13, color: C.amberHi, background: C.amberBg,
-          border: `1px solid ${C.amberBdr}`, borderRadius: 10,
+          border: `1px solid ${C.amberBdr}`, borderRadius: 0,
           padding: '10px 14px', marginBottom: 14,
         }}>
           These ideas are over 30 days old. Refresh for updated opportunities.
@@ -972,7 +977,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       {error && (
         <div style={{
           fontSize: 14, color: C.red, background: C.redBg,
-          border: `1px solid ${C.redBdr}`, borderRadius: 10,
+          border: `1px solid ${C.redBdr}`, borderRadius: 0,
           padding: '10px 14px', marginBottom: 14,
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
@@ -1000,8 +1005,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         <div style={{
           textAlign: 'center', padding: '56px 24px',
           background: C.cardFlat, border: `1px solid ${C.border}`,
-          borderRadius: 16, marginTop: 8,
-          boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)',
+          borderRadius: 0, marginTop: 8,
         }}>
           <div style={{ marginBottom: 14 }}><LightbulbIcon /></div>
           <h3 style={{ fontSize: 16, fontWeight: 600, color: C.text1, marginBottom: 8, letterSpacing: '-0.2px' }}>No ideas yet</h3>
@@ -1015,9 +1019,9 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               onClick={() => onNavigate && onNavigate('Competitors')}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '11px 22px', borderRadius: 100, border: 'none',
-                fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
-                letterSpacing: '0.01em',
+                padding: '12px 22px', borderRadius: 0, border: 'none',
+                fontSize: 13, fontWeight: 600, fontFamily: COND,
+                textTransform: 'uppercase', letterSpacing: '0.06em',
                 background: C.red, color: 'var(--yd-on-gold)', cursor: 'pointer',
                 transition: 'filter 0.15s',
               }}
@@ -1032,9 +1036,9 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               disabled={refreshing}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '11px 22px', borderRadius: 100, border: 'none',
-                fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
-                letterSpacing: '0.01em',
+                padding: '12px 22px', borderRadius: 0, border: 'none',
+                fontSize: 13, fontWeight: 600, fontFamily: COND,
+                textTransform: 'uppercase', letterSpacing: '0.06em',
                 background: C.red, color: 'var(--yd-on-gold)', cursor: 'pointer',
                 transition: 'filter 0.15s',
               }}
@@ -1071,7 +1075,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '8px 14px', marginBottom: 10,
               background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-              borderRadius: 10,
+              borderRadius: 0,
             }}>
               <span style={{ fontSize: 12.5, color: C.greenHi, fontWeight: 600 }}>
                 {doneCount} idea{doneCount > 1 ? 's' : ''} completed
