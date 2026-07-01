@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import UpsellGate from '../components/UpsellGate'
 
-// Load Geist page-scoped, matches Chat / Competitors / Keywords / Outliers.
-if (typeof document !== 'undefined' && !document.getElementById('wr-geist-font')) {
+// Editorial app fonts, page-scoped. Cormorant = display H1 + big numbers,
+// Barlow = body/UI, Barlow Condensed = labels/buttons. Mirrors SeoOptimizer.
+if (typeof document !== 'undefined' && !document.getElementById('wr-editorial-font')) {
   const link = document.createElement('link')
-  link.id = 'wr-geist-font'
+  link.id = 'wr-editorial-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
   document.head.appendChild(link)
 }
+const SERIF = "'Cormorant Garamond', Georgia, serif"
 /* ─── C: dark palette for this page. Mirrors the shipped app-shell /
        Competitors / Keywords / Outliers dark system. Defined ABOVE the
        scoped-styles block so the injected stylesheet can interpolate
@@ -18,15 +20,17 @@ if (typeof document !== 'undefined' && !document.getElementById('wr-geist-font')
 const C = {
   red:   '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)', redHi:   '#7a5b14',
   green: '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#2d7a4f',
-  amber: '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#b07d1a',
+  // "amber" remapped to the warm gold accent family, no foreign orange survives.
+  amber: '#c9a030', amberBg: 'rgba(201,160,48,0.13)', amberBdr: 'rgba(201,160,48,0.32)', amberHi: '#7a5b14',
   text1: '#14130f', text2: '#6b6862', text3: '#6b6862',
   border: 'rgba(20,19,15,0.08)',
   card:           'linear-gradient(180deg, var(--yd-surface) 0%, var(--yd-surface) 100%)',
   cardFlat:       'var(--yd-surface)',
   hair:           'rgba(20,19,15,0.08)',
   hairHi:         'rgba(20,19,15,0.16)',
-  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
-  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+  // Flat editorial system: cards are hairline + radius 0, NO shadow.
+  cardShadow:     'none',
+  cardShadowLift: 'none',
 }
 
 if (typeof document !== 'undefined' && !document.getElementById('wr-styles')) {
@@ -88,7 +92,7 @@ function MetricCard({ label, value, metric, unit, isScore, valueColor }) {
   return (
     <div className="ytg-stat-card" style={{ cursor: 'default' }}>
       <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-1.4px', color: valueColor || C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontFamily: SERIF, fontSize: 36, fontWeight: 500, letterSpacing: '-0.01em', color: valueColor || C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       <div style={{ marginTop: 10 }}>
         <DeltaBadge metric={metric} unit={unit} isScore={isScore} />
       </div>
@@ -100,7 +104,7 @@ function MetricCard({ label, value, metric, unit, isScore, valueColor }) {
 function healthColor(n, { red, amber }) {
   if (n == null) return null
   if (n < red)   return C.redHi
-  if (n < amber) return C.amberHi
+  if (n < amber) return C.text2
   return C.greenHi
 }
 
@@ -222,7 +226,7 @@ function ReportBody({ rd, isLatest }) {
         }}>
           {/* Watch out (amber) */}
           {rd.watchOut
-            ? <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 12, padding: '14px 16px' }}>
+            ? <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 0, padding: '14px 16px' }}>
                 <ColLabel color={C.amber}>Watch out</ColLabel>
                 <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>{rd.watchOut}</p>
               </div>
@@ -234,9 +238,9 @@ function ReportBody({ rd, isLatest }) {
             ? <div style={{
                 background: 'linear-gradient(160deg, rgba(201,160,48,0.16) 0%, rgba(201,160,48,0.06) 100%)',
                 border: `1px solid ${C.redBdr}`,
-                borderRadius: 12,
+                borderRadius: 0,
                 padding: '14px 16px',
-                boxShadow: '0 1px 2px rgba(201,160,48,0.05), 0 8px 22px rgba(201,160,48,0.08)',
+                boxShadow: 'none',
               }}>
                 <ColLabel color={C.red}>Your priority</ColLabel>
                 <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>{rd.priorityAction}</p>
@@ -246,7 +250,7 @@ function ReportBody({ rd, isLatest }) {
 
           {/* Biggest win (green) */}
           {rd.biggestWin
-            ? <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12, padding: '14px 16px' }}>
+            ? <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 0, padding: '14px 16px' }}>
                 <ColLabel color={C.green}>Biggest win</ColLabel>
                 <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>{rd.biggestWin}</p>
               </div>
@@ -344,8 +348,8 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
   const header = (
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
       <div>
-        <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Weekly Report</h1>
-        <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>{subSubtitle}</p>
+        <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>Weekly Report</h1>
+        <p style={{ fontSize: 14, color: C.text2, fontWeight: 400, letterSpacing: '-0.005em', lineHeight: 1.45 }}>{subSubtitle}</p>
       </div>
 
       {/* Email delivery toggle, paid only (free users have nothing to toggle) */}
@@ -430,7 +434,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   fontSize: 11, fontWeight: 600, color: C.greenHi,
                   background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-                  borderRadius: 999, padding: '4px 11px',
+                  borderRadius: 0, padding: '4px 11px',
                   letterSpacing: '0.10em', textTransform: 'uppercase',
                 }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green }}/>
@@ -443,21 +447,21 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 10 }}>
-                <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 12, padding: '14px 16px' }}>
+                <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 0, padding: '14px 16px' }}>
                   <ColLabel color={C.amber}>Watch out</ColLabel>
                   <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>Posting frequency dropped to one video in 14 days and the algorithm is deprioritizing the channel.</p>
                 </div>
                 <div style={{
                   background: 'linear-gradient(160deg, rgba(201,160,48,0.16) 0%, rgba(201,160,48,0.06) 100%)',
                   border: `1px solid ${C.redBdr}`,
-                  borderRadius: 12,
+                  borderRadius: 0,
                   padding: '14px 16px',
-                  boxShadow: '0 1px 2px rgba(201,160,48,0.05), 0 8px 22px rgba(201,160,48,0.08)',
+                  boxShadow: 'none',
                 }}>
                   <ColLabel color={C.red}>Your priority</ColLabel>
                   <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>Film two shopping hauls this week, they are your repeatable winner, and a second one inside 7 days compounds the algorithm boost.</p>
                 </div>
-                <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12, padding: '14px 16px' }}>
+                <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 0, padding: '14px 16px' }}>
                   <ColLabel color={C.green}>Biggest win</ColLabel>
                   <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>The house tour hit 13,908 views and pulled in 25 new subs, your best single video this quarter.</p>
                 </div>
@@ -481,7 +485,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           background: C.amberBg,
           border: `1px solid ${C.amberBdr}`,
           borderLeft: `3px solid ${C.amber}`,
-          borderRadius: 12,
+          borderRadius: 0,
           padding: '14px 18px',
           marginBottom: 16,
         }}>
@@ -535,7 +539,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
               display: 'inline-flex', alignItems: 'center', gap: 6,
               fontSize: 11, fontWeight: 600, color: C.greenHi,
               background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-              borderRadius: 999, padding: '4px 11px',
+              borderRadius: 0, padding: '4px 11px',
               letterSpacing: '0.10em', textTransform: 'uppercase',
               flexShrink: 0,
             }}>

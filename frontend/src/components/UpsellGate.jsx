@@ -35,31 +35,31 @@ export default function UpsellGate({
 }) {
   const card = (
     <div style={{
-      background: 'linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%)',
+      background: 'var(--yd-surface)',
       border: '1px solid rgba(201,160,48,0.32)',
-      borderRadius: 20,
-      boxShadow: '0 20px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(20,19,15,0.04)',
+      borderRadius: 0,
+      boxShadow: '0 16px 40px rgba(0,0,0,0.16)',
       padding: '30px 36px 28px',
       maxWidth: 540, width: '100%',
       textAlign: 'center',
       fontFamily: "'Barlow', system-ui, sans-serif",
       margin: '0 auto',
     }}>
-      {/* Lock icon, red gradient square */}
+      {/* Lock icon, flat gold square, ink glyph */}
       <div style={{
-        width: 50, height: 50, borderRadius: 14,
-        background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
+        width: 50, height: 50, borderRadius: 0,
+        background: C.red,
         margin: '0 auto 18px',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(20,19,15,0.25)`,
+        boxShadow: 'none',
       }}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--yd-on-gold)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="11" width="18" height="11" rx="2"/>
           <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
       </div>
 
-      <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
+      <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 30, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', marginBottom: 10, lineHeight: 1.15 }}>
         {title}
       </h2>
       <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: note ? 10 : 22, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -68,7 +68,7 @@ export default function UpsellGate({
 
       {/* Optional note, small amber line, e.g. "Outlier Scoring requires 3 credits." */}
       {note && (
-        <p style={{ fontSize: 12.5, color: '#b07d1a', fontWeight: 600, marginBottom: 22, letterSpacing: '-0.05px' }}>
+        <p style={{ fontSize: 12.5, color: '#7a5b14', fontWeight: 600, marginBottom: 22, letterSpacing: '-0.05px' }}>
           {note}
         </p>
       )}
@@ -99,12 +99,13 @@ export default function UpsellGate({
         style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           width: '100%', maxWidth: 360,
-          background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
-          color: '#ffffff',
-          fontSize: 14, fontWeight: 600,
-          padding: '13px 24px', borderRadius: 999,
-          textDecoration: 'none', letterSpacing: '-0.1px',
-          boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(20,19,15,0.22)`,
+          background: C.red,
+          color: 'var(--yd-on-gold)',
+          fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase',
+          fontSize: 13, fontWeight: 600,
+          padding: '13px 24px', borderRadius: 0,
+          textDecoration: 'none', letterSpacing: '0.06em',
+          boxShadow: 'none',
         }}
       >
         {primaryCta}
