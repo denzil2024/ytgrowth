@@ -475,7 +475,7 @@ function L1Row({ keyName, data, benchComp }) {
           {/* Why, charcoal-neutral tint. Reasoning context goes neutral so red stays semantic for the actionable Fix. */}
           <div style={{ background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 0, padding: '11px 13px' }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why</p>
-            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>{explanation}</p>
+            <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{explanation}</p>
           </div>
           {fix && (
             /* Fix, symmetric red-tinted card, matches WeeklyReport priority pattern */
@@ -487,7 +487,7 @@ function L1Row({ keyName, data, benchComp }) {
               boxShadow: 'none',
             }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Fix</p>
-              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{fix}</p>
+              <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{fix}</p>
             </div>
           )}
         </div>
@@ -522,7 +522,7 @@ function L2Row({ dimKey, dim }) {
                  fontFamily: 'inherit', textAlign: 'left' }}
       >
         <div style={{ width: 160, flexShrink: 0 }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: C.text1 }}>{L2_LABELS[dimKey] || dimKey}</p>
+          <p style={{ fontSize: 12, fontWeight: 600, color: C.text1 }}>{L2_LABELS[dimKey] || dimKey}</p>
         </div>
         <div style={{ flex: 1 }}>
           <MiniBar value={score} max={10} color={col}/>
@@ -538,12 +538,12 @@ function L2Row({ dimKey, dim }) {
       {open && (
         <div style={{ paddingBottom: 12 }}>
           {dim.verdict && (
-            <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.65, marginBottom: 8 }}>
+            <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65, marginBottom: 8 }}>
               {dim.verdict}
             </p>
           )}
           {dim.vs_benchmark && (
-            <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.6, marginBottom: hasFix ? 8 : 0 }}>
+            <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.6, marginBottom: hasFix ? 8 : 0 }}>
               vs. top performers: {dim.vs_benchmark}
             </p>
           )}
@@ -556,7 +556,7 @@ function L2Row({ dimKey, dim }) {
             }}>
               <p style={{ fontSize: 12, fontWeight: 600, color: '#7a5b14', marginBottom: 4,
                           letterSpacing: '0.06em', textTransform: 'uppercase' }}>Fix</p>
-              <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.6 }}>{dim.fix}</p>
+              <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.6 }}>{dim.fix}</p>
             </div>
           )}
         </div>
@@ -854,7 +854,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           Typography scale: 11 eyebrow · 13 desc (matches Overview's card headers). */}
       <div style={{ marginBottom: 18, paddingBottom: 16, borderBottom: `1px solid ${C.border}` }}>
         <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Score a new thumbnail</p>
-        <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
+        <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.6 }}>
           Match your thumbnail to a video idea. You'll get a benchmark from videos already winning on YouTube for that topic.
         </p>
       </div>
@@ -878,7 +878,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
                 Using competitor-researched keyword: &quot;{selectedIdea.targetKeyword}&quot;
               </p>
               {selectedIdea.angle && (
-                <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.5 }}>Gap: {selectedIdea.angle}</p>
+                <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5 }}>Gap: {selectedIdea.angle}</p>
               )}
             </div>
           )}
@@ -1339,7 +1339,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div>
             <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>Thumbnail IQ</h1>
-            <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, lineHeight: 1.5, letterSpacing: '-0.05px' }}>
+            <p style={{ fontSize: 14, color: C.text2, fontWeight: 400, lineHeight: 1.5, letterSpacing: '-0.05px' }}>
               See how your thumbnail performs before you publish
               <span> · Benchmarked against real top-ranked channels</span>
               {history.length > 0 && <span> · <span style={{ color: C.text1, fontWeight: 600 }}>{history.length}</span> saved</span>}
@@ -1536,7 +1536,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                               {itemL2.biggestWin && (
                                 <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 0, padding: '12px 16px' }}>
                                   <p style={{ fontSize: 10, fontWeight: 600, color: C.greenHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest win</p>
-                                  <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestWin}</p>
+                                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestWin}</p>
                                 </div>
                               )}
                               {itemL2.biggestFix && (
@@ -1548,7 +1548,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                                   boxShadow: 'none',
                                 }}>
                                   <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest fix</p>
-                                  <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestFix}</p>
+                                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestFix}</p>
                                 </div>
                               )}
                             </div>
@@ -1569,7 +1569,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                                   {scoreLabel(score, max)}{!itemL2 && <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}> · technical only</span>}
                                 </p>
                                 {itemL2?.overallVerdict
-                                  ? <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.65 }}>{itemL2.overallVerdict}</p>
+                                  ? <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65 }}>{itemL2.overallVerdict}</p>
                                   : <p style={{ fontSize: 12, color: C.text3 }}>{item.format} · {item.size_bracket}</p>
                                 }
                               </div>
@@ -1685,7 +1685,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 {/* Benchmark context, small muted strip at the very bottom of the card */}
                 {keyword && (
                   <div style={{ padding: '10px 14px', borderTop: `1px solid ${C.border}` }}>
-                    <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.55 }}>
+                    <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.55 }}>
                       Benchmarked against <strong style={{ color: C.text2 }}>top {fmt}</strong> videos
                       {' · '}<strong style={{ color: C.text2 }}>{bracket}</strong> channels
                       {' · '}<strong style={{ color: C.text2 }}>"{keyword}"</strong>
@@ -1700,7 +1700,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                   {l2.biggestWin && (
                     <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 0, padding: '14px 18px' }}>
                       <p style={{ fontSize: 10, fontWeight: 600, color: C.greenHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest win</p>
-                      <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestWin}</p>
+                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.65 }}>{l2.biggestWin}</p>
                     </div>
                   )}
                   {l2.biggestFix && (
@@ -1712,7 +1712,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       boxShadow: 'none',
                     }}>
                       <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest fix</p>
-                      <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestFix}</p>
+                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.65 }}>{l2.biggestFix}</p>
                     </div>
                   )}
                 </div>
@@ -1761,10 +1761,10 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                             {currentLabel}{!isFinal && <span style={{ fontSize: 12, fontWeight: 500, color: C.text3 }}> · technical only</span>}
                           </p>
                           {isFinal && l2.overallVerdict && (
-                            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>{l2.overallVerdict}</p>
+                            <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{l2.overallVerdict}</p>
                           )}
                           {!isFinal && (
-                            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>
+                            <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>
                               Technical scan complete. Run the full AI analysis below to add emotion, composition, and feed-distinctiveness scoring.
                             </p>
                           )}
