@@ -4,6 +4,7 @@ import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
 import MoneyCalculatorWidget from '../../components/MoneyCalculatorWidget'
+import EzoicSlot from '../../components/EzoicSlot'
 import { getCategory } from '../../data/youtubeStatsCategories'
 import {
   NICHES, NICHE_LOOKUP, COUNTRY_LOOKUP, EARNINGS_META, NICHE_COUNTRY_SPLITS,
@@ -258,6 +259,8 @@ export default function NicheEarnings() {
         </div>
       </section>
 
+      <EzoicSlot id={101} />
+
       {/* ══ CALCULATOR ══ */}
       <section className="yte-section-pad" style={{ padding: isMobile ? '52px 22px 64px' : '68px 48px 88px', background: 'var(--yte-bg)' }}>
         <div className="yte-wrap">
@@ -350,6 +353,8 @@ export default function NicheEarnings() {
         </section>
       )}
 
+      <EzoicSlot id={102} />
+
       {/* ══ FAQ ══ */}
       <div className="yte-section-pad" style={{ background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)', padding: isMobile ? '60px 22px' : '104px 48px' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 36 : 80, alignItems: 'start' }}>
@@ -409,6 +414,8 @@ export default function NicheEarnings() {
           </div>
         </div>
       </section>
+
+      <EzoicSlot id={103} />
 
       <LandingFooter />
     </div>
