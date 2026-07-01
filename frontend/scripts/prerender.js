@@ -21,7 +21,7 @@ import { dirname, join, resolve } from 'node:path'
 import puppeteer from 'puppeteer'
 import { CATEGORY_META } from '../src/data/youtubeStatsCategories.js'
 import { COUNTRY_META }  from '../src/data/youtubeStatsCountries.js'
-import { NICHES }        from '../src/data/youtubeEarnings.js'
+import { NICHES, EARNINGS_COUNTRIES } from '../src/data/youtubeEarnings.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = dirname(__filename)
@@ -192,6 +192,15 @@ for (const n of NICHES) {
     title:       `How Much Do ${label} YouTubers Make in 2026?`,
     description: `What ${label.toLowerCase()} YouTubers earn in 2026: real RPM and CPM by niche, earnings per million views, and a free calculator.`,
   }
+  /* /youtube-earnings/:niche/:country — per-country earnings pages. Title and
+   * description must match NicheCountryEarnings.jsx exactly so the prerendered
+   * head matches the React head. */
+  for (const c of EARNINGS_COUNTRIES) {
+    META_BY_ROUTE[`/youtube-earnings/${n.key}/${c.key}`] = {
+      title:       `How Much Do ${label} YouTubers Make in ${c.name}? (2026)`,
+      description: `${label} YouTuber earnings in ${c.name}: real RPM and CPM for ${/^[aeiou]/i.test(c.demonym) ? 'an' : 'a'} ${c.demonym} audience, earnings per million views, and a free calculator.`,
+    }
+  }
 }
 
 /* Discover blog slugs from the source data file. We slice from
@@ -264,6 +273,7 @@ async function buildRoutes() {
     '/tools/youtube-chapter-generator',
     '/tools/youtube-thumbnail-tester',
     ...NICHES.map(n => `/youtube-earnings/${n.key}`),
+    ...NICHES.flatMap(n => EARNINGS_COUNTRIES.map(c => `/youtube-earnings/${n.key}/${c.key}`)),
     '/youtube-stats',
     '/youtube-stats/gaming',
     '/youtube-stats/tech',

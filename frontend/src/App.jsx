@@ -40,6 +40,7 @@ const YoutubeChapterGenerator          = lazy(() => import('./pages/tools/Youtub
 const YoutubeThumbnailTester           = lazy(() => import('./pages/tools/YoutubeThumbnailTester'))
 const ToolsHub                         = lazy(() => import('./pages/ToolsHub'))
 const NicheEarnings                    = lazy(() => import('./pages/earnings/NicheEarnings'))
+const NicheCountryEarnings             = lazy(() => import('./pages/earnings/NicheCountryEarnings'))
 const YoutubeStats                     = lazy(() => import('./pages/YoutubeStats'))
 const YoutubeStatsCategory             = lazy(() => import('./pages/YoutubeStatsCategory'))
 const YoutubeStatsCountry              = lazy(() => import('./pages/YoutubeStatsCountry'))
@@ -88,6 +89,7 @@ function App() {
           <Route path="/tools/youtube-thumbnail-tester"            element={<YoutubeThumbnailTester />} />
           <Route path="/tools"                                     element={<ToolsHub />} />
           <Route path="/youtube-earnings/:niche"                   element={<NicheEarnings />} />
+          <Route path="/youtube-earnings/:niche/:country"          element={<NicheCountryEarnings />} />
           <Route path="/youtube-stats"                             element={<YoutubeStats />} />
           <Route path="/youtube-stats/country/:countrySlug/:categorySlug" element={<YoutubeStatsCountryCategory />} />
           <Route path="/youtube-stats/country/:slug"               element={<YoutubeStatsCountry />} />

@@ -62,15 +62,24 @@ export default function MoneyCalculatorWidget({
   initialNiche = 'tech',
   initialCountry = 'tier1',
   initialViews = 250_000,
+  extraCountries = [],   // exact-country options prepended to the tier list, so a
+                         // page can pin a precise multiplier (e.g. India 0.20)
+                         // and the calculator matches its own stat cards exactly.
 }) {
   useWidgetStyles()
+  // Merge any page-supplied exact countries ahead of the standard tier buckets.
+  const countryOpts   = useMemo(() => [...extraCountries, ...COUNTRIES], [extraCountries])
+  const countryLookup = useMemo(
+    () => ({ ...COUNTRY_LOOKUP, ...Object.fromEntries(extraCountries.map(c => [c.key, c])) }),
+    [extraCountries],
+  )
   const [views, setViews]     = useState(initialViews)
   const [niche, setNiche]     = useState(NICHE_LOOKUP[initialNiche] ? initialNiche : 'tech')
-  const [country, setCountry] = useState(COUNTRY_LOOKUP[initialCountry] ? initialCountry : 'tier1')
+  const [country, setCountry] = useState(countryLookup[initialCountry] ? initialCountry : 'tier1')
 
   const r = useMemo(() => {
     const n = NICHE_LOOKUP[niche] || NICHES[0]
-    const c = COUNTRY_LOOKUP[country] || COUNTRIES[0]
+    const c = countryLookup[country] || COUNTRIES[0]
     const lowRpm  = n.low  * c.mult
     const highRpm = n.high * c.mult
     return {
@@ -81,7 +90,7 @@ export default function MoneyCalculatorWidget({
       annualHigh:  views * (highRpm / 1000) * 12,
       label: n.label,
     }
-  }, [views, niche, country])
+  }, [views, niche, country, countryLookup])
 
   function onViewsChange(e) {
     const digits = e.target.value.replace(/[^0-9]/g, '')
@@ -122,7 +131,7 @@ export default function MoneyCalculatorWidget({
         <div>
           <label className="mcw-label" htmlFor="mcw-country">Audience country</label>
           <select id="mcw-country" className="mcw-input" value={country} onChange={e => setCountry(e.target.value)}>
-            {COUNTRIES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+            {countryOpts.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
           </select>
         </div>
       </div>

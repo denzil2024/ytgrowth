@@ -65,6 +65,70 @@ export const NICHE_COUNTRY_SPLITS = {
   cooking: ['tier1', 'tier6'],   // "cooking channel rpm in india" demand
 }
 
+/* Per-country earnings pages: /youtube-earnings/:niche/:country.
+   Distinct per-country multipliers (finer than the coarse tier buckets above)
+   so every country page shows a genuinely different RPM and reads uniquely —
+   this is what keeps US / UK / Canada / Australia from being near-duplicate
+   pages. Multiplier is relative to the US baseline (1.00) and reflects observed
+   RPM patterns driven by local advertiser spend and audience buying power.
+   Slugs match the /youtube-stats/country/* slugs so the two surfaces cross-link
+   cleanly. GSC (2026-06) showed live geo demand for finance + cooking RPM in
+   india / usa; these six countries carry the clearest search volume. */
+export const EARNINGS_COUNTRIES = [
+  { key: 'united-states',  name: 'the United States', short: 'US',        demonym: 'American',  mult: 1.00,
+    tier1: true,  cur: { code: 'USD', sym: '$',  perUsd: 1,    locale: 'en-US' },
+    note: 'the single most valuable ad market on the platform, where advertisers pay the most per view',
+    payNote: 'Google pays you in US dollars straight to a US bank account or check once you clear the $100 AdSense threshold.',
+    taxNote: 'YouTube income is self-employment income in the US: you get a 1099 (or handle it yourself), pay federal and state income tax plus self-employment tax, and can deduct gear and software as business expenses.' },
+  { key: 'australia',      name: 'Australia',         short: 'Australia', demonym: 'Australian', mult: 0.95,
+    tier1: true,  cur: { code: 'AUD', sym: 'A$', perUsd: 1.52, locale: 'en-AU' },
+    note: 'a small but high-income market where advertiser bids stay close to US levels',
+    payNote: 'AdSense pays in US dollars and your bank converts to Australian dollars, so the AUD figure moves a little with the exchange rate. Payout lands after the $100 threshold.',
+    taxNote: 'YouTube earnings are assessable income in Australia. Most creators register an ABN, declare it at tax time, and can claim gear, software and a home-studio portion as deductions.' },
+  { key: 'united-kingdom', name: 'the United Kingdom', short: 'UK',       demonym: 'British',   mult: 0.90,
+    tier1: true,  cur: { code: 'GBP', sym: '£',  perUsd: 0.79, locale: 'en-GB' },
+    note: 'a mature, high-spend ad market that pays only a little below the US',
+    payNote: 'AdSense pays in US dollars and your UK bank converts to pounds, so the sterling total shifts slightly with the exchange rate. Payout clears once you pass $100.',
+    taxNote: 'YouTube income is self-employed income in the UK. Once you pass the trading allowance you register with HMRC via Self Assessment and can deduct equipment and software costs.' },
+  { key: 'canada',         name: 'Canada',            short: 'Canada',    demonym: 'Canadian',  mult: 0.88,
+    tier1: true,  cur: { code: 'CAD', sym: 'C$', perUsd: 1.36, locale: 'en-CA' },
+    note: 'a high-income market that tracks just under US and UK rates',
+    payNote: 'AdSense pays in US dollars and your Canadian bank converts to CAD, so the loonie figure moves with the exchange rate. Payout releases after the $100 threshold.',
+    taxNote: 'YouTube earnings are self-employment income in Canada, reported on your T1, with gear, software and part of a home office claimable as expenses.' },
+  { key: 'india',          name: 'India',             short: 'India',     demonym: 'Indian',    mult: 0.20,
+    tier1: false, cur: { code: 'INR', sym: '₹',  perUsd: 83,   locale: 'en-IN' },
+    note: 'an enormous-volume market where low local ad spend keeps per-view rates far below tier-1 countries',
+    payNote: 'AdSense pays in US dollars and your Indian bank converts to rupees, so the ₹ total tracks the USD/INR rate. Payout clears after the $100 threshold, and Google may withhold US tax on the US-viewer share unless your tax info is filed.',
+    taxNote: 'YouTube income is taxable in India as business or professional income, and it also falls under GST once you cross the registration threshold, so many creators register early and keep invoices.' },
+  { key: 'pakistan',       name: 'Pakistan',          short: 'Pakistan',  demonym: 'Pakistani', mult: 0.16,
+    tier1: false, cur: { code: 'PKR', sym: '₨',  perUsd: 278,  locale: 'en-PK' },
+    note: 'a large-audience, low-ad-spend market where earnings come from volume rather than rate',
+    payNote: 'AdSense pays in US dollars and your Pakistani bank converts to rupees, so the ₨ total depends on the USD/PKR rate. Payout clears after $100, and filing US tax info avoids extra withholding on US views.',
+    taxNote: 'YouTube income is taxable in Pakistan, though registered IT / freelance exporters have historically enjoyed concessional treatment, so it is worth filing as a documented exporter of services.' },
+]
+
+export const EARNINGS_COUNTRY_LOOKUP = Object.fromEntries(EARNINGS_COUNTRIES.map(c => [c.key, c]))
+
+/* Compact per-niche monetisation facts so the country pages carry niche-specific
+   substance in their FAQs, not just a swapped country name. `top` = the corners
+   of the niche that pay the most; `beyond` = where the real money is past AdSense. */
+export const NICHE_MONETISATION = {
+  finance:       { top: 'investing, credit cards, and business software content', beyond: 'affiliate deals with brokers and fintech apps, plus paid communities' },
+  tech:          { top: 'gadget reviews, software tutorials, and buying guides',  beyond: 'affiliate links to hardware and SaaS, plus sponsor integrations' },
+  education:     { top: 'exam prep, coding, and career-skill tutorials',          beyond: 'course sales, memberships, and textbook or tool affiliates' },
+  news:          { top: 'business and finance-adjacent commentary',               beyond: 'memberships and reader-style subscriptions over ads' },
+  beauty:        { top: 'skincare routines and product reviews',                  beyond: 'brand sponsorships and affiliate storefronts, which dwarf ad income' },
+  fitness:       { top: 'programs, nutrition, and equipment reviews',             beyond: 'coaching, training plans, and supplement or gear affiliates' },
+  travel:        { top: 'destination guides and travel-gear reviews',            beyond: 'tourism-board sponsorships, gear affiliates, and booking commissions' },
+  cooking:       { top: 'appliance reviews and premium recipe series',            beyond: 'cookware affiliates, cookbooks, and brand deals with food companies' },
+  vlogs:         { top: 'lifestyle and product-heavy daily content',              beyond: 'brand deals and merch, since the ad rate itself stays modest' },
+  sports:        { top: 'analysis, betting-adjacent, and gear content',           beyond: 'sponsorships and merch, plus equipment affiliates' },
+  gaming:        { top: 'hardware, strategy, and new-release coverage',           beyond: 'sponsorships, memberships, and Twitch or merch crossover' },
+  comedy:        { top: 'branded skits and character series',                     beyond: 'brand deals, live shows, and merch far more than ads' },
+  entertainment: { top: 'commentary and reaction formats with broad reach',       beyond: 'brand deals and merch, since raw ad RPM stays low' },
+  music:         { top: 'original releases and licensing-friendly content',       beyond: 'streaming royalties, sync licensing, shows, and merch' },
+}
+
 /* Per-niche editorial copy for the /youtube-earnings/:niche pages. Hand-written
    so each page reads with the same depth as the /youtube-stats category pages,
    not templated filler. Numbers here must stay consistent with the NICHES RPM
