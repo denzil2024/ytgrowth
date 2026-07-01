@@ -129,12 +129,14 @@ function fmtRpm(v) {
   return '$' + (v < 10 ? v.toFixed(1) : Math.round(v).toString())
 }
 
-/* USD amount shown in the country's own currency (null for the US, no line). */
+/* USD amount shown in the country's own currency (null for the US, no line).
+   Grouped with English commas (not the local locale) because the page is in
+   English: "€11.900" in German grouping reads like 11.9 to an English visitor. */
 function localMoney(usd, cur) {
   if (!cur || cur.code === 'USD') return null
   let v = usd * cur.perUsd
   v = v >= 1000 ? Math.round(v / 100) * 100 : Math.round(v)
-  return cur.sym + v.toLocaleString(cur.locale)
+  return cur.sym + v.toLocaleString('en-US')
 }
 
 /* Deterministic hash so each niche+country page selects a genuinely different
@@ -157,8 +159,9 @@ function buildCountryCopy(niche, label, country, countrySlug) {
   const pctOfUs = Math.round(country.mult * 100)
   const cur = country.cur
   const mon = NICHE_MONETISATION[niche.key] || { top: 'its highest-value topics', beyond: 'sponsorships and affiliates' }
-  // Correct article for the demonym (an American / an Indian vs a British).
-  const art = /^[aeiou]/i.test(country.demonym) ? 'an' : 'a'
+  // Correct article for the demonym (an American / an Indian vs a British), with
+  // an explicit override for consonant-sound vowels like "a Ukrainian".
+  const art = country.article || (/^[aeiou]/i.test(country.demonym) ? 'an' : 'a')
   const Art = art === 'an' ? 'An' : 'A'
 
   // Local-currency phrasings (empty string for the US so sentences read clean).
@@ -261,7 +264,7 @@ export default function NicheCountryEarnings() {
 
   const seoTitle = (niche && country) ? `How Much Do ${label} YouTubers Make in ${country.name}? (2026)` : ''
   const seoDesc  = (niche && country)
-    ? `${label} YouTuber earnings in ${country.name}: real RPM and CPM for ${/^[aeiou]/i.test(country.demonym) ? 'an' : 'a'} ${country.demonym} audience, earnings per million views, and a free calculator.`
+    ? `${label} YouTuber earnings in ${country.name}: real RPM and CPM for ${country.article || (/^[aeiou]/i.test(country.demonym) ? 'an' : 'a')} ${country.demonym} audience, earnings per million views, and a free calculator.`
     : ''
 
   useEffect(() => {

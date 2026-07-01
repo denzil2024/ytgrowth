@@ -198,7 +198,7 @@ for (const n of NICHES) {
   for (const c of EARNINGS_COUNTRIES) {
     META_BY_ROUTE[`/youtube-earnings/${n.key}/${c.key}`] = {
       title:       `How Much Do ${label} YouTubers Make in ${c.name}? (2026)`,
-      description: `${label} YouTuber earnings in ${c.name}: real RPM and CPM for ${/^[aeiou]/i.test(c.demonym) ? 'an' : 'a'} ${c.demonym} audience, earnings per million views, and a free calculator.`,
+      description: `${label} YouTuber earnings in ${c.name}: real RPM and CPM for ${c.article || (/^[aeiou]/i.test(c.demonym) ? 'an' : 'a')} ${c.demonym} audience, earnings per million views, and a free calculator.`,
     }
   }
 }
