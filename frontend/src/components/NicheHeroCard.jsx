@@ -519,8 +519,8 @@ function SectionSkeleton() {
             <div className="nh-sk" style={{ width: '92%', height: 17, marginBottom: 9 }} />
             <div className="nh-sk" style={{ width: '60%', height: 12, marginBottom: 14 }} />
             <div style={{ display: 'flex', gap: 8 }}>
-              <div className="nh-sk" style={{ width: 90, height: 22, borderRadius: 100 }} />
-              <div className="nh-sk" style={{ width: 80, height: 22, borderRadius: 100 }} />
+              <div className="nh-sk" style={{ width: 90, height: 22, borderRadius: 0 }} />
+              <div className="nh-sk" style={{ width: 80, height: 22, borderRadius: 0 }} />
             </div>
           </div>
         </div>
@@ -622,7 +622,7 @@ const styles = `
 .nh-card {
   background: ${C.card};
   border: 1px solid ${C.border};
-  border-radius: 14px;
+  border-radius: 0;
   box-shadow: ${C.shadowSm};
   padding: 18px 20px;
   font-family: 'Barlow', system-ui, sans-serif;
@@ -639,7 +639,7 @@ const styles = `
   display: inline-flex; align-items: center; gap: 7px;
   font-family: 'Barlow', system-ui, sans-serif;
   font-size: 12.5px; font-weight: 600;
-  padding: 7px 13px; border-radius: 100px;
+  padding: 7px 13px; border-radius: 0;
   border: 1px solid ${C.insetBdr};
   background: var(--yd-wash2); color: ${C.text2};
   cursor: pointer;
@@ -655,7 +655,7 @@ const styles = `
 .nh-pill-count {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 18px; height: 18px; padding: 0 5px;
-  border-radius: 100px;
+  border-radius: 0;
   font-size: 10.5px; font-weight: 700;
   background: rgba(20,19,15,0.22);
 }
@@ -689,7 +689,7 @@ const styles = `
 .nh-locked-thumb {
   position: absolute;
   width: 200px; aspect-ratio: 16 / 9;
-  border-radius: 10px;
+  border-radius: 0;
   background: linear-gradient(135deg, #e8e4dc 0%, #e8e4dc 50%, #e8e4dc 100%);
   box-shadow: 0 4px 14px rgba(0,0,0,0.10);
   filter: blur(0.6px);
@@ -764,13 +764,13 @@ const styles = `
   position: relative;
   width: 220px; flex-shrink: 0;
   aspect-ratio: 16 / 9;
-  border-radius: 10px;
+  border-radius: 0;
   overflow: hidden;
   background: #e8e4dc;
   text-decoration: none;
   display: block;
 }
-.nh-thumb-ch { aspect-ratio: 1 / 1; width: 140px; border-radius: 14px; }
+.nh-thumb-ch { aspect-ratio: 1 / 1; width: 140px; border-radius: 0; }
 .nh-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nh-thumb-fallback { width: 100%; height: 100%; background: #e8e4dc; }
 .nh-thumb-fallback-ch {
@@ -797,7 +797,7 @@ const styles = `
   position: absolute; top: 8px; left: 8px;
   background: ${C.red}; color: #fff;
   font-size: 11px; font-weight: 700; letter-spacing: -0.1px;
-  padding: 4px 9px; border-radius: 100px;
+  padding: 4px 9px; border-radius: 0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.25);
 }
 
@@ -823,7 +823,7 @@ const styles = `
 .nh-chip {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 12px; font-weight: 600;
-  padding: 5px 11px; border-radius: 100px;
+  padding: 5px 11px; border-radius: 0;
   letter-spacing: -0.1px;
 }
 .nh-chip strong { font-weight: 700; }
@@ -864,20 +864,19 @@ const styles = `
 .nh-cta {
   display: inline-flex; align-items: center; gap: 7px;
   background: ${C.red};
-  color: #ffffff;
+  color: var(--yd-on-gold);
   border: none;
-  padding: 9px 16px;
-  border-radius: 100px;
-  font-family: 'Barlow', system-ui, sans-serif;
-  font-size: 12.5px; font-weight: 600;
-  letter-spacing: -0.1px;
+  padding: 10px 18px;
+  border-radius: 0;
+  font-family: 'Barlow Condensed', system-ui, sans-serif;
+  font-size: 14px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 14px rgba(201,160,48,0.26);
-  transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
+  box-shadow: none;
+  transition: filter 0.15s, transform 0.15s;
 }
 .nh-cta:hover:not(:disabled) {
-  filter: brightness(1.07); transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.13), 0 10px 28px rgba(201,160,48,0.32);
+  filter: brightness(1.06); transform: translateY(-1px);
 }
 .nh-cta:disabled { opacity: 0.55; cursor: not-allowed; }
 
@@ -889,7 +888,7 @@ const styles = `
   border-top: 1px solid ${C.borderSoft};
 }
 .nh-pager-btn {
-  width: 30px; height: 30px; border-radius: 100px;
+  width: 30px; height: 30px; border-radius: 0;
   border: 1px solid ${C.insetBdr};
   background: var(--yd-wash2); color: ${C.text2};
   cursor: pointer;
@@ -906,20 +905,19 @@ const styles = `
 .nh-ghost-cta {
   display: inline-flex; align-items: center; gap: 6px;
   background: transparent;
-  color: ${C.red};
-  border: 1px solid ${C.redBdr};
-  padding: 7px 14px;
-  border-radius: 100px;
-  font-family: 'Barlow', system-ui, sans-serif;
-  font-size: 12.5px; font-weight: 600;
-  letter-spacing: -0.1px;
+  color: ${C.text2};
+  border: 1px solid ${C.border};
+  padding: 8px 15px;
+  border-radius: 0;
+  font-family: 'Barlow Condensed', system-ui, sans-serif;
+  font-size: 13.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 .nh-ghost-cta:hover {
-  background: ${C.redTint};
-  border-color: ${C.red};
-  color: ${C.redDeep};
+  border-color: var(--yd-ink);
+  color: var(--yd-ink);
 }
 
 /* Rail */
@@ -931,7 +929,7 @@ const styles = `
   padding-bottom: 4px;
 }
 .nh-rail::-webkit-scrollbar { height: 6px; }
-.nh-rail::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 100px; }
+.nh-rail::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 0; }
 .nh-rail-thumb {
   position: relative;
   flex-shrink: 0;
@@ -951,7 +949,7 @@ const styles = `
   position: absolute; top: 4px; left: 4px;
   background: rgba(0,0,0,0.72); color: #fff;
   font-size: 10px; font-weight: 700; letter-spacing: -0.05em;
-  padding: 2px 6px; border-radius: 100px;
+  padding: 2px 6px; border-radius: 0;
 }
 
 /* Legacy card foot */

@@ -66,7 +66,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-glass-card {
     background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
     border: 1px solid rgba(20,19,15,0.08) !important;
-    border-radius: 14px;
+    border-radius: 0;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04) !important;
     transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
@@ -77,7 +77,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-suggestion-card {
     background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
     border: 1px solid rgba(20,19,15,0.08);
-    border-radius: 14px;
+    border-radius: 0;
     overflow: hidden;
     margin-bottom: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04);
@@ -107,7 +107,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     width: 100%;
     padding: 16px 18px;
     border: 1px solid rgba(20,19,15,0.08);
-    border-radius: 12px;
+    border-radius: 0;
     cursor: pointer; background: var(--yd-surface);
     box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     font-family: inherit;
@@ -134,14 +134,14 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-intent-decide-btn {
     display: inline-flex; align-items: center; gap: 6px;
     margin-top: 16px;
-    padding: 7px 14px;
-    font-size: 12.5px; font-weight: 600;
-    font-family: inherit;
-    letter-spacing: -0.01em;
-    color: rgba(20,19,15,0.78);
+    padding: 8px 15px;
+    font-size: 13.5px; font-weight: 600;
+    font-family: 'Barlow Condensed', sans-serif;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--yd-soft);
     background: transparent;
-    border: 1px solid rgba(20,19,15,0.14);
-    border-radius: 100px;
+    border: 1px solid var(--yd-line);
+    border-radius: 0;
     cursor: pointer;
     transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
   }
@@ -155,27 +155,26 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
      with inset highlight + soft shadow, no dual-glow). */
   .seo-btn {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 9px 18px; border-radius: 100px; border: 1px solid rgba(20,19,15,0.14);
-    font-family: inherit; font-size: 13px; font-weight: 600;
-    background: rgba(20,19,15,0.04); color: #6b6862; cursor: pointer;
+    padding: 10px 18px; border-radius: 0; border: 1px solid var(--yd-line);
+    font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    background: transparent; color: var(--yd-soft); cursor: pointer;
     transition: background 160ms cubic-bezier(0.32,0.72,0,1), color 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
     white-space: nowrap;
-    letter-spacing: -0.01em;
   }
   .seo-btn:hover {
-    background: rgba(20,19,15,0.07);
-    color: #14130f;
-    border-color: rgba(20,19,15,0.22);
+    color: var(--yd-ink);
+    border-color: var(--yd-ink);
   }
   .seo-btn-primary {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 9px 18px; border-radius: 100px; border: none;
-    font-family: inherit; font-size: 13px; font-weight: 600;
-    background: #c9a030; color: #ffffff; cursor: pointer;
-    box-shadow: 0 1px 2px rgba(201,160,48,0.20), inset 0 1px 0 rgba(20,19,15,0.22);
+    padding: 10px 20px; border-radius: 0; border: none;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    background: var(--yd-gold); color: var(--yd-on-gold); cursor: pointer;
+    box-shadow: none;
     transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
     white-space: nowrap;
-    letter-spacing: -0.01em;
   }
   .seo-btn-primary:hover:not(:disabled) {
     filter: brightness(1.06); transform: translateY(-1px);
@@ -190,7 +189,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-report-header {
     background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
     border: 1px solid rgba(20,19,15,0.08);
-    border-radius: 14px;
+    border-radius: 0;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04);
     padding: 18px 22px;
     display: flex;
@@ -209,7 +208,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     position: absolute;
     top: 12px; right: 12px;
     width: 28px; height: 28px;
-    border-radius: 8px;
+    border-radius: 0;
     border: 1px solid transparent;
     background: transparent;
     color: #6b6862;
@@ -229,7 +228,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     background: #c9a030;
     color: #fff;
     border: 1px solid #c9a030;
-    border-radius: 100px;
+    border-radius: 0;
     padding: 8px 16px;
     font-size: 12.5px; font-weight: 600;
     font-family: inherit;
@@ -245,7 +244,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     display: inline-flex; align-items: baseline; gap: 5px;
     background: rgba(217,119,6,0.14);
     border: 1px solid rgba(217,119,6,0.34);
-    border-radius: 100px;
+    border-radius: 0;
     padding: 4px 11px;
   }
   .seo-report-chip .val { font-size: 12px; font-weight: 600; color: #14130f; letter-spacing: -0.01em; }
@@ -300,7 +299,7 @@ const C = {
 //    the hierarchy Overview uses, don't flatten it. ──
 const T = {
   // Page + section headers (Overview: H1 24, H2 22, H3 20)
-  h1:           { fontSize: 26, fontWeight: 600, color: '#14130f', letterSpacing: '-0.7px', lineHeight: 1.1 },
+  h1:           { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 500, color: '#14130f', letterSpacing: '-0.01em', lineHeight: 1.12 },
   h2:           { fontSize: 16, fontWeight: 600, color: '#14130f', letterSpacing: '-0.2px', lineHeight: 1.3 },
   h3:           { fontSize: 16, fontWeight: 600, color: '#14130f', letterSpacing: '-0.2px', lineHeight: 1.3 },
 
@@ -406,13 +405,13 @@ function MiniStat({ label, value, sub, accent, alert }) {
     <div style={{
       background: alert ? 'rgba(201,160,48,0.10)' : 'var(--yd-surface)',
       border: `1px solid ${alert ? 'rgba(201,160,48,0.22)' : 'rgba(20,19,15,0.08)'}`,
-      borderRadius: 16,
+      borderRadius: 0,
       padding: '22px 24px',
       boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
       transition: 'box-shadow 0.2s, transform 0.2s',
     }}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 40, fontWeight: 500, letterSpacing: '-0.01em', color: col, lineHeight: 1 }}>{value}</p>
       {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
     </div>
   )
@@ -433,7 +432,7 @@ function ScoreRing({ score }) {
           style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 28, fontWeight: 600, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+        <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 36, fontWeight: 500, color, letterSpacing: '-0.01em', lineHeight: 1 }}>{score}</span>
         <span style={{ fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.10em', marginTop: 2 }}>/100</span>
       </div>
     </div>
@@ -693,7 +692,7 @@ function VideoTile({ video, baselineViews }) {
           collides with creator hooks (which always live top-left). */}
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '16 / 9',
-        borderRadius: 10, overflow: 'hidden', background: '#14130f',
+        borderRadius: 0, overflow: 'hidden', background: '#14130f',
         boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 6px 18px rgba(0,0,0,0.08)',
       }}>
         {(video.video_id || video.thumbnail) && (
@@ -769,7 +768,7 @@ function ShortTile({ video, baselineViews }) {
       }}>
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '9 / 16',
-        borderRadius: 11, overflow: 'hidden', background: '#14130f',
+        borderRadius: 0, overflow: 'hidden', background: '#14130f',
         boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 8px 22px rgba(0,0,0,0.10)',
       }}>
         {(video.video_id || video.thumbnail) && (
@@ -989,7 +988,7 @@ function CompetitorThumbTile({ video }) {
       }}>
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '16 / 9',
-        borderRadius: 8, overflow: 'hidden', background: '#14130f',
+        borderRadius: 0, overflow: 'hidden', background: '#14130f',
         boxShadow: '0 1px 2px rgba(0,0,0,0.08), 0 3px 10px rgba(0,0,0,0.06)',
       }}>
         {(video.video_id || video.thumbnail) && (
@@ -1098,7 +1097,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           <span style={{
             fontSize: 10.5, fontWeight: 600, color: sevColor,
             background: sevBg, border: `1px solid ${sevColor}66`,
-            padding: '3px 10px', borderRadius: 100,
+            padding: '3px 10px', borderRadius: 0,
             letterSpacing: '0.10em', textTransform: 'uppercase',
             fontVariantNumeric: 'tabular-nums',
             display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -1132,7 +1131,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           <div style={{
             background: 'var(--yd-surface)',
             border: `1px solid ${C.border}`,
-            borderRadius: 10,
+            borderRadius: 0,
             padding: '14px 16px',
             boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.04)',
             display: 'flex', flexDirection: 'column', gap: 12,
@@ -1150,7 +1149,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           <div style={{
             background: 'var(--yd-surface)',
             border: `1px solid ${C.border}`,
-            borderRadius: 10,
+            borderRadius: 0,
             padding: '14px 16px',
           }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>Competing against</p>
@@ -1162,7 +1161,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
               </div>
             ) : (
               <div style={{
-                background: 'rgba(20,19,15,0.04)', border: '1px dashed rgba(20,19,15,0.08)', borderRadius: 8,
+                background: 'rgba(20,19,15,0.04)', border: '1px dashed rgba(20,19,15,0.08)', borderRadius: 0,
                 padding: '24px 14px', textAlign: 'center',
               }}>
                 <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.5 }}>
@@ -1205,11 +1204,11 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           )}
           <div style={{ flex: 1 }}/>
           <button onClick={onCopy}
-            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: 'var(--yd-surface)', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(20,19,15,0.12)'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
+            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: 'var(--yd-surface)', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(20,19,15,0.12)'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
           <button onClick={onSelect}
-            style={{ fontSize: 12.5, fontWeight: 600, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(201,160,48,0.08)' : '#c9a030', border: `1px solid ${isSelected ? 'rgba(201,160,48,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(201,160,48,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
+            style={{ fontSize: 12.5, fontWeight: 600, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(201,160,48,0.08)' : '#c9a030', border: `1px solid ${isSelected ? 'rgba(201,160,48,0.25)' : 'transparent'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(201,160,48,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
             {isSelected ? '✓ Selected' : 'Use this title →'}
           </button>
         </div>
@@ -1266,7 +1265,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
           padding: '14px 22px', display: 'flex', alignItems: 'center', gap: 12,
           cursor: 'pointer', userSelect: 'none',
         }}>
-        <div style={{ width: 26, height: 26, borderRadius: 8, background: C.text1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <div style={{ width: 26, height: 26, borderRadius: 0, background: C.text1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--yd-paper)', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
         </div>
         <span style={{ fontSize: 10, fontWeight: 600, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
@@ -1289,7 +1288,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
 
         {/* 2-col body, Why it works (charcoal-neutral) + Full description (white + amber left bar + shadow). */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 8, marginLeft: 38 }}>
-          <div style={{ background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+          <div style={{ background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0, padding: '12px 14px' }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{sentenceCase(d.why_it_works)}</p>
           </div>
@@ -1297,7 +1296,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
           <div style={{
             background: 'var(--yd-surface)',
             border: `1px solid ${C.border}`,
-            borderRadius: 10,
+            borderRadius: 0,
             padding: '12px 16px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             display: 'flex', flexDirection: 'column',
@@ -2381,7 +2380,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         return (
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>SEO Studio</h1>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>SEO Studio</h1>
           <p style={{ fontSize: 14, color: 'rgba(20,19,15,0.78)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
             Score your title against live competitor data
             {lastSearchAt && <> · Last analysed {relTime(lastSearchAt)}</>}
@@ -2412,7 +2411,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               onClick={() => setActiveTab(key)}
               style={{
                 fontSize: 13, fontWeight: active ? 600 : 500, padding: '8px 16px',
-                borderRadius: 100,
+                borderRadius: 0,
                 border: active ? '1px solid rgba(20,19,15,0.10)' : '1px solid transparent',
                 background: active ? 'rgba(20,19,15,0.055)' : 'transparent',
                 color: active ? '#14130f' : 'rgba(20,19,15,0.78)',
@@ -2472,7 +2471,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <div style={{
               fontSize: 12, fontWeight: 500, color: C.text2,
               background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)',
-              borderRadius: 8, padding: '7px 12px', marginBottom: 12,
+              borderRadius: 0, padding: '7px 12px', marginBottom: 12,
               display: 'inline-flex', alignItems: 'center', gap: 8,
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green }} />
@@ -2493,7 +2492,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               padding: '18px 20px',
               fontSize: 16,
               border: '1px solid rgba(20,19,15,0.10)',
-              borderRadius: 14,
+              borderRadius: 0,
               fontFamily: 'inherit',
               outline: 'none',
               color: '#14130f',
@@ -2572,12 +2571,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 aria-expanded={formatMenuOpen}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 7,
-                  padding: '8px 14px', borderRadius: 99,
+                  padding: '8px 15px', borderRadius: 0,
                   background: formatMenuOpen ? 'rgba(201,160,48,0.06)' : 'var(--yd-surface)',
-                  border: `1px solid ${formatMenuOpen ? 'rgba(201,160,48,0.35)' : 'rgba(20,19,15,0.12)'}`,
+                  border: `1px solid ${formatMenuOpen ? 'rgba(201,160,48,0.35)' : 'var(--yd-line)'}`,
                   color: formatMenuOpen ? C.red : C.text2,
-                  fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
-                  fontFamily: 'inherit', cursor: 'pointer',
+                  fontSize: 13.5, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
+                  fontFamily: "'Barlow Condensed', sans-serif", cursor: 'pointer',
                   transition: 'background 0.14s, border-color 0.14s, color 0.14s',
                   height: 36, boxSizing: 'border-box', whiteSpace: 'nowrap',
                 }}
@@ -2594,7 +2593,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   position: 'absolute', top: 'calc(100% + 6px)', left: 0,
                   width: 320, maxHeight: 360, overflow: 'auto',
                   background: 'var(--yd-surface)',
-                  border: '1px solid rgba(20,19,15,0.08)', borderRadius: 12,
+                  border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0,
                   boxShadow: '0 6px 24px rgba(0,0,0,0.10)',
                   zIndex: 20, padding: 4,
                 }}>
@@ -2605,7 +2604,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                       onClick={() => { setTitle(fmt.example); setFormatMenuOpen(false) }}
                       style={{
                         width: '100%', textAlign: 'left',
-                        padding: '10px 12px', borderRadius: 8,
+                        padding: '10px 12px', borderRadius: 0,
                         background: 'transparent', border: 'none',
                         cursor: 'pointer', fontFamily: 'inherit',
                         display: 'flex', flexDirection: 'column', gap: 4,
@@ -2709,7 +2708,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                         fontSize: 11, fontWeight: 600,
                         color: '#2d7a4f', background: 'rgba(22,163,74,0.08)',
                         border: '1px solid rgba(134,239,172,0.7)',
-                        padding: '2px 9px', borderRadius: 100,
+                        padding: '2px 9px', borderRadius: 0,
                         fontVariantNumeric: 'tabular-nums',
                         letterSpacing: '-0.02em',
                       }}>{opt.keyword}</span>
@@ -2803,7 +2802,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
             const tileBase = {
               position: 'relative',
-              borderRadius: 14,
+              borderRadius: 0,
               padding: '16px 18px 18px',
               display: 'flex', flexDirection: 'column', gap: 10,
               minHeight: 152,
@@ -2934,7 +2933,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   fontSize: 10, fontWeight: 600, color: C.text2,
                   background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)',
-                  padding: '3px 9px', borderRadius: 100,
+                  padding: '3px 9px', borderRadius: 0,
                   letterSpacing: '0.10em', textTransform: 'uppercase',
                 }}>
                   <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, animation: 'seoPulse 1.6s ease-in-out infinite' }}/>
@@ -3123,7 +3122,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Description optimizer</h2>
               </div>
 
-              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px' }}>
+              <div className="seo-glass-card" style={{ borderRadius: 0, padding: '22px 24px' }}>
 
               {/* Picked title + action cluster (Change title + Regenerate when descriptions exist), single row */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
@@ -3154,7 +3153,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     <textarea value={currentDesc} onChange={e => setCurrentDesc(e.target.value)}
                       placeholder="Paste your existing description here…"
                       rows={4}
-                      style={{ width: '100%', padding: '12px 14px', fontSize: 13.5, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 10, fontFamily: 'inherit', outline: 'none', color: C.text1, background: 'var(--yd-surface)', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.6, transition: 'border-color 0.18s, box-shadow 0.18s' }}
+                      style={{ width: '100%', padding: '12px 14px', fontSize: 13.5, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0, fontFamily: 'inherit', outline: 'none', color: C.text1, background: 'var(--yd-surface)', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.6, transition: 'border-color 0.18s, box-shadow 0.18s' }}
                       onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
                       onBlur={e => { e.target.style.borderColor = 'rgba(20,19,15,0.08)'; e.target.style.boxShadow = 'none' }}
                     />
