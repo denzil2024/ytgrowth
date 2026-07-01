@@ -10,7 +10,8 @@ const API = ''
 const C = {
   red:    '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)', redHi:   '#7a5b14',
   green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#2d7a4f',
-  amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#b07d1a',
+  // "amber" remapped to the warm gold accent family, no foreign orange survives.
+  amber:  '#c9a030', amberBg: 'rgba(201,160,48,0.13)', amberBdr: 'rgba(201,160,48,0.32)', amberHi: '#7a5b14',
   text1:  '#14130f',
   text2:  '#6b6862',
   text3:  '#6b6862',
@@ -22,18 +23,22 @@ const C = {
   hairHi:      'rgba(20,19,15,0.16)',
   wash:        'rgba(20,19,15,0.04)',
   washActive:  'rgba(20,19,15,0.06)',
-  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
-  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+  // Flat editorial system: cards are hairline + radius 0, NO shadow.
+  cardShadow:     'none',
+  cardShadowLift: 'none',
 }
 
-// Geist page-scoped, matches Chat / Competitors / Keywords / Outliers / WeeklyReport.
-if (typeof document !== 'undefined' && !document.getElementById('au-geist-font')) {
+// Editorial app fonts, page-scoped. Cormorant = display H1 + score numbers,
+// Barlow = body/UI, Barlow Condensed = labels/buttons. Mirrors SeoOptimizer.
+if (typeof document !== 'undefined' && !document.getElementById('au-editorial-font')) {
   const link = document.createElement('link')
-  link.id = 'au-geist-font'
+  link.id = 'au-editorial-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
   document.head.appendChild(link)
 }
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const COND  = "'Barlow Condensed', sans-serif"
 
 if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')) {
   const s = document.createElement('style')
@@ -54,7 +59,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-card {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       overflow: hidden;
       box-shadow: ${C.cardShadow};
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
@@ -69,7 +74,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
        pattern). NEVER red active, red is for primary CTAs only. */
     .au-tab-btn {
       background: transparent; color: ${C.text2};
-      border: 1px solid transparent; border-radius: 100px;
+      border: 1px solid transparent; border-radius: 0;
       padding: 8px 16px; font-size: 13px; font-weight: 500;
       font-family: inherit;
       cursor: pointer; white-space: nowrap;
@@ -87,20 +92,22 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
 
     .au-btn-primary {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 9px 18px; border-radius: 100px; border: none;
-      font-size: 13px; font-weight: 600; color: #fff;
+      padding: 10px 18px; border-radius: 0; border: none;
+      font-size: 12px; font-weight: 600; color: var(--yd-on-gold);
+      font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
       background: ${C.red}; cursor: pointer; white-space: nowrap;
-      box-shadow: 0 1px 2px rgba(201,160,48,0.20), inset 0 1px 0 rgba(20,19,15,0.22);
-      transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
-      letter-spacing: -0.01em;
+      box-shadow: none;
+      transition: filter 160ms cubic-bezier(0.32,0.72,0,1);
+      letter-spacing: 0.06em;
     }
-    .au-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+    .au-btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
     .au-btn-primary:disabled { background: rgba(20,19,15,0.06); color: ${C.text3}; cursor: default; box-shadow: none; }
 
     .au-btn-outline {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 9px 18px; border-radius: 100px;
-      font-size: 13px; font-weight: 600;
+      padding: 10px 18px; border-radius: 0;
+      font-size: 12px; font-weight: 600;
+      font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.06em;
       background: transparent; color: ${C.redHi}; border: 1px solid ${C.redBdr};
       cursor: pointer; white-space: nowrap;
       transition: background 0.15s;
@@ -111,7 +118,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-report-header {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       box-shadow: ${C.cardShadow};
       padding: 18px 22px;
       display: flex; align-items: center; gap: 16px;
@@ -125,7 +132,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     }
     .au-report-remove {
       position: absolute; top: 12px; right: 12px;
-      width: 28px; height: 28px; border-radius: 8px;
+      width: 28px; height: 28px; border-radius: 0;
       border: 1px solid transparent; background: transparent;
       color: ${C.text3}; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
@@ -142,7 +149,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-chip {
       display: inline-flex; align-items: baseline; gap: 4px;
       background: ${C.cardFlat}; border: 1px solid ${C.hair};
-      border-radius: 8px; padding: 4px 10px;
+      border-radius: 0; padding: 4px 10px;
     }
     .au-chip .val { font-size: 12px; font-weight: 600; color: ${C.text1}; }
     .au-chip .lbl { font-size: 11px; color: ${C.text3}; font-weight: 500; }
@@ -168,7 +175,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-video-card {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       overflow: hidden;
       box-shadow: ${C.cardShadow};
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
@@ -181,12 +188,12 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     }
     .au-video-cta {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      width: 100%; padding: 11px 16px; border-radius: 100px;
-      font-size: 13px; font-weight: 600; letter-spacing: -0.01em;
-      background: ${C.red}; color: #fff; border: none; cursor: pointer;
-      box-shadow: 0 1px 2px rgba(201,160,48,0.20);
-      transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
-      font-family: inherit; white-space: nowrap;
+      width: 100%; padding: 11px 16px; border-radius: 0;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+      background: ${C.red}; color: var(--yd-on-gold); border: none; cursor: pointer;
+      box-shadow: none;
+      transition: filter 160ms cubic-bezier(0.32,0.72,0,1);
+      font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; white-space: nowrap;
     }
     .au-video-cta:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
     .au-video-cta:disabled { background: rgba(20,19,15,0.06); color: ${C.text3}; cursor: default; box-shadow: none; }
@@ -209,7 +216,7 @@ function ScoreRing({ score, color }) {
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 22, fontWeight: 700, color, letterSpacing: '-0.8px', lineHeight: 1 }}>{score}</span>
+        <span style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 500, color, letterSpacing: '-0.01em', lineHeight: 1 }}>{score}</span>
         <span style={{ fontSize: 10, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>/100</span>
       </div>
     </div>
@@ -244,15 +251,15 @@ function ReportCard({ data, video, onClose }) {
   const m = data.metrics || {}
   return (
     <div className="au-in" style={{
-      background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 14,
+      background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0,
       borderTop: `3px solid ${scoreColor}`,
-      boxShadow: '0 1px 2px rgba(0,0,0,0.4), ',
+      boxShadow: 'none',
       padding: '24px 26px 24px', marginBottom: 20,
     }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: 18 }}>
         {video?.thumbnail && (
           <img src={video.thumbnail} alt="" referrerPolicy="no-referrer"
-            style={{ width: 130, height: 73, objectFit: 'cover', borderRadius: 10, flexShrink: 0,
+            style={{ width: 130, height: 73, objectFit: 'cover', borderRadius: 0, flexShrink: 0,
               border: '1px solid rgba(20,19,15,0.08)' }} />
         )}
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -267,7 +274,7 @@ function ReportCard({ data, video, onClose }) {
           <span style={{
             display: 'inline-block', fontSize: 11, fontWeight: 600,
             color: v.color, background: v.bg, border: `1px solid ${v.bdr}`,
-            borderRadius: 100, padding: '3px 11px', letterSpacing: '0.10em',
+            borderRadius: 0, padding: '3px 11px', letterSpacing: '0.10em',
             textTransform: 'uppercase',
           }}>{v.label}</span>
         </div>
@@ -275,7 +282,7 @@ function ReportCard({ data, video, onClose }) {
       </div>
 
       {data.headline && (
-        <p style={{ fontSize: 14, color: C.text1, fontWeight: 500,
+        <p style={{ fontSize: 14, color: C.text1, fontWeight: 400,
           lineHeight: 1.65, marginBottom: 20, letterSpacing: '-0.005em' }}>
           {data.headline}
         </p>
@@ -297,11 +304,11 @@ function ReportCard({ data, video, onClose }) {
         ].map(([lbl, val]) => (
           <div key={lbl} style={{
             background: C.cardFlat, border: `1px solid ${C.border}`,
-            borderRadius: 10, padding: '8px 11px',
+            borderRadius: 0, padding: '8px 11px',
           }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3,
               letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 3 }}>{lbl}</p>
-            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1,
+            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1,
               fontVariantNumeric: 'tabular-nums' }}>{val}</p>
           </div>
         ))}
@@ -310,7 +317,7 @@ function ReportCard({ data, video, onClose }) {
       {/* What worked / What didn't, paired panels */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
         <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-          borderRadius: 12, padding: '12px 14px' }}>
+          borderRadius: 0, padding: '12px 14px' }}>
           <p style={{ fontSize: 10, fontWeight: 600, color: C.greenHi,
             letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>What worked</p>
           {(data.what_worked || []).map((b, i) => (
@@ -322,7 +329,7 @@ function ReportCard({ data, video, onClose }) {
           )}
         </div>
         <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`,
-          borderRadius: 12, padding: '12px 14px' }}>
+          borderRadius: 0, padding: '12px 14px' }}>
           <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14',
             letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>What didn't</p>
           {(data.what_didnt || []).map((b, i) => (
@@ -347,9 +354,9 @@ function ReportCard({ data, video, onClose }) {
               <div key={i} style={{
                 background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)',
                 borderLeft: `3px solid ${C.amber}`,
-                borderRadius: '0 12px 12px 0', padding: '14px 16px',
+                borderRadius: 0, padding: '14px 16px',
                 display: 'flex', alignItems: 'flex-start', gap: 12,
-                boxShadow: '0 1px 2px rgba(0,0,0,0.4)',
+                boxShadow: 'none',
               }}>
                 <span style={{
                   fontSize: 12, fontWeight: 600,
@@ -529,11 +536,11 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
           Competitors header rhythm: 26 / 700 / -0.7px with a 14 / 500 / muted
           subtitle on one line. */}
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1,
-          letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: C.text1,
+          letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>
           Video Review
         </h1>
-        <p style={{ fontSize: 14, color: C.text2, fontWeight: 500,
+        <p style={{ fontSize: 14, color: C.text2, fontWeight: 400,
           letterSpacing: '-0.005em', lineHeight: 1.45 }}>
           For videos at least 7 days old · what worked, what didn't, what to test next · 1 credit per review
         </p>
@@ -565,7 +572,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
 
         {error && (
           <div style={{
-            background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
+            background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 0,
             padding: '10px 14px', marginBottom: 14, color: '#7a5b14', fontSize: 14,
           }}>{error}</div>
         )}
@@ -583,8 +590,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
         {eligible.length === 0 ? (
           <div style={{
             padding: '48px 24px', textAlign: 'center',
-            background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16,
-            boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+            background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 0,
           }}>
             <p style={{ fontSize: 15, fontWeight: 600, color: C.text1,
               letterSpacing: '-0.2px', marginBottom: 6 }}>
@@ -626,7 +632,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                 <div key={v.video_id || i} className="au-video-card">
                   {/* Thumbnail */}
                   <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
-                    style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '14px 14px 0 0', overflow: 'hidden' }}>
+                    style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: 0, overflow: 'hidden' }}>
                     {v.thumbnail || v.video_id
                       ? <img
                           src={v.video_id ? ytMaxThumbUrl(v.video_id) : v.thumbnail}
@@ -638,10 +644,10 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                       : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                     }
                     {isShort && (
-                      <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 4, letterSpacing: '0.10em' }}>SHORT</span>
+                      <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 0, letterSpacing: '0.10em' }}>SHORT</span>
                     )}
                     {durLabel && (
-                      <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 600, padding: '3px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
+                      <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 600, padding: '3px 7px', borderRadius: 0, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
                     )}
                   </a>
 
@@ -698,8 +704,8 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
           ) : reports.length === 0 ? (
             <div style={{
               padding: '56px 24px', textAlign: 'center',
-              background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 14,
-              boxShadow: '0 1px 2px rgba(0,0,0,0.4), ',
+              background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0,
+              boxShadow: 'none',
             }}>
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1,
                 letterSpacing: '-0.2px', marginBottom: 8 }}>No reports yet</p>
@@ -728,7 +734,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                       {r.thumbnail && (
                         <img src={r.thumbnail} alt="" referrerPolicy="no-referrer"
                           style={{ width: 96, height: 54, objectFit: 'cover',
-                            borderRadius: 8, flexShrink: 0, border: '1px solid rgba(20,19,15,0.08)' }} />
+                            borderRadius: 0, flexShrink: 0, border: '1px solid rgba(20,19,15,0.08)' }} />
                       )}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontWeight: 600, fontSize: 14.5, color: C.text1,
@@ -741,7 +747,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                           <span style={{
                             display: 'inline-flex', alignItems: 'center',
-                            fontSize: 11, borderRadius: 100,
+                            fontSize: 11, borderRadius: 0,
                             padding: '3px 4px 3px 10px',
                             fontVariantNumeric: 'tabular-nums',
                             border: `1px solid ${v.bdr}`,
@@ -751,7 +757,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                             <span style={{
                               fontSize: 11, fontWeight: 600, color: C.text1,
                               background: C.cardFlat, border: `1px solid ${v.color}40`,
-                              borderRadius: 100, padding: '1px 8px', letterSpacing: '-0.01em',
+                              borderRadius: 0, padding: '1px 8px', letterSpacing: '-0.01em',
                             }}>{score}/100</span>
                           </span>
                           <span style={{ fontSize: 12, color: C.text3, fontWeight: 500, letterSpacing: '-0.005em' }}>
@@ -777,7 +783,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                       <div style={{ flexShrink: 0, paddingRight: 24 }}>
                         <button className="au-btn-primary"
                           onClick={e => { e.stopPropagation(); openReport(r) }}
-                          style={{ padding: '8px 16px', fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em' }}>
+                          style={{ padding: '9px 16px', fontSize: 12, fontWeight: 600, letterSpacing: '0.06em' }}>
                           Open report
                           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
                             stroke="currentColor" strokeWidth="2" strokeLinecap="round">
