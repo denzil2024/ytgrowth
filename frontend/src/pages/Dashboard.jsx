@@ -2347,8 +2347,8 @@ export default function Dashboard() {
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h1 style={{ fontSize: 26, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>My Videos</h1>
-                  <p style={{ fontSize: 14, color: SHELL.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+                  <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 500, color: SHELL.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>My Videos</h1>
+                  <p style={{ fontSize: 14, color: SHELL.text2, fontWeight: 400, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
                     Every video on your channel · {videos.length.toLocaleString()} total · {fmtNum(videos.reduce((s, v) => s + (v.views || 0), 0))} views
                   </p>
                 </div>
@@ -2467,7 +2467,7 @@ export default function Dashboard() {
                 const DeltaCell = ({ label, before, current, pctVal, tint }) => {
                   const tintMap = {
                     blue:  { bg: 'rgba(20,19,15,0.05)', border: '1px solid rgba(20,19,15,0.08)', labelColor: SHELL.text2 },
-                    white: { bg: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)', borderLeft: '3px solid #2d7a4f', borderRadius: '0 10px 10px 0', boxShadow: 'none', labelColor: '#2d7a4f' },
+                    white: { bg: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)', borderLeft: '3px solid #2d7a4f', borderRadius: 0, boxShadow: 'none', labelColor: '#2d7a4f' },
                     green: { bg: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.34)', labelColor: '#2d7a4f' },
                   }[tint]
                   // Hide the delta label entirely when nothing has changed (pct is 0 or null).
@@ -2480,7 +2480,7 @@ export default function Dashboard() {
                       background: tintMap.bg,
                       border: tintMap.border,
                       borderLeft: tintMap.borderLeft,
-                      borderRadius: tintMap.borderRadius || 10,
+                      borderRadius: tintMap.borderRadius || 0,
                       padding: '12px 14px',
                       boxShadow: tintMap.boxShadow,
                     }}>
@@ -2519,7 +2519,7 @@ export default function Dashboard() {
                             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 14 }}>
                               {o.thumbnail_url && (
                                 <a href={`https://www.youtube.com/watch?v=${o.video_id}`} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, lineHeight: 0, textDecoration: 'none', alignSelf: 'center' }}>
-                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 8, objectFit: 'cover', display: 'block', border: '1px solid rgba(20,19,15,0.08)' }}/>
+                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 0, objectFit: 'cover', display: 'block', border: '1px solid rgba(20,19,15,0.08)' }}/>
                                 </a>
                               )}
 
@@ -2609,7 +2609,7 @@ export default function Dashboard() {
                     <div key={v.video_id || i} className="ytg-card" style={{ display: 'flex', flexDirection: 'column' }}>
                       {/* Thumbnail */}
                       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
-                        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '16px 16px 0 0', overflow: 'hidden' }}>
+                        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: 0, overflow: 'hidden' }}>
                         {v.thumbnail || v.video_id
                           ? <img
                               src={v.video_id ? ytMaxThumbUrl(v.video_id) : v.thumbnail}
@@ -2621,10 +2621,10 @@ export default function Dashboard() {
                           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                         }
                         {isShort && (
-                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 4, letterSpacing: '0.10em' }}>SHORT</span>
+                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 0, letterSpacing: '0.10em' }}>SHORT</span>
                         )}
                         {durLabel && (
-                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 600, padding: '3px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
+                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 600, padding: '3px 7px', borderRadius: 0, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
                         )}
                       </a>
 
