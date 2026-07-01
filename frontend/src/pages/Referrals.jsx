@@ -153,7 +153,7 @@ export default function Referrals() {
                 <p style={{ fontSize: 28, fontWeight: 800, color: C.ink, letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
                   ${headline.toLocaleString()}<span style={{ fontSize: 15, fontWeight: 600, color: C.ink55, letterSpacing: '-0.1px' }}> /mo recurring by month 12</span>
                 </p>
-                <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 6, lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12, fontWeight: 400, color: C.ink45, marginTop: 6, lineHeight: 1.5 }}>
                   Illustrative. Assumes the Growth plan ($49/mo) and that referrals stay subscribed.
                 </p>
               </div>
@@ -192,7 +192,7 @@ export default function Referrals() {
               ].map(([v, l]) => (
                 <span key={l} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6 }}>
                   <span style={{ fontSize: 13, fontWeight: 700, color: C.ink, fontVariantNumeric: 'tabular-nums' }}>{v}</span>
-                  <span style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55 }}>{l}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 400, color: C.ink55 }}>{l}</span>
                 </span>
               ))}
             </div>
@@ -219,12 +219,12 @@ export default function Referrals() {
                   boxShadow: 'inset 0 1px 0 rgba(20,19,15,0.2)',
                 }} />
                 <span style={{ fontSize: 13, fontWeight: 600, color: C.ink, marginTop: 10 }}>{t.name}</span>
-                <span style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 2 }}>${t.price}/mo plan</span>
+                <span style={{ fontSize: 12, fontWeight: 400, color: C.ink45, marginTop: 2 }}>${t.price}/mo plan</span>
               </div>
             )
           })}
         </div>
-        <p style={{ fontSize: 12, fontWeight: 450, color: C.ink55, marginTop: 18, paddingTop: 14, borderTop: `1px solid ${C.hair}`, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 12, fontWeight: 400, color: C.ink55, marginTop: 18, paddingTop: 14, borderTop: `1px solid ${C.hair}`, lineHeight: 1.5 }}>
           Recurring monthly commission per referred creator. One Agency referral clears the $50 payout minimum in about two months.
         </p>
       </div>
@@ -243,7 +243,7 @@ export default function Referrals() {
               marginBottom: 13,
             }}>{step.n}</span>
             <p style={{ fontSize: 15, fontWeight: 700, color: C.ink, letterSpacing: '-0.3px', marginBottom: 6 }}>{step.title}</p>
-            <p style={{ fontSize: 13, fontWeight: 450, color: C.ink70, lineHeight: 1.6, letterSpacing: '-0.005em' }}>{step.body}</p>
+            <p style={{ fontSize: 13, fontWeight: 400, color: C.ink70, lineHeight: 1.6, letterSpacing: '-0.005em' }}>{step.body}</p>
           </div>
         ))}
       </div>
@@ -251,7 +251,7 @@ export default function Referrals() {
       {/* ── Embed card ──────────────────────────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 12 }}>
         <p className="ref-eyebrow">Your dashboard</p>
-        <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, letterSpacing: '-0.005em' }}>Copy your link below to start sharing</p>
+        <p style={{ fontSize: 12, fontWeight: 400, color: C.ink45, letterSpacing: '-0.005em' }}>Copy your link below to start sharing</p>
       </div>
       <div style={{ ...CARD, overflow: 'hidden' }}>
         {loading && (
@@ -268,7 +268,7 @@ export default function Referrals() {
               </svg>
             </div>
             <p style={{ fontSize: 15, fontWeight: 700, color: C.ink, letterSpacing: '-0.3px' }}>Couldn't load your affiliate dashboard</p>
-            <p style={{ fontSize: 13, fontWeight: 450, color: C.ink55, maxWidth: 360, lineHeight: 1.6 }}>{error}</p>
+            <p style={{ fontSize: 13, fontWeight: 400, color: C.ink55, maxWidth: 360, lineHeight: 1.6 }}>{error}</p>
             <button
               onClick={() => window.location.reload()}
               style={{ marginTop: 4, padding: '8px 18px', borderRadius: 100, border: `1px solid rgba(10,10,15,0.10)`, background: '#fff', color: C.ink70, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7)' }}
@@ -287,7 +287,7 @@ export default function Referrals() {
       </div>
 
       {/* ── Footnote ────────────────────────────────────────────────────── */}
-      <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 16, marginBottom: 48, lineHeight: 1.6, textAlign: 'center', letterSpacing: '-0.005em' }}>
+      <p style={{ fontSize: 12, fontWeight: 400, color: C.ink45, marginTop: 16, marginBottom: 48, lineHeight: 1.6, textAlign: 'center', letterSpacing: '-0.005em' }}>
         Full program details on the{' '}
         <a href="/affiliate" target="_blank" rel="noopener noreferrer" style={{ color: C.ink70, fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: 2 }}>public affiliate page</a>
         {' '}has the earnings calculator, FAQ, and plan comparisons.

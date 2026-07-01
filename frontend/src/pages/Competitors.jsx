@@ -105,7 +105,7 @@ function useCompetitorStyles() {
         border: 1px solid ${D.hair};
         background: ${D.surfaceInput};
         font-size: 14px;
-        font-weight: 450;
+        font-weight: 400;
         font-family: 'Barlow', system-ui, sans-serif;
         outline: none;
         transition: border-color 200ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1);
@@ -113,7 +113,7 @@ function useCompetitorStyles() {
         letter-spacing: -0.005em;
         box-shadow: ${D.cardShadow};
       }
-      .comp-input::placeholder { color: rgba(20,19,15,0.30); font-weight: 450; }
+      .comp-input::placeholder { color: rgba(20,19,15,0.30); font-weight: 400; }
       .comp-input:focus {
         border-color: rgba(201,160,48,0.45);
         box-shadow: 0 0 0 4px rgba(201,160,48,0.10), ${D.cardShadow};
@@ -765,7 +765,7 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
           {channel.channel_name}
         </p>
         {channel.description && (
-          <p style={{ fontSize: 12.5, color: D.text3, overflow: 'hidden', fontWeight: 450,
+          <p style={{ fontSize: 12.5, color: D.text3, overflow: 'hidden', fontWeight: 400,
             letterSpacing: '-0.005em',
             textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{channel.description}</p>
         )}
@@ -795,7 +795,7 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
         <button className="comp-btn-primary" onClick={() => onAnalyze(channel.channel_id)}
           style={{ padding: '9px 18px', fontSize: 13, flexShrink: 0 }}>
           Analyze
-          <span style={{ fontSize: 11, fontWeight: 450, opacity: 0.7, marginLeft: 6, letterSpacing: 0 }}>1 credit</span>
+          <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.7, marginLeft: 6, letterSpacing: 0 }}>1 credit</span>
         </button>
       )}
     </div>
@@ -1682,7 +1682,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8a8378" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
               </div>
               <p style={{ fontWeight: 500, color: D.text1, marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>Search for a channel to compare</p>
-              <p style={{ fontSize: 13, color: D.text3, fontWeight: 450, letterSpacing: '-0.005em' }}>Type any YouTube channel name above</p>
+              <p style={{ fontSize: 13, color: D.text3, fontWeight: 400, letterSpacing: '-0.005em' }}>Type any YouTube channel name above</p>
             </div>
           )}
 
@@ -1692,7 +1692,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8a8378" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/><line x1="6.5" y1="8.5" x2="10.5" y2="8.5"/></svg>
               </div>
               <p style={{ fontWeight: 500, color: D.text1, marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>No channels found</p>
-              <p style={{ fontSize: 13, color: D.text3, fontWeight: 450, letterSpacing: '-0.005em' }}>Try a different name or paste the channel URL</p>
+              <p style={{ fontSize: 13, color: D.text3, fontWeight: 400, letterSpacing: '-0.005em' }}>Try a different name or paste the channel URL</p>
             </div>
           )}
 
@@ -1718,7 +1718,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8a8378" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="10" width="3" height="7" rx="1"/><rect x="8.5" y="6" width="3" height="11" rx="1"/><rect x="14" y="3" width="3" height="14" rx="1"/></svg>
               </div>
               <p style={{ fontWeight: 500, color: D.text1, marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>No competitors tracked yet</p>
-              <p style={{ fontSize: 13, color: D.text3, fontWeight: 450, letterSpacing: '-0.005em', maxWidth: 320, margin: '0 auto', lineHeight: 1.55 }}>
+              <p style={{ fontSize: 13, color: D.text3, fontWeight: 400, letterSpacing: '-0.005em', maxWidth: 320, margin: '0 auto', lineHeight: 1.55 }}>
                 Search a channel and click Analyze. It saves here so you can dip back into the report later.
               </p>
             </div>

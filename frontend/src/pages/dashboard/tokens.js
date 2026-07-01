@@ -128,11 +128,13 @@ export const METAL = {
 
 /* Each category has its own vivid gradient so badges are visually distinct
    at a glance. */
+/* Editorial-safe category tones: medal metals (gold / silver / bronze) plus
+   green. No brand red, no blue. Each category still reads distinct. */
 export const CATEGORY_GRADIENT = {
-  subs:        { h1: '#ff8a80', h2: '#e5251b', h3: '#7a0f08', stroke: '#4a0903', ink: '#4a0903' },
-  views:       { h1: '#7fb3ff', h2: '#2563eb', h3: '#1e3a8a', stroke: '#172554', ink: '#172554' },
-  watch_hours: { h1: '#ffe082', h2: '#eab308', h3: '#8a6400', stroke: '#4a3400', ink: '#4a3400' },
-  uploads:     { h1: '#6ee7b7', h2: '#059669', h3: '#064e3b', stroke: '#022c1e', ink: '#022c1e' },
+  subs:        { h1: '#ffe08a', h2: '#c9a030', h3: '#7a5b14', stroke: '#5a4100', ink: '#5a4100' },
+  views:       { h1: '#dedad0', h2: '#9a948a', h3: '#4a4843', stroke: '#2a2824', ink: '#2a2824' },
+  watch_hours: { h1: '#ffcf8a', h2: '#b07d1a', h3: '#6a4a0e', stroke: '#4a3400', ink: '#4a3400' },
+  uploads:     { h1: '#6ee7b7', h2: '#2d7a4f', h3: '#1d5235', stroke: '#022c1e', ink: '#022c1e' },
 }
 
 /* Confetti palette for the milestone celebration modal. */

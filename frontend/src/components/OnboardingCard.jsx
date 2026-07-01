@@ -98,7 +98,7 @@ export default function OnboardingCard({
         </span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ fontSize: 15, fontWeight: 600, color: C.ink, letterSpacing: '-0.2px' }}>You're all set</p>
-          <p style={{ fontSize: 13, fontWeight: 450, color: C.sub, marginTop: 2 }}>Your channel is set up. Your Feed is below.</p>
+          <p style={{ fontSize: 13, fontWeight: 400, color: C.sub, marginTop: 2 }}>Your channel is set up. Your Feed is below.</p>
         </div>
         <button onClick={onDismiss} style={primaryBtn}>
           Go to my Feed <ArrowIcon size={12} />
@@ -119,7 +119,7 @@ export default function OnboardingCard({
           <h2 style={{ fontSize: 22, fontWeight: 600, color: C.ink, letterSpacing: '-0.5px', lineHeight: 1.2, margin: 0 }}>
             Set up your channel
           </h2>
-          <p style={{ fontSize: 13.5, fontWeight: 450, color: C.sub, marginTop: 6, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 13.5, fontWeight: 400, color: C.sub, marginTop: 6, lineHeight: 1.5 }}>
             A few steps to your first wins. Takes about two minutes.
           </p>
         </div>
@@ -190,7 +190,7 @@ export default function OnboardingCard({
                       </span>
                     )}
                   </div>
-                  <p style={{ fontSize: 12.5, fontWeight: 450, color: C.sub, marginTop: 3, lineHeight: 1.5 }}>{s.body}</p>
+                  <p style={{ fontSize: 12.5, fontWeight: 400, color: C.sub, marginTop: 3, lineHeight: 1.5 }}>{s.body}</p>
                 </div>
 
                 {/* Action */}

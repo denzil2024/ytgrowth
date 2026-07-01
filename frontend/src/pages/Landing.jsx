@@ -660,7 +660,7 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3 }) {
                         </span>
                         <span style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                           <span style={{ fontSize: 14, fontWeight: 600, color: '#0a0a0f', letterSpacing: '-0.15px', whiteSpace: 'nowrap', lineHeight: 1.3 }}>{item.label}</span>
-                          {item.desc && <span style={{ fontSize: 12, fontWeight: 450, color: 'rgba(10,10,15,0.5)', letterSpacing: '-0.05px', lineHeight: 1.35, marginTop: 1 }}>{item.desc}</span>}
+                          {item.desc && <span style={{ fontSize: 12, fontWeight: 400, color: 'rgba(10,10,15,0.5)', letterSpacing: '-0.05px', lineHeight: 1.35, marginTop: 1 }}>{item.desc}</span>}
                         </span>
                       </a>
                     ))}
@@ -1081,7 +1081,7 @@ export default function Landing() {
             <div key={i} style={{ background: '#ffffff', padding: isMobile ? '24px 22px' : '34px 28px 32px' }}>
               <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: isMobile ? 32 : 38, color: ED_INK, letterSpacing: '-0.5px', lineHeight: 1, marginBottom: 12 }}>{stat}</p>
               <p style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 700, color: ED_MUTED, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>{label}</p>
-              <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 450, color: ED_SOFT, lineHeight: 1.55, maxWidth: 220 }}>{desc}</p>
+              <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 400, color: ED_SOFT, lineHeight: 1.55, maxWidth: 220 }}>{desc}</p>
             </div>
           ))}
         </div>

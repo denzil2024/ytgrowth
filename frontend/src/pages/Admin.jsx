@@ -182,7 +182,7 @@ function useAdminStyles() {
           font-variant-numeric:tabular-nums;
         }
         .adm-section-sub {
-          font-size:13px; color:#8a8378; font-weight:450; line-height:1.5;
+          font-size:13px; color:#8a8378; font-weight:400; line-height:1.5;
           margin-top:4px;
         }
         /* Card-embedded section header sits at the top of a SectionCard */

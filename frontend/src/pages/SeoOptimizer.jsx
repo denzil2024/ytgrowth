@@ -306,17 +306,17 @@ const T = {
 
   // Uppercase labels
   sectionLabel: { fontSize: 11, fontWeight: 600, color: '#6b6862', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH"), neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
-  sectionHint:  { fontSize: 12.5, fontWeight: 450, color: '#6b6862' },                                                     // right-aligned hint text
+  sectionHint:  { fontSize: 12.5, fontWeight: 400, color: '#6b6862' },                                                     // right-aligned hint text
   innerLabel:   { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // inside sub-blocks (needs + color)
   statLabel:    { fontSize: 11, fontWeight: 500, color: '#6b6862', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
 
   // Descriptions
-  cardDesc:     { fontSize: 12.5, fontWeight: 450, color: '#6b6862', lineHeight: 1.55 },
+  cardDesc:     { fontSize: 12.5, fontWeight: 400, color: '#6b6862', lineHeight: 1.55 },
 
   // Body text
   bodyBold:     { fontSize: 13.5, fontWeight: 600, color: '#14130f', lineHeight: 1.55, letterSpacing: '-0.1px' },
-  body:         { fontSize: 13.5, fontWeight: 450, color: '#6b6862', lineHeight: 1.65 },
-  innerText:    { fontSize: 13.5, fontWeight: 450, color: '#14130f', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
+  body:         { fontSize: 13.5, fontWeight: 400, color: '#6b6862', lineHeight: 1.65 },
+  innerText:    { fontSize: 13.5, fontWeight: 400, color: '#14130f', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
 
   // Pills / chips / badges
   pill:         { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // severity + vol/comp

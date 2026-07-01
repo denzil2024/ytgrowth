@@ -198,13 +198,13 @@ function useSettingsStyles() {
         background: var(--yd-surface);
         border: 1px solid rgba(20,19,15,0.12);
         border-radius: 12px;
-        font-size: 13.5px; font-weight: 450; color: ${C.ink};
+        font-size: 13.5px; font-weight: 400; color: ${C.ink};
         font-family: 'Barlow', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em;
         box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
         transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-input::placeholder { color: rgba(20,19,15,0.34); font-weight: 450; }
+      .set-input::placeholder { color: rgba(20,19,15,0.34); font-weight: 400; }
       .set-input:focus {
         border-color: rgba(201,160,48,0.45);
         box-shadow: 0 0 0 4px rgba(201,160,48,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
@@ -215,14 +215,14 @@ function useSettingsStyles() {
         background: var(--yd-surface);
         border: 1px solid rgba(20,19,15,0.12);
         border-radius: 12px;
-        font-size: 13.5px; font-weight: 450; color: ${C.ink};
+        font-size: 13.5px; font-weight: 400; color: ${C.ink};
         font-family: 'Barlow', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em; line-height: 1.55;
         resize: vertical; min-height: 104px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
         transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-textarea::placeholder { color: rgba(20,19,15,0.34); font-weight: 450; }
+      .set-textarea::placeholder { color: rgba(20,19,15,0.34); font-weight: 400; }
       .set-textarea:focus {
         border-color: rgba(201,160,48,0.45);
         box-shadow: 0 0 0 4px rgba(201,160,48,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
@@ -648,12 +648,12 @@ export default function Settings({ channelData }) {
               {displayName}
             </p>
             {me?.email && (
-              <p style={{ fontSize: 13.5, fontWeight: 450, color: C.ink60, marginTop: 3, letterSpacing: '-0.005em' }}>
+              <p style={{ fontSize: 13.5, fontWeight: 400, color: C.ink60, marginTop: 3, letterSpacing: '-0.005em' }}>
                 {me.email}
               </p>
             )}
             {me?.member_since && (
-              <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 3, letterSpacing: '-0.005em' }}>
+              <p style={{ fontSize: 12, fontWeight: 400, color: C.ink45, marginTop: 3, letterSpacing: '-0.005em' }}>
                 Member since {fmtMonthYear(me.member_since)}
               </p>
             )}
@@ -668,7 +668,7 @@ export default function Settings({ channelData }) {
               boxShadow: 'inset 0 1px 0 rgba(20,19,15,0.5)',
             }}>{planLabel(me?.plan)}</span>
             {compactBillingLabel(me) && (
-              <p style={{ fontSize: 12, fontWeight: 450, color: C.ink55, marginTop: 8, letterSpacing: '-0.005em' }}>
+              <p style={{ fontSize: 12, fontWeight: 400, color: C.ink55, marginTop: 8, letterSpacing: '-0.005em' }}>
                 {compactBillingLabel(me)}
               </p>
             )}
@@ -687,7 +687,7 @@ export default function Settings({ channelData }) {
               letterSpacing: '-0.03em', lineHeight: 1,
               fontVariantNumeric: 'tabular-nums',
             }}>{remaining}</span>
-            <span style={{ fontSize: 14, fontWeight: 450, color: C.ink60, letterSpacing: '-0.005em' }}>
+            <span style={{ fontSize: 14, fontWeight: 400, color: C.ink60, letterSpacing: '-0.005em' }}>
               of {allowance} left
             </span>
           </div>
@@ -705,7 +705,7 @@ export default function Settings({ channelData }) {
               transition: 'width 0.85s cubic-bezier(0.34,1.56,0.64,1)',
             }} />
           </div>
-          <p style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55, marginTop: 10, letterSpacing: '-0.005em' }}>
+          <p style={{ fontSize: 12.5, fontWeight: 400, color: C.ink55, marginTop: 10, letterSpacing: '-0.005em' }}>
             {refillLabel(me?.reset_date, me?.is_lifetime)}
           </p>
 
@@ -718,7 +718,7 @@ export default function Settings({ channelData }) {
               <p style={{ fontSize: 13.5, fontWeight: 500, color: C.ink, letterSpacing: '-0.005em' }}>
                 Credit pack balance
               </p>
-              <p style={{ fontSize: 12, fontWeight: 450, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
+              <p style={{ fontSize: 12, fontWeight: 400, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
                 Never expires. Used after monthly analyses run out.
               </p>
             </div>
@@ -809,7 +809,7 @@ export default function Settings({ channelData }) {
                     )}
                   </div>
                   <p style={{
-                    fontSize: 12.5, fontWeight: 450,
+                    fontSize: 12.5, fontWeight: 400,
                     color: C.ink55, marginTop: 3, letterSpacing: '-0.005em',
                     fontVariantNumeric: 'tabular-nums',
                   }}>
@@ -843,7 +843,7 @@ export default function Settings({ channelData }) {
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0' }}>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 13.5, fontWeight: 450, color: C.ink60, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
+                <p style={{ fontSize: 13.5, fontWeight: 400, color: C.ink60, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
                   You have reached your channel limit. Upgrade to connect more.
                 </p>
               </div>
@@ -941,7 +941,7 @@ export default function Settings({ channelData }) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0' }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.ink, letterSpacing: '-0.005em' }}>{r.title}</p>
-                        <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 3, letterSpacing: '-0.005em' }}>{fmtDate(r.created_at)}</p>
+                        <p style={{ fontSize: 12, fontWeight: 400, color: C.ink45, marginTop: 3, letterSpacing: '-0.005em' }}>{fmtDate(r.created_at)}</p>
                       </div>
                       <span style={{
                         fontSize: 10, fontWeight: 600, color: sty.c, background: sty.bg,

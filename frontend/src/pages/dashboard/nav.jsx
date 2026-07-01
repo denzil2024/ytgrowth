@@ -105,7 +105,7 @@ export function NavSubBtn({ label, active, onClick, locked = false }) {
         width: `calc(100% - ${NAV_GUTTER * 2 + SUB_INDENT}px)`,
         background: 'transparent',
         color: active ? SHELL.text1 : SHELL.text2,
-        fontWeight: active ? 600 : 450,
+        fontWeight: active ? 600 : 400,
         fontSize: 13.5,
         letterSpacing: '-0.01em',
         border: 'none',
@@ -321,7 +321,7 @@ export function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
                   width: `calc(100% - ${NAV_GUTTER * 2 + SUB_INDENT}px)`,
                   background: on ? SHELL.activeBg : 'transparent',
                   color: on ? SHELL.text1 : SHELL.text2,
-                  fontWeight: on ? 600 : 450, fontSize: 13.5, letterSpacing: '-0.01em',
+                  fontWeight: on ? 600 : 400, fontSize: 13.5, letterSpacing: '-0.01em',
                   border: 'none', padding: '7px 10px', borderRadius: 8,
                   textAlign: 'left', cursor: 'pointer',
                   fontFamily: "'Barlow', system-ui, sans-serif",
@@ -467,7 +467,7 @@ export function WhatsNewCard({ channelId, onNavigate }) {
             {feature.headline}
           </p>
           <p style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text2,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text2,
             letterSpacing: '-0.01em', lineHeight: 1.55,
             marginBottom: 10,
           }}>

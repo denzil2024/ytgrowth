@@ -126,7 +126,7 @@ export function FeedCard({
         }}>{category}</h3>
         {age && (
           <span style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
             letterSpacing: '-0.01em',
           }}>· {age}</span>
         )}
@@ -266,7 +266,7 @@ export function ActionsRailCard({ items }) {
 
                 <p style={{
                   flex: 1, minWidth: 0,
-                  fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+                  fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
                   letterSpacing: '-0.1px', lineHeight: 1.45,
                   margin: 0,
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
@@ -428,7 +428,7 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
       {/* Headline, lighter weight so the Actions tab doesn't read like a
           wall of bold. The eyebrow chip already signals the weight. */}
       <h3 style={{
-        fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+        fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
         letterSpacing: '-0.1px', lineHeight: 1.5,
         marginBottom: 10,
       }}>{action.problem || action.action || 'Action'}</h3>
@@ -522,7 +522,7 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
                       marginBottom: 6,
                     }}>Fix</p>
                     <p style={{
-                      fontSize: 12.5, fontWeight: 450, color: SHELL.text1,
+                      fontSize: 12.5, fontWeight: 400, color: SHELL.text1,
                       letterSpacing: '-0.01em', lineHeight: 1.65,
                     }}>{action.action}</p>
                   </div>
@@ -541,7 +541,7 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
                       marginBottom: 6,
                     }}>Why this works</p>
                     <p style={{
-                      fontSize: 12.5, fontWeight: 450, color: SHELL.text1,
+                      fontSize: 12.5, fontWeight: 400, color: SHELL.text1,
                       letterSpacing: '-0.01em', lineHeight: 1.65,
                     }}>{action.expected_outcome}</p>
                   </div>
@@ -958,7 +958,7 @@ export function AuditLockedCard({ count, onUpgrade }) {
         </span>
       }
     >
-      <p style={{ fontSize: 13.5, fontWeight: 450, color: SHELL.text2, lineHeight: 1.6, margin: '0 0 14px' }}>
+      <p style={{ fontSize: 13.5, fontWeight: 400, color: SHELL.text2, lineHeight: 1.6, margin: '0 0 14px' }}>
         Your audit found <strong style={{ color: SHELL.text1, fontWeight: 600 }}>{count} more priority {count === 1 ? 'action' : 'actions'}</strong>. Upgrade to see every ranked move, the full channel analysis, and fresh re-audits as your channel grows.
       </p>
       <button
@@ -1793,7 +1793,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
               <div style={{ flex: 1, minWidth: 0 }}>
                 {/* Title */}
                 <p style={{
-                  fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+                  fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
                   letterSpacing: '-0.1px', lineHeight: 1.45,
                   marginBottom: 4,
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
@@ -1962,13 +1962,13 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
         }}>Top Performer · Title Suggestion</h3>
         {viewsLabel && (
           <span style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
             letterSpacing: '-0.01em',
           }}>· {viewsLabel}</span>
         )}
         {ageLabel && (
           <span style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
             letterSpacing: '-0.01em',
           }}>· {ageLabel}</span>
         )}
@@ -2089,7 +2089,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
           {focused.why_it_works && (
             <p style={{
               margin: '8px 0 0 46px',
-              fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+              fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
               letterSpacing: '-0.01em', lineHeight: 1.45,
             }}>{focused.why_it_works}</p>
           )}
@@ -2220,7 +2220,7 @@ export function MissingDescriptionCard({
         }}>Add Description</h3>
         {ageLabel && (
           <span style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
             letterSpacing: '-0.01em',
           }}>· {ageLabel}</span>
         )}
@@ -2287,7 +2287,7 @@ export function MissingDescriptionCard({
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10, justifyContent: 'center' }}>
           {/* Explainer line. References the specific gap, not a generic nag. */}
           <p style={{
-            margin: 0, fontSize: 13.5, fontWeight: 450, color: SHELL.text2,
+            margin: 0, fontSize: 13.5, fontWeight: 400, color: SHELL.text2,
             letterSpacing: '-0.05px', lineHeight: 1.45,
           }}>
             Your {video.is_short ? 'last short' : 'latest video'} has {lenLabel}.
@@ -2319,7 +2319,7 @@ export function MissingDescriptionCard({
             </div>
             <p style={{
               margin: 0, padding: '10px 12px',
-              fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+              fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
               letterSpacing: '-0.05px', lineHeight: 1.5,
               whiteSpace: 'pre-wrap',
               display: '-webkit-box',
@@ -2425,7 +2425,7 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
         }}>Trending Keyword</h3>
         {ageLabel && (
           <span style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
             letterSpacing: '-0.01em',
           }}>· {ageLabel}</span>
         )}
@@ -2492,7 +2492,7 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
               }}>{momLabel}</span>
             )}
             {subsLabel && (
-              <span style={{ fontSize: 12.5, fontWeight: 450, color: SHELL.text2, letterSpacing: '-0.01em' }}>
+              <span style={{ fontSize: 12.5, fontWeight: 400, color: SHELL.text2, letterSpacing: '-0.01em' }}>
                 · {subsLabel}
               </span>
             )}
@@ -2500,7 +2500,7 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
 
           {freshLabel && (
             <p style={{
-              margin: 0, fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+              margin: 0, fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
               letterSpacing: '-0.01em',
             }}>{freshLabel}</p>
           )}
@@ -2573,7 +2573,7 @@ export function MissingTagsCard({
         }}>Add Tags</h3>
         {ageLabel && (
           <span style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
             letterSpacing: '-0.01em',
           }}>· {ageLabel}</span>
         )}
@@ -2638,7 +2638,7 @@ export function MissingTagsCard({
 
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <p style={{
-            margin: 0, fontSize: 13.5, fontWeight: 450, color: SHELL.text2,
+            margin: 0, fontSize: 13.5, fontWeight: 400, color: SHELL.text2,
             letterSpacing: '-0.05px', lineHeight: 1.45,
           }}>
             Your {video.is_short ? 'last short' : 'latest video'} has {countLabel}.
@@ -2785,7 +2785,7 @@ export function PinnedAIInput({ onAsk }) {
           border: 'none', outline: 'none',
           color: SHELL.text1,
           fontFamily: 'inherit',
-          fontSize: 14, fontWeight: 450,
+          fontSize: 14, fontWeight: 400,
           letterSpacing: '-0.05px',
           padding: '6px 4px',
         }}
@@ -2861,7 +2861,7 @@ export function UnansweredCommentCard({
         }}>Unanswered Comment</h3>
         {ageLabel && (
           <span style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
             letterSpacing: '-0.01em',
           }}>· {ageLabel}</span>
         )}
@@ -2926,13 +2926,13 @@ export function UnansweredCommentCard({
                 letterSpacing: '-0.05px',
               }}>{authorName}</span>
               {video?.title && (
-                <span style={{ fontSize: 12, fontWeight: 450, color: SHELL.text3, letterSpacing: '-0.01em' }}>
+                <span style={{ fontSize: 12, fontWeight: 400, color: SHELL.text3, letterSpacing: '-0.01em' }}>
                   · on "{video.title.length > 48 ? video.title.slice(0, 46) + '…' : video.title}"
                 </span>
               )}
             </div>
             <p style={{
-              margin: 0, fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+              margin: 0, fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
               letterSpacing: '-0.05px', lineHeight: 1.5,
               whiteSpace: 'pre-wrap',
               display: '-webkit-box',
@@ -2970,7 +2970,7 @@ export function UnansweredCommentCard({
         </div>
         <p style={{
           margin: 0, padding: '10px 12px',
-          fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+          fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
           letterSpacing: '-0.05px', lineHeight: 1.5,
           whiteSpace: 'pre-wrap',
         }}>{reply}</p>
@@ -3071,7 +3071,7 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
           letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
         }}>Top Search Terms</h3>
         <span style={{
-          fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+          fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
           letterSpacing: '-0.01em',
         }}>· last 28 days{ageLabel ? ` · refreshed ${ageLabel}` : ''}</span>
         <div style={{ flex: 1 }}/>
@@ -3097,7 +3097,7 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
       </div>
 
       <p style={{
-        margin: '0 0 12px 0', fontSize: 13.5, fontWeight: 450, color: SHELL.text2,
+        margin: '0 0 12px 0', fontSize: 13.5, fontWeight: 400, color: SHELL.text2,
         letterSpacing: '-0.05px', lineHeight: 1.45,
       }}>
         How viewers are finding you on YouTube search.
@@ -3399,7 +3399,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
           : 'New Traffic From Related Videos'}</h3>
         {ageLabel && (
           <span style={{
-            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
             letterSpacing: '-0.01em',
           }}>· {ageLabel}</span>
         )}
@@ -3433,7 +3433,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
           border: '1px dashed rgba(20,19,15,0.10)',
           borderRadius: 12,
           color: SHELL.text2,
-          fontSize: 13, fontWeight: 450, lineHeight: 1.55,
+          fontSize: 13, fontWeight: 400, lineHeight: 1.55,
           letterSpacing: '-0.01em',
         }}>{reasonCopy}</div>
       )}
@@ -3520,7 +3520,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
               {it.channel_name && (
                 <p style={{
                   margin: '4px 2px 0',
-                  fontSize: 12, fontWeight: 450, color: SHELL.text3,
+                  fontSize: 12, fontWeight: 400, color: SHELL.text3,
                   letterSpacing: '-0.01em', lineHeight: 1.3,
                   whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                 }}>{it.channel_name}</p>
@@ -3606,7 +3606,7 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
           border: '1px dashed rgba(20,19,15,0.10)',
           borderRadius: 12,
           color: SHELL.text2,
-          fontSize: 13, fontWeight: 450, lineHeight: 1.55,
+          fontSize: 13, fontWeight: 400, lineHeight: 1.55,
           letterSpacing: '-0.01em',
           marginBottom: 12,
         }}>

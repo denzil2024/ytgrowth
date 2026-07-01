@@ -1198,7 +1198,7 @@ export default function Dashboard() {
                         letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
                       }}>Channel Snapshot</h3>
                       <span style={{
-                        fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+                        fontSize: 12.5, fontWeight: 400, color: SHELL.text3,
                         letterSpacing: '-0.01em',
                       }}>· {data.channel.channel_name || 'your channel'}</span>
                     </div>
@@ -2015,7 +2015,7 @@ export default function Dashboard() {
                       <div key={p.key} className="ytg-card" style={{
                         padding: '26px 24px 22px',
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        background: `linear-gradient(180deg, ${cat.h1}26 0%, #1c1c21 45%, #1c1c21 100%)`,
+                        background: `linear-gradient(180deg, ${cat.h1}22 0%, var(--yd-surface) 42%, var(--yd-surface) 100%)`,
                         position: 'relative', overflow: 'hidden',
                       }}>
                         {/* Top category banner */}
@@ -2032,10 +2032,10 @@ export default function Dashboard() {
 
                         {/* Tier value */}
                         <p style={{
-                          fontSize: 38, fontWeight: 700, color: SHELL.text1,
-                          letterSpacing: '-1.5px', lineHeight: 1,
+                          fontFamily: SHELL.serif,
+                          fontSize: 46, fontWeight: 500, color: SHELL.text1,
+                          letterSpacing: '-0.01em', lineHeight: 1,
                           marginTop: 18, marginBottom: 6,
-                          fontVariantNumeric: 'tabular-nums',
                         }}>{hasEarned ? fmtNum(p.latestTier) : '—'}</p>
                         <p style={{ fontSize: 13, fontWeight: 600, color: SHELL.text3, letterSpacing: '-0.1px' }}>
                           {hasEarned ? p.Title : 'Not yet earned'}
@@ -2074,17 +2074,17 @@ export default function Dashboard() {
                             style={{
                               alignSelf: 'stretch', marginTop: 24,
                               display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-                              background: `linear-gradient(180deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
-                              color: '#ffffff',
-                              fontSize: 13.5, fontWeight: 600,
-                              padding: '13px 20px', borderRadius: 999,
+                              background: 'var(--yd-gold)',
+                              color: 'var(--yd-on-gold)',
+                              fontFamily: SHELL.cond, fontSize: 14, fontWeight: 700,
+                              textTransform: 'uppercase', letterSpacing: '0.08em',
+                              padding: '12px 20px', borderRadius: 0,
                               border: 'none', cursor: 'pointer',
-                              letterSpacing: '-0.1px',
-                              boxShadow: `0 4px 14px ${cat.h2}40, inset 0 1px 0 rgba(20,19,15,0.22)`,
-                              transition: 'transform 0.15s, box-shadow 0.15s',
+                              boxShadow: 'none',
+                              transition: 'filter 0.15s, transform 0.15s',
                             }}
-                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1.5px)'; e.currentTarget.style.boxShadow = `0 8px 20px ${cat.h2}55, inset 0 1px 0 rgba(20,19,15,0.22)` }}
-                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 4px 14px ${cat.h2}40, inset 0 1px 0 rgba(20,19,15,0.22)` }}
+                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1.5px)'; e.currentTarget.style.filter = 'brightness(1.06)' }}
+                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.filter = 'none' }}
                           >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>

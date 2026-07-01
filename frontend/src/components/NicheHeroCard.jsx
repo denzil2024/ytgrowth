@@ -607,7 +607,7 @@ const styles = `
   margin: 0;
 }
 .nh-card-age {
-  font-size: 12.5px; font-weight: 450; color: ${C.text3};
+  font-size: 12.5px; font-weight: 400; color: ${C.text3};
   letter-spacing: -0.01em;
 }
 .nh-x {

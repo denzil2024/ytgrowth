@@ -22,6 +22,18 @@
 
 import { useState } from 'react'
 
+/* YouTube titles arrive HTML-escaped (&amp;, &#39;, &quot;…). Decode so they
+   render as real characters instead of literal entity text. */
+function decodeEntities(s) {
+  if (!s || typeof s !== 'string') return s || ''
+  return s
+    .replace(/&amp;/g, '&').replace(/&#38;/g, '&')
+    .replace(/&#39;/g, "'").replace(/&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+}
+
 
 /* ─── Scoped styles ──────────────────────────────────────────────────────────
    Injected once per browser session under the 'outlier-cards-styles' id.
@@ -35,18 +47,16 @@ if (typeof document !== 'undefined' && !document.getElementById('outlier-cards-s
     @keyframes outFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
 
     .out-grid-card {
-      background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
-      border: 1px solid rgba(20,19,15,0.08);
-      border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      background: var(--yd-surface);
+      border: 1px solid var(--yd-line);
+      border-radius: 0;
+      box-shadow: none;
+      transition: border-color 0.2s;
       display: flex; flex-direction: column;
       overflow: hidden;
     }
     .out-grid-card:hover {
-      box-shadow: 0 6px 20px rgba(0,0,0,0.55);
-      border-color: rgba(20,19,15,0.16);
-      transform: translateY(-1px);
+      border-color: var(--yd-gold-line);
     }
   `
   document.head.appendChild(s)
@@ -58,21 +68,21 @@ if (typeof document !== 'undefined' && !document.getElementById('outlier-cards-s
    inlines its own copies. Mirrors the shipped dark surface system;
    semantic *Hi text variants for legibility on dark tinted chips. */
 export const OC_C = {
-  card:        'linear-gradient(180deg, #ffffff 0%, #ffffff 100%)',
-  border:      'rgba(20,19,15,0.08)',
-  borderLight: 'rgba(20,19,15,0.06)',
-  text1:       '#f4f4f5',
-  text2:       '#cfd0d6',
-  text3:       '#b2b3bb',
-  red:         '#c9a030',
-  redBg:       'rgba(201,160,48,0.13)',
-  redBdr:      'rgba(201,160,48,0.32)',
-  green:       '#2d7a4f',
-  greenBg:     'rgba(22,163,74,0.14)',
-  greenBdr:    'rgba(22,163,74,0.34)',
-  amber:       '#b07d1a',
-  amberBg:     'rgba(217,119,6,0.14)',
-  amberBdr:    'rgba(217,119,6,0.34)',
+  card:        'var(--yd-surface)',
+  border:      'var(--yd-line)',
+  borderLight: 'var(--yd-line-lo)',
+  text1:       'var(--yd-ink)',
+  text2:       'var(--yd-soft)',
+  text3:       'var(--yd-muted)',
+  red:         'var(--yd-gold)',
+  redBg:       'var(--yd-gold-soft)',
+  redBdr:      'var(--yd-gold-line)',
+  green:       'var(--yd-green)',
+  greenBg:     'var(--yd-green-soft)',
+  greenBdr:    'var(--yd-green-line)',
+  amber:       'var(--yd-amber)',
+  amberBg:     'var(--yd-amber-soft)',
+  amberBdr:    'var(--yd-amber-line)',
 }
 
 
@@ -208,12 +218,12 @@ export function VideoResultCard({ item, kind, onOpen }) {
         <p style={{
           fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-        }}>{item.title}</p>
+        }}>{decodeEntities(item.title)}</p>
 
         <p style={{
           fontSize: 13, fontWeight: 600, color: C.text2, marginBottom: 8, letterSpacing: '-0.1px',
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>{item.channel_name}</p>
+        }}>{decodeEntities(item.channel_name)}</p>
 
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
@@ -316,7 +326,7 @@ export function ChannelResultCard({ item, onOpen }) {
         <p style={{
           fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.35, marginBottom: 3, letterSpacing: '-0.3px',
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>{item.channel_name}</p>
+        }}>{decodeEntities(item.channel_name)}</p>
 
         {handle ? (
           <p style={{
