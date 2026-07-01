@@ -56,6 +56,22 @@ function loadPaddle() {
   return paddleReadyPromise
 }
 
+// Google gtag.js library. The inline snippet in index.html already primed
+// window.dataLayer and queued gtag('js') + gtag('config', ...) for both the
+// Ads (AW-) and GA4 (G-) properties, so simply attaching the library here
+// flushes that queue and fires the pageview. Deferring the library (instead
+// of the eager <script async> it replaced) keeps ~310 KB of render-time JS
+// off the mobile critical path, where it was pushing LCP from ~4s to ~11s.
+let gtagLoaded = false
+function loadGtag() {
+  if (gtagLoaded) return
+  gtagLoaded = true
+  const s = document.createElement('script')
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-10883831151'
+  s.async = true
+  document.head.appendChild(s)
+}
+
 let affonsoLoaded = false
 function loadAffonso() {
   if (affonsoLoaded) return
@@ -75,6 +91,7 @@ if (typeof navigator !== 'undefined' && !navigator.webdriver) {
   const trigger = () => {
     loadPaddle().catch(() => {}) // failure is non-fatal until checkout
     loadAffonso()
+    loadGtag()
   }
   const events = ['mousemove', 'keydown', 'touchstart', 'scroll']
   const onceTrigger = () => {

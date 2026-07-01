@@ -195,8 +195,13 @@
          critical path. They fire on first user interaction, OR a 2.5s
          timeout, whichever comes first. See loadThirdParty() in main.jsx. -->
     <!-- Google tag (gtag.js): one load serves both the Google Ads tag
-         (AW-10883831151) and the GA4 analytics property (G-MFMVT6Q5RB). -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10883831151"></script>
+         (AW-10883831151) and the GA4 analytics property (G-MFMVT6Q5RB).
+         The gtag.js LIBRARY is NOT loaded here — on mobile it was ~310 KB of
+         render-time JS that starved fonts + hydration and pushed LCP from ~4s
+         to ~11s. It is now lazy-loaded from main.jsx on first interaction or a
+         2.5s timeout (see loadGtag / loadThirdParty). The inline setup below
+         still runs immediately so dataLayer is primed and the config commands
+         are queued; they fire the moment the deferred library attaches. -->
     <script>
       // Analytics suppression, shared by GA4 + Ads AND Ahrefs below. Two
       // independent reasons NOT to record a visit:
