@@ -67,12 +67,12 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
     border: 1px solid rgba(20,19,15,0.08) !important;
     border-radius: 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04) !important;
+    box-shadow: none !important;
     transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
   .seo-glass-card:hover {
     border-color: rgba(20,19,15,0.16) !important;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(20,19,15,0.05) !important;
+    box-shadow: none !important;
   }
   .seo-suggestion-card {
     background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
@@ -80,19 +80,19 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-radius: 0;
     overflow: hidden;
     margin-bottom: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04);
+    box-shadow: none;
     transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
   .seo-suggestion-card:hover {
     border-color: rgba(20,19,15,0.16);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(20,19,15,0.05);
+    box-shadow: none;
     transform: translateY(-1px);
   }
   .seo-kw-row:hover .seo-kw-phrase { color: #14130f !important; }
   .seo-format-card { outline: none; }
   .seo-format-card:hover {
     border-color: rgba(20,19,15,0.16);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.55);
+    box-shadow: none;
     transform: translateY(-1px);
   }
   .seo-format-card:focus-visible {
@@ -109,7 +109,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border: 1px solid rgba(20,19,15,0.08);
     border-radius: 0;
     cursor: pointer; background: var(--yd-surface);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    box-shadow: none;
     font-family: inherit;
     text-align: left;
     transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1),
@@ -120,7 +120,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-intent-opt:hover {
     border-color: rgba(52,210,123,0.38);
     background: rgba(22,163,74,0.12);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    box-shadow: none;
     transform: translateY(-1px);
   }
   .seo-intent-opt .seo-intent-arrow {
@@ -190,7 +190,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
     border: 1px solid rgba(20,19,15,0.08);
     border-radius: 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04);
+    box-shadow: none;
     padding: 18px 22px;
     display: flex;
     align-items: center;
@@ -200,7 +200,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     user-select: none;
   }
   .seo-report-header:hover {
-    box-shadow: 0 6px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(20,19,15,0.05);
+    box-shadow: none;
     border-color: rgba(20,19,15,0.16);
     transform: translateY(-1px);
   }
@@ -407,7 +407,7 @@ function MiniStat({ label, value, sub, accent, alert }) {
       border: `1px solid ${alert ? 'rgba(201,160,48,0.22)' : 'rgba(20,19,15,0.08)'}`,
       borderRadius: 0,
       padding: '22px 24px',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+      boxShadow: 'none',
       transition: 'box-shadow 0.2s, transform 0.2s',
     }}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
@@ -478,10 +478,10 @@ function ScoreBar({ label, value, mounted }) {
       }}>{label}</span>
       <div style={{
         flex: 1, height: 7, background: '#eef0f4',
-        borderRadius: 99, overflow: 'hidden', position: 'relative',
+        borderRadius: 0, overflow: 'hidden', position: 'relative',
       }}>
         <div style={{
-          width: w, height: '100%', background: _barFill(color), borderRadius: 99,
+          width: w, height: '100%', background: _barFill(color), borderRadius: 0,
           transition: 'width 0.85s cubic-bezier(0.34,1.56,0.64,1)',
           boxShadow: v >= 75 ? `0 0 0 1px ${color}22` : 'none',
         }}/>
@@ -537,7 +537,7 @@ function LengthSweetSpot({ length, mounted }) {
         {/* Base track */}
         <div style={{
           position: 'absolute', left: 0, right: 0, top: 5, height: 4,
-          background: '#eef0f4', borderRadius: 99,
+          background: '#eef0f4', borderRadius: 0,
         }}/>
         {/* Ideal zone (50-70) */}
         <div style={{
@@ -546,7 +546,7 @@ function LengthSweetSpot({ length, mounted }) {
           width: `${((ZONE_HI - ZONE_LO) / MAX) * 100}%`,
           top: 5, height: 4,
           background: 'rgba(5,150,105,0.55)',
-          borderRadius: 99,
+          borderRadius: 0,
         }}/>
         {/* Marker (triangle) */}
         <div style={{
@@ -732,7 +732,7 @@ function VideoTile({ video, baselineViews }) {
         {mult && pill && (
           <span style={{
             display: 'inline-flex', alignItems: 'center',
-            padding: '1px 7px', borderRadius: 99,
+            padding: '1px 7px', borderRadius: 0,
             background: pill.bg, color: pill.color,
             border: `1px solid ${pill.border}`,
             fontSize: 10, fontWeight: 600, letterSpacing: '-0.2px',
@@ -804,7 +804,7 @@ function ShortTile({ video, baselineViews }) {
         {mult && pill && (
           <span style={{
             display: 'inline-flex', alignItems: 'center',
-            padding: '1px 6px', borderRadius: 99,
+            padding: '1px 6px', borderRadius: 0,
             background: pill.bg, color: pill.color,
             border: `1px solid ${pill.border}`,
             fontSize: 9.5, fontWeight: 600, letterSpacing: '-0.2px',
@@ -830,7 +830,7 @@ function HeatStrip({ label, count, Tile, items, baselineViews }) {
         <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(20,19,15,0.78)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>{label}</p>
         <span style={{
           fontSize: 11, fontWeight: 600, color: 'rgba(20,19,15,0.78)',
-          background: 'rgba(20,19,15,0.04)', padding: '2px 8px', borderRadius: 99,
+          background: 'rgba(20,19,15,0.04)', padding: '2px 8px', borderRadius: 0,
           fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
         }}>{count}</span>
       </div>
@@ -1089,7 +1089,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
               letterSpacing: '-0.01em',
               maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             }}>
-              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(20,19,15,0.30)', flexShrink: 0 }}/>
+              <span style={{ width: 3, height: 3, borderRadius: 0, background: 'rgba(20,19,15,0.30)', flexShrink: 0 }}/>
               {eyebrow}
             </span>
           )}
@@ -1133,7 +1133,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             border: `1px solid ${C.border}`,
             borderRadius: 0,
             padding: '14px 16px',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.04)',
+            boxShadow: 'none',
             display: 'flex', flexDirection: 'column', gap: 12,
           }}>
             <div>
@@ -1186,11 +1186,11 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
               aria-expanded={whyOpen}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
-                padding: '5px 11px', borderRadius: 99,
+                padding: '6px 12px', borderRadius: 0,
                 background: whyOpen ? 'rgba(20,19,15,0.06)' : 'var(--yd-surface)',
-                border: `1px solid ${whyOpen ? 'rgba(20,19,15,0.16)' : 'rgba(20,19,15,0.12)'}`,
-                color: C.text2, fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
-                fontFamily: 'inherit', cursor: 'pointer',
+                border: `1px solid ${whyOpen ? 'var(--yd-ink)' : 'var(--yd-line)'}`,
+                color: C.text2, fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
+                fontFamily: "'Barlow Condensed', sans-serif", cursor: 'pointer',
                 transition: 'background 0.14s, border-color 0.14s, color 0.14s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = C.text1 }}
@@ -1204,11 +1204,11 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           )}
           <div style={{ flex: 1 }}/>
           <button onClick={onCopy}
-            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: 'var(--yd-surface)', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(20,19,15,0.12)'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
+            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: 'var(--yd-surface)', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(20,19,15,0.12)'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: 'none' }}>
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
           <button onClick={onSelect}
-            style={{ fontSize: 12.5, fontWeight: 600, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(201,160,48,0.08)' : '#c9a030', border: `1px solid ${isSelected ? 'rgba(201,160,48,0.25)' : 'transparent'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(201,160,48,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
+            style={{ fontSize: 13.5, fontWeight: 600, color: isSelected ? C.red : 'var(--yd-on-gold)', background: isSelected ? 'rgba(201,160,48,0.08)' : '#c9a030', border: `1px solid ${isSelected ? 'rgba(201,160,48,0.25)' : 'transparent'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase', letterSpacing: '0.06em', transition: 'filter 0.15s, background 0.15s', boxShadow: 'none', whiteSpace: 'nowrap' }}>
             {isSelected ? '✓ Selected' : 'Use this title →'}
           </button>
         </div>
@@ -1467,9 +1467,9 @@ function SaturationDots({ total, filled, color, label }) {
       </span>
       {/* Slimmer 100px-max bar, the verdict chip on the right tells the
           story; the bar is a visual support, not the headline. */}
-      <div style={{ flex: '0 1 100px', maxWidth: 100, height: 4, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+      <div style={{ flex: '0 1 100px', maxWidth: 100, height: 4, background: '#eef0f4', borderRadius: 0, overflow: 'hidden' }}>
         <div style={{
-          width: `${ratio * 100}%`, height: '100%', background: _barFill(color), borderRadius: 99,
+          width: `${ratio * 100}%`, height: '100%', background: _barFill(color), borderRadius: 0,
           transition: 'width 0.85s cubic-bezier(0.34,1.4,0.64,1)',
         }}/>
       </div>
@@ -1519,7 +1519,7 @@ function IntentInsightRow({
             on the title card and suggestion-card eyebrows; the previous 34×34
             made it the heaviest icon on the page. */}
         <div style={{
-          width: 28, height: 28, borderRadius: 99,
+          width: 28, height: 28, borderRadius: 0,
           background: `${chipColor}14`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0,
@@ -1666,9 +1666,9 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
       {/* Your row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 }}>
         <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>You</span>
-        <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+        <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 0, overflow: 'hidden' }}>
           <div style={{
-            height: '100%', width: mounted ? `${you}%` : '0%', background: _barFill(youCol), borderRadius: 99,
+            height: '100%', width: mounted ? `${you}%` : '0%', background: _barFill(youCol), borderRadius: 0,
             transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
           }}/>
         </div>
@@ -1677,9 +1677,9 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
       {/* AI row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>AI</span>
-        <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+        <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 0, overflow: 'hidden' }}>
           <div style={{
-            height: '100%', width: mounted ? `${ai}%` : '0%', background: _barFill(aiCol), borderRadius: 99,
+            height: '100%', width: mounted ? `${ai}%` : '0%', background: _barFill(aiCol), borderRadius: 0,
             transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay + 100}ms`,
           }}/>
         </div>
@@ -1781,7 +1781,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         </div>
         {lift !== 0 && (
           <span style={{
-            padding: '5px 11px', borderRadius: 99,
+            padding: '5px 11px', borderRadius: 0,
             background: liftBg, border: `1px solid ${liftBdr}`,
             color: liftColor, fontSize: 11, fontWeight: 600,
             fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
@@ -1805,10 +1805,10 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <p style={sideLabel}>Your title</p>
           <p style={{ ...sideScore, color: userCol }}>{userScore}</p>
-          <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+          <div style={{ height: 6, background: '#eef0f4', borderRadius: 0, overflow: 'hidden' }}>
             <div style={{
               height: '100%', width: mounted ? `${Math.max(2, userScore)}%` : '0%',
-              background: _barFill(userCol), borderRadius: 99,
+              background: _barFill(userCol), borderRadius: 0,
               transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1)',
             }}/>
           </div>
@@ -1829,10 +1829,10 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <p style={sideLabel}>AI's best pick</p>
           <p style={{ ...sideScore, color: bestCol }}>{bestAvg}</p>
-          <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+          <div style={{ height: 6, background: '#eef0f4', borderRadius: 0, overflow: 'hidden' }}>
             <div style={{
               height: '100%', width: mounted ? `${Math.max(2, bestAvg)}%` : '0%',
-              background: _barFill(bestCol), borderRadius: 99,
+              background: _barFill(bestCol), borderRadius: 0,
               transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1) 180ms',
             }}/>
           </div>
@@ -1914,7 +1914,7 @@ function NicheMap({ keywords, onPick }) {
             fontSize: 12, fontWeight: 500, color: 'rgba(20,19,15,0.78)',
             letterSpacing: '-0.01em',
           }}>
-            <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(20,19,15,0.30)' }}/>
+            <span style={{ width: 3, height: 3, borderRadius: 0, background: 'rgba(20,19,15,0.30)' }}/>
             {sorted.length} phrases ranked
           </span>
           <div style={{ flex: 1 }}/>
@@ -1966,9 +1966,9 @@ function NicheMap({ keywords, onPick }) {
                   letterSpacing: '0.10em', textTransform: 'uppercase',
                   textAlign: 'right',
                 }}>{kw.competition === 'LOW' ? 'LOW' : kw.competition === 'MED' ? 'MED' : 'HIGH'}</span>
-                <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{ height: 6, background: '#eef0f4', borderRadius: 0, overflow: 'hidden' }}>
                   <div style={{
-                    width: `${kw.score}%`, height: '100%', background: col, borderRadius: 99,
+                    width: `${kw.score}%`, height: '100%', background: col, borderRadius: 0,
                     transition: 'width 0.85s cubic-bezier(0.34,1.4,0.64,1)',
                   }}/>
                 </div>
@@ -2490,29 +2490,29 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             style={{
               width: '100%',
               padding: '18px 20px',
-              fontSize: 16,
-              border: '1px solid rgba(20,19,15,0.10)',
+              fontSize: 16.5,
+              border: '1px solid var(--yd-line)',
               borderRadius: 0,
-              fontFamily: 'inherit',
+              fontFamily: "'Barlow', system-ui, sans-serif",
               outline: 'none',
               color: '#14130f',
               background: 'var(--yd-surface)',
               boxSizing: 'border-box',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04)',
-              transition: 'border-color 0.2s cubic-bezier(0.2,0.7,0.3,1), box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1)',
-              letterSpacing: '-0.15px',
-              fontWeight: 500,
+              boxShadow: 'none',
+              transition: 'border-color 0.2s cubic-bezier(0.2,0.7,0.3,1)',
+              letterSpacing: '0',
+              fontWeight: 400,
               lineHeight: 1.5,
               resize: 'vertical',
               minHeight: 76,
             }}
             onFocus={e => {
-              e.target.style.borderColor = 'rgba(20,19,15,0.30)'
-              e.target.style.boxShadow = '0 0 0 4px rgba(20,19,15,0.05), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04)'
+              e.target.style.borderColor = 'var(--yd-gold)'
+              e.target.style.boxShadow = '0 0 0 3px var(--yd-gold-soft)'
             }}
             onBlur={e => {
-              e.target.style.borderColor = 'rgba(20,19,15,0.10)'
-              e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04)'
+              e.target.style.borderColor = 'var(--yd-line)'
+              e.target.style.boxShadow = 'none'
             }} />
 
           {error && (
@@ -2548,14 +2548,14 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               return (
                 <span title={tooltip} style={{
                   display: 'inline-flex', alignItems: 'center', gap: 7,
-                  padding: '8px 12px', borderRadius: 99,
+                  padding: '8px 12px', borderRadius: 0,
                   background: bg, border: `1px solid ${bdr}`,
                   color, fontSize: 11.5, fontWeight: 600,
                   letterSpacing: '-0.05px',
                   cursor: 'help',
                   height: 36, boxSizing: 'border-box',
                 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: 99, background: color, flexShrink: 0 }}/>
+                  <span style={{ width: 6, height: 6, borderRadius: 0, background: color, flexShrink: 0 }}/>
                   {text}
                 </span>
               )
@@ -2650,8 +2650,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {/* Indeterminate progress bar, sits below the action row so it
               doesn't disrupt the row's vertical rhythm. */}
           {(loading || loadingIntent) && (
-            <div style={{ marginTop: 12, width: '100%', height: 3, background: 'rgba(201,160,48,0.12)', borderRadius: 99, overflow: 'hidden' }}>
-              <div style={{ width: '45%', height: '100%', background: C.red, borderRadius: 99, animation: 'seoLoadingSlide 1.4s ease-in-out infinite' }}/>
+            <div style={{ marginTop: 12, width: '100%', height: 3, background: 'rgba(201,160,48,0.12)', borderRadius: 0, overflow: 'hidden' }}>
+              <div style={{ width: '45%', height: '100%', background: C.red, borderRadius: 0, animation: 'seoLoadingSlide 1.4s ease-in-out infinite' }}/>
             </div>
           )}
         </div>
@@ -2812,8 +2812,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               textTransform: 'uppercase', margin: 0,
             }
             const headlineBase = {
-              fontSize: 13.5, fontWeight: 500, lineHeight: 1.5,
-              color: '#6b6862', letterSpacing: '-0.05px', margin: 0, flex: 1,
+              fontFamily: "'Barlow', system-ui, sans-serif",
+              fontSize: 13.5, fontWeight: 400, lineHeight: 1.55,
+              color: '#4a4843', letterSpacing: '0', margin: 0, flex: 1,
             }
 
             return (
@@ -2836,8 +2837,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     </div>
                     <p style={headlineBase}>{gap}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'auto' }}>
-                      <div style={{ flex: 1, height: 5, background: 'rgba(5,150,105,0.10)', borderRadius: 99, overflow: 'hidden' }}>
-                        <div style={{ width: '4%', height: '100%', background: '#2d7a4f', borderRadius: 99 }}/>
+                      <div style={{ flex: 1, height: 5, background: 'rgba(5,150,105,0.10)', borderRadius: 0, overflow: 'hidden' }}>
+                        <div style={{ width: '4%', height: '100%', background: '#2d7a4f', borderRadius: 0 }}/>
                       </div>
                       <span style={{ fontSize: 11.5, fontWeight: 600, color: '#2d7a4f', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
                         Wide open · 0/{total}
@@ -2858,8 +2859,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                       </div>
                       <p style={headlineBase}>{overused}</p>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'auto' }}>
-                        <div style={{ flex: 1, height: 5, background: 'rgba(217,119,6,0.10)', borderRadius: 99, overflow: 'hidden' }}>
-                          <div style={{ width: `${Math.round((overusedFilled / total) * 100)}%`, height: '100%', background: '#b07d1a', borderRadius: 99 }}/>
+                        <div style={{ flex: 1, height: 5, background: 'rgba(217,119,6,0.10)', borderRadius: 0, overflow: 'hidden' }}>
+                          <div style={{ width: `${Math.round((overusedFilled / total) * 100)}%`, height: '100%', background: '#b07d1a', borderRadius: 0 }}/>
                         </div>
                         <span style={{ fontSize: 11.5, fontWeight: 600, color: '#b07d1a', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
                           Saturated · {overusedFilled}/{total}
@@ -2924,7 +2925,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     display: 'inline-flex', alignItems: 'center', gap: 6,
                     fontSize: 12.5, fontWeight: 500, color: 'rgba(20,19,15,0.78)', letterSpacing: '-0.05px',
                   }}>
-                    <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(20,19,15,0.30)' }}/>
+                    <span style={{ width: 3, height: 3, borderRadius: 0, background: 'rgba(20,19,15,0.30)' }}/>
                     &ldquo;{result.primary_phrase}&rdquo;
                   </span>
                 )}
@@ -2936,7 +2937,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   padding: '3px 9px', borderRadius: 0,
                   letterSpacing: '0.10em', textTransform: 'uppercase',
                 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, animation: 'seoPulse 1.6s ease-in-out infinite' }}/>
+                  <span style={{ width: 6, height: 6, borderRadius: 0, background: C.green, animation: 'seoPulse 1.6s ease-in-out infinite' }}/>
                   Live
                 </span>
               </div>
