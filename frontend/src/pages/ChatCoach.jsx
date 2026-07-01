@@ -72,7 +72,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
       content: counter(mdlist) '.';
       position: absolute; left: 0; top: 0;
       color: rgba(20,19,15,0.55);
-      font-size: 13.5px; font-weight: 600;
+      font-size: 14px; font-weight: 600;
       font-variant-numeric: tabular-nums; line-height: inherit;
     }
   `
@@ -582,7 +582,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
           background: 'rgba(201,160,48,0.09)', border: `1px solid rgba(201,160,48,0.22)`,
           borderRadius: 12, padding: '14px 18px',
         }}>
-          <p style={{ fontSize: 13.5, color: C.redText, fontWeight: 400, letterSpacing: '-0.005em' }}>
+          <p style={{ fontSize: 14, color: C.redText, fontWeight: 400, letterSpacing: '-0.005em' }}>
             {state.error}
           </p>
         </div>
@@ -820,7 +820,7 @@ function ThinkingTimeline({ sources }) {
             className="ytg-fade-up"
             style={{
               animation: `ytgFadeUp 0.30s ${C.spring} both`,
-              fontSize: 13.5, fontWeight: 400, letterSpacing: '-0.005em',
+              fontSize: 14, fontWeight: 400, letterSpacing: '-0.005em',
               color: isCurrent ? C.t2 : C.t4,
               opacity: isCurrent ? 1 : 0.7,
             }}

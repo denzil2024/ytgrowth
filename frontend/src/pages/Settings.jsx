@@ -198,7 +198,7 @@ function useSettingsStyles() {
         background: var(--yd-surface);
         border: 1px solid rgba(20,19,15,0.12);
         border-radius: 12px;
-        font-size: 13.5px; font-weight: 400; color: ${C.ink};
+        font-size: 14px; font-weight: 400; color: ${C.ink};
         font-family: 'Barlow', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em;
         box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
@@ -215,7 +215,7 @@ function useSettingsStyles() {
         background: var(--yd-surface);
         border: 1px solid rgba(20,19,15,0.12);
         border-radius: 12px;
-        font-size: 13.5px; font-weight: 400; color: ${C.ink};
+        font-size: 14px; font-weight: 400; color: ${C.ink};
         font-family: 'Barlow', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em; line-height: 1.55;
         resize: vertical; min-height: 104px;
@@ -243,7 +243,7 @@ function useSettingsStyles() {
         padding: 13px 12px; margin: 0 -12px;
         border-radius: 11px;
         text-decoration: none;
-        color: ${C.red}; font-size: 13.5px; font-weight: 600;
+        color: ${C.red}; font-size: 14px; font-weight: 600;
         letter-spacing: -0.01em; cursor: pointer;
         transition: background 160ms cubic-bezier(0.32,0.72,0,1);
       }
@@ -384,7 +384,7 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
         border: `1px solid ${C.hairline}`,
       }}>
         <p style={{ fontSize: 15, fontWeight: 600, color: C.ink, letterSpacing: '-0.01em', marginBottom: 8 }}>{title}</p>
-        <p style={{ fontSize: 13.5, color: C.ink60, lineHeight: 1.6, marginBottom: requireTyping ? 16 : 22, letterSpacing: '-0.005em' }}>{body}</p>
+        <p style={{ fontSize: 14, color: C.ink60, lineHeight: 1.6, marginBottom: requireTyping ? 16 : 22, letterSpacing: '-0.005em' }}>{body}</p>
         {requireTyping && (
           <div style={{ marginBottom: 20 }}>
             <p style={{ fontSize: 12, color: C.ink45, marginBottom: 6, letterSpacing: '-0.005em' }}>Type DELETE to confirm</p>
@@ -648,7 +648,7 @@ export default function Settings({ channelData }) {
               {displayName}
             </p>
             {me?.email && (
-              <p style={{ fontSize: 13.5, fontWeight: 400, color: C.ink60, marginTop: 3, letterSpacing: '-0.005em' }}>
+              <p style={{ fontSize: 14, fontWeight: 400, color: C.ink60, marginTop: 3, letterSpacing: '-0.005em' }}>
                 {me.email}
               </p>
             )}
@@ -715,7 +715,7 @@ export default function Settings({ channelData }) {
             justifyContent: 'space-between', gap: 16, marginTop: 22,
           }}>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 13.5, fontWeight: 500, color: C.ink, letterSpacing: '-0.005em' }}>
+              <p style={{ fontSize: 14, fontWeight: 500, color: C.ink, letterSpacing: '-0.005em' }}>
                 Credit pack balance
               </p>
               <p style={{ fontSize: 12, fontWeight: 400, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
@@ -843,7 +843,7 @@ export default function Settings({ channelData }) {
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0' }}>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 13.5, fontWeight: 400, color: C.ink60, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
+                <p style={{ fontSize: 14, fontWeight: 400, color: C.ink60, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
                   You have reached your channel limit. Upgrade to connect more.
                 </p>
               </div>
@@ -940,7 +940,7 @@ export default function Settings({ channelData }) {
                     {idx > 0 && <div className="set-divider" />}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0' }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.ink, letterSpacing: '-0.005em' }}>{r.title}</p>
+                        <p style={{ fontSize: 14, fontWeight: 500, color: C.ink, letterSpacing: '-0.005em' }}>{r.title}</p>
                         <p style={{ fontSize: 12, fontWeight: 400, color: C.ink45, marginTop: 3, letterSpacing: '-0.005em' }}>{fmtDate(r.created_at)}</p>
                       </div>
                       <span style={{

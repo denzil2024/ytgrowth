@@ -357,7 +357,7 @@ function ReportCard({ data, video, onClose }) {
                   lineHeight: 1.55, minWidth: 18, flexShrink: 0,
                 }}>{i + 1}.</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1,
+                  <p style={{ fontSize: 14, fontWeight: 600, color: C.text1,
                     lineHeight: 1.55, marginBottom: 4, letterSpacing: '-0.005em' }}>{a.action}</p>
                   {a.expectedOutcome && (
                     <p style={{ fontSize: 12.5, color: C.greenHi, fontWeight: 500, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
@@ -566,7 +566,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
         {error && (
           <div style={{
             background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
-            padding: '10px 14px', marginBottom: 14, color: '#7a5b14', fontSize: 13.5,
+            padding: '10px 14px', marginBottom: 14, color: '#7a5b14', fontSize: 14,
           }}>{error}</div>
         )}
 
@@ -703,7 +703,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
             }}>
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1,
                 letterSpacing: '-0.2px', marginBottom: 8 }}>No reports yet</p>
-              <p style={{ fontSize: 13.5, color: C.text2, fontWeight: 500,
+              <p style={{ fontSize: 14, color: C.text2, fontWeight: 500,
                 maxWidth: 360, margin: '0 auto', lineHeight: 1.6, letterSpacing: '-0.005em' }}>
                 Run a review on any of your eligible videos and it'll show up
                 here, so you can always come back to a report you've already

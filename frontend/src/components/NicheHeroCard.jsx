@@ -910,7 +910,7 @@ const styles = `
   padding: 8px 15px;
   border-radius: 0;
   font-family: 'Barlow Condensed', system-ui, sans-serif;
-  font-size: 13.5px; font-weight: 600;
+  font-size: 14px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.06em;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;

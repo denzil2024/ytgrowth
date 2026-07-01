@@ -135,7 +135,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     display: inline-flex; align-items: center; gap: 6px;
     margin-top: 16px;
     padding: 8px 15px;
-    font-size: 13.5px; font-weight: 600;
+    font-size: 14px; font-weight: 600;
     font-family: 'Barlow Condensed', sans-serif;
     text-transform: uppercase; letter-spacing: 0.06em;
     color: var(--yd-soft);
@@ -313,9 +313,9 @@ const T = {
   cardDesc:     { fontSize: 12.5, fontWeight: 400, color: '#6b6862', lineHeight: 1.55 },
 
   // Body text
-  bodyBold:     { fontSize: 13.5, fontWeight: 600, color: '#14130f', lineHeight: 1.55, letterSpacing: '-0.1px' },
-  body:         { fontSize: 13.5, fontWeight: 400, color: '#6b6862', lineHeight: 1.65 },
-  innerText:    { fontSize: 13.5, fontWeight: 400, color: '#14130f', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
+  bodyBold:     { fontSize: 14, fontWeight: 600, color: '#14130f', lineHeight: 1.55, letterSpacing: '-0.1px' },
+  body:         { fontSize: 14, fontWeight: 400, color: '#6b6862', lineHeight: 1.65 },
+  innerText:    { fontSize: 14, fontWeight: 400, color: '#14130f', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
 
   // Pills / chips / badges
   pill:         { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // severity + vol/comp
@@ -327,7 +327,7 @@ const T = {
 
   // Tables (Overview uses 10.5/600 in Score breakdown headers)
   tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#6b6862', textTransform: 'uppercase', letterSpacing: '0.10em' },
-  keyword:      { fontSize: 13.5, fontWeight: 600, color: '#14130f', letterSpacing: '-0.1px' },
+  keyword:      { fontSize: 14, fontWeight: 600, color: '#14130f', letterSpacing: '-0.1px' },
 }
 
 const VIRAL_FORMATS = [
@@ -1208,7 +1208,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
           <button onClick={onSelect}
-            style={{ fontSize: 13.5, fontWeight: 600, color: isSelected ? C.red : 'var(--yd-on-gold)', background: isSelected ? 'rgba(201,160,48,0.08)' : '#c9a030', border: `1px solid ${isSelected ? 'rgba(201,160,48,0.25)' : 'transparent'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase', letterSpacing: '0.06em', transition: 'filter 0.15s, background 0.15s', boxShadow: 'none', whiteSpace: 'nowrap' }}>
+            style={{ fontSize: 14, fontWeight: 600, color: isSelected ? C.red : 'var(--yd-on-gold)', background: isSelected ? 'rgba(201,160,48,0.08)' : '#c9a030', border: `1px solid ${isSelected ? 'rgba(201,160,48,0.25)' : 'transparent'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase', letterSpacing: '0.06em', transition: 'filter 0.15s, background 0.15s', boxShadow: 'none', whiteSpace: 'nowrap' }}>
             {isSelected ? '✓ Selected' : 'Use this title →'}
           </button>
         </div>
@@ -1271,7 +1271,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
         <span style={{ fontSize: 10, fontWeight: 600, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
           {categoryShort}
         </span>
-        <p style={{ flex: 1, minWidth: 0, fontSize: 13.5, color: C.text2, fontWeight: 500, lineHeight: 1.45, letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <p style={{ flex: 1, minWidth: 0, fontSize: 14, color: C.text2, fontWeight: 500, lineHeight: 1.45, letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {teaser}
         </p>
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none"
@@ -1738,7 +1738,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
     fontVariantNumeric: 'tabular-nums',
   }
   const sideTitle = {
-    fontSize: 13.5, fontWeight: 500, lineHeight: 1.45,
+    fontSize: 14, fontWeight: 500, lineHeight: 1.45,
     color: '#6b6862', letterSpacing: '-0.05px', margin: 0,
   }
   const subRow = {
@@ -1746,7 +1746,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
     fontVariantNumeric: 'tabular-nums',
   }
   const subKey = { fontSize: 10, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(20,19,15,0.45)' }
-  const subVal = { fontSize: 13.5, fontWeight: 600, letterSpacing: '-0.2px' }
+  const subVal = { fontSize: 14, fontWeight: 600, letterSpacing: '-0.2px' }
 
   return (
     <div style={{ marginBottom: 28 }}>
@@ -1952,7 +1952,7 @@ function NicheMap({ keywords, onPick }) {
                   letterSpacing: '0.04em',
                 }}>{String(i + 1).padStart(2, '0')}</span>
                 <span style={{
-                  fontSize: 13.5, fontWeight: 500, color: C.text1,
+                  fontSize: 14, fontWeight: 500, color: C.text1,
                   letterSpacing: '-0.1px',
                   whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                 }}>{kw.phrase}</span>
@@ -2575,7 +2575,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   background: formatMenuOpen ? 'rgba(201,160,48,0.06)' : 'var(--yd-surface)',
                   border: `1px solid ${formatMenuOpen ? 'rgba(201,160,48,0.35)' : 'var(--yd-line)'}`,
                   color: formatMenuOpen ? C.red : C.text2,
-                  fontSize: 13.5, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
+                  fontSize: 14, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
                   fontFamily: "'Barlow Condensed', sans-serif", cursor: 'pointer',
                   transition: 'background 0.14s, border-color 0.14s, color 0.14s',
                   height: 36, boxSizing: 'border-box', whiteSpace: 'nowrap',
@@ -2813,7 +2813,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             }
             const headlineBase = {
               fontFamily: "'Barlow', system-ui, sans-serif",
-              fontSize: 13.5, fontWeight: 400, lineHeight: 1.55,
+              fontSize: 14, fontWeight: 400, lineHeight: 1.55,
               color: '#4a4843', letterSpacing: '0', margin: 0, flex: 1,
             }
 
@@ -3154,7 +3154,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     <textarea value={currentDesc} onChange={e => setCurrentDesc(e.target.value)}
                       placeholder="Paste your existing description here…"
                       rows={4}
-                      style={{ width: '100%', padding: '12px 14px', fontSize: 13.5, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0, fontFamily: 'inherit', outline: 'none', color: C.text1, background: 'var(--yd-surface)', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.6, transition: 'border-color 0.18s, box-shadow 0.18s' }}
+                      style={{ width: '100%', padding: '12px 14px', fontSize: 14, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0, fontFamily: 'inherit', outline: 'none', color: C.text1, background: 'var(--yd-surface)', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.6, transition: 'border-color 0.18s, box-shadow 0.18s' }}
                       onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
                       onBlur={e => { e.target.style.borderColor = 'rgba(20,19,15,0.08)'; e.target.style.boxShadow = 'none' }}
                     />
@@ -3306,7 +3306,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                 No reports yet
               </p>
-              <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
                 Run a title analysis and it'll show up here, so you can always come back to a report you've already paid for.
               </p>
             </div>

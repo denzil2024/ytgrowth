@@ -268,7 +268,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
           <h3 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1.3, marginBottom: 10 }}>
             Generate fresh video ideas?
           </h3>
-          <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.65, marginBottom: 14 }}>
+          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65, marginBottom: 14 }}>
             YTGrowth will produce 10 new ideas based on:
           </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -299,7 +299,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
               style={{
                 padding: '10px 18px', borderRadius: 100,
                 border: `1px solid ${C.border}`, background: C.cardFlat, color: C.text2,
-                fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+                fontSize: 14, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
                 transition: 'background 0.15s, border-color 0.15s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = '#f6f6f9' }}
@@ -310,7 +310,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
               style={{
                 padding: '10px 20px', borderRadius: 100, border: 'none',
                 background: C.red, color: 'var(--yd-on-gold)',
-                fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
+                fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em', cursor: 'pointer',
                 transition: 'filter 0.15s',
               }}
@@ -971,7 +971,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       {/* Error */}
       {error && (
         <div style={{
-          fontSize: 13.5, color: C.red, background: C.redBg,
+          fontSize: 14, color: C.red, background: C.redBg,
           border: `1px solid ${C.redBdr}`, borderRadius: 10,
           padding: '10px 14px', marginBottom: 14,
           display: 'flex', alignItems: 'center', gap: 8,
@@ -1005,7 +1005,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         }}>
           <div style={{ marginBottom: 14 }}><LightbulbIcon /></div>
           <h3 style={{ fontSize: 16, fontWeight: 600, color: C.text1, marginBottom: 8, letterSpacing: '-0.2px' }}>No ideas yet</h3>
-          <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 340, margin: '0 auto 22px', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 14, color: C.text3, maxWidth: 340, margin: '0 auto 22px', lineHeight: 1.6 }}>
             {isFreePlan
               ? 'Analyse a competitor to unlock up to 5 free video ideas tuned to their playbook.'
               : 'Analyze a competitor first to unlock free video ideas, or generate AI-powered ideas directly.'}
@@ -1016,7 +1016,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '11px 22px', borderRadius: 100, border: 'none',
-                fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
+                fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em',
                 background: C.red, color: 'var(--yd-on-gold)', cursor: 'pointer',
                 transition: 'filter 0.15s',
@@ -1033,7 +1033,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '11px 22px', borderRadius: 100, border: 'none',
-                fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
+                fontSize: 14, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em',
                 background: C.red, color: 'var(--yd-on-gold)', cursor: 'pointer',
                 transition: 'filter 0.15s',

@@ -436,7 +436,7 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
             </span>
           )}
         </div>
-        {sub && <p style={{ fontSize: 13.5, color: alert ? C.red : C.text2, fontWeight: 500, marginTop: 12, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
+        {sub && <p style={{ fontSize: 14, color: alert ? C.red : C.text2, fontWeight: 500, marginTop: 12, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
         {sparkline && <Sparkline data={sparkline} accent={accentVar} />}
         {engagementPct != null && (
           <div className="adm-engage-track">
@@ -1086,7 +1086,7 @@ export default function Admin() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 11, minWidth: 0 }}>
                       <Avatar src={pic} name={name} size={30} />
                       <div style={{ minWidth: 0 }}>
-                        <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</p>
+                        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</p>
                         <p style={{ fontSize: 11.5, color: C.text3, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</p>
                       </div>
                     </div>
@@ -1138,7 +1138,7 @@ export default function Admin() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 11, minWidth: 0 }}>
                       <Avatar src={u.channel_thumbnail} name={u.channel_name} size={30} />
                       <div style={{ minWidth: 0 }}>
-                        <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.channel_name || '(unnamed)'}</p>
+                        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.channel_name || '(unnamed)'}</p>
                         <p style={{ fontSize: 11.5, color: C.text3, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.owner_email}</p>
                       </div>
                     </div>
@@ -1209,7 +1209,7 @@ export default function Admin() {
             {/* Sample list of recipients */}
             <div style={{ padding: '20px 26px' }}>
               {topupData.eligible_count === 0 ? (
-                <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.6, margin: 0 }}>
+                <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, margin: 0 }}>
                   Nobody's sitting at 2/3 or 3/3 right now. The list will repopulate as free users approach their monthly limit.
                 </p>
               ) : (
@@ -1358,7 +1358,7 @@ export default function Admin() {
                         }}>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 3 }}>
-                            <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</p>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</p>
                             <span style={{
                               fontSize: 10, fontWeight: 700, color: sty.c, background: sty.bg,
                               border: `1px solid ${sty.b}`, padding: '2px 8px', borderRadius: 100,

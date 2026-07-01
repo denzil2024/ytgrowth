@@ -224,7 +224,7 @@ function ReportBody({ rd, isLatest }) {
           {rd.watchOut
             ? <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                 <ColLabel color={C.amber}>Watch out</ColLabel>
-                <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.watchOut}</p>
+                <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>{rd.watchOut}</p>
               </div>
             : <div />
           }
@@ -239,7 +239,7 @@ function ReportBody({ rd, isLatest }) {
                 boxShadow: '0 1px 2px rgba(201,160,48,0.05), 0 8px 22px rgba(201,160,48,0.08)',
               }}>
                 <ColLabel color={C.red}>Your priority</ColLabel>
-                <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.priorityAction}</p>
+                <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>{rd.priorityAction}</p>
               </div>
             : <div />
           }
@@ -248,7 +248,7 @@ function ReportBody({ rd, isLatest }) {
           {rd.biggestWin
             ? <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                 <ColLabel color={C.green}>Biggest win</ColLabel>
-                <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.biggestWin}</p>
+                <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>{rd.biggestWin}</p>
               </div>
             : <div />
           }
@@ -445,7 +445,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 10 }}>
                 <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                   <ColLabel color={C.amber}>Watch out</ColLabel>
-                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Posting frequency dropped to one video in 14 days and the algorithm is deprioritizing the channel.</p>
+                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>Posting frequency dropped to one video in 14 days and the algorithm is deprioritizing the channel.</p>
                 </div>
                 <div style={{
                   background: 'linear-gradient(160deg, rgba(201,160,48,0.16) 0%, rgba(201,160,48,0.06) 100%)',
@@ -455,11 +455,11 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                   boxShadow: '0 1px 2px rgba(201,160,48,0.05), 0 8px 22px rgba(201,160,48,0.08)',
                 }}>
                   <ColLabel color={C.red}>Your priority</ColLabel>
-                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Film two shopping hauls this week, they are your repeatable winner, and a second one inside 7 days compounds the algorithm boost.</p>
+                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>Film two shopping hauls this week, they are your repeatable winner, and a second one inside 7 days compounds the algorithm boost.</p>
                 </div>
                 <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                   <ColLabel color={C.green}>Biggest win</ColLabel>
-                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>The house tour hit 13,908 views and pulled in 25 new subs, your best single video this quarter.</p>
+                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.72 }}>The house tour hit 13,908 views and pulled in 25 new subs, your best single video this quarter.</p>
                 </div>
               </div>
             </div>
@@ -490,7 +490,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.5, marginBottom: 2 }}>
+            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.5, marginBottom: 2 }}>
               You&rsquo;re out of credits
             </p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>

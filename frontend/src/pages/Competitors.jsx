@@ -403,7 +403,7 @@ function useCompetitorStyles() {
       }
       .comp-thumb-text { padding: 11px 13px 13px; }
       .comp-thumb-title {
-        font-size: 13.5px;
+        font-size: 14px;
         font-weight: 600;
         color: ${D.text1};
         letter-spacing: -0.15px;
@@ -1037,7 +1037,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                             Why it works
                           </p>
-                          <p style={{ fontSize: 13.5, color: D.text1, lineHeight: 1.72 }}>{body}</p>
+                          <p style={{ fontSize: 14, color: D.text1, lineHeight: 1.72 }}>{body}</p>
                         </div>
                       </>
                     )}
@@ -1350,7 +1350,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                             Why now
                           </p>
-                          <p style={{ fontSize: 13.5, color: D.text1, lineHeight: 1.72 }}>
+                          <p style={{ fontSize: 14, color: D.text1, lineHeight: 1.72 }}>
                             {why || '—'}
                           </p>
                         </div>
@@ -1369,7 +1369,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
                             Action
                           </p>
-                          <p style={{ fontSize: 13.5, color: D.text1, lineHeight: 1.72 }}>{action}</p>
+                          <p style={{ fontSize: 14, color: D.text1, lineHeight: 1.72 }}>{action}</p>
                         </div>
                       </div>
                     </div>
@@ -1416,7 +1416,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                       flexShrink: 0, marginTop: 4 }}
                   />
                   <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                    <p style={{ fontSize: 13.5, fontWeight: 600,
+                    <p style={{ fontSize: 14, fontWeight: 600,
                       color: isDone ? D.text3 : D.text1, lineHeight: 1.5,
                       letterSpacing: '-0.1px',
                       textDecoration: isDone ? 'line-through' : 'none' }}>

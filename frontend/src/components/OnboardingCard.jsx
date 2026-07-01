@@ -119,7 +119,7 @@ export default function OnboardingCard({
           <h2 style={{ fontSize: 22, fontWeight: 600, color: C.ink, letterSpacing: '-0.5px', lineHeight: 1.2, margin: 0 }}>
             Set up your channel
           </h2>
-          <p style={{ fontSize: 13.5, fontWeight: 400, color: C.sub, marginTop: 6, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 14, fontWeight: 400, color: C.sub, marginTop: 6, lineHeight: 1.5 }}>
             A few steps to your first wins. Takes about two minutes.
           </p>
         </div>

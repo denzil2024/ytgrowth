@@ -87,7 +87,7 @@ export default function UpsellGate({
                   <polyline points="1.5,6.5 5,10 10.5,2"/>
                 </svg>
               </span>
-              <span style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.55 }}>{t}</span>
+              <span style={{ fontSize: 14, color: C.text2, lineHeight: 1.55 }}>{t}</span>
             </div>
           ))}
         </div>

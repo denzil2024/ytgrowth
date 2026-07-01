@@ -816,7 +816,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         <div style={{
           background: 'rgba(201,160,48,0.06)', border: '1px solid rgba(201,160,48,0.2)',
           borderRadius: 12, padding: '12px 16px', marginBottom: 14,
-          display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: C.text1,
+          display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: C.text1,
         }}>
           <span style={{ flex: 1 }}>
             New Outliers searches require a paid plan. Your past reports stay available.
@@ -938,7 +938,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
             <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1.3, marginBottom: 10 }}>
               Your search could go <span style={{ color: '#7a5b14' }}>3 ways</span>. Pick one.
             </h2>
-            <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
+            <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
               Same words, different niches. Pick the closest, that's the outlier cohort we'll pull.
             </p>
           </div>
@@ -1182,7 +1182,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                 No reports yet
               </p>
-              <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
                 Run an Outliers search and it'll show up here, so you can always come back to a report you've already paid for.
               </p>
             </div>
@@ -1447,7 +1447,7 @@ function VideoResultCard({ item, kind, onOpen }) {
 
         {/* Meta line, views · relTime. 2 items instead of 3 now that channel
             name has its own line. Matches the Videos tab meta typography. */}
-        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <p style={{ fontSize: 14, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
           <span style={{ margin: '0 8px', color: C.text3 }}>·</span>
           {relPublished(item.published_at) || '—'}
@@ -1503,7 +1503,7 @@ function VideoResultCard({ item, kind, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
+              padding: '11px 16px', fontSize: 14, fontWeight: 600,
               border: 'none', borderRadius: 100, cursor: 'pointer',
               background: C.red, color: 'var(--yd-on-gold)',
               fontFamily: 'inherit', letterSpacing: '0.01em',
@@ -1618,7 +1618,7 @@ function ChannelResultCard({ item, onOpen }) {
         }}>{item.description || '—'}</p>
 
         {/* Meta line, subs · videos, same typography as VideoResultCard meta */}
-        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <p style={{ fontSize: 14, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.subscribers)}</span> subs
           <span style={{ margin: '0 8px', color: C.text3 }}>·</span>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.video_count)}</span> videos
@@ -1642,7 +1642,7 @@ function ChannelResultCard({ item, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
+              padding: '11px 16px', fontSize: 14, fontWeight: 600,
               border: 'none', borderRadius: 100, cursor: 'pointer',
               background: C.red, color: 'var(--yd-on-gold)',
               fontFamily: 'inherit', letterSpacing: '0.01em',

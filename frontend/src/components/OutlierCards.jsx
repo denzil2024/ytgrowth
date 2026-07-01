@@ -225,7 +225,7 @@ export function VideoResultCard({ item, kind, onOpen }) {
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>{decodeEntities(item.channel_name)}</p>
 
-        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <p style={{ fontSize: 14, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
           <span style={{ margin: '0 8px', color: 'rgba(20,19,15,0.30)' }}>·</span>
           {relPublished(item.published_at) || '—'}
@@ -248,7 +248,7 @@ export function VideoResultCard({ item, kind, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
+              padding: '11px 16px', fontSize: 14, fontWeight: 600,
               border: '1px solid var(--yd-line)', borderRadius: 0, cursor: 'pointer',
               background: 'transparent', color: 'var(--yd-soft)',
               fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.06em', textTransform: 'uppercase',
@@ -343,7 +343,7 @@ export function ChannelResultCard({ item, onOpen }) {
           minHeight: 39,
         }}>{item.description || '—'}</p>
 
-        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <p style={{ fontSize: 14, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.subscribers)}</span> subs
           <span style={{ margin: '0 8px', color: 'rgba(20,19,15,0.30)' }}>·</span>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.video_count)}</span> videos
@@ -366,7 +366,7 @@ export function ChannelResultCard({ item, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
+              padding: '11px 16px', fontSize: 14, fontWeight: 600,
               border: '1px solid var(--yd-line)', borderRadius: 0, cursor: 'pointer',
               background: 'transparent', color: 'var(--yd-soft)',
               fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.06em', textTransform: 'uppercase',

@@ -946,7 +946,7 @@ export default function Dashboard() {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Start here</p>
                         <h2 style={{ fontSize: 22, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 6 }}>Run your first audit</h2>
-                        <p style={{ fontSize: 13.5, color: SHELL.text2, lineHeight: 1.55, maxWidth: 520 }}>
+                        <p style={{ fontSize: 14, color: SHELL.text2, lineHeight: 1.55, maxWidth: 520 }}>
                           We need to analyse your channel before we can show Priority Actions, growth patterns, and milestone tracking. Costs 1 credit and takes about 30 seconds.
                         </p>
                       </div>
@@ -965,7 +965,7 @@ export default function Dashboard() {
                 <div>
                   <h1 style={{ fontFamily: SHELL.serif, fontSize: 32, fontWeight: 500, color: SHELL.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>
                     Good to see you{data.channel.channel_name ? <>, <span style={{ fontFamily: SHELL.serif, color: SHELL.goldInk, fontWeight: 500 }}>{data.channel.channel_name}</span></> : ''}.</h1>
-                  <p style={{ fontSize: 13.5, color: SHELL.text2, fontWeight: 500, display: 'flex', gap: 0, flexWrap: 'wrap', letterSpacing: '-0.05px' }}>
+                  <p style={{ fontSize: 14, color: SHELL.text2, fontWeight: 500, display: 'flex', gap: 0, flexWrap: 'wrap', letterSpacing: '-0.05px' }}>
                     {data.stats_fetched_at && (
                       <span>Stats from {relTime(data.stats_fetched_at)}</span>
                     )}
@@ -2579,7 +2579,7 @@ export default function Dashboard() {
                   <p style={{ fontSize: 16, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                     No tracked optimisations yet
                   </p>
-                  <p style={{ fontSize: 13.5, color: SHELL.text2, fontWeight: 500, lineHeight: 1.6, maxWidth: 420, margin: '0 auto', letterSpacing: '-0.005em' }}>
+                  <p style={{ fontSize: 14, color: SHELL.text2, fontWeight: 500, lineHeight: 1.6, maxWidth: 420, margin: '0 auto', letterSpacing: '-0.005em' }}>
                     Open any video below and run an SEO optimisation. Once you publish the new title or description, the lift in views, likes, and comments shows up here.
                   </p>
                 </div>

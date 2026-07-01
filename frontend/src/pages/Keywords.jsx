@@ -530,7 +530,7 @@ function KwDetailModal({ kw, C, onClose }) {
                         </div>
                         <div style={{ padding: '11px 13px 13px' }}>
                           <p style={{
-                            fontSize: 13.5, fontWeight: 600, color: C.text1,
+                            fontSize: 14, fontWeight: 600, color: C.text1,
                             letterSpacing: '-0.15px', lineHeight: 1.4,
                             margin: '0 0 4px',
                             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
@@ -1060,7 +1060,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
         <div style={{
           background: 'rgba(201,160,48,0.06)', border: '1px solid rgba(201,160,48,0.2)',
           borderRadius: 12, padding: '12px 16px', marginBottom: 14,
-          display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: C.text1,
+          display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: C.text1,
         }}>
           <span style={{ flex: 1 }}>
             You've used your free Keyword research this cycle. Your past reports stay available.
@@ -1094,7 +1094,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
       {error && (
         <div style={{
           background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
-          padding: '10px 14px', marginBottom: 14, color: '#7a5b14', fontSize: 13.5,
+          padding: '10px 14px', marginBottom: 14, color: '#7a5b14', fontSize: 14,
         }}>
           {error}
         </div>
@@ -1386,7 +1386,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         </div>
                         <div style={{ padding: '11px 13px 13px' }}>
                           <p style={{
-                            fontSize: 13.5, fontWeight: 600, color: C.text1,
+                            fontSize: 14, fontWeight: 600, color: C.text1,
                             letterSpacing: '-0.15px', lineHeight: 1.4,
                             margin: '0 0 4px',
                             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
@@ -1517,7 +1517,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                                 style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
                               >
                                 <span className="kw-row-phrase" style={{
-                                  fontSize: 13.5, color: C.text1, fontWeight: 500,
+                                  fontSize: 14, color: C.text1, fontWeight: 500,
                                   width: 260, flexShrink: 0,
                                   letterSpacing: '-0.1px',
                                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
@@ -1671,7 +1671,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                 No reports yet
               </p>
-              <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
                 Run a keyword research and it'll show up here, so you can always come back to a report you've already paid for.
               </p>
             </div>

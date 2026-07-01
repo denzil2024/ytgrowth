@@ -98,7 +98,7 @@ export function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
               {top.category && <p style={{ fontSize: 12, color: SHELL.text3, marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
               <div style={{ background: 'rgba(20,19,15,0.04)', border: `1px solid rgba(20,19,15,0.08)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
                 <p style={{ fontSize: 10, fontWeight: 600, color: s.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
-                <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{top.action}</p>
+                <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.72 }}>{top.action}</p>
               </div>
             </>
           ) : (

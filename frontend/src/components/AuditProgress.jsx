@@ -169,7 +169,7 @@ export default function AuditProgress({ done = false, onDone }) {
           margin-bottom: 6px;
         }
         .ap-sub {
-          font-size: 13.5px; color: ${C.text3}; line-height: 1.55;
+          font-size: 14px; color: ${C.text3}; line-height: 1.55;
           margin-bottom: 24px;
         }
 

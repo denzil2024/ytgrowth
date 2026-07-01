@@ -266,7 +266,7 @@ export function ActionsRailCard({ items }) {
 
                 <p style={{
                   flex: 1, minWidth: 0,
-                  fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
+                  fontSize: 14, fontWeight: 400, color: SHELL.text1,
                   letterSpacing: '-0.1px', lineHeight: 1.45,
                   margin: 0,
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
@@ -428,7 +428,7 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
       {/* Headline, lighter weight so the Actions tab doesn't read like a
           wall of bold. The eyebrow chip already signals the weight. */}
       <h3 style={{
-        fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
+        fontSize: 14, fontWeight: 400, color: SHELL.text1,
         letterSpacing: '-0.1px', lineHeight: 1.5,
         marginBottom: 10,
       }}>{action.problem || action.action || 'Action'}</h3>
@@ -958,7 +958,7 @@ export function AuditLockedCard({ count, onUpgrade }) {
         </span>
       }
     >
-      <p style={{ fontSize: 13.5, fontWeight: 400, color: SHELL.text2, lineHeight: 1.6, margin: '0 0 14px' }}>
+      <p style={{ fontSize: 14, fontWeight: 400, color: SHELL.text2, lineHeight: 1.6, margin: '0 0 14px' }}>
         Your audit found <strong style={{ color: SHELL.text1, fontWeight: 600 }}>{count} more priority {count === 1 ? 'action' : 'actions'}</strong>. Upgrade to see every ranked move, the full channel analysis, and fresh re-audits as your channel grows.
       </p>
       <button
@@ -1793,7 +1793,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
               <div style={{ flex: 1, minWidth: 0 }}>
                 {/* Title */}
                 <p style={{
-                  fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
+                  fontSize: 14, fontWeight: 400, color: SHELL.text1,
                   letterSpacing: '-0.1px', lineHeight: 1.45,
                   marginBottom: 4,
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
@@ -2041,7 +2041,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
               letterSpacing: '0.08em', textTransform: 'uppercase',
             }}>Your title now</p>
             <p style={{
-              margin: 0, fontSize: 13.5, fontWeight: 600, color: SHELL.text2,
+              margin: 0, fontSize: 14, fontWeight: 600, color: SHELL.text2,
               letterSpacing: '-0.1px', lineHeight: 1.4,
               display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
               overflow: 'hidden', textOverflow: 'ellipsis',
@@ -2287,7 +2287,7 @@ export function MissingDescriptionCard({
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10, justifyContent: 'center' }}>
           {/* Explainer line. References the specific gap, not a generic nag. */}
           <p style={{
-            margin: 0, fontSize: 13.5, fontWeight: 400, color: SHELL.text2,
+            margin: 0, fontSize: 14, fontWeight: 400, color: SHELL.text2,
             letterSpacing: '-0.05px', lineHeight: 1.45,
           }}>
             Your {video.is_short ? 'last short' : 'latest video'} has {lenLabel}.
@@ -2319,7 +2319,7 @@ export function MissingDescriptionCard({
             </div>
             <p style={{
               margin: 0, padding: '10px 12px',
-              fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
+              fontSize: 14, fontWeight: 400, color: SHELL.text1,
               letterSpacing: '-0.05px', lineHeight: 1.5,
               whiteSpace: 'pre-wrap',
               display: '-webkit-box',
@@ -2638,7 +2638,7 @@ export function MissingTagsCard({
 
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <p style={{
-            margin: 0, fontSize: 13.5, fontWeight: 400, color: SHELL.text2,
+            margin: 0, fontSize: 14, fontWeight: 400, color: SHELL.text2,
             letterSpacing: '-0.05px', lineHeight: 1.45,
           }}>
             Your {video.is_short ? 'last short' : 'latest video'} has {countLabel}.
@@ -2932,7 +2932,7 @@ export function UnansweredCommentCard({
               )}
             </div>
             <p style={{
-              margin: 0, fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
+              margin: 0, fontSize: 14, fontWeight: 400, color: SHELL.text1,
               letterSpacing: '-0.05px', lineHeight: 1.5,
               whiteSpace: 'pre-wrap',
               display: '-webkit-box',
@@ -2970,7 +2970,7 @@ export function UnansweredCommentCard({
         </div>
         <p style={{
           margin: 0, padding: '10px 12px',
-          fontSize: 13.5, fontWeight: 400, color: SHELL.text1,
+          fontSize: 14, fontWeight: 400, color: SHELL.text1,
           letterSpacing: '-0.05px', lineHeight: 1.5,
           whiteSpace: 'pre-wrap',
         }}>{reply}</p>
@@ -3097,7 +3097,7 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
       </div>
 
       <p style={{
-        margin: '0 0 12px 0', fontSize: 13.5, fontWeight: 400, color: SHELL.text2,
+        margin: '0 0 12px 0', fontSize: 14, fontWeight: 400, color: SHELL.text2,
         letterSpacing: '-0.05px', lineHeight: 1.45,
       }}>
         How viewers are finding you on YouTube search.
@@ -3128,7 +3128,7 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
               }}>
                 <span style={{
-                  fontSize: 13.5, fontWeight: 500, color: SHELL.text1,
+                  fontSize: 14, fontWeight: 500, color: SHELL.text1,
                   letterSpacing: '-0.05px', lineHeight: 1.3,
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                   flex: 1, minWidth: 0,
@@ -3509,7 +3509,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
               {/* Title */}
               <p style={{
                 margin: '10px 2px 0',
-                fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
+                fontSize: 14, fontWeight: 600, color: SHELL.text1,
                 letterSpacing: '-0.1px', lineHeight: 1.35,
                 display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                 overflow: 'hidden', textOverflow: 'ellipsis',
@@ -3806,7 +3806,7 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
             {/* Why now */}
             <div style={{ background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0, padding: '12px 14px' }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
-              <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.whyNow || insight.cause}</p>
+              <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.72 }}>{insight.whyNow || insight.cause}</p>
             </div>
 
             {/* Action */}
@@ -3820,14 +3820,14 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
               display: 'flex', flexDirection: 'column',
             }}>
               <p style={{ fontSize: 10, fontWeight: 600, color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
-              <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.action}</p>
+              <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.72 }}>{insight.action}</p>
             </div>
 
             {/* Expected outcome */}
             {insight.expectedOutcome
               ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 0, padding: '12px 14px' }}>
                   <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
-                  <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.expectedOutcome}</p>
+                  <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.72 }}>{insight.expectedOutcome}</p>
                 </div>
               : <div />
             }

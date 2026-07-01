@@ -558,7 +558,7 @@ export function MilestoneCelebrationModal({ milestone, channelName, channelThumb
               display: 'inline-flex', alignItems: 'center', gap: 8,
               background: `linear-gradient(180deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
               color: '#ffffff',
-              fontSize: 13.5, fontWeight: 600,
+              fontSize: 14, fontWeight: 600,
               padding: '11px 22px', borderRadius: 999,
               border: 'none', cursor: 'pointer',
               letterSpacing: '-0.1px',

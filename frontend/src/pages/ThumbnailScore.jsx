@@ -1013,7 +1013,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           padding: '11px 16px',
           background: canUpload ? C.red : '#e0e0e6',
           color: canUpload ? '#fff' : C.text3,
-          border: 'none', borderRadius: 100, fontSize: 13.5, fontWeight: 600,
+          border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 600,
           cursor: canUpload ? 'pointer' : 'not-allowed',
           fontFamily: 'inherit', letterSpacing: '0.01em', transition: 'filter 0.15s',
         }}
@@ -1333,7 +1333,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div>
             <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
-            <p style={{ fontSize: 13.5, color: C.text2, fontWeight: 500, lineHeight: 1.5, letterSpacing: '-0.05px' }}>
+            <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, lineHeight: 1.5, letterSpacing: '-0.05px' }}>
               See how your thumbnail performs before you publish
               <span> · Benchmarked against real top-ranked channels</span>
               {history.length > 0 && <span> · <span style={{ color: C.text1, fontWeight: 600 }}>{history.length}</span> saved</span>}
@@ -1383,7 +1383,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 display: 'inline-block', marginBottom: 12,
               }}>History</span>
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8, lineHeight: 1.3 }}>No previous thumbnails</p>
-              <p style={{ fontSize: 13.5, color: C.text2, maxWidth: 340, margin: '0 auto', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 14, color: C.text2, maxWidth: 340, margin: '0 auto', lineHeight: 1.6 }}>
                 Upload a thumbnail to get started. It will be saved here automatically.
               </p>
             </div>
@@ -1821,7 +1821,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       width: '100%',
                       padding: '11px 16px',
                       background: C.red, color: 'var(--yd-on-gold)',
-                      border: 'none', borderRadius: 100, fontSize: 13.5, fontWeight: 600,
+                      border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 600,
                       cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.01em',
                       transition: 'filter 0.15s',
                     }}
@@ -1865,7 +1865,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                         padding: '11px 16px',
                         background: markingReady ? '#e0e0e6' : C.green,
                         color: '#fff', border: 'none', borderRadius: 100,
-                        fontSize: 13.5, fontWeight: 600,
+                        fontSize: 14, fontWeight: 600,
                         cursor: markingReady ? 'not-allowed' : 'pointer',
                         fontFamily: 'inherit', letterSpacing: '0.01em', transition: 'filter 0.15s',
                       }}
