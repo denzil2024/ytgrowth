@@ -308,10 +308,34 @@ def _render_index_with_meta(path: str) -> str:
 _index_template_cache: str | None = None
 
 
+# Long-lived cache TTLs for static binary assets served by the SPA catch-all.
+# These files sit outside Vite's hashed /assets dir (fonts, blog covers,
+# avatars) so Starlette's FileResponse would otherwise emit no Cache-Control
+# and inherit Railway's 4h default, which Lighthouse flags as a repeat-visit
+# waste. Fonts have stable filenames and never change → 1y immutable. Images
+# may be replaced under the same name → 30d. Rotating crawler files
+# (sitemap.xml, robots.txt, llms.txt) and HTML are intentionally left off this
+# map so they keep the short default and new blog posts surface promptly.
+_FONT_EXTS = {".woff2", ".woff", ".ttf", ".otf"}
+_IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".ico"}
+
+
+def _static_cache_control(suffix: str) -> str | None:
+    s = suffix.lower()
+    if s in _FONT_EXTS:
+        return "public, max-age=31536000, immutable"
+    if s in _IMAGE_EXTS:
+        return "public, max-age=2592000"
+    return None
+
+
 @app.get("/{full_path:path}")
 def serve_frontend(full_path: str):
     file = DIST / full_path
     if file.is_file():
+        cache = _static_cache_control(file.suffix)
+        if cache:
+            return FileResponse(file, headers={"Cache-Control": cache})
         return FileResponse(file)
     # Pre-rendered route. scripts/prerender.js writes dist/<path>/index.html
     # for public, indexable pages (the landing page, /blog, every /blog/<slug>,
