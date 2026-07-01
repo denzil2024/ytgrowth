@@ -573,7 +573,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Geist', 'Inter', system-ui, sans-serif", background: C.bg }}>
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Barlow', system-ui, sans-serif", background: C.bg }}>
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
@@ -599,7 +599,7 @@ export default function Dashboard() {
            <div style={{
              background: SHELL.cardBg,
              border: `1px solid ${SHELL.hair}`,
-             borderRadius: 12,
+             borderRadius: 0,
              padding: '15px 16px 14px',
              boxShadow: SHELL.cardShadow,
            }}>
@@ -617,11 +617,11 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 16 }}>
                   {data.channel.thumbnail
                     ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}/>
-                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(251,106,96,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 600, color: '#fb6a60', flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(201,160,48,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 600, color: '#7a5b14', flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{ fontSize: 14.5, fontWeight: 600, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
-                    <p style={{ fontSize: 12, color: SHELL.text2, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
+                    <p style={{ fontFamily: SHELL.sans, fontSize: 15, fontWeight: 600, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.01em', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
+                    <p style={{ fontFamily: SHELL.sans, fontSize: 12.5, color: SHELL.text2, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
                   </div>
                 </div>
               )
@@ -631,9 +631,9 @@ export default function Dashboard() {
                 card (the imported scoreColor returns the light-page red /
                 amber / green which lose contrast here). */}
             {(() => {
-              const onDarkScoreColor = score >= 75 ? '#34d27b'
-                : score >= 50 ? '#f0a23b'
-                : '#fb6a60'
+              const onDarkScoreColor = score >= 75 ? '#2d7a4f'
+                : score >= 50 ? '#b07d1a'
+                : '#7a5b14'
               return (
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
@@ -724,13 +724,13 @@ export default function Dashboard() {
             <UsageBar
               channelId={data.channel?.channel_id}
               email={data.channel?.email}
-              dark={true}
+              dark={false}
               onPlan={setBillingPlan}
               onUsage={setUsagePct}
             />
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+              fontFamily: "'Barlow', system-ui, sans-serif",
               marginTop: 2,
             }}>
               <button
@@ -782,7 +782,7 @@ export default function Dashboard() {
       // ground is the SAME #0e0e10 so the topbar is seamless (no lighter
       // band), matching how Chat reads. Chat keeps its own tuned ground
       // (#0a0a0c) because ChatCoach paints its own surface on top.
-      const darkGround = nav === 'Chat' ? '#0a0a0c' : '#0e0e10'
+      const darkGround = 'var(--yd-paper)'
       return (
       <div className={darkRoute ? 'ytg-dark' : undefined} style={{ flex: 1, overflow: 'auto', background: darkRoute ? darkGround : C.bg }}>
 
@@ -790,7 +790,7 @@ export default function Dashboard() {
             locked shell shade so it does not sit as a white band over a
             dark page. Other pages are untouched. */}
         {(() => {
-          const darkBar = darkRoute
+          const darkBar = false
           return (
         <div style={{
           borderBottom: darkBar ? 'none' : `1px solid ${C.border}`,
@@ -804,14 +804,14 @@ export default function Dashboard() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: darkBar ? '#f4f4f5' : C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
             {data && <>
-              <span style={{ color: darkBar ? 'rgba(255,255,255,0.18)' : C.border, fontSize: 14 }}>·</span>
+              <span style={{ color: darkBar ? 'rgba(20,19,15,0.18)' : C.border, fontSize: 14 }}>·</span>
               <span style={{ fontSize: 13, fontWeight: 400, color: darkBar ? '#b2b3bb' : C.text3, letterSpacing: '-0.1px' }}>{data.channel?.channel_name}</span>
             </>}
           </div>
           <div style={{
             background: darkBar ? 'transparent' : C.surface,
-            border: darkBar ? '1px solid rgba(255,255,255,0.08)' : `1px solid ${C.border}`,
-            borderRadius: 100, padding: '5px 14px',
+            border: darkBar ? '1px solid rgba(20,19,15,0.08)' : `1px solid ${C.border}`,
+            borderRadius: 0, padding: '5px 14px',
             display: 'flex', alignItems: 'center', gap: 6,
             boxShadow: darkBar ? 'none' : '0 1px 3px rgba(0,0,0,0.05)',
           }}>
@@ -836,8 +836,8 @@ export default function Dashboard() {
                   <div className="ytg-skel" style={{ width: 180, height: 14, borderRadius: 4 }}/>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <div className="ytg-skel" style={{ width: 130, height: 34, borderRadius: 100 }}/>
-                  <div className="ytg-skel" style={{ width: 130, height: 34, borderRadius: 100 }}/>
+                  <div className="ytg-skel" style={{ width: 130, height: 34, borderRadius: 0 }}/>
+                  <div className="ytg-skel" style={{ width: 130, height: 34, borderRadius: 0 }}/>
                 </div>
               </div>
               {/* Hero tiles */}
@@ -848,7 +848,7 @@ export default function Dashboard() {
               {/* Filter pills */}
               <div style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
                 {[0, 1, 2, 3].map(i => (
-                  <div key={i} className="ytg-skel" style={{ width: 90, height: 32, borderRadius: 100 }}/>
+                  <div key={i} className="ytg-skel" style={{ width: 90, height: 32, borderRadius: 0 }}/>
                 ))}
               </div>
               {/* Card stream */}
@@ -954,7 +954,7 @@ export default function Dashboard() {
                         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                           <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
                         </svg>
-                        <span>Run audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span>
+                        <span>Run audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(20,19,15,0.6)', marginLeft: 2 }}>· 1 credit</span>
                       </button>
                     </div>
                   )
@@ -963,8 +963,8 @@ export default function Dashboard() {
               })()}
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h1 style={{ fontSize: 26, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
-                    Good to see you{data.channel.channel_name ? <>, <span style={{ color: SHELL.text1, fontWeight: 600 }}>{data.channel.channel_name}</span></> : ''}.</h1>
+                  <h1 style={{ fontFamily: SHELL.serif, fontSize: 32, fontWeight: 500, color: SHELL.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>
+                    Good to see you{data.channel.channel_name ? <>, <span style={{ fontFamily: SHELL.serif, color: SHELL.goldInk, fontWeight: 500 }}>{data.channel.channel_name}</span></> : ''}.</h1>
                   <p style={{ fontSize: 13.5, color: SHELL.text2, fontWeight: 500, display: 'flex', gap: 0, flexWrap: 'wrap', letterSpacing: '-0.05px' }}>
                     {data.stats_fetched_at && (
                       <span>Stats from {relTime(data.stats_fetched_at)}</span>
@@ -980,7 +980,7 @@ export default function Dashboard() {
                     const auditDate = parseUTC(data.analyzed_at)
                     const daysOld = auditDate ? (Date.now() - auditDate.getTime()) / 86400000 : 0
                     return daysOld > 7 && usagePct < 100 ? (
-                      <span style={{ fontSize: 11, fontWeight: 600, color: '#f0a23b' }}>Audit may be outdated</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: '#b07d1a' }}>Audit may be outdated</span>
                     ) : null
                   })()}
 
@@ -1025,7 +1025,7 @@ export default function Dashboard() {
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                       <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
                     </svg>
-                    {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
+                    {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(20,19,15,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
                   </button>
 
                   {/* Refresh stats, with flash feedback */}
@@ -1068,8 +1068,8 @@ export default function Dashboard() {
                     style={{ position: 'relative' }}
                   >
                     {refreshingStats ? 'Refreshing…'
-                      : statsFlash === 'ok'  ? <span style={{ color: '#34d27b' }}>Updated ✓</span>
-                      : statsFlash === 'err' ? <span style={{ color: '#fb6a60' }}>Failed ✕</span>
+                      : statsFlash === 'ok'  ? <span style={{ color: '#2d7a4f' }}>Updated ✓</span>
+                      : statsFlash === 'err' ? <span style={{ color: '#7a5b14' }}>Failed ✕</span>
                       : 'Refresh stats'}
                   </button>
                 </div>
@@ -1081,9 +1081,9 @@ export default function Dashboard() {
                 <div style={{
                   marginBottom: 14,
                   display: 'flex', alignItems: 'center', gap: 9,
-                  fontSize: 13, color: '#fb6a60',
-                  background: 'rgba(229,37,27,0.06)',
-                  border: '1px solid rgba(229,37,27,0.18)',
+                  fontSize: 13, color: '#7a5b14',
+                  background: 'rgba(201,160,48,0.06)',
+                  border: '1px solid rgba(201,160,48,0.18)',
                   borderRadius: 9, padding: '9px 13px',
                 }}>
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -1112,9 +1112,9 @@ export default function Dashboard() {
                 // the Channel Snapshot card instead of muddy red-on-red /
                 // dim green-on-green.
                 const scoreColor = !haveScore ? SHELL.text3
-                  : channelScore >= 70 ? '#34d27b'
+                  : channelScore >= 70 ? '#2d7a4f'
                   : channelScore >= 50 ? SHELL.text1
-                  : '#fb6a60'
+                  : '#7a5b14'
                 const scoreLabel = !haveScore ? 'Awaiting audit'
                   : channelScore >= 70 ? 'Strong'
                   : channelScore >= 50 ? 'Steady'
@@ -1125,9 +1125,9 @@ export default function Dashboard() {
                   letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0,
                 }
                 const bigNum = {
-                  fontSize: 30, fontWeight: 600, color: SHELL.text1,
-                  letterSpacing: '-1.0px', lineHeight: 1,
-                  fontVariantNumeric: 'tabular-nums',
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  fontSize: 44, fontWeight: 500, color: SHELL.text1,
+                  letterSpacing: '-0.01em', lineHeight: 1,
                 }
                 const subMeta = {
                   fontSize: 11.5, fontWeight: 500, color: SHELL.text2,
@@ -1141,15 +1141,15 @@ export default function Dashboard() {
                   // Brighter on-dark variants so the chip pops against the
                   // dark Channel Snapshot card instead of looking muddy red
                   // on red-tinted background.
-                  const color = pos ? '#34d27b' : '#fb6a60'
-                  const bg    = pos ? 'rgba(52,210,123,0.14)' : 'rgba(251,106,96,0.13)'
-                  const bdr   = pos ? 'rgba(52,210,123,0.34)' : 'rgba(251,106,96,0.32)'
+                  const color = pos ? '#2d7a4f' : '#7a5b14'
+                  const bg    = pos ? 'rgba(52,210,123,0.14)' : 'rgba(201,160,48,0.13)'
+                  const bdr   = pos ? 'rgba(52,210,123,0.34)' : 'rgba(201,160,48,0.32)'
                   return (
                     <span style={{
                       display: 'inline-flex', alignItems: 'center', gap: 3,
                       fontSize: 10.5, fontWeight: 600, color,
                       background: bg, border: `1px solid ${bdr}`,
-                      padding: '1px 7px', borderRadius: 100,
+                      padding: '1px 7px', borderRadius: 0,
                       letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
                     }}>
                       <svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ transform: pos ? 'none' : 'rotate(180deg)' }}>
@@ -1165,11 +1165,11 @@ export default function Dashboard() {
                   // Below that, it stays the brand red gradient.
                   const nearing = pct >= 70
                   const gradient = nearing
-                    ? 'linear-gradient(90deg, rgba(52,210,123,0.55) 0%, #34d27b 100%)'
-                    : 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)'
+                    ? 'linear-gradient(90deg, rgba(52,210,123,0.55) 0%, #2d7a4f 100%)'
+                    : 'linear-gradient(90deg, rgba(201,160,48,0.55) 0%, #c9a030 100%)'
                   return (
                     <div style={{
-                      height: 3, background: 'rgba(255,255,255,0.10)', borderRadius: 99, overflow: 'hidden',
+                      height: 3, background: 'rgba(20,19,15,0.10)', borderRadius: 99, overflow: 'hidden',
                     }}>
                       <div style={{
                         width: `${pct}%`, height: '100%',
@@ -1184,10 +1184,10 @@ export default function Dashboard() {
                 return (
                   <article style={{
                     background: SHELL.cardFlat,
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: 14,
+                    border: '1px solid rgba(20,19,15,0.08)',
+                    borderRadius: 0,
                     padding: '14px 18px 16px 18px',
-                    boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+                    boxShadow: 'none',
                     marginBottom: 28,
                   }}>
                     {/* Uniform 16/600 title inside the card, matches Add
@@ -1242,8 +1242,8 @@ export default function Dashboard() {
                         const avg = (arr) => arr.reduce((s, v) => s + v, 0) / arr.length
                         const rising = avg(subsSeries.slice(half)) > avg(subsSeries.slice(0, half))
                           && subsSeries[subsSeries.length - 1] > subsSeries[0]
-                        const stroke = rising ? '#34d27b' : '#e5251b'
-                        const fill   = rising ? 'rgba(52,210,123,0.14)' : 'rgba(229,37,27,0.10)'
+                        const stroke = rising ? '#2d7a4f' : '#c9a030'
+                        const fill   = rising ? 'rgba(52,210,123,0.14)' : 'rgba(201,160,48,0.10)'
                         return (
                         <>
                           <div style={{ marginTop: -2 }}>
@@ -1272,16 +1272,16 @@ export default function Dashboard() {
                           <span style={{
                             fontSize: 10.5, fontWeight: 600, color: scoreColor,
                             background: channelScore >= 70 ? 'rgba(22,163,74,0.14)'
-                                      : channelScore >= 50 ? 'rgba(255,255,255,0.06)'
-                                      : 'rgba(229,37,27,0.07)',
-                            border: `1px solid ${channelScore >= 70 ? 'rgba(22,163,74,0.34)' : channelScore >= 50 ? 'rgba(255,255,255,0.12)' : 'rgba(229,37,27,0.20)'}`,
-                            padding: '1px 8px', borderRadius: 100, letterSpacing: '-0.05px',
+                                      : channelScore >= 50 ? 'rgba(20,19,15,0.06)'
+                                      : 'rgba(201,160,48,0.07)',
+                            border: `1px solid ${channelScore >= 70 ? 'rgba(22,163,74,0.34)' : channelScore >= 50 ? 'rgba(20,19,15,0.12)' : 'rgba(201,160,48,0.20)'}`,
+                            padding: '1px 8px', borderRadius: 0, letterSpacing: '-0.05px',
                           }}>{scoreLabel}</span>
                         )}
                       </div>
                       <p style={{ ...bigNum, color: scoreColor }}>{haveScore ? channelScore : '—'}</p>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
-                        <div style={{ height: 3, background: 'rgba(255,255,255,0.10)', borderRadius: 99, overflow: 'hidden' }}>
+                        <div style={{ height: 3, background: 'rgba(20,19,15,0.10)', borderRadius: 99, overflow: 'hidden' }}>
                           <div style={{
                             width: haveScore ? `${channelScore}%` : '0%', height: '100%',
                             background: scoreColor, borderRadius: 99,
@@ -1300,9 +1300,9 @@ export default function Dashboard() {
               {/* Analytics-missing nudge, moved here from the quick-stats
                   strip (the strip is gone in the Feed redesign). */}
               {!data.analytics && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(217,119,6,0.14)', border: `1px solid rgba(217,119,6,0.34)`, borderLeft: `3px solid ${'#f0a23b'}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={'#f0a23b'} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                    <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={'#f0a23b'} stroke="none"/>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(217,119,6,0.14)', border: `1px solid rgba(217,119,6,0.34)`, borderLeft: `3px solid ${'#b07d1a'}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={'#b07d1a'} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={'#b07d1a'} stroke="none"/>
                   </svg>
                   <p style={{ fontSize: 12.5, color: SHELL.text2, lineHeight: 1.55 }}>
                     Grant <strong style={{ fontWeight: 600 }}>YouTube Analytics read access</strong> on the next reconnect to unlock retention, duration, and 90-day subscriber data.
@@ -1341,6 +1341,7 @@ export default function Dashboard() {
                   const open = []
                   for (let i = 0; i < all.length; i++) {
                     const a = all[i]
+                    if (a.locked) continue  // redacted free-tier stub: no text, shown via the locked teaser instead
                     const rank = a.rank ?? (i + 1)
                     const k = `rank_${rank}`
                     if (!checked[k] && !deleted[k]) open.push({ a, rank, k, idx: i })
@@ -1391,8 +1392,16 @@ export default function Dashboard() {
                 // Free-tier teaser: how many priority actions are hidden behind
                 // upgrade (everything past the single free one shown above).
                 const priorityLockedBlock = (() => {
-                  if (!isFreeAudit) return null
                   const all = data.insights?.priorityActions || []
+                  // Prefer the backend's own signal: any action collapsed to a
+                  // {rank, locked:true} stub is gated behind upgrade. This works
+                  // even before billingPlan resolves, so redacted rows never
+                  // render blank.
+                  const lockedCount = all.filter(a => a.locked).length
+                  if (lockedCount > 0) {
+                    return <AuditLockedCard key="audit-locked" count={lockedCount} onUpgrade={() => setAuditLocked(true)} />
+                  }
+                  if (!isFreeAudit) return null
                   let openCount = 0
                   for (let i = 0; i < all.length; i++) {
                     const a = all[i]
@@ -2071,11 +2080,11 @@ export default function Dashboard() {
                               padding: '13px 20px', borderRadius: 999,
                               border: 'none', cursor: 'pointer',
                               letterSpacing: '-0.1px',
-                              boxShadow: `0 4px 14px ${cat.h2}40, inset 0 1px 0 rgba(255,255,255,0.22)`,
+                              boxShadow: `0 4px 14px ${cat.h2}40, inset 0 1px 0 rgba(20,19,15,0.22)`,
                               transition: 'transform 0.15s, box-shadow 0.15s',
                             }}
-                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1.5px)'; e.currentTarget.style.boxShadow = `0 8px 20px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)` }}
-                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 4px 14px ${cat.h2}40, inset 0 1px 0 rgba(255,255,255,0.22)` }}
+                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1.5px)'; e.currentTarget.style.boxShadow = `0 8px 20px ${cat.h2}55, inset 0 1px 0 rgba(20,19,15,0.22)` }}
+                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 4px 14px ${cat.h2}40, inset 0 1px 0 rgba(20,19,15,0.22)` }}
                           >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
@@ -2092,7 +2101,7 @@ export default function Dashboard() {
                           }}>
                             <YTGLogo size={18}/>
                             <span style={{ fontSize: 14, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.3px' }}>
-                              YTGrowth<span style={{ color: '#fb6a60' }}>.io</span>
+                              YTGrowth<span style={{ color: '#7a5b14' }}>.io</span>
                             </span>
                           </div>
                         )}
@@ -2128,7 +2137,7 @@ export default function Dashboard() {
                       <ScoreRing score={score} />
                       <p style={{ fontSize: 11, color: SHELL.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Overall</p>
                       {prevScore != null && prevScore !== score && (
-                        <p style={{ fontSize: 11, fontWeight: 600, color: score > prevScore ? '#34d27b' : C.red, marginTop: 3 }}>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: score > prevScore ? '#2d7a4f' : C.red, marginTop: 3 }}>
                           {score > prevScore ? '▲' : '▼'} {Math.abs(score - prevScore)} from last audit
                         </p>
                       )}
@@ -2167,7 +2176,7 @@ export default function Dashboard() {
                         <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <span style={{ fontSize: 11, fontWeight: 500, color: SHELL.text3, flexShrink: 0, width: 36, textAlign: 'right' }}>{weight}</span>
                           <span style={{ fontSize: 13, color: SHELL.text2, fontWeight: 400, flexShrink: 0, width: 148 }}>{label}</span>
-                          <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden' }}>
+                          <div style={{ flex: 1, height: 4, background: 'rgba(20,19,15,0.08)', borderRadius: 99, overflow: 'hidden' }}>
                             <div style={{ width: `${val ?? 0}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
                           <span style={{ fontSize: 13, fontWeight: 600, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{val ?? '—'}</span>
@@ -2201,13 +2210,13 @@ export default function Dashboard() {
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <p style={{ fontSize: 20, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                          <span style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', background: 'rgba(22,163,74,0.14)', padding: '3px 9px', borderRadius: 100, border: `1px solid ${'rgba(22,163,74,0.34)'}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', background: 'rgba(22,163,74,0.14)', padding: '3px 9px', borderRadius: 0, border: `1px solid ${'rgba(22,163,74,0.34)'}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
                         </div>
                       </div>
                       <div style={{
                         background: 'rgba(22,163,74,0.14)',
                         border: `1px solid ${'rgba(22,163,74,0.34)'}`,
-                        borderLeft: `3px solid ${'#34d27b'}`,
+                        borderLeft: `3px solid ${'#2d7a4f'}`,
                         borderRadius: '0 12px 12px 0',
                         padding: '14px 18px',
                       }}>
@@ -2223,12 +2232,12 @@ export default function Dashboard() {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <p style={{ fontSize: 20, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                        <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.08)', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
                       </div>
                       {doneCount > 0 && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontVariantNumeric: 'tabular-nums' }}>
-                          <div style={{ width: 72, height: 3, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{ width: `${(doneCount / total) * 100}%`, height: '100%', background: '#34d27b', borderRadius: 99, transition: 'width 0.6s ease' }}/>
+                          <div style={{ width: 72, height: 3, background: 'rgba(20,19,15,0.08)', borderRadius: 99, overflow: 'hidden' }}>
+                            <div style={{ width: `${(doneCount / total) * 100}%`, height: '100%', background: '#2d7a4f', borderRadius: 99, transition: 'width 0.6s ease' }}/>
                           </div>
                           <span style={{ fontSize: 11.5, fontWeight: 600, color: SHELL.text3 }}>
                             {doneCount} of {total} done
@@ -2284,8 +2293,8 @@ export default function Dashboard() {
                   return (
                     <div className="ytg-card" style={{ padding: '20px 22px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                        <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Quick wins</p>
-                        <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '2px 7px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>{wins.length} left</span>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Quick wins</p>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '2px 7px', borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)' }}>{wins.length} left</span>
                       </div>
                       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
                         {data.insights.quickWins.map((w, i) => {
@@ -2298,12 +2307,12 @@ export default function Dashboard() {
                                 type="checkbox"
                                 checked={isDone}
                                 onChange={() => handleToggleCheck(key)}
-                                style={{ width: 14, height: 14, accentColor: '#34d27b', cursor: 'pointer', flexShrink: 0, marginTop: 3 }}
+                                style={{ width: 14, height: 14, accentColor: '#2d7a4f', cursor: 'pointer', flexShrink: 0, marginTop: 3 }}
                               />
                               <p style={{ fontSize: 14, color: isDone ? SHELL.text3 : SHELL.text2, lineHeight: 1.6, flex: 1, textDecoration: isDone ? 'line-through' : 'none' }}>{w}</p>
                               {isDone && (
                                 <button className="ytg-del-btn" onClick={() => handleDelete(key)} title="Remove">
-                                  <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round">
+                                  <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#c9a030" strokeWidth="1.8" strokeLinecap="round">
                                     <line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/>
                                   </svg>
                                 </button>
@@ -2318,13 +2327,13 @@ export default function Dashboard() {
                 <div className="ytg-card" style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {data.insights.biggestRisk && (
                     <div>
-                      <p style={{ fontSize: 11, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
                       <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.7 }}>{data.insights.biggestRisk}</p>
                     </div>
                   )}
                   {data.insights.topPerformingPattern && (
                     <div style={{ paddingTop: data.insights.biggestRisk ? 16 : 0, borderTop: data.insights.biggestRisk ? `1px solid ${SHELL.hair}` : 'none' }}>
-                      <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
                       <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.7 }}>{data.insights.topPerformingPattern}</p>
                     </div>
                   )}
@@ -2422,15 +2431,15 @@ export default function Dashboard() {
                       onClick={() => setVideosTab(key)}
                       style={{
                         fontSize: 13, fontWeight: active ? 600 : 500, padding: '8px 16px',
-                        borderRadius: 100,
-                        border: active ? '1px solid rgba(255,255,255,0.12)' : '1px solid transparent',
-                        background: active ? 'rgba(255,255,255,0.06)' : 'transparent',
+                        borderRadius: 0,
+                        border: active ? '1px solid rgba(20,19,15,0.12)' : '1px solid transparent',
+                        background: active ? 'rgba(20,19,15,0.06)' : 'transparent',
                         color: active ? SHELL.text1 : SHELL.text2,
                         cursor: 'pointer', fontFamily: 'inherit',
                         letterSpacing: '-0.01em',
                         transition: 'background 180ms cubic-bezier(0.32,0.72,0,1), color 180ms cubic-bezier(0.32,0.72,0,1), border-color 180ms cubic-bezier(0.32,0.72,0,1)',
                       }}
-                      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = SHELL.text1 } }}
+                      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(20,19,15,0.05)'; e.currentTarget.style.color = SHELL.text1 } }}
                       onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = SHELL.text2 } }}
                     >
                       {label}
@@ -2457,14 +2466,14 @@ export default function Dashboard() {
                 // Views=charcoal (info), Likes=white+green-bar (action), Comments=green (outcome).
                 const DeltaCell = ({ label, before, current, pctVal, tint }) => {
                   const tintMap = {
-                    blue:  { bg: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', labelColor: SHELL.text2 },
-                    white: { bg: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderLeft: '3px solid #34d27b', borderRadius: '0 10px 10px 0', boxShadow: 'none', labelColor: '#34d27b' },
-                    green: { bg: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.34)', labelColor: '#34d27b' },
+                    blue:  { bg: 'rgba(20,19,15,0.05)', border: '1px solid rgba(20,19,15,0.08)', labelColor: SHELL.text2 },
+                    white: { bg: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)', borderLeft: '3px solid #2d7a4f', borderRadius: '0 10px 10px 0', boxShadow: 'none', labelColor: '#2d7a4f' },
+                    green: { bg: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.34)', labelColor: '#2d7a4f' },
                   }[tint]
                   // Hide the delta label entirely when nothing has changed (pct is 0 or null).
                   // 0% everywhere is noise, we only show the badge when there's a real move.
                   const showDelta = pctVal != null && pctVal !== 0
-                  const col  = showDelta && pctVal > 0 ? '#34d27b' : showDelta && pctVal < 0 ? '#fb6a60' : SHELL.text3
+                  const col  = showDelta && pctVal > 0 ? '#2d7a4f' : showDelta && pctVal < 0 ? '#7a5b14' : SHELL.text3
                   const sign = showDelta ? (pctVal > 0 ? `+${pctVal}%` : `${pctVal}%`) : null
                   return (
                     <div style={{
@@ -2510,12 +2519,12 @@ export default function Dashboard() {
                             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 14 }}>
                               {o.thumbnail_url && (
                                 <a href={`https://www.youtube.com/watch?v=${o.video_id}`} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, lineHeight: 0, textDecoration: 'none', alignSelf: 'center' }}>
-                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 8, objectFit: 'cover', display: 'block', border: '1px solid rgba(255,255,255,0.08)' }}/>
+                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 8, objectFit: 'cover', display: 'block', border: '1px solid rgba(20,19,15,0.08)' }}/>
                                 </a>
                               )}
 
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
+                                <p style={{ fontSize: 11, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
                                 {titleChanged ? (
                                   <>
                                     <p style={{ fontSize: 12, color: SHELL.text3, fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through', marginBottom: 4, letterSpacing: '-0.005em' }}>{o.before_title}</p>
@@ -2526,13 +2535,13 @@ export default function Dashboard() {
                                 )}
                               </div>
 
-                              <span style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', padding: '3px 11px', borderRadius: 100, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1px solid ${'rgba(22,163,74,0.34)'}`, background: 'rgba(22,163,74,0.14)', flexShrink: 0 }}>
+                              <span style={{ fontSize: 11, fontWeight: 600, color: '#2d7a4f', padding: '3px 11px', borderRadius: 0, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1px solid ${'rgba(22,163,74,0.34)'}`, background: 'rgba(22,163,74,0.14)', flexShrink: 0 }}>
                                 {daysLabel}
                               </span>
                             </div>
 
                             {/* Hairline divider, aligned with the thumbnail edge (100 + 14 gap = 114) */}
-                            <div style={{ height: 1, background: 'rgba(255,255,255,0.10)', marginBottom: 14, marginLeft: 114 }}/>
+                            <div style={{ height: 1, background: 'rgba(20,19,15,0.10)', marginBottom: 14, marginLeft: 114 }}/>
 
                             {/* 3-col body, Views / Likes (amber bar centre) / Comments. Brand-only palette. */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 114 }}>
@@ -2633,7 +2642,7 @@ export default function Dashboard() {
                         </p>
 
                         {/* Footer: Watch · Retention · Eng + Optimise */}
-                        <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.10)' }}>
+                        <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid rgba(20,19,15,0.10)' }}>
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 14 }}>
                             {[
                               { label: 'Watch',     display: wtDisplay,                                             color: SHELL.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
@@ -2710,7 +2719,7 @@ export default function Dashboard() {
                     <p style={{ fontSize: 26, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.8px', marginBottom: 10, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
                     <span style={{
                       fontSize: 11, fontWeight: 600,
-                      color:   p.good ? '#34d27b'  : '#f0a23b',
+                      color:   p.good ? '#2d7a4f'  : '#b07d1a',
                       background: 'transparent',
                       padding: '3px 10px', borderRadius: 20,
                       border: `1.5px solid ${p.good ? 'rgba(22,163,74,0.34)' : 'rgba(217,119,6,0.34)'}`,
@@ -2725,7 +2734,7 @@ export default function Dashboard() {
                   { label: 'Worst performing', video: patterns.worstVideo, isGood: false },
                 ].map(({ label, video, isGood }) => (
                   <div key={label} className="ytg-card" style={{ padding: '20px 22px' }}>
-                    <p style={{ fontSize: 11, fontWeight: 600, color: isGood ? '#34d27b' : C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>{label}</p>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: isGood ? '#2d7a4f' : C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>{label}</p>
                     {video && (
                       <>
                         <div style={{ display: 'flex', gap: 11, marginBottom: 13, alignItems: 'flex-start' }}>
@@ -2733,7 +2742,7 @@ export default function Dashboard() {
                           <p style={{ fontSize: 14, fontWeight: 600, color: SHELL.text1, lineHeight: 1.5 }}>{video.title}</p>
                         </div>
                         <div style={{ display: 'flex', gap: 20, marginBottom: 12 }}>
-                          {[['Views', fmtNum(video.views), isGood ? '#34d27b' : C.red], ['Likes', fmtNum(video.likes), SHELL.text1]].map(([lbl, val, col]) => (
+                          {[['Views', fmtNum(video.views), isGood ? '#2d7a4f' : C.red], ['Likes', fmtNum(video.likes), SHELL.text1]].map(([lbl, val, col]) => (
                             <div key={lbl}>
                               <p style={{ fontSize: 12, color: SHELL.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 600 }}>{lbl}</p>
                               <p style={{ fontSize: 21, fontWeight: 700, color: col, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums' }}>{val}</p>
@@ -2741,11 +2750,11 @@ export default function Dashboard() {
                           ))}
                         </div>
                         <div style={{
-                          background: isGood ? 'rgba(22,163,74,0.14)' : 'rgba(229,37,27,0.13)',
-                          border: `1px solid ${isGood ? 'rgba(22,163,74,0.34)' : 'rgba(229,37,27,0.32)'}`,
-                          borderRadius: 10, padding: '9px 12px',
+                          background: isGood ? 'rgba(22,163,74,0.14)' : 'rgba(201,160,48,0.13)',
+                          border: `1px solid ${isGood ? 'rgba(22,163,74,0.34)' : 'rgba(201,160,48,0.32)'}`,
+                          borderRadius: 0, padding: '9px 12px',
                         }}>
-                          <p style={{ fontSize: 12, color: isGood ? '#34d27b' : '#fb6a60', lineHeight: 1.7 }}>
+                          <p style={{ fontSize: 12, color: isGood ? '#2d7a4f' : '#7a5b14', lineHeight: 1.7 }}>
                             {isGood ? 'Study this, replicate its title style, length, and topic angle.' : 'Avoid this format or topic, it isn\'t connecting with your audience.'}
                           </p>
                         </div>

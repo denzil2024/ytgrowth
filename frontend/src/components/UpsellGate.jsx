@@ -19,9 +19,9 @@
                       omitted, the card renders solo on the page background. */
 
 const C = {
-  red: '#e5251b', green: '#34d27b', amber: '#f0a23b',
-  text1: '#f4f4f5', text2: '#cfd0d6', text3: '#b2b3bb',
-  border: 'rgba(255,255,255,0.08)',
+  red: '#c9a030', green: '#2d7a4f', amber: '#b07d1a',
+  text1: '#14130f', text2: '#6b6862', text3: '#6b6862',
+  border: 'rgba(20,19,15,0.08)',
 }
 
 export default function UpsellGate({
@@ -35,14 +35,14 @@ export default function UpsellGate({
 }) {
   const card = (
     <div style={{
-      background: 'linear-gradient(180deg,#1e1e24 0%,#18181c 100%)',
-      border: '1px solid rgba(229,37,27,0.32)',
+      background: 'linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%)',
+      border: '1px solid rgba(201,160,48,0.32)',
       borderRadius: 20,
-      boxShadow: '0 20px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)',
+      boxShadow: '0 20px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(20,19,15,0.04)',
       padding: '30px 36px 28px',
       maxWidth: 540, width: '100%',
       textAlign: 'center',
-      fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+      fontFamily: "'Barlow', system-ui, sans-serif",
       margin: '0 auto',
     }}>
       {/* Lock icon, red gradient square */}
@@ -51,7 +51,7 @@ export default function UpsellGate({
         background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
         margin: '0 auto 18px',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
+        boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(20,19,15,0.25)`,
       }}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="11" width="18" height="11" rx="2"/>
@@ -68,7 +68,7 @@ export default function UpsellGate({
 
       {/* Optional note, small amber line, e.g. "Outlier Scoring requires 3 credits." */}
       {note && (
-        <p style={{ fontSize: 12.5, color: '#f0a23b', fontWeight: 600, marginBottom: 22, letterSpacing: '-0.05px' }}>
+        <p style={{ fontSize: 12.5, color: '#b07d1a', fontWeight: 600, marginBottom: 22, letterSpacing: '-0.05px' }}>
           {note}
         </p>
       )}
@@ -104,7 +104,7 @@ export default function UpsellGate({
           fontSize: 14, fontWeight: 600,
           padding: '13px 24px', borderRadius: 999,
           textDecoration: 'none', letterSpacing: '-0.1px',
-          boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(255,255,255,0.22)`,
+          boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(20,19,15,0.22)`,
         }}
       >
         {primaryCta}
@@ -142,7 +142,7 @@ export default function UpsellGate({
               alt=""
               style={{
                 width: 28, height: 28, borderRadius: '50%',
-                border: '2px solid #18181c',
+                border: '2px solid var(--yd-surface)',
                 marginLeft: i === 0 ? 0 : -9,
                 objectFit: 'cover',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.15)',

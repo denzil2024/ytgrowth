@@ -1,7 +1,7 @@
 /* OnboardingCard, the real getting-started flow for new signups.
    Lives at the top of the Feed (.ov-page) for new users only, in the
    Feed's own card grammar (dark SHELL gradient, hairline
-   rgba(255,255,255,0.08), 14px radius, soft shadow + inset). Replaces the lone
+   rgba(20,19,15,0.08), 14px radius, soft shadow + inset). Replaces the lone
    "Run your first audit" card and the dismiss-and-forget WelcomeModal.
 
    Completion is derived from server-backed signals the app already
@@ -22,16 +22,16 @@
 import { useEffect, useState } from 'react'
 
 const C = {
-  ink:    '#f4f4f5',
-  sub:    '#cfd0d6',
-  eyebrow:'#b2b3bb',
-  hair:   'rgba(255,255,255,0.08)',
-  hair2:  'rgba(255,255,255,0.14)',
-  tint:   'rgba(255,255,255,0.04)',
-  green:  '#34d27b',
-  red:    '#e5251b',
-  redHi:  '#ef3a31',
-  faint:  '#b2b3bb',
+  ink:    '#14130f',
+  sub:    '#6b6862',
+  eyebrow:'#6b6862',
+  hair:   'rgba(20,19,15,0.08)',
+  hair2:  'rgba(20,19,15,0.14)',
+  tint:   'rgba(20,19,15,0.04)',
+  green:  '#2d7a4f',
+  red:    '#c9a030',
+  redHi:  '#d4af3f',
+  faint:  '#6b6862',
 }
 
 function CheckIcon({ size = 12 }) {
@@ -75,10 +75,10 @@ export default function OnboardingCard({
   useEffect(() => { const t = requestAnimationFrame(() => setShown(true)); return () => cancelAnimationFrame(t) }, [])
 
   const cardStyle = {
-    background: 'linear-gradient(180deg,#1e1e24 0%,#18181c 100%)',
+    background: 'linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%)',
     border: `1px solid ${C.hair}`,
     borderRadius: 14,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04)',
     marginTop: 32, marginBottom: 24,
     opacity: shown ? 1 : 0,
     transform: shown ? 'none' : 'translateY(8px)',
@@ -91,7 +91,7 @@ export default function OnboardingCard({
       <div className="ytg-card" style={{ ...cardStyle, padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
         <span style={{
           flexShrink: 0, width: 30, height: 30, borderRadius: '50%',
-          background: 'rgba(22,163,74,0.16)', color: '#34d27b',
+          background: 'rgba(22,163,74,0.16)', color: '#2d7a4f',
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <CheckIcon size={14} />
@@ -138,7 +138,7 @@ export default function OnboardingCard({
               onMouseLeave={e => { e.currentTarget.style.color = C.faint }}
             >Skip</button>
           </div>
-          <div style={{ width: 132, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden', marginTop: 9, marginLeft: 'auto' }}>
+          <div style={{ width: 132, height: 4, background: 'rgba(20,19,15,0.08)', borderRadius: 99, overflow: 'hidden', marginTop: 9, marginLeft: 'auto' }}>
             <div style={{
               width: `${(doneCount / total) * 100}%`, height: '100%',
               background: C.green, borderRadius: 99,
@@ -172,8 +172,8 @@ export default function OnboardingCard({
                   flexShrink: 0, marginTop: 1,
                   width: 22, height: 22, borderRadius: '50%',
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  background: s.done ? 'rgba(22,163,74,0.16)' : isActive ? '#1c1c21' : 'transparent',
-                  border: s.done ? 'none' : `1.5px solid ${isActive ? C.hair2 : 'rgba(255,255,255,0.16)'}`,
+                  background: s.done ? 'rgba(22,163,74,0.16)' : isActive ? 'var(--yd-surface)' : 'transparent',
+                  border: s.done ? 'none' : `1.5px solid ${isActive ? C.hair2 : 'rgba(20,19,15,0.16)'}`,
                   color: s.done ? C.green : isActive ? C.ink : C.faint,
                   fontSize: 11, fontWeight: 600, fontVariantNumeric: 'tabular-nums',
                 }}>
@@ -196,7 +196,7 @@ export default function OnboardingCard({
                 {/* Action */}
                 <div style={{ flexShrink: 0, alignSelf: 'center' }}>
                   {s.done ? (
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#34d27b', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#2d7a4f', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                       <CheckIcon size={11} /> Done
                     </span>
                   ) : (
@@ -231,6 +231,6 @@ const primaryBtn = {
   fontFamily: 'inherit', fontSize: 13, fontWeight: 600,
   letterSpacing: '-0.01em', padding: '8px 16px', borderRadius: 100,
   whiteSpace: 'nowrap',
-  boxShadow: '0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22)',
+  boxShadow: '0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22)',
   transition: 'filter 0.15s',
 }

@@ -211,7 +211,7 @@ setTimeout(() => {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement('div', {
-    style: { padding: '36px 24px', boxSizing: 'border-box', background: '#0e0e10', minHeight: '100vh' },
+    style: { padding: '36px 24px', boxSizing: 'border-box', background: 'var(--yd-paper)', minHeight: '100vh' },
   },
     React.createElement(Outliers, {
       plan: 'pro',

@@ -31,7 +31,7 @@ function useKwStyles() {
     style.id = 'ytg-kw-styles'
     style.textContent = `
       .kw-page { max-width: 1040px; margin: 0 auto; }
-      .kw-page * { box-sizing: border-box; font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .kw-page * { box-sizing: border-box; font-family: 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
       .kw-page p, .kw-page span, .kw-page div { margin: 0; }
 
       @keyframes kwSpin { to { transform: rotate(360deg) } }
@@ -79,7 +79,7 @@ function useKwStyles() {
         animation: kwSlideIn 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) both;
       }
       .kw-modal::-webkit-scrollbar { width: 4px }
-      .kw-modal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 4px }
+      .kw-modal::-webkit-scrollbar-thumb { background: rgba(20,19,15,0.14); border-radius: 4px }
       @keyframes kwFadeIn  { from { opacity: 0 } to { opacity: 1 } }
       @keyframes kwSlideIn { from { opacity: 0; transform: translateY(10px) scale(0.98) } to { opacity: 1; transform: none } }
 
@@ -87,31 +87,31 @@ function useKwStyles() {
         flex: 1; padding: 12px 20px;
         border-radius: 100px; border: 1px solid ${C.hair};
         background: ${C.surfaceInput}; font-size: 14px; font-weight: 500;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         outline: none;
         transition: border-color 200ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1);
         color: ${C.text1}; letter-spacing: -0.005em;
       }
-      .kw-input::placeholder { color: rgba(255,255,255,0.30); font-weight: 500; }
+      .kw-input::placeholder { color: rgba(20,19,15,0.30); font-weight: 500; }
       .kw-input:focus {
-        border-color: rgba(229,37,27,0.45);
-        box-shadow: 0 0 0 4px rgba(229,37,27,0.10);
+        border-color: rgba(201,160,48,0.45);
+        box-shadow: 0 0 0 4px rgba(201,160,48,0.10);
       }
 
       .kw-btn-primary {
-        background: linear-gradient(180deg, #ef3a31 0%, #e5251b 100%);
+        background: linear-gradient(180deg, #d4af3f 0%, #c9a030 100%);
         color: #fff; border: none; border-radius: 100px;
         padding: 12px 22px; font-size: 13px; font-weight: 600;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         transition: filter 160ms cubic-bezier(0.32, 0.72, 0, 1), transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
         letter-spacing: -0.01em;
-        box-shadow: 0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
+        box-shadow: 0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22);
         display: inline-flex; align-items: center; gap: 8px;
       }
       .kw-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
       .kw-btn-primary:disabled {
-        background: rgba(255,255,255,0.06);
+        background: rgba(20,19,15,0.06);
         color: ${C.text3};
         cursor: default;
         box-shadow: none;
@@ -121,7 +121,7 @@ function useKwStyles() {
         background: ${C.card}; color: ${C.text2};
         border: 1px solid ${C.hair}; border-radius: 100px;
         padding: 11px 18px; font-size: 13px; font-weight: 600;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1), color 160ms cubic-bezier(0.32, 0.72, 0, 1), border-color 160ms cubic-bezier(0.32, 0.72, 0, 1);
         letter-spacing: -0.01em;
@@ -142,7 +142,7 @@ function useKwStyles() {
         font-weight: 500;
         cursor: pointer;
         transition: background 180ms cubic-bezier(0.32, 0.72, 0, 1), color 180ms cubic-bezier(0.32, 0.72, 0, 1), border-color 180ms cubic-bezier(0.32, 0.72, 0, 1);
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         border: 1px solid transparent;
         white-space: nowrap;
         letter-spacing: -0.01em;
@@ -190,19 +190,19 @@ function useKwStyles() {
       }
       .kw-report-wrapper:hover .kw-report-remove { opacity: 1; }
       .kw-report-remove:hover {
-        background: rgba(229,37,27,0.08);
-        border-color: rgba(229,37,27,0.2);
-        color: #e5251b;
+        background: rgba(201,160,48,0.08);
+        border-color: rgba(201,160,48,0.2);
+        color: #c9a030;
       }
       .kw-report-cta {
-        background: #e5251b; color: #fff;
-        border: 1px solid #e5251b; border-radius: 100px;
+        background: #c9a030; color: #fff;
+        border: 1px solid #c9a030; border-radius: 100px;
         padding: 8px 18px; font-size: 12.5px; font-weight: 600;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         transition: filter 0.15s;
         display: flex; align-items: center; gap: 6px;
-        box-shadow: 0 1px 3px rgba(229,37,27,0.20), 0 4px 14px rgba(229,37,27,0.25);
+        box-shadow: 0 1px 3px rgba(201,160,48,0.20), 0 4px 14px rgba(201,160,48,0.25);
       }
       .kw-report-cta:hover { filter: brightness(1.07); }
       .kw-report-chip {
@@ -244,7 +244,7 @@ function useKwStyles() {
         margin-top: 16px;
         padding: 7px 14px;
         font-size: 12.5px; font-weight: 600;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         letter-spacing: -0.01em;
         color: ${C.text2};
         background: transparent;
@@ -267,8 +267,8 @@ function useKwStyles() {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 8px 16px; border-radius: 100px;
         font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
-        background: #e5251b; color: #fff;
+        font-family: 'Barlow', system-ui, sans-serif;
+        background: #c9a030; color: #fff;
         border: none; cursor: pointer;
         transition: filter 0.15s;
       }
@@ -287,7 +287,7 @@ function useKwStyles() {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 7px 15px; border-radius: 100px;
         font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         background: ${C.card}; color: ${C.text1};
         border: 1px solid ${C.hair}; cursor: pointer;
         box-shadow: ${C.cardShadow};
@@ -305,10 +305,10 @@ function useKwStyles() {
         transform: none;
       }
 
-      .kw-bar { height: 4px; border-radius: 4px; background: rgba(255,255,255,0.10); overflow: hidden; }
+      .kw-bar { height: 4px; border-radius: 4px; background: rgba(20,19,15,0.10); overflow: hidden; }
       .kw-bar-fill { height: 4px; border-radius: 4px; transition: width 0.5s ease; }
 
-      .kw-spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: kwSpin 0.7s linear infinite; flex-shrink: 0; }
+      .kw-spinner { width: 14px; height: 14px; border: 2px solid rgba(20,19,15,0.3); border-top-color: #fff; border-radius: 50%; animation: kwSpin 0.7s linear infinite; flex-shrink: 0; }
     `
     document.head.appendChild(style)
   }, [])
@@ -322,25 +322,25 @@ function useKwStyles() {
        red/amber/green keep their hue; fill tints are re-tuned for dark
        and *Hi variants give legible text on the dark tinted chips. ─── */
 const C = {
-  red:     '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)',
+  red:     '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)',
   green:   '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)',
   amber:   '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)',
-  redHi:   '#fb6a60', greenHi: '#34d27b', amberHi: '#f0a23b',
-  text1:   '#f4f4f5',
-  text2:   '#cfd0d6',
-  text3:   '#b2b3bb',
-  text4:   'rgba(255,255,255,0.40)',
-  border:  'rgba(255,255,255,0.08)',
-  chipBg:  '#1c1c21',
+  redHi:   '#7a5b14', greenHi: '#2d7a4f', amberHi: '#b07d1a',
+  text1:   '#14130f',
+  text2:   '#6b6862',
+  text3:   '#6b6862',
+  text4:   'rgba(20,19,15,0.40)',
+  border:  'rgba(20,19,15,0.08)',
+  chipBg:  'var(--yd-surface)',
   // surface system (identical tokens to Competitors' D)
-  bg:             '#0e0e10',
-  card:           'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-  cardFlat:       '#1c1c21',
-  surfaceInput:   '#18181b',
-  hair:           'rgba(255,255,255,0.08)',
-  hairHi:         'rgba(255,255,255,0.16)',
-  wash:           'rgba(255,255,255,0.04)',
-  washActive:     'rgba(255,255,255,0.06)',
+  bg:             'var(--yd-paper)',
+  card:           'linear-gradient(180deg, var(--yd-surface) 0%, var(--yd-surface) 100%)',
+  cardFlat:       'var(--yd-surface)',
+  surfaceInput:   'var(--yd-surface)',
+  hair:           'rgba(20,19,15,0.08)',
+  hairHi:         'rgba(20,19,15,0.16)',
+  wash:           'rgba(20,19,15,0.04)',
+  washActive:     'rgba(20,19,15,0.06)',
   cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
 }
@@ -484,21 +484,21 @@ function KwDetailModal({ kw, C, onClose }) {
                         style={{
                           display: 'block', textDecoration: 'none', color: 'inherit',
                           borderRadius: 10, overflow: 'hidden',
-                          border: '1px solid rgba(255,255,255,0.08)', background: C.cardFlat,
+                          border: '1px solid rgba(20,19,15,0.08)', background: C.cardFlat,
                           transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
                         }}
                         onMouseEnter={e => {
                           e.currentTarget.style.transform = 'translateY(-1px)'
                           e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'
-                          e.currentTarget.style.borderColor = '#d6d6dc'
+                          e.currentTarget.style.borderColor = '#4a4843'
                         }}
                         onMouseLeave={e => {
                           e.currentTarget.style.transform = 'translateY(0)'
                           e.currentTarget.style.boxShadow = 'none'
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
+                          e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)'
                         }}
                       >
-                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#26262b', overflow: 'hidden' }}>
+                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#e8e4dc', overflow: 'hidden' }}>
                           {thumb && (
                             <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
                               data-fallback={thumbFallback || ''}
@@ -562,11 +562,11 @@ function KwDetailModal({ kw, C, onClose }) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
               {/* Blue, Why it works (numbered list, mirrors Quick actions) */}
               <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: '#4a7cf7', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {buildWhyItWorks(kw).map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: '#4a7cf7', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#7a5b14', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                       <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
@@ -574,11 +574,11 @@ function KwDetailModal({ kw, C, onClose }) {
               </div>
               {/* Amber, Quick actions (numbered list) */}
               <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {actions.map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: '#f0a23b', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#b07d1a', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                       <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
@@ -586,7 +586,7 @@ function KwDetailModal({ kw, C, onClose }) {
               </div>
               {/* Green, Why now */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
                 <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.005em' }}>{buildWhyNow(kw)}</p>
               </div>
             </div>
@@ -707,8 +707,8 @@ function VideoMetricsRow({ vph, outlierMult }) {
   if (!vph && !outlierMult) return null
   const isStrong = outlierMult && outlierMult >= 3
   const outlierTone = isStrong
-    ? { color: '#34d27b', bg: C.greenBg, bdr: C.greenBdr, label: 'Outlier' }
-    : { color: '#f0a23b', bg: C.amberBg, bdr: C.amberBdr, label: 'Above avg' }
+    ? { color: '#2d7a4f', bg: C.greenBg, bdr: C.greenBdr, label: 'Outlier' }
+    : { color: '#b07d1a', bg: C.amberBg, bdr: C.amberBdr, label: 'Above avg' }
 
   const chipBase = {
     display: 'inline-flex', alignItems: 'center',
@@ -749,10 +749,10 @@ function VideoMetricsRow({ vph, outlierMult }) {
       {vph && (
         <span style={{
           ...chipBase,
-          color: C.text2, background: '#1c1c21', borderColor: C.border,
+          color: C.text2, background: 'var(--yd-surface)', borderColor: C.border,
         }}>
           <span style={labelStyle}>VPH</span>
-          <span style={valuePill('rgba(255,255,255,0.16)')}>{fmtCompact(vph)}/hr</span>
+          <span style={valuePill('rgba(20,19,15,0.16)')}>{fmtCompact(vph)}/hr</span>
         </span>
       )}
     </div>
@@ -808,11 +808,11 @@ function MomentumChart({ timeline, height = 120 }) {
         {/* Y gridlines, 3 quiet lines */}
         {[0.25, 0.5, 0.75].map(p => (
           <line key={p} x1={padL} x2={W - padR} y1={padT + innerH * p} y2={padT + innerH * p}
-            stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+            stroke="rgba(20,19,15,0.06)" strokeWidth="1" />
         ))}
         {/* Baseline */}
         <line x1={padL} x2={W - padR} y1={padT + innerH} y2={padT + innerH}
-          stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
+          stroke="rgba(20,19,15,0.10)" strokeWidth="1" />
         {/* Filled area */}
         <path d={fillPath} fill={fillColor} />
         {/* Line */}
@@ -823,7 +823,7 @@ function MomentumChart({ timeline, height = 120 }) {
         {/* X labels */}
         {labels.map((lbl, i) => lbl ? (
           <text key={i} x={xFor(i)} y={H - 8}
-            fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500"
+            fill="rgba(20,19,15,0.45)" fontSize="11" fontWeight="500"
             textAnchor={i === n - 1 ? 'end' : 'middle'}
             style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em' }}>
             {lbl}
@@ -831,12 +831,12 @@ function MomentumChart({ timeline, height = 120 }) {
         ) : null)}
         {/* Y max label */}
         <text x={padL - 6} y={padT + 4}
-          fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500"
+          fill="rgba(20,19,15,0.45)" fontSize="11" fontWeight="500"
           textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {maxCount}
         </text>
         <text x={padL - 6} y={padT + innerH + 2}
-          fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500"
+          fill="rgba(20,19,15,0.45)" fontSize="11" fontWeight="500"
           textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>
           0
         </text>
@@ -1058,7 +1058,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           search bar instead of taking over the whole page. */}
       {gated && (
         <div style={{
-          background: 'rgba(229,37,27,0.06)', border: '1px solid rgba(229,37,27,0.2)',
+          background: 'rgba(201,160,48,0.06)', border: '1px solid rgba(201,160,48,0.2)',
           borderRadius: 12, padding: '12px 16px', marginBottom: 14,
           display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: C.text1,
         }}>
@@ -1094,7 +1094,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
       {error && (
         <div style={{
           background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
-          padding: '10px 14px', marginBottom: 14, color: '#fb6a60', fontSize: 13.5,
+          padding: '10px 14px', marginBottom: 14, color: '#7a5b14', fontSize: 13.5,
         }}>
           {error}
         </div>
@@ -1207,7 +1207,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
             return (
               <div style={{
-                background: C.cardFlat, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16,
+                background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 16,
                 padding: '28px 32px',
                 boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
               }}>
@@ -1339,22 +1339,22 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         style={{
                           display: 'block', textDecoration: 'none', color: 'inherit',
                           borderRadius: 12, overflow: 'hidden',
-                          border: '1px solid rgba(255,255,255,0.08)', background: C.cardFlat,
+                          border: '1px solid rgba(20,19,15,0.08)', background: C.cardFlat,
                           boxShadow: '0 1px 2px rgba(15,15,25,0.04)',
                           transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
                         }}
                         onMouseEnter={e => {
                           e.currentTarget.style.transform = 'translateY(-1px)'
                           e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'
+                          e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)'
                         }}
                         onMouseLeave={e => {
                           e.currentTarget.style.transform = 'translateY(0)'
                           e.currentTarget.style.boxShadow = '0 1px 2px rgba(15,15,25,0.04)'
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
+                          e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)'
                         }}
                       >
-                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#26262b', overflow: 'hidden' }}>
+                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#e8e4dc', overflow: 'hidden' }}>
                           {thumb && (
                             <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
                               data-fallback={thumbFallback || ''}
@@ -1460,7 +1460,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
               <div style={{ marginBottom: 14, marginTop: 32 }}>
                 <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 4 }}>Ranked keywords</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Click any keyword for the playbook · <span style={{ color: '#34d27b', fontWeight: 600 }}>ACTIVE</span> = rising · <span style={{ color: '#f0a23b', fontWeight: 600 }}>OPEN</span> = underclaimed
+                  Click any keyword for the playbook · <span style={{ color: '#2d7a4f', fontWeight: 600 }}>ACTIVE</span> = rising · <span style={{ color: '#b07d1a', fontWeight: 600 }}>OPEN</span> = underclaimed
                 </p>
               </div>
 
@@ -1470,8 +1470,8 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{
                         fontSize: 11, fontWeight: 600, color: C.text3,
-                        background: '#1c1c21', padding: '2px 8px',
-                        borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)',
+                        background: 'var(--yd-surface)', padding: '2px 8px',
+                        borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)',
                         fontVariantNumeric: 'tabular-nums',
                       }}>{result.keywords.length}</span>
                       <p style={{ fontSize: 13, fontWeight: 500, color: C.text2, lineHeight: 1.5, letterSpacing: '-0.01em' }}>
@@ -1493,7 +1493,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', position: 'relative' }}>
                     <div style={{
                       position: 'absolute', left: 'calc(50% - 0.5px)', top: 0, bottom: 0,
-                      width: 1, background: 'rgba(255,255,255,0.08)', pointerEvents: 'none',
+                      width: 1, background: 'rgba(20,19,15,0.08)', pointerEvents: 'none',
                     }}/>
                     {[0, 1].map(colIdx => {
                       const colKws = result.keywords.filter((_, i) => i % 2 === colIdx)
@@ -1524,7 +1524,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                                   transition: 'color 0.12s',
                                 }}>{kw.keyword}</span>
                                 <MomentumBadge momentum={kw.momentum} />
-                                <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
+                                <div style={{ flex: 1, height: 4, background: 'rgba(20,19,15,0.08)', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
                                   <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                                 </div>
                                 <span style={{
@@ -1584,8 +1584,8 @@ export default function Keywords({ plan, freeTierFeatures }) {
                             </p>
                             <span style={{
                               fontSize: 11, fontWeight: 600, color: C.text3,
-                              background: '#1c1c21', padding: '2px 8px',
-                              borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)',
+                              background: 'var(--yd-surface)', padding: '2px 8px',
+                              borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)',
                               flexShrink: 0, fontVariantNumeric: 'tabular-nums',
                             }}>{cl.keywords?.length || 0}</span>
                           </div>
@@ -1599,7 +1599,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                               <span key={k} style={{
                                 background: C.greenBg,
                                 border: `1px solid ${C.greenBdr}`,
-                                color: '#34d27b',
+                                color: '#2d7a4f',
                                 padding: '4px 11px', borderRadius: 100,
                                 fontSize: 11.5, fontWeight: 500, letterSpacing: '-0.05px',
                               }}>{k}</span>
@@ -1733,7 +1733,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                           </span>
                         </div>
                       </div>
-                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(255,255,255,0.08)',
+                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(20,19,15,0.08)',
                         paddingLeft: 16, marginLeft: 4, paddingRight: 12 }}>
                         <button className="kw-report-cta"
                           onClick={e => { e.stopPropagation(); openReport(r) }}>

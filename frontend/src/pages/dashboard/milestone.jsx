@@ -40,7 +40,7 @@ export function StarBadge({ category, tier, size = 108 }) {
           strokeWidth="1.25"
           strokeLinejoin="round"
         />
-        <circle cx={cx} cy={cy * 0.97} r={s * 0.19} fill="rgba(255,255,255,0.96)"/>
+        <circle cx={cx} cy={cy * 0.97} r={s * 0.19} fill="rgba(20,19,15,0.96)"/>
       </svg>
       <div style={{
         position: 'absolute', top: 0, left: 0, width: s, height: s,
@@ -66,7 +66,7 @@ export function TierRibbon({ tier, metal }) {
       borderRadius: 3,
       letterSpacing: '-0.1px',
       fontVariantNumeric: 'tabular-nums',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.2)',
+      boxShadow: '0 2px 5px rgba(0,0,0,0.22), inset 0 1px 0 rgba(20,19,15,0.2)',
       position: 'relative',
       marginTop: -8,
     }}>
@@ -107,9 +107,9 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
       style={{
         width: 600,
         background: '#ffffff',
-        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+        fontFamily: "'Barlow', system-ui, sans-serif",
         color: '#0f0f13',
-        borderRadius: 16,
+        borderRadius: 0,
         overflow: 'hidden',
         boxShadow: '0 24px 60px rgba(0,0,0,0.22)',
         border: '1px solid #e8e8ee',
@@ -123,20 +123,20 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
       }}>
         <div style={{
           width: 34, height: 34, borderRadius: 8,
-          background: '#ff3b30',
+          background: '#c9a030',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 2px 10px rgba(255,59,48,0.45)',
         }}>
           <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
             <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-            <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
+            <polygon points="13.5,19 19.5,16 13.5,13" fill="#c9a030"/>
           </svg>
         </div>
         <span style={{
           fontSize: 22, fontWeight: 700, color: '#ffffff',
           letterSpacing: '-0.6px',
         }}>
-          YTGrowth<span style={{ color: '#ff3b30' }}>.io</span>
+          YTGrowth<span style={{ color: '#c9a030' }}>.io</span>
         </span>
       </div>
 
@@ -159,8 +159,8 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
           >
             <defs>
               <linearGradient id={`ribbonL-${category}-${tier}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stopColor="#ff5246"/>
-                <stop offset="100%" stopColor="#c1150c"/>
+                <stop offset="0%"   stopColor="#c9a030"/>
+                <stop offset="100%" stopColor="#7a5b14"/>
               </linearGradient>
               <linearGradient id={`ribbonR-${category}-${tier}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%"   stopColor="#d31a10"/>
@@ -216,12 +216,12 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
           <div style={{
             position: 'relative',
-            background: 'linear-gradient(180deg, #ff4a3f 0%, #e5251b 100%)',
+            background: 'linear-gradient(180deg, #ff4a3f 0%, #c9a030 100%)',
             color: '#ffffff',
             fontSize: 14, fontWeight: 600,
             letterSpacing: '-0.1px',
             padding: '11px 32px',
-            boxShadow: '0 3px 10px rgba(229,37,27,0.28)',
+            boxShadow: '0 3px 10px rgba(201,160,48,0.28)',
             clipPath: 'polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%)',
           }}>
             Achieved {dateStr}
@@ -249,7 +249,7 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
             ) : (
               <div style={{
                 width: 68, height: 68, borderRadius: '50%',
-                background: '#ff3b30', color: '#ffffff',
+                background: '#c9a030', color: '#ffffff',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 28, fontWeight: 700,
                 border: '3px solid #ffffff',
@@ -262,7 +262,7 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
             <div style={{
               position: 'absolute', bottom: -2, right: -2,
               width: 26, height: 26, borderRadius: 7,
-              background: '#ff3b30',
+              background: '#c9a030',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               border: '2px solid #ffffff',
               boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
@@ -382,9 +382,9 @@ export function MilestoneShareModal({ milestone, channelName, channelThumbnail, 
         {/* Action row */}
         <div style={{
           display: 'flex', gap: 8, marginTop: 6,
-          background: 'rgba(255,255,255,0.06)',
+          background: 'rgba(20,19,15,0.06)',
           padding: 6, borderRadius: 999,
-          border: '1px solid rgba(255,255,255,0.12)',
+          border: '1px solid rgba(20,19,15,0.12)',
         }}>
           <button
             onClick={handleDownload}
@@ -397,7 +397,7 @@ export function MilestoneShareModal({ milestone, channelName, channelThumbnail, 
               padding: '9px 18px', borderRadius: 999,
               border: 'none', cursor: downloading ? 'wait' : 'pointer',
               opacity: downloading ? 0.7 : 1,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.9)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(20,19,15,0.9)',
               letterSpacing: '-0.1px',
               transition: 'transform 0.15s',
             }}
@@ -421,7 +421,7 @@ export function MilestoneShareModal({ milestone, channelName, channelThumbnail, 
               padding: '9px 18px', borderRadius: 999,
               border: '1px solid #2a2a33', cursor: 'pointer',
               letterSpacing: '-0.1px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(20,19,15,0.08)',
               transition: 'transform 0.15s',
             }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)' }}
@@ -439,11 +439,11 @@ export function MilestoneShareModal({ milestone, channelName, channelThumbnail, 
               background: 'transparent', color: '#ffffff',
               fontSize: 13, fontWeight: 600,
               padding: '9px 16px', borderRadius: 999,
-              border: '1px solid rgba(255,255,255,0.28)', cursor: 'pointer',
+              border: '1px solid rgba(20,19,15,0.28)', cursor: 'pointer',
               letterSpacing: '-0.1px',
               transition: 'background 0.15s',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(20,19,15,0.08)' }}
             onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
           >
             Close
@@ -562,11 +562,11 @@ export function MilestoneCelebrationModal({ milestone, channelName, channelThumb
               padding: '11px 22px', borderRadius: 999,
               border: 'none', cursor: 'pointer',
               letterSpacing: '-0.1px',
-              boxShadow: `0 6px 18px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)`,
+              boxShadow: `0 6px 18px ${cat.h2}55, inset 0 1px 0 rgba(20,19,15,0.22)`,
               transition: 'transform 0.15s, box-shadow 0.15s',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1.5px)'; e.currentTarget.style.boxShadow = `0 10px 24px ${cat.h2}70, inset 0 1px 0 rgba(255,255,255,0.22)` }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 6px 18px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)` }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1.5px)'; e.currentTarget.style.boxShadow = `0 10px 24px ${cat.h2}70, inset 0 1px 0 rgba(20,19,15,0.22)` }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 6px 18px ${cat.h2}55, inset 0 1px 0 rgba(20,19,15,0.22)` }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
@@ -580,11 +580,11 @@ export function MilestoneCelebrationModal({ milestone, channelName, channelThumb
               background: 'transparent', color: '#ffffff',
               fontSize: 13, fontWeight: 600,
               padding: '11px 18px', borderRadius: 999,
-              border: '1px solid rgba(255,255,255,0.28)', cursor: 'pointer',
+              border: '1px solid rgba(20,19,15,0.28)', cursor: 'pointer',
               letterSpacing: '-0.1px',
               transition: 'background 0.15s',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(20,19,15,0.08)' }}
             onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
           >
             Continue

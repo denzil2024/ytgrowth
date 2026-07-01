@@ -29,7 +29,7 @@ window.fetch = async (url, opts) => {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  React.createElement('div', { style: { padding: '36px 24px', minHeight: '100vh', background: '#0e0e10' } },
+  React.createElement('div', { style: { padding: '36px 24px', minHeight: '100vh', background: 'var(--yd-paper)' } },
     React.createElement(VideoIdeas, { onNavigate: () => {}, plan: 'growth', freeTierFeatures: {} })
   )
 )

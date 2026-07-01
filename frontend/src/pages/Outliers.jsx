@@ -19,24 +19,24 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-geist-
        red/green/amber keep their hue; fill tints re-tuned for dark and
        *Hi variants give legible text on the dark tinted chips. ─── */
 const C = {
-  bg:          '#0e0e10',
-  card:        'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-  cardFlat:    '#1c1c21',
-  surfaceInput:'#18181b',
-  border:      'rgba(255,255,255,0.08)',
-  borderLight: 'rgba(255,255,255,0.06)',
-  hair:        'rgba(255,255,255,0.08)',
-  hairHi:      'rgba(255,255,255,0.16)',
-  wash:        'rgba(255,255,255,0.04)',
-  washActive:  'rgba(255,255,255,0.06)',
+  bg:          'var(--yd-paper)',
+  card:        'linear-gradient(180deg, var(--yd-surface) 0%, var(--yd-surface) 100%)',
+  cardFlat:    'var(--yd-surface)',
+  surfaceInput:'var(--yd-surface)',
+  border:      'rgba(20,19,15,0.08)',
+  borderLight: 'rgba(20,19,15,0.06)',
+  hair:        'rgba(20,19,15,0.08)',
+  hairHi:      'rgba(20,19,15,0.16)',
+  wash:        'rgba(20,19,15,0.04)',
+  washActive:  'rgba(20,19,15,0.06)',
   cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
-  text1:       '#f4f4f5',
-  text2:       '#cfd0d6',
-  text3:       '#b2b3bb',
-  red:         '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
-  green:       '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
-  amber:       '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
+  text1:       '#14130f',
+  text2:       '#6b6862',
+  text3:       '#6b6862',
+  red:         '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)', redHi:   '#7a5b14',
+  green:       '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#2d7a4f',
+  amber:       '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#b07d1a',
 }
 
 /* ─── Scoped styles ─────────────────────────────────────────────────────── */
@@ -46,7 +46,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
   s.textContent = `
     /* Centered 1040 column + Geist inheritance, matches Competitors / Keywords. */
     .out-page { max-width: 1040px; margin: 0 auto; }
-    .out-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    .out-page * { font-family: 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
     @keyframes outFadeUp   { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
     @keyframes outFadeIn   { from { opacity:0 } to { opacity:1 } }
@@ -136,14 +136,14 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       padding: 10px 16px; border-radius: 100px; border: none;
       font-family: inherit;
       font-size: 13px; font-weight: 600;
-      background: #e5251b; color: #fff; cursor: pointer;
+      background: #c9a030; color: #fff; cursor: pointer;
       transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 1px 3px rgba(229,37,27,0.32), 0 4px 14px rgba(229,37,27,0.22);
+      box-shadow: 0 1px 3px rgba(201,160,48,0.32), 0 4px 14px rgba(201,160,48,0.22);
       letter-spacing: 0.01em;
     }
     .out-cta:hover {
       filter: brightness(1.08); transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(229,37,27,0.38), 0 8px 24px rgba(229,37,27,0.28);
+      box-shadow: 0 2px 8px rgba(201,160,48,0.38), 0 8px 24px rgba(201,160,48,0.28);
     }
     /* Ghost variant, outlined neutral pill. Used for New-search alongside
        the (already red) top Search/Reports pill so we don't stack reds. */
@@ -181,17 +181,17 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
 
     .out-btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 9px 20px; border-radius: 100px; border: 1px solid #e5251b;
+      padding: 9px 20px; border-radius: 100px; border: 1px solid #c9a030;
       font-family: inherit;
       font-size: 12.5px; font-weight: 600;
-      background: ${C.card}; color: #e5251b; cursor: pointer;
-      box-shadow: 0 1px 3px rgba(229,37,27,0.10), 0 4px 14px rgba(229,37,27,0.10);
+      background: ${C.card}; color: #c9a030; cursor: pointer;
+      box-shadow: 0 1px 3px rgba(201,160,48,0.10), 0 4px 14px rgba(201,160,48,0.10);
       transition: all 0.18s;
       white-space: nowrap;
     }
     .out-btn:hover:not(:disabled) {
-      background: rgba(229,37,27,0.06);
-      box-shadow: 0 2px 8px rgba(229,37,27,0.14), 0 8px 28px rgba(229,37,27,0.14);
+      background: rgba(201,160,48,0.06);
+      box-shadow: 0 2px 8px rgba(201,160,48,0.14), 0 8px 28px rgba(201,160,48,0.14);
       transform: translateY(-1px);
     }
     .out-btn:disabled { opacity: 0.55; cursor: not-allowed; }
@@ -201,19 +201,19 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       padding: 9px 20px; border-radius: 100px; border: none;
       font-family: inherit;
       font-size: 12.5px; font-weight: 600;
-      background: #e5251b; color: #ffffff; cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
+      background: #c9a030; color: #ffffff; cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(201,160,48,0.32);
       transition: all 0.18s;
       letter-spacing: -0.1px;
       white-space: nowrap;
     }
     .out-btn-primary:hover:not(:disabled) {
       filter: brightness(1.07);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(201,160,48,0.42);
       transform: translateY(-1px);
     }
     .out-btn-primary:disabled {
-      background: rgba(255,255,255,0.10); color: ${C.text3}; cursor: not-allowed;
+      background: rgba(20,19,15,0.10); color: ${C.text3}; cursor: not-allowed;
       box-shadow: none; opacity: 0.92;
     }
 
@@ -226,10 +226,10 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       cursor: pointer; white-space: nowrap;
       transition: all 0.15s;
     }
-    .out-view-btn:hover { border-color: #e5251b; color: #e5251b; }
+    .out-view-btn:hover { border-color: #c9a030; color: #c9a030; }
     .out-view-btn.active {
-      background: #e5251b; color: #fff; border-color: #e5251b;
-      box-shadow: 0 1px 3px rgba(229,37,27,0.25), 0 4px 14px rgba(229,37,27,0.25);
+      background: #c9a030; color: #fff; border-color: #c9a030;
+      box-shadow: 0 1px 3px rgba(201,160,48,0.25), 0 4px 14px rgba(201,160,48,0.25);
     }
 
     /* Reports list, matches Competitors tracked accordion grammar exactly:
@@ -263,19 +263,19 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     }
     .out-report-wrapper:hover .out-report-remove { opacity: 1; }
     .out-report-remove:hover {
-      background: rgba(229,37,27,0.08);
-      border-color: rgba(229,37,27,0.2);
-      color: #e5251b;
+      background: rgba(201,160,48,0.08);
+      border-color: rgba(201,160,48,0.2);
+      color: #c9a030;
     }
     .out-report-cta {
-      background: #e5251b; color: #fff;
-      border: 1px solid #e5251b; border-radius: 100px;
+      background: #c9a030; color: #fff;
+      border: 1px solid #c9a030; border-radius: 100px;
       padding: 8px 18px; font-size: 12.5px; font-weight: 600;
       font-family: inherit;
       cursor: pointer; white-space: nowrap;
       transition: filter 0.15s;
       display: flex; align-items: center; gap: 6px;
-      box-shadow: 0 1px 3px rgba(229,37,27,0.20), 0 4px 14px rgba(229,37,27,0.25);
+      box-shadow: 0 1px 3px rgba(201,160,48,0.20), 0 4px 14px rgba(201,160,48,0.25);
     }
     .out-report-cta:hover { filter: brightness(1.07); }
     .out-report-chip {
@@ -302,10 +302,10 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       line-height: 1.4;
     }
     .out-search-input:focus {
-      border-color: rgba(229,37,27,0.45);
-      box-shadow: 0 0 0 4px rgba(229,37,27,0.10);
+      border-color: rgba(201,160,48,0.45);
+      box-shadow: 0 0 0 4px rgba(201,160,48,0.10);
     }
-    .out-search-input::placeholder { color: rgba(255,255,255,0.30); }
+    .out-search-input::placeholder { color: rgba(20,19,15,0.30); }
 
     .out-modal-overlay {
       position: fixed; inset: 0;
@@ -327,7 +327,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       animation: outSlideIn 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) both;
     }
     .out-modal::-webkit-scrollbar { width: 4px }
-    .out-modal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 4px }
+    .out-modal::-webkit-scrollbar-thumb { background: rgba(20,19,15,0.14); border-radius: 4px }
   `
   document.head.appendChild(s)
 }
@@ -404,10 +404,10 @@ function relPublished(iso) {
 }
 
 function outlierTier(score) {
-  if (score >= 10) return { label: '10× outlier',  color: '#fb6a60',   bg: C.redBg,   bdr: C.redBdr }
-  if (score >= 5)  return { label: `${score}× outlier`, color: '#fb6a60',   bg: C.redBg,   bdr: C.redBdr }
-  if (score >= 3)  return { label: `${score}× outlier`, color: '#f0a23b', bg: C.amberBg, bdr: C.amberBdr }
-  return           { label: `${score}× outlier`, color: '#34d27b', bg: C.greenBg, bdr: C.greenBdr }
+  if (score >= 10) return { label: '10× outlier',  color: '#7a5b14',   bg: C.redBg,   bdr: C.redBdr }
+  if (score >= 5)  return { label: `${score}× outlier`, color: '#7a5b14',   bg: C.redBg,   bdr: C.redBdr }
+  if (score >= 3)  return { label: `${score}× outlier`, color: '#b07d1a', bg: C.amberBg, bdr: C.amberBdr }
+  return           { label: `${score}× outlier`, color: '#2d7a4f', bg: C.greenBg, bdr: C.greenBdr }
 }
 
 /* ─── Tabs ──────────────────────────────────────────────────────────────── */
@@ -814,7 +814,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           instead of blocking the whole page. */}
       {outliersGated && (
         <div style={{
-          background: 'rgba(229,37,27,0.06)', border: '1px solid rgba(229,37,27,0.2)',
+          background: 'rgba(201,160,48,0.06)', border: '1px solid rgba(201,160,48,0.2)',
           borderRadius: 12, padding: '12px 16px', marginBottom: 14,
           display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: C.text1,
         }}>
@@ -904,7 +904,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               ? <><SpinIcon /> Reading intent…</>
               : loading
                 ? <><SpinIcon /> Searching…</>
-                : <><SparkIcon /> <span>Find outliers</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.65)', marginLeft: 2 }}>· 3 credits</span></>
+                : <><SparkIcon /> <span>Find outliers</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(20,19,15,0.65)', marginLeft: 2 }}>· 3 credits</span></>
             }
           </button>
         </div>
@@ -933,10 +933,10 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 2v12M2 8h12M4 4l8 8M12 4l-8 8"/>
               </svg>
-              <span style={{ fontSize: 10.5, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
+              <span style={{ fontSize: 10.5, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
             </div>
             <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1.3, marginBottom: 10 }}>
-              Your search could go <span style={{ color: '#fb6a60' }}>3 ways</span>. Pick one.
+              Your search could go <span style={{ color: '#7a5b14' }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
               Same words, different niches. Pick the closest, that's the outlier cohort we'll pull.
@@ -950,16 +950,16 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                   <div style={{
                     width: 38, height: 38, borderRadius: 12,
-                    background: `linear-gradient(135deg, ${C.red} 0%, #b91c1c 100%)`,
+                    background: `linear-gradient(135deg, ${C.red} 0%, #c0392b 100%)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: `0 4px 10px rgba(229,37,27,0.40), inset 0 1px 0 rgba(255,255,255,0.30)`,
+                    boxShadow: `0 4px 10px rgba(201,160,48,0.40), inset 0 1px 0 rgba(20,19,15,0.30)`,
                     flexShrink: 0,
                   }}>
                     <span style={{ fontSize: 13, fontWeight: 600, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
                       0{i + 1}
                     </span>
                   </div>
-                  <span style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                     Route 0{i + 1}
                   </span>
                 </div>
@@ -970,8 +970,8 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                   alignSelf: 'flex-start',
                   fontSize: 11.5, fontWeight: 600,
                   color: C.redHi,
-                  background: 'rgba(229,37,27,0.08)',
-                  border: '1px solid rgba(229,37,27,0.22)',
+                  background: 'rgba(201,160,48,0.08)',
+                  border: '1px solid rgba(201,160,48,0.22)',
                   padding: '3px 10px', borderRadius: 999,
                   marginBottom: 12,
                 }}>
@@ -981,7 +981,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                   {opt.description}
                 </p>
                 <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: '#fb6a60', letterSpacing: '-0.1px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#7a5b14', letterSpacing: '-0.1px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     Go this way
                     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                       <path d="M6 3l5 5-5 5"/>
@@ -1045,7 +1045,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
             width: 48, height: 48, borderRadius: 14,
             background: C.redBg, border: `1px solid ${C.redBdr}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fb6a60',
+            color: '#7a5b14',
           }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
@@ -1321,8 +1321,8 @@ function PatternSynthesisCard({ synthesis }) {
         </div>
       )}
       {nextMove && (
-        <div style={{ paddingTop: pattern ? 20 : 0, borderTop: pattern ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
-          <p style={{ fontSize: 11, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Your next move</p>
+        <div style={{ paddingTop: pattern ? 20 : 0, borderTop: pattern ? '1px solid rgba(20,19,15,0.08)' : 'none' }}>
+          <p style={{ fontSize: 11, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Your next move</p>
           {nextMove.title_scaffold && (
             <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.45, marginBottom: 16, letterSpacing: '-0.3px' }}>
               {nextMove.title_scaffold}
@@ -1343,8 +1343,8 @@ function PatternSynthesisCard({ synthesis }) {
             )}
           </div>
           {nextMove.why_now && (
-            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5, paddingTop: 12, borderTop: '1px dashed rgba(255,255,255,0.08)' }}>
-              <span style={{ fontWeight: 600, color: '#f0a23b', letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
+            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5, paddingTop: 12, borderTop: '1px dashed rgba(20,19,15,0.08)' }}>
+              <span style={{ fontWeight: 600, color: '#b07d1a', letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
               {nextMove.why_now}
             </p>
           )}
@@ -1421,8 +1421,8 @@ function VideoResultCard({ item, kind, onOpen }) {
             synthesis returned a tag for this video id. */}
         {item.pattern_tag && (() => {
           const t = String(item.pattern_tag).toLowerCase()
-          const cfg = t === 'replicable' ? { label: 'Replicable', bg: 'rgba(5,150,105,0.10)', border: 'rgba(5,150,105,0.30)', color: '#34d27b' }
-                    : t === 'trending'   ? { label: 'Trending',   bg: 'rgba(217,119,6,0.10)', border: 'rgba(217,119,6,0.30)', color: '#f0a23b' }
+          const cfg = t === 'replicable' ? { label: 'Replicable', bg: 'rgba(5,150,105,0.10)', border: 'rgba(5,150,105,0.30)', color: '#2d7a4f' }
+                    : t === 'trending'   ? { label: 'Trending',   bg: 'rgba(217,119,6,0.10)', border: 'rgba(217,119,6,0.30)', color: '#b07d1a' }
                     : t === 'lucky'      ? { label: 'Lucky',      bg: C.cardFlat,              border: C.hair,              color: C.text3 }
                     : null
           if (!cfg) return null
@@ -1480,7 +1480,7 @@ function VideoResultCard({ item, kind, onOpen }) {
             { label: 'Eng',     sub: '',  display: engPct != null ? `${engPct.toFixed(1)}%` : '—',          color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
           ].filter(Boolean)
           return (
-        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
           {/* Even-gutter grid, 2 cols when 4 metrics, 3 cols when Winnable
               is missing. Keeps consistent rhythm across cards even though
               the metric count varies. */}
@@ -1505,7 +1505,7 @@ function VideoResultCard({ item, kind, onOpen }) {
               width: '100%', justifyContent: 'center',
               padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
               border: 'none', borderRadius: 100, cursor: 'pointer',
-              background: C.red, color: '#fff',
+              background: C.red, color: 'var(--yd-on-gold)',
               fontFamily: 'inherit', letterSpacing: '0.01em',
               display: 'inline-flex', alignItems: 'center', gap: 6,
               transition: 'filter 0.15s',
@@ -1589,7 +1589,7 @@ function ChannelResultCard({ item, onOpen }) {
             : <span style={{
                 position: 'absolute', inset: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, fontWeight: 600, color: '#fb6a60',
+                fontSize: 28, fontWeight: 600, color: '#7a5b14',
               }}>{initial}</span>
           }
         </div>
@@ -1625,7 +1625,7 @@ function ChannelResultCard({ item, onOpen }) {
         </p>
 
         {/* Footer, identical to VideoResultCard: flex metrics + full-width red CTA */}
-        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
           <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier',  display: `${item.outlier_score}×`,            color: tier.color, tip: 'Their best-performing video in this search beat the niche median by this multiple.' },
@@ -1644,7 +1644,7 @@ function ChannelResultCard({ item, onOpen }) {
               width: '100%', justifyContent: 'center',
               padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
               border: 'none', borderRadius: 100, cursor: 'pointer',
-              background: C.red, color: '#fff',
+              background: C.red, color: 'var(--yd-on-gold)',
               fontFamily: 'inherit', letterSpacing: '0.01em',
               display: 'inline-flex', alignItems: 'center', gap: 6,
               transition: 'filter 0.15s',
@@ -1723,9 +1723,9 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
   const likes   = item.likes || 0
   const engPct  = views > 0 ? (likes / views * 100) : 0
   const days    = item.published_at ? Math.max(0, (Date.now() - new Date(item.published_at).getTime()) / 86400000) : null
-  const verdict = item.outlier_score >= 5 ? { label: 'Strong',      color: '#fb6a60'   }
-                 : item.outlier_score >= 3 ? { label: 'Notable',     color: '#f0a23b' }
-                 : item.outlier_score >= 1.8 ? { label: 'Over median', color: '#34d27b' }
+  const verdict = item.outlier_score >= 5 ? { label: 'Strong',      color: '#7a5b14'   }
+                 : item.outlier_score >= 3 ? { label: 'Notable',     color: '#b07d1a' }
+                 : item.outlier_score >= 1.8 ? { label: 'Over median', color: '#2d7a4f' }
                  : { label: 'Subtle', color: C.text3 }
 
   const outlierPct = Math.min(100, Math.round((item.outlier_score || 0) * 20))
@@ -1813,7 +1813,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           {/* Why Now hero, same "Fix first" card silhouette (white bg, red left-bar) */}
           {item.why_now && (
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-              <span style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
               <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{item.why_now}</p>
             </div>
           )}
@@ -1861,7 +1861,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                   (off-palette). Amber doubles as the "AI/explainer" accent
                   used elsewhere (Title Scorecard pattern). */}
               <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'Why this channel' : 'Why it worked'}
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
@@ -1871,7 +1871,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
               {/* Amber, Quick actions / What to do (list) */}
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'What to do' : 'Quick actions'}
                 </p>
                 {(() => {
@@ -1881,7 +1881,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7 }}>
                       {list.map((s, i) => (
                         <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: '#f0a23b', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: '#b07d1a', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                           <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
                         </li>
                       ))}
@@ -1892,7 +1892,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
               {/* Green, Why now (same text as hero; keeps the 3-col symmetry) */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   Act on this because
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
@@ -1920,7 +1920,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                     border: a.success ? `1px solid ${C.greenBdr}` : 'none',
                     cursor: a.disabled ? 'default' : 'pointer',
                     fontFamily: 'inherit',
-                    boxShadow: a.success ? 'none' : '0 1px 3px rgba(229,37,27,0.32), 0 4px 14px rgba(229,37,27,0.22)',
+                    boxShadow: a.success ? 'none' : '0 1px 3px rgba(201,160,48,0.32), 0 4px 14px rgba(201,160,48,0.22)',
                     transition: 'filter 0.15s, transform 0.15s',
                     opacity: a.disabled && !a.success ? 0.7 : 1,
                   }}
@@ -1958,7 +1958,7 @@ function OutlierRing({ score, color }) {
   return (
     <div style={{ position: 'relative', width: 88, height: 88, flexShrink: 0 }}>
       <svg width="88" height="88" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="44" cy="44" r={r} fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="6" />
+        <circle cx="44" cy="44" r={r} fill="none" stroke="rgba(20,19,15,0.10)" strokeWidth="6" />
         <circle cx="44" cy="44" r={r} fill="none" stroke={color} strokeWidth="6"
           strokeDasharray={`${filled} ${circ}`} strokeLinecap="round"
           style={{ transition: 'stroke-dasharray 0.6s ease' }} />
@@ -1982,7 +1982,7 @@ function OutlierBar({ label, score, tip }) {
           <span style={{ fontSize: 14, color: C.text2, fontWeight: 500 }}>{label}</span>
           {tip && (
             <button onClick={() => setShowWhy(v => !v)}
-              style={{ width: 15, height: 15, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', cursor: 'pointer', fontSize: 12, fontWeight: 600, color: C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
+              style={{ width: 15, height: 15, borderRadius: '50%', border: '1px solid rgba(20,19,15,0.08)', background: 'transparent', cursor: 'pointer', fontSize: 12, fontWeight: 600, color: C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
             </button>
           )}
         </div>
@@ -1992,7 +1992,7 @@ function OutlierBar({ label, score, tip }) {
         <div style={{ height: '100%', width: `${score}%`, background: color, borderRadius: 4, transition: 'width 0.5s ease' }} />
       </div>
       {showWhy && tip && (
-        <p style={{ fontSize: 12, color: C.text3, marginTop: 5, lineHeight: 1.5, paddingLeft: 8, borderLeft: '2px solid rgba(255,255,255,0.16)' }}>
+        <p style={{ fontSize: 12, color: C.text3, marginTop: 5, lineHeight: 1.5, paddingLeft: 8, borderLeft: '2px solid rgba(20,19,15,0.16)' }}>
           {tip}
         </p>
       )}
@@ -2050,7 +2050,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
             </div>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
               Thumbnail pattern · last 12 months
             </p>
             <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>
@@ -2059,7 +2059,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           </div>
           {patterns.sample_size ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-              <span style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
+              <span style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
                 {patterns.sample_size} analysed
               </span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.text2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -2112,14 +2112,14 @@ function ThumbnailPatternsCard({ patterns, query }) {
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
             {recs.length === 0 ? (
               <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>—</p>
             ) : (
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {recs.map((r, i) => (
                   <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#f0a23b', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#b07d1a', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                     <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{r}</span>
                   </li>
                 ))}
@@ -2130,7 +2130,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           {/* Green "Why now", same Expected outcome tile in Priority Actions */}
           {patterns.why_now ? (
             <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{patterns.why_now}</p>
             </div>
           ) : <div />}

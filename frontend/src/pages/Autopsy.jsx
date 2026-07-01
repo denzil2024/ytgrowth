@@ -8,20 +8,20 @@ const API = ''
    Semantic red/green/amber keep their hue; tints re-tuned for dark and
    *Hi variants give legible text on the dark tinted chips. */
 const C = {
-  red:    '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
-  green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
-  amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
-  text1:  '#f4f4f5',
-  text2:  '#cfd0d6',
-  text3:  '#b2b3bb',
-  border: 'rgba(255,255,255,0.08)',
-  card:   'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-  cardFlat:    '#1c1c21',
-  surfaceInput:'#18181b',
-  hair:        'rgba(255,255,255,0.08)',
-  hairHi:      'rgba(255,255,255,0.16)',
-  wash:        'rgba(255,255,255,0.04)',
-  washActive:  'rgba(255,255,255,0.06)',
+  red:    '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)', redHi:   '#7a5b14',
+  green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#2d7a4f',
+  amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#b07d1a',
+  text1:  '#14130f',
+  text2:  '#6b6862',
+  text3:  '#6b6862',
+  border: 'rgba(20,19,15,0.08)',
+  card:   'linear-gradient(180deg, var(--yd-surface) 0%, var(--yd-surface) 100%)',
+  cardFlat:    'var(--yd-surface)',
+  surfaceInput:'var(--yd-surface)',
+  hair:        'rgba(20,19,15,0.08)',
+  hairHi:      'rgba(20,19,15,0.16)',
+  wash:        'rgba(20,19,15,0.04)',
+  washActive:  'rgba(20,19,15,0.06)',
   cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
 }
@@ -42,7 +42,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     /* Centered 1040 column + Geist inheritance, matches the rest of the
        redesigned pages. */
     .au-page { max-width: 1040px; margin: 0 auto; }
-    .au-page * { box-sizing: border-box; font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    .au-page * { box-sizing: border-box; font-family: 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
     .au-page p, .au-page span, .au-page div { margin: 0; }
 
     @keyframes auSpin { to { transform: rotate(360deg) } }
@@ -90,12 +90,12 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
       padding: 9px 18px; border-radius: 100px; border: none;
       font-size: 13px; font-weight: 600; color: #fff;
       background: ${C.red}; cursor: pointer; white-space: nowrap;
-      box-shadow: 0 1px 2px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.22);
+      box-shadow: 0 1px 2px rgba(201,160,48,0.20), inset 0 1px 0 rgba(20,19,15,0.22);
       transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
       letter-spacing: -0.01em;
     }
     .au-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
-    .au-btn-primary:disabled { background: rgba(255,255,255,0.06); color: ${C.text3}; cursor: default; box-shadow: none; }
+    .au-btn-primary:disabled { background: rgba(20,19,15,0.06); color: ${C.text3}; cursor: default; box-shadow: none; }
 
     .au-btn-outline {
       display: inline-flex; align-items: center; gap: 8px;
@@ -105,7 +105,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
       cursor: pointer; white-space: nowrap;
       transition: background 0.15s;
     }
-    .au-btn-outline:hover { background: rgba(229,37,27,0.13); }
+    .au-btn-outline:hover { background: rgba(201,160,48,0.13); }
 
     .au-report-wrapper { position: relative; margin-bottom: 14px; }
     .au-report-header {
@@ -135,8 +135,8 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     }
     .au-report-wrapper:hover .au-report-remove { opacity: 1; }
     .au-report-remove:hover {
-      background: rgba(229,37,27,0.08);
-      border-color: rgba(229,37,27,0.2);
+      background: rgba(201,160,48,0.08);
+      border-color: rgba(201,160,48,0.2);
       color: ${C.red};
     }
     .au-chip {
@@ -184,12 +184,12 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
       width: 100%; padding: 11px 16px; border-radius: 100px;
       font-size: 13px; font-weight: 600; letter-spacing: -0.01em;
       background: ${C.red}; color: #fff; border: none; cursor: pointer;
-      box-shadow: 0 1px 2px rgba(229,37,27,0.20);
+      box-shadow: 0 1px 2px rgba(201,160,48,0.20);
       transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
       font-family: inherit; white-space: nowrap;
     }
     .au-video-cta:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
-    .au-video-cta:disabled { background: rgba(255,255,255,0.06); color: ${C.text3}; cursor: default; box-shadow: none; }
+    .au-video-cta:disabled { background: rgba(20,19,15,0.06); color: ${C.text3}; cursor: default; box-shadow: none; }
   `
   document.head.appendChild(s)
 }
@@ -202,7 +202,7 @@ function ScoreRing({ score, color }) {
   return (
     <div style={{ position: 'relative', width: 78, height: 78, flexShrink: 0 }}>
       <svg width="78" height="78" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="39" cy="39" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
+        <circle cx="39" cy="39" r={r} fill="none" stroke="rgba(20,19,15,0.08)" strokeWidth="6" />
         <circle cx="39" cy="39" r={r} fill="none" stroke={color} strokeWidth="6"
           strokeDasharray={`${filled} ${circ}`} strokeLinecap="round"
           style={{ transition: 'stroke-dasharray 0.6s ease' }} />
@@ -232,7 +232,7 @@ function verdictMeta(verdict, score) {
   if (verdict === 'winner' || score >= 85)
     return { label: 'Winner',          color: C.greenHi, bg: C.greenBg, bdr: C.greenBdr }
   if (verdict === 'underperformer' || score < 60)
-    return { label: 'Underperformer', color: '#fb6a60',   bg: C.redBg,   bdr: C.redBdr }
+    return { label: 'Underperformer', color: '#7a5b14',   bg: C.redBg,   bdr: C.redBdr }
   return    { label: 'Average',        color: C.amberHi, bg: C.amberBg, bdr: C.amberBdr }
 }
 
@@ -244,7 +244,7 @@ function ReportCard({ data, video, onClose }) {
   const m = data.metrics || {}
   return (
     <div className="au-in" style={{
-      background: C.cardFlat, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14,
+      background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 14,
       borderTop: `3px solid ${scoreColor}`,
       boxShadow: '0 1px 2px rgba(0,0,0,0.4), ',
       padding: '24px 26px 24px', marginBottom: 20,
@@ -253,7 +253,7 @@ function ReportCard({ data, video, onClose }) {
         {video?.thumbnail && (
           <img src={video.thumbnail} alt="" referrerPolicy="no-referrer"
             style={{ width: 130, height: 73, objectFit: 'cover', borderRadius: 10, flexShrink: 0,
-              border: '1px solid rgba(255,255,255,0.08)' }} />
+              border: '1px solid rgba(20,19,15,0.08)' }} />
         )}
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em',
@@ -323,7 +323,7 @@ function ReportCard({ data, video, onClose }) {
         </div>
         <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`,
           borderRadius: 12, padding: '12px 14px' }}>
-          <p style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60',
+          <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14',
             letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>What didn't</p>
           {(data.what_didnt || []).map((b, i) => (
             <p key={i} style={{ fontSize: 13, color: C.text1, lineHeight: 1.5,
@@ -345,7 +345,7 @@ function ReportCard({ data, video, onClose }) {
           <div style={{ display: 'grid', gap: 10 }}>
             {data.next_actions.map((a, i) => (
               <div key={i} style={{
-                background: C.cardFlat, border: '1px solid rgba(255,255,255,0.08)',
+                background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)',
                 borderLeft: `3px solid ${C.amber}`,
                 borderRadius: '0 12px 12px 0', padding: '14px 16px',
                 display: 'flex', alignItems: 'flex-start', gap: 12,
@@ -566,7 +566,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
         {error && (
           <div style={{
             background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
-            padding: '10px 14px', marginBottom: 14, color: '#fb6a60', fontSize: 13.5,
+            padding: '10px 14px', marginBottom: 14, color: '#7a5b14', fontSize: 13.5,
           }}>{error}</div>
         )}
 
@@ -659,7 +659,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                     </p>
 
                     {/* Footer: Watch · Retention · Eng + Run-review CTA */}
-                    <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.10)' }}>
+                    <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid rgba(20,19,15,0.10)' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 14 }}>
                         {[
                           { label: 'Watch',     display: wtDisplay,                                             color: C.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
@@ -698,7 +698,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
           ) : reports.length === 0 ? (
             <div style={{
               padding: '56px 24px', textAlign: 'center',
-              background: C.cardFlat, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14,
+              background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 14,
               boxShadow: '0 1px 2px rgba(0,0,0,0.4), ',
             }}>
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1,
@@ -728,7 +728,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                       {r.thumbnail && (
                         <img src={r.thumbnail} alt="" referrerPolicy="no-referrer"
                           style={{ width: 96, height: 54, objectFit: 'cover',
-                            borderRadius: 8, flexShrink: 0, border: '1px solid rgba(255,255,255,0.08)' }} />
+                            borderRadius: 8, flexShrink: 0, border: '1px solid rgba(20,19,15,0.08)' }} />
                       )}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontWeight: 600, fontSize: 14.5, color: C.text1,
@@ -766,8 +766,8 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                                 background: 'transparent', border: 'none', cursor: 'pointer',
                                 fontFamily: 'inherit', padding: 0, letterSpacing: '-0.005em',
                               }}
-                              onMouseEnter={e => { e.currentTarget.style.color = '#f4f4f5' }}
-                              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.50)' }}
+                              onMouseEnter={e => { e.currentTarget.style.color = '#14130f' }}
+                              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(20,19,15,0.50)' }}
                             >
                               · View tracked optimisation →
                             </button>

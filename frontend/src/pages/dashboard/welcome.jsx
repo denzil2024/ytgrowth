@@ -96,7 +96,7 @@ export function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
                 <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
               </div>
               {top.category && <p style={{ fontSize: 12, color: SHELL.text3, marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
-              <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
+              <div style={{ background: 'rgba(20,19,15,0.04)', border: `1px solid rgba(20,19,15,0.08)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
                 <p style={{ fontSize: 10, fontWeight: 600, color: s.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
                 <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{top.action}</p>
               </div>

@@ -50,10 +50,10 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
   const s = document.createElement('style')
   s.id = 'ytg-chat-scrollbar'
   s.textContent = `
-    .ytg-chat-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.10) transparent }
+    .ytg-chat-scroll { scrollbar-width: thin; scrollbar-color: rgba(20,19,15,0.10) transparent }
     .ytg-chat-scroll::-webkit-scrollbar { width: 6px; height: 6px }
-    .ytg-chat-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 99px }
-    .ytg-chat-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18) }
+    .ytg-chat-scroll::-webkit-scrollbar-thumb { background: rgba(20,19,15,0.10); border-radius: 99px }
+    .ytg-chat-scroll::-webkit-scrollbar-thumb:hover { background: rgba(20,19,15,0.18) }
     .ytg-chat-scroll::-webkit-scrollbar-track, .ytg-chat-scroll::-webkit-scrollbar-button { background: transparent; display: none }
     .ytg-chat-textarea::placeholder { color: #87878f }
     @keyframes ytgFadeUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
@@ -63,7 +63,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     .md-list-ul > li::before {
       content: ''; position: absolute; left: 4px; top: 11px;
       width: 4px; height: 4px; border-radius: 100px;
-      background: rgba(255,255,255,0.36);
+      background: rgba(20,19,15,0.36);
     }
     /* Numbered list, plain digit with a period. No badge pill;
        the structure carries itself via the indent. */
@@ -71,7 +71,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     .md-list-ol > li::before {
       content: counter(mdlist) '.';
       position: absolute; left: 0; top: 0;
-      color: rgba(255,255,255,0.55);
+      color: rgba(20,19,15,0.55);
       font-size: 13.5px; font-weight: 600;
       font-variant-numeric: tabular-nums; line-height: inherit;
     }
@@ -79,26 +79,28 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
   document.head.appendChild(s)
 }
 
-const FONT_STACK = "'Geist', 'Inter', system-ui, -apple-system, sans-serif"
+const FONT_STACK = "'Barlow', system-ui, -apple-system, sans-serif"
 const FONT_MONO  = "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
 
 /* ─── One neutral-zinc dark system. Three surface steps, a five-step
        text ramp, and brand red used in exactly two places: the enabled
        send button and the active history-row marker. Nowhere else. ─── */
+/* Editorial (themed) palette. Warm paper, gold accent. Every value is a
+   theme variable so Chat flips with the light/dark toggle like the app. */
 const C = {
-  base:        '#0e0e10',                 // dark panel base (locked content shade)
-  rail:        '#131316',                 // history rail (one step off base)
-  raised:      '#18181b',                 // composer, user chip, avatar
-  raisedHover: '#1f1f23',                 // hover on raised elements
-  hair:        'rgba(255,255,255,0.06)',  // resting hairline
-  hairStrong:  'rgba(255,255,255,0.11)',  // focus / active hairline
-  t1:          '#f4f4f5',                 // strong text
-  t2:          '#d4d4d8',                 // body text
-  t3:          '#cfd0d6',                 // muted text
-  t4:          '#87878f',                 // faint (placeholder, footnotes)
-  t5:          '#87878f',                 // faintest (labels, idle icons)
-  red:         '#e5251b',                 // accent, send + active marker only
-  redText:     '#f87171',                 // error copy on dark
+  base:        'var(--yd-paper)',         // page base
+  rail:        'var(--yd-paper2)',        // history rail (one step off base)
+  raised:      'var(--yd-surface)',       // composer, user chip, avatar
+  raisedHover: 'var(--yd-wash2)',         // hover on raised elements
+  hair:        'var(--yd-line-lo)',       // resting hairline
+  hairStrong:  'var(--yd-line)',          // focus / active hairline
+  t1:          'var(--yd-ink)',           // strong text
+  t2:          'var(--yd-soft)',          // body text
+  t3:          'var(--yd-muted)',         // muted text
+  t4:          'var(--yd-muted)',         // faint (placeholder, footnotes)
+  t5:          'var(--yd-muted)',         // faintest (labels, idle icons)
+  red:         'var(--yd-gold)',          // accent, send + active marker only
+  redText:     'var(--yd-danger)',        // error copy
   spring:      'cubic-bezier(0.32, 0.72, 0, 1)',
 }
 
@@ -155,7 +157,7 @@ const MARKDOWN_COMPONENTS = {
       return (
         <pre style={{
           margin: '10px 0 14px 0', padding: '12px 14px',
-          background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.hair}`,
+          background: 'rgba(20,19,15,0.04)', border: `1px solid ${C.hair}`,
           borderRadius: 10, fontSize: 13, fontFamily: FONT_MONO,
           lineHeight: 1.6, color: C.t2, overflow: 'auto',
         }}><code>{children}</code></pre>
@@ -168,7 +170,7 @@ const MARKDOWN_COMPONENTS = {
       <code style={{
         fontFamily: FONT_STACK, fontSize: '0.94em', fontWeight: 500,
         color: '#f0a23b', letterSpacing: 'inherit',
-        background: 'rgba(255,255,255,0.05)',
+        background: 'rgba(20,19,15,0.05)',
         border: `1px solid ${C.hair}`,
         borderRadius: 6,
         padding: '1px 6px',
@@ -425,7 +427,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
         border: `1px solid ${composerFocus ? C.hairStrong : C.hair}`,
         borderRadius: 16, padding: '16px 16px 12px 20px',
         boxShadow: composerFocus
-          ? '0 0 0 4px rgba(255,255,255,0.025), 0 10px 30px -12px rgba(0,0,0,0.5)'
+          ? '0 0 0 4px rgba(20,19,15,0.025), 0 10px 30px -12px rgba(0,0,0,0.5)'
           : '0 6px 22px -14px rgba(0,0,0,0.5)',
         transition: `border-color 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
       }}
@@ -478,7 +480,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
               flexShrink: 0,
               width: 38, height: 38, borderRadius: 999,
               border: 'none',
-              background: isOff ? 'rgba(255,255,255,0.05)' : C.red,
+              background: isOff ? 'rgba(20,19,15,0.05)' : C.red,
               color: isOff ? C.t5 : '#fff',
               cursor: isOff ? 'default' : 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -498,8 +500,8 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
       marginBottom: 12,
-      background: 'rgba(229,37,27,0.09)',
-      border: `1px solid rgba(229,37,27,0.22)`,
+      background: 'rgba(201,160,48,0.09)',
+      border: `1px solid rgba(201,160,48,0.22)`,
       borderRadius: 12, padding: '10px 14px',
     }}>
       <p style={{ fontSize: 13, color: C.redText, fontWeight: 400, flex: 1, lineHeight: 1.5, letterSpacing: '-0.005em' }}>
@@ -513,7 +515,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
             display: 'inline-flex', alignItems: 'center', gap: 5,
             padding: '7px 13px', borderRadius: 10,
             border: 'none', cursor: 'pointer',
-            background: C.red, color: '#fff',
+            background: C.red, color: 'var(--yd-on-gold)',
             fontFamily: 'inherit', fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
             flexShrink: 0, transition: `filter 140ms ${C.spring}`,
           }}
@@ -566,7 +568,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{
             width: 22, height: 22, marginBottom: 14,
-            border: `2px solid rgba(255,255,255,0.08)`,
+            border: `2px solid rgba(20,19,15,0.08)`,
             borderTop: `2px solid ${C.t2}`,
             borderRadius: '50%', animation: 'spin 0.8s linear infinite',
           }}/>
@@ -577,7 +579,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
       ) : state.error ? (
         <div style={{
           margin: 'auto', maxWidth: 420,
-          background: 'rgba(229,37,27,0.09)', border: `1px solid rgba(229,37,27,0.22)`,
+          background: 'rgba(201,160,48,0.09)', border: `1px solid rgba(201,160,48,0.22)`,
           borderRadius: 12, padding: '14px 18px',
         }}>
           <p style={{ fontSize: 13.5, color: C.redText, fontWeight: 400, letterSpacing: '-0.005em' }}>
@@ -638,7 +640,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
                           style={{
                             display: 'inline-flex', alignItems: 'center', gap: 7,
                             padding: '9px 16px', borderRadius: 999,
-                            background: 'rgba(255,255,255,0.025)',
+                            background: 'rgba(20,19,15,0.025)',
                             border: `1px solid ${C.hair}`,
                             color: C.t3, fontFamily: 'inherit',
                             fontSize: 12.5, fontWeight: 400, letterSpacing: '-0.005em',
@@ -652,7 +654,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
                             e.currentTarget.style.transform = 'translateY(-1px)'
                           }}
                           onMouseLeave={e => {
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.025)'
+                            e.currentTarget.style.background = 'rgba(20,19,15,0.025)'
                             e.currentTarget.style.borderColor = C.hair
                             e.currentTarget.style.color = C.t3
                             e.currentTarget.style.transform = 'translateY(0)'
@@ -751,7 +753,7 @@ function Message({ role, content, sources }) {
           fontFamily: FONT_STACK,
           fontSize: 15, fontWeight: 400, letterSpacing: '-0.006em', lineHeight: 1.6,
           whiteSpace: 'pre-wrap',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.04)',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.30), inset 0 1px 0 rgba(20,19,15,0.04)',
         }}>{content}</div>
       </div>
     )
@@ -766,7 +768,7 @@ function Message({ role, content, sources }) {
             display: 'inline-flex', alignItems: 'center', gap: 6,
             marginTop: 12,
             padding: '4px 10px',
-            background: 'rgba(255,255,255,0.04)',
+            background: 'rgba(20,19,15,0.04)',
             border: `1px solid ${C.hair}`,
             borderRadius: 100,
             fontSize: 11.5, color: C.t3, fontWeight: 500, letterSpacing: '-0.005em',

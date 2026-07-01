@@ -33,23 +33,23 @@ async function clearDbCache(videoId) {
    dark surface system. Semantic hues kept; *Hi-bright text on dark
    tinted chips; fill tints re-tuned for dark. */
 const C = {
-  card:       'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-  surface:    '#1c1c21',
-  border:     'rgba(255,255,255,0.08)',
-  borderFaint:'rgba(255,255,255,0.06)',
-  text1:      '#f4f4f5',
-  text2:      '#cfd0d6',
-  text3:      '#b2b3bb',
-  blue:       '#7aa2ff',
+  card:       'linear-gradient(180deg, var(--yd-surface) 0%, var(--yd-surface) 100%)',
+  surface:    'var(--yd-surface)',
+  border:     'rgba(20,19,15,0.08)',
+  borderFaint:'rgba(20,19,15,0.06)',
+  text1:      '#14130f',
+  text2:      '#6b6862',
+  text3:      '#6b6862',
+  blue:       '#8a8378',
   blueBg:     'rgba(79,134,247,0.14)',
   blueBdr:    'rgba(79,134,247,0.34)',
-  green:      '#34d27b',
+  green:      '#2d7a4f',
   greenBg:    'rgba(22,163,74,0.14)',
   greenBdr:   'rgba(22,163,74,0.34)',
-  red:        '#e5251b',
-  redBg:      'rgba(229,37,27,0.13)',
-  redBdr:     'rgba(229,37,27,0.32)',
-  amber:      '#f0a23b',
+  red:        '#c9a030',
+  redBg:      'rgba(201,160,48,0.13)',
+  redBdr:     'rgba(201,160,48,0.32)',
+  amber:      '#b07d1a',
   amberBg:    'rgba(217,119,6,0.14)',
   amberBdr:   'rgba(217,119,6,0.34)',
 }
@@ -67,14 +67,14 @@ const BREAKDOWN_META = {
 
 const DESC_TYPE_META = {
   story:   { label: 'Story',   color: C.blue,  bg: C.blueBg,  bdr: C.blueBdr  },
-  value:   { label: 'Value',   color: '#34d27b', bg: C.greenBg, bdr: C.greenBdr },
-  keyword: { label: 'Keyword', color: '#f0a23b', bg: C.amberBg, bdr: C.amberBdr },
+  value:   { label: 'Value',   color: '#2d7a4f', bg: C.greenBg, bdr: C.greenBdr },
+  keyword: { label: 'Keyword', color: '#b07d1a', bg: C.amberBg, bdr: C.amberBdr },
 }
 
 const HOOK_META = {
   curiosity:      { label: 'Curiosity / FOMO', color: C.blue,  desc: "Makes viewers feel they're missing something" },
-  transformation: { label: 'Transformation',   color: '#34d27b', desc: 'Focuses on the outcome or result' },
-  contrarian:     { label: 'Contrarian',        color: '#f0a23b', desc: "Challenges assumptions, what others don't show" },
+  transformation: { label: 'Transformation',   color: '#2d7a4f', desc: 'Focuses on the outcome or result' },
+  contrarian:     { label: 'Contrarian',        color: '#b07d1a', desc: "Challenges assumptions, what others don't show" },
 }
 
 // ── Primitives ─────────────────────────────────────────────────────────────────
@@ -190,9 +190,9 @@ function TitlePreviewSimulator({ title }) {
 function ApplyButton({ onClick, state, label = 'Apply to YouTube' }) {
   const styles = {
     idle:    { bg: C.red,     color: '#fff',    border: C.red     },
-    loading: { bg: C.redBg,   color: '#fb6a60',     border: C.redBdr  },
-    success: { bg: C.greenBg, color: '#34d27b',   border: C.greenBdr},
-    error:   { bg: C.redBg,   color: '#fb6a60',     border: C.redBdr  },
+    loading: { bg: C.redBg,   color: '#7a5b14',     border: C.redBdr  },
+    success: { bg: C.greenBg, color: '#2d7a4f',   border: C.greenBdr},
+    error:   { bg: C.redBg,   color: '#7a5b14',     border: C.redBdr  },
   }
   const s = styles[state] || styles.idle
   const labels = { idle: label, loading: 'Applying…', success: '✓ Applied', error: '✗ Failed' }
@@ -203,7 +203,7 @@ function ApplyButton({ onClick, state, label = 'Apply to YouTube' }) {
         background: s.bg, color: s.color, border: `1.5px solid ${s.border}`,
         cursor: state === 'loading' || state === 'success' ? 'default' : 'pointer',
         fontFamily: 'inherit', transition: 'all 0.2s',
-        boxShadow: state === 'idle' ? '0 1px 3px rgba(229,37,27,0.2), 0 4px 12px rgba(229,37,27,0.18)' : 'none',
+        boxShadow: state === 'idle' ? '0 1px 3px rgba(201,160,48,0.2), 0 4px 12px rgba(201,160,48,0.18)' : 'none',
       }}>
       {labels[state] || label}
     </button>
@@ -251,17 +251,17 @@ function DescriptionCard({ d, idx, applyState, applyError, onApply }) {
             value={draft}
             onChange={e => setDraft(e.target.value)}
             rows={8}
-            style={{ width: '100%', fontSize: 12, color: C.text1, lineHeight: 1.7, background: C.surface, padding: '10px 12px', borderRadius: 8, marginBottom: 10, border: `1px solid ${C.border}`, fontFamily: "'Geist', 'Inter', system-ui, sans-serif", resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
+            style={{ width: '100%', fontSize: 12, color: C.text1, lineHeight: 1.7, background: C.surface, padding: '10px 12px', borderRadius: 8, marginBottom: 10, border: `1px solid ${C.border}`, fontFamily: "'Barlow', system-ui, sans-serif", resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
           />
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button onClick={() => setExpanded(v => !v)}
-            style={{ fontSize: 12, color: '#fb6a60', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, fontWeight: 600 }}>
+            style={{ fontSize: 12, color: '#7a5b14', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, fontWeight: 600 }}>
             {expanded ? 'Collapse ↑' : 'Show full ↓'}
           </button>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
             {applyState === 'error' && applyError && (
-              <span style={{ fontSize: 12, color: '#fb6a60' }}>{applyError}</span>
+              <span style={{ fontSize: 12, color: '#7a5b14' }}>{applyError}</span>
             )}
             <ApplyButton onClick={() => onApply(draft, idx)} state={applyState} label="Apply Description" />
           </div>
@@ -480,15 +480,15 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
           <div style={{
             width: 68, height: 68, borderRadius: '50%',
-            background: `conic-gradient(${C.amber} 0deg 230deg, rgba(255,255,255,0.08) 230deg 360deg)`,
+            background: `conic-gradient(${C.amber} 0deg 230deg, rgba(20,19,15,0.08) 230deg 360deg)`,
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
           }}>
             <div style={{ width: 54, height: 54, borderRadius: '50%', background: C.surface, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: 20, fontWeight: 700, color: '#f0a23b', letterSpacing: '-0.5px' }}>64</span>
+              <span style={{ fontSize: 20, fontWeight: 700, color: '#b07d1a', letterSpacing: '-0.5px' }}>64</span>
             </div>
           </div>
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Needs work</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Needs work</p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55 }}>Front-loading weak · no power word · missing number specificity</p>
           </div>
         </div>
@@ -496,7 +496,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
           background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.14)',
           borderRadius: 10, padding: '14px 16px',
         }}>
-          <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>AI rewrite · Score 88</p>
+          <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>AI rewrite · Score 88</p>
           <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>
             0 to 10K Subs in 90 Days: The 3 Things That Moved the Needle
           </p>
@@ -549,8 +549,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
         <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
           {(videoResult || titleResult) && (
             <button onClick={handleClear}
-              style={{ fontSize: 12, color: '#fb6a60', background: C.surface, border: `1px solid ${C.red}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(229,37,27,0.12)' }}>
-              Re-analyse <span style={{ color: '#fb6a60', opacity: 0.7, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span>
+              style={{ fontSize: 12, color: '#7a5b14', background: C.surface, border: `1px solid ${C.red}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(201,160,48,0.12)' }}>
+              Re-analyse <span style={{ color: '#7a5b14', opacity: 0.7, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span>
             </button>
           )}
           <button onClick={onClose}
@@ -571,8 +571,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
       {/* Errors */}
       {(videoError || titleError) && !isLoading && (
         <div style={{ padding: '12px 0' }}>
-          {videoError && <p style={{ fontSize: 14, color: '#fb6a60', marginBottom: 4 }}>{videoError}</p>}
-          {titleError && <p style={{ fontSize: 14, color: '#fb6a60' }}>{titleError}</p>}
+          {videoError && <p style={{ fontSize: 14, color: '#7a5b14', marginBottom: 4 }}>{videoError}</p>}
+          {titleError && <p style={{ fontSize: 14, color: '#7a5b14' }}>{titleError}</p>}
         </div>
       )}
 
@@ -585,7 +585,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
             const msg   = parts.slice(1).join('|').trim()
             return (
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: '#fb6a60', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Fix first</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: '#7a5b14', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Fix first</span>
                 <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{area}{msg ? `, ${msg}` : ''}</p>
               </div>
             )
@@ -633,13 +633,13 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
 
                   {/* Search Intent */}
                   <div style={{ background: 'rgba(79,134,247,0.14)', border: '1px solid rgba(79,134,247,0.16)', borderRadius: 10, padding: '12px 14px' }}>
-                    <p style={{ fontSize: 10, fontWeight: 600, color: '#7aa2ff', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Search Intent</p>
+                    <p style={{ fontSize: 10, fontWeight: 600, color: '#8a8378', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Search Intent</p>
                     <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{titleResult.intent_analysis.search_intent}</p>
                   </div>
 
                   {/* Competitor Gap */}
                   <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                    <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Competitor Gap</p>
+                    <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Competitor Gap</p>
                     <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{titleResult.intent_analysis.gap_opportunity || '—'}</p>
                     {titleResult.intent_analysis.overused_angle && (
                       <p style={{ fontSize: 12, color: C.text3, marginTop: 8, lineHeight: 1.55 }}>
@@ -650,7 +650,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
 
                   {/* Emotional Driver */}
                   <div style={{ background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                    <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Emotional Driver</p>
+                    <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Emotional Driver</p>
                     <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{titleResult.intent_analysis.emotional_driver}</p>
                   </div>
 
@@ -675,7 +675,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                             borderTop: `3px solid ${isSelc ? C.red : hm.color}`,
                             borderRadius: 12, background: C.card, cursor: 'pointer',
                             transition: 'border-color 0.15s, box-shadow 0.15s',
-                            boxShadow: isSelc ? '0 0 0 3px rgba(229,37,27,0.08)' : '0 1px 4px rgba(0,0,0,0.05)',
+                            boxShadow: isSelc ? '0 0 0 3px rgba(201,160,48,0.08)' : '0 1px 4px rgba(0,0,0,0.05)',
                           }}>
 
                           {/* Header row */}
@@ -700,7 +700,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
 
                             {/* Why it works */}
                             <div style={{ background: 'rgba(79,134,247,0.14)', border: '1px solid rgba(79,134,247,0.16)', borderRadius: 10, padding: '10px 12px' }}>
-                              <p style={{ fontSize: 10, fontWeight: 600, color: '#7aa2ff', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Why it works</p>
+                              <p style={{ fontSize: 10, fontWeight: 600, color: '#8a8378', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Why it works</p>
                               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.why_it_works || hm.desc}</p>
                             </div>
 
@@ -719,7 +719,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
 
                             {/* Scores */}
                             <div style={{ background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.14)', borderRadius: 10, padding: '10px 12px' }}>
-                              <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Scores</p>
+                              <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Scores</p>
                               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                                 {s.seo_score  > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: 12, color: C.text3 }}>SEO</span><span style={{ fontSize: 14, fontWeight: 700, color: s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.amber : C.red }}>{s.seo_score}</span></div>}
                                 {s.ctr_score  > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: 12, color: C.text3 }}>CTR</span><span style={{ fontSize: 14, fontWeight: 700, color: s.ctr_score  >= 70 ? C.green : s.ctr_score  >= 50 ? C.amber : C.red }}>{s.ctr_score}</span></div>}
@@ -737,7 +737,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12 }}>
                     <ApplyButton onClick={applyTitle} state={titleApply} />
                     {titleApply === 'error' && titleApplyErr && (
-                      <span style={{ fontSize: 12, color: '#fb6a60' }}>{titleApplyErr}</span>
+                      <span style={{ fontSize: 12, color: '#7a5b14' }}>{titleApplyErr}</span>
                     )}
                   </div>
                 </div>
@@ -753,7 +753,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
 
                 {/* Score + verdict */}
                 <div style={{ background: 'rgba(79,134,247,0.14)', border: '1px solid rgba(79,134,247,0.16)', borderRadius: 10, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: '#7aa2ff', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Assessment</p>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: '#8a8378', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Assessment</p>
                   <div style={{ marginBottom: 10 }}>
                     <ScoreBar score={a.description.score} label="Quality score" />
                   </div>
@@ -761,24 +761,24 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                 </div>
 
                 {/* Hook quality */}
-                <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderLeft: `3px solid #7aa2ff`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: '#7aa2ff', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Hook, first 150 chars</p>
+                <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderLeft: `3px solid #8a8378`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: '#8a8378', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Hook, first 150 chars</p>
                   <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{a.description.hook_quality || 'No hook data available.'}</p>
                 </div>
 
                 {/* Issues */}
-                <div style={{ background: a.description.issues?.length > 0 ? 'rgba(229,37,27,0.05)' : 'rgba(22,163,74,0.14)', border: `1px solid ${a.description.issues?.length > 0 ? C.redBdr : 'rgba(22,163,74,0.14)'}`, borderRadius: 10, padding: '12px 14px' }}>
+                <div style={{ background: a.description.issues?.length > 0 ? 'rgba(201,160,48,0.05)' : 'rgba(22,163,74,0.14)', border: `1px solid ${a.description.issues?.length > 0 ? C.redBdr : 'rgba(22,163,74,0.14)'}`, borderRadius: 10, padding: '12px 14px' }}>
                   <p style={{ fontSize: 10, fontWeight: 600, color: a.description.issues?.length > 0 ? C.red : C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
                     {a.description.issues?.length > 0 ? 'Issues to fix' : 'No issues'}
                   </p>
                   {a.description.issues?.length > 0
                     ? a.description.issues.map((issue, i) => (
                         <div key={i} style={{ display: 'flex', gap: 7, alignItems: 'flex-start', marginBottom: 6 }}>
-                          <span style={{ fontSize: 13, color: '#fb6a60', fontWeight: 600, flexShrink: 0 }}>✕</span>
+                          <span style={{ fontSize: 13, color: '#7a5b14', fontWeight: 600, flexShrink: 0 }}>✕</span>
                           <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.55 }}>{issue}</span>
                         </div>
                       ))
-                    : <p style={{ fontSize: 13, color: '#34d27b', lineHeight: 1.65 }}>Description looks good.</p>
+                    : <p style={{ fontSize: 13, color: '#2d7a4f', lineHeight: 1.65 }}>Description looks good.</p>
                   }
                 </div>
 
@@ -788,16 +788,16 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                 <div style={{ borderTop: `1px solid ${C.borderFaint}`, paddingTop: 14 }}>
                   <p style={{ fontSize: 14, color: C.text3, marginBottom: 12 }}>
                     Generate 3 AI-optimised descriptions (story / value / keyword) and apply directly to YouTube.
-                    {titleApply === 'success' && <span style={{ color: '#34d27b', fontWeight: 600 }}> Using your new applied title.</span>}
+                    {titleApply === 'success' && <span style={{ color: '#2d7a4f', fontWeight: 600 }}> Using your new applied title.</span>}
                   </p>
                   <button onClick={generateDescriptions} disabled={descLoading}
-                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 22px', background: !descLoading ? C.red : C.surface, color: !descLoading ? '#fff' : C.text3, border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 600, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.15s', boxShadow: !descLoading ? '0 1px 3px rgba(229,37,27,0.2), 0 4px 12px rgba(229,37,27,0.18)' : 'none' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 22px', background: !descLoading ? C.red : C.surface, color: !descLoading ? '#fff' : C.text3, border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 600, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.15s', boxShadow: !descLoading ? '0 1px 3px rgba(201,160,48,0.2), 0 4px 12px rgba(201,160,48,0.18)' : 'none' }}>
                     {descLoading ? <><SpinIcon /> Generating…</> : <>
                       <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 10 3.3 12.5l1.4-4.3L1 5.5h4.5z"/></svg>
                       Generate 3 descriptions · 1 credit
                     </>}
                   </button>
-                  {descError && <p style={{ marginTop: 10, fontSize: 14, color: '#fb6a60' }}>{descError}</p>}
+                  {descError && <p style={{ marginTop: 10, fontSize: 14, color: '#7a5b14' }}>{descError}</p>}
                 </div>
               )}
 
@@ -806,8 +806,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                     <p style={{ fontSize: 14, color: C.text3 }}>Expand each to review &amp; edit, then apply directly to YouTube.</p>
                     <button onClick={() => { setDescApplyStates({}); setDescApplyErrors({}); generateDescriptions() }} disabled={descLoading}
-                      style={{ fontSize: 14, color: '#fb6a60', background: C.surface, border: `1px solid ${C.red}`, borderRadius: 100, padding: '6px 14px', cursor: descLoading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', fontWeight: 600, opacity: descLoading ? 0.6 : 1, boxShadow: '0 1px 3px rgba(229,37,27,0.12)' }}>
-                      {descLoading ? 'Regenerating…' : <>Regenerate <span style={{ color: '#fb6a60', opacity: 0.7, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span></>}
+                      style={{ fontSize: 14, color: '#7a5b14', background: C.surface, border: `1px solid ${C.red}`, borderRadius: 100, padding: '6px 14px', cursor: descLoading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', fontWeight: 600, opacity: descLoading ? 0.6 : 1, boxShadow: '0 1px 3px rgba(201,160,48,0.12)' }}>
+                      {descLoading ? 'Regenerating…' : <>Regenerate <span style={{ color: '#7a5b14', opacity: 0.7, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span></>}
                     </button>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -830,7 +830,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
 
                 {/* Score + verdict */}
                 <div style={{ background: 'rgba(79,134,247,0.14)', border: '1px solid rgba(79,134,247,0.16)', borderRadius: 10, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: '#7aa2ff', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Assessment</p>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: '#8a8378', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Assessment</p>
                   <div style={{ marginBottom: 10 }}>
                     <ScoreBar score={a.thumbnail.score} label="Visual score" />
                   </div>
@@ -838,8 +838,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                 </div>
 
                 {/* Checks */}
-                <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderLeft: `3px solid #7aa2ff`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: '#7aa2ff', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Visual checks</p>
+                <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderLeft: `3px solid #8a8378`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: '#8a8378', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Visual checks</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {[
                       [a.thumbnail.has_text_overlay, 'Text overlay'],
@@ -859,15 +859,15 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
 
                 {/* Tips */}
                 <div style={{ background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Recommendations</p>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Recommendations</p>
                   {a.thumbnail.tips?.length > 0
                     ? a.thumbnail.tips.map((tip, i) => (
                         <div key={i} style={{ display: 'flex', gap: 7, alignItems: 'flex-start', marginBottom: 8 }}>
-                          <span style={{ fontSize: 13, color: '#34d27b', fontWeight: 600, flexShrink: 0 }}>→</span>
+                          <span style={{ fontSize: 13, color: '#2d7a4f', fontWeight: 600, flexShrink: 0 }}>→</span>
                           <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.55 }}>{tip}</span>
                         </div>
                       ))
-                    : <p style={{ fontSize: 13, color: '#34d27b', lineHeight: 1.65 }}>Thumbnail looks good.</p>
+                    : <p style={{ fontSize: 13, color: '#2d7a4f', lineHeight: 1.65 }}>Thumbnail looks good.</p>
                   }
                 </div>
 

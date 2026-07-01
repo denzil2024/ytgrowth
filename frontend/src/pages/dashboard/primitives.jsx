@@ -13,16 +13,16 @@ import {
 export function YTGLogo({ size = 12 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
+      <rect width="32" height="32" rx="9" fill="#c9a030"/>
       <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
+      <polygon points="13.5,19 19.5,16 13.5,13" fill="#c9a030"/>
     </svg>
   )
 }
 
-/* ─── Logo (lockup, white wordmark variant for the dark shell) ─────────── */
+/* ─── Logo (lockup, ink wordmark for the light shell) ─────────── */
 export function Logo({ size = 24 }) {
-  return <BrandLockup height={size} tone="light" />
+  return <BrandLockup height={size} tone="dark" />
 }
 
 /* ─── Score ring ────────────────────────────────────────────────────────── */
@@ -40,11 +40,10 @@ export function ScoreRing({ score }) {
         transform={`rotate(-90 ${cx} ${cy})`}
         style={{ transition: 'stroke-dasharray 1s cubic-bezier(0.34,1.56,0.64,1)' }}
       />
-      <text x={cx} y={cy - 4} textAnchor="middle" fill={col}
-        fontSize="24" fontWeight="700" fontFamily="Geist, Inter, sans-serif"
-        style={{ fontVariantNumeric: 'tabular-nums' }}>{score}</text>
-      <text x={cx} y={cy + 13} textAnchor="middle" fill={C.text3}
-        fontSize="10" fontFamily="Geist, Inter, sans-serif">{scoreLabel(score)}</text>
+      <text x={cx} y={cy - 2} textAnchor="middle" fill={col}
+        fontSize="34" fontWeight="500" fontFamily="'Cormorant Garamond', Georgia, serif">{score}</text>
+      <text x={cx} y={cy + 15} textAnchor="middle" fill="#8a8378"
+        fontSize="9.5" fontWeight="600" letterSpacing="0.08em" fontFamily="'Barlow Condensed', sans-serif">{scoreLabel(score).toUpperCase()}</text>
     </svg>
   )
 }
@@ -91,8 +90,8 @@ export function HeroTile({ label, value, sub, delta, deltaSuffix, deltaIsAbsolut
   const deltaNum = hasDelta ? Number(delta) : 0
   const deltaPositive = deltaNum >= 0
   const deltaColor = !hasDelta ? C.text3 : deltaPositive ? C.green : C.red
-  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
-  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.18)' : 'rgba(229,37,27,0.18)'
+  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(201,160,48,0.07)'
+  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.18)' : 'rgba(201,160,48,0.18)'
   const deltaLabel = hasDelta
     ? `${deltaPositive ? '+' : ''}${fmtNum(Math.abs(deltaNum)) }${deltaIsAbsolute ? '' : ''}`
     : ''
@@ -105,7 +104,7 @@ export function HeroTile({ label, value, sub, delta, deltaSuffix, deltaIsAbsolut
             display: 'inline-flex', alignItems: 'center', gap: 4,
             fontSize: 11, fontWeight: 600, color: deltaColor,
             background: deltaBg, border: `1px solid ${deltaBdr}`,
-            padding: '3px 9px', borderRadius: 100,
+            padding: '3px 9px', borderRadius: 0,
             fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px',
           }}>
             <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: deltaPositive ? 'none' : 'rotate(180deg)' }}>
@@ -129,8 +128,8 @@ export function Sparkline({
   data,
   width = 160,
   height = 48,
-  stroke = '#e5251b',
-  fill = 'rgba(229,37,27,0.10)',
+  stroke = '#c9a030',
+  fill = 'rgba(201,160,48,0.10)',
   strokeWidth = 1.8,
 }) {
   if (!data || data.length < 2) {
@@ -181,8 +180,8 @@ export function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, seri
   const deltaNum = hasDelta ? Number(delta) : 0
   const deltaPositive = deltaNum >= 0
   const deltaColor = !hasDelta ? C.text3 : deltaPositive ? C.green : C.red
-  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
-  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.20)' : 'rgba(229,37,27,0.20)'
+  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(201,160,48,0.07)'
+  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.20)' : 'rgba(201,160,48,0.20)'
 
   return (
     <div className="ytg-stat-card" style={{ padding: '18px 20px 16px', position: 'relative', overflow: 'hidden' }}>
@@ -199,7 +198,7 @@ export function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, seri
                 display: 'inline-flex', alignItems: 'center', gap: 3,
                 fontSize: 10.5, fontWeight: 600, color: deltaColor,
                 background: deltaBg, border: `1px solid ${deltaBdr}`,
-                padding: '1px 7px', borderRadius: 100,
+                padding: '1px 7px', borderRadius: 0,
                 letterSpacing: '-0.05px',
                 fontVariantNumeric: 'tabular-nums',
               }}>
@@ -224,7 +223,7 @@ export function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, seri
           }}>
             <div style={{
               width: `${pct}%`, height: '100%',
-              background: 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)',
+              background: 'linear-gradient(90deg, rgba(201,160,48,0.55) 0%, #c9a030 100%)',
               borderRadius: 99,
               transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
             }}/>
@@ -257,7 +256,7 @@ export function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, seri
             gap: 6, paddingBottom: 4,
             background: 'rgba(15,15,19,0.025)',
             border: '1px dashed rgba(15,15,19,0.08)',
-            borderRadius: 10,
+            borderRadius: 0,
           }}>
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="rgba(10,10,15,0.30)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
               <path d="M2 14l4-5 3 3 4-6 3 4"/>
@@ -284,8 +283,8 @@ export function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix,
   const deltaNum = hasDelta ? Number(delta) : 0
   const deltaPositive = deltaNum >= 0
   const deltaColor = !hasDelta ? C.text3 : deltaPositive ? C.green : C.red
-  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
-  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.18)' : 'rgba(229,37,27,0.18)'
+  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(201,160,48,0.07)'
+  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.18)' : 'rgba(201,160,48,0.18)'
 
   return (
     <div className="ytg-stat-card" style={{ padding: '14px 16px 12px' }}>
@@ -303,7 +302,7 @@ export function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix,
             display: 'inline-flex', alignItems: 'center', gap: 3,
             fontSize: 10.5, fontWeight: 600, color: deltaColor,
             background: deltaBg, border: `1px solid ${deltaBdr}`,
-            padding: '1px 7px', borderRadius: 100,
+            padding: '1px 7px', borderRadius: 0,
             letterSpacing: '-0.05px',
             fontVariantNumeric: 'tabular-nums',
           }}>
@@ -331,7 +330,7 @@ export function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix,
       }}>
         <div style={{
           width: `${pct}%`, height: '100%',
-          background: 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)',
+          background: 'linear-gradient(90deg, rgba(201,160,48,0.55) 0%, #c9a030 100%)',
           borderRadius: 99,
           transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
         }}/>

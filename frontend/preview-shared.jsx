@@ -30,7 +30,7 @@ if (isModal) {
   root.render(React.createElement(UpsellModal, { open: true, onClose: () => {}, ...gateProps }))
 } else {
   root.render(
-    React.createElement('div', { style: { maxWidth: 1040, margin: '0 auto', padding: '40px 24px', background: '#0e0e10', minHeight: '100vh' } },
+    React.createElement('div', { style: { maxWidth: 1040, margin: '0 auto', padding: '40px 24px', background: 'var(--yd-paper)', minHeight: '100vh' } },
       React.createElement(Section, { label: 'UpsellGate — solo' }, React.createElement(UpsellGate, gateProps)),
       React.createElement(Section, { label: 'UpsellGate — with blurred teaser' }, React.createElement(UpsellGate, { ...gateProps, showPackLink: true, previewContent: React.createElement(Mock) })),
       React.createElement(Section, { label: 'OnboardingCard — in progress' }, React.createElement(OnboardingCard, { channelName: 'Life with Nthenya', trackedCompetitor: true, optimized: false, exploredIdeas: false, onNavigate: () => {}, onDismiss: () => {} })),

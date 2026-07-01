@@ -5,35 +5,35 @@ import { loginUrl } from '../utm.js'
 /* ── Design tokens ──────────────────────────────────────────────────────────
    Aligned with the Competitors design north-star, dark theme. Geist font,
    1040 centered, dark gradient cards + single shadow, hairline
-   rgba(255,255,255,0.08) borders, 14px radius, 11/600/0.10em eyebrows,
+   rgba(20,19,15,0.08) borders, 14px radius, 11/600/0.10em eyebrows,
    canonical dark text ramp, weights capped at 700 (headings 600). */
 const C = {
-  red:      '#e5251b',
-  redLight: '#ef3a31',
-  redBg:    'rgba(229,37,27,0.13)',
-  redBdr:   'rgba(229,37,27,0.32)',
-  green:    '#34d27b',
+  red:      '#c9a030',
+  redLight: '#d4af3f',
+  redBg:    'rgba(201,160,48,0.13)',
+  redBdr:   'rgba(201,160,48,0.32)',
+  green:    '#2d7a4f',
   greenBg:  'rgba(22,163,74,0.16)',
   greenBdr: 'rgba(22,163,74,0.34)',
-  amber:    '#f0a23b',
+  amber:    '#b07d1a',
   amberBg:  'rgba(217,119,6,0.14)',
   amberBdr: 'rgba(217,119,6,0.34)',
-  ink:      '#f4f4f5',
-  ink60:    '#cfd0d6',
-  ink55:    '#cfd0d6',
-  ink50:    '#b2b3bb',
-  ink45:    '#b2b3bb',
-  ink30:    '#87878f',
-  hairline: 'rgba(255,255,255,0.08)',
-  chipBg:   'rgba(255,255,255,0.06)',
+  ink:      '#14130f',
+  ink60:    '#6b6862',
+  ink55:    '#6b6862',
+  ink50:    '#6b6862',
+  ink45:    '#6b6862',
+  ink30:    '#8a8378',
+  hairline: 'rgba(20,19,15,0.08)',
+  chipBg:   'rgba(20,19,15,0.06)',
 }
 
 /* Credit-state accent. Green when healthy, amber under 20%, red at zero.
    Each returns a solid, a lighter top-of-gradient, a glow and a soft tint. */
 function creditAccent(state) {
-  if (state === 'empty') return { solid: '#e5251b', light: '#ef3a31', glow: 'rgba(229,37,27,0.30)' }
-  if (state === 'low')   return { solid: '#f0a23b', light: '#f59e0b', glow: 'rgba(217,119,6,0.34)' }
-  return                        { solid: '#34d27b', light: '#22c55e', glow: 'rgba(22,163,74,0.32)' }
+  if (state === 'empty') return { solid: '#c9a030', light: '#d4af3f', glow: 'rgba(201,160,48,0.30)' }
+  if (state === 'low')   return { solid: '#b07d1a', light: '#f59e0b', glow: 'rgba(217,119,6,0.34)' }
+  return                        { solid: '#2d7a4f', light: '#22c55e', glow: 'rgba(22,163,74,0.32)' }
 }
 
 /* ── Page-scoped styles. Geist load, base typography, card grammar, button
@@ -54,7 +54,7 @@ function useSettingsStyles() {
       .set-page { max-width: 1040px; margin: 0 auto; }
       .set-page, .set-page * {
         box-sizing: border-box;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
       .set-page p, .set-page span, .set-page div, .set-page h1, .set-page label { margin: 0; }
@@ -86,20 +86,20 @@ function useSettingsStyles() {
       }
 
       .set-card {
-        background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
+        background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
         border: 1px solid ${C.hairline};
         border-radius: 14px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04);
       }
       /* Hero reads one tier above the rest: deeper layered shadow + a
          brighter inset sheen. Grammar unchanged, just more presence. */
       .set-card-hero {
-        background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
+        background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
         border: 1px solid ${C.hairline};
         border-radius: 14px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.4),
                     0 14px 36px -10px rgba(0,0,0,0.55),
-                    inset 0 1px 0 rgba(255,255,255,0.05);
+                    inset 0 1px 0 rgba(20,19,15,0.05);
       }
 
       .set-divider { height: 1px; background: ${C.hairline}; width: 100%; }
@@ -111,14 +111,14 @@ function useSettingsStyles() {
       }
 
       /* SectionTitle grammar, identical to Competitors' SectionTitle:
-         15/700/-0.3px title, 12/#b2b3bb hint, block marginBottom 14. */
+         15/700/-0.3px title, 12/#6b6862 hint, block marginBottom 14. */
       .set-section { margin-bottom: 14px; }
       .set-card-title {
-        font-size: 15px; font-weight: 600; color: #f4f4f5;
+        font-size: 15px; font-weight: 600; color: #14130f;
         letter-spacing: -0.3px;
       }
       .set-card-sub {
-        font-size: 12px; font-weight: 400; color: #b2b3bb;
+        font-size: 12px; font-weight: 400; color: #6b6862;
         margin-top: 3px !important; line-height: 1.5;
       }
 
@@ -127,11 +127,11 @@ function useSettingsStyles() {
         background: linear-gradient(180deg, ${C.redLight} 0%, ${C.red} 100%);
         color: #fff; border: none; border-radius: 100px;
         padding: 8px 18px; font-size: 13px; font-weight: 600;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         letter-spacing: -0.01em; text-decoration: none;
         display: inline-flex; align-items: center; gap: 6px;
-        box-shadow: 0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
+        box-shadow: 0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22);
         transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
       }
       .set-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
@@ -139,23 +139,23 @@ function useSettingsStyles() {
       .set-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
 
       .set-btn-secondary {
-        background: rgba(255,255,255,0.04); color: ${C.ink};
-        border: 1px solid rgba(255,255,255,0.12); border-radius: 100px;
+        background: rgba(20,19,15,0.04); color: ${C.ink};
+        border: 1px solid rgba(20,19,15,0.12); border-radius: 100px;
         padding: 7px 16px; font-size: 13px; font-weight: 600;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         letter-spacing: -0.01em;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04);
         transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-btn-secondary:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.20); transform: translateY(-1px); }
+      .set-btn-secondary:hover { background: rgba(20,19,15,0.07); border-color: rgba(20,19,15,0.20); transform: translateY(-1px); }
       .set-btn-secondary:active { transform: translateY(0); }
 
       .set-btn-text {
         background: transparent; color: ${C.ink55};
         border: none; padding: 6px 4px;
         font-size: 13px; font-weight: 500;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; text-decoration: none;
         letter-spacing: -0.01em;
         display: inline-flex; align-items: center; gap: 5px;
@@ -164,68 +164,68 @@ function useSettingsStyles() {
       .set-btn-text:hover { color: ${C.ink}; gap: 7px; }
 
       .set-btn-danger-outline {
-        background: rgba(229,37,27,0.10); color: #fb6a60;
-        border: 1px solid rgba(229,37,27,0.32); border-radius: 100px;
+        background: rgba(201,160,48,0.10); color: #7a5b14;
+        border: 1px solid rgba(201,160,48,0.32); border-radius: 100px;
         padding: 7px 16px; font-size: 13px; font-weight: 600;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         letter-spacing: -0.01em;
         box-shadow: 0 1px 3px rgba(0,0,0,0.4);
         transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-btn-danger-outline:hover { background: rgba(229,37,27,0.18); border-color: rgba(229,37,27,0.48); transform: translateY(-1px); }
+      .set-btn-danger-outline:hover { background: rgba(201,160,48,0.18); border-color: rgba(201,160,48,0.48); transform: translateY(-1px); }
       .set-btn-danger-outline:active { transform: translateY(0); }
 
       .set-btn-row-disconnect {
         background: transparent; color: ${C.ink45};
         border: none; padding: 5px 8px; border-radius: 7px;
         font-size: 12.5px; font-weight: 600;
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; letter-spacing: -0.01em;
         transition: color 160ms cubic-bezier(0.32,0.72,0,1), background 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-btn-row-disconnect:hover { color: ${C.red}; background: rgba(229,37,27,0.07); }
+      .set-btn-row-disconnect:hover { color: ${C.red}; background: rgba(201,160,48,0.07); }
 
       .set-page button:focus-visible,
       .set-page a:focus-visible {
-        outline: 2px solid rgba(229,37,27,0.45);
+        outline: 2px solid rgba(201,160,48,0.45);
         outline-offset: 2px;
       }
 
       /* ── Inputs ───────────────────────────────────────────────────────── */
       .set-input {
         width: 100%; padding: 11px 14px;
-        background: #1c1c21;
-        border: 1px solid rgba(255,255,255,0.12);
+        background: var(--yd-surface);
+        border: 1px solid rgba(20,19,15,0.12);
         border-radius: 12px;
         font-size: 13.5px; font-weight: 450; color: ${C.ink};
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
         transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-input::placeholder { color: rgba(255,255,255,0.34); font-weight: 450; }
+      .set-input::placeholder { color: rgba(20,19,15,0.34); font-weight: 450; }
       .set-input:focus {
-        border-color: rgba(229,37,27,0.45);
-        box-shadow: 0 0 0 4px rgba(229,37,27,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+        border-color: rgba(201,160,48,0.45);
+        box-shadow: 0 0 0 4px rgba(201,160,48,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
       }
 
       .set-textarea {
         width: 100%; padding: 12px 14px;
-        background: #1c1c21;
-        border: 1px solid rgba(255,255,255,0.12);
+        background: var(--yd-surface);
+        border: 1px solid rgba(20,19,15,0.12);
         border-radius: 12px;
         font-size: 13.5px; font-weight: 450; color: ${C.ink};
-        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        font-family: 'Barlow', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em; line-height: 1.55;
         resize: vertical; min-height: 104px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
         transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-textarea::placeholder { color: rgba(255,255,255,0.34); font-weight: 450; }
+      .set-textarea::placeholder { color: rgba(20,19,15,0.34); font-weight: 450; }
       .set-textarea:focus {
-        border-color: rgba(229,37,27,0.45);
-        box-shadow: 0 0 0 4px rgba(229,37,27,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+        border-color: rgba(201,160,48,0.45);
+        box-shadow: 0 0 0 4px rgba(201,160,48,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
       }
 
       /* Channel row, hover wash bleeds into the card padding via the
@@ -236,7 +236,7 @@ function useSettingsStyles() {
         border-radius: 11px;
         transition: background 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-channel-row:hover { background: rgba(255,255,255,0.04); }
+      .set-channel-row:hover { background: rgba(20,19,15,0.04); }
 
       .set-connect-row {
         display: flex; align-items: center; gap: 8px;
@@ -247,7 +247,7 @@ function useSettingsStyles() {
         letter-spacing: -0.01em; cursor: pointer;
         transition: background 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-connect-row:hover { background: rgba(229,37,27,0.12); }
+      .set-connect-row:hover { background: rgba(201,160,48,0.12); }
 
       @keyframes settingsSpin { to { transform: rotate(360deg) } }
     `
@@ -345,7 +345,7 @@ function Toggle({ on, onChange }) {
       aria-pressed={on}
       style={{
         width: 46, height: 26, borderRadius: 100,
-        background: on ? 'linear-gradient(180deg,#22c55e 0%,#16a34a 100%)' : 'rgba(255,255,255,0.16)',
+        background: on ? 'linear-gradient(180deg,#22c55e 0%,#16a34a 100%)' : 'rgba(20,19,15,0.16)',
         border: 'none', cursor: 'pointer', position: 'relative',
         transition: 'background 0.25s cubic-bezier(0.32,0.72,0,1)',
         flexShrink: 0,
@@ -378,9 +378,9 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
       zIndex: 1000,
     }}>
       <div style={{
-        background: 'linear-gradient(180deg,#1e1e24 0%,#18181c 100%)', borderRadius: 16,
+        background: 'linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%)', borderRadius: 16,
         padding: '24px 26px', maxWidth: 400, width: '90%',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.4), 0 24px 56px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.4), 0 24px 56px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(20,19,15,0.05)',
         border: `1px solid ${C.hairline}`,
       }}>
         <p style={{ fontSize: 15, fontWeight: 600, color: C.ink, letterSpacing: '-0.01em', marginBottom: 8 }}>{title}</p>
@@ -624,7 +624,7 @@ export default function Settings({ channelData }) {
             <img src={avatarPic} alt="" style={{
               width: 44, height: 44, borderRadius: '50%',
               objectFit: 'cover', flexShrink: 0,
-              boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 2px 8px rgba(0,0,0,0.45)',
+              boxShadow: '0 0 0 1px rgba(20,19,15,0.10), 0 2px 8px rgba(0,0,0,0.45)',
             }} />
           ) : (
             <div style={{
@@ -633,7 +633,7 @@ export default function Settings({ channelData }) {
               alignItems: 'center', justifyContent: 'center',
               fontSize: 15, fontWeight: 600, color: C.ink,
               flexShrink: 0,
-              boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 2px 8px rgba(0,0,0,0.45)',
+              boxShadow: '0 0 0 1px rgba(20,19,15,0.10), 0 2px 8px rgba(0,0,0,0.45)',
             }}>
               {initial || (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ color: C.ink45 }}>
@@ -665,7 +665,7 @@ export default function Settings({ channelData }) {
               fontSize: 11, fontWeight: 600, letterSpacing: '0.06em',
               textTransform: 'uppercase', padding: '4px 11px',
               borderRadius: 100, display: 'inline-block',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5)',
+              boxShadow: 'inset 0 1px 0 rgba(20,19,15,0.5)',
             }}>{planLabel(me?.plan)}</span>
             {compactBillingLabel(me) && (
               <p style={{ fontSize: 12, fontWeight: 450, color: C.ink55, marginTop: 8, letterSpacing: '-0.005em' }}>
@@ -693,7 +693,7 @@ export default function Settings({ channelData }) {
           </div>
 
           <div style={{
-            height: 7, background: 'rgba(255,255,255,0.10)', borderRadius: 99,
+            height: 7, background: 'rgba(20,19,15,0.10)', borderRadius: 99,
             overflow: 'hidden', marginTop: 14,
             boxShadow: 'inset 0 1px 1.5px rgba(0,0,0,0.35)',
           }}>
@@ -775,7 +775,7 @@ export default function Settings({ channelData }) {
                   <img src={ch.channel_thumbnail} alt="" style={{
                     width: 38, height: 38, borderRadius: '50%',
                     objectFit: 'cover', flexShrink: 0,
-                    boxShadow: '0 0 0 1px rgba(255,255,255,0.10)',
+                    boxShadow: '0 0 0 1px rgba(20,19,15,0.10)',
                   }} />
                 ) : (
                   <div style={{
@@ -783,7 +783,7 @@ export default function Settings({ channelData }) {
                     background: C.chipBg, display: 'flex',
                     alignItems: 'center', justifyContent: 'center',
                     fontSize: 14, fontWeight: 600, color: C.ink,
-                    flexShrink: 0, boxShadow: '0 0 0 1px rgba(255,255,255,0.10)',
+                    flexShrink: 0, boxShadow: '0 0 0 1px rgba(20,19,15,0.10)',
                   }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
                 )}
 
@@ -911,7 +911,7 @@ export default function Settings({ channelData }) {
             {frError
               ? frError
               : frSuccess
-                ? <span style={{ color: '#34d27b', fontWeight: 600 }}>Sent. Thanks for the suggestion.</span>
+                ? <span style={{ color: '#2d7a4f', fontWeight: 600 }}>Sent. Thanks for the suggestion.</span>
                 : `${frDesc.length} / ${FR_DESC_MAX}`}
           </div>
           <button
@@ -979,16 +979,16 @@ export default function Settings({ channelData }) {
 
       {/* ── Danger zone ─────────────────────────────────────────────────── */}
       <div style={{
-        background: 'rgba(229,37,27,0.025)',
-        border: '1px solid rgba(229,37,27,0.10)',
+        background: 'rgba(201,160,48,0.025)',
+        border: '1px solid rgba(201,160,48,0.10)',
         borderRadius: 14,
-        boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04)',
         padding: '20px 24px',
         marginBottom: 48,
         display: 'flex', alignItems: 'center', gap: 16,
       }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p className="set-card-title" style={{ color: '#fb6a60' }}>Delete account</p>
+          <p className="set-card-title" style={{ color: '#7a5b14' }}>Delete account</p>
           <p className="set-card-sub">Permanently deletes account, channels, analyses, and reports.</p>
         </div>
         <button className="set-btn-danger-outline" onClick={() => setShowDeleteDialog(true)}>

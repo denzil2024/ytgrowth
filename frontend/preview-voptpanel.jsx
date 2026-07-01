@@ -23,7 +23,7 @@ window.fetch = async (url, opts) => {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  React.createElement('div', { style: { padding: '24px', minHeight: '100vh', background: '#0e0e10' } },
+  React.createElement('div', { style: { padding: '24px', minHeight: '100vh', background: 'var(--yd-paper)' } },
     React.createElement(VideoOptimizePanel, {
       video: { video_id: 'dQw4w9WgXcQ', title: 'house tour', thumbnail: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg', views: 9200, likes: 300 },
       onClose: () => {}, onVideoUpdated: () => {}, plan: 'growth', freeTierFeatures: {},

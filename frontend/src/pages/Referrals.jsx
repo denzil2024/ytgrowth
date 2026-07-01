@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 
 /* ── Design tokens, Competitors / Settings north-star ─────────────────── */
 const C = {
-  red:      '#e5251b',
-  redHi:    '#ef3a31',
-  redBg:    'rgba(229,37,27,0.05)',
-  redBdr:   'rgba(229,37,27,0.18)',
+  red:      '#c9a030',
+  redHi:    '#d4af3f',
+  redBg:    'rgba(201,160,48,0.05)',
+  redBdr:   'rgba(201,160,48,0.18)',
   green:    '#16a34a',
-  ink:      '#0a0a0f',
+  ink:      'var(--yd-paper)',
   ink70:    'rgba(10,10,15,0.70)',
   ink55:    'rgba(10,10,15,0.55)',
   ink45:    'rgba(10,10,15,0.45)',
@@ -21,7 +21,7 @@ const CARD = {
   background:   '#ffffff',
   border:       `1px solid ${C.hair}`,
   borderRadius: 14,
-  boxShadow:    '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
+  boxShadow:    '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7)',
 }
 
 function useReferralsStyles() {
@@ -40,7 +40,7 @@ function useReferralsStyles() {
       .referrals-page { max-width: 1040px; margin: 0 auto; }
       .referrals-page, .referrals-page * {
         box-sizing: border-box;
-        font-family: 'Geist','Inter',system-ui,sans-serif;
+        font-family: 'Barlow','Inter',system-ui,sans-serif;
         -webkit-font-smoothing: antialiased;
       }
       .referrals-page p, .referrals-page span, .referrals-page div, .referrals-page h1 { margin: 0; }
@@ -79,13 +79,13 @@ function ProjectionChart({ perMonth }) {
     <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: 150, display: 'block' }}>
       <defs>
         <linearGradient id="ref-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(229,37,27,0.18)" />
-          <stop offset="100%" stopColor="rgba(229,37,27,0)" />
+          <stop offset="0%" stopColor="rgba(201,160,48,0.18)" />
+          <stop offset="100%" stopColor="rgba(201,160,48,0)" />
         </linearGradient>
       </defs>
       <path d={area} fill="url(#ref-fill)" />
-      <polyline points={line} fill="none" stroke="#e5251b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-      <circle cx={x(months - 1)} cy={y(pts[pts.length - 1])} r="4.5" fill="#e5251b" />
+      <polyline points={line} fill="none" stroke="#c9a030" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      <circle cx={x(months - 1)} cy={y(pts[pts.length - 1])} r="4.5" fill="#c9a030" />
     </svg>
   )
 }
@@ -216,7 +216,7 @@ export default function Referrals() {
                 <div style={{
                   width: '100%', maxWidth: 120, height: h, borderRadius: '8px 8px 0 0',
                   background: `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 100%)`,
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2)',
+                  boxShadow: 'inset 0 1px 0 rgba(20,19,15,0.2)',
                 }} />
                 <span style={{ fontSize: 13, fontWeight: 600, color: C.ink, marginTop: 10 }}>{t.name}</span>
                 <span style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 2 }}>${t.price}/mo plan</span>
@@ -271,7 +271,7 @@ export default function Referrals() {
             <p style={{ fontSize: 13, fontWeight: 450, color: C.ink55, maxWidth: 360, lineHeight: 1.6 }}>{error}</p>
             <button
               onClick={() => window.location.reload()}
-              style={{ marginTop: 4, padding: '8px 18px', borderRadius: 100, border: `1px solid rgba(10,10,15,0.10)`, background: '#fff', color: C.ink70, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)' }}
+              style={{ marginTop: 4, padding: '8px 18px', borderRadius: 100, border: `1px solid rgba(10,10,15,0.10)`, background: '#fff', color: C.ink70, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7)' }}
             >Try again</button>
           </div>
         )}

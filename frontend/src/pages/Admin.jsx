@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 
 /* ── Design tokens, exact match to Dashboard.jsx / SeoOptimizer.jsx ───── */
 const C = {
-  red:      '#e5251b', redBg:    '#fff5f5', redBdr:    '#fecaca',
+  red:      '#c9a030', redBg:    '#fff5f5', redBdr:    '#fecaca',
   green:    '#059669', greenBg:  '#ecfdf5', greenBdr:  '#a7f3d0',
   amber:    '#d97706', amberBg:  '#fffbeb', amberBdr:  '#fde68a',
-  text1:    '#0a0a0f',
+  text1:    'var(--yd-paper)',
   text2:    '#4a4a58',
-  text3:    '#9595a4',
+  text3:    '#8a8378',
   border:   'rgba(10,10,15,0.07)',
   bg:       '#fafafb',
   surface:  '#ffffff',
@@ -17,7 +17,7 @@ const CARD = {
   background:   C.surface,
   border:       '1px solid rgba(10,10,15,0.07)',
   borderRadius: 14,
-  boxShadow:    '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
+  boxShadow:    '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7)',
 }
 
 const PAGE_SIZE_SIGNUPS = 8
@@ -63,7 +63,7 @@ function useAdminStyles() {
       const style = document.createElement('style')
       style.id = 'ytg-admin-styles-v2'
       style.textContent = `
-        .adm, .adm * { font-family:'Geist','Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; box-sizing:border-box; }
+        .adm, .adm * { font-family:'Barlow','Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; box-sizing:border-box; }
         /* Same 1040 centered measure as every other page in the suite. */
         .adm { max-width:1040px; margin:0 auto; }
         .adm p,.adm span,.adm div,.adm h1,.adm h2,.adm h3 { margin:0; }
@@ -75,7 +75,7 @@ function useAdminStyles() {
           background:#ffffff;
           border:1px solid rgba(10,10,15,0.07); border-radius:14px;
           padding:22px 24px;
-          box-shadow:0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+          box-shadow:0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7);
           cursor:default; position:relative; overflow:hidden;
         }
 
@@ -84,17 +84,17 @@ function useAdminStyles() {
            One confident red shadow + a single soft top-edge sheen. */
         .adm-stat-card-red {
           position:relative; overflow:hidden;
-          background:linear-gradient(160deg, #ef3a31 0%, #e5251b 55%, #c81d14 100%);
+          background:linear-gradient(160deg, #c9a030 0%, #a67f1e 55%, #7a5b14 100%);
           border:none; border-radius:14px;
           padding:22px 24px;
           color:#ffffff;
-          box-shadow:0 1px 2px rgba(229,37,27,0.28), 0 12px 32px -10px rgba(229,37,27,0.45), inset 0 1px 0 rgba(255,255,255,0.22);
+          box-shadow:0 1px 2px rgba(201,160,48,0.28), 0 12px 32px -10px rgba(201,160,48,0.45), inset 0 1px 0 rgba(20,19,15,0.22);
           cursor:default;
         }
         .adm-stat-card-red::after {
           content:''; position:absolute; top:-60px; right:-60px;
           width:200px; height:200px; border-radius:50%;
-          background:radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 65%);
+          background:radial-gradient(circle, rgba(20,19,15,0.14) 0%, transparent 65%);
           pointer-events:none;
         }
 
@@ -108,7 +108,7 @@ function useAdminStyles() {
         .adm-spark-tick {
           flex:1; text-align:center;
           font-size:9.5px; font-weight:600; letter-spacing:0.05em;
-          color:var(--adm-axis, #b8b8c4);
+          color:var(--adm-axis, #6b6862);
         }
 
         /* MRR breakdown bars, per-tier horizontal bars on the red hero card */
@@ -116,17 +116,17 @@ function useAdminStyles() {
         .adm-mrr-bar-row { display:grid; grid-template-columns: 58px 1fr 60px; align-items:center; gap:10px; }
         .adm-mrr-bar-label {
           font-size:10.5px; font-weight:800; letter-spacing:0.08em;
-          text-transform:uppercase; color:rgba(255,255,255,0.78);
+          text-transform:uppercase; color:rgba(20,19,15,0.78);
         }
         .adm-mrr-bar-track {
           height:6px; border-radius:99px; overflow:hidden;
-          background:rgba(255,255,255,0.14);
+          background:rgba(20,19,15,0.14);
           box-shadow: inset 0 1px 1px rgba(0,0,0,0.10);
         }
         .adm-mrr-bar-fill {
           height:100%; border-radius:99px;
-          background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.65) 100%);
-          box-shadow: 0 0 8px rgba(255,255,255,0.32), inset 0 1px 0 rgba(255,255,255,0.4);
+          background: linear-gradient(90deg, rgba(20,19,15,0.95) 0%, rgba(20,19,15,0.65) 100%);
+          box-shadow: 0 0 8px rgba(20,19,15,0.32), inset 0 1px 0 rgba(20,19,15,0.4);
           transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
         }
         .adm-mrr-bar-value {
@@ -154,8 +154,8 @@ function useAdminStyles() {
         }
         .adm-engage-fill {
           height:100%; border-radius:99px;
-          background: linear-gradient(90deg, #34d399 0%, #059669 100%);
-          box-shadow: 0 0 8px rgba(5,150,105,0.30), inset 0 1px 0 rgba(255,255,255,0.30);
+          background: linear-gradient(90deg, #2d7a4f 0%, #059669 100%);
+          box-shadow: 0 0 8px rgba(5,150,105,0.30), inset 0 1px 0 rgba(20,19,15,0.30);
           transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
         }
 
@@ -173,16 +173,16 @@ function useAdminStyles() {
           display:flex; align-items:center; gap:10px;
         }
         .adm-section-title h2 {
-          font-size:17px; font-weight:700; color:#0a0a0f; letter-spacing:-0.3px;
+          font-size:17px; font-weight:700; color:var(--yd-paper); letter-spacing:-0.3px;
         }
         .adm-section-count {
-          font-size:11.5px; font-weight:700; color:#9595a4;
+          font-size:11.5px; font-weight:700; color:#8a8378;
           background:#f1f1f6; border:1px solid #e6e6ec;
           padding:2px 9px; border-radius:100px;
           font-variant-numeric:tabular-nums;
         }
         .adm-section-sub {
-          font-size:13px; color:#9595a4; font-weight:450; line-height:1.5;
+          font-size:13px; color:#8a8378; font-weight:450; line-height:1.5;
           margin-top:4px;
         }
         /* Card-embedded section header sits at the top of a SectionCard */
@@ -207,12 +207,12 @@ function useAdminStyles() {
           padding:13px 22px; margin-bottom:16px;
           background:#ffffff;
           border:1px solid rgba(10,10,15,0.07); border-radius:14px;
-          box-shadow:0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+          box-shadow:0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7);
         }
         .adm-pulse-eyebrow {
           display:flex; align-items:center; gap:8px; flex-shrink:0;
           font-size:11px; font-weight:700; letter-spacing:0.10em;
-          text-transform:uppercase; color:#9595a4;
+          text-transform:uppercase; color:#8a8378;
         }
         .adm-pulse-divider {
           width:1px; height:22px; background:rgba(10,10,15,0.07); flex-shrink:0;
@@ -224,29 +224,29 @@ function useAdminStyles() {
           display:inline-flex; align-items:baseline; gap:6px;
         }
         .adm-pulse-num {
-          font-size:16px; font-weight:800; color:#0a0a0f;
+          font-size:16px; font-weight:800; color:var(--yd-paper);
           letter-spacing:-0.3px; font-variant-numeric:tabular-nums;
         }
-        .adm-pulse-num.dim { color:#9595a4; }
+        .adm-pulse-num.dim { color:#8a8378; }
         .adm-pulse-num.up  { color:#059669; }
         .adm-pulse-label {
-          font-size:12px; color:#9595a4; font-weight:500;
+          font-size:12px; color:#8a8378; font-weight:500;
         }
         .adm-pulse-quiet {
-          font-size:13px; color:#9595a4; font-weight:500;
+          font-size:13px; color:#8a8378; font-weight:500;
         }
 
         .adm-row { transition:background 0.13s; }
         .adm-row:hover { background:rgba(10,10,15,0.022) !important; }
         .adm-pg-btn { transition:background 0.15s,color 0.15s,border-color 0.15s; }
-        .adm-pg-btn:not(:disabled):hover { background:rgba(10,10,15,0.025) !important; border-color:rgba(10,10,15,0.18) !important; color:#0a0a0f !important; }
+        .adm-pg-btn:not(:disabled):hover { background:rgba(10,10,15,0.025) !important; border-color:rgba(10,10,15,0.18) !important; color:var(--yd-paper) !important; }
         .adm-sec-btn { transition:border-color 0.16s,color 0.16s,box-shadow 0.16s,transform 0.16s; }
-        .adm-sec-btn:hover { border-color:rgba(10,10,15,0.18) !important; color:#0a0a0f !important; box-shadow:0 4px 16px rgba(15,15,25,0.06) !important; transform:translateY(-1px); }
+        .adm-sec-btn:hover { border-color:rgba(10,10,15,0.18) !important; color:var(--yd-paper) !important; box-shadow:0 4px 16px rgba(15,15,25,0.06) !important; transform:translateY(-1px); }
 
         /* Red primary refresh button (matches ytg-dash-btn-primary on Dashboard) */
         .adm-refresh-btn:hover:not(:disabled) {
           filter:brightness(1.06); transform:translateY(-1px);
-          box-shadow:0 1px 2px rgba(229,37,27,0.30), 0 8px 22px -6px rgba(229,37,27,0.45) !important;
+          box-shadow:0 1px 2px rgba(201,160,48,0.30), 0 8px 22px -6px rgba(201,160,48,0.45) !important;
         }
 
         /* Empty state */
@@ -301,7 +301,7 @@ function planBadge(plan) {
   if (p.includes('solo'))     return { bg: C.amberBg,  color: C.amber, bdr: C.amberBdr }
   if (p.includes('lifetime')) return { bg: C.greenBg,  color: C.green, bdr: C.greenBdr }
   if (p.includes('pack'))     return { bg: C.amberBg,  color: C.amber, bdr: C.amberBdr }
-  return { bg: '#f4f4f6', color: C.text2, bdr: C.border }
+  return { bg: '#14130f', color: C.text2, bdr: C.border }
 }
 
 /* plan bar accent: 3 tiers, paid plans get vivid green/amber/red, free is neutral */
@@ -312,7 +312,7 @@ function planBarAccent(plan) {
   if (p.includes('solo'))     return C.amber
   if (p.includes('lifetime')) return C.green
   if (p.includes('pack'))     return C.amber
-  return '#d1d1d8'  // free → muted
+  return '#6b6862'  // free → muted
 }
 
 /* ── Atoms ──────────────────────────────────────────────────────────────── */
@@ -355,7 +355,7 @@ function Sparkline({ data, accent, axisColor }) {
           }} />
         ))}
       </div>
-      <div className="adm-spark-axis" style={{ '--adm-axis': axisColor || '#b8b8c4' }}>
+      <div className="adm-spark-axis" style={{ '--adm-axis': axisColor || '#6b6862' }}>
         {data.map((_, i) => {
           const isToday = i === data.length - 1
           const dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
@@ -375,21 +375,21 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
     return (
       <div className="adm-stat-card-red">
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.82)', marginBottom: 12 }}>{label}</p>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(20,19,15,0.82)', marginBottom: 12 }}>{label}</p>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
             <p className="num" style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-0.6px', color: '#fff', lineHeight: 1 }}>{value}</p>
             {delta && (
               <span className="adm-delta" style={{
                 color: '#fff',
-                background: 'rgba(255,255,255,0.18)',
-                border: '1px solid rgba(255,255,255,0.28)',
+                background: 'rgba(20,19,15,0.18)',
+                border: '1px solid rgba(20,19,15,0.28)',
               }}>
                 <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
                 {delta.label}
               </span>
             )}
           </div>
-          {sub && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.86)', fontWeight: 500, marginTop: 14, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
+          {sub && <p style={{ fontSize: 14, color: 'rgba(20,19,15,0.86)', fontWeight: 500, marginTop: 14, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
           {breakdown && (
             <div className="adm-mrr-bars">
               {breakdown.map((b, i) => {
@@ -406,7 +406,7 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
               })}
             </div>
           )}
-          {sparkline && <Sparkline data={sparkline} accent="rgba(255,255,255,0.85)" axisColor="rgba(255,255,255,0.55)" />}
+          {sparkline && <Sparkline data={sparkline} accent="rgba(20,19,15,0.85)" axisColor="rgba(20,19,15,0.55)" />}
         </div>
       </div>
     )
@@ -419,7 +419,7 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
     <div className={`adm-stat-card${alert ? ' alert' : ''}`}
       style={{
         '--adm-accent': accentVar,
-        ...(alert ? { borderColor: 'rgba(229,37,27,0.22)', background: '#fff8f8' } : {}),
+        ...(alert ? { borderColor: 'rgba(201,160,48,0.22)', background: '#fff8f8' } : {}),
       }}>
       <div style={{ position: 'relative', zIndex: 1 }}>
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
@@ -428,7 +428,7 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
           {delta && (
             <span className="adm-delta" style={{
               color: delta.tone === 'up' ? C.green : delta.tone === 'down' ? C.red : C.text2,
-              background: delta.tone === 'up' ? C.greenBg : delta.tone === 'down' ? C.redBg : '#f4f4f6',
+              background: delta.tone === 'up' ? C.greenBg : delta.tone === 'down' ? C.redBg : '#14130f',
               border: `1px solid ${delta.tone === 'up' ? C.greenBdr : delta.tone === 'down' ? C.redBdr : C.border}`,
             }}>
               <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
@@ -501,14 +501,14 @@ function FunnelCard({ stats }) {
       label:    'Signups',
       sub:      'All-time accounts created',
       count:    total,
-      barColor: 'linear-gradient(90deg, #c9c9d3 0%, #b8b8c4 100%)',
+      barColor: 'linear-gradient(90deg, #c9c9d3 0%, #6b6862 100%)',
       isTotal:  true,
     },
     {
       label:    'Active this week',
       sub:      'Audited a channel in the last 7 days',
       count:    stats.active_7d || 0,
-      barColor: 'linear-gradient(90deg, #34d399 0%, #059669 100%)',
+      barColor: 'linear-gradient(90deg, #2d7a4f 0%, #059669 100%)',
       accent:   C.green,
       drop:     Math.max(0, total - (stats.active_7d || 0)),
       dropLabel:"haven't audited this week",
@@ -517,7 +517,7 @@ function FunnelCard({ stats }) {
       label:    'Paying customers',
       sub:      `${stats.conversion_pct || 0}% conversion rate`,
       count:    stats.paid_users || 0,
-      barColor: 'linear-gradient(90deg, #ff5048 0%, #e5251b 100%)',
+      barColor: 'linear-gradient(90deg, #c9a030 0%, #c9a030 100%)',
       accent:   C.red,
       drop:     Math.max(0, total - (stats.paid_users || 0)),
       dropLabel:'still on free plan',
@@ -557,7 +557,7 @@ function FunnelCard({ stats }) {
                   width: `${pct}%`, height: '100%',
                   background: step.barColor, borderRadius: 99,
                   transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
-                  boxShadow: step.isTotal ? 'none' : 'inset 0 1px 0 rgba(255,255,255,0.25)',
+                  boxShadow: step.isTotal ? 'none' : 'inset 0 1px 0 rgba(20,19,15,0.25)',
                 }} />
               </div>
               {step.drop > 0 && (
@@ -579,7 +579,7 @@ function FunnelCard({ stats }) {
 function EmptyState({ eyebrow = 'Empty', children }) {
   return (
     <div className="adm-empty">
-      <p style={{ fontSize: 10.5, fontWeight: 700, color: '#9595a4', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 10 }}>{eyebrow}</p>
+      <p style={{ fontSize: 10.5, fontWeight: 700, color: '#8a8378', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 10 }}>{eyebrow}</p>
       <p style={{ fontSize: 14, color: '#4a4a58', lineHeight: 1.65, maxWidth: 360, margin: '0 auto', fontWeight: 500 }}>{children}</p>
     </div>
   )
@@ -601,7 +601,7 @@ function BarRow({ label, count, total, accent, prefix, muted }) {
         </span>
       </div>
       <div style={{ height: 6, background: '#f0f0f4', borderRadius: 99, overflow: 'hidden' }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: muted ? '#d1d1d8' : accent, borderRadius: 99, transition: 'width 0.7s cubic-bezier(0.34,1.56,0.64,1)', opacity: muted ? 0.5 : 1 }} />
+        <div style={{ width: `${pct}%`, height: '100%', background: muted ? '#6b6862' : accent, borderRadius: 99, transition: 'width 0.7s cubic-bezier(0.34,1.56,0.64,1)', opacity: muted ? 0.5 : 1 }} />
       </div>
     </div>
   )
@@ -617,7 +617,7 @@ function Pager({ page, total, onPage, pageSize = PAGE_SIZE_SIGNUPS }) {
     background: C.surface, color: disabled ? C.text3 : C.text2,
     fontSize: 12.5, fontWeight: 600, fontFamily: 'inherit',
     cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1,
-    boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
+    boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7)',
   })
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px', borderTop: `1px solid ${C.border}`, background: '#fafafc' }}>
@@ -955,7 +955,7 @@ export default function Admin() {
             <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', lineHeight: 1.1 }}>Admin</h1>
             <span style={{
               fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-              color: '#9595a4', background: '#f1f1f6', border: '1px solid #e6e6ec',
+              color: '#8a8378', background: '#f1f1f6', border: '1px solid #e6e6ec',
               padding: '3px 9px', borderRadius: 100,
             }}>Internal</span>
           </div>
@@ -971,11 +971,11 @@ export default function Admin() {
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '9px 20px', borderRadius: 100, border: 'none',
-            background: 'linear-gradient(180deg, #ef3a31 0%, #e5251b 100%)',
+            background: 'linear-gradient(180deg, #d4af3f 0%, #c9a030 100%)',
             color: '#ffffff', fontSize: 13, fontWeight: 600,
             cursor: refreshing ? 'wait' : 'pointer', fontFamily: 'inherit',
             letterSpacing: '-0.01em',
-            boxShadow: '0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22)',
+            boxShadow: '0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22)',
             opacity: refreshing ? 0.65 : 1,
             transition: 'filter 0.18s, transform 0.18s, box-shadow 0.18s',
           }}
@@ -1150,11 +1150,11 @@ export default function Admin() {
                         <div className="adm-usage-fill" style={{
                           width: `${usagePct}%`,
                           background: usagePct > 80
-                            ? 'linear-gradient(90deg, #ff5048 0%, #e5251b 100%)'
+                            ? 'linear-gradient(90deg, #c9a030 0%, #c9a030 100%)'
                             : usagePct > 55
                               ? 'linear-gradient(90deg, #fbbf24 0%, #d97706 100%)'
-                              : 'linear-gradient(90deg, #34d399 0%, #059669 100%)',
-                          boxShadow: `0 0 6px ${barClr}55, inset 0 1px 0 rgba(255,255,255,0.30)`,
+                              : 'linear-gradient(90deg, #2d7a4f 0%, #059669 100%)',
+                          boxShadow: `0 0 6px ${barClr}55, inset 0 1px 0 rgba(20,19,15,0.30)`,
                         }} />
                       </div>
                     </div>
@@ -1182,12 +1182,12 @@ export default function Admin() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   padding: '9px 20px', borderRadius: 100, border: 'none',
-                  background: topupData.eligible_count === 0 ? 'rgba(10,10,15,0.06)' : 'linear-gradient(180deg, #ef3a31 0%, #e5251b 100%)',
+                  background: topupData.eligible_count === 0 ? 'rgba(10,10,15,0.06)' : 'linear-gradient(180deg, #d4af3f 0%, #c9a030 100%)',
                   color: topupData.eligible_count === 0 ? C.text3 : '#ffffff',
                   fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
                   cursor: (topupSending || topupData.eligible_count === 0) ? 'not-allowed' : 'pointer',
                   fontFamily: 'inherit', whiteSpace: 'nowrap',
-                  boxShadow: topupData.eligible_count === 0 ? 'inset 0 1px 0 rgba(255,255,255,0.6)' : '0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22)',
+                  boxShadow: topupData.eligible_count === 0 ? 'inset 0 1px 0 rgba(20,19,15,0.6)' : '0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22)',
                   opacity: topupSending ? 0.65 : 1,
                   transition: 'filter 0.16s, transform 0.16s',
                 }}
@@ -1285,8 +1285,8 @@ export default function Admin() {
         const statusStyle = (s) => {
           if (s === 'shipped')  return { c: C.green, bg: '#ecfdf5', b: '#a7f3d0', label: 'Shipped' }
           if (s === 'planned')  return { c: C.amber, bg: '#fffbeb', b: '#fde68a', label: 'Planned' }
-          if (s === 'declined') return { c: C.text3, bg: '#f4f4f6', b: C.border,  label: 'Declined' }
-          return                       { c: C.text2, bg: '#f4f4f6', b: C.border,  label: 'New' }
+          if (s === 'declined') return { c: C.text3, bg: '#14130f', b: C.border,  label: 'Declined' }
+          return                       { c: C.text2, bg: '#14130f', b: C.border,  label: 'New' }
         }
 
         return (
@@ -1297,7 +1297,7 @@ export default function Admin() {
               sub="Submitted via Settings or the /feedback share link"
               right={
                 <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 500 }}>
-                  Share link: <code style={{ background: '#f4f4f6', border: `1px solid ${C.border}`, padding: '2px 7px', borderRadius: 6, fontSize: 11.5, color: C.text2 }}>/feedback</code>
+                  Share link: <code style={{ background: '#14130f', border: `1px solid ${C.border}`, padding: '2px 7px', borderRadius: 6, fontSize: 11.5, color: C.text2 }}>/feedback</code>
                 </span>
               }
             >

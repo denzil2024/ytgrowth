@@ -36,7 +36,7 @@ export default function UpsellModal({
         backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)',
         overflowY: 'auto',
         padding: '40px 24px',
-        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+        fontFamily: "'Barlow', system-ui, sans-serif",
         animation: 'upmFade 0.16s ease',
       }}
     >
@@ -61,14 +61,14 @@ export default function UpsellModal({
           style={{
             position: 'absolute', top: -8, right: -8, zIndex: 2,
             width: 32, height: 32, borderRadius: 10,
-            border: '1px solid rgba(255,255,255,0.10)', background: '#1c1c21',
-            color: '#cfd0d6', cursor: 'pointer',
+            border: '1px solid rgba(20,19,15,0.10)', background: 'var(--yd-surface)',
+            color: '#6b6862', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
             transition: 'background 0.15s, color 0.15s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.color = '#f4f4f5' }}
-          onMouseLeave={e => { e.currentTarget.style.color = '#cfd0d6' }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#14130f' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#6b6862' }}
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M3 3l8 8M11 3l-8 8"/>

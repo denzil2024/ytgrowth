@@ -40,7 +40,7 @@ export function FeedFilterPills({ value, counts, onChange }) {
             onClick={() => onChange?.(t.key)}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 7,
-              padding: '7px 14px', borderRadius: 100,
+              padding: '7px 14px', borderRadius: 0,
               border: `1px solid ${active ? SHELL.hair : 'transparent'}`,
               background: active ? SHELL.activeBg : 'transparent',
               color: active ? SHELL.text1 : SHELL.text2,
@@ -57,9 +57,9 @@ export function FeedFilterPills({ value, counts, onChange }) {
               <span style={{
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                 minWidth: 18, height: 18, padding: '0 6px',
-                borderRadius: 100,
+                borderRadius: 0,
                 fontSize: 10.5, fontWeight: 600,
-                background: active ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)',
+                background: active ? 'rgba(20,19,15,0.12)' : 'rgba(20,19,15,0.06)',
                 color: active ? SHELL.text1 : SHELL.text2,
                 fontVariantNumeric: 'tabular-nums',
               }}>{count}</span>
@@ -77,8 +77,8 @@ export function FeedFilterPills({ value, counts, onChange }) {
 // as one system, not a pile of bespoke surfaces.
 export function FeedCard({
   Icon,                // Lucide icon component
-  iconColor = '#e5251b',
-  iconBg = 'rgba(229,37,27,0.08)',
+  iconColor = '#c9a030',
+  iconBg = 'rgba(201,160,48,0.08)',
   category,
   age,
   onDismiss,
@@ -91,10 +91,10 @@ export function FeedCard({
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: 'none',
       marginBottom: 12,
       transition: 'box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), transform 0.2s cubic-bezier(0.2,0.7,0.3,1), border-color 0.2s',
       height: fillHeight ? '100%' : 'auto',
@@ -102,14 +102,14 @@ export function FeedCard({
       flexDirection: fillHeight ? 'column' : undefined,
     }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '0 2px 6px rgba(255,255,255,0.06), 0 12px 32px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.7)'
+        e.currentTarget.style.boxShadow = 'none'
         e.currentTarget.style.transform = 'translateY(-1px)'
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+        e.currentTarget.style.borderColor = 'rgba(20,19,15,0.12)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)'
+        e.currentTarget.style.boxShadow = 'none'
         e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
+        e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)'
       }}
     >
       {/* Uniform header: h3 title in 16/600 (matching Add Description and
@@ -140,13 +140,13 @@ export function FeedCard({
             style={{
               width: 22, height: 22, borderRadius: 6,
               border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.36)',
+              color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s ease, color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(20,19,15,0.36)' }}
           >
             <XIcon size={12} strokeWidth={2.1} />
           </button>
@@ -176,10 +176,10 @@ export function ActionsRailCard({ items }) {
   const impactColor = (impact) => {
     const k = (impact || 'med').toLowerCase()
     // Dark-mode text variants of the brand red/amber. The saturated brand
-    // values (#e5251b / #d97706) are reserved for CTA backgrounds; using
-    // them as small label text on dark shimmers/halates. #fb6a60 / #f0a23b
+    // values (#c9a030 / #d97706) are reserved for CTA backgrounds; using
+    // them as small label text on dark shimmers/halates. #7a5b14 / #b07d1a
     // are the canonical text-on-dark equivalents used elsewhere in the app.
-    return k === 'high' ? '#fb6a60' : k === 'low' ? SHELL.text3 : '#f0a23b'
+    return k === 'high' ? '#7a5b14' : k === 'low' ? SHELL.text3 : '#b07d1a'
   }
   const impactLabel = (impact) => {
     const k = (impact || 'med').toLowerCase()
@@ -191,8 +191,18 @@ export function ActionsRailCard({ items }) {
   // `problem` diagnosis, take the first clause and clamp it - the whole
   // paragraph belongs in the expander, not the always-visible row.
   const headlineFor = (a) => {
-    const raw = (a.action && a.action.length > 8 ? a.action : a.problem) || ''
-    const clean = raw.replace(/\s+/g, ' ').trim()
+    if (!a) return ''
+    // Prefer the natural headline fields, in order; then fall back to the
+    // first non-empty string field on the object so a row is NEVER blank,
+    // whatever the AI named it (real audits vary the shape per rank).
+    const nonEmpty = (v) => typeof v === 'string' && v.trim().length > 0
+    const preferred = [
+      (a.action && a.action.length > 8) ? a.action : null,
+      a.problem, a.title, a.headline, a.whyNow, a.why_now,
+      a.recommendation, a.expectedOutcome, a.expected_outcome, a.action,
+    ].find(nonEmpty)
+    const raw = preferred || Object.values(a).find(v => nonEmpty(v) && v.trim().length > 3) || ''
+    const clean = String(raw).replace(/\s+/g, ' ').trim()
     if (clean.length <= 120) return clean
     const cut = clean.slice(0, 117)
     return cut.replace(/\s+\S*$/, '') + '…'
@@ -201,9 +211,9 @@ export function ActionsRailCard({ items }) {
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
+      boxShadow: 'none',
       overflow: 'hidden',
       marginBottom: 12,
     }}>
@@ -211,7 +221,7 @@ export function ActionsRailCard({ items }) {
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '12px 18px',
-        borderBottom: '1px solid rgba(255,255,255,0.10)',
+        borderBottom: '1px solid rgba(20,19,15,0.10)',
       }}>
         <span style={{
           fontSize: 11, fontWeight: 600, color: SHELL.text2,
@@ -219,7 +229,7 @@ export function ActionsRailCard({ items }) {
         }}>Priority actions</span>
         <span style={{
           fontSize: 11, fontWeight: 600, color: SHELL.text3,
-          background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 99,
+          background: 'rgba(20,19,15,0.06)', padding: '2px 8px', borderRadius: 99,
           fontVariantNumeric: 'tabular-nums',
         }}>{items.length}</span>
       </div>
@@ -233,9 +243,9 @@ export function ActionsRailCard({ items }) {
           const showWhy = !!it.action.expected_outcome
           return (
             <div key={it.key} style={{
-              borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.10)',
+              borderTop: i === 0 ? 'none' : '1px solid rgba(20,19,15,0.10)',
               transition: 'background 0.14s',
-              background: isOpen ? 'rgba(255,255,255,0.015)' : 'transparent',
+              background: isOpen ? 'rgba(20,19,15,0.015)' : 'transparent',
             }}>
               {/* Row */}
               <div
@@ -249,7 +259,7 @@ export function ActionsRailCard({ items }) {
                 <span style={{
                   flexShrink: 0, width: 22, height: 22, borderRadius: 7,
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  background: 'rgba(255,255,255,0.06)',
+                  background: 'rgba(20,19,15,0.06)',
                   fontSize: 11, fontWeight: 600, color: SHELL.text1,
                   fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px',
                 }}>{i + 1}</span>
@@ -275,16 +285,16 @@ export function ActionsRailCard({ items }) {
                   style={{
                     flexShrink: 0,
                     display: 'inline-flex', alignItems: 'center', gap: 5,
-                    padding: '7px 14px', borderRadius: 99,
-                    border: 'none', cursor: 'pointer',
-                    background: '#e5251b', color: '#fff',
-                    fontFamily: 'inherit',
-                    fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
-                    boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
-                    transition: 'filter 0.14s, transform 0.14s',
+                    padding: '7px 14px', borderRadius: 0,
+                    border: '1px solid var(--yd-line)', cursor: 'pointer',
+                    background: 'transparent', color: 'var(--yd-soft)',
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontSize: 13, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase',
+                    boxShadow: 'none',
+                    transition: 'border-color 0.14s, color 0.14s',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-                  onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--yd-gold)'; e.currentTarget.style.color = 'var(--yd-gold-ink)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--yd-line)'; e.currentTarget.style.color = 'var(--yd-soft)' }}
                 >
                   {it.ctaLabel}
                   <ArrowRight size={11} strokeWidth={2.4}/>
@@ -303,7 +313,7 @@ export function ActionsRailCard({ items }) {
                 <div style={{ padding: '0 18px 14px 60px' }}>
                   {it.action.problem && (
                     <p style={{
-                      fontSize: 12.5, fontWeight: 400, color: 'rgba(255,255,255,0.65)',
+                      fontSize: 12.5, fontWeight: 400, color: 'rgba(20,19,15,0.65)',
                       lineHeight: 1.6, letterSpacing: '-0.02em',
                       marginBottom: (showFix || showWhy) ? 10 : 8,
                     }}>{it.action.problem}</p>
@@ -316,13 +326,13 @@ export function ActionsRailCard({ items }) {
                     }}>
                       {showFix && (
                         <div style={{
-                          background: 'rgba(229,37,27,0.04)',
-                          border: '1px solid rgba(229,37,27,0.10)',
-                          borderLeft: '3px solid #e5251b',
+                          background: 'rgba(201,160,48,0.04)',
+                          border: '1px solid rgba(201,160,48,0.10)',
+                          borderLeft: '3px solid #c9a030',
                           borderRadius: '0 8px 8px 0',
                           padding: '8px 12px',
                         }}>
-                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Fix</p>
+                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Fix</p>
                           <p style={{ fontSize: 12, fontWeight: 500, color: SHELL.text1, lineHeight: 1.55 }}>{it.action.action}</p>
                         </div>
                       )}
@@ -334,7 +344,7 @@ export function ActionsRailCard({ items }) {
                           borderRadius: '0 8px 8px 0',
                           padding: '8px 12px',
                         }}>
-                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Why this works</p>
+                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Why this works</p>
                           <p style={{ fontSize: 12, fontWeight: 500, color: SHELL.text1, lineHeight: 1.55 }}>{it.action.expected_outcome}</p>
                         </div>
                       )}
@@ -348,16 +358,16 @@ export function ActionsRailCard({ items }) {
                       onClick={(e) => { e.stopPropagation(); it.onDone() }}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: 5,
-                        padding: '6px 12px', borderRadius: 99,
-                        border: '1px solid rgba(255,255,255,0.12)',
-                        background: SHELL.cardFlat, color: 'rgba(255,255,255,0.65)',
-                        fontFamily: 'inherit',
-                        fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                        padding: '7px 14px', borderRadius: 0,
+                        border: '1px solid rgba(20,19,15,0.12)',
+                        background: SHELL.cardFlat, color: 'rgba(20,19,15,0.65)',
+                        fontFamily: "'Barlow Condensed', sans-serif",
+                        fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
                         cursor: 'pointer',
                         transition: 'background 0.14s, color 0.14s',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = 'rgba(20,19,15,0.65)' }}
                     >Mark done</button>
                     )}
                     {it.onDismiss && (
@@ -366,16 +376,16 @@ export function ActionsRailCard({ items }) {
                       onClick={(e) => { e.stopPropagation(); it.onDismiss() }}
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: 5,
-                        padding: '6px 12px', borderRadius: 99,
-                        border: '1px solid rgba(255,255,255,0.12)',
+                        padding: '7px 14px', borderRadius: 0,
+                        border: '1px solid rgba(20,19,15,0.12)',
                         background: SHELL.cardFlat, color: SHELL.text2,
-                        fontFamily: 'inherit',
-                        fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                        fontFamily: "'Barlow Condensed', sans-serif",
+                        fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
                         cursor: 'pointer',
                         transition: 'background 0.14s, color 0.14s',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.78)' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = 'rgba(20,19,15,0.78)' }}
                     >Dismiss</button>
                     )}
                   </div>
@@ -393,9 +403,9 @@ export function ActionsRailCard({ items }) {
 export function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDismiss, ctaLabel }) {
   const [open, setOpen] = useState(false)
   const impactKey = (impact || 'med').toLowerCase()
-  const impactClr = impactKey === 'high' ? '#fb6a60' : impactKey === 'low' ? SHELL.text3 : '#f0a23b'
-  const impactBg  = impactKey === 'high' ? 'rgba(229,37,27,0.07)' : impactKey === 'low' ? 'rgba(255,255,255,0.04)' : 'rgba(217,119,6,0.08)'
-  const impactBdr = impactKey === 'high' ? 'rgba(229,37,27,0.18)' : impactKey === 'low' ? 'rgba(255,255,255,0.10)' : 'rgba(217,119,6,0.18)'
+  const impactClr = impactKey === 'high' ? '#7a5b14' : impactKey === 'low' ? SHELL.text3 : '#b07d1a'
+  const impactBg  = impactKey === 'high' ? 'rgba(201,160,48,0.07)' : impactKey === 'low' ? 'rgba(20,19,15,0.04)' : 'rgba(217,119,6,0.08)'
+  const impactBdr = impactKey === 'high' ? 'rgba(201,160,48,0.18)' : impactKey === 'low' ? 'rgba(20,19,15,0.10)' : 'rgba(217,119,6,0.18)'
 
   const cat = action.category || categoryToNav(action.category, action.problem)
 
@@ -403,14 +413,14 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
     <FeedCard
       Icon={Target}
       iconColor={C.red}
-      iconBg="rgba(229,37,27,0.08)"
+      iconBg="rgba(201,160,48,0.08)"
       category={`Priority Action · ${rank} of ${total}`}
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
           fontSize: 9.5, fontWeight: 600, color: impactClr,
           background: impactBg, border: `1px solid ${impactBdr}`,
-          padding: '3px 8px', borderRadius: 100,
+          padding: '3px 8px', borderRadius: 0,
           letterSpacing: '0.08em', textTransform: 'uppercase',
         }}>{impactKey} impact</span>
       }
@@ -441,12 +451,12 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
           onClick={onAct}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
-            padding: '7px 13px', borderRadius: 100,
+            padding: '7px 13px', borderRadius: 0,
             border: 'none', cursor: 'pointer',
-            background: C.red, color: '#fff',
+            background: C.red, color: 'var(--yd-on-gold)',
             fontFamily: 'inherit',
             fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
-            boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+            boxShadow: 'none',
             transition: 'filter 0.14s ease, transform 0.14s ease',
           }}
           onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
@@ -462,16 +472,16 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
           aria-label={open ? 'Hide detail' : 'Show detail'}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '6px 11px', borderRadius: 100,
-            border: '1px solid rgba(255,255,255,0.08)',
+            padding: '6px 11px', borderRadius: 0,
+            border: '1px solid rgba(20,19,15,0.08)',
             background: SHELL.cardFlat, color: SHELL.text2,
-            fontFamily: 'inherit',
-            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
         >
           Detail
           <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -486,7 +496,7 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
       {open && (
         <div style={{
           marginTop: 14, paddingTop: 14,
-          borderTop: '1px solid rgba(255,255,255,0.08)',
+          borderTop: '1px solid rgba(20,19,15,0.08)',
         }}>
           {(() => {
             const showFix = action.action && action.action !== action.problem
@@ -500,14 +510,14 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
               }}>
                 {showFix && (
                   <div style={{
-                    background: 'rgba(229,37,27,0.05)',
-                    border: '1px solid rgba(229,37,27,0.12)',
+                    background: 'rgba(201,160,48,0.05)',
+                    border: '1px solid rgba(201,160,48,0.12)',
                     borderLeft: `3px solid ${C.red}`,
                     borderRadius: '0 10px 10px 0',
                     padding: '11px 14px',
                   }}>
                     <p style={{
-                      fontSize: 9.5, fontWeight: 600, color: '#fb6a60',
+                      fontSize: 9.5, fontWeight: 600, color: '#7a5b14',
                       letterSpacing: '0.10em', textTransform: 'uppercase',
                       marginBottom: 6,
                     }}>Fix</p>
@@ -521,12 +531,12 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
                   <div style={{
                     background: 'rgba(22,163,74,0.14)',
                     border: '1px solid rgba(5,150,105,0.14)',
-                    borderLeft: `3px solid ${'#34d27b'}`,
+                    borderLeft: `3px solid ${'#2d7a4f'}`,
                     borderRadius: '0 10px 10px 0',
                     padding: '11px 14px',
                   }}>
                     <p style={{
-                      fontSize: 9.5, fontWeight: 600, color: '#34d27b',
+                      fontSize: 9.5, fontWeight: 600, color: '#2d7a4f',
                       letterSpacing: '0.10em', textTransform: 'uppercase',
                       marginBottom: 6,
                     }}>Why this works</p>
@@ -544,16 +554,16 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
             onClick={onDone}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '6px 12px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.08)',
+              padding: '6px 12px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.08)',
               background: SHELL.cardFlat, color: SHELL.text2,
-              fontFamily: 'inherit',
-              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
               cursor: 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
           >
             Mark done
           </button>
@@ -571,7 +581,7 @@ export function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss })
   return (
     <FeedCard
       Icon={Trophy}
-      iconColor={'#f0a23b'}
+      iconColor={'#b07d1a'}
       iconBg="rgba(217,119,6,0.10)"
       category="Milestone Unlocked"
       age={milestone.earned_age || ''}
@@ -587,7 +597,7 @@ export function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss })
       <div style={{ marginBottom: 12 }}>
         <div style={{
           position: 'relative',
-          background: 'rgba(255,255,255,0.08)', borderRadius: 99, height: 6,
+          background: 'rgba(20,19,15,0.08)', borderRadius: 99, height: 6,
           overflow: 'hidden',
         }}>
           <div style={{
@@ -609,12 +619,12 @@ export function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss })
             onClick={onShare}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '7px 13px', borderRadius: 100,
+              padding: '7px 13px', borderRadius: 0,
               border: 'none', cursor: 'pointer',
-              background: C.red, color: '#fff',
+              background: C.red, color: 'var(--yd-on-gold)',
               fontFamily: 'inherit',
               fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
-              boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+              boxShadow: 'none',
               transition: 'filter 0.14s ease, transform 0.14s ease',
             }}
             onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
@@ -631,16 +641,16 @@ export function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss })
             aria-label={open ? 'Hide detail' : 'Show detail'}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 4,
-              padding: '6px 11px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.08)',
+              padding: '6px 11px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.08)',
               background: SHELL.cardFlat, color: SHELL.text2,
-              fontFamily: 'inherit',
-              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
               cursor: 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
           >
             Detail
             <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -651,7 +661,7 @@ export function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss })
       {open && milestone.body && (
         <div style={{
           marginTop: 14, paddingTop: 14,
-          borderTop: '1px solid rgba(255,255,255,0.08)',
+          borderTop: '1px solid rgba(20,19,15,0.08)',
         }}>
           <p style={{
             fontSize: 12.5, fontWeight: 500, color: SHELL.text2,
@@ -698,7 +708,7 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
     <FeedCard
       Icon={BarChart3}
       iconColor={SHELL.text1}
-      iconBg="rgba(255,255,255,0.06)"
+      iconBg="rgba(20,19,15,0.06)"
       category="Content Mix"
       onDismiss={onDismiss}
       fillHeight={fillHeight}
@@ -712,16 +722,16 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
       <div style={{ marginBottom: 10 }}>
         <div style={{
           display: 'flex',
-          background: 'rgba(255,255,255,0.08)', borderRadius: 99, height: 7,
+          background: 'rgba(20,19,15,0.08)', borderRadius: 99, height: 7,
           overflow: 'hidden',
         }}>
           <div style={{
             width: `${sPct}%`, height: '100%',
-            background: 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)',
+            background: 'linear-gradient(90deg, rgba(201,160,48,0.55) 0%, #c9a030 100%)',
           }}/>
           <div style={{
             width: `${lPct}%`, height: '100%',
-            background: 'linear-gradient(90deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.72) 100%)',
+            background: 'linear-gradient(90deg, rgba(20,19,15,0.45) 0%, rgba(20,19,15,0.72) 100%)',
           }}/>
         </div>
       </div>
@@ -733,7 +743,7 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
           fontSize: 11.5, fontWeight: 500, color: SHELL.text2, letterSpacing: '-0.01em',
           fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ width: 8, height: 8, borderRadius: 99, background: '#e5251b' }}/>
+          <span style={{ width: 8, height: 8, borderRadius: 99, background: '#c9a030' }}/>
           Shorts {sCount != null && (<><strong style={{ color: SHELL.text1, fontWeight: 600 }}> {sCount}</strong> · {sPct}%</>)}
         </span>
         <span style={{
@@ -741,7 +751,7 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
           fontSize: 11.5, fontWeight: 500, color: SHELL.text2, letterSpacing: '-0.01em',
           fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ width: 8, height: 8, borderRadius: 99, background: 'rgba(255,255,255,0.72)' }}/>
+          <span style={{ width: 8, height: 8, borderRadius: 99, background: 'rgba(20,19,15,0.72)' }}/>
           Long {lCount != null && (<><strong style={{ color: SHELL.text1, fontWeight: 600 }}> {lCount}</strong> · {lPct}%</>)}
         </span>
       </div>
@@ -770,16 +780,16 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
             aria-label={open ? 'Hide detail' : 'Show detail'}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 4,
-              padding: '6px 11px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.08)',
+              padding: '6px 11px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.08)',
               background: SHELL.cardFlat, color: SHELL.text2,
-              fontFamily: 'inherit',
-              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
               cursor: 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
           >
             Detail
             <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -790,7 +800,7 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
       {open && (patterns.body || patterns.text) && (
         <div style={{
           marginTop: 14, paddingTop: 14,
-          borderTop: '1px solid rgba(255,255,255,0.08)',
+          borderTop: '1px solid rgba(20,19,15,0.08)',
         }}>
           <p style={{
             fontSize: 12.5, fontWeight: 500, color: SHELL.text2,
@@ -808,20 +818,20 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
 // quick wins, biggest risk) renders below when expanded.
 export function ChannelHealthFeedCard({ score, categories, weakest, children, open, onToggle, fillHeight = false, locked = false }) {
   const scoreClr =
-    score >= 75 ? '#34d27b' : score >= 50 ? '#f0a23b' : C.red
+    score >= 75 ? '#2d7a4f' : score >= 50 ? '#b07d1a' : C.red
   const scoreBdr =
-    score >= 75 ? 'rgba(5,150,105,0.25)' : score >= 50 ? 'rgba(217,119,6,0.22)' : 'rgba(229,37,27,0.22)'
+    score >= 75 ? 'rgba(5,150,105,0.25)' : score >= 50 ? 'rgba(217,119,6,0.22)' : 'rgba(201,160,48,0.22)'
   const scoreBg =
-    score >= 75 ? 'rgba(22,163,74,0.14)' : score >= 50 ? 'rgba(217,119,6,0.06)' : 'rgba(229,37,27,0.05)'
+    score >= 75 ? 'rgba(22,163,74,0.14)' : score >= 50 ? 'rgba(217,119,6,0.06)' : 'rgba(201,160,48,0.05)'
 
   // Map each category score to a dot color. We surface the 5 categories
   // VidIQ users instantly recognise: CTR, retention, strategy,
   // consistency, engagement. Hover reveals the label + score.
   const dotFor = (v) => {
-    if (v == null) return { c: 'rgba(255,255,255,0.20)', bdr: 'rgba(255,255,255,0.20)' }
-    if (v >= 75) return { c: '#34d27b', bdr: 'rgba(5,150,105,0.35)' }
-    if (v >= 50) return { c: '#f0a23b', bdr: 'rgba(217,119,6,0.35)' }
-    return { c: C.red, bdr: 'rgba(229,37,27,0.30)' }
+    if (v == null) return { c: 'rgba(20,19,15,0.20)', bdr: 'rgba(20,19,15,0.20)' }
+    if (v >= 75) return { c: '#2d7a4f', bdr: 'rgba(5,150,105,0.35)' }
+    if (v >= 50) return { c: '#b07d1a', bdr: 'rgba(217,119,6,0.35)' }
+    return { c: C.red, bdr: 'rgba(201,160,48,0.30)' }
   }
   const dots = (categories || []).map(([label, value]) => ({ label, value, ...dotFor(value) }))
 
@@ -835,7 +845,7 @@ export function ChannelHealthFeedCard({ score, categories, weakest, children, op
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'baseline', gap: 2,
-          padding: '3px 10px', borderRadius: 100,
+          padding: '3px 10px', borderRadius: 0,
           border: `1px solid ${scoreBdr}`,
           background: scoreBg,
           fontVariantNumeric: 'tabular-nums',
@@ -895,16 +905,16 @@ export function ChannelHealthFeedCard({ score, categories, weakest, children, op
           onClick={onToggle}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '6px 11px', borderRadius: 100,
-            border: '1px solid rgba(255,255,255,0.08)',
+            padding: '6px 11px', borderRadius: 0,
+            border: '1px solid rgba(20,19,15,0.08)',
             background: SHELL.cardFlat, color: SHELL.text2,
-            fontFamily: 'inherit',
-            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
         >
           {locked ? (
             <>Unlock full audit<Lock size={10} strokeWidth={2.2} /></>
@@ -939,10 +949,10 @@ export function AuditLockedCard({ count, onUpgrade }) {
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
-          padding: '3px 10px', borderRadius: 100,
-          border: '1px solid rgba(229,37,27,0.22)',
-          background: 'rgba(229,37,27,0.06)',
-          fontSize: 11, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.02em',
+          padding: '3px 10px', borderRadius: 0,
+          border: '1px solid rgba(201,160,48,0.22)',
+          background: 'rgba(201,160,48,0.06)',
+          fontSize: 11, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.02em',
         }}>
           <Lock size={11} strokeWidth={2.2} /> Paid
         </span>
@@ -956,18 +966,18 @@ export function AuditLockedCard({ count, onUpgrade }) {
         onClick={onUpgrade}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 7,
-          padding: '9px 16px', borderRadius: 100, border: 'none', cursor: 'pointer',
-          background: 'linear-gradient(180deg, #ef3a31 0%, #e5251b 100%)',
-          color: '#fff', fontFamily: 'inherit', fontSize: 12.5, fontWeight: 600,
-          letterSpacing: '-0.01em',
-          boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.20)',
+          padding: '10px 18px', borderRadius: 0, border: 'none', cursor: 'pointer',
+          background: 'var(--yd-gold)',
+          color: 'var(--yd-on-gold)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: 14, fontWeight: 700,
+          letterSpacing: '0.08em', textTransform: 'uppercase',
+          boxShadow: 'none',
           transition: 'filter 0.15s',
         }}
         onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)' }}
         onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
       >
         Unlock full audit
-        <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>· from $19/mo</span>
+        <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(20,19,15,0.7)' }}>· from $19/mo</span>
       </button>
     </FeedCard>
   )
@@ -994,7 +1004,7 @@ export function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) 
   return (
     <FeedCard
       Icon={Trophy}
-      iconColor={'#34d27b'}
+      iconColor={'#2d7a4f'}
       iconBg="rgba(22,163,74,0.14)"
       category="Top Performer"
       age={ageStr}
@@ -1002,9 +1012,9 @@ export function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) 
       rightSlot={mDisplay && (
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 3,
-          fontSize: 10.5, fontWeight: 700, color: '#34d27b',
+          fontSize: 10.5, fontWeight: 700, color: '#2d7a4f',
           background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
-          padding: '3px 8px', borderRadius: 100,
+          padding: '3px 8px', borderRadius: 0,
           letterSpacing: '-0.05px',
           fontVariantNumeric: 'tabular-nums',
         }}>
@@ -1017,8 +1027,8 @@ export function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) 
         {video.thumbnail ? (
           <div style={{
             flexShrink: 0, width: 200, aspectRatio: '16/9',
-            borderRadius: 10, overflow: 'hidden',
-            background: '#26262b',
+            borderRadius: 0, overflow: 'hidden',
+            background: '#e8e4dc',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.08)',
           }}>
             <img
@@ -1030,7 +1040,7 @@ export function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) 
         ) : (
           <div style={{
             flexShrink: 0, width: 200, aspectRatio: '16/9',
-            borderRadius: 10, background: '#26262b',
+            borderRadius: 0, background: '#e8e4dc',
           }}/>
         )}
 
@@ -1056,7 +1066,7 @@ export function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) 
             </div>
             <div>
               <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Engagement</p>
-              <p style={{ fontSize: 18, fontWeight: 700, color: engagement >= 3 ? '#34d27b' : SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{engagement}%</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: engagement >= 3 ? '#2d7a4f' : SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{engagement}%</p>
             </div>
           </div>
 
@@ -1072,15 +1082,15 @@ export function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) 
                 onClick={onOpen}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '7px 13px', borderRadius: 100,
+                  padding: '7px 13px', borderRadius: 0,
                   border: 'none', cursor: 'pointer',
-                  background: C.red, color: '#fff',
-                  fontFamily: 'inherit',
-                  fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
-                  boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+                  background: C.red, color: 'var(--yd-on-gold)',
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+                  boxShadow: 'none',
                   transition: 'filter 0.14s ease, transform 0.14s ease',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
                 onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
               >
                 Study video
@@ -1116,8 +1126,8 @@ export function PostingTimeline({ uploadDays }) {
   if (total === 0) {
     return (
       <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ display: 'block' }}>
-        <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="rgba(255,255,255,0.08)" strokeWidth="1.2"/>
-        <text x={width / 2} y={height / 2} textAnchor="middle" fontSize="12" fontWeight="600" fill="rgba(255,255,255,0.40)">No uploads in this window</text>
+        <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="rgba(20,19,15,0.08)" strokeWidth="1.2"/>
+        <text x={width / 2} y={height / 2} textAnchor="middle" fontSize="12" fontWeight="600" fill="rgba(20,19,15,0.40)">No uploads in this window</text>
       </svg>
     )
   }
@@ -1155,26 +1165,26 @@ export function PostingTimeline({ uploadDays }) {
     <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ display: 'block' }}>
       <defs>
         <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(229,37,27,0.22)"/>
-          <stop offset="100%" stopColor="rgba(229,37,27,0)"/>
+          <stop offset="0%" stopColor="rgba(201,160,48,0.22)"/>
+          <stop offset="100%" stopColor="rgba(201,160,48,0)"/>
         </linearGradient>
       </defs>
 
       {/* Faint horizontal guides */}
       {guides.map((y, i) => (
-        <line key={i} x1={padX} y1={y} x2={width - padX} y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="2 4"/>
+        <line key={i} x1={padX} y1={y} x2={width - padX} y2={y} stroke="rgba(20,19,15,0.08)" strokeWidth="1" strokeDasharray="2 4"/>
       ))}
 
       {/* Baseline */}
-      <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
+      <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="rgba(20,19,15,0.10)" strokeWidth="1"/>
 
       {/* Area + line */}
       <path d={pathArea} fill={`url(#${gradId})`}/>
-      <path d={pathLine} fill="none" stroke="#e5251b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d={pathLine} fill="none" stroke="#c9a030" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
 
       {/* Upload-day dots */}
       {uploadIdxes.map(i => (
-        <circle key={i} cx={points[i][0]} cy={points[i][1]} r="3.6" fill="#fff" stroke="#e5251b" strokeWidth="2"/>
+        <circle key={i} cx={points[i][0]} cy={points[i][1]} r="3.6" fill="#fff" stroke="#c9a030" strokeWidth="2"/>
       ))}
 
       {/* X-axis date labels */}
@@ -1186,7 +1196,7 @@ export function PostingTimeline({ uploadDays }) {
           textAnchor={l.anchor}
           fontSize="9.5"
           fontWeight="600"
-          fill="rgba(255,255,255,0.40)"
+          fill="rgba(20,19,15,0.40)"
           letterSpacing="0.04em"
         >{l.label}</text>
       ))}
@@ -1212,9 +1222,9 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
     : pacePerWeek >= 1 ? 'Healthy weekly cadence'
     : pacePerWeek > 0 ? 'Posting irregularly'
     : 'No recent uploads'
-  const verdictClr = pacePerWeek >= 3 ? '#34d27b'
+  const verdictClr = pacePerWeek >= 3 ? '#2d7a4f'
     : pacePerWeek >= 1 ? SHELL.text2
-    : '#f0a23b'
+    : '#b07d1a'
 
   const headline = currentStreak >= 7 ? `${currentStreak}-day posting streak`
     : currentStreak >= 3 ? `On a ${currentStreak}-day streak`
@@ -1224,25 +1234,25 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
 
   // Cell color for the (now collapsed) detail heatmap.
   const cellColor = (n) => {
-    if (n === 0) return 'rgba(255,255,255,0.08)'
-    if (n === 1) return 'rgba(229,37,27,0.40)'
-    if (n === 2) return 'rgba(229,37,27,0.70)'
-    return '#e5251b'
+    if (n === 0) return 'rgba(20,19,15,0.08)'
+    if (n === 1) return 'rgba(201,160,48,0.40)'
+    if (n === 2) return 'rgba(201,160,48,0.70)'
+    return '#c9a030'
   }
 
   return (
     <FeedCard
       Icon={CalendarDays}
       iconColor={SHELL.text1}
-      iconBg="rgba(255,255,255,0.06)"
+      iconBg="rgba(20,19,15,0.06)"
       category="Posting Consistency · 28 days"
       onDismiss={onDismiss}
       rightSlot={currentStreak >= 2 && (
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 700, color: '#fb6a60',
-          background: 'rgba(229,37,27,0.07)', border: '1px solid rgba(229,37,27,0.20)',
-          padding: '3px 8px', borderRadius: 100,
+          fontSize: 10.5, fontWeight: 700, color: '#7a5b14',
+          background: 'rgba(201,160,48,0.07)', border: '1px solid rgba(201,160,48,0.20)',
+          padding: '3px 8px', borderRadius: 0,
           letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
         }}>
           <Flame size={10} strokeWidth={2.4} />
@@ -1269,7 +1279,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
       {/* Stat strip, 4 tiles edge to edge across the card */}
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16,
-        paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)',
+        paddingTop: 14, borderTop: '1px solid rgba(20,19,15,0.08)',
       }}>
         <StatTile
           label="Uploads"
@@ -1303,16 +1313,16 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
           aria-label={open ? 'Hide heatmap' : 'Show daily heatmap'}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '6px 11px', borderRadius: 100,
-            border: '1px solid rgba(255,255,255,0.08)',
+            padding: '6px 11px', borderRadius: 0,
+            border: '1px solid rgba(20,19,15,0.08)',
             background: SHELL.cardFlat, color: SHELL.text2,
-            fontFamily: 'inherit',
-            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
         >
           {open ? 'Hide heatmap' : 'Daily heatmap'}
           <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -1321,7 +1331,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
 
       {/* Daily heatmap inside the detail expansion */}
       {open && (
-        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
           <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
             Daily uploads, last 28 days
           </p>
@@ -1335,7 +1345,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
                   aspectRatio: '1 / 1',
                   borderRadius: 4,
                   background: cellColor(c),
-                  border: c === 0 ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(229,37,27,0.10)',
+                  border: c === 0 ? '1px solid rgba(20,19,15,0.04)' : '1px solid rgba(201,160,48,0.10)',
                 }}
               />
             ))}
@@ -1346,7 +1356,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
               <span key={n} style={{
                 width: 11, height: 11, borderRadius: 3,
                 background: cellColor(n),
-                border: n === 0 ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(229,37,27,0.10)',
+                border: n === 0 ? '1px solid rgba(20,19,15,0.04)' : '1px solid rgba(201,160,48,0.10)',
               }}/>
             ))}
             <span style={{ fontSize: 10, color: SHELL.text3, fontWeight: 600, letterSpacing: '0.04em', marginLeft: 4 }}>More</span>
@@ -1394,15 +1404,15 @@ export function BestTimeCard({ videos, onDismiss }) {
     <FeedCard
       Icon={Clock}
       iconColor={SHELL.text1}
-      iconBg="rgba(255,255,255,0.06)"
+      iconBg="rgba(20,19,15,0.06)"
       category="Best Time To Publish · your data"
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 700, color: '#fb6a60',
-          background: 'rgba(229,37,27,0.07)', border: '1px solid rgba(229,37,27,0.20)',
-          padding: '3px 8px', borderRadius: 100,
+          fontSize: 10.5, fontWeight: 700, color: '#7a5b14',
+          background: 'rgba(201,160,48,0.07)', border: '1px solid rgba(201,160,48,0.20)',
+          padding: '3px 8px', borderRadius: 0,
           letterSpacing: '0.05em', textTransform: 'uppercase',
         }}>
           {DAYS_SHORT[top.dow]} · {formatHour12(top.h)}
@@ -1424,7 +1434,7 @@ export function BestTimeCard({ videos, onDismiss }) {
       <div style={{ marginBottom: 16 }}>
         <svg width="100%" viewBox={`0 0 ${chartW} ${chartH}`} preserveAspectRatio="none" style={{ display: 'block' }}>
           {/* Baseline */}
-          <line x1={padX} y1={chartH - padBot} x2={chartW - padX} y2={chartH - padBot} stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
+          <line x1={padX} y1={chartH - padBot} x2={chartW - padX} y2={chartH - padBot} stroke="rgba(20,19,15,0.10)" strokeWidth="1"/>
           {/* Bars */}
           {hourAvg.map((v, h) => {
             const heightPct = v / maxBar
@@ -1438,7 +1448,7 @@ export function BestTimeCard({ videos, onDismiss }) {
                 x={x.toFixed(2)} y={y.toFixed(2)}
                 width={barW.toFixed(2)} height={barH.toFixed(2)}
                 rx="2" ry="2"
-                fill={isPeak ? '#e5251b' : 'rgba(255,255,255,0.12)'}
+                fill={isPeak ? '#c9a030' : 'rgba(20,19,15,0.12)'}
               >
                 <title>{`${formatHour12(h)}: ${fmtNum(Math.round(v))} avg views`}</title>
               </rect>
@@ -1448,12 +1458,12 @@ export function BestTimeCard({ videos, onDismiss }) {
           {[0, 6, 12, 18].map(h => {
             const x = padX + h * ((chartW - padX * 2) / 24) + barW / 2 + 1
             return (
-              <text key={h} x={x} y={chartH - 6} textAnchor="middle" fontSize="9.5" fontWeight="600" fill="rgba(255,255,255,0.40)" letterSpacing="0.04em">
+              <text key={h} x={x} y={chartH - 6} textAnchor="middle" fontSize="9.5" fontWeight="600" fill="rgba(20,19,15,0.40)" letterSpacing="0.04em">
                 {formatHour12(h).replace(' ', '')}
               </text>
             )
           })}
-          <text x={chartW - padX} y={chartH - 6} textAnchor="end" fontSize="9.5" fontWeight="600" fill="rgba(255,255,255,0.40)" letterSpacing="0.04em">
+          <text x={chartW - padX} y={chartH - 6} textAnchor="end" fontSize="9.5" fontWeight="600" fill="rgba(20,19,15,0.40)" letterSpacing="0.04em">
             11PM
           </text>
         </svg>
@@ -1462,10 +1472,10 @@ export function BestTimeCard({ videos, onDismiss }) {
       {/* Stat strip: Best, Runner-up, Avoid */}
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
-        paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)',
+        paddingTop: 14, borderTop: '1px solid rgba(20,19,15,0.08)',
       }}>
         <div>
-          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Best time</p>
+          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Best time</p>
           <p style={{ fontSize: 16, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
             {DAYS_SHORT[top.dow]} · {formatHour12(top.h)}
           </p>
@@ -1483,7 +1493,7 @@ export function BestTimeCard({ videos, onDismiss }) {
           </p>
         </div>
         <div>
-          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Avoid</p>
+          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Avoid</p>
           <p style={{ fontSize: 16, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
             {worst ? `${DAYS_SHORT[worst.dow]} · ${formatHour12(worst.h)}` : '—'}
           </p>
@@ -1501,16 +1511,16 @@ export function BestTimeCard({ videos, onDismiss }) {
           aria-label={open ? 'Hide weekly breakdown' : 'Show weekly breakdown'}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '6px 11px', borderRadius: 100,
-            border: '1px solid rgba(255,255,255,0.08)',
+            padding: '6px 11px', borderRadius: 0,
+            border: '1px solid rgba(20,19,15,0.08)',
             background: SHELL.cardFlat, color: SHELL.text2,
-            fontFamily: 'inherit',
-            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
         >
           {open ? 'Hide weekly view' : 'Weekly view'}
           <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -1518,7 +1528,7 @@ export function BestTimeCard({ videos, onDismiss }) {
       </div>
 
       {open && (
-        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
           <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
             Avg views per upload by day of week
           </p>
@@ -1536,7 +1546,7 @@ export function BestTimeCard({ videos, onDismiss }) {
                     <div style={{
                       width: '60%',
                       height: `${Math.max(4, heightPct * 100)}%`,
-                      background: isTop ? '#e5251b' : 'rgba(255,255,255,0.12)',
+                      background: isTop ? '#c9a030' : 'rgba(20,19,15,0.12)',
                       borderRadius: 3,
                       transition: 'height 0.6s cubic-bezier(0.34,1.56,0.64,1)',
                     }} title={`${DAYS_LONG[i]}: ${fmtNum(Math.round(avg))} avg views`}/>
@@ -1576,7 +1586,7 @@ export function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
   return (
     <FeedCard
       Icon={TrendingUp}
-      iconColor={'#34d27b'}
+      iconColor={'#2d7a4f'}
       iconBg="rgba(22,163,74,0.14)"
       category="Tracked Lift · SEO Optimizer"
       age={ageStr}
@@ -1584,9 +1594,9 @@ export function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 700, color: '#34d27b',
+          fontSize: 10.5, fontWeight: 700, color: '#2d7a4f',
           background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
-          padding: '3px 8px', borderRadius: 100,
+          padding: '3px 8px', borderRadius: 0,
           letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
         }}>
           +{fmtNum(deltaViews)} views · +{deltaPct}%
@@ -1604,8 +1614,8 @@ export function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
         {win.thumbnail_url ? (
           <div style={{
             flexShrink: 0, width: 180, aspectRatio: '16/9',
-            borderRadius: 10, overflow: 'hidden',
-            background: '#26262b',
+            borderRadius: 0, overflow: 'hidden',
+            background: '#e8e4dc',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.08)',
           }}>
             <img
@@ -1617,7 +1627,7 @@ export function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
         ) : (
           <div style={{
             flexShrink: 0, width: 180, aspectRatio: '16/9',
-            borderRadius: 10, background: '#26262b',
+            borderRadius: 0, background: '#e8e4dc',
           }}/>
         )}
 
@@ -1659,7 +1669,7 @@ export function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
               <ArrowRight size={16} strokeWidth={2.4} color={SHELL.text3} />
             </div>
             <div>
-              <p style={{ fontSize: 9.5, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Now</p>
+              <p style={{ fontSize: 9.5, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Now</p>
               <p style={{ fontSize: 17, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(currentViews)}</p>
             </div>
           </div>
@@ -1667,7 +1677,7 @@ export function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
       </div>
 
       {/* Bottom row: more wins + CTA */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
         <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
           {moreCount > 0 ? `+ ${moreCount} more win${moreCount === 1 ? '' : 's'} this month` : 'Single tracked win'}
         </span>
@@ -1678,12 +1688,12 @@ export function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
             onClick={onOpenAll}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '7px 13px', borderRadius: 100,
+              padding: '7px 13px', borderRadius: 0,
               border: 'none', cursor: 'pointer',
-              background: C.red, color: '#fff',
+              background: C.red, color: 'var(--yd-on-gold)',
               fontFamily: 'inherit',
               fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
-              boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+              boxShadow: 'none',
               transition: 'filter 0.14s ease, transform 0.14s ease',
             }}
             onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
@@ -1719,19 +1729,19 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
   return (
     <FeedCard
       Icon={Lightbulb}
-      iconColor={'#f0a23b'}
+      iconColor={'#b07d1a'}
       iconBg="rgba(217,119,6,0.10)"
       category="Daily Ideas"
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
-          fontSize: 10.5, fontWeight: 600, color: '#34d27b',
+          fontSize: 10.5, fontWeight: 600, color: '#2d7a4f',
           background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
-          padding: '3px 9px', borderRadius: 100,
+          padding: '3px 9px', borderRadius: 0,
           letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>
-          <span style={{ width: 5, height: 5, borderRadius: 99, background: '#34d27b' }}/>
+          <span style={{ width: 5, height: 5, borderRadius: 99, background: '#2d7a4f' }}/>
           {top3.length} ready
         </span>
       }
@@ -1742,7 +1752,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
           letterSpacing: '-0.15px', lineHeight: 1.3, margin: 0,
         }}>Start shooting one of these today</h3>
         <span style={{
-          fontSize: 12, fontWeight: 500, color: isStale ? '#f0a23b' : 'rgba(255,255,255,0.78)',
+          fontSize: 12, fontWeight: 500, color: isStale ? '#b07d1a' : 'rgba(20,19,15,0.78)',
           letterSpacing: '-0.05px',
         }}>{subline}</span>
       </div>
@@ -1754,7 +1764,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
           const score = idea.opportunityScore != null
             ? idea.opportunityScore
             : Math.max(65, 85 - i * 4)
-          const scoreClr = score >= 80 ? '#34d27b' : score >= 65 ? '#f0a23b' : 'rgba(255,255,255,0.78)'
+          const scoreClr = score >= 80 ? '#2d7a4f' : score >= 65 ? '#b07d1a' : 'rgba(20,19,15,0.78)'
           return (
             <div
               key={i}
@@ -1762,19 +1772,19 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
                 display: 'flex', alignItems: 'flex-start', gap: 12,
                 padding: '12px 14px',
                 background: SHELL.cardFlat,
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 10,
+                border: '1px solid rgba(20,19,15,0.08)',
+                borderRadius: 0,
                 transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.02)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
             >
               {/* Rank badge, neutral charcoal, no amber tint */}
               <div style={{
                 flexShrink: 0,
                 width: 24, height: 24, borderRadius: 7,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(255,255,255,0.06)',
+                background: 'rgba(20,19,15,0.06)',
                 fontSize: 11.5, fontWeight: 600, color: SHELL.text1,
                 letterSpacing: '-0.2px',
                 fontVariantNumeric: 'tabular-nums',
@@ -1792,7 +1802,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
                 {/* Angle (one-line truncated), text2 for readability, not faint text3 */}
                 {idea.angle && (
                   <p style={{
-                    fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.65)',
+                    fontSize: 12, fontWeight: 500, color: 'rgba(20,19,15,0.65)',
                     letterSpacing: '-0.05px', lineHeight: 1.5,
                     display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
@@ -1806,7 +1816,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
                       letterSpacing: '-0.01em',
                       display: 'inline-flex', alignItems: 'center', gap: 5,
                     }}>
-                      <span style={{ width: 4, height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.35)' }}/>
+                      <span style={{ width: 4, height: 4, borderRadius: 99, background: 'rgba(20,19,15,0.35)' }}/>
                       {idea.targetKeyword}
                     </span>
                   )}
@@ -1827,12 +1837,12 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
                 style={{
                   flexShrink: 0, alignSelf: 'center',
                   display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '7px 14px', borderRadius: 100,
+                  padding: '7px 14px', borderRadius: 0,
                   border: 'none', cursor: 'pointer',
-                  background: '#e5251b', color: '#fff',
+                  background: '#c9a030', color: 'var(--yd-on-gold)',
                   fontFamily: 'inherit',
                   fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
-                  boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+                  boxShadow: '0 1px 3px rgba(201,160,48,0.28)',
                   transition: 'filter 0.14s, transform 0.14s',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
@@ -1847,7 +1857,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
       </div>
 
       {/* Bottom row: refresh + open full ideas */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
         <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
           {isFree ? 'Free plan shows top 3, upgrade for the full feed' : 'Full feed in Video Ideas'}
         </span>
@@ -1859,17 +1869,17 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
             disabled={refreshing}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '6px 11px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.08)',
-              background: refreshing ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
+              padding: '6px 11px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.08)',
+              background: refreshing ? 'rgba(20,19,15,0.05)' : 'rgba(20,19,15,0.02)',
               color: refreshing ? SHELL.text3 : SHELL.text2,
-              fontFamily: 'inherit',
-              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
               cursor: refreshing ? 'wait' : 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' } }}
-            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
+            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' } }}
+            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' } }}
           >
             <RefreshCw size={11} strokeWidth={2.4} style={{ animation: refreshing ? 'spin 0.8s linear infinite' : 'none' }}/>
             {refreshing ? 'Refreshing…' : 'Refresh ideas'}
@@ -1881,9 +1891,9 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
             onClick={onOpenAll}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '7px 13px', borderRadius: 100,
+              padding: '7px 13px', borderRadius: 0,
               border: 'none', cursor: 'pointer',
-              background: SHELL.text1, color: '#0e0e10',
+              background: SHELL.text1, color: 'var(--yd-paper)',
               fontFamily: 'inherit',
               fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
               boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
@@ -1920,9 +1930,9 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
   const idx     = Math.max(0, Math.min(suggestions.length - 1, activeIdx))
   const focused = suggestions[idx]
   const score   = Math.max(0, Math.min(100, Math.round(Number(focused?.score || 0))))
-  const tone    = score >= 80 ? { bg: 'rgba(22,163,74,0.16)',  text: '#34d27b', bdr: 'rgba(22,163,74,0.32)' }
-                : score >= 50 ? { bg: 'rgba(217,118,6,0.16)',  text: '#f0a23b', bdr: 'rgba(217,118,6,0.32)' }
-                :                { bg: 'rgba(229,37,27,0.13)', text: '#fb6a60', bdr: 'rgba(229,37,27,0.32)' }
+  const tone    = score >= 80 ? { bg: 'rgba(22,163,74,0.16)',  text: '#2d7a4f', bdr: 'rgba(22,163,74,0.32)' }
+                : score >= 50 ? { bg: 'rgba(217,118,6,0.16)',  text: '#b07d1a', bdr: 'rgba(217,118,6,0.32)' }
+                :                { bg: 'rgba(201,160,48,0.13)', text: '#7a5b14', bdr: 'rgba(201,160,48,0.32)' }
   const isApplying = applyingIdx === idx
   const isApplied  = appliedIdx  === idx
   const ctaLabel   = isApplied ? 'Applied to YouTube' : isApplying ? 'Applying…' : 'Apply Title'
@@ -1939,10 +1949,10 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: 'none',
       marginBottom: 12,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -1971,13 +1981,13 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
             style={{
               width: 28, height: 28, borderRadius: 8,
               border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.36)',
+              color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(20,19,15,0.36)' }}
           >
             <XIcon size={14} strokeWidth={2} />
           </button>
@@ -1990,8 +2000,8 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
         gap: 18,
         alignItems: 'stretch',
         padding: 14,
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(20,19,15,0.02)',
+        border: '1px solid rgba(20,19,15,0.06)',
         borderRadius: 12,
         marginBottom: 14,
       }}>
@@ -2008,16 +2018,16 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
                 width: '100%', aspectRatio: thumbAspect,
                 objectFit: 'cover',
                 borderRadius: 12,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'rgba(20,19,15,0.06)',
+                border: '1px solid rgba(20,19,15,0.08)',
               }}
             />
           ) : (
             <div style={{
               width: '100%', aspectRatio: thumbAspect,
               borderRadius: 12,
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(20,19,15,0.06)',
+              border: '1px solid rgba(20,19,15,0.08)',
             }}/>
           )}
         </div>
@@ -2040,18 +2050,18 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
 
           {/* Divider with centered arrow circle */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 0' }}>
-            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }}/>
+            <div style={{ flex: 1, height: 1, background: 'rgba(20,19,15,0.08)' }}/>
             <span style={{
               flexShrink: 0,
               width: 22, height: 22, borderRadius: 99,
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(20,19,15,0.06)',
+              border: '1px solid rgba(20,19,15,0.10)',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               color: SHELL.text3,
             }}>
               <ArrowDown size={12} strokeWidth={2.2} />
             </span>
-            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }}/>
+            <div style={{ flex: 1, height: 1, background: 'rgba(20,19,15,0.08)' }}/>
           </div>
 
           {/* Focused rewrite (score chip + title) */}
@@ -2099,7 +2109,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
                 width: i === idx ? 18 : 6, height: 6,
                 borderRadius: 99,
                 border: 'none',
-                background: i === idx ? '#e5251b' : 'rgba(255,255,255,0.18)',
+                background: i === idx ? '#c9a030' : 'rgba(20,19,15,0.18)',
                 cursor: 'pointer',
                 padding: 0,
                 transition: 'width 0.2s, background 0.2s',
@@ -2117,17 +2127,17 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
             onClick={() => setActiveIdx((idx + 1) % suggestions.length)}
             style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-              padding: '10px 14px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.10)',
-              background: 'rgba(255,255,255,0.03)',
-              color: SHELL.text1,
-              fontFamily: 'inherit',
-              fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+              padding: '11px 14px', borderRadius: 0,
+              border: '1px solid var(--yd-line)',
+              background: 'transparent',
+              color: SHELL.text2,
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 14, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
               cursor: 'pointer',
-              transition: 'background 0.14s, border-color 0.14s',
+              transition: 'border-color 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--yd-ink)'; e.currentTarget.style.color = 'var(--yd-ink)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--yd-line)'; e.currentTarget.style.color = 'var(--yd-soft)' }}
           >
             <RefreshCw size={13} strokeWidth={2.1} />
             Next suggestion
@@ -2140,13 +2150,13 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
           onClick={() => onApply?.(focused, idx, video)}
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            padding: '10px 14px', borderRadius: 100,
+            padding: '11px 14px', borderRadius: 0,
             border: 'none',
-            background: isApplied ? 'rgba(22,163,74,0.85)' : '#e5251b',
-            color: '#fff',
-            fontFamily: 'inherit',
-            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-            boxShadow: isApplied ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+            background: isApplied ? '#2d7a4f' : '#c9a030',
+            color: isApplied ? '#fff' : 'var(--yd-on-gold)',
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 14, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+            boxShadow: 'none',
             cursor: (isApplying || isApplied) ? 'default' : 'pointer',
             transition: 'filter 0.14s, transform 0.14s, background 0.2s',
           }}
@@ -2159,7 +2169,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
       </div>
 
       {applyError && (
-        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#fb6a60' }}>
+        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#7a5b14' }}>
           {applyError}
         </p>
       )}
@@ -2197,10 +2207,10 @@ export function MissingDescriptionCard({
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: 'none',
       marginBottom: 12,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -2223,13 +2233,13 @@ export function MissingDescriptionCard({
             style={{
               width: 28, height: 28, borderRadius: 8,
               border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.36)',
+              color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(20,19,15,0.36)' }}
           >
             <XIcon size={14} strokeWidth={2} />
           </button>
@@ -2242,8 +2252,8 @@ export function MissingDescriptionCard({
         gap: 18,
         alignItems: 'stretch',
         padding: 14,
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(20,19,15,0.02)',
+        border: '1px solid rgba(20,19,15,0.06)',
         borderRadius: 12,
         marginBottom: 14,
       }}>
@@ -2260,16 +2270,16 @@ export function MissingDescriptionCard({
                 width: '100%', aspectRatio: thumbAspect,
                 objectFit: 'cover',
                 borderRadius: 12,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'rgba(20,19,15,0.06)',
+                border: '1px solid rgba(20,19,15,0.08)',
               }}
             />
           ) : (
             <div style={{
               width: '100%', aspectRatio: thumbAspect,
               borderRadius: 12,
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(20,19,15,0.06)',
+              border: '1px solid rgba(20,19,15,0.08)',
             }}/>
           )}
         </div>
@@ -2286,16 +2296,16 @@ export function MissingDescriptionCard({
 
           {/* AI draft preview */}
           <div style={{
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 10,
+            border: '1px solid rgba(20,19,15,0.08)',
+            borderRadius: 0,
             background: 'rgba(0,0,0,0.16)',
             overflow: 'hidden',
           }}>
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '7px 12px',
-              borderBottom: '1px solid rgba(255,255,255,0.06)',
-              background: 'rgba(255,255,255,0.02)',
+              borderBottom: '1px solid rgba(20,19,15,0.06)',
+              background: 'rgba(20,19,15,0.02)',
             }}>
               <span style={{
                 fontSize: 11, fontWeight: 600, color: SHELL.text3,
@@ -2331,9 +2341,9 @@ export function MissingDescriptionCard({
             onClick={() => setDraftIdx((idx + 1) % drafts.length)}
             style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-              padding: '10px 14px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.10)',
-              background: 'rgba(255,255,255,0.03)',
+              padding: '10px 14px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.10)',
+              background: 'rgba(20,19,15,0.03)',
               color: SHELL.text1,
               fontFamily: 'inherit',
               fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
@@ -2341,8 +2351,8 @@ export function MissingDescriptionCard({
               opacity: (publishing || published) ? 0.5 : 1,
               transition: 'background 0.14s, border-color 0.14s',
             }}
-            onMouseEnter={e => { if (!publishing && !published) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' } }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
+            onMouseEnter={e => { if (!publishing && !published) { e.currentTarget.style.background = 'rgba(20,19,15,0.07)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.18)' } }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.03)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.10)' }}
           >
             <RefreshCw size={13} strokeWidth={2.1} />
             Next draft
@@ -2355,13 +2365,13 @@ export function MissingDescriptionCard({
           onClick={() => onPublish?.(draft, video)}
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            padding: '10px 14px', borderRadius: 100,
+            padding: '10px 14px', borderRadius: 0,
             border: 'none',
-            background: published ? 'rgba(22,163,74,0.85)' : '#e5251b',
+            background: published ? 'rgba(22,163,74,0.85)' : '#c9a030',
             color: '#fff',
             fontFamily: 'inherit',
             fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-            boxShadow: published ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+            boxShadow: published ? 'none' : '0 1px 3px rgba(201,160,48,0.28)',
             cursor: (publishing || published) ? 'default' : 'pointer',
             transition: 'filter 0.14s, transform 0.14s, background 0.2s',
           }}
@@ -2374,7 +2384,7 @@ export function MissingDescriptionCard({
       </div>
 
       {publishError && (
-        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#fb6a60' }}>
+        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#7a5b14' }}>
           {publishError}
         </p>
       )}
@@ -2391,9 +2401,9 @@ export function MissingDescriptionCard({
 export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, freshLabel, ageLabel, onResearch, onDismiss }) {
   if (!keyword) return null
   const s = Math.max(0, Math.min(100, Number(score) || 0))
-  const tone = s >= 75 ? { bg: 'rgba(22,163,74,0.20)', text: '#34d27b', bdr: 'rgba(22,163,74,0.35)' }
-             : s >= 50 ? { bg: 'rgba(217,118,6,0.20)', text: '#f0a23b', bdr: 'rgba(217,118,6,0.35)' }
-             :          { bg: 'rgba(229,37,27,0.16)', text: '#fb6a60', bdr: 'rgba(229,37,27,0.35)' }
+  const tone = s >= 75 ? { bg: 'rgba(22,163,74,0.20)', text: '#2d7a4f', bdr: 'rgba(22,163,74,0.35)' }
+             : s >= 50 ? { bg: 'rgba(217,118,6,0.20)', text: '#b07d1a', bdr: 'rgba(217,118,6,0.35)' }
+             :          { bg: 'rgba(201,160,48,0.16)', text: '#7a5b14', bdr: 'rgba(201,160,48,0.35)' }
   const momLabel = momentum === 'active' ? 'active'
                  : momentum === 'unclaimed' ? 'unclaimed'
                  : momentum === 'steady' ? 'steady'
@@ -2402,10 +2412,10 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: 'none',
       marginBottom: 12,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -2428,13 +2438,13 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
             style={{
               width: 28, height: 28, borderRadius: 8,
               border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.36)',
+              color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(20,19,15,0.36)' }}
           >
             <XIcon size={14} strokeWidth={2} />
           </button>
@@ -2447,14 +2457,14 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
         gap: 16,
         alignItems: 'center',
         padding: 14,
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(20,19,15,0.02)',
+        border: '1px solid rgba(20,19,15,0.06)',
         borderRadius: 12,
         marginBottom: 14,
       }}>
         <div style={{
           flexShrink: 0,
-          width: 64, height: 64, borderRadius: 14,
+          width: 64, height: 64, borderRadius: 0,
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           background: tone.bg,
           border: `1px solid ${tone.bdr}`,
@@ -2474,9 +2484,9 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
             {momLabel && (
               <span style={{
                 fontSize: 11, fontWeight: 600,
-                padding: '2px 9px', borderRadius: 100,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.10)',
+                padding: '2px 9px', borderRadius: 0,
+                background: 'rgba(20,19,15,0.06)',
+                border: '1px solid rgba(20,19,15,0.10)',
                 color: SHELL.text2,
                 letterSpacing: '-0.01em',
               }}>{momLabel}</span>
@@ -2503,13 +2513,13 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
         style={{
           width: '100%',
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-          padding: '10px 14px', borderRadius: 100,
+          padding: '10px 14px', borderRadius: 0,
           border: 'none',
-          background: '#e5251b',
+          background: '#c9a030',
           color: '#fff',
           fontFamily: 'inherit',
           fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-          boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+          boxShadow: '0 1px 3px rgba(201,160,48,0.28)',
           cursor: 'pointer',
           transition: 'filter 0.14s, transform 0.14s',
         }}
@@ -2550,10 +2560,10 @@ export function MissingTagsCard({
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: 'none',
       marginBottom: 12,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -2576,13 +2586,13 @@ export function MissingTagsCard({
             style={{
               width: 28, height: 28, borderRadius: 8,
               border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.36)',
+              color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(20,19,15,0.36)' }}
           >
             <XIcon size={14} strokeWidth={2} />
           </button>
@@ -2594,8 +2604,8 @@ export function MissingTagsCard({
         gap: 18,
         alignItems: 'stretch',
         padding: 14,
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(20,19,15,0.02)',
+        border: '1px solid rgba(20,19,15,0.06)',
         borderRadius: 12,
         marginBottom: 14,
       }}>
@@ -2612,16 +2622,16 @@ export function MissingTagsCard({
                 width: '100%', aspectRatio: thumbAspect,
                 objectFit: 'cover',
                 borderRadius: 12,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'rgba(20,19,15,0.06)',
+                border: '1px solid rgba(20,19,15,0.08)',
               }}
             />
           ) : (
             <div style={{
               width: '100%', aspectRatio: thumbAspect,
               borderRadius: 12,
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(20,19,15,0.06)',
+              border: '1px solid rgba(20,19,15,0.08)',
             }}/>
           )}
         </div>
@@ -2636,16 +2646,16 @@ export function MissingTagsCard({
           </p>
 
           <div style={{
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 10,
+            border: '1px solid rgba(20,19,15,0.08)',
+            borderRadius: 0,
             background: 'rgba(0,0,0,0.16)',
             overflow: 'hidden',
           }}>
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '7px 12px',
-              borderBottom: '1px solid rgba(255,255,255,0.06)',
-              background: 'rgba(255,255,255,0.02)',
+              borderBottom: '1px solid rgba(20,19,15,0.06)',
+              background: 'rgba(20,19,15,0.02)',
             }}>
               <span style={{
                 fontSize: 11, fontWeight: 600, color: SHELL.text3,
@@ -2664,9 +2674,9 @@ export function MissingTagsCard({
               {tags.map((t, i) => (
                 <span key={`${idx}-${i}-${t}`} style={{
                   display: 'inline-flex', alignItems: 'center',
-                  padding: '4px 10px', borderRadius: 100,
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  padding: '4px 10px', borderRadius: 0,
+                  background: 'rgba(20,19,15,0.04)',
+                  border: '1px solid rgba(20,19,15,0.08)',
                   color: SHELL.text1,
                   fontSize: 12, fontWeight: 500,
                   letterSpacing: '-0.01em',
@@ -2686,9 +2696,9 @@ export function MissingTagsCard({
             onClick={() => setSetIdx((idx + 1) % tagSets.length)}
             style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-              padding: '10px 14px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.10)',
-              background: 'rgba(255,255,255,0.03)',
+              padding: '10px 14px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.10)',
+              background: 'rgba(20,19,15,0.03)',
               color: SHELL.text1,
               fontFamily: 'inherit',
               fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
@@ -2696,8 +2706,8 @@ export function MissingTagsCard({
               opacity: (publishing || published) ? 0.5 : 1,
               transition: 'background 0.14s, border-color 0.14s',
             }}
-            onMouseEnter={e => { if (!publishing && !published) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' } }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
+            onMouseEnter={e => { if (!publishing && !published) { e.currentTarget.style.background = 'rgba(20,19,15,0.07)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.18)' } }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.03)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.10)' }}
           >
             <RefreshCw size={13} strokeWidth={2.1} />
             Next set
@@ -2710,13 +2720,13 @@ export function MissingTagsCard({
           onClick={() => onPublish?.(tags, video)}
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            padding: '10px 14px', borderRadius: 100,
+            padding: '10px 14px', borderRadius: 0,
             border: 'none',
-            background: published ? 'rgba(22,163,74,0.85)' : '#e5251b',
+            background: published ? 'rgba(22,163,74,0.85)' : '#c9a030',
             color: '#fff',
             fontFamily: 'inherit',
             fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-            boxShadow: published ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+            boxShadow: published ? 'none' : '0 1px 3px rgba(201,160,48,0.28)',
             cursor: (publishing || published) ? 'default' : 'pointer',
             transition: 'filter 0.14s, transform 0.14s, background 0.2s',
           }}
@@ -2729,7 +2739,7 @@ export function MissingTagsCard({
       </div>
 
       {publishError && (
-        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#fb6a60' }}>
+        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#7a5b14' }}>
           {publishError}
         </p>
       )}
@@ -2755,11 +2765,11 @@ export function PinnedAIInput({ onAsk }) {
       position: 'sticky', bottom: 16, zIndex: 5,
       marginTop: 18,
       padding: '10px 12px',
-      background: 'linear-gradient(180deg, rgba(20,20,24,0.92) 0%, rgba(12,12,14,0.96) 100%)',
+      background: 'var(--yd-surface)',
       backdropFilter: 'blur(14px)',
-      border: '1px solid rgba(255,255,255,0.10)',
-      borderRadius: 14,
-      boxShadow: '0 4px 18px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.06)',
+      border: '1px solid var(--yd-line)',
+      borderRadius: 0,
+      boxShadow: '0 6px 22px rgba(20,19,15,0.10)',
       display: 'flex', alignItems: 'center', gap: 10,
     }}>
       <input
@@ -2786,13 +2796,13 @@ export function PinnedAIInput({ onAsk }) {
         disabled={!value.trim()}
         style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-          padding: '8px 16px', borderRadius: 100,
+          padding: '8px 16px', borderRadius: 0,
           border: 'none',
-          background: value.trim() ? '#e5251b' : 'rgba(255,255,255,0.08)',
-          color: '#fff',
-          fontFamily: 'inherit',
-          fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-          boxShadow: value.trim() ? '0 1px 3px rgba(229,37,27,0.28)' : 'none',
+          background: value.trim() ? '#c9a030' : 'rgba(20,19,15,0.08)',
+          color: value.trim() ? 'var(--yd-on-gold)' : 'var(--yd-muted)',
+          fontFamily: "'Barlow Condensed', sans-serif",
+          fontSize: 14, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+          boxShadow: 'none',
           cursor: value.trim() ? 'pointer' : 'default',
           opacity: value.trim() ? 1 : 0.6,
           transition: 'filter 0.14s, transform 0.14s, background 0.2s, opacity 0.2s',
@@ -2838,10 +2848,10 @@ export function UnansweredCommentCard({
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: 'none',
       marginBottom: 12,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -2864,13 +2874,13 @@ export function UnansweredCommentCard({
             style={{
               width: 28, height: 28, borderRadius: 8,
               border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.36)',
+              color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(20,19,15,0.36)' }}
           >
             <XIcon size={14} strokeWidth={2} />
           </button>
@@ -2880,8 +2890,8 @@ export function UnansweredCommentCard({
       {/* Comment block: avatar + author + text + on-video subline */}
       <div style={{
         padding: 14,
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(20,19,15,0.02)',
+        border: '1px solid rgba(20,19,15,0.06)',
         borderRadius: 12,
         marginBottom: 10,
       }}>
@@ -2895,16 +2905,16 @@ export function UnansweredCommentCard({
                 flexShrink: 0,
                 width: 38, height: 38, borderRadius: '50%',
                 objectFit: 'cover',
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.10)',
+                background: 'rgba(20,19,15,0.06)',
+                border: '1px solid rgba(20,19,15,0.10)',
               }}
             />
           ) : (
             <div style={{
               flexShrink: 0,
               width: 38, height: 38, borderRadius: '50%',
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(20,19,15,0.06)',
+              border: '1px solid rgba(20,19,15,0.10)',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               color: SHELL.text3, fontSize: 14, fontWeight: 600,
             }}>{(authorName || '@').replace(/^@/, '').slice(0, 1).toUpperCase() || '@'}</div>
@@ -2936,8 +2946,8 @@ export function UnansweredCommentCard({
 
       {/* AI reply draft */}
       <div style={{
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 10,
+        border: '1px solid rgba(20,19,15,0.08)',
+        borderRadius: 0,
         background: 'rgba(0,0,0,0.16)',
         overflow: 'hidden',
         marginBottom: 14,
@@ -2945,8 +2955,8 @@ export function UnansweredCommentCard({
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '7px 12px',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-          background: 'rgba(255,255,255,0.02)',
+          borderBottom: '1px solid rgba(20,19,15,0.06)',
+          background: 'rgba(20,19,15,0.02)',
         }}>
           <span style={{
             fontSize: 11, fontWeight: 600, color: SHELL.text3,
@@ -2974,9 +2984,9 @@ export function UnansweredCommentCard({
             onClick={() => setReplyIdx((idx + 1) % replies.length)}
             style={{
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-              padding: '10px 14px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.10)',
-              background: 'rgba(255,255,255,0.03)',
+              padding: '10px 14px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.10)',
+              background: 'rgba(20,19,15,0.03)',
               color: SHELL.text1,
               fontFamily: 'inherit',
               fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
@@ -2984,8 +2994,8 @@ export function UnansweredCommentCard({
               opacity: (posting || posted) ? 0.5 : 1,
               transition: 'background 0.14s, border-color 0.14s',
             }}
-            onMouseEnter={e => { if (!posting && !posted) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' } }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
+            onMouseEnter={e => { if (!posting && !posted) { e.currentTarget.style.background = 'rgba(20,19,15,0.07)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.18)' } }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.03)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.10)' }}
           >
             <RefreshCw size={13} strokeWidth={2.1} />
             Next draft
@@ -2998,13 +3008,13 @@ export function UnansweredCommentCard({
           onClick={() => onPost?.(reply, comment)}
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            padding: '10px 14px', borderRadius: 100,
+            padding: '10px 14px', borderRadius: 0,
             border: 'none',
-            background: posted ? 'rgba(22,163,74,0.85)' : '#e5251b',
+            background: posted ? 'rgba(22,163,74,0.85)' : '#c9a030',
             color: '#fff',
             fontFamily: 'inherit',
             fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-            boxShadow: posted ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+            boxShadow: posted ? 'none' : '0 1px 3px rgba(201,160,48,0.28)',
             cursor: (posting || posted) ? 'default' : 'pointer',
             transition: 'filter 0.14s, transform 0.14s, background 0.2s',
           }}
@@ -3017,7 +3027,7 @@ export function UnansweredCommentCard({
       </div>
 
       {postError && (
-        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#fb6a60' }}>
+        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#7a5b14' }}>
           {postError}
         </p>
       )}
@@ -3049,10 +3059,10 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: 'none',
       marginBottom: 12,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -3073,13 +3083,13 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
             style={{
               width: 28, height: 28, borderRadius: 8,
               border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.36)',
+              color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(20,19,15,0.36)' }}
           >
             <XIcon size={14} strokeWidth={2} />
           </button>
@@ -3101,16 +3111,16 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
             <div key={`${it.term}-${i}`} style={{
               position: 'relative',
               padding: '9px 12px',
-              borderRadius: 10,
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              borderRadius: 0,
+              background: 'rgba(20,19,15,0.02)',
+              border: '1px solid rgba(20,19,15,0.06)',
               overflow: 'hidden',
             }}>
               {/* Subtle volume bar behind the row, brand-red tinted */}
               <div style={{
                 position: 'absolute', inset: 0,
                 width: `${pct}%`,
-                background: 'linear-gradient(90deg, rgba(229,37,27,0.10) 0%, rgba(229,37,27,0.03) 100%)',
+                background: 'linear-gradient(90deg, rgba(201,160,48,0.10) 0%, rgba(201,160,48,0.03) 100%)',
                 pointerEvents: 'none',
               }}/>
               <div style={{
@@ -3142,13 +3152,13 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
           style={{
             width: '100%',
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            padding: '10px 14px', borderRadius: 100,
+            padding: '10px 14px', borderRadius: 0,
             border: 'none',
-            background: '#e5251b',
+            background: '#c9a030',
             color: '#fff',
             fontFamily: 'inherit',
             fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-            boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+            boxShadow: '0 1px 3px rgba(201,160,48,0.28)',
             cursor: 'pointer',
             transition: 'filter 0.14s, transform 0.14s',
           }}
@@ -3176,20 +3186,20 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
   return (
     <FeedCard
       Icon={UserPlus}
-      iconColor={'#fb6a60'}
-      iconBg="rgba(229,37,27,0.10)"
+      iconColor={'#7a5b14'}
+      iconBg="rgba(201,160,48,0.10)"
       category="Suggested Competitors"
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
           fontSize: 10.5, fontWeight: 600, color: SHELL.text2,
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          padding: '3px 9px', borderRadius: 100,
+          background: 'rgba(20,19,15,0.05)',
+          border: '1px solid rgba(20,19,15,0.08)',
+          padding: '3px 9px', borderRadius: 0,
           letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>
-          <span style={{ width: 5, height: 5, borderRadius: 99, background: 'rgba(255,255,255,0.45)' }}/>
+          <span style={{ width: 5, height: 5, borderRadius: 99, background: 'rgba(20,19,15,0.45)' }}/>
           {top.length} picks
         </span>
       }
@@ -3200,7 +3210,7 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
           letterSpacing: '-0.15px', lineHeight: 1.3, margin: 0,
         }}>Channels in your niche worth tracking</h3>
         <span style={{
-          fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.78)',
+          fontSize: 12, fontWeight: 500, color: 'rgba(20,19,15,0.78)',
           letterSpacing: '-0.05px',
         }}>{subline}</span>
       </div>
@@ -3225,12 +3235,12 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
                 gap: 10,
                 padding: '18px 12px 14px',
                 background: SHELL.cardFlat,
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 14,
+                border: '1px solid rgba(20,19,15,0.08)',
+                borderRadius: 0,
                 transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.02)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
             >
               {/* Large centered avatar */}
               {c.thumbnail ? (
@@ -3243,15 +3253,15 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
                   style={{
                     width: 72, height: 72, borderRadius: '50%',
                     objectFit: 'cover',
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.10)',
+                    background: 'rgba(20,19,15,0.06)',
+                    border: '1px solid rgba(20,19,15,0.10)',
                   }}
                 />
               ) : (
                 <div style={{
                   width: 72, height: 72, borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.10)',
+                  background: 'rgba(20,19,15,0.06)',
+                  border: '1px solid rgba(20,19,15,0.10)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   color: SHELL.text3,
                 }}>
@@ -3283,12 +3293,12 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
                 style={{
                   width: '100%',
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5,
-                  padding: '8px 14px', borderRadius: 100,
+                  padding: '8px 14px', borderRadius: 0,
                   border: 'none', cursor: 'pointer',
-                  background: '#e5251b', color: '#fff',
+                  background: '#c9a030', color: 'var(--yd-on-gold)',
                   fontFamily: 'inherit',
                   fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.05px',
-                  boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+                  boxShadow: '0 1px 3px rgba(201,160,48,0.28)',
                   transition: 'filter 0.14s, transform 0.14s',
                   marginTop: 4,
                 }}
@@ -3303,7 +3313,7 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
       </div>
 
       {/* Bottom row: open Competitors */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
         <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
           Picked from caches, no new search burned
         </span>
@@ -3314,17 +3324,17 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
             onClick={onOpenAll}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '6px 11px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.08)',
-              background: 'rgba(255,255,255,0.02)',
+              padding: '6px 11px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.08)',
+              background: 'rgba(20,19,15,0.02)',
               color: SHELL.text2,
-              fontFamily: 'inherit',
-              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
               cursor: 'pointer',
               transition: 'background 0.14s, border-color 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = SHELL.text2 }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.02)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)'; e.currentTarget.style.color = SHELL.text2 }}
           >
             Open Competitors
             <ArrowRight size={11} strokeWidth={2.4} />
@@ -3373,10 +3383,10 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
   return (
     <article style={{
       background: SHELL.cardFlat,
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: 14,
+      border: '1px solid rgba(20,19,15,0.08)',
+      borderRadius: 0,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: 'none',
       marginBottom: 12,
     }}>
       {/* Plain head: title + age + dismiss */}
@@ -3402,13 +3412,13 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
             style={{
               width: 28, height: 28, borderRadius: 8,
               border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.36)',
+              color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s, color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(20,19,15,0.36)' }}
           >
             <XIcon size={14} strokeWidth={2} />
           </button>
@@ -3419,8 +3429,8 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
       {top.length === 0 && reasonCopy && (
         <div style={{
           padding: '16px 18px',
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px dashed rgba(255,255,255,0.10)',
+          background: 'rgba(20,19,15,0.02)',
+          border: '1px dashed rgba(20,19,15,0.10)',
           borderRadius: 12,
           color: SHELL.text2,
           fontSize: 13, fontWeight: 450, lineHeight: 1.55,
@@ -3470,16 +3480,16 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
                       width: '100%', aspectRatio: '16 / 9',
                       objectFit: 'cover',
                       borderRadius: 12,
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.08)',
+                      background: 'rgba(20,19,15,0.06)',
+                      border: '1px solid rgba(20,19,15,0.08)',
                     }}
                   />
                 ) : (
                   <div style={{
                     width: '100%', aspectRatio: '16 / 9',
                     borderRadius: 12,
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'rgba(20,19,15,0.06)',
+                    border: '1px solid rgba(20,19,15,0.08)',
                   }}/>
                 )}
                 {dur && dur !== '0:00' && (
@@ -3534,10 +3544,10 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
                 <ArrowRight size={12} strokeWidth={2.2} style={{ color: SHELL.text3 }}/>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: 4,
-                  padding: '3px 9px', borderRadius: 100,
-                  background: 'rgba(229,37,27,0.13)',
-                  border: '1px solid rgba(229,37,27,0.32)',
-                  color: '#fb6a60',
+                  padding: '3px 9px', borderRadius: 0,
+                  background: 'rgba(201,160,48,0.13)',
+                  border: '1px solid rgba(201,160,48,0.32)',
+                  color: '#7a5b14',
                   fontSize: 11.5, fontWeight: 600,
                   letterSpacing: '-0.01em',
                   fontVariantNumeric: 'tabular-nums',
@@ -3566,15 +3576,15 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
     <FeedCard
       Icon={Users}
       iconColor={SHELL.text1}
-      iconBg="rgba(255,255,255,0.06)"
+      iconBg="rgba(20,19,15,0.06)"
       category="Competitor Moves · last 7 days"
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
           fontSize: 10.5, fontWeight: 600, color: SHELL.text2,
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)',
-          padding: '3px 8px', borderRadius: 100,
+          background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.10)',
+          padding: '3px 8px', borderRadius: 0,
           letterSpacing: '0.05em', textTransform: 'uppercase',
         }}>
           {isEmpty ? `${tracking} tracked` : `${top3.length} new`}
@@ -3592,8 +3602,8 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
       {isEmpty && (
         <div style={{
           padding: '16px 18px',
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px dashed rgba(255,255,255,0.10)',
+          background: 'rgba(20,19,15,0.02)',
+          border: '1px dashed rgba(20,19,15,0.10)',
           borderRadius: 12,
           color: SHELL.text2,
           fontSize: 13, fontWeight: 450, lineHeight: 1.55,
@@ -3616,17 +3626,17 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
             style={{
               display: 'block',
               background: SHELL.cardFlat,
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 10,
+              border: '1px solid rgba(20,19,15,0.08)',
+              borderRadius: 0,
               overflow: 'hidden',
               textDecoration: 'none',
               transition: 'background 0.14s ease, border-color 0.14s ease, transform 0.14s ease, box-shadow 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
           >
             {/* Thumbnail */}
-            <div style={{ position: 'relative', aspectRatio: '16/9', background: '#26262b', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', aspectRatio: '16/9', background: '#e8e4dc', overflow: 'hidden' }}>
               {item.thumbnail && (
                 <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
               )}
@@ -3670,7 +3680,7 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
               }}>{item.channel_name}</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, fontWeight: 500, color: SHELL.text3, fontVariantNumeric: 'tabular-nums' }}>
                 <span>{fmtNum(item.views || 0)} views</span>
-                <span style={{ color: 'rgba(255,255,255,0.20)' }}>·</span>
+                <span style={{ color: 'rgba(20,19,15,0.20)' }}>·</span>
                 <span>{item.age_label || ''}</span>
               </div>
             </div>
@@ -3679,7 +3689,7 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
       </div>}
 
       {/* Bottom row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
         <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
           From the channels you track
         </span>
@@ -3691,17 +3701,17 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
             disabled={refreshing}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '6px 11px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.08)',
-              background: refreshing ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
+              padding: '6px 11px', borderRadius: 0,
+              border: '1px solid rgba(20,19,15,0.08)',
+              background: refreshing ? 'rgba(20,19,15,0.05)' : 'rgba(20,19,15,0.02)',
               color: refreshing ? SHELL.text3 : SHELL.text2,
-              fontFamily: 'inherit',
-              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 13, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
               cursor: refreshing ? 'wait' : 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' } }}
-            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
+            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.16)' } }}
+            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' } }}
           >
             <RefreshCw size={11} strokeWidth={2.4} style={{ animation: refreshing ? 'spin 0.8s linear infinite' : 'none' }}/>
             {refreshing ? 'Refreshing…' : 'Refresh'}
@@ -3713,15 +3723,15 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
             onClick={onOpenAll}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '7px 13px', borderRadius: 100,
+              padding: '8px 15px', borderRadius: 0,
               border: 'none', cursor: 'pointer',
-              background: SHELL.text1, color: '#0e0e10',
-              fontFamily: 'inherit',
-              fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
+              background: 'var(--yd-gold)', color: 'var(--yd-on-gold)',
+              fontFamily: "'Barlow Condensed', sans-serif",
+              fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+              boxShadow: 'none',
               transition: 'filter 0.14s ease, transform 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.10)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
             onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             Open Competitors
@@ -3740,7 +3750,7 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
   return (
     <div className={`ytg-insight-card${checked ? ' done' : ''}`} style={{
       transition: 'opacity 0.2s', marginBottom: 10,
-      borderTop: `3px solid ${checked ? 'rgba(255,255,255,0.08)' : color}`,
+      borderTop: `3px solid ${checked ? 'rgba(20,19,15,0.08)' : color}`,
     }}>
       <div style={{ padding: '16px 22px 18px' }}>
 
@@ -3753,11 +3763,11 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
               type="checkbox"
               checked={!!checked}
               onChange={onToggle}
-              style={{ width: 15, height: 15, accentColor: '#34d27b', cursor: 'pointer', flexShrink: 0 }}
+              style={{ width: 15, height: 15, accentColor: '#2d7a4f', cursor: 'pointer', flexShrink: 0 }}
             />
             <div style={{ width: 26, height: 26, borderRadius: 8, background: checked ? 'rgba(22,163,74,0.14)' : color, border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {checked
-                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={'#34d27b'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={'#2d7a4f'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
                 : <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
               }
             </div>
@@ -3778,7 +3788,7 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
             </span>
             {checked && onDelete && (
               <button className="ytg-del-btn" onClick={onDelete} title="Remove task">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#c9a030" strokeWidth="1.8" strokeLinecap="round">
                   <line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/>
                 </svg>
               </button>
@@ -3787,14 +3797,14 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
         </div>
 
         {/* Divider between header and body */}
-        {!checked && <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 14, marginLeft: 46 }} />}
+        {!checked && <div style={{ height: 1, background: 'rgba(20,19,15,0.08)', marginBottom: 14, marginLeft: 46 }} />}
 
         {/* ── Body, hidden when done ── */}
         {!checked && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
 
             {/* Why now */}
-            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+            <div style={{ background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0, padding: '12px 14px' }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
               <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.whyNow || insight.cause}</p>
             </div>
@@ -3802,7 +3812,7 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
             {/* Action */}
             <div style={{
               background: SHELL.cardFlat,
-              border: `1px solid ${'rgba(255,255,255,0.08)'}`,
+              border: `1px solid ${'rgba(20,19,15,0.08)'}`,
               borderLeft: `3px solid ${color}`,
               borderRadius: '0 10px 10px 0',
               padding: '12px 16px',
@@ -3815,8 +3825,8 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
 
             {/* Expected outcome */}
             {insight.expectedOutcome
-              ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
+              ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 0, padding: '12px 14px' }}>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
                   <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.expectedOutcome}</p>
                 </div>
               : <div />

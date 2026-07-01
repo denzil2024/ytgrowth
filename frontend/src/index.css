@@ -1,5 +1,38 @@
 @import "tailwindcss";
 
+/* ── Dashboard theme variables (editorial / Zennara) ────────────────────────
+   Defined globally so every logged-in surface (rendered inside Dashboard or
+   standalone) has them. Light is the default; dark ships behind a toggle
+   (set data-theme="dark" on <html>). */
+:root {
+  --yd-paper:#faf8f4; --yd-paper2:#f1efe9; --yd-surface:#ffffff;
+  --yd-ink:#14130f; --yd-soft:#4a4843; --yd-muted:#6b6862;
+  --yd-line:rgba(20,19,15,0.12); --yd-line-lo:rgba(20,19,15,0.07);
+  --yd-wash:rgba(20,19,15,0.035); --yd-wash2:rgba(20,19,15,0.06);
+  --yd-gold:#c9a030; --yd-gold-ink:#7a5b14;
+  --yd-gold-soft:rgba(201,160,48,0.10); --yd-gold-line:rgba(201,160,48,0.30);
+  --yd-on-gold:#1a1710;
+  --yd-green:#2d7a4f; --yd-green-ink:#1d5235;
+  --yd-green-soft:rgba(45,122,79,0.12); --yd-green-line:rgba(45,122,79,0.28);
+  --yd-amber:#b07d1a; --yd-amber-soft:rgba(176,125,26,0.10); --yd-amber-line:rgba(176,125,26,0.24);
+  --yd-danger:#c0392b; --yd-danger-soft:rgba(192,57,43,0.08); --yd-danger-line:rgba(192,57,43,0.24);
+  --yd-on-accent:#ffffff;
+}
+html[data-theme="dark"] {
+  --yd-paper:#080808; --yd-paper2:#141414; --yd-surface:#181818;
+  --yd-ink:#ffffff; --yd-soft:#bbbbbb; --yd-muted:#888888;
+  --yd-line:rgba(255,255,255,0.10); --yd-line-lo:rgba(255,255,255,0.06);
+  --yd-wash:rgba(255,255,255,0.04); --yd-wash2:rgba(255,255,255,0.07);
+  --yd-gold:#c9a030; --yd-gold-ink:#e2b84a;
+  --yd-gold-soft:rgba(201,160,48,0.12); --yd-gold-line:rgba(201,160,48,0.34);
+  --yd-on-gold:#141007;
+  --yd-green:#3baa6a; --yd-green-ink:#7fca9c;
+  --yd-green-soft:rgba(59,170,106,0.14); --yd-green-line:rgba(59,170,106,0.30);
+  --yd-amber:#d0a03a; --yd-amber-soft:rgba(208,160,58,0.12); --yd-amber-line:rgba(208,160,58,0.28);
+  --yd-danger:#e0574d; --yd-danger-soft:rgba(224,87,77,0.12); --yd-danger-line:rgba(224,87,77,0.28);
+  --yd-on-accent:#ffffff;
+}
+
 /* Landing page */
 @keyframes landing-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 @keyframes landing-floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }

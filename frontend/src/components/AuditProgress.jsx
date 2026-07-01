@@ -19,10 +19,10 @@
 import { useEffect, useRef, useState } from 'react'
 
 const C = {
-  red: '#e5251b', redDeep: '#a50f07',
-  text1: '#f4f4f5', text2: '#cfd0d6', text3: '#b2b3bb',
-  border: 'rgba(255,255,255,0.08)', borderSoft: 'rgba(255,255,255,0.06)',
-  green: '#34d27b', greenSoft: 'rgba(22,163,74,0.16)',
+  red: '#c9a030', redDeep: '#a50f07',
+  text1: '#14130f', text2: '#6b6862', text3: '#6b6862',
+  border: 'rgba(20,19,15,0.08)', borderSoft: 'rgba(20,19,15,0.06)',
+  green: '#2d7a4f', greenSoft: 'rgba(22,163,74,0.16)',
 }
 
 const STAGES = [
@@ -129,12 +129,12 @@ export default function AuditProgress({ done = false, onDone }) {
       <style>{`
         .ap-wrap {
           position: relative;
-          background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
+          background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
           border: 1px solid ${C.border};
           border-radius: 22px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(20,19,15,0.04);
           padding: 30px 34px 28px;
-          font-family: 'Geist', 'Inter', system-ui, sans-serif;
+          font-family: 'Barlow', system-ui, sans-serif;
           overflow: hidden;
           animation: apIn 0.4s cubic-bezier(0.2, 0.7, 0.3, 1);
           max-width: 640px; width: 100%;
@@ -178,7 +178,7 @@ export default function AuditProgress({ done = false, onDone }) {
         }
         .ap-track {
           height: 6px; border-radius: 100px;
-          background: rgba(255,255,255,0.08);
+          background: rgba(20,19,15,0.08);
           overflow: hidden;
           position: relative;
         }
@@ -187,7 +187,7 @@ export default function AuditProgress({ done = false, onDone }) {
           background: linear-gradient(90deg, ${C.red} 0%, #fca5a5 100%);
           border-radius: 100px;
           transition: width 0.4s cubic-bezier(0.2, 0.7, 0.3, 1);
-          box-shadow: 0 0 8px rgba(229,37,27,0.35);
+          box-shadow: 0 0 8px rgba(201,160,48,0.35);
         }
         .ap-track-row {
           display: flex; justify-content: space-between; align-items: baseline;
@@ -222,8 +222,8 @@ export default function AuditProgress({ done = false, onDone }) {
           flex-shrink: 0;
           transition: background 0.3s, color 0.3s, transform 0.3s;
         }
-        .ap-stage[data-state="pending"] .ap-stage-ico { background: rgba(255,255,255,0.06); color: ${C.text3}; }
-        .ap-stage[data-state="active"]  .ap-stage-ico { background: ${C.red}; color: #ffffff; box-shadow: 0 4px 12px rgba(229,37,27,0.35); }
+        .ap-stage[data-state="pending"] .ap-stage-ico { background: rgba(20,19,15,0.06); color: ${C.text3}; }
+        .ap-stage[data-state="active"]  .ap-stage-ico { background: ${C.red}; color: #ffffff; box-shadow: 0 4px 12px rgba(201,160,48,0.35); }
         .ap-stage[data-state="done"]    .ap-stage-ico { background: ${C.greenSoft}; color: ${C.green}; }
         .ap-stage[data-state="active"]  .ap-stage-ico-inner { animation: apSpin 1.8s linear infinite; transform-origin: center; }
 

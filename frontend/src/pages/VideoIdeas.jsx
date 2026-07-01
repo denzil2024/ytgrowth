@@ -16,22 +16,22 @@ if (typeof document !== 'undefined' && !document.getElementById('vi-geist-font')
    Defined above the injected stylesheet so it can interpolate ${C.*}.
    Semantic hues kept; *Hi-bright text for the dark tinted chips. */
 const C = {
-  red:    '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
-  green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
-  amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
-  blue:   '#7aa2ff', blueBg:  'rgba(79,134,247,0.14)', blueBdr: 'rgba(79,134,247,0.34)',
-  text1:  '#f4f4f5',
-  text2:  '#cfd0d6',
-  text3:  '#b2b3bb',
-  text4:  'rgba(255,255,255,0.30)',
-  border: 'rgba(255,255,255,0.08)',
-  card:        'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-  cardFlat:    '#1c1c21',
-  surfaceInput:'#18181b',
-  hair:        'rgba(255,255,255,0.08)',
-  hairHi:      'rgba(255,255,255,0.16)',
-  wash:        'rgba(255,255,255,0.04)',
-  washActive:  'rgba(255,255,255,0.06)',
+  red:    '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)', redHi:   '#7a5b14',
+  green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#2d7a4f',
+  amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#b07d1a',
+  blue:   '#8a8378', blueBg:  'rgba(79,134,247,0.14)', blueBdr: 'rgba(79,134,247,0.34)',
+  text1:  '#14130f',
+  text2:  '#6b6862',
+  text3:  '#6b6862',
+  text4:  'rgba(20,19,15,0.30)',
+  border: 'rgba(20,19,15,0.08)',
+  card:        'linear-gradient(180deg, var(--yd-surface) 0%, var(--yd-surface) 100%)',
+  cardFlat:    'var(--yd-surface)',
+  surfaceInput:'var(--yd-surface)',
+  hair:        'rgba(20,19,15,0.08)',
+  hairHi:      'rgba(20,19,15,0.16)',
+  wash:        'rgba(20,19,15,0.04)',
+  washActive:  'rgba(20,19,15,0.06)',
   cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
 }
@@ -43,7 +43,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
   const s = document.createElement('style')
   s.id = 'ytg-vi-styles'
   s.textContent = `
-    .vi-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    .vi-page * { font-family: 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
     @keyframes viSpin    { to { transform: rotate(360deg) } }
     @keyframes viFadeUp  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
@@ -78,7 +78,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
     }
 
     .vi-skeleton {
-      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+      background: linear-gradient(90deg, rgba(20,19,15,0.04) 25%, rgba(20,19,15,0.08) 50%, rgba(20,19,15,0.04) 75%);
       background-size: 200% 100%;
       animation: viSkeleton 1.4s ease infinite;
       border-radius: 8px;
@@ -309,7 +309,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
               onClick={onConfirm}
               style={{
                 padding: '10px 20px', borderRadius: 100, border: 'none',
-                background: C.red, color: '#fff',
+                background: C.red, color: 'var(--yd-on-gold)',
                 fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em', cursor: 'pointer',
                 transition: 'filter 0.15s',
@@ -345,8 +345,8 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
 
   const sevLabel = score >= 75 ? 'Strong' : score >= 60 ? 'Solid' : 'Weak'
   const sevColor = score >= 75 ? C.green : score >= 60 ? C.amber : C.red
-  const sevBg    = score >= 75 ? 'rgba(22,163,74,0.08)' : score >= 60 ? 'rgba(217,119,6,0.08)' : 'rgba(229,37,27,0.07)'
-  const sevBdr   = score >= 75 ? 'rgba(22,163,74,0.22)' : score >= 60 ? 'rgba(217,119,6,0.22)' : 'rgba(229,37,27,0.18)'
+  const sevBg    = score >= 75 ? 'rgba(22,163,74,0.08)' : score >= 60 ? 'rgba(217,119,6,0.08)' : 'rgba(201,160,48,0.07)'
+  const sevBdr   = score >= 75 ? 'rgba(22,163,74,0.22)' : score >= 60 ? 'rgba(217,119,6,0.22)' : 'rgba(201,160,48,0.18)'
 
   const proof = Array.isArray(idea.top_competing_videos) ? idea.top_competing_videos : []
   const hasProof = proof.length > 0
@@ -364,7 +364,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
 
   // Severity stripe color for the 3px top accent.
   const stripeColor = done
-    ? 'rgba(255,255,255,0.08)'
+    ? 'rgba(20,19,15,0.08)'
     : (score >= 75 ? C.green : score >= 60 ? C.amber : C.red)
 
   return (
@@ -401,7 +401,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
               fontSize: 12, fontWeight: 500, color: C.text2,
               letterSpacing: '-0.01em',
             }}>
-              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.12)' }}/>
+              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(20,19,15,0.12)' }}/>
               {idea.targetKeyword}
             </span>
           )}
@@ -430,7 +430,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             title, so the typography should make that the star. ── */}
         <h3 style={{
           fontSize: 16, fontWeight: 600,
-          color: done ? 'rgba(255,255,255,0.12)' : C.text1,
+          color: done ? 'rgba(20,19,15,0.12)' : C.text1,
           letterSpacing: '-0.2px', lineHeight: 1.35,
           marginBottom: done ? 0 : 18,
           textDecoration: done ? 'line-through' : 'none',
@@ -487,17 +487,17 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                         display: 'block',
                         textDecoration: 'none', color: 'inherit',
                         borderRadius: 10, overflow: 'hidden',
-                        border: '1px solid rgba(255,255,255,0.08)',
+                        border: '1px solid rgba(20,19,15,0.08)',
                         background: C.cardFlat,
                         transition: 'transform 0.14s, box-shadow 0.14s, border-color 0.14s',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'; e.currentTarget.style.borderColor = '#d6d6dc' }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'; e.currentTarget.style.borderColor = '#4a4843' }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
                     >
                       <div style={{
                         position: 'relative',
                         aspectRatio: '16/9',
-                        background: '#26262b',
+                        background: '#e8e4dc',
                         overflow: 'hidden',
                       }}>
                         {(p.video_id || p.thumbnail) && (
@@ -545,7 +545,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             {/* ── Empty proof state: small inline note ── */}
             {!hasProof && (
               <div style={{
-                background: 'rgba(255,255,255,0.04)',
+                background: 'rgba(20,19,15,0.04)',
                 border: '1px dashed rgba(15,15,19,0.10)',
                 borderRadius: 10,
                 padding: '12px 14px',
@@ -579,10 +579,10 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                   padding: '8px 14px', borderRadius: 100,
                   border: 'none', cursor: 'pointer',
-                  background: C.red, color: '#fff',
+                  background: C.red, color: 'var(--yd-on-gold)',
                   fontFamily: 'inherit',
                   fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
-                  boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+                  boxShadow: '0 1px 3px rgba(201,160,48,0.30)',
                   transition: 'filter 0.14s ease, transform 0.14s ease',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
@@ -599,15 +599,15 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 4,
                     padding: '7px 12px', borderRadius: 100,
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(20,19,15,0.08)',
                     background: C.cardFlat, color: C.text2,
                     fontFamily: 'inherit',
                     fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
                     cursor: 'pointer',
                     transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = C.cardFlat; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = C.cardFlat; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.08)' }}
                 >
                   Detail
                   <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}><polyline points="3,4.5 6,7.5 9,4.5"/></svg>
@@ -936,7 +936,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
                 background: refreshing ? '#e0e0e6' : C.red,
                 color: refreshing ? C.text3 : '#fff',
                 cursor: refreshing ? 'not-allowed' : 'pointer',
-                boxShadow: refreshing ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+                boxShadow: refreshing ? 'none' : '0 1px 3px rgba(201,160,48,0.28)',
                 transition: 'filter 0.15s, transform 0.15s',
               }}
               onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
@@ -1018,7 +1018,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
                 padding: '11px 22px', borderRadius: 100, border: 'none',
                 fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em',
-                background: C.red, color: '#fff', cursor: 'pointer',
+                background: C.red, color: 'var(--yd-on-gold)', cursor: 'pointer',
                 transition: 'filter 0.15s',
               }}
               onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
@@ -1035,7 +1035,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
                 padding: '11px 22px', borderRadius: 100, border: 'none',
                 fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em',
-                background: C.red, color: '#fff', cursor: 'pointer',
+                background: C.red, color: 'var(--yd-on-gold)', cursor: 'pointer',
                 transition: 'filter 0.15s',
               }}
               onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}

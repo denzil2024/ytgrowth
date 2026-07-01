@@ -42,10 +42,10 @@ export function NavBtn({ label, active, onClick, badge, dot }) {
         letterSpacing: '-0.01em',
         border: 'none',
         padding: `9px ${NAV_PAD_X}px`,
-        borderRadius: 10,
+        borderRadius: 0,
         textAlign: 'left',
         cursor: 'pointer',
-        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+        fontFamily: "'Barlow', system-ui, sans-serif",
         display: 'flex', alignItems: 'center', gap: 12,
         transition: 'background 0.14s ease, color 0.14s ease',
       }}
@@ -55,7 +55,7 @@ export function NavBtn({ label, active, onClick, badge, dot }) {
       {active && (
         <span aria-hidden style={{
           position: 'absolute', left: -NAV_GUTTER, top: 8, bottom: 8,
-          width: 3, borderRadius: 100,
+          width: 3, borderRadius: 0,
           background: C.red,
         }}/>
       )}
@@ -67,14 +67,14 @@ export function NavBtn({ label, active, onClick, badge, dot }) {
       <span style={{ flex: 1 }}>{label}</span>
       {typeof badge === 'string' && badge && (
         <span style={{
-          background: 'rgba(229,37,27,0.10)', color: '#fb6a60',
+          background: 'rgba(201,160,48,0.10)', color: '#7a5b14',
           fontSize: 9.5, fontWeight: 700, padding: '2px 7px',
           borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase',
         }}>{badge}</span>
       )}
       {typeof badge === 'number' && badge > 0 && (
         <span style={{
-          background: 'rgba(229,37,27,0.10)', color: '#fb6a60',
+          background: 'rgba(201,160,48,0.10)', color: '#7a5b14',
           fontSize: 10.5, fontWeight: 700, padding: '1px 7px',
           borderRadius: 20, minWidth: 18, textAlign: 'center',
           letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
@@ -85,7 +85,7 @@ export function NavBtn({ label, active, onClick, badge, dot }) {
         <span aria-label="new" style={{
           width: 7, height: 7, borderRadius: '50%',
           background: C.red,
-          boxShadow: `0 0 0 3px rgba(229,37,27,0.16)`,
+          boxShadow: `0 0 0 3px rgba(201,160,48,0.16)`,
           flexShrink: 0,
         }}/>
       )}
@@ -113,7 +113,7 @@ export function NavSubBtn({ label, active, onClick, locked = false }) {
         borderRadius: 8,
         textAlign: 'left',
         cursor: 'pointer',
-        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+        fontFamily: "'Barlow', system-ui, sans-serif",
         display: 'flex', alignItems: 'center', gap: 10,
         transition: 'background 0.14s ease, color 0.14s ease',
       }}
@@ -124,7 +124,7 @@ export function NavSubBtn({ label, active, onClick, locked = false }) {
         width: 5, height: 5, borderRadius: '50%',
         background: active ? C.red : SHELL.iconIdle,
         flexShrink: 0,
-        boxShadow: active ? `0 0 0 3px rgba(229,37,27,0.10)` : 'none',
+        boxShadow: active ? `0 0 0 3px rgba(201,160,48,0.10)` : 'none',
         transition: 'background 0.14s ease, box-shadow 0.14s ease',
       }}/>
       <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
@@ -181,10 +181,10 @@ export function NavGroup({ label, children, anyChildActive, defaultOpen = true, 
           letterSpacing: '-0.01em',
           border: 'none',
           padding: `9px ${NAV_PAD_X}px`,
-          borderRadius: 10,
+          borderRadius: 0,
           textAlign: 'left',
           cursor: 'pointer',
-          fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+          fontFamily: "'Barlow', system-ui, sans-serif",
           display: 'flex', alignItems: 'center', gap: 12,
           transition: 'background 0.14s ease, color 0.14s ease',
         }}
@@ -199,7 +199,7 @@ export function NavGroup({ label, children, anyChildActive, defaultOpen = true, 
         <span style={{ flex: 1 }}>{label}</span>
         {typeof badge === 'number' && badge > 0 && (
           <span style={{
-            background: 'rgba(229,37,27,0.10)', color: '#fb6a60',
+            background: 'rgba(201,160,48,0.10)', color: '#7a5b14',
             fontSize: 10.5, fontWeight: 700, padding: '1px 7px',
             borderRadius: 20, minWidth: 18, textAlign: 'center',
             letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
@@ -210,7 +210,7 @@ export function NavGroup({ label, children, anyChildActive, defaultOpen = true, 
           <span aria-label="new" style={{
             width: 7, height: 7, borderRadius: '50%',
             background: C.red,
-            boxShadow: `0 0 0 3px rgba(229,37,27,0.16)`,
+            boxShadow: `0 0 0 3px rgba(201,160,48,0.16)`,
             flexShrink: 0,
           }}/>
         )}
@@ -267,7 +267,7 @@ export function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
           margin: `1px ${NAV_GUTTER}px`,
           width: `calc(100% - ${NAV_GUTTER * 2}px)`,
           display: 'flex', alignItems: 'center',
-          borderRadius: 10,
+          borderRadius: 0,
           background: active ? SHELL.activeBg : 'transparent',
           transition: 'background 0.14s ease',
         }}
@@ -275,7 +275,7 @@ export function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
         onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent' }}
       >
         {active && (
-          <span aria-hidden style={{ position: 'absolute', left: -NAV_GUTTER, top: 8, bottom: 8, width: 3, borderRadius: 100, background: C.red }}/>
+          <span aria-hidden style={{ position: 'absolute', left: -NAV_GUTTER, top: 8, bottom: 8, width: 3, borderRadius: 0, background: C.red }}/>
         )}
         <button
           onClick={onNew}
@@ -286,7 +286,7 @@ export function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
             padding: `9px 4px 9px ${NAV_PAD_X}px`,
             color: active ? SHELL.text1 : SHELL.text2,
             fontWeight: active ? 600 : 500, fontSize: 14, letterSpacing: '-0.01em',
-            fontFamily: "'Geist', 'Inter', system-ui, sans-serif", textAlign: 'left',
+            fontFamily: "'Barlow', system-ui, sans-serif", textAlign: 'left',
           }}
         >
           <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0, color: active ? C.red : SHELL.iconIdle }}>{NAV_ICONS['Chat']}</span>
@@ -308,7 +308,7 @@ export function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
         <div style={{ position: 'relative', paddingTop: 2, paddingBottom: 4 }}>
           <span aria-hidden style={{ position: 'absolute', left: NAV_GUTTER + NAV_PAD_X + (NAV_ICON_COL / 2), top: 4, bottom: 6, width: 1, background: SHELL.hair }}/>
           {recent.length === 0 ? (
-            <p style={{ margin: `2px ${NAV_GUTTER}px 4px ${NAV_GUTTER + SUB_INDENT}px`, padding: '6px 10px', fontSize: 12.5, color: SHELL.text3, fontFamily: "'Geist', 'Inter', system-ui, sans-serif" }}>No chats yet</p>
+            <p style={{ margin: `2px ${NAV_GUTTER}px 4px ${NAV_GUTTER + SUB_INDENT}px`, padding: '6px 10px', fontSize: 12.5, color: SHELL.text3, fontFamily: "'Barlow', system-ui, sans-serif" }}>No chats yet</p>
           ) : recent.map(c => {
             const on = nav === 'Chat' && c.id === activeId
             return (
@@ -324,7 +324,7 @@ export function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
                   fontWeight: on ? 600 : 450, fontSize: 13.5, letterSpacing: '-0.01em',
                   border: 'none', padding: '7px 10px', borderRadius: 8,
                   textAlign: 'left', cursor: 'pointer',
-                  fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+                  fontFamily: "'Barlow', system-ui, sans-serif",
                   display: 'flex', alignItems: 'center', gap: 9,
                   transition: 'background 0.14s ease, color 0.14s ease',
                 }}
@@ -413,10 +413,10 @@ export function WhatsNewCard({ channelId, onNavigate }) {
       position: 'relative',
       background: SHELL.cardBg,
       border: `1px solid ${SHELL.hair}`,
-      borderRadius: 11,
+      borderRadius: 0,
       padding: '13px 14px 14px 14px',
       boxShadow: SHELL.cardShadow,
-      fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+      fontFamily: "'Barlow', system-ui, sans-serif",
     }}>
       {/* Dismiss × */}
       <button
@@ -444,15 +444,15 @@ export function WhatsNewCard({ channelId, onNavigate }) {
           flexShrink: 0,
           width: 28, height: 28, borderRadius: 8,
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(229,37,27,0.08)',
-          color: '#fb6a60',
+          background: 'rgba(201,160,48,0.08)',
+          color: '#7a5b14',
           marginTop: 1,
         }}>
           <Sparkles size={15} strokeWidth={2} />
         </span>
         <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{
-            fontSize: 9.5, fontWeight: 600, color: '#fb6a60',
+            fontSize: 9.5, fontWeight: 600, color: '#7a5b14',
             letterSpacing: '0.11em', textTransform: 'uppercase',
             marginBottom: 5,
           }}>
@@ -480,13 +480,13 @@ export function WhatsNewCard({ channelId, onNavigate }) {
               display: 'inline-flex', alignItems: 'center', gap: 5,
               padding: 0, border: 'none', background: 'transparent',
               cursor: 'pointer',
-              color: '#fb6a60',
+              color: '#7a5b14',
               fontSize: 13, fontWeight: 600,
               letterSpacing: '-0.01em',
               fontFamily: 'inherit',
             }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#ff5a4f' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#e5251b' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#c9a030' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#c9a030' }}
           >
             {feature.cta}
             <ArrowRight size={13} strokeWidth={2.4} />
@@ -512,7 +512,7 @@ export function ChannelSwitcher({ channels, channelsAllowed, canAddMore, current
 
   const current = channels.find(c => c.is_current) || channels[0]
 
-  function scoreColor(s) { return s >= 75 ? '#16a34a' : s >= 50 ? '#d97706' : '#e5251b' }
+  function scoreColor(s) { return s >= 75 ? '#16a34a' : s >= 50 ? '#d97706' : '#c9a030' }
 
   function doSwitch(channelId) {
     setOpen(false)
@@ -550,7 +550,7 @@ export function ChannelSwitcher({ channels, channelsAllowed, canAddMore, current
       >
         {current.channel_thumbnail
           ? <img src={current.channel_thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1.5px solid ${SHELL.hair}` }} />
-          : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(251,106,96,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#fb6a60', flexShrink: 0 }}>{(current.channel_name || '?')[0].toUpperCase()}</div>
+          : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(201,160,48,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#7a5b14', flexShrink: 0 }}>{(current.channel_name || '?')[0].toUpperCase()}</div>
         }
         <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{ fontSize: 14, fontWeight: 600, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{current.channel_name}</p>
@@ -567,7 +567,7 @@ export function ChannelSwitcher({ channels, channelsAllowed, canAddMore, current
           position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0,
           background: SHELL.cardBg,
           border: `0.5px solid ${SHELL.hair}`,
-          borderRadius: 12,
+          borderRadius: 0,
           boxShadow: SHELL.popShadow,
           padding: 6,
           zIndex: 100,
@@ -588,7 +588,7 @@ export function ChannelSwitcher({ channels, channelsAllowed, canAddMore, current
             >
               {ch.channel_thumbnail
                 ? <img src={ch.channel_thumbnail} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(251,106,96,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#fb6a60', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
+                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(201,160,48,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#7a5b14', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
               }
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontSize: 14, fontWeight: 500, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
@@ -612,7 +612,7 @@ export function ChannelSwitcher({ channels, channelsAllowed, canAddMore, current
                 onMouseEnter={e => { e.currentTarget.style.background = SHELL.hoverBg }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
               >
-                <span style={{ fontSize: 14, color: '#fb6a60', fontWeight: 500 }}>+ Connect another channel</span>
+                <span style={{ fontSize: 14, color: '#7a5b14', fontWeight: 500 }}>+ Connect another channel</span>
               </div>
             : <div
                 onClick={() => { setOpen(false); window.location.href = '/#pricing' }}

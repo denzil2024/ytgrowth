@@ -103,7 +103,7 @@ const settingsEl = () => React.createElement(Settings, {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement('div', {
-    style: { padding: '40px 24px 80px', boxSizing: 'border-box', background: '#0e0e10', minHeight: '100vh' }
+    style: { padding: '40px 24px 80px', boxSizing: 'border-box', background: 'var(--yd-paper)', minHeight: '100vh' }
   },
     React.createElement('style', null, fontOverride),
     Label('A — Current app font (Geist)', 'What ships today across the dark app'),

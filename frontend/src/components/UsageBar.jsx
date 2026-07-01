@@ -68,14 +68,16 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
 
   // Canonical palette, matches Dashboard C tokens.
   const C = {
-    red:    '#e5251b',
-    redHi:  '#ef3a31',
-    amber:  '#d97706',
-    green:  '#059669',
-    text1:  dark ? '#ffffff' : '#0f0f13',
-    text2:  dark ? 'rgba(255,255,255,0.62)' : '#4a4a58',
-    text3:  dark ? 'rgba(255,255,255,0.45)' : '#9595a4',
-    track:  dark ? 'rgba(255,255,255,0.10)' : '#eceef2',
+    red:    '#c0392b',   // danger: genuine out-of-credits state
+    redHi:  '#c0392b',
+    gold:   '#c9a030',
+    goldInk: dark ? '#e2b84a' : '#7a5b14',
+    amber:  '#b07d1a',
+    green:  '#2d7a4f',
+    text1:  'var(--yd-ink)',
+    text2:  'var(--yd-soft)',
+    text3:  'var(--yd-muted)',
+    track:  'var(--yd-line)',
   }
 
   // State colour: green healthy, amber as it drains, red when critical.
@@ -102,7 +104,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     <button
       onClick={() => window.location.href = '/?tab=monthly'}
       style={{
-        fontSize: 10.5, fontWeight: 700, color: dark ? '#fb6a60' : C.red,
+        fontSize: 10.5, fontWeight: 700, color: C.goldInk,
         background: 'none', border: 'none', padding: 0, cursor: 'pointer',
         fontFamily: 'inherit', letterSpacing: '0.01em', flexShrink: 0,
         display: 'inline-flex', alignItems: 'center', gap: 3,
@@ -157,14 +159,14 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         exactly when the space and the CTA are earned. A soft tinted card
         (amber draining, red empty) that draws the eye, with the
         shout removed: no glow drop-shadow on Upgrade. ─────────────────── */
-  const alertBg  = atLimit ? 'rgba(229,37,27,0.05)'  : 'rgba(217,119,6,0.06)'
-  const alertBdr = atLimit ? 'rgba(229,37,27,0.18)'  : 'rgba(217,119,6,0.20)'
+  const alertBg  = atLimit ? 'rgba(192,57,43,0.05)'  : 'rgba(217,119,6,0.06)'
+  const alertBdr = atLimit ? 'rgba(192,57,43,0.18)'  : 'rgba(217,119,6,0.20)'
 
   return (
     <div style={{
       background: dark ? 'rgba(255,255,255,0.04)' : alertBg,
       border: `1px solid ${dark ? 'rgba(255,255,255,0.10)' : alertBdr}`,
-      borderRadius: 11,
+      borderRadius: 0,
       padding: '10px 12px 11px',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
@@ -198,12 +200,13 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         <button
           onClick={() => window.location.href = '/?tab=monthly'}
           style={{
-            flex: 1, fontSize: 12, fontWeight: 600,
-            padding: '7px 0', borderRadius: 100,
+            flex: 1, fontSize: 13, fontWeight: 700,
+            padding: '8px 0', borderRadius: 0,
             cursor: 'pointer', border: 'none',
-            background: 'linear-gradient(180deg, #ef3a31 0%, #e5251b 100%)',
-            color: '#fff', fontFamily: 'inherit',
-            boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.20)',
+            fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase', letterSpacing: '0.08em',
+            background: 'var(--yd-gold)',
+            color: 'var(--yd-on-gold)',
+            boxShadow: 'none',
             transition: 'filter 0.15s',
           }}
           onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)' }}
@@ -215,7 +218,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
           onClick={() => window.location.href = '/?tab=packs'}
           style={{
             flex: 1, fontSize: 12, fontWeight: 600,
-            padding: '7px 0', borderRadius: 100,
+            padding: '7px 0', borderRadius: 0,
             cursor: 'pointer',
             background: dark ? 'transparent' : '#ffffff',
             border: `1px solid ${dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec'}`,

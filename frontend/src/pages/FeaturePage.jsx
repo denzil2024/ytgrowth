@@ -33,10 +33,10 @@ function useFeatureStyles() {
     style.id = 'ytg-feat-styles'
     style.textContent = `
       :root {
-        --ytg-bg:           #f4f4f6;
+        --ytg-bg:           #14130f;
         --ytg-bg-2:         #ecedf1;
         --ytg-bg-3:         #e6e7ec;
-        --ytg-text:         #0a0a0f;
+        --ytg-text:         var(--yd-paper);
         --ytg-text-2:       rgba(10,10,15,0.62);
         --ytg-text-3:       rgba(10,10,15,0.40);
         --ytg-text-4:       rgba(10,10,15,0.30);
@@ -46,7 +46,7 @@ function useFeatureStyles() {
         --ytg-border-2:     rgba(10,10,15,0.16);
         --ytg-accent:       #e5302a;
         --ytg-accent-text:  #c22b25;
-        --ytg-accent-light: rgba(229,48,42,0.07);
+        --ytg-accent-light: rgba(201,160,48,0.07);
         --ytg-shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
         --ytg-shadow:       0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.11);
         --ytg-shadow-lg:    0 4px 16px rgba(0,0,0,0.11), 0 24px 60px rgba(0,0,0,0.14);
@@ -67,12 +67,12 @@ function useFeatureStyles() {
         font-size: 15px; font-weight: 700; font-family: 'Inter', system-ui, sans-serif;
         padding: 15px 30px; border-radius: 100px; border: none;
         cursor: pointer; text-decoration: none; letter-spacing: -0.2px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(229,48,42,0.34);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(201,160,48,0.34);
         transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
       }
       .ftr-btn:hover {
         filter: brightness(1.07); transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(0,0,0,0.16), 0 12px 36px rgba(229,48,42,0.42);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.16), 0 12px 36px rgba(201,160,48,0.42);
       }
       .ftr-btn-lg  { font-size: 16px; padding: 17px 38px; }
 
@@ -291,13 +291,13 @@ export default function FeaturePage({
       {/* ── VISUAL ── */}
       <section style={{
         background: visualDark ? '#0d0d12' : 'var(--ytg-bg-2)',
-        borderTop: visualDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid var(--ytg-border)',
-        borderBottom: visualDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid var(--ytg-border)',
+        borderTop: visualDark ? '1px solid rgba(20,19,15,0.06)' : '1px solid var(--ytg-border)',
+        borderBottom: visualDark ? '1px solid rgba(20,19,15,0.06)' : '1px solid var(--ytg-border)',
         padding: isMobile ? '60px 20px' : '90px 40px',
         position: 'relative', overflow: 'hidden',
       }}>
         {visualDark && (
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(201,160,48,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
         )}
         <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           {visual}
@@ -388,7 +388,7 @@ export default function FeaturePage({
       {/* ── BOTTOM CTA ── */}
       <section style={{ padding: isMobile ? '64px 20px 40px' : '100px 40px 64px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 820, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '48px 24px' : '72px 56px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 500, height: 240, background: 'radial-gradient(ellipse, rgba(229,48,42,0.09) 0%, transparent 70%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 500, height: 240, background: 'radial-gradient(ellipse, rgba(201,160,48,0.09) 0%, transparent 70%)', pointerEvents: 'none' }} />
           <h2 className="ftr-h2" style={{ fontSize: isMobile ? 28 : 40, marginBottom: 14 }}>
             {bottomHeadline || 'Ready to see what your channel is missing?'}
           </h2>

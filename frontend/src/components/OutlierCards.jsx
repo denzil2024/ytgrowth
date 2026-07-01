@@ -35,8 +35,8 @@ if (typeof document !== 'undefined' && !document.getElementById('outlier-cards-s
     @keyframes outFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
 
     .out-grid-card {
-      background: linear-gradient(180deg, #1e1e24 0%, #18181c 100%);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+      border: 1px solid rgba(20,19,15,0.08);
       border-radius: 16px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.4);
       transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
@@ -45,7 +45,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outlier-cards-s
     }
     .out-grid-card:hover {
       box-shadow: 0 6px 20px rgba(0,0,0,0.55);
-      border-color: rgba(255,255,255,0.16);
+      border-color: rgba(20,19,15,0.16);
       transform: translateY(-1px);
     }
   `
@@ -58,19 +58,19 @@ if (typeof document !== 'undefined' && !document.getElementById('outlier-cards-s
    inlines its own copies. Mirrors the shipped dark surface system;
    semantic *Hi text variants for legibility on dark tinted chips. */
 export const OC_C = {
-  card:        'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-  border:      'rgba(255,255,255,0.08)',
-  borderLight: 'rgba(255,255,255,0.06)',
+  card:        'linear-gradient(180deg, #ffffff 0%, #ffffff 100%)',
+  border:      'rgba(20,19,15,0.08)',
+  borderLight: 'rgba(20,19,15,0.06)',
   text1:       '#f4f4f5',
   text2:       '#cfd0d6',
   text3:       '#b2b3bb',
-  red:         '#e5251b',
-  redBg:       'rgba(229,37,27,0.13)',
-  redBdr:      'rgba(229,37,27,0.32)',
-  green:       '#34d27b',
+  red:         '#c9a030',
+  redBg:       'rgba(201,160,48,0.13)',
+  redBdr:      'rgba(201,160,48,0.32)',
+  green:       '#2d7a4f',
   greenBg:     'rgba(22,163,74,0.14)',
   greenBdr:    'rgba(22,163,74,0.34)',
-  amber:       '#f0a23b',
+  amber:       '#b07d1a',
   amberBg:     'rgba(217,119,6,0.14)',
   amberBdr:    'rgba(217,119,6,0.34)',
 }
@@ -193,7 +193,7 @@ export function VideoResultCard({ item, kind, onOpen }) {
               onError={makeThumbOnError(item.video_id, item.thumbnail)}
               onLoad={makeThumbOnLoad(item.video_id, item.thumbnail)}
             />
-          : <div style={{ width: '100%', aspectRatio: '16/9', background: '#26262b' }}/>
+          : <div style={{ width: '100%', aspectRatio: '16/9', background: '#e8e4dc' }}/>
         }
         {isShort && (
           <span style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.78)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
@@ -217,11 +217,11 @@ export function VideoResultCard({ item, kind, onOpen }) {
 
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
-          <span style={{ margin: '0 8px', color: 'rgba(255,255,255,0.30)' }}>·</span>
+          <span style={{ margin: '0 8px', color: 'rgba(20,19,15,0.30)' }}>·</span>
           {relPublished(item.published_at) || '—'}
         </p>
 
-        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
           <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier', display: `${item.outlier_score}×`,                                                       color: tier.color, tip: 'How many times this video beat its niche cohort\'s median views-per-subscriber. 5×+ is breakout.' },
@@ -239,14 +239,14 @@ export function VideoResultCard({ item, kind, onOpen }) {
             style={{
               width: '100%', justifyContent: 'center',
               padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
-              border: 'none', borderRadius: 100, cursor: 'pointer',
-              background: C.red, color: '#fff',
-              fontFamily: 'inherit', letterSpacing: '0.01em',
+              border: '1px solid var(--yd-line)', borderRadius: 0, cursor: 'pointer',
+              background: 'transparent', color: 'var(--yd-soft)',
+              fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.06em', textTransform: 'uppercase',
               display: 'inline-flex', alignItems: 'center', gap: 6,
               transition: 'filter 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
-            onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--yd-gold)'; e.currentTarget.style.color = 'var(--yd-gold-ink)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--yd-line)'; e.currentTarget.style.color = 'var(--yd-soft)' }}
           >
             {ctaLabel}
           </button>
@@ -296,7 +296,7 @@ export function ChannelResultCard({ item, onOpen }) {
         <div style={{
           width: 72, height: 72, borderRadius: '50%',
           overflow: 'hidden',
-          border: '4px solid #2a2a30',
+          border: '4px solid #e8e4dc',
           boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
           marginTop: -36, marginBottom: 12,
           flexShrink: 0, background: C.redBg,
@@ -308,7 +308,7 @@ export function ChannelResultCard({ item, onOpen }) {
             : <span style={{
                 position: 'absolute', inset: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, fontWeight: 600, color: '#fb6a60',
+                fontSize: 28, fontWeight: 600, color: '#7a5b14',
               }}>{initial}</span>
           }
         </div>
@@ -335,11 +335,11 @@ export function ChannelResultCard({ item, onOpen }) {
 
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.subscribers)}</span> subs
-          <span style={{ margin: '0 8px', color: 'rgba(255,255,255,0.30)' }}>·</span>
+          <span style={{ margin: '0 8px', color: 'rgba(20,19,15,0.30)' }}>·</span>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.video_count)}</span> videos
         </p>
 
-        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(20,19,15,0.08)' }}>
           <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier',   display: `${item.outlier_score}×`,           color: tier.color, tip: 'Their best-performing video in this search beat the niche median by this multiple.' },
@@ -357,14 +357,14 @@ export function ChannelResultCard({ item, onOpen }) {
             style={{
               width: '100%', justifyContent: 'center',
               padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
-              border: 'none', borderRadius: 100, cursor: 'pointer',
-              background: C.red, color: '#fff',
-              fontFamily: 'inherit', letterSpacing: '0.01em',
+              border: '1px solid var(--yd-line)', borderRadius: 0, cursor: 'pointer',
+              background: 'transparent', color: 'var(--yd-soft)',
+              fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.06em', textTransform: 'uppercase',
               display: 'inline-flex', alignItems: 'center', gap: 6,
               transition: 'filter 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
-            onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--yd-gold)'; e.currentTarget.style.color = 'var(--yd-gold-ink)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--yd-line)'; e.currentTarget.style.color = 'var(--yd-soft)' }}
           >
             Analyze channel
           </button>

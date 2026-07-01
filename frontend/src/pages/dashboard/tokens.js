@@ -3,23 +3,50 @@
    itself be pure data, keep this file leaf-level so it can be consumed by
    every other dashboard/* module without import cycles. */
 
-/* Light-page palette. Pages stay on this; only the app shell uses SHELL. */
+/* Editorial (Zennara) fonts. Cormorant for display + big numbers, Barlow
+   Condensed for labels/nav/buttons, Barlow for body. Shared so components
+   can reference the exact families instead of hardcoding font strings. */
+export const F = {
+  serif: "'Cormorant Garamond', Georgia, 'Times New Roman', serif",
+  cond:  "'Barlow Condensed', system-ui, sans-serif",
+  sans:  "'Barlow', system-ui, -apple-system, sans-serif",
+}
+
+/* Themed palette. Every value is a CSS variable (defined in styles.js) so a
+   light/dark toggle is one attribute flip (`data-theme="dark"` on <html>),
+   not a second set of components. Default theme is LIGHT (warm paper),
+   matching the marketing site.
+
+   Editorial translation: the brand accent is GOLD (was red). `red` keeps its
+   key name so every existing consumer switches to gold automatically; true
+   error/delete states use `danger`. Green stays for positive/healthy. Gold
+   text uses the darker `goldInk` (readable on white); gold FILLS use `gold`
+   with ink text (var(--yd-on-gold)). */
 export const C = {
-  red:      '#e5251b',
-  redBg:    '#fff5f5',
-  redBdr:   '#fecaca',
-  green:    '#059669',
-  greenBg:  '#ecfdf5',
-  greenBdr: '#a7f3d0',
-  amber:    '#d97706',
-  amberBg:  '#fffbeb',
-  amberBdr: '#fde68a',
-  text1:    '#0f0f13',
-  text2:    '#4a4a58',
-  text3:    '#9595a4',
-  border:   '#e6e6ec',
-  bg:       '#f5f5f9',
-  surface:  '#ffffff',
+  red:      'var(--yd-gold)',       // accent (GOLD) — key kept for free remap
+  redBg:    'var(--yd-gold-soft)',
+  redBdr:   'var(--yd-gold-line)',
+  gold:     'var(--yd-gold)',
+  goldL:    'var(--yd-gold)',
+  goldInk:  'var(--yd-gold-ink)',   // darker gold, readable as text
+  onGold:   'var(--yd-on-gold)',    // ink text on a gold fill
+  danger:   'var(--yd-danger)',     // reserved: true errors / delete confirm
+  green:    'var(--yd-green)',
+  greenBg:  'var(--yd-green-soft)',
+  greenBdr: 'var(--yd-green-line)',
+  greenInk: 'var(--yd-green-ink)',
+  amber:    'var(--yd-amber)',
+  amberBg:  'var(--yd-amber-soft)',
+  amberBdr: 'var(--yd-amber-line)',
+  text1:    'var(--yd-ink)',
+  text2:    'var(--yd-soft)',
+  text3:    'var(--yd-muted)',
+  border:   'var(--yd-line)',
+  bg:       'var(--yd-paper)',
+  surface:  'var(--yd-surface)',
+  serif:    F.serif,
+  cond:     F.cond,
+  sans:     F.sans,
 }
 
 /* SHELL: dark palette for the app shell only (sidebar + its nav / footer
@@ -27,31 +54,41 @@ export const C = {
    mirror the ChatCoach dark surface that's already shipped, so the rail
    and the Chat page read as one system. Every consumer of SHELL is
    shell-only and never renders on a light page. */
+/* SHELL: the app shell + pages palette. Same themed CSS variables as C, so
+   the whole app (rail + pages) flips together with the light/dark toggle.
+   Default LIGHT (warm paper), matching the marketing site. Sharp + flat: no
+   gradients, no soft shadows, hairline borders. Accent GOLD (`red` key kept);
+   green stays for positive; `danger` reserved for true errors. */
 export const SHELL = {
-  bg:        '#0c0c0e',                 // aside background (= ChatCoach rail)
-  surface:   '#18181b',                 // flat fallback (rarely used)
-  // Raised surfaces (profile card, What's-new, channel-switcher popover)
-  // use the SAME lit gradient + single soft shadow as every ChatCoach
-  // dark surface, so the rail and the Chat page read as one system.
-  cardBg:    'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-  cardFlat:  '#1c1c21',                 // flat inner blocks / chips
-  cardShadow:'0 1px 3px rgba(0,0,0,0.4)',
-  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
-  popShadow: '0 12px 32px rgba(0,0,0,0.6)',
-  hair:      'rgba(255,255,255,0.08)',  // borders + dividers
-  hairLo:    'rgba(255,255,255,0.06)',
-  text1:     '#f4f4f5',
-  text2:     '#cfd0d6',
-  text3:     '#b2b3bb',
-  iconIdle:  '#5b5b66',                 // idle nav icons / carets / sub-dots
-  // Quiet selection grammar, identical to the shipped ChatCoach rail:
-  // hover = faint white wash, active = slightly stronger white wash.
-  // Brand red stays an ACCENT only (the left stripe + icon), never a
-  // background wash, matches the "red is for CTAs, not toggles" rule.
-  hoverBg:   'rgba(255,255,255,0.035)',
-  activeBg:  'rgba(255,255,255,0.06)',
-  track:     'rgba(255,255,255,0.10)',  // health-bar track (= UsageBar dark)
-  red:       '#e5251b',
+  bg:        'var(--yd-paper)',         // aside + page background
+  surface:   'var(--yd-surface)',       // raised surface
+  cardBg:    'var(--yd-surface)',       // card background (flat)
+  cardFlat:  'var(--yd-surface)',       // flat inner blocks / chips
+  cardShadow:'none',
+  cardShadowLift: 'none',
+  popShadow: '0 16px 44px rgba(20,19,15,0.14)',
+  hair:      'var(--yd-line)',          // borders + dividers (sharp hairline)
+  hairLo:    'var(--yd-line-lo)',
+  text1:     'var(--yd-ink)',
+  text2:     'var(--yd-soft)',
+  text3:     'var(--yd-muted)',
+  iconIdle:  'var(--yd-muted)',         // idle nav icons / carets / sub-dots
+  // Quiet selection grammar: hover = faint wash, active = stronger wash.
+  // Gold stays an ACCENT (left stripe + icon), never a background wash.
+  hoverBg:   'var(--yd-wash)',
+  activeBg:  'var(--yd-wash2)',
+  track:     'var(--yd-line)',          // health-bar track
+  red:       'var(--yd-gold)',          // accent (GOLD) — key kept
+  gold:      'var(--yd-gold)',
+  goldL:     'var(--yd-gold)',
+  goldInk:   'var(--yd-gold-ink)',      // brighter/darker gold text per theme
+  onGold:    'var(--yd-on-gold)',       // ink text on a gold fill
+  green:     'var(--yd-green)',
+  greenInk:  'var(--yd-green-ink)',
+  danger:    'var(--yd-danger)',        // true error / delete
+  serif:     "'Cormorant Garamond', Georgia, 'Times New Roman', serif",
+  cond:      "'Barlow Condensed', system-ui, sans-serif",
+  sans:      "'Barlow', system-ui, -apple-system, sans-serif",
 }
 
 /* Milestone tier thresholds per category. */

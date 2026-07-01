@@ -22,8 +22,8 @@
 import { useEffect } from 'react'
 
 const C = {
-  red: '#e5251b', green: '#059669', amber: '#d97706',
-  text1: '#0f0f13', text2: '#4a4a58', text3: '#9595a4',
+  red: '#c9a030', green: '#059669', amber: '#d97706',
+  text1: '#0f0f13', text2: '#4a4a58', text3: '#8a8378',
   border: '#e6e6ec',
 }
 
@@ -152,7 +152,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
         backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: 24,
-        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
+        fontFamily: "'Barlow', system-ui, sans-serif",
         animation: 'aem-fade 0.16s ease',
       }}>
       <style>{`
@@ -165,7 +165,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
         style={{
           position: 'relative',
           background: '#ffffff',
-          border: '1px solid rgba(229,37,27,0.2)',
+          border: '1px solid rgba(201,160,48,0.2)',
           borderRadius: 20,
           boxShadow: '0 20px 50px rgba(0,0,0,0.22)',
           padding: '30px 36px 28px',
@@ -186,7 +186,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.15s, color 0.15s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#f4f4f6'; e.currentTarget.style.color = C.text1 }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#14130f'; e.currentTarget.style.color = C.text1 }}
           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text3 }}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M3 3l8 8M11 3l-8 8"/>
@@ -199,7 +199,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
           background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
           margin: '0 auto 18px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
+          boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(20,19,15,0.25)`,
         }}>
           {cfg.icon}
         </div>
@@ -224,7 +224,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
             fontSize: 14, fontWeight: 700,
             padding: '13px 24px', borderRadius: 999,
             textDecoration: 'none', letterSpacing: '-0.1px',
-            boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(255,255,255,0.22)`,
+            boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(20,19,15,0.22)`,
           }}>
           {cfg.primary.label}
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">

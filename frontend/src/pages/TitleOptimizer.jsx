@@ -22,12 +22,12 @@ const C = {
   bg: '#f5f5f7',
   card: '#fff',
   border: '#e8e8ec',
-  text1: '#0f0f10',
+  text1: 'var(--yd-paper)',
   text2: '#3a3a3c',
   text3: '#8e8e93',
-  red: '#ff3b30',
+  red: '#c9a030',
   green: '#34c759',
-  blue: '#007aff',
+  blue: '#7a5b14',
   orange: '#ff9500',
   purple: '#af52de',
   teal: '#32ade6',
@@ -246,7 +246,7 @@ export default function TitleOptimizer() {
     : ''
 
   return (
-    <div style={{ maxWidth: 860, fontFamily: "'Geist', 'Inter', system-ui, sans-serif" }}>
+    <div style={{ maxWidth: 860, fontFamily: "'Barlow', system-ui, sans-serif" }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
@@ -299,7 +299,7 @@ export default function TitleOptimizer() {
             <>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="6" cy="6" r="5"/><path d="m9 9 3 3"/></svg>
               <span>Analyze &amp; suggest titles</span>
-              <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.65)', marginLeft: 2 }}>· 1 credit</span>
+              <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(20,19,15,0.65)', marginLeft: 2 }}>· 1 credit</span>
             </>
           )}
         </button>
