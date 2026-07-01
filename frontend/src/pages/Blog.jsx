@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
-import { posts, formatPostDate } from '../blog/posts.jsx'
+import { postsMeta as posts, formatPostDate } from '../blog/postsMeta.js'
 
 /* Pagination tunables. POSTS_PER_PAGE = grid cards per page. The
    featured post is shown on page 1 in addition to the cards (so page 1

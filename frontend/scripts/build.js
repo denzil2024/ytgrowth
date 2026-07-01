@@ -30,6 +30,11 @@ if (isCI && !process.env.FORCE_BUILD) {
   process.exit(0)
 }
 
+console.log('[build] gen-blog-meta')
+// Regenerate the metadata-only view of the blog posts (postsMeta.js) from
+// posts.jsx so Landing + Blog list never re-bundle the full ~1 MB of article
+// bodies. Runs before vite so the fresh module is picked up by the build.
+execSync('node scripts/gen-blog-meta.js', { stdio: 'inherit' })
 console.log('[build] vite build')
 execSync('vite build', { stdio: 'inherit' })
 console.log('[build] prerender')

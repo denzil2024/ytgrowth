@@ -27,7 +27,7 @@ import ChannelAuditPreview from '../components/landing/ChannelAuditPreview'
 import CompetitorPreview from '../components/landing/CompetitorPreview'
 import ThumbnailPreview from '../components/landing/ThumbnailPreview'
 import WeeklyReportPreview from '../components/landing/WeeklyReportPreview'
-import { posts, formatPostDate } from '../blog/posts.jsx'
+import { postsMeta as posts, formatPostDate } from '../blog/postsMeta.js'
 
 /* ─── inject font + global styles into <head> once ─────────────────────── */
 function useGlobalStyles() {
@@ -62,7 +62,7 @@ function useGlobalStyles() {
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
+      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Barlow', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
       @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
       @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
       /* Centered variant keeps the -50% X shift so the mega panel stays centered
@@ -339,7 +339,7 @@ function useGlobalStyles() {
       @keyframes ytg-ticker { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
       .ytg-ticker-track { display: flex; animation: ytg-ticker 52s linear infinite; width: max-content; }
       .ytg-ticker-track:hover { animation-play-state: paused; }
-      .ytg-footer-link { display: block; font-size: 14px; color: rgba(255,255,255,0.42); text-decoration: none; margin-bottom: 13px; transition: color 0.15s; font-family: 'Inter',system-ui,sans-serif; line-height: 1; }
+      .ytg-footer-link { display: block; font-size: 14px; color: rgba(255,255,255,0.42); text-decoration: none; margin-bottom: 13px; transition: color 0.15s; font-family: 'Barlow',system-ui,sans-serif; line-height: 1; }
       .ytg-footer-link:hover { color: rgba(255,255,255,0.82); }
       .ytg-footer-link:last-child { margin-bottom: 0; }
       .ytg-creator-avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; display: block; }
@@ -972,7 +972,7 @@ export default function Landing() {
   }, [])
 
   return (
-    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
+    <div style={{ fontFamily: "'Barlow', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'clip' }}>
 
       {/* ── AUTH ERROR. Paywall-style modal, replaces the old toast ─────── */}
       <AuthErrorModal

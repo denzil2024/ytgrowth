@@ -1,0 +1,489 @@
+Skip to content
+windsor.ai
+Products {SVG}
+[IMG svg%3E | alt=""]
+Destinations {SVG}
+Data Studio
+Claude
+BigQuery
+Google Sheets
+View all
+[IMG svg%3E | alt=""]
+Data sources {SVG}
+Facebook Ads
+GA4
+Google Ads
+Salesforce
+View all
+[IMG svg%3E | alt=""]
+AI insights {SVG}
+ChatGPT
+Claude
+Gemini
+Perplexity
+View all
+Company {SVG}
+[IMG svg%3E | alt=""]
+About us
+[IMG svg%3E | alt=""]
+Careers
+[IMG svg%3E | alt=""]
+Security
+[IMG svg%3E | alt=""]
+Customer reviews
+[IMG svg%3E | alt=""]
+Contact us
+Pricing
+Partners {SVG}
+[IMG svg%3E | alt=""]
+Affiliate program
+[IMG svg%3E | alt=""]
+Solution partners
+Resources {SVG}
+[IMG svg%3E | alt=""]
+Template gallery {SVG}
+[IMG svg%3E | alt=""]
+Looker Studio templates
+[IMG svg%3E | alt=""]
+Power BI templates
+[IMG svg%3E | alt=""]
+Excel templates
+[IMG svg%3E | alt=""]
+Google Sheets templates
+[IMG svg%3E | alt=""]
+Tableau templates
+[IMG svg%3E | alt=""]
+Facebook Ads templates
+[IMG svg%3E | alt=""]
+Google Ads templates
+View all
+[IMG svg%3E | alt=""]
+Data fields & Metrics
+[IMG svg%3E | alt=""]
+AI prompt library & Guides
+[IMG svg%3E | alt=""]
+Product documentation
+[IMG svg%3E | alt=""]
+API documentation
+[IMG svg%3E | alt=""]
+Case studies
+[IMG svg%3E | alt=""]
+Blog
+[IMG svg%3E | alt=""]
+Data models
+Why Windsor {SVG}
+[IMG svg%3E | alt=""]
+Windsor vs Supermetrics
+[IMG svg%3E | alt=""]
+Windsor vs Funnel.io
+[IMG svg%3E | alt=""]
+Windsor vs Fivetran
+[IMG svg%3E | alt=""]
+Windsor vs Rivery
+[IMG svg%3E | alt=""]
+Windsor vs Portermetrics
+[IMG svg%3E | alt=""]
+Windsor vs Coupler.io
+Log in
+Book a Demo
+Start for Free
+windsor.ai
+Navigation Menu
+Navigation Menu
+Products
+{SVG}
+[IMG dest-logo.svg | alt=""]
+Destinations
+{SVG}
+Data Studio
+Claude
+BigQuery
+Google Sheets
+View all
+[IMG data-source-logo.svg | alt=""]
+Data sources
+{SVG}
+Facebook Ads
+GA4
+Google Ads
+Salesforce
+View all
+[IMG Windsor-mcp.svg | alt=""]
+AI insights
+{SVG}
+ChatGPT
+Claude
+Gemini
+Perplexity
+View all
+Company
+{SVG}
+[IMG Frame-2.svg | alt=""]
+About us
+[IMG svg%3E | alt=""]
+Careers
+[IMG svg%3E | alt=""]
+Security
+[IMG svg%3E | alt=""]
+Customer reviews
+[IMG svg%3E | alt=""]
+Contact us
+Pricing
+Partners
+{SVG}
+[IMG svg%3E | alt=""]
+Affiliate program
+[IMG svg%3E | alt=""]
+Solution partners
+Resources
+{SVG}
+[IMG svg%3E | alt=""]
+Template gallery
+{SVG}
+[IMG svg%3E | alt=""]
+Looker Studio templates
+[IMG svg%3E | alt=""]
+Power BI templates
+[IMG svg%3E | alt=""]
+Excel templates
+[IMG svg%3E | alt=""]
+Google Sheets templates
+[IMG svg%3E | alt=""]
+Tableau templates
+[IMG svg%3E | alt=""]
+Facebook Ads templates
+[IMG svg%3E | alt=""]
+Google Ads templates
+View all
+[IMG svg%3E | alt=""]
+Data fields & Metrics
+[IMG svg%3E | alt=""]
+AI prompt library & Guides
+[IMG svg%3E | alt=""]
+Product documentation
+[IMG svg%3E | alt=""]
+API documentation
+[IMG svg%3E | alt=""]
+Case studies
+[IMG svg%3E | alt=""]
+Blog
+[IMG svg%3E | alt=""]
+Data models
+Why Windsor
+{SVG}
+[IMG svg%3E | alt=""]
+Windsor vs Supermetrics
+[IMG svg%3E | alt=""]
+Windsor vs Funnel.io
+[IMG svg%3E | alt=""]
+Windsor vs Fivetran
+[IMG svg%3E | alt=""]
+Windsor vs Rivery
+[IMG svg%3E | alt=""]
+Windsor vs Portermetrics
+[IMG svg%3E | alt=""]
+Windsor vs Coupler.io
+Connect any data source. Analyze it anywhere. Get insights with AI. Automatically pull data from 350+ business platforms and send it to your BI tools, spreadsheets, warehouses, and AI chats with the Windsor.ai connectors. Forget CSVs. Stop copy/paste. Sync data in 1 minute. No code required.
+Start for Free
+[IMG svg%3E | alt="google icon"]
+Sign up with Google
+[IMG check-mark.svg | alt=""]
+Free forever plan
+[IMG check-mark.svg | alt=""]
+No credit card needed
+[IMG svg%3E | alt="Windsor.ai Home"]
+[IMG svg%3E | alt="Windsor.ai Home"]
+[IMG svg%3E | alt="Windsor.ai Home"]
+[IMG svg%3E | alt="Windsor.ai Home"]
+[IMG svg%3E | alt=""]
+10,000+ companies choose Windsor.ai as their go-to data integration platform
+[IMG audi_logo-1.svg | alt="audi logo"]
+[IMG Logo-2-1.svg | alt=""]
+[IMG Logo-1.svg | alt="colgate"]
+[IMG idOqEm9gzY_1735910673367-1.svg | alt="asics"]
+[IMG idwJCOvWP7_1736239898377-1.svg | alt=""]
+[IMG idb3lV94IM_1736240060656-1.svg | alt="roche"]
+[IMG novo-nordisk-logo.svg | alt="novo nordisk logo"]
+[IMG Group-1.svg | alt="UBS"]
+[IMG idiuLxAbsR_1736240170989-1.svg | alt="unicef"]
+[IMG Group-2.svg | alt="verisure"]
+[IMG idwasseaDn_1736240093892-1.svg | alt="wpp"]
+[IMG path2043.svg | alt="club med"]
+[IMG logo-_-skoda.svg | alt="skoda"]
+[IMG idDbNcmsh__1735911107538-1.svg | alt="heineken"]
+[IMG idZScXivAN_1735910777994-1.svg | alt="puma"]
+[IMG audi_logo-1.svg | alt="audi logo"]
+[IMG Logo-2-1.svg | alt=""]
+[IMG Logo-1.svg | alt="colgate"]
+[IMG idOqEm9gzY_1735910673367-1.svg | alt="asics"]
+[IMG idwJCOvWP7_1736239898377-1.svg | alt=""]
+[IMG idb3lV94IM_1736240060656-1.svg | alt="roche"]
+[IMG novo-nordisk-logo.svg | alt="novo nordisk logo"]
+[IMG Group-1.svg | alt="UBS"]
+[IMG idiuLxAbsR_1736240170989-1.svg | alt="unicef"]
+[IMG Group-2.svg | alt="verisure"]
+[IMG idwasseaDn_1736240093892-1.svg | alt="wpp"]
+[IMG path2043.svg | alt="club med"]
+[IMG logo-_-skoda.svg | alt="skoda"]
+[IMG idDbNcmsh__1735911107538-1.svg | alt="heineken"]
+[IMG idZScXivAN_1735910777994-1.svg | alt="puma"]
+Send your data wherever you need it — from $19/month
+[IMG svg%3E | alt=""]
+Data Studio
+Try It Free
+Learn more
+[IMG svg%3E | alt=""]
+Claude
+Try It Free
+Learn more
+[IMG svg%3E | alt=""]
+ChatGPT
+Try It Free
+Learn more
+[IMG svg%3E | alt=""]
+Google Sheets
+Try It Free
+Learn more
+[IMG svg%3E | alt=""]
+Google BigQuery
+Try It Free
+Learn more
+View all destinations
+###### SECTION ######
+NEW: Windsor MCP for AI Insights
+[IMG svg%3E | alt=""]
+Ask AI anything about your data — directly in Claude & ChatGPT, and other LLMs Connect your Windsor.ai data to your favorite AI tool and get answers in seconds, from cross-channel campaign analysis to performance dashboards.
+Learn more.
+Install with one click:
+[IMG svg%3E | alt="claude"]
+Native connector for Claude {SVG}
+[IMG svg%3E | alt=""]
+Native app for ChatGPT {SVG}
+Also works with:
+[IMG svg%3E | alt="Copilot"]
+[IMG svg%3E | alt="gemini"]
+[IMG svg%3E | alt="perplexity"]
+[IMG svg%3E | alt="cursor"]
+[IMG svg%3E | alt="windsor mcp for manus ai"]
+other LLMs
+Centralize your data and make it ready for AI-powered analytics, dashboards, and reports. Always fresh, unified, and accessible to your team and clients
+Connect data
+Export data
+Automate pipelines
+Schedule refreshes
+Ask AI about your data
+[IMG connect-data-source-to-windsor.jpg | alt=""]
+[IMG windsor-supported-destinations.png | alt="windsor supported destinations"]
+[IMG build-pipelines-with-windsor.jpg | alt=""]
+[IMG create-a-destination-task-in-windsor.jpg | alt=""]
+[IMG ai-insights-with-windsor-mcp.jpg | alt="ask ai about your data windsor"]
+{SVG}
+{SVG}
+[IMG svg%3E | alt=""]
+Build AI integrations and end-to-end ETL/ELT pipelines in minutes with no coding skills
+[IMG svg%3E | alt=""]
+Automate reporting and reduce manual data prep tasks to save 4+ hours every day
+[IMG svg%3E | alt=""]
+Get started and explore the platform’s features with a free plan
+[IMG svg%3E | alt=""]
+Start instantly with a vast library of free, customizable dashboard templates
+Get started with Windsor.ai connectors in under 60 seconds 1
+Sign up and start for free
+Create your windsor.ai account and explore the platform’s capabilities at no cost.
+[IMG svg%3E | alt=""]
+2
+Connect all your data sources Aggregate data from more than 350+ sources with our secure and reliable ELT connectors.
+[IMG svg%3E | alt=""]
+3
+Choose where to send your data Transfer your unified data to the preferred destination: AI chat, BI tool, database, warehouse, or spreadsheet.
+[IMG svg%3E | alt="send data with windsor ai"]
+4
+Bonus: Analyze your data faster with AI Connect your data to ChatGPT, Claude, or other AI chats to unlock deeper insights and create visual summaries in seconds.
+[IMG svg%3E | alt=""]
+[IMG svg%3E | alt=""]
+[IMG svg%3E | alt=""]
+[IMG svg%3E | alt="send data with windsor ai"]
+[IMG svg%3E | alt=""]
+###### SECTION ######
+What clients say about Windsor.ai Over 300,000 data professionals worldwide trust Windsor.ai, and their testimonials highlight our platform’s effectiveness and reliability.
+See all reviews
+###### SECTION ######
+[IMG svg%3E | alt="G2"]
+Reviews & awards
+[IMG svg%3E | alt="star-1"]
+[IMG svg%3E | alt="star-2"]
+[IMG svg%3E | alt="star-3"]
+[IMG svg%3E | alt="star-4"]
+[IMG svg%3E | alt="star-5"]
+Great customer support
+Powerful integrations
+Vast connector library
+Ease of use
+Affordable pricing
+[IMG svg%3E | alt="Badge"]
+[IMG svg%3E | alt="Badge"]
+[IMG svg%3E | alt=""]
+Roberto Fernandes 6 month ago Efficient tool. Fast support. Windsor.ai is now a crucial tool in our day-to-day operations. We integrate data from various media channels with BigQuery quickly and transparently and have never had any type of instability. Every time we needed support, they were quick and resolved all cases.
+[IMG svg%3E | alt=""]
+Kelly Hatherell 2 week ago The backbone of cross-channel reporting. Windsor.ai is easy to use and delivers all the data I need for full funnel marketing. I have been using this tool for close on 2 years and their product development is good.
+[IMG svg%3E | alt=""]
+Andreas Waldmann 6 month ago Found hidden ROI, saved $2.8M. Windsor.ai transformed how we understand marketing performance. Multi-touch attribution showed us that channels we thought weren’t working were actually driving our most valuable customers. This insight alone saved us $2.8M annually and helped us scale our loan business more efficiently than ever.
+[IMG svg%3E | alt=""]
+Maxime Morell 2 week ago Excellent tool for Amazon data integration. Windsor has been a game-changer for our data analysis. We’ve been using it for several months to extract sales data from our Amazon account, and it seamlessly integrates with Looker Studio to create accurate and detailed dashboards. The setup was straightforward, and the data is reliable. It has saved us a significant amount of time and effort in manually compiling reports.
+See all reviews
+A modern data platform for AI analytics and automated data workflows
+Analysts
+Agencies
+Data teams
+Windsor.ai for analysts
+Automate data collection and reporting across 350+ channels
+Build pipelines and prepare datasets without custom API scripts or manual exports
+Use pre-built dashboard templates for instant reporting
+Reduce dependency on engineering for new integrations
+Identify trends and unlock deep insights in seconds with AI ⏱ Save up to 40 hours per week on manual data wrangling and prep
+Try It Now
+[IMG svg%3E | alt=""]
+Windsor.ai for agencies
+Automate cross-platform client dashboards and reporting
+Manage reporting on hundreds of accounts from a single workspace
+Get access to unlimited users and data blending on every plan
+Scale to more sources, accounts, and clients without added maintenance
+Onboard new clients in minutes instead of days 📈 Scale to 3x more clients without adding technical headcount
+Try It Now
+[IMG svg%3E | alt=""]
+Windsor.ai for data teams
+Replace fragile scripts with fully managed, automated pipelines
+Normalize and transform datasets at scale with no manual effort
+Send analysis-ready data to warehouses, BI tools, and LLMs via no-code connectors
+Keep dashboards and models up to date with scheduled auto-refreshes 🧑‍💻 Eliminate over 80% of custom scripts and manual maintenance
+Try It Now
+[IMG svg%3E | alt=""]
+Analysts
+Windsor.ai for analysts
+Automate data collection and reporting across 350+ channels
+Build pipelines and prepare datasets without custom API scripts or manual exports
+Use pre-built dashboard templates for instant reporting
+Reduce dependency on engineering for new integrations
+Identify trends and unlock deep insights in seconds with AI ⏱ Save up to 40 hours per week on manual data wrangling and prep
+Try It Now Agencies
+Windsor.ai for agencies
+Automate cross-platform client dashboards and reporting
+Manage reporting on hundreds of accounts from a single workspace
+Get access to unlimited users and data blending on every plan
+Scale to more sources, accounts, and clients without added maintenance
+Onboard new clients in minutes instead of days 📈 Scale to 3x more clients without adding technical headcount
+Try It Now Data teams
+Windsor.ai for data teams
+Replace fragile scripts with fully managed, automated pipelines
+Normalize and transform datasets at scale with no manual effort
+Send analysis-ready data to warehouses, BI tools, and LLMs via no-code connectors
+Keep dashboards and models up to date with scheduled auto-refreshes 🧑‍💻 Eliminate over 80% of custom scripts and manual maintenance
+Try It Now
+Turn raw data into insights: quick, AI-driven, fully automated
+Connect, unify, and analyze all your data in one place. Windsor.ai automates cross-platform data integration with a no-code ETL/ELT platform that handles schema mapping, updates, and near real-time syncs. Gain a single source of truth for all your marketing and business performance and connect your data to AI chats for deeper insights, saving weekly 40+ hrs
+[IMG svg%3E | alt="cross-channel analysis windsor"]
+[IMG svg%3E | alt=""]
+Bring all your data together Easily blend data from multiple sources and make it available where your team needs it, be it Looker Studio, Claude, BigQuery, Power BI, Sheets, or another destination.
+[IMG svg%3E | alt=""]
+Automate data workflows Streamline recurring tasks and eliminate manual data wrangling by replacing scripts, file exports, and spreadsheet copy-pasting with fully automated data movement.
+[IMG svg%3E | alt=""]
+Optimize strategy and budget Get a unified view of performance across all channels, spot top campaigns and underperforming spend, and reallocate budget based on real data, not guesswork.
+Turn your data into a strategic asset. Get instant insights across all your platforms with Windsor.ai One connection, endless possibilities. Centralize your data and instantly fuel your AI assistants, BI dashboards, and custom reports.
+Start for Free
+Book a Demo
+[IMG svg%3E | alt="g logo"]
+[IMG svg%3E | alt="fb logo"]
+[IMG svg%3E | alt="big query data"]
+[IMG svg%3E | alt="youtube logo"]
+[IMG svg%3E | alt="power logo"]
+[IMG looker.svg | alt="looker logo"]
+[IMG svg%3E | alt="logo windsor.ai"]
+Get started with Windsor.ai
+Documentation
+Data fields
+Pricing
+Solution partner program
+Affiliate program
+Help & Community Destinations
+Data Studio Integrations
+Claude Integrations
+BigQuery Integrations
+Snowflake Integrations
+Google Sheets Integrations
+View all Connectors
+Instagram Connector
+Google Analytics 4 Connector
+Shopify Connector
+Facebook Ads Connector
+Google Ads Connector
+View all Template gallery
+Data Studio Templates
+Power BI Templates
+Marketing Templates
+Google Ads Dashboard
+Meta Ads Dashboard
+View all
+Start Free Trial
+Book a Demo
+[IMG svg%3E | alt="LinkedIn"]
+[IMG svg%3E | alt="facebook"]
+[IMG svg%3E | alt="twitter-X"]
+[IMG svg%3E | alt="YouTube"]
+[IMG svg%3E | alt="github"]
+[IMG svg%3E | alt="users-love-us"]
+[IMG svg%3E | alt="medal"]
+[IMG svg%3E | alt="users-love-us"]
+Privacy Policy
+Terms of Service
+Security
+[IMG svg%3E | alt="users-love-us"]
+[IMG svg%3E | alt="medal"]
+[IMG svg%3E | alt="users-love-us"]
+Made in Switzerland. © 2026 Windsor.ai
+Neve | Powered by
+WordPress Get started with Windsor.ai
+Documentation
+Data fields
+Pricing
+Solution partner program
+Affiliate program
+Help & Community Destinations
+Data Studio Integrations
+Claude Integrations
+BigQuery Integrations
+Snowflake Integrations
+Google Sheets Integrations
+View all Connectors
+Instagram Connector
+Google Analytics 4 Connector
+Shopify Connector
+Facebook Ads Connector
+Google Ads Connector
+View all Template gallery
+Data Studio Templates
+Power BI Templates
+Marketing Templates
+Google Ads Dashboard
+Meta Ads Dashboard
+View all
+Start Free Trial
+Book a Demo
+[IMG svg%3E | alt="LinkedIn"]
+[IMG svg%3E | alt="facebook"]
+[IMG svg%3E | alt="twitter-X"]
+[IMG svg%3E | alt="YouTube"]
+[IMG svg%3E | alt="github"]
+[IMG svg%3E | alt="users-love-us"]
+[IMG svg%3E | alt="medal"]
+[IMG svg%3E | alt="users-love-us"]
+Privacy Policy
+Terms of Service
+Security
+[IMG svg%3E | alt="users-love-us"]
+[IMG svg%3E | alt="medal"]
+[IMG svg%3E | alt="users-love-us"]
+Made in Switzerland. © 2026 Windsor.ai
+Neve | Powered by
+WordPress
+{SVG} New: Connect your data to Claude in 1 minute
+{SVG}

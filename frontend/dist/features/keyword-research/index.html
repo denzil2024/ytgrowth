@@ -35,7 +35,7 @@
     <meta name="twitter:image" content="https://ytgrowth.io/og-image.png">
 
     <!-- JSON-LD: SoftwareApplication: what AI search models read to describe the product. -->
-    <script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=AW-10883831151&amp;cx=c&amp;gtm=4e66u0h2"></script><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-MFMVT6Q5RB&amp;cx=c&amp;gtm=4e66u0h2"></script><script type="application/ld+json">
+    <script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=AW-10883831151&amp;cx=c&amp;gtm=4e66t1"></script><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-MFMVT6Q5RB&amp;cx=c&amp;gtm=4e66t1"></script><script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
@@ -160,12 +160,18 @@
          (googleapis -> gstatic chain) that was the bulk of the mobile LCP
          render delay. The variable woff2 files cover every weight; @font-face
          is inlined so there's no external font stylesheet to block render, and
-         DM Sans (the hero/LCP face) is preloaded so it's ready by first paint,
-         which avoids the fallback->web-font swap (no CLS). -->
+         the fonts the landing renders above the fold are preloaded so they
+         load in parallel with the CSS instead of chaining behind it (Lighthouse
+         "avoid chaining critical requests"). The set matches the hero + header
+         exactly: Fraunces normal (H1) + italic (the red accent phrase in the
+         H1), and Barlow 400/600/700 (hero sub, eyebrow, CTA button). DM Sans is
+         NOT preloaded — the wordmark now uses Barlow, so DM Sans is unused on
+         the homepage. Inter is gone entirely; the editorial sans is Barlow. -->
     <link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin="">
+    <link rel="preload" href="/fonts/fraunces-italic-latin.woff2" as="font" type="font/woff2" crossorigin="">
     <link rel="preload" href="/fonts/barlow-400-latin.woff2" as="font" type="font/woff2" crossorigin="">
     <link rel="preload" href="/fonts/barlow-600-latin.woff2" as="font" type="font/woff2" crossorigin="">
-    <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin="">
+    <link rel="preload" href="/fonts/barlow-700-latin.woff2" as="font" type="font/woff2" crossorigin="">
     <style>
       /* Editorial design fonts (public site), self-hosted, latin subset, variable
          where available. Replaces the Google Fonts @import that was on every
@@ -225,12 +231,12 @@
          records owner + dev visits too; Ahrefs' own bot filtering aside,
          that's the trade-off for reliable detection. -->
     <script src="https://analytics.ahrefs.com/analytics.js" data-key="NYeHh1Ga901GDZ9oU9W3aQ" async=""></script>
-    <script type="module" crossorigin="" src="/assets/index-BLLUDmzM.js"></script>
+    <script type="module" crossorigin="" src="/assets/index-0oixgNXW.js"></script>
     <link rel="modulepreload" crossorigin="" href="/assets/chunk-DECur_0Z.js">
     <link rel="modulepreload" crossorigin="" href="/assets/preload-helper-D4M6sveU.js">
     <link rel="modulepreload" crossorigin="" href="/assets/jsx-runtime-CP2iHdEU.js">
     <link rel="stylesheet" crossorigin="" href="/assets/index-Cokogoqy.css">
-  <link rel="modulepreload" as="script" crossorigin="" href="/assets/Landing-COKaIPzU.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/primitives-M6JQZs6T.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/BrandLockup-CcnJKG4F.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/posts-BgOQ9voI.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/SiteHeader-B7dEtuHY.js"><style id="sh-styles">
+  <link rel="modulepreload" as="script" crossorigin="" href="/assets/Landing-hbmUvQhv.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/primitives-M6JQZs6T.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/BrandLockup-CcnJKG4F.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/postsMeta-QCYxvBqk.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/SiteHeader-B7dEtuHY.js"><style id="sh-styles">
       .sh-nav {
         position: sticky; top: 0; z-index: 100;
         height: 66px;
@@ -357,7 +363,7 @@
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
+      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Barlow', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
       @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
       @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
       /* Centered variant keeps the -50% X shift so the mega panel stays centered
@@ -634,7 +640,7 @@
       @keyframes ytg-ticker { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
       .ytg-ticker-track { display: flex; animation: ytg-ticker 52s linear infinite; width: max-content; }
       .ytg-ticker-track:hover { animation-play-state: paused; }
-      .ytg-footer-link { display: block; font-size: 14px; color: rgba(255,255,255,0.42); text-decoration: none; margin-bottom: 13px; transition: color 0.15s; font-family: 'Inter',system-ui,sans-serif; line-height: 1; }
+      .ytg-footer-link { display: block; font-size: 14px; color: rgba(255,255,255,0.42); text-decoration: none; margin-bottom: 13px; transition: color 0.15s; font-family: 'Barlow',system-ui,sans-serif; line-height: 1; }
       .ytg-footer-link:hover { color: rgba(255,255,255,0.82); }
       .ytg-footer-link:last-child { margin-bottom: 0; }
       .ytg-creator-avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; display: block; }
@@ -668,7 +674,7 @@
         .ytg-hero-trust { gap: 10px; }
         .ytg-hero-ph { margin-top: 24px; }
       }
-    </style><script type="text/javascript" async="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/10883831151/?random=1782866173569&amp;cv=11&amp;fst=1782866173569&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;en=gtag.config&amp;gtm=45be66u0h2v9203910369za200zd9203910369xec&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115616986~115938466~115938469~119027224~119576881~119576885~119576891~119576895&amp;u_w=800&amp;u_h=600&amp;url=http%3A%2F%2Flocalhost%3A4173%2F&amp;rcb=12&amp;frm=0&amp;tiba=YTGrowth%3A%20VidIQ%2C%20TubeBuddy%20%26%20Viewstats%20Alternative&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=64526417.1782866174&amp;uaa=x86&amp;uab=64&amp;uafvl=Chromium%3B147.0.7727.57%7CNot.A%252FBrand%3B8.0.0.0&amp;uamb=0&amp;uam=&amp;uap=Windows&amp;uapv=19.0.0&amp;uaw=0&amp;data=event%3Dgtag.config&amp;ept=9&amp;rfmt=3&amp;fmt=4"></script><link rel="modulepreload" as="script" crossorigin="" href="/assets/KeywordResearch-BF9c63FP.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/seo-CgFrX2Z9.js"><script type="text/javascript" async="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/10883831151/?random=1782866234170&amp;cv=11&amp;fst=1782866234170&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;en=gtag.config&amp;gtm=45be66u0h2v9203910369za200zb9255464893zd9255464893xec&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115616985~115938465~115938468~119027224~119576881~119576885~119576891~119576895&amp;u_w=800&amp;u_h=600&amp;url=http%3A%2F%2Flocalhost%3A4173%2Ffeatures%2Fkeyword-research&amp;rcb=8&amp;frm=0&amp;tiba=YTGrowth%3A%20VidIQ%2C%20TubeBuddy%20%26%20Viewstats%20Alternative&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=64526417.1782866174&amp;uaa=x86&amp;uab=64&amp;uafvl=Chromium%3B147.0.7727.57%7CNot.A%252FBrand%3B8.0.0.0&amp;uamb=0&amp;uam=&amp;uap=Windows&amp;uapv=19.0.0&amp;uaw=0&amp;data=event%3Dgtag.config&amp;ept=9&amp;rfmt=3&amp;fmt=4"></script><style id="kwr-styles">
+    </style><script type="text/javascript" async="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/10883831151/?random=1782899885460&amp;cv=11&amp;fst=1782899885460&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;en=gtag.config&amp;gtm=45be66t1v9203910369za200zd9203910369xec&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115938466~115938469~119027224~119576881~119576885~119576891~119576895&amp;u_w=800&amp;u_h=600&amp;url=http%3A%2F%2Flocalhost%3A4173%2F&amp;rcb=8&amp;frm=0&amp;tiba=YTGrowth%3A%20VidIQ%2C%20TubeBuddy%20%26%20Viewstats%20Alternative&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=1913641824.1782899885&amp;uaa=x86&amp;uab=64&amp;uafvl=Chromium%3B147.0.7727.57%7CNot.A%252FBrand%3B8.0.0.0&amp;uamb=0&amp;uam=&amp;uap=Windows&amp;uapv=19.0.0&amp;uaw=0&amp;data=event%3Dgtag.config&amp;ept=9&amp;rfmt=3&amp;fmt=4"></script><link rel="modulepreload" as="script" crossorigin="" href="/assets/KeywordResearch-BF9c63FP.js"><link rel="modulepreload" as="script" crossorigin="" href="/assets/seo-CgFrX2Z9.js"><script type="text/javascript" async="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/10883831151/?random=1782899944217&amp;cv=11&amp;fst=1782899944217&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;en=gtag.config&amp;gtm=45be66t1v9203910369za200zb9255464893zd9255464893xec&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115938465~115938468~119027224~119576881~119576885~119576891~119576895&amp;u_w=800&amp;u_h=600&amp;url=http%3A%2F%2Flocalhost%3A4173%2Ffeatures%2Fkeyword-research&amp;rcb=6&amp;frm=0&amp;tiba=YTGrowth%3A%20VidIQ%2C%20TubeBuddy%20%26%20Viewstats%20Alternative&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=1913641824.1782899885&amp;uaa=x86&amp;uab=64&amp;uafvl=Chromium%3B147.0.7727.57%7CNot.A%252FBrand%3B8.0.0.0&amp;uamb=0&amp;uam=&amp;uap=Windows&amp;uapv=19.0.0&amp;uaw=0&amp;data=event%3Dgtag.config&amp;ept=9&amp;rfmt=3&amp;fmt=4"></script><style id="kwr-styles">
       :root {
         --yte-bg: #f6f4ef; --yte-bg-2: #efece4; --yte-surface: #ffffff;
         --yte-ink: #14130f; --yte-soft: #5c574e; --yte-muted: #8a8378;
