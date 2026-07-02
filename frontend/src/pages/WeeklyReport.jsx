@@ -202,12 +202,12 @@ function ReportBody({ rd, isLatest }) {
         <MetricCard label="Channel Score"  value={scoreVal} metric={m.channelScore} isScore valueColor={scoreColor} />
       </div>
 
-      {/* Weekly summary, bold statement (like Overview insight problem) */}
+      {/* Weekly summary, normal body weight (no bold walls of text) */}
       {rd.weeklySummary && (
         <p style={{
-          fontSize: 14.5, fontWeight: 600,
-          color: C.text1, lineHeight: 1.65,
-          letterSpacing: '-0.15px',
+          fontSize: 14, fontWeight: 400,
+          color: C.text1, lineHeight: 1.7,
+          letterSpacing: '-0.005em',
           marginBottom: 18,
         }}>
           {rd.weeklySummary}
@@ -442,7 +442,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 </span>
               </div>
 
-              <p style={{ fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.15px', marginBottom: 18 }}>
+              <p style={{ fontSize: 14, fontWeight: 400, color: C.text1, lineHeight: 1.7, letterSpacing: '-0.005em', marginBottom: 18 }}>
                 {channelFirstName} grew 12% this week with strong retention on the house tour, but the 14-day posting gap is starting to hurt recommendation surfaces, here&rsquo;s what&rsquo;s working and what to focus on next.
               </p>
 
