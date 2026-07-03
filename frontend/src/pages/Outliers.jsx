@@ -1,15 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
+import EstimateTag from '../components/EstimateTag'
 
-// Load Geist once, SCOPED to this page. Matches Chat / Competitors / Keywords.
-if (typeof document !== 'undefined' && !document.getElementById('outliers-geist-font')) {
+// Editorial app fonts, page-scoped. Cormorant = display H1 + big numbers,
+// Barlow = body/UI, Barlow Condensed = labels/buttons. Mirrors SeoOptimizer.
+if (typeof document !== 'undefined' && !document.getElementById('outliers-editorial-font')) {
   const link = document.createElement('link')
-  link.id = 'outliers-geist-font'
+  link.id = 'outliers-editorial-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
   document.head.appendChild(link)
 }
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const COND  = "'Barlow Condensed', sans-serif"
 
 /* ─── C: dark palette for this page. Mirrors the shipped app-shell /
        Competitors / Keywords dark system (lit-gradient cards, white-alpha
@@ -29,14 +33,14 @@ const C = {
   hairHi:      'rgba(20,19,15,0.16)',
   wash:        'rgba(20,19,15,0.04)',
   washActive:  'rgba(20,19,15,0.06)',
-  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
-  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+  cardShadow:     'none',
+  cardShadowLift: 'none',
   text1:       '#14130f',
   text2:       '#6b6862',
   text3:       '#6b6862',
   red:         '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)', redHi:   '#7a5b14',
   green:       '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#2d7a4f',
-  amber:       '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#b07d1a',
+  amber:       '#c9a030', amberBg: 'rgba(201,160,48,0.13)', amberBdr: 'rgba(201,160,48,0.32)', amberHi: '#7a5b14',
 }
 
 /* ─── Scoped styles ─────────────────────────────────────────────────────── */
@@ -60,14 +64,14 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-card {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       box-shadow: ${C.cardShadow};
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
     }
     .out-result-card {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       padding: 16px;
       box-shadow: ${C.cardShadow};
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
@@ -85,7 +89,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-grid-card {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       box-shadow: ${C.cardShadow};
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
       display: flex; flex-direction: column;
@@ -100,7 +104,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       display: inline-flex; align-items: center; gap: 7px;
       font-size: 12.5px; font-weight: 600; color: ${C.text2};
       background: ${C.cardFlat}; border: 1px solid ${C.hair};
-      border-radius: 100px; padding: 4px 12px 4px 4px;
+      border-radius: 0; padding: 4px 12px 4px 4px;
       box-shadow: ${C.cardShadow};
       letter-spacing: -0.01em;
     }
@@ -111,7 +115,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     }
     .out-sort-group {
       display: inline-flex; align-items: center;
-      background: ${C.cardFlat}; border-radius: 100px;
+      background: ${C.cardFlat}; border-radius: 0;
       border: 1px solid ${C.hair};
       box-shadow: ${C.cardShadow};
       padding: 3px; gap: 2px;
@@ -119,7 +123,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-sort-btn {
       font-family: inherit;
       font-size: 12.5px; font-weight: 600;
-      padding: 7px 14px; border-radius: 100px;
+      padding: 7px 14px; border-radius: 0;
       border: none; cursor: pointer; background: transparent;
       color: ${C.text2};
       transition: all 0.18s;
@@ -133,23 +137,22 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     }
     .out-cta {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 10px 16px; border-radius: 100px; border: none;
-      font-family: inherit;
-      font-size: 13px; font-weight: 600;
-      background: #c9a030; color: #fff; cursor: pointer;
-      transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 1px 3px rgba(201,160,48,0.32), 0 4px 14px rgba(201,160,48,0.22);
-      letter-spacing: 0.01em;
+      padding: 11px 16px; border-radius: 0; border: none;
+      font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
+      font-size: 12px; font-weight: 600;
+      background: #c9a030; color: var(--yd-on-gold); cursor: pointer;
+      transition: filter 0.15s;
+      box-shadow: none;
+      letter-spacing: 0.06em;
     }
     .out-cta:hover {
-      filter: brightness(1.08); transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(201,160,48,0.38), 0 8px 24px rgba(201,160,48,0.28);
+      filter: brightness(1.08);
     }
     /* Ghost variant, outlined neutral pill. Used for New-search alongside
        the (already red) top Search/Reports pill so we don't stack reds. */
     .out-cta-ghost {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 9px 16px; border-radius: 100px;
+      padding: 9px 16px; border-radius: 0;
       border: 1px solid ${C.hair};
       background: transparent; color: ${C.text2};
       font-family: inherit; font-size: 13px; font-weight: 600;
@@ -163,7 +166,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
 
     .out-tab-btn {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 9px 18px; border-radius: 100px;
+      padding: 9px 18px; border-radius: 0;
       font-family: inherit;
       font-size: 12.5px; font-weight: 600;
       background: transparent; color: ${C.text2};
@@ -181,36 +184,32 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
 
     .out-btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 9px 20px; border-radius: 100px; border: 1px solid #c9a030;
-      font-family: inherit;
-      font-size: 12.5px; font-weight: 600;
-      background: ${C.card}; color: #c9a030; cursor: pointer;
-      box-shadow: 0 1px 3px rgba(201,160,48,0.10), 0 4px 14px rgba(201,160,48,0.10);
-      transition: all 0.18s;
+      padding: 10px 20px; border-radius: 0; border: 1px solid #c9a030;
+      font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+      background: ${C.card}; color: ${C.redHi}; cursor: pointer;
+      box-shadow: none;
+      transition: background 0.18s, border-color 0.18s;
       white-space: nowrap;
     }
     .out-btn:hover:not(:disabled) {
       background: rgba(201,160,48,0.06);
-      box-shadow: 0 2px 8px rgba(201,160,48,0.14), 0 8px 28px rgba(201,160,48,0.14);
-      transform: translateY(-1px);
     }
     .out-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
     .out-btn-primary {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 9px 20px; border-radius: 100px; border: none;
-      font-family: inherit;
-      font-size: 12.5px; font-weight: 600;
-      background: #c9a030; color: #ffffff; cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(201,160,48,0.32);
-      transition: all 0.18s;
-      letter-spacing: -0.1px;
+      padding: 10px 20px; border-radius: 0; border: none;
+      font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
+      font-size: 12px; font-weight: 600;
+      background: #c9a030; color: var(--yd-on-gold); cursor: pointer;
+      box-shadow: none;
+      transition: filter 0.18s;
+      letter-spacing: 0.06em;
       white-space: nowrap;
     }
     .out-btn-primary:hover:not(:disabled) {
       filter: brightness(1.07);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(201,160,48,0.42);
-      transform: translateY(-1px);
     }
     .out-btn-primary:disabled {
       background: rgba(20,19,15,0.10); color: ${C.text3}; cursor: not-allowed;
@@ -220,16 +219,16 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     /* View tabs, Search / Reports top-level switch (Competitors pattern) */
     .out-view-btn {
       background: ${C.cardFlat}; color: ${C.text2};
-      border: 1px solid ${C.hair}; border-radius: 100px;
+      border: 1px solid ${C.hair}; border-radius: 0;
       padding: 8px 18px; font-size: 13px; font-weight: 600;
       font-family: inherit;
       cursor: pointer; white-space: nowrap;
       transition: all 0.15s;
     }
-    .out-view-btn:hover { border-color: #c9a030; color: #c9a030; }
+    .out-view-btn:hover { border-color: #c9a030; color: ${C.redHi}; }
     .out-view-btn.active {
-      background: #c9a030; color: #fff; border-color: #c9a030;
-      box-shadow: 0 1px 3px rgba(201,160,48,0.25), 0 4px 14px rgba(201,160,48,0.25);
+      background: ${C.washActive}; color: ${C.text1}; border-color: ${C.hair};
+      box-shadow: none;
     }
 
     /* Reports list, matches Competitors tracked accordion grammar exactly:
@@ -239,7 +238,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-report-header {
       background: ${C.card};
       border: 1px solid ${C.hair};
-      border-radius: 14px;
+      border-radius: 0;
       box-shadow: ${C.cardShadow};
       padding: 18px 22px;
       display: flex; align-items: center; gap: 16px;
@@ -253,7 +252,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     }
     .out-report-remove {
       position: absolute; top: 12px; right: 12px;
-      width: 28px; height: 28px; border-radius: 8px;
+      width: 28px; height: 28px; border-radius: 0;
       border: 1px solid transparent; background: transparent;
       color: ${C.text3}; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
@@ -269,7 +268,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     }
     .out-report-cta {
       background: #c9a030; color: #fff;
-      border: 1px solid #c9a030; border-radius: 100px;
+      border: 1px solid #c9a030; border-radius: 0;
       padding: 8px 18px; font-size: 12.5px; font-weight: 600;
       font-family: inherit;
       cursor: pointer; white-space: nowrap;
@@ -406,7 +405,7 @@ function relPublished(iso) {
 function outlierTier(score) {
   if (score >= 10) return { label: '10× outlier',  color: '#7a5b14',   bg: C.redBg,   bdr: C.redBdr }
   if (score >= 5)  return { label: `${score}× outlier`, color: '#7a5b14',   bg: C.redBg,   bdr: C.redBdr }
-  if (score >= 3)  return { label: `${score}× outlier`, color: '#b07d1a', bg: C.amberBg, bdr: C.amberBdr }
+  if (score >= 3)  return { label: `${score}× outlier`, color: '#7a5b14', bg: C.amberBg, bdr: C.amberBdr }
   return           { label: `${score}× outlier`, color: '#2d7a4f', bg: C.greenBg, bdr: C.greenBdr }
 }
 
@@ -788,7 +787,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
             gap: 16, marginBottom: 24, flexWrap: 'wrap',
           }}>
             <div style={{ flex: '1 1 auto', minWidth: 0 }}>
-              <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+              <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>
                 Outliers
               </h1>
               <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
@@ -815,7 +814,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
       {outliersGated && (
         <div style={{
           background: 'rgba(201,160,48,0.06)', border: '1px solid rgba(201,160,48,0.2)',
-          borderRadius: 12, padding: '12px 16px', marginBottom: 14,
+          borderRadius: 0, padding: '12px 16px', marginBottom: 14,
           display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: C.text1,
         }}>
           <span style={{ flex: 1 }}>
@@ -842,7 +841,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
       }}>
         <div style={{
           display: 'inline-flex', gap: 4, padding: 4,
-          background: C.hair, borderRadius: 100,
+          background: C.hair, borderRadius: 0,
         }}>
           {TABS.map(t => (
             <button
@@ -857,7 +856,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         {hasResults && (
           <div style={{
             display: 'inline-flex', gap: 4, padding: 4,
-            background: C.hair, borderRadius: 100, flexShrink: 0,
+            background: C.hair, borderRadius: 0, flexShrink: 0,
           }}>
             {sortOptions.map(opt => (
               <button
@@ -913,7 +912,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           <div style={{
             marginTop: 12, display: 'flex', alignItems: 'flex-start', gap: 8,
             fontSize: 12.5, color: C.red, background: C.redBg,
-            border: `1px solid ${C.redBdr}`, borderRadius: 9,
+            border: `1px solid ${C.redBdr}`, borderRadius: 0,
             padding: '9px 12px', lineHeight: 1.4,
           }}>
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}>
@@ -949,7 +948,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                 style={{ flexDirection: 'column', padding: 18, cursor: 'pointer', display: 'flex', alignItems: 'stretch' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                   <div style={{
-                    width: 38, height: 38, borderRadius: 12,
+                    width: 38, height: 38, borderRadius: 0,
                     background: `linear-gradient(135deg, ${C.red} 0%, #c0392b 100%)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     boxShadow: `0 4px 10px rgba(201,160,48,0.40), inset 0 1px 0 rgba(20,19,15,0.30)`,
@@ -972,7 +971,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                   color: C.redHi,
                   background: 'rgba(201,160,48,0.08)',
                   border: '1px solid rgba(201,160,48,0.22)',
-                  padding: '3px 10px', borderRadius: 999,
+                  padding: '3px 10px', borderRadius: 0,
                   marginBottom: 12,
                 }}>
                   {opt.keyword}
@@ -1176,8 +1175,8 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           ) : reports.length === 0 ? (
             <div style={{
               padding: '56px 24px', textAlign: 'center',
-              background: C.card, border: `1px solid ${C.border}`, borderRadius: 16,
-              boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+              background: C.card, border: `1px solid ${C.border}`, borderRadius: 0,
+              boxShadow: 'none',
             }}>
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                 No reports yet
@@ -1344,7 +1343,7 @@ function PatternSynthesisCard({ synthesis }) {
           </div>
           {nextMove.why_now && (
             <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5, paddingTop: 12, borderTop: '1px dashed rgba(20,19,15,0.08)' }}>
-              <span style={{ fontWeight: 600, color: '#b07d1a', letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
+              <span style={{ fontWeight: 600, color: '#7a5b14', letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
               {nextMove.why_now}
             </p>
           )}
@@ -1379,7 +1378,7 @@ function VideoResultCard({ item, kind, onOpen }) {
       {/* Thumbnail, YouTube link, matching Videos tab */}
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
-        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
+        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: 0, overflow: 'hidden' }}>
         {/* Max-resolution thumbnail, uses maxresdefault.jpg (1280x720) where
             the uploader supplied an HD master, else cascades through
             hqdefault.jpg (480x360, always present) and finally the stored
@@ -1399,10 +1398,10 @@ function VideoResultCard({ item, kind, onOpen }) {
             lives in the footer's OUTLIER metric, not on the thumbnail, so the
             thumbnail stays as clean as the Videos tab's. */}
         {isShort && (
-          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 600, padding: '2px 6px', borderRadius: 0, letterSpacing: '0.06em' }}>SHORT</span>
         )}
         {durLabel && (
-          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 600, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 600, padding: '2px 7px', borderRadius: 0, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
         )}
       </a>
 
@@ -1422,7 +1421,7 @@ function VideoResultCard({ item, kind, onOpen }) {
         {item.pattern_tag && (() => {
           const t = String(item.pattern_tag).toLowerCase()
           const cfg = t === 'replicable' ? { label: 'Replicable', bg: 'rgba(5,150,105,0.10)', border: 'rgba(5,150,105,0.30)', color: '#2d7a4f' }
-                    : t === 'trending'   ? { label: 'Trending',   bg: 'rgba(217,119,6,0.10)', border: 'rgba(217,119,6,0.30)', color: '#b07d1a' }
+                    : t === 'trending'   ? { label: 'Trending',   bg: 'rgba(201,160,48,0.10)', border: 'rgba(201,160,48,0.30)', color: '#7a5b14' }
                     : t === 'lucky'      ? { label: 'Lucky',      bg: C.cardFlat,              border: C.hair,              color: C.text3 }
                     : null
           if (!cfg) return null
@@ -1430,7 +1429,7 @@ function VideoResultCard({ item, kind, onOpen }) {
             <span style={{
               display: 'inline-flex', alignItems: 'center', alignSelf: 'flex-start',
               fontSize: 10.5, fontWeight: 600, letterSpacing: '0.09em', textTransform: 'uppercase',
-              padding: '4px 9px', borderRadius: 100,
+              padding: '4px 9px', borderRadius: 0,
               background: cfg.bg, border: `1px solid ${cfg.border}`, color: cfg.color,
               marginBottom: 10,
             }}>{cfg.label}</span>
@@ -1492,19 +1491,20 @@ function VideoResultCard({ item, kind, onOpen }) {
             {metrics.map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
                 <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6, lineHeight: 1 }}>{m.label}</p>
-                <p style={{ fontSize: 18, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>
+                <p style={{ fontSize: 18, fontWeight: 600, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>
                   {m.display}
                   {m.sub && <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, marginLeft: 2, letterSpacing: 0 }}>{m.sub}</span>}
                 </p>
               </div>
             ))}
           </div>
+          <div style={{ marginTop: -6, marginBottom: 14 }}><EstimateTag color={C.text3} /></div>
           <button
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
               padding: '11px 16px', fontSize: 14, fontWeight: 600,
-              border: 'none', borderRadius: 100, cursor: 'pointer',
+              border: 'none', borderRadius: 0, cursor: 'pointer',
               background: C.red, color: 'var(--yd-on-gold)',
               fontFamily: 'inherit', letterSpacing: '0.01em',
               display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -1555,7 +1555,7 @@ function ChannelResultCard({ item, onOpen }) {
         onClick={e => { if (!ytUrl) e.preventDefault() }}
         style={{
           display: 'block', position: 'relative', textDecoration: 'none',
-          flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden',
+          flexShrink: 0, borderRadius: 0, overflow: 'hidden',
           height: 72,
           background: `linear-gradient(135deg, ${C.redBg} 0%, #fff0e4 50%, ${C.amberBg} 100%)`,
         }}>
@@ -1578,7 +1578,7 @@ function ChannelResultCard({ item, onOpen }) {
           width: 72, height: 72, borderRadius: '50%',
           overflow: 'hidden',
           border: '4px solid #fff',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
+          boxShadow: 'none',
           marginTop: -36, marginBottom: 12,
           flexShrink: 0, background: C.redBg,
           position: 'relative',
@@ -1634,7 +1634,7 @@ function ChannelResultCard({ item, onOpen }) {
             ].map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
                 <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
-                <p style={{ fontSize: 17, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+                <p style={{ fontSize: 17, fontWeight: 600, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
               </div>
             ))}
           </div>
@@ -1643,7 +1643,7 @@ function ChannelResultCard({ item, onOpen }) {
             style={{
               width: '100%', justifyContent: 'center',
               padding: '11px 16px', fontSize: 14, fontWeight: 600,
-              border: 'none', borderRadius: 100, cursor: 'pointer',
+              border: 'none', borderRadius: 0, cursor: 'pointer',
               background: C.red, color: 'var(--yd-on-gold)',
               fontFamily: 'inherit', letterSpacing: '0.01em',
               display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -1724,7 +1724,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
   const engPct  = views > 0 ? (likes / views * 100) : 0
   const days    = item.published_at ? Math.max(0, (Date.now() - new Date(item.published_at).getTime()) / 86400000) : null
   const verdict = item.outlier_score >= 5 ? { label: 'Strong',      color: '#7a5b14'   }
-                 : item.outlier_score >= 3 ? { label: 'Notable',     color: '#b07d1a' }
+                 : item.outlier_score >= 3 ? { label: 'Notable',     color: '#7a5b14' }
                  : item.outlier_score >= 1.8 ? { label: 'Over median', color: '#2d7a4f' }
                  : { label: 'Subtle', color: C.text3 }
 
@@ -1790,21 +1790,21 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.borderLight}` }}>
             {headerThumb
               ? <img src={headerThumb} alt=""
-                  style={{ width: 96, height: 60, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }}
+                  style={{ width: 96, height: 60, borderRadius: 0, objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }}
                   onError={makeThumbOnError(headerVideoId, headerThumbLo)}
                   onLoad={makeThumbOnLoad(headerVideoId, headerThumbLo)}/>
-              : <div style={{ width: 96, height: 60, borderRadius: 8, background: C.hair, flexShrink: 0, border: `1px solid ${C.border}` }}/>}
+              : <div style={{ width: 96, height: 60, borderRadius: 0, background: C.hair, flexShrink: 0, border: `1px solid ${C.border}` }}/>}
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{kindLabel}</p>
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{headerTitle}</p>
             </div>
             <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
               <button onClick={openOnYouTube}
-                style={{ fontSize: 12, color: C.text2, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                style={{ fontSize: 12, color: C.text2, background: C.card, border: `1px solid ${C.border}`, borderRadius: 0, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: 'none' }}>
                 Open on YouTube
               </button>
               <button onClick={onClose}
-                style={{ fontSize: 12, color: C.text3, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                style={{ fontSize: 12, color: C.text3, background: C.card, border: `1px solid ${C.border}`, borderRadius: 0, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: 'none' }}>
                 Close ✕
               </button>
             </div>
@@ -1812,14 +1812,14 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
           {/* Why Now hero, same "Fix first" card silhouette (white bg, red left-bar) */}
           {item.why_now && (
-            <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 0, padding: '14px 18px', marginBottom: 16, boxShadow: 'none' }}>
               <span style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
-              <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{item.why_now}</p>
+              <p style={{ fontSize: 14, fontWeight: 400, color: C.text1, lineHeight: 1.65 }}>{item.why_now}</p>
             </div>
           )}
 
           {/* Breakdown Section, same silhouette as "Title Analysis" */}
-          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 0, padding: '20px 22px', marginBottom: 12 }}>
             <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
               {isChannel ? 'Channel breakdown' : 'Outlier breakdown'}
             </p>
@@ -1830,7 +1830,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                 <OutlierRing score={item.outlier_score} color={verdict.color}/>
                 <span style={{ fontSize: 14, fontWeight: 600, color: verdict.color }}>{verdict.label}</span>
                 {query && (
-                  <span style={{ fontSize: 12, color: C.text2, background: C.cardFlat, padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: `1px solid ${C.border}` }}>
+                  <span style={{ fontSize: 12, color: C.text2, background: C.cardFlat, padding: '3px 10px', borderRadius: 0, fontWeight: 600, border: `1px solid ${C.border}` }}>
                     {query}
                   </span>
                 )}
@@ -1851,7 +1851,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           </div>
 
           {/* 3-col intent grid, same silhouette as Search Intent / Competitor Gap / Emotional Driver */}
-          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 0, padding: '20px 22px', marginBottom: 12 }}>
             <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
               {isChannel ? 'Channel playbook' : 'Outlier playbook'}
             </p>
@@ -1860,8 +1860,8 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
               {/* Amber-tinted, Why it worked / Why this channel. Was blue
                   (off-palette). Amber doubles as the "AI/explainer" accent
                   used elsewhere (Title Scorecard pattern). */}
-              <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+              <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 0, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'Why this channel' : 'Why it worked'}
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
@@ -1870,8 +1870,8 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
               </div>
 
               {/* Amber, Quick actions / What to do (list) */}
-              <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+              <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: 0, padding: '12px 14px', boxShadow: 'none' }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'What to do' : 'Quick actions'}
                 </p>
                 {(() => {
@@ -1881,7 +1881,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7 }}>
                       {list.map((s, i) => (
                         <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: '#b07d1a', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: '#7a5b14', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                           <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
                         </li>
                       ))}
@@ -1891,7 +1891,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
               </div>
 
               {/* Green, Why now (same text as hero; keeps the 3-col symmetry) */}
-              <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+              <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 0, padding: '12px 14px' }}>
                 <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   Act on this because
                 </p>
@@ -1904,7 +1904,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           </div>
 
           {/* Actions Section, same card silhouette, full-width button row */}
-          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 0, padding: '20px 22px' }}>
             <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Shortcuts</p>
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${actionList.length}, minmax(0, 1fr))`, gap: 10 }}>
               {actionList.map((a, i) => (
@@ -1914,7 +1914,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                   disabled={a.disabled}
                   style={{
                     fontSize: 13, fontWeight: 600,
-                    padding: '11px 16px', borderRadius: 100,
+                    padding: '11px 16px', borderRadius: 0,
                     background: a.success ? C.greenBg : C.red,
                     color: a.success ? C.green : '#fff',
                     border: a.success ? `1px solid ${C.greenBdr}` : 'none',
@@ -1932,7 +1932,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
               ))}
             </div>
             {addError && (
-              <p style={{ marginTop: 10, fontSize: 12, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 9, padding: '8px 11px', lineHeight: 1.4 }}>
+              <p style={{ marginTop: 10, fontSize: 12, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 0, padding: '8px 11px', lineHeight: 1.4 }}>
                 {addError}
               </p>
             )}
@@ -1964,7 +1964,7 @@ function OutlierRing({ score, color }) {
           style={{ transition: 'stroke-dasharray 0.6s ease' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 22, fontWeight: 700, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val.toFixed(1)}</span>
+        <span style={{ fontFamily: SERIF, fontSize: 27, fontWeight: 500, color, letterSpacing: '-0.01em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val.toFixed(1)}</span>
         <span style={{ fontSize: 9.5, color: C.text3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.02em', marginTop: 3, lineHeight: 1 }}>× outlier</span>
       </div>
     </div>
@@ -1988,8 +1988,8 @@ function OutlierBar({ label, score, tip }) {
         </div>
         <span style={{ fontSize: 12, color, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{score}/100</span>
       </div>
-      <div style={{ height: 5, background: C.hair, borderRadius: 4, overflow: 'hidden' }}>
-        <div style={{ height: '100%', width: `${score}%`, background: color, borderRadius: 4, transition: 'width 0.5s ease' }} />
+      <div style={{ height: 5, background: C.hair, borderRadius: 0, overflow: 'hidden' }}>
+        <div style={{ height: '100%', width: `${score}%`, background: color, borderRadius: 0, transition: 'width 0.5s ease' }} />
       </div>
       {showWhy && tip && (
         <p style={{ fontSize: 12, color: C.text3, marginTop: 5, lineHeight: 1.5, paddingLeft: 8, borderLeft: '2px solid rgba(20,19,15,0.16)' }}>
@@ -2041,7 +2041,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
             marginBottom: open ? 14 : 0,
           }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
-            <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 26, height: 26, borderRadius: 0, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="1.5" y="2.5" width="11" height="9" rx="1.5"/>
                 <circle cx="5" cy="6.5" r="1" fill="#fff" stroke="none"/>
@@ -2050,16 +2050,16 @@ function ThumbnailPatternsCard({ patterns, query }) {
             </div>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
               Thumbnail pattern · last 12 months
             </p>
-            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>
+            <p style={{ fontSize: 14, fontWeight: 400, color: C.text1, lineHeight: 1.65 }}>
               What wins in your niche{query ? ` · "${query}"` : ''}
             </p>
           </div>
           {patterns.sample_size ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-              <span style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
+              <span style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', padding: '3px 9px', borderRadius: 0, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
                 {patterns.sample_size} analysed
               </span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.text2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -2092,7 +2092,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           {/* Neutral "Visual formula", was off-palette blue. Sticks to
               red/amber/green + neutral grey, with the amber "Next thumbnail"
               tile carrying the chromatic anchor in the middle column. */}
-          <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px' }}>
+          <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 0, padding: '12px 14px' }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Visual formula</p>
             {traits.map(([label, value], i) => (
               <div key={label} style={{ marginBottom: i === traits.length - 1 ? 0 : 10 }}>
@@ -2107,19 +2107,19 @@ function ThumbnailPatternsCard({ patterns, query }) {
             background: C.card,
             border: `1px solid ${C.border}`,
             borderLeft: `3px solid ${C.amber}`,
-            borderRadius: '0 10px 10px 0',
+            borderRadius: 0,
             padding: '12px 16px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            boxShadow: 'none',
             display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
             {recs.length === 0 ? (
               <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>—</p>
             ) : (
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {recs.map((r, i) => (
                   <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#b07d1a', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#7a5b14', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                     <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{r}</span>
                   </li>
                 ))}
@@ -2129,7 +2129,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
 
           {/* Green "Why now", same Expected outcome tile in Priority Actions */}
           {patterns.why_now ? (
-            <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+            <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 0, padding: '12px 14px' }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{patterns.why_now}</p>
             </div>

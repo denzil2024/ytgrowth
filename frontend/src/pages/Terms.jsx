@@ -49,6 +49,7 @@ export default function Terms() {
 
           <h2>1. The Service</h2>
           <p>YTGrowth is an AI-powered YouTube channel analysis platform providing channel insights, competitor analysis, SEO optimization, keyword research, and video optimization tools. Each use of a tool consumes one token from your account balance.</p>
+          <p>YTGrowth uses YouTube API Services. By accessing or using the Service, you also agree to be bound by the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noreferrer">YouTube Terms of Service</a>. Your use of any YouTube data through the Service is subject to those terms and to the <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">Google Privacy Policy</a>.</p>
 
           <h2>2. Accounts &amp; Eligibility</h2>
           <p>You must be at least 13 years old to use the Service. By connecting your Google account, you authorize us to access your YouTube channel data and analytics as permitted by the scopes you approve. You are responsible for maintaining the security of your account.</p>

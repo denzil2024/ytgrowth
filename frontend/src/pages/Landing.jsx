@@ -398,11 +398,13 @@ function useBreakpoint() {
 function Logo({ size = 32, iconOnly = false }) {
   if (iconOnly) {
     return (
-      <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-        <rect width="32" height="32" rx="9" fill="#e5251b"/>
-        <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-        <polygon points="13.5,19 19.5,16 13.5,13" fill="#e5251b"/>
-      </svg>
+      <img
+        src="/favicon.png"
+        alt=""
+        width={size}
+        height={size}
+        style={{ display: 'block', borderRadius: Math.max(2, size * 0.28) }}
+      />
     )
   }
   return <BrandLockup height={size - 2} />
@@ -1001,7 +1003,7 @@ export default function Landing() {
           </h1>
 
           <p className="ytg-hero-sub" style={{ fontFamily: ED_SANS, color: ED_SOFT, lineHeight: 1.7, maxWidth: 660, margin: isMobile ? '0 auto 28px' : '0 0 32px', textWrap: 'pretty' }}>
-            YouTube Studio gives you fifty charts and zero answers. YTGrowth reads every one, pinpoints what's holding your channel back, and hands you a ranked plan, starting with the single fix that moves the needle most. The vidIQ, TubeBuddy, and Viewstats alternative built around your next move, not another dashboard.
+            YouTube Studio gives you fifty charts and zero answers. We read every one, pinpoint what's holding your channel back, and hand you a ranked plan, starting with the single fix that moves the needle most. The vidIQ, TubeBuddy, and Viewstats alternative built around your next move, not another dashboard.
           </p>
 
           <div className="ytg-hero-cta" style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 26 }}>
@@ -1100,7 +1102,7 @@ export default function Landing() {
               <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>YouTube Channel Audit</span>
             </div>
             <h2 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(34px, 4.4vw, 54px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.08, color: ED_INK, textWrap: 'balance' }}>10 dimensions. <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>One brutally honest assessment.</em></h2>
-            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginTop: 18, marginBottom: 26 }}>This is the read a $500/hour consultant would give your channel, in about 30 seconds. Most tools stop at a score. YTGrowth shows you why, then hands you one ranked to-do list: traffic, retention, CTR, SEO, and how you stack up against the channels beating you.</p>
+            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginTop: 18, marginBottom: 26 }}>This is the read a $500/hour consultant would give your channel, in about 30 seconds. Most tools stop at a score. We show you why, then hand you one ranked to-do list: traffic, retention, CTR, SEO, and how you stack up against the channels beating you.</p>
             {[
               'Traffic source breakdown. Search vs browse vs external',
               'Competitor benchmarking against channels in your niche',
@@ -1164,7 +1166,7 @@ export default function Landing() {
               <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Competitive Edge</span>
             </div>
             <h2 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(34px, 4.4vw, 54px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.08, marginBottom: 18, color: ED_INK, textWrap: 'balance' }}>Find the gaps your competitors <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>leave open.</em></h2>
-            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginBottom: 26 }}>Point YTGrowth at any competitor and it maps the topics they skip, the title patterns driving their views, and the audience they're leaving underserved. Then it shows you how to take that ground before they do.</p>
+            <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginBottom: 26 }}>Point us at any competitor and we map the topics they skip, the title patterns driving their views, and the audience they're leaving underserved. Then we show you how to take that ground before they do.</p>
             {[
               'Topic gap analysis from real video data',
               'Title pattern and keyword extraction',
@@ -1188,7 +1190,7 @@ export default function Landing() {
               <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Proof, not a guess</span>
             </div>
             <h3 style={{ fontFamily: ED_SERIF, fontSize: 'clamp(26px, 3vw, 36px)', fontWeight: 300, letterSpacing: '-0.01em', lineHeight: 1.12, color: ED_INK, textWrap: 'balance' }}>The hooks they won't touch are <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>quietly winning.</em></h3>
-            <p style={{ fontFamily: ED_SANS, fontSize: 16, color: ED_SOFT, lineHeight: 1.7, marginTop: 14 }}>These are real videos winning the exact angle your competitor refuses to cover. YTGrowth surfaces every one the moment you add a rival, then shows you the pattern to copy.</p>
+            <p style={{ fontFamily: ED_SANS, fontSize: 16, color: ED_SOFT, lineHeight: 1.7, marginTop: 14 }}>These are real videos winning the exact angle your competitor refuses to cover. We surface every one the moment you add a rival, then show you the pattern to copy.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 18 : 22 }}>
             {[
@@ -1229,7 +1231,7 @@ export default function Landing() {
             <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, marginBottom: 26 }}>Two passes on every thumbnail. An algorithm checks contrast, text clarity, faces, and composition; a vision model weighs it against the top-performing videos in your exact niche. You get a score out of 100 and a punch list of what to change before you hit publish.</p>
             {[
               'Layer 1. Algorithm, instant, free',
-              'Layer 2. YTGrowth vision vs real niche benchmarks',
+              'Layer 2. AI vision vs real niche benchmarks',
               'Benchmarked by velocity, recency, and channel size bracket',
               'Full history. Every thumbnail scored',
             ].map((t, i) => (
@@ -1696,7 +1698,7 @@ export default function Landing() {
             {[
               { q: 'Is YTGrowth worth it when my channel is under 1,000 subscribers?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision. Right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
               { q: 'What happens when I run out of AI analyses before my month resets?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
-              { q: 'How is YTGrowth different from TubeBuddy or VidIQ, exactly?', a: "TubeBuddy and VidIQ show you dashboards and data. YTGrowth runs the actual AI analysis. Competitor gaps, keyword intent, title variants. And hands you the conclusion, not the raw numbers." },
+              { q: 'How is YTGrowth different from TubeBuddy or VidIQ, exactly?', a: "TubeBuddy and VidIQ show you dashboards and data. We run the actual AI analysis. Competitor gaps, keyword intent, title variants. And hand you the conclusion, not the raw numbers." },
               { q: 'Can I cancel or change my subscription at any time?', a: "Yes. Monthly is month-to-month. Cancel whenever. Annual gives you the rest of your year. No cancellation fees, no guilt-trip retention email. Just done." },
               { q: 'Do unused monthly analyses roll over to the following month?', a: "Monthly included analyses reset every month. Use them or lose them. But top-up pack analyses never expire and never reset. They sit in your account until you need them." },
               { q: 'Can I purchase and use analysis packs without a subscription plan?', a: "Yes. Packs work standalone. Buy a pack, run analyses, no subscription required. If you have analyses, you have full access. Subscribe later and your pack analyses stack on top." },

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import EstimateTag from '../components/EstimateTag'
 
 const API = ''
 
@@ -278,7 +279,10 @@ function ReportCard({ data, video, onClose }) {
             textTransform: 'uppercase',
           }}>{v.label}</span>
         </div>
-        <ScoreRing score={data.score || 0} color={scoreColor} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+          <ScoreRing score={data.score || 0} color={scoreColor} />
+          <EstimateTag color={C.text3} />
+        </div>
       </div>
 
       {data.headline && (

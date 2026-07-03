@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { Lightbulb, AlertTriangle, Target, Sparkles, TrendingUp, Users } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
+import EstimateTag from '../components/EstimateTag'
 
 // Geist loaded page-scoped, matches every other redesigned page.
 if (typeof document !== 'undefined' && !document.getElementById('seo-opt-geist-font')) {
@@ -1137,7 +1138,10 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             display: 'flex', flexDirection: 'column', gap: 12,
           }}>
             <div>
-              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>Title quality</p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 12 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>Title quality</p>
+                <EstimateTag color={C.text3} />
+              </div>
               <ScoreBars seo={s.seo_score} ctr={s.ctr_score} hook={s.hook_score} mounted={mounted}/>
             </div>
             <div style={{ height: 1, background: C.borderLight }}/>
@@ -1762,6 +1766,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
       }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, minWidth: 0, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: C.text1, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Title analysis</span>
+          <EstimateTag color="rgba(20,19,15,0.42)" />
           {videosFound > 0 && (
             <>
               <span style={{ color: 'rgba(20,19,15,0.30)' }}>·</span>

@@ -199,25 +199,6 @@ function ThumbnailCard({ videoId, size }) {
     setState('ok')
   }
 
-  async function handleDownload() {
-    try {
-      const res = await fetch(url, { mode: 'cors' })
-      if (!res.ok) throw new Error('fetch failed')
-      const blob = await res.blob()
-      const objectUrl = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = objectUrl
-      a.download = `youtube-thumbnail-${videoId}-${size.key}.jpg`
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      URL.revokeObjectURL(objectUrl)
-    } catch {
-      // Fallback: open in new tab so user can right-click → save
-      window.open(url, '_blank', 'noopener,noreferrer')
-    }
-  }
-
   function handleCopy() {
     try {
       navigator.clipboard.writeText(url)
@@ -261,13 +242,7 @@ function ThumbnailCard({ videoId, size }) {
           </span>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={handleDownload} disabled={state !== 'ok'} className="ytd-btn" style={{ flex: 1, padding: '11px 14px' }}>
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M7 1.5v9M3 7l4 4 4-4M2 12.5h10"/>
-            </svg>
-            Download
-          </button>
-          <button onClick={handleCopy} disabled={state !== 'ok'} className="ytd-btn-ghost" title="Copy image URL">
+          <button onClick={handleCopy} disabled={state !== 'ok'} className="ytd-btn-ghost" title="Copy image URL" style={{ flex: 1, padding: '11px 14px' }}>
             {copied ? (
               <>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -333,10 +308,10 @@ export default function YoutubeThumbnailDownloader() {
         <div className="ytd-wrap" style={{ animation: 'ytdFadeUp 0.5s ease both' }}>
           <Eyebrow>Free tool</Eyebrow>
           <h1 className="ytd-h1" style={{ fontSize: H1, marginBottom: 22, maxWidth: 820, textWrap: 'balance' }}>
-            Download any YouTube thumbnail in <em>seconds.</em>
+            Preview any YouTube thumbnail in <em>seconds.</em>
           </h1>
           <p className="ytd-lead" style={{ fontSize: isMobile ? 16 : 17.5, marginBottom: 28, maxWidth: 620, textWrap: 'pretty' }}>
-            Paste a YouTube URL. Get every available thumbnail size, including the full HD source, in one click.
+            Paste a YouTube URL. See every available thumbnail size, including the full HD source.
           </p>
 
           {/* Input form */}

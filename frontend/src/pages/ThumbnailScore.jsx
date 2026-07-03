@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { ChevronDown, Upload, Lightbulb } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
+import EstimateTag from '../components/EstimateTag'
 
 // Load the editorial app fonts once, SCOPED to this page (each page owns its
 // font loading, never global). Cormorant Garamond = display H1 + score numbers,
@@ -1751,8 +1752,9 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                     {/* ── 1. Summary card, ScoreRing + vertical divider + AI-assessment text ── */}
                     <div className="tiq-card" style={{ padding: '26px 28px', marginBottom: 14 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-                        <div style={{ flexShrink: 0 }}>
+                        <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                           <ScoreRing score={currentScore} max={currentMax} label={isFinal ? 'Thumbnail IQ' : 'Technical'} size={120} strokeW={8}/>
+                          <EstimateTag color={C.text3} />
                         </div>
                         <div style={{ width: 1, alignSelf: 'stretch', background: C.border, flexShrink: 0 }}/>
                         <div style={{ flex: 1, minWidth: 0 }}>

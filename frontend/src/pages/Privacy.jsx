@@ -46,6 +46,8 @@ export default function Privacy() {
         <article className="bp-prose">
           <p>YTGrowth is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights over it.</p>
 
+          <p>YTGrowth uses YouTube API Services. By using YTGrowth you agree to the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noreferrer">YouTube Terms of Service</a>, and your data handled through those services is also governed by the <a href="http://www.google.com/policies/privacy" target="_blank" rel="noreferrer">Google Privacy Policy</a>.</p>
+
           <hr />
 
           <h2>1. Data We Collect</h2>
@@ -69,7 +71,7 @@ export default function Privacy() {
 
           <h2>3. Third-Party Services</h2>
           <ul>
-            <li>Google / YouTube APIs, subject to Google's Privacy Policy and YouTube's Terms of Service.</li>
+            <li>Google / YouTube APIs, subject to the <a href="http://www.google.com/policies/privacy" target="_blank" rel="noreferrer">Google Privacy Policy</a> and the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noreferrer">YouTube Terms of Service</a>.</li>
             <li>Paddle, our payment processor and Merchant of Record. Handles all payment data under their own privacy policy.</li>
             <li>Anthropic (Claude API), we send anonymised channel data to generate AI insights. No personally identifiable information is included.</li>
           </ul>

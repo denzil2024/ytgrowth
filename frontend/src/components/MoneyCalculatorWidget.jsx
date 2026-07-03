@@ -163,7 +163,7 @@ export default function MoneyCalculatorWidget({
           </div>
         </div>
         <div style={{ marginTop: 'auto', paddingTop: 26, fontFamily: "'Barlow', system-ui, sans-serif", fontSize: 12.5, opacity: 0.7, lineHeight: 1.55 }}>
-          RPM is what hits your AdSense after YouTube's 45% cut and unmonetized views. CPM (advertiser gross) runs roughly ${rpmToCpm(r.lowRpm).toFixed(0)}–${rpmToCpm(r.highRpm).toFixed(0)}.
+          RPM is what hits your AdSense after YouTube's 45% cut and unmonetized views. CPM (advertiser gross) runs roughly ${rpmToCpm(r.lowRpm).toFixed(0)}–${rpmToCpm(r.highRpm).toFixed(0)}. These figures are YTGrowth estimates, not YouTube data.
         </div>
       </div>
     </div>

@@ -322,7 +322,7 @@ export default function YoutubeSubscriberMoneyCalculator() {
             </tbody>
           </table>
           <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', marginTop: 14, lineHeight: 1.6 }}>
-            From ads alone. Sponsorships and affiliates can hit these incomes at far fewer subscribers, especially in high-RPM niches.
+            From ads alone. Sponsorships and affiliates can hit these incomes at far fewer subscribers, especially in high-RPM niches. These figures are YTGrowth estimates, not YouTube data.
           </p>
         </div>
       </section>

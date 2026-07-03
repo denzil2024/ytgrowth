@@ -121,17 +121,11 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
         padding: '22px 0',
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
       }}>
-        <div style={{
-          width: 34, height: 34, borderRadius: 8,
-          background: '#c9a030',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 10px rgba(255,59,48,0.45)',
-        }}>
-          <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
-            <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-            <polygon points="13.5,19 19.5,16 13.5,13" fill="#c9a030"/>
-          </svg>
-        </div>
+        <img
+          src="/favicon.png"
+          alt=""
+          style={{ width: 34, height: 34, borderRadius: 8, boxShadow: '0 2px 10px rgba(0,0,0,0.3)' }}
+        />
         <span style={{
           fontSize: 22, fontWeight: 700, color: '#ffffff',
           letterSpacing: '-0.6px',
@@ -258,19 +252,18 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
                 {initial}
               </div>
             )}
-            {/* YouTube badge on avatar */}
-            <div style={{
-              position: 'absolute', bottom: -2, right: -2,
-              width: 26, height: 26, borderRadius: 7,
-              background: '#c9a030',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: '2px solid #ffffff',
-              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-            }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="#ffffff">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </div>
+            {/* YTGrowth mark on avatar (was a play-button badge imitating the
+                YouTube icon, policy III.F.2a) */}
+            <img
+              src="/favicon.png"
+              alt=""
+              style={{
+                position: 'absolute', bottom: -2, right: -2,
+                width: 26, height: 26, borderRadius: 7,
+                border: '2px solid #ffffff',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+              }}
+            />
           </div>
           <p style={{
             fontSize: 17, fontWeight: 700, color: '#0f0f13',

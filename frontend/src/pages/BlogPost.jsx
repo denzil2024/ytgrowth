@@ -274,7 +274,7 @@ export default function BlogPost() {
           publisher: {
             '@type': 'Organization',
             name:    'YTGrowth',
-            logo:    { '@type': 'ImageObject', url: `${ORIGIN}/favicon.svg` },
+            logo:    { '@type': 'ImageObject', url: `${ORIGIN}/favicon.png` },
           },
           mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
           articleSection:   post.category?.label,

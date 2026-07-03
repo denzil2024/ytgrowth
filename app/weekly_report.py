@@ -21,7 +21,7 @@ from database.models import (
 
 BASE_URL    = os.environ.get("BASE_URL",    "http://localhost:5173")
 BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
-LOGO_URL    = f"{BASE_URL}/static/logo.svg"
+LOGO_URL    = f"{BASE_URL}/favicon.png"
 
 
 # ── Date helpers ──────────────────────────────────────────────────────────────

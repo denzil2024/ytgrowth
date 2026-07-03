@@ -767,6 +767,12 @@ export default function Dashboard() {
                 <LogOut size={13} strokeWidth={1.75} />
               </a>
             </div>
+            {/* YouTube API policy III.E.4h: all YTGrowth scores are our own
+                analysis, not YouTube metrics. Persistent so it shows on every
+                screen. */}
+            <p style={{ margin: '12px 4px 0', fontSize: 10, lineHeight: 1.5, color: SHELL.text2, opacity: 0.7 }}>
+              Scores and grades in YTGrowth are our own analysis, not YouTube metrics.
+            </p>
           </div>
         )}
       </aside>
