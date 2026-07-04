@@ -280,7 +280,7 @@ export default function YoutubeSubscriberMoneyCalculator() {
                 {fmtMoney(r.monthlyLow)} – {fmtMoney(r.monthlyHigh)}
               </div>
               <div style={{ fontFamily: SANS, fontSize: 13, opacity: 0.7 }}>
-                {fmtNum(subs)} subs · {videosPerMonth} {videosPerMonth === 1 ? 'upload' : 'uploads'}/mo · {r.label}
+                {fmtNum(subs)} subscribers · {videosPerMonth} {videosPerMonth === 1 ? 'upload' : 'uploads'}/mo · {r.label}
               </div>
               <div style={{ height: 1, background: 'rgba(255,255,255,0.16)', margin: '24px 0' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16 }}>

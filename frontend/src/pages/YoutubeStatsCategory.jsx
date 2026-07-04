@@ -275,7 +275,7 @@ export default function YoutubeStatsCategory() {
                     </div>
                     <div>
                       <div className="yts-row-subs">{fmtSubs(c.subscribers)}</div>
-                      <div className="yts-row-subs-label">subs</div>
+                      <div className="yts-row-subs-label">subscribers</div>
                     </div>
                   </a>
                 )
