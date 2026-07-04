@@ -4,12 +4,15 @@ import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 import EstimateTag from '../components/EstimateTag'
 
-// Geist loaded page-scoped, matches every other redesigned page.
-if (typeof document !== 'undefined' && !document.getElementById('seo-opt-geist-font')) {
+// Editorial fonts loaded page-scoped (Cormorant display + Barlow body + Barlow
+// Condensed labels/buttons), matching every other migrated app page. Replaces
+// the old Geist load, which left the Cormorant H1 and Condensed buttons on
+// system fallbacks.
+if (typeof document !== 'undefined' && !document.getElementById('seo-editorial-font')) {
   const link = document.createElement('link')
-  link.id = 'seo-opt-geist-font'
+  link.id = 'seo-editorial-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
   document.head.appendChild(link)
 }
 
@@ -23,8 +26,8 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
      smooth-resize instead of pop. Borrowed from the VidIQ playbook. */
   :root { interpolate-size: allow-keywords; }
 
-  /* Page-scoped Geist inheritance, keeps every element on the canonical
-     font without dropping inline fontFamily on each component. */
+  /* Page-scoped Barlow inheritance, keeps every element on the canonical
+     body font without dropping inline fontFamily on each component. */
   .seo-page * { font-family: 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
   @keyframes spin { to { transform: rotate(360deg) } }
@@ -170,7 +173,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-btn-primary {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 10px 20px; border-radius: 0; border: none;
-    font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 600;
     text-transform: uppercase; letter-spacing: 0.08em;
     background: var(--yd-gold); color: var(--yd-on-gold); cursor: pointer;
     box-shadow: none;
@@ -226,9 +229,9 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     color: #7a5b14;
   }
   .seo-report-cta {
-    background: #c9a030;
-    color: #fff;
-    border: 1px solid #c9a030;
+    background: var(--yd-gold);
+    color: var(--yd-on-gold);
+    border: 1px solid var(--yd-gold);
     border-radius: 0;
     padding: 8px 16px;
     font-size: 12.5px; font-weight: 600;
@@ -237,19 +240,19 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     white-space: nowrap;
     transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
     display: flex; align-items: center; gap: 6px;
-    box-shadow: 0 1px 2px rgba(201,160,48,0.20), inset 0 1px 0 rgba(20,19,15,0.22);
+    box-shadow: none;
     letter-spacing: -0.01em;
   }
   .seo-report-cta:hover { filter: brightness(1.06); transform: translateY(-1px); }
   .seo-report-chip {
     display: inline-flex; align-items: baseline; gap: 5px;
-    background: rgba(217,119,6,0.14);
-    border: 1px solid rgba(217,119,6,0.34);
+    background: rgba(201,160,48,0.14);
+    border: 1px solid rgba(201,160,48,0.34);
     border-radius: 0;
     padding: 4px 11px;
   }
   .seo-report-chip .val { font-size: 12px; font-weight: 600; color: #14130f; letter-spacing: -0.01em; }
-  .seo-report-chip .lbl { font-size: 11px; color: #b07d1a; font-weight: 600; }
+  .seo-report-chip .lbl { font-size: 11px; color: #7a5b14; font-weight: 600; }
 `
   document.head.appendChild(s)
 }
@@ -271,7 +274,9 @@ function saveToDisk(state) {
 
 const API = ''
 
-// Brand palette, red + amber + green + charcoal neutrals. No blue / purple / teal / orange.
+// App editorial palette: GOLD accent (the old `red`/`amber` keys both resolve to
+// dark-gold #7a5b14 now), green for positive, charcoal neutrals. No orange /
+// emerald / blue / purple / teal. Keys kept for call-site compatibility.
 const C = {
   bg: 'var(--yd-paper)',
   card: 'linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%)',
@@ -288,13 +293,11 @@ const C = {
   green: '#2d7a4f',
   greenBg: 'rgba(22,163,74,0.14)',
   greenBdr: 'rgba(22,163,74,0.34)',
-  amber: '#b07d1a',
-  amberBg: 'rgba(217,119,6,0.14)',
-  amberBdr: 'rgba(217,119,6,0.34)',
+  amber: '#7a5b14',
+  amberBg: 'rgba(201,160,48,0.14)',
+  amberBdr: 'rgba(201,160,48,0.34)',
 }
 
-// Per-tile accent colors, scoped to this section ONLY, never reuse elsewhere.
-// Row 1 warm (red + amber), row 2 cool (purple + blue), row 3 green-family (teal + green).
 // ── Canonical typography, matches Overview (Dashboard.jsx) exactly.
 //    Sizes intentionally vary by role (card label 11, inner label 10), this is
 //    the hierarchy Overview uses, don't flatten it. ──
@@ -320,8 +323,8 @@ const T = {
 
   // Pills / chips / badges
   pill:         { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // severity + vol/comp
-  countBadge:   { fontSize: 11, fontWeight: 600, color: '#6b6862', background: 'rgba(20,19,15,0.06)', padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)' },
-  chip:         { fontSize: 12, fontWeight: 500, color: '#6b6862', background: 'rgba(20,19,15,0.04)', padding: '5px 11px', borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
+  countBadge:   { fontSize: 11, fontWeight: 600, color: '#6b6862', background: 'rgba(20,19,15,0.06)', padding: '2px 8px', borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)' },
+  chip:         { fontSize: 12, fontWeight: 500, color: '#6b6862', background: 'rgba(20,19,15,0.04)', padding: '5px 11px', borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
 
   // Numbers
   numberLg:     { fontSize: 14, fontWeight: 600, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' },            // score numbers
@@ -332,12 +335,12 @@ const T = {
 }
 
 const VIRAL_FORMATS = [
-  { key: 'survival_challenge',  hook: 'curiosity',      color: '#b07d1a', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
-  { key: 'extreme_comparison',  hook: 'contrarian',     color: '#b07d1a', label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
-  { key: 'authority_warning',   hook: 'curiosity',      color: '#b07d1a', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
-  { key: 'listicle',            hook: 'transformation', color: '#b07d1a', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
-  { key: 'curiosity_gap',       hook: 'curiosity',      color: '#b07d1a', label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
-  { key: 'aspirational',        hook: 'transformation', color: '#b07d1a', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
+  { key: 'survival_challenge',  hook: 'curiosity',      color: '#7a5b14', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
+  { key: 'extreme_comparison',  hook: 'contrarian',     color: '#7a5b14', label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
+  { key: 'authority_warning',   hook: 'curiosity',      color: '#7a5b14', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
+  { key: 'listicle',            hook: 'transformation', color: '#7a5b14', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
+  { key: 'curiosity_gap',       hook: 'curiosity',      color: '#7a5b14', label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
+  { key: 'aspirational',        hook: 'transformation', color: '#7a5b14', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
 ]
 
 const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.label]))
@@ -546,7 +549,7 @@ function LengthSweetSpot({ length, mounted }) {
           left: `${(ZONE_LO / MAX) * 100}%`,
           width: `${((ZONE_HI - ZONE_LO) / MAX) * 100}%`,
           top: 5, height: 4,
-          background: 'rgba(5,150,105,0.55)',
+          background: 'rgba(22,163,74,0.55)',
           borderRadius: 0,
         }}/>
         {/* Marker (triangle) */}
@@ -562,7 +565,7 @@ function LengthSweetSpot({ length, mounted }) {
         {/* Marker stem so triangle visually connects to the bar */}
         <div style={{
           position: 'absolute', top: 6, left: markerLeft,
-          width: 2, height: 6, background: markerColor, borderRadius: 1,
+          width: 2, height: 6, background: markerColor, borderRadius: 0,
           transform: 'translateX(-50%)',
           transition: 'left 0.85s cubic-bezier(0.34,1.56,0.64,1)',
         }}/>
@@ -711,7 +714,7 @@ function VideoTile({ video, baselineViews }) {
         {/* View chip (bottom-right, YouTube duration zone) */}
         <div style={{
           position: 'absolute', right: 7, bottom: 7,
-          padding: '2px 7px', borderRadius: 5,
+          padding: '2px 7px', borderRadius: 0,
           background: 'rgba(0,0,0,0.78)',
           color: '#fff', fontSize: 11, fontWeight: 600,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
@@ -786,7 +789,7 @@ function ShortTile({ video, baselineViews }) {
         )}
         <div style={{
           position: 'absolute', right: 6, bottom: 6,
-          padding: '2px 6px', borderRadius: 5,
+          padding: '2px 6px', borderRadius: 0,
           background: 'rgba(0,0,0,0.78)',
           color: '#fff', fontSize: 10.5, fontWeight: 600,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
@@ -1006,7 +1009,7 @@ function CompetitorThumbTile({ video }) {
         )}
         <div style={{
           position: 'absolute', right: 6, bottom: 6,
-          padding: '2px 6px', borderRadius: 5,
+          padding: '2px 6px', borderRadius: 0,
           background: 'rgba(0,0,0,0.78)',
           color: '#fff', fontSize: 10.5, fontWeight: 600,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
@@ -1043,7 +1046,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
     : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
   const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 60 ? 'Solid' : 'Weak'
   const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.text2 : C.red
-  const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(20,19,15,0.05)' : 'rgba(201,160,48,0.08)'
+  const sevBg    = avgScore >= 75 ? 'rgba(22,163,74,0.10)' : avgScore >= 60 ? 'rgba(20,19,15,0.05)' : 'rgba(201,160,48,0.08)'
   const hasWhy   = !!(s.why_it_works || s.angle)
 
   // Pick 2 real competing videos from the niche pool that look most like
@@ -1072,7 +1075,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
           <div style={{
             flexShrink: 0,
-            width: 24, height: 24, borderRadius: 7,
+            width: 24, height: 24, borderRadius: 0,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             background: 'rgba(20,19,15,0.06)',
             border: '1px solid rgba(20,19,15,0.08)',
@@ -1208,7 +1211,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           )}
           <div style={{ flex: 1 }}/>
           <button onClick={onCopy}
-            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: 'var(--yd-surface)', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(20,19,15,0.12)'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: 'none' }}>
+            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: 'var(--yd-surface)', border: `1px solid ${isCopied ? 'rgba(22,163,74,0.38)' : 'rgba(20,19,15,0.12)'}`, borderRadius: 0, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: 'none' }}>
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
           <button onClick={onSelect}
@@ -1272,7 +1275,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
         <div style={{ width: 26, height: 26, borderRadius: 0, background: C.text1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--yd-paper)', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
         </div>
-        <span style={{ fontSize: 10, fontWeight: 600, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
+        <span style={{ fontSize: 10, fontWeight: 600, color: tm.color, padding: '3px 9px', borderRadius: 0, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
           {categoryShort}
         </span>
         <p style={{ flex: 1, minWidth: 0, fontSize: 14, color: C.text2, fontWeight: 500, lineHeight: 1.45, letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -1302,7 +1305,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
             border: `1px solid ${C.border}`,
             borderRadius: 0,
             padding: '12px 16px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            boxShadow: 'none',
             display: 'flex', flexDirection: 'column',
           }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Full description</p>
@@ -1374,7 +1377,7 @@ function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFou
   const back  = buckets.slice(half).reduce((a, b) => a + b, 0)
   const rising = back >= front
   const color = rising ? C.green : C.amber
-  const fillColor = rising ? 'rgba(5,150,105,0.10)' : 'rgba(217,119,6,0.10)'
+  const fillColor = rising ? 'rgba(22,163,74,0.10)' : 'rgba(201,160,48,0.10)'
 
   const W = 1000, H = 130
   const padL = 28, padR = 14, padT = 18, padB = 26
@@ -1718,8 +1721,8 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   // (your title is already winning). Mirrors the rest of the page's tier rules.
   const liftPositive = lift >= 0
   const liftColor = liftPositive ? C.green : C.red
-  const liftBg    = liftPositive ? 'rgba(5,150,105,0.08)' : 'rgba(201,160,48,0.07)'
-  const liftBdr   = liftPositive ? 'rgba(5,150,105,0.25)' : 'rgba(201,160,48,0.22)'
+  const liftBg    = liftPositive ? 'rgba(22,163,74,0.08)' : 'rgba(201,160,48,0.07)'
+  const liftBdr   = liftPositive ? 'rgba(22,163,74,0.25)' : 'rgba(201,160,48,0.22)'
 
   const userSubs = _userSubScoresFromBreakdown(userBreakdown)
   const aiSubs   = {
@@ -1903,7 +1906,7 @@ function NicheMap({ keywords, onPick }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
           <div style={{
             flexShrink: 0,
-            width: 26, height: 26, borderRadius: 7,
+            width: 26, height: 26, borderRadius: 0,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             background: 'rgba(20,19,15,0.05)',
             border: '1px solid rgba(20,19,15,0.10)',
@@ -2521,7 +2524,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             }} />
 
           {error && (
-            <div style={{ marginTop: 12, display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12.5, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 9, padding: '9px 12px', lineHeight: 1.4 }}>
+            <div style={{ marginTop: 12, display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12.5, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 0, padding: '9px 12px', lineHeight: 1.4 }}>
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3M6.5 9v.5"/></svg>
               {error}
             </div>
@@ -2547,8 +2550,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 ? 'Fits all 3 surfaces'
                 : `Cuts on ${cuts.map(s => s.label.toLowerCase()).join(' + ')}`
               const color   = allFit ? C.green : C.red
-              const bg      = allFit ? 'rgba(5,150,105,0.07)'  : 'rgba(201,160,48,0.07)'
-              const bdr     = allFit ? 'rgba(5,150,105,0.22)' : 'rgba(201,160,48,0.22)'
+              const bg      = allFit ? 'rgba(22,163,74,0.07)'  : 'rgba(201,160,48,0.07)'
+              const bdr     = allFit ? 'rgba(22,163,74,0.22)' : 'rgba(201,160,48,0.22)'
               const tooltip = surfaces.map(s => `${s.label} ${title.length}/${s.maxChars}`).join(' · ')
               return (
                 <span title={tooltip} style={{
@@ -2766,7 +2769,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
-            <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 12px 12px 0', padding: '14px 18px', marginBottom: 24 }}>
+            <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderLeft: `3px solid ${C.red}`, borderRadius: 0, padding: '14px 18px', marginBottom: 24 }}>
               <p style={{ ...T.innerLabel, color: '#7a5b14', marginBottom: 6 }}>AI suggestions unavailable</p>
               <p style={T.innerText}>{result.suggestion_error}</p>
             </div>
@@ -2833,8 +2836,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   {/* Tile 1, Opportunity (green). Gap by definition = 0 use it. */}
                   <div style={{
                     ...tileBase,
-                    background: 'rgba(5,150,105,0.05)',
-                    border: '1px solid rgba(5,150,105,0.18)',
+                    background: 'rgba(22,163,74,0.05)',
+                    border: '1px solid rgba(22,163,74,0.18)',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <Lightbulb size={14} color="#2d7a4f" strokeWidth={2.2}/>
@@ -2842,7 +2845,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     </div>
                     <p style={headlineBase}>{gap}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'auto' }}>
-                      <div style={{ flex: 1, height: 5, background: 'rgba(5,150,105,0.10)', borderRadius: 0, overflow: 'hidden' }}>
+                      <div style={{ flex: 1, height: 5, background: 'rgba(22,163,74,0.10)', borderRadius: 0, overflow: 'hidden' }}>
                         <div style={{ width: '4%', height: '100%', background: '#2d7a4f', borderRadius: 0 }}/>
                       </div>
                       <span style={{ fontSize: 11.5, fontWeight: 600, color: '#2d7a4f', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
@@ -2855,19 +2858,19 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   {overused && (
                     <div style={{
                       ...tileBase,
-                      background: 'rgba(217,119,6,0.05)',
-                      border: '1px solid rgba(217,119,6,0.18)',
+                      background: 'rgba(201,160,48,0.05)',
+                      border: '1px solid rgba(201,160,48,0.18)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <AlertTriangle size={14} color="#b07d1a" strokeWidth={2.2}/>
-                        <p style={{ ...eyebrowBase, color: '#b07d1a' }}>Overused angle</p>
+                        <AlertTriangle size={14} color="#7a5b14" strokeWidth={2.2}/>
+                        <p style={{ ...eyebrowBase, color: '#7a5b14' }}>Overused angle</p>
                       </div>
                       <p style={headlineBase}>{overused}</p>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'auto' }}>
-                        <div style={{ flex: 1, height: 5, background: 'rgba(217,119,6,0.10)', borderRadius: 0, overflow: 'hidden' }}>
-                          <div style={{ width: `${Math.round((overusedFilled / total) * 100)}%`, height: '100%', background: '#b07d1a', borderRadius: 0 }}/>
+                        <div style={{ flex: 1, height: 5, background: 'rgba(201,160,48,0.10)', borderRadius: 0, overflow: 'hidden' }}>
+                          <div style={{ width: `${Math.round((overusedFilled / total) * 100)}%`, height: '100%', background: '#7a5b14', borderRadius: 0 }}/>
                         </div>
-                        <span style={{ fontSize: 11.5, fontWeight: 600, color: '#b07d1a', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+                        <span style={{ fontSize: 11.5, fontWeight: 600, color: '#7a5b14', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
                           Saturated · {overusedFilled}/{total}
                         </span>
                       </div>
@@ -3089,12 +3092,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                                 ...T.chip,
                                 display: 'inline-flex', alignItems: 'center', gap: 6,
                                 color: inTitle ? C.green : C.text2,
-                                background: inTitle ? 'rgba(5,150,105,0.07)' : 'rgba(20,19,15,0.04)',
-                                border: `1px solid ${inTitle ? 'rgba(5,150,105,0.25)' : 'rgba(20,19,15,0.08)'}`,
+                                background: inTitle ? 'rgba(22,163,74,0.07)' : 'rgba(20,19,15,0.04)',
+                                border: `1px solid ${inTitle ? 'rgba(22,163,74,0.25)' : 'rgba(20,19,15,0.08)'}`,
                                 fontWeight: inTitle ? 600 : 500,
                               }}
-                              onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.45)' : '#d0d0d8' }}
-                              onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.25)' : 'rgba(20,19,15,0.08)' }}>
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(22,163,74,0.45)' : '#d0d0d8' }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(22,163,74,0.25)' : 'rgba(20,19,15,0.08)' }}>
                               {inTitle ? (
                                 <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                                   <polyline points="1.5,6.5 5,10 10.5,2"/>
@@ -3179,7 +3182,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   </button>
 
                   {descError && (
-                    <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#7a5b14', background: 'rgba(201,160,48,0.06)', border: '1px solid rgba(201,160,48,0.18)', borderRadius: 9, padding: '9px 13px' }}>
+                    <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#7a5b14', background: 'rgba(201,160,48,0.06)', border: '1px solid rgba(201,160,48,0.18)', borderRadius: 0, padding: '9px 13px' }}>
                       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3M6.5 9v.5"/></svg>
                       {descError}
                     </div>
@@ -3220,15 +3223,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                             style={{
                               display: 'inline-flex', alignItems: 'center', gap: 6,
                               fontSize: 12, fontWeight: 600, color: '#2d7a4f',
-                              background: 'rgba(5,150,105,0.07)',
-                              border: '1px solid rgba(5,150,105,0.22)',
-                              padding: '5px 11px', borderRadius: 20,
+                              background: 'rgba(22,163,74,0.07)',
+                              border: '1px solid rgba(22,163,74,0.22)',
+                              padding: '5px 11px', borderRadius: 0,
                               cursor: 'pointer',
                               letterSpacing: '-0.05px',
                               transition: 'all 0.15s',
                             }}
-                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(5,150,105,0.12)'; e.currentTarget.style.borderColor = 'rgba(5,150,105,0.40)' }}
-                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(5,150,105,0.07)'; e.currentTarget.style.borderColor = 'rgba(5,150,105,0.22)' }}>
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(22,163,74,0.12)'; e.currentTarget.style.borderColor = 'rgba(22,163,74,0.40)' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(22,163,74,0.07)'; e.currentTarget.style.borderColor = 'rgba(22,163,74,0.22)' }}>
                             <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                               <polyline points="1.5,6.5 5,10 10.5,2"/>
                             </svg>
@@ -3269,15 +3272,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                             style={{
                               display: 'inline-flex', alignItems: 'center', gap: 6,
                               fontSize: 12, fontWeight: 600, color: '#2d7a4f',
-                              background: 'rgba(5,150,105,0.07)',
-                              border: '1px solid rgba(5,150,105,0.22)',
-                              padding: '5px 11px', borderRadius: 20,
+                              background: 'rgba(22,163,74,0.07)',
+                              border: '1px solid rgba(22,163,74,0.22)',
+                              padding: '5px 11px', borderRadius: 0,
                               cursor: 'pointer',
                               letterSpacing: '-0.05px',
                               transition: 'all 0.15s',
                             }}
-                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(5,150,105,0.12)'; e.currentTarget.style.borderColor = 'rgba(5,150,105,0.40)' }}
-                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(5,150,105,0.07)'; e.currentTarget.style.borderColor = 'rgba(5,150,105,0.22)' }}>
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(22,163,74,0.12)'; e.currentTarget.style.borderColor = 'rgba(22,163,74,0.40)' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(22,163,74,0.07)'; e.currentTarget.style.borderColor = 'rgba(22,163,74,0.22)' }}>
                             {h.tag}
                             <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>
                               ×{h.count}
