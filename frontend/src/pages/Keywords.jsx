@@ -533,7 +533,7 @@ function KwDetailModal({ kw, C, onClose }) {
                         </div>
                         <div style={{ padding: '11px 13px 13px' }}>
                           <p style={{
-                            fontSize: 14, fontWeight: 600, color: C.text1,
+                            fontSize: 14, fontWeight: 500, color: C.text1,
                             letterSpacing: '-0.15px', lineHeight: 1.4,
                             margin: '0 0 4px',
                             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
@@ -1319,7 +1319,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     <span style={{
                       marginLeft: 'auto',
                       display: 'inline-flex', alignItems: 'center', gap: 7,
-                      fontSize: 12.5, fontWeight: 600, color: C.text2,
+                      fontSize: 12.5, fontWeight: 500, color: C.text2,
                       letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
                     }}>
                       <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, flexShrink: 0 }}/>
@@ -1389,7 +1389,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         </div>
                         <div style={{ padding: '11px 13px 13px' }}>
                           <p style={{
-                            fontSize: 14, fontWeight: 600, color: C.text1,
+                            fontSize: 14, fontWeight: 500, color: C.text1,
                             letterSpacing: '-0.15px', lineHeight: 1.4,
                             margin: '0 0 4px',
                             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
@@ -1582,7 +1582,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                             Theme
                           </p>
                           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 14 }}>
-                            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.35, letterSpacing: '-0.15px', flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.35, letterSpacing: '-0.15px', flex: 1, minWidth: 0 }}>
                               {cl.clusterName}
                             </p>
                             <span style={{
