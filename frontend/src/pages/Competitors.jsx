@@ -17,11 +17,11 @@ function useCompetitorStyles() {
     // Geist Variable load, page-scoped, same pattern as Chat. Geist
     // sits cleaner on this design grammar than Inter; weights drop a
     // tier across the page (500/600 max, never 700/800).
-    if (!document.getElementById('ytg-comp-geist-font')) {
+    if (!document.getElementById('ytg-comp-editorial-font')) {
       const link = document.createElement('link')
-      link.id = 'ytg-comp-geist-font'
+      link.id = 'ytg-comp-editorial-font'
       link.rel = 'stylesheet'
-      link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
+      link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
       document.head.appendChild(link)
     }
 
@@ -40,14 +40,14 @@ function useCompetitorStyles() {
       .comp-card {
         background: ${D.card};
         border: 1px solid ${D.hair};
-        border-radius: 14px;
+        border-radius: 0;
         box-shadow: ${D.cardShadow};
       }
 
       .comp-channel-card {
         background: ${D.card};
         border: 1px solid ${D.hair};
-        border-radius: 14px;
+        border-radius: 0;
         box-shadow: ${D.cardShadow};
         padding: 14px 18px;
         display: flex;
@@ -69,7 +69,7 @@ function useCompetitorStyles() {
          actual CTA (Search) and the threat dot. ── */
       .comp-tab-btn {
         padding: 8px 16px;
-        border-radius: 100px;
+        border-radius: 0;
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
@@ -101,7 +101,7 @@ function useCompetitorStyles() {
       .comp-input {
         flex: 1;
         padding: 12px 20px;
-        border-radius: 14px;
+        border-radius: 0;
         border: 1px solid ${D.hair};
         background: ${D.surfaceInput};
         font-size: 14px;
@@ -124,22 +124,21 @@ function useCompetitorStyles() {
          system: flat brand red, pill shape, soft red-tinted shadow. ── */
       .comp-btn-primary {
         background: #c9a030;
-        color: #fff;
+        color: var(--yd-on-gold);
         border: none;
-        border-radius: 100px;
-        padding: 9px 20px;
-        font-size: 12.5px;
+        border-radius: 0;
+        padding: 10px 20px;
+        font-size: 12px;
         font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
+        font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
         cursor: pointer;
         white-space: nowrap;
-        transition: filter 180ms ease, transform 180ms ease, box-shadow 180ms ease;
-        letter-spacing: -0.01em;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(201,160,48,0.32);
+        transition: filter 180ms ease;
+        letter-spacing: 0.06em;
+        box-shadow: none;
       }
       .comp-btn-primary:hover:not(:disabled) {
-        filter: brightness(1.07); transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(201,160,48,0.42);
+        filter: brightness(1.07);
       }
       .comp-btn-primary:disabled {
         background: rgba(20,19,15,0.06);
@@ -157,7 +156,7 @@ function useCompetitorStyles() {
         right: 56px;
         width: 26px;
         height: 26px;
-        border-radius: 7px;
+        border-radius: 0;
         border: none;
         background: transparent;
         color: ${D.text3};
@@ -184,7 +183,7 @@ function useCompetitorStyles() {
         background: transparent;
         color: ${D.text3};
         border: none;
-        border-radius: 8px;
+        border-radius: 0;
         padding: 6px;
         cursor: pointer;
         white-space: nowrap;
@@ -261,7 +260,7 @@ function useCompetitorStyles() {
       .comp-timing-pill {
         background: ${D.cardFlat};
         border: 1px solid ${D.hair};
-        border-radius: 14px;
+        border-radius: 0;
         padding: 20px 18px;
         display: flex;
         flex-direction: column;
@@ -298,8 +297,8 @@ function useCompetitorStyles() {
         border-color: ${D.hairHi};
         transform: translateY(-1px);
       }
-      .comp-accordion-header.closed { border-radius: 14px; }
-      .comp-accordion-header.open   { border-radius: 14px 14px 0 0; border-bottom-color: ${D.hair}; transform: none; }
+      .comp-accordion-header.closed { border-radius: 0; }
+      .comp-accordion-header.open   { border-radius: 0; border-bottom-color: ${D.hair}; transform: none; }
       .comp-accordion-header.open:hover { transform: none; }
 
       /* 3px colored stripe, threat color, top edge of the card. Visual
@@ -396,7 +395,7 @@ function useCompetitorStyles() {
         font-size: 11.5px;
         font-weight: 600;
         padding: 3px 7px;
-        border-radius: 5px;
+        border-radius: 0;
         font-variant-numeric: tabular-nums;
         letter-spacing: -0.05px;
         backdrop-filter: blur(2px);
@@ -404,7 +403,7 @@ function useCompetitorStyles() {
       .comp-thumb-text { padding: 11px 13px 13px; }
       .comp-thumb-title {
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 500;
         color: ${D.text1};
         letter-spacing: -0.15px;
         line-height: 1.4;
@@ -431,7 +430,7 @@ function useCompetitorStyles() {
       .comp-thumb-chip {
         display: inline-flex; align-items: center;
         border: 1px solid;
-        border-radius: 100px;
+        border-radius: 0;
         padding: 3px 4px 3px 10px;
         font-variant-numeric: tabular-nums;
       }
@@ -449,7 +448,7 @@ function useCompetitorStyles() {
         color: ${D.text1};
         background: ${D.cardFlat};
         border: 1px solid;
-        border-radius: 100px;
+        border-radius: 0;
         padding: 1px 8px;
         letter-spacing: -0.01em;
       }
@@ -457,7 +456,7 @@ function useCompetitorStyles() {
       .comp-accordion-body {
         border: 1px solid ${D.hair};
         border-top: none;
-        border-radius: 0 0 14px 14px;
+        border-radius: 0;
         background: rgba(20,19,15,0.02);
         padding: 22px 18px 26px;
         box-shadow: ${D.cardShadow};
@@ -494,11 +493,11 @@ function useCompetitorStyles() {
         background: ${D.card};
         color: ${D.text1};
         border: 1px solid ${D.hair};
-        border-radius: 100px;
-        padding: 9px 22px;
-        font-size: 13px;
+        border-radius: 0;
+        padding: 10px 22px;
+        font-size: 12px;
         font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
+        font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.06em;
         cursor: pointer;
         white-space: nowrap;
         box-shadow: ${D.cardShadow};
@@ -557,21 +556,23 @@ const D = {
   hairHi:         'rgba(20,19,15,0.16)',
   wash:           'rgba(20,19,15,0.04)',                        // row hover
   washActive:     'rgba(20,19,15,0.06)',                        // selected tab
-  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
-  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+  cardShadow:     'none',
+  cardShadowLift: 'none',
   text1:          '#14130f',
   text2:          '#6b6862',
   text3:          '#6b6862',
   text4:          'rgba(20,19,15,0.40)',
-  red:   '#c9a030', redHi: '#d4af3f', amber: '#d97706',
-  green: '#16a34a', greenHi: '#22c55e', blue: '#8a8378',
+  red:   '#c9a030', redHi: '#d4af3f', amber: '#c9a030',
+  green: '#16a34a', greenHi: '#2d7a4f', blue: '#8a8378',
 }
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const COND  = "'Barlow Condensed', sans-serif"
 
 // ─── colour tokens, strict red/amber/green palette with system tints ────────
 // Fill + border tints re-tuned for the dark surface; text colours unchanged.
 const THREAT = {
   high:   { bg: 'rgba(201,160,48,0.13)', border: 'rgba(201,160,48,0.32)', text: '#7a5b14', label: 'High threat',   dot: '#c9a030' },
-  medium: { bg: 'rgba(217,119,6,0.14)', border: 'rgba(217,119,6,0.34)', text: '#b07d1a', label: 'Medium threat', dot: '#d97706' },
+  medium: { bg: 'rgba(201,160,48,0.13)', border: 'rgba(201,160,48,0.32)', text: '#7a5b14', label: 'Medium threat', dot: '#c9a030' },
   low:    { bg: 'rgba(22,163,74,0.14)', border: 'rgba(22,163,74,0.34)', text: '#2d7a4f', label: 'Low threat',    dot: '#16a34a' },
 }
 
@@ -632,9 +633,9 @@ function CompVideoChips({ views, publishedAt, baselineViews }) {
   const outlierMult = outlierFor(views, baselineViews)
   if (!vph && !outlierMult) return null
   const isStrong = outlierMult && outlierMult >= 3
-  const outlierColor = isStrong ? D.greenHi : '#b07d1a'
-  const outlierBg    = isStrong ? 'rgba(22,163,74,0.14)' : 'rgba(217,119,6,0.14)'
-  const outlierBdr   = isStrong ? 'rgba(22,163,74,0.34)' : 'rgba(217,119,6,0.34)'
+  const outlierColor = isStrong ? D.greenHi : '#7a5b14'
+  const outlierBg    = isStrong ? 'rgba(22,163,74,0.14)' : 'rgba(201,160,48,0.14)'
+  const outlierBdr   = isStrong ? 'rgba(22,163,74,0.34)' : 'rgba(201,160,48,0.34)'
   const outlierLabel = isStrong ? 'Outlier' : 'Above avg'
   return (
     <div className="comp-thumb-chips">
@@ -659,7 +660,7 @@ function CompVideoChips({ views, publishedAt, baselineViews }) {
 
 // ─── base card, amber 3px top border matches SEO Studio / Keywords pattern.
 // Pass topAccent={null} to render a plain card with no colored top border. ──
-function Card({ children, style, topAccent = '#d97706' }) {
+function Card({ children, style, topAccent = '#c9a030' }) {
   return (
     <div className="comp-card" style={{
       padding: '20px 24px',
@@ -693,7 +694,7 @@ function Disclosure({ label, count, children, defaultOpen = false }) {
         onClick={() => setOpen(o => !o)}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '9px 16px', borderRadius: 100,
+          padding: '9px 16px', borderRadius: 0,
           border: `1px solid ${D.hair}`,
           background: open ? D.washActive : 'transparent',
           color: open ? D.text1 : D.text2,
@@ -718,7 +719,7 @@ function Disclosure({ label, count, children, defaultOpen = false }) {
         {open ? 'Hide' : 'Show'} {label}
         {count != null && (
           <span style={{ fontSize: 11, fontWeight: 600, color: D.text3,
-            background: D.wash, padding: '2px 7px', borderRadius: 99,
+            background: D.wash, padding: '2px 7px', borderRadius: 0,
             border: `1px solid ${D.hair}` }}>{count}</span>
         )}
         <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
@@ -752,10 +753,10 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
     <div className="comp-channel-card">
       {channel.thumbnail
         ? <img src={channel.thumbnail} alt="" referrerPolicy="no-referrer"
-            style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover', flexShrink: 0,
-              boxShadow: '0 1px 3px rgba(0,0,0,0.4)' }} />
+            style={{ width: 44, height: 44, borderRadius: 0, objectFit: 'cover', flexShrink: 0,
+              boxShadow: 'none' }} />
         : <div style={{ width: 44, height: 44, background: 'linear-gradient(135deg,#e8e4dc,var(--yd-surface))',
-            borderRadius: 10, flexShrink: 0, display: 'flex', alignItems: 'center',
+            borderRadius: 0, flexShrink: 0, display: 'flex', alignItems: 'center',
             justifyContent: 'center', fontWeight: 500, fontSize: 18, color: D.text3 }}>
             {channel.channel_name[0]}
           </div>
@@ -783,7 +784,7 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
       ) : loading ? (
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '6px 14px', borderRadius: 100,
+          padding: '6px 14px', borderRadius: 0,
           background: D.wash,
           color: D.text2,
           fontSize: 12.5, fontWeight: 500, flexShrink: 0,
@@ -824,7 +825,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
 
   // KPI hero values (only render the strip if we have at least one)
   const cs              = ai.postingBehavior?.consistencyScore
-  const consistencyCol  = cs == null ? D.text1 : cs >= 75 ? D.greenHi : cs >= 55 ? '#b07d1a' : '#7a5b14'
+  const consistencyCol  = cs == null ? D.text1 : cs >= 75 ? D.greenHi : cs >= 55 ? '#7a5b14' : '#7a5b14'
   const avgGap          = ai.postingBehavior?.avgGapDays
   const subs            = comp?.subscribers
   const avgViews        = comp?.avg_views_per_video
@@ -853,7 +854,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
             { label: 'Consistency',    val: cs       != null ? `${cs}/100`        : '—', col: consistencyCol },
           ].map(({ label, val, col }) => (
             <div key={label} className="comp-timing-pill">
-              <p style={{ fontSize: 24, fontWeight: 700, color: col, letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val}</p>
+              <p style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 500, color: col, letterSpacing: '-0.01em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val}</p>
               <p style={{ fontSize: 11.5, fontWeight: 600, color: D.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</p>
             </div>
           ))}
@@ -874,7 +875,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                 Top videos to study
               </h2>
               <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
-                padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)' }}>
+                padding: '2px 8px', borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)' }}>
                 {vids.length}
               </span>
             </div>
@@ -935,7 +936,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 18 }}>
           <SectionTitle>Intelligence summary</SectionTitle>
           <span style={{ background: threat.bg, color: threat.text, border: `1px solid ${threat.border}`,
-            fontSize: 12, fontWeight: 600, padding: '5px 13px', borderRadius: 50, flexShrink: 0,
+            fontSize: 12, fontWeight: 600, padding: '5px 13px', borderRadius: 0, flexShrink: 0,
             display: 'inline-flex', alignItems: 'center', gap: 5, letterSpacing: '0.1px' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: threat.dot,
               flexShrink: 0, boxShadow: `0 0 6px ${threat.dot}` }} />
@@ -957,7 +958,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
           </div>
 
           {/* Amber divider, 3px vertical bar, now centered since both panels are flex:1 */}
-          <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706', flexShrink: 0, borderRadius: 2 }}/>
+          <div style={{ width: 3, alignSelf: 'stretch', background: '#c9a030', flexShrink: 0, borderRadius: 0 }}/>
 
           {/* Right panel: Why this threat level */}
           <div style={{ flex: 1, minWidth: 0 }}>
@@ -989,7 +990,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                 Channel insights
               </p>
               <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
-                padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)' }}>
+                padding: '2px 8px', borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)' }}>
                 {insights.length}
               </span>
             </div>
@@ -1001,27 +1002,27 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
 
               return (
                 <div key={key} className="comp-card" style={{
-                  borderRadius: 14,
+                  borderRadius: 0,
                   overflow: 'hidden',
                   marginBottom: 10,
-                  borderTop: '3px solid #d97706',
+                  borderTop: '3px solid #c9a030',
                 }}>
                   <div style={{ padding: '16px 22px 18px' }}>
 
                     {/* Header: amber badge + amber category + bold headline */}
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: body ? 14 : 0 }}>
-                      <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
+                      <div style={{ width: 26, height: 26, borderRadius: 0, background: '#c9a030',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--yd-on-gold)', fontVariantNumeric: 'tabular-nums' }}>
                           {i + 1}
                         </span>
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a',
+                        <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14',
                           letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                           {label}
                         </p>
-                        <p style={{ fontSize: 14, fontWeight: 600, color: D.text1, lineHeight: 1.55 }}>
+                        <p style={{ fontSize: 14, fontWeight: 400, color: D.text1, lineHeight: 1.65 }}>
                           {headline}
                         </p>
                       </div>
@@ -1032,7 +1033,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                       <>
                         <div style={{ height: 1, background: D.hair, marginBottom: 14, marginLeft: 38 }} />
                         <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
-                          border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                          border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0, padding: '12px 14px' }}>
                           <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                             Why it works
@@ -1054,7 +1055,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
            three tiles are identity/timestamp values and stay neutral. */}
       {false /* posting timing moved into KPI hero strip */ && ai.postingBehavior && (() => {
         const cs = ai.postingBehavior.consistencyScore ?? 0
-        const consistencyColor = cs >= 75 ? '#059669' : cs >= 55 ? '#d97706' : '#c9a030'
+        const consistencyColor = cs >= 75 ? '#2d7a4f' : cs >= 55 ? '#c9a030' : '#c9a030'
         return (
         <Card topAccent={null}>
           <SectionTitle>Posting timing</SectionTitle>
@@ -1066,7 +1067,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
               { label: 'Consistency', val: `${cs}/100`,                         color: consistencyColor },
             ].map(({ label, val, color }) => (
               <div key={label} className="comp-timing-pill">
-                <p style={{ fontSize: 20, fontWeight: 700, color, letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
+                <p style={{ fontFamily: SERIF, fontSize: 24, fontWeight: 500, color, letterSpacing: '-0.01em', lineHeight: 1 }}>{val}</p>
                 <p style={{ fontSize: 12, fontWeight: 600, color: D.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
               </div>
             ))}
@@ -1087,7 +1088,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         // read as an arbitrary alert color in a section about their wins.
         const viewVals = ai.topTopics.map(t => t.avgViews || 0)
         const maxViews = Math.max(...viewVals, 1)
-        const BAR_COLOR = '#059669'
+        const BAR_COLOR = '#2d7a4f'
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
@@ -1095,12 +1096,12 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                 Top content topics
               </h2>
               <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
-                padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)' }}>
+                padding: '2px 8px', borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)' }}>
                 {ai.topTopics.length}
               </span>
             </div>
 
-            <div className="comp-card" style={{ borderTop: '3px solid #d97706' }}>
+            <div className="comp-card" style={{ borderTop: '3px solid #c9a030' }}>
               <div style={{ padding: '18px 22px 20px' }}>
                 <div style={{ marginBottom: 14 }}>
                   <p style={{ fontSize: 11, fontWeight: 600, color: D.text2,
@@ -1129,7 +1130,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                         display: 'flex', alignItems: 'center', gap: 10,
                         paddingLeft:  isRightCol ? 20 : 0,
                         paddingRight: isRightCol ? 0 : 20,
-                        borderLeft:   isRightCol ? '1px solid rgba(217,119,6,0.34)' : 'none',
+                        borderLeft:   isRightCol ? '1px solid rgba(201,160,48,0.34)' : 'none',
                       }}>
                         <span style={{ fontSize: 13, color: D.text2, fontWeight: 500,
                           flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis',
@@ -1165,10 +1166,10 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
            H2 + subtitle above the card, matching the Top content topics header. */}
       {ai.titlePatterns && (() => {
         const len      = ai.titlePatterns.avgTitleLength || 0
-        const lenCol   = len <= 60 ? '#059669' : len <= 80 ? '#d97706' : '#c9a030'
+        const lenCol   = len <= 60 ? '#2d7a4f' : len <= 80 ? '#c9a030' : '#c9a030'
         const overCap  = len > 100
         const capDelta = 100 - len
-        const deltaCol = overCap ? '#c9a030' : '#059669'
+        const deltaCol = overCap ? '#c9a030' : '#2d7a4f'
 
         return (
           <div>
@@ -1184,7 +1185,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
 
                 {/* LEFT, big avg length + label + delta (scoreColor by truncation risk) */}
                 <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 120 }}>
-                  <p style={{ fontSize: 44, fontWeight: 700, color: lenCol,
+                  <p style={{ fontFamily: SERIF, fontSize: 44, fontWeight: 500, color: lenCol,
                     letterSpacing: '-1.2px', lineHeight: 1 }}>
                     {len}
                     <span style={{ fontSize: 16, color: D.text2, fontWeight: 600,
@@ -1202,8 +1203,8 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                 </div>
 
                 {/* AMBER 3px vertical divider */}
-                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
-                  flexShrink: 0, borderRadius: 2 }}/>
+                <div style={{ width: 3, alignSelf: 'stretch', background: '#c9a030',
+                  flexShrink: 0, borderRadius: 0 }}/>
 
                 {/* MIDDLE, dominant formats listed as verdict-style content */}
                 <div style={{ flex: 1.3, minWidth: 0 }}>
@@ -1216,7 +1217,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                       display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {ai.titlePatterns.dominantFormats.map((f, i) => (
                         <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: 11, fontWeight: 600, color: '#b07d1a',
+                          <span style={{ fontSize: 11, fontWeight: 600, color: '#7a5b14',
                             fontVariantNumeric: 'tabular-nums', flexShrink: 0, marginTop: 3,
                             minWidth: 14 }}>
                             {i + 1}
@@ -1233,8 +1234,8 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                 </div>
 
                 {/* AMBER 3px vertical divider */}
-                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
-                  flexShrink: 0, borderRadius: 2 }}/>
+                <div style={{ width: 3, alignSelf: 'stretch', background: '#c9a030',
+                  flexShrink: 0, borderRadius: 0 }}/>
 
                 {/* RIGHT, title vocabulary (keywords + power words) */}
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -1266,8 +1267,8 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                       </p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                         {ai.titlePatterns.powerWordsUsed.map((w, i) => (
-                          <span key={i} className="comp-tag" style={{ background: 'rgba(217,119,6,0.14)',
-                            color: '#b07d1a', border: '1px solid rgba(217,119,6,0.34)' }}>{w}</span>
+                          <span key={i} className="comp-tag" style={{ background: 'rgba(201,160,48,0.14)',
+                            color: '#7a5b14', border: '1px solid rgba(201,160,48,0.34)' }}>{w}</span>
                         ))}
                       </div>
                     </div>
@@ -1298,7 +1299,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                 Winning moves
               </p>
               <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
-                padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)' }}>
+                padding: '2px 8px', borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)' }}>
                 {moves.length}
               </span>
             </div>
@@ -1311,26 +1312,26 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
 
                 return (
                   <div key={i} className="comp-card" style={{
-                    borderRadius: 14,
+                    borderRadius: 0,
                     overflow: 'hidden',
-                    borderTop: '3px solid #d97706',
+                    borderTop: '3px solid #c9a030',
                   }}>
                     <div style={{ padding: '16px 22px 18px' }}>
 
                       {/* Header, rank badge + category eyebrow + bold title */}
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                        <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
+                        <div style={{ width: 26, height: 26, borderRadius: 0, background: '#c9a030',
                           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--yd-on-gold)', fontVariantNumeric: 'tabular-nums' }}>
                             {i + 1}
                           </span>
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a',
+                          <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                             Winning move
                           </p>
-                          <p style={{ fontSize: 14, fontWeight: 600, color: D.text1, lineHeight: 1.55 }}>
+                          <p style={{ fontSize: 14, fontWeight: 400, color: D.text1, lineHeight: 1.65 }}>
                             {action}
                           </p>
                         </div>
@@ -1345,7 +1346,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                         {/* Why now, blue tint, same palette as Overview's Why-now cell */}
                         <div style={{ background: 'rgba(79,134,247,0.07)',
                           border: '1px solid rgba(79,134,247,0.12)',
-                          borderRadius: 10, padding: '12px 14px' }}>
+                          borderRadius: 0, padding: '12px 14px' }}>
                           <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                             Why now
@@ -1359,13 +1360,13 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                         <div style={{
                           background: D.cardFlat,
                           border: `1px solid ${D.hair}`,
-                          borderLeft: '3px solid #d97706',
-                          borderRadius: '0 10px 10px 0',
+                          borderLeft: '3px solid #c9a030',
+                          borderRadius: 0,
                           padding: '12px 16px',
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
+                          boxShadow: 'none',
                           display: 'flex', flexDirection: 'column',
                         }}>
-                          <p style={{ fontSize: 10, fontWeight: 600, color: '#b07d1a',
+                          <p style={{ fontSize: 10, fontWeight: 600, color: '#7a5b14',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
                             Action
                           </p>
@@ -1398,7 +1399,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
               Topics to tackle
             </h2>
             <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
-              padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)' }}>
+              padding: '2px 8px', borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)' }}>
               {ideasLeft} left
             </span>
           </div>
@@ -1412,11 +1413,11 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                     type="checkbox"
                     checked={isDone}
                     onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)}
-                    style={{ width: 14, height: 14, accentColor: '#059669', cursor: 'pointer',
+                    style={{ width: 14, height: 14, accentColor: '#2d7a4f', cursor: 'pointer',
                       flexShrink: 0, marginTop: 4 }}
                   />
                   <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                    <p style={{ fontSize: 14, fontWeight: 600,
+                    <p style={{ fontSize: 14, fontWeight: 500,
                       color: isDone ? D.text3 : D.text1, lineHeight: 1.5,
                       letterSpacing: '-0.1px',
                       textDecoration: isDone ? 'line-through' : 'none' }}>
@@ -1448,7 +1449,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
           onClick={() => setShowProse(p => !p)}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '9px 16px', borderRadius: 100,
+            padding: '9px 16px', borderRadius: 0,
             border: `1px solid ${D.hair}`,
             background: showProse ? D.washActive : 'transparent',
             color: showProse ? D.text1 : D.text2,
@@ -1637,7 +1638,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
             draft. Subtitle is one weight lower with slightly darker
             color so it doesn't disappear on light backgrounds. */}
       <div style={{ marginBottom: 26 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 600, color: D.text1, marginBottom: 6, letterSpacing: '-0.7px', lineHeight: 1.1 }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: D.text1, marginBottom: 6, letterSpacing: '-0.01em', lineHeight: 1.12 }}>
           Competitors
         </h1>
         <p style={{ fontSize: 14, color: D.text2, fontWeight: 500, letterSpacing: '-0.005em' }}>
@@ -1678,7 +1679,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
 
           {!searched && (
             <div className="comp-empty-state">
-              <div style={{ width: 44, height: 44, borderRadius: 13, background: D.cardFlat, border: '1px solid rgba(20,19,15,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <div style={{ width: 44, height: 44, borderRadius: 0, background: D.cardFlat, border: '1px solid rgba(20,19,15,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8a8378" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
               </div>
               <p style={{ fontWeight: 500, color: D.text1, marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>Search for a channel to compare</p>
@@ -1688,7 +1689,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
 
           {searched && !loadingSearch && searchResults.length === 0 && (
             <div className="comp-empty-state">
-              <div style={{ width: 44, height: 44, borderRadius: 13, background: D.cardFlat, border: '1px solid rgba(20,19,15,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <div style={{ width: 44, height: 44, borderRadius: 0, background: D.cardFlat, border: '1px solid rgba(20,19,15,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8a8378" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/><line x1="6.5" y1="8.5" x2="10.5" y2="8.5"/></svg>
               </div>
               <p style={{ fontWeight: 500, color: D.text1, marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>No channels found</p>
@@ -1697,7 +1698,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
           )}
 
           {analyzeError && (
-            <div style={{ background: 'rgba(201,160,48,0.13)', border: '1px solid rgba(201,160,48,0.32)', borderRadius: 12, padding: '12px 16px', marginBottom: 12, fontSize: 14, color: '#7a5b14', fontWeight: 500 }}>
+            <div style={{ background: 'rgba(201,160,48,0.13)', border: '1px solid rgba(201,160,48,0.32)', borderRadius: 0, padding: '12px 16px', marginBottom: 12, fontSize: 14, color: '#7a5b14', fontWeight: 500 }}>
               {analyzeError}
             </div>
           )}
@@ -1714,7 +1715,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
         <div>
           {analyses.length === 0 ? (
             <div className="comp-empty-state">
-              <div style={{ width: 44, height: 44, borderRadius: 13, background: D.cardFlat, border: '1px solid rgba(20,19,15,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <div style={{ width: 44, height: 44, borderRadius: 0, background: D.cardFlat, border: '1px solid rgba(20,19,15,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#8a8378" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="10" width="3" height="7" rx="1"/><rect x="8.5" y="6" width="3" height="11" rx="1"/><rect x="14" y="3" width="3" height="14" rx="1"/></svg>
               </div>
               <p style={{ fontWeight: 500, color: D.text1, marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>No competitors tracked yet</p>
@@ -1775,8 +1776,8 @@ export default function Competitors({ plan, freeTierFeatures }) {
                     <div className="comp-identity-row">
                       {comp.thumbnail && (
                         <img src={comp.thumbnail} alt="" referrerPolicy="no-referrer"
-                          style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover',
-                            flexShrink: 0, boxShadow: '0 1px 3px rgba(0,0,0,0.4)' }} />
+                          style={{ width: 44, height: 44, borderRadius: 0, objectFit: 'cover',
+                            flexShrink: 0, boxShadow: 'none' }} />
                       )}
 
                       <div style={{ flex: 1, minWidth: 0 }}>
