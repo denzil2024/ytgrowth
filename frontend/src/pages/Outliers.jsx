@@ -1503,10 +1503,10 @@ function VideoResultCard({ item, kind, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 14, fontWeight: 600,
+              padding: '11px 16px', fontSize: 13, fontWeight: 600,
               border: 'none', borderRadius: 0, cursor: 'pointer',
               background: C.red, color: 'var(--yd-on-gold)',
-              fontFamily: 'inherit', letterSpacing: '0.01em',
+              fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em',
               display: 'inline-flex', alignItems: 'center', gap: 6,
               transition: 'filter 0.15s',
             }}
@@ -1642,10 +1642,10 @@ function ChannelResultCard({ item, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 14, fontWeight: 600,
+              padding: '11px 16px', fontSize: 13, fontWeight: 600,
               border: 'none', borderRadius: 0, cursor: 'pointer',
               background: C.red, color: 'var(--yd-on-gold)',
-              fontFamily: 'inherit', letterSpacing: '0.01em',
+              fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em',
               display: 'inline-flex', alignItems: 'center', gap: 6,
               transition: 'filter 0.15s',
             }}
