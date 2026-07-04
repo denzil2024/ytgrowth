@@ -621,7 +621,7 @@ export default function Dashboard() {
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={{ fontFamily: SHELL.sans, fontSize: 15, fontWeight: 600, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.01em', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
-                    <p style={{ fontFamily: SHELL.sans, fontSize: 12.5, color: SHELL.text2, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
+                    <p style={{ fontFamily: SHELL.sans, fontSize: 12.5, color: SHELL.text2, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subscribers</p>
                   </div>
                 </div>
               )
@@ -1262,10 +1262,12 @@ export default function Dashboard() {
                         )
                       })() : (
                         <>
-                          <p style={{ fontSize: 13, fontWeight: 500, color: SHELL.text2, lineHeight: 1.4, margin: 0 }}>
-                            Connect YouTube Analytics on your next reconnect to unlock the 28-day trend line.
+                          <p style={{ fontSize: 13, fontWeight: 400, color: SHELL.text2, lineHeight: 1.5, margin: 0 }}>
+                            Reconnect with YouTube Analytics access to unlock the 28-day trend line.
                           </p>
-                          <p style={{ ...subMeta, marginTop: 'auto', color: SHELL.text3 }}>Not connected</p>
+                          <a href="/auth/login" style={{ ...subMeta, marginTop: 'auto', color: '#7a5b14', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                            Reconnect to unlock →
+                          </a>
                         </>
                       )}
                     </div>
@@ -1306,13 +1308,19 @@ export default function Dashboard() {
               {/* Analytics-missing nudge, moved here from the quick-stats
                   strip (the strip is gone in the Feed redesign). */}
               {!data.analytics && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(217,119,6,0.14)', border: `1px solid rgba(217,119,6,0.34)`, borderLeft: `3px solid ${'#b07d1a'}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={'#b07d1a'} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                    <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={'#b07d1a'} stroke="none"/>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(201,160,48,0.10)', border: `1px solid rgba(201,160,48,0.28)`, borderLeft: `3px solid #c9a030`, borderRadius: 0, padding: '11px 16px', marginBottom: 18 }}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={'#7a5b14'} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={'#7a5b14'} stroke="none"/>
                   </svg>
-                  <p style={{ fontSize: 12.5, color: SHELL.text2, lineHeight: 1.55 }}>
+                  <p style={{ fontSize: 12.5, color: SHELL.text2, lineHeight: 1.55, flex: 1 }}>
                     Grant <strong style={{ fontWeight: 600 }}>YouTube Analytics read access</strong> on the next reconnect to unlock retention, duration, and 90-day subscriber data.
                   </p>
+                  <a href="/auth/login" style={{
+                    flexShrink: 0, textDecoration: 'none',
+                    background: '#c9a030', color: 'var(--yd-on-gold)',
+                    fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase', letterSpacing: '0.06em',
+                    fontSize: 12, fontWeight: 600, padding: '8px 15px',
+                  }}>Reconnect</a>
                 </div>
               )}
 

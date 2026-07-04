@@ -138,7 +138,7 @@ export function FeedCard({
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 22, height: 22, borderRadius: 6,
+              width: 22, height: 22, borderRadius: 0,
               border: 'none', background: 'transparent',
               color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
@@ -176,10 +176,10 @@ export function ActionsRailCard({ items }) {
   const impactColor = (impact) => {
     const k = (impact || 'med').toLowerCase()
     // Dark-mode text variants of the brand red/amber. The saturated brand
-    // values (#c9a030 / #d97706) are reserved for CTA backgrounds; using
-    // them as small label text on dark shimmers/halates. #7a5b14 / #b07d1a
+    // values (#c9a030 / #c9a030) are reserved for CTA backgrounds; using
+    // them as small label text on dark shimmers/halates. #7a5b14 / #7a5b14
     // are the canonical text-on-dark equivalents used elsewhere in the app.
-    return k === 'high' ? '#7a5b14' : k === 'low' ? SHELL.text3 : '#b07d1a'
+    return k === 'high' ? '#7a5b14' : k === 'low' ? SHELL.text3 : '#7a5b14'
   }
   const impactLabel = (impact) => {
     const k = (impact || 'med').toLowerCase()
@@ -257,7 +257,7 @@ export function ActionsRailCard({ items }) {
                   padding: '13px 18px', cursor: 'pointer', userSelect: 'none',
                 }}>
                 <span style={{
-                  flexShrink: 0, width: 22, height: 22, borderRadius: 7,
+                  flexShrink: 0, width: 22, height: 22, borderRadius: 0,
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                   background: 'rgba(20,19,15,0.06)',
                   fontSize: 11, fontWeight: 600, color: SHELL.text1,
@@ -338,8 +338,8 @@ export function ActionsRailCard({ items }) {
                       )}
                       {showWhy && (
                         <div style={{
-                          background: 'rgba(5,150,105,0.04)',
-                          border: '1px solid rgba(5,150,105,0.12)',
+                          background: 'rgba(22,163,74,0.04)',
+                          border: '1px solid rgba(22,163,74,0.12)',
                           borderLeft: '3px solid #059669',
                           borderRadius: '0 8px 8px 0',
                           padding: '8px 12px',
@@ -403,9 +403,9 @@ export function ActionsRailCard({ items }) {
 export function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDismiss, ctaLabel }) {
   const [open, setOpen] = useState(false)
   const impactKey = (impact || 'med').toLowerCase()
-  const impactClr = impactKey === 'high' ? '#7a5b14' : impactKey === 'low' ? SHELL.text3 : '#b07d1a'
-  const impactBg  = impactKey === 'high' ? 'rgba(201,160,48,0.07)' : impactKey === 'low' ? 'rgba(20,19,15,0.04)' : 'rgba(217,119,6,0.08)'
-  const impactBdr = impactKey === 'high' ? 'rgba(201,160,48,0.18)' : impactKey === 'low' ? 'rgba(20,19,15,0.10)' : 'rgba(217,119,6,0.18)'
+  const impactClr = impactKey === 'high' ? '#7a5b14' : impactKey === 'low' ? SHELL.text3 : '#7a5b14'
+  const impactBg  = impactKey === 'high' ? 'rgba(201,160,48,0.07)' : impactKey === 'low' ? 'rgba(20,19,15,0.04)' : 'rgba(201,160,48,0.08)'
+  const impactBdr = impactKey === 'high' ? 'rgba(201,160,48,0.18)' : impactKey === 'low' ? 'rgba(20,19,15,0.10)' : 'rgba(201,160,48,0.18)'
 
   const cat = action.category || categoryToNav(action.category, action.problem)
 
@@ -530,7 +530,7 @@ export function PriorityActionCard({ action, rank, total, impact, onAct, onDone,
                 {showWhy && (
                   <div style={{
                     background: 'rgba(22,163,74,0.14)',
-                    border: '1px solid rgba(5,150,105,0.14)',
+                    border: '1px solid rgba(22,163,74,0.14)',
                     borderLeft: `3px solid ${'#2d7a4f'}`,
                     borderRadius: '0 10px 10px 0',
                     padding: '11px 14px',
@@ -581,8 +581,8 @@ export function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss })
   return (
     <FeedCard
       Icon={Trophy}
-      iconColor={'#b07d1a'}
-      iconBg="rgba(217,119,6,0.10)"
+      iconColor={'#7a5b14'}
+      iconBg="rgba(201,160,48,0.10)"
       category="Milestone Unlocked"
       age={milestone.earned_age || ''}
       onDismiss={onDismiss}
@@ -602,7 +602,7 @@ export function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss })
         }}>
           <div style={{
             width: '100%', height: '100%',
-            background: 'linear-gradient(90deg, rgba(217,119,6,0.55) 0%, #d97706 100%)',
+            background: 'linear-gradient(90deg, rgba(201,160,48,0.55) 0%, #c9a030 100%)',
             borderRadius: 99,
           }}/>
         </div>
@@ -818,19 +818,19 @@ export function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = fals
 // quick wins, biggest risk) renders below when expanded.
 export function ChannelHealthFeedCard({ score, categories, weakest, children, open, onToggle, fillHeight = false, locked = false }) {
   const scoreClr =
-    score >= 75 ? '#2d7a4f' : score >= 50 ? '#b07d1a' : C.red
+    score >= 75 ? '#2d7a4f' : score >= 50 ? '#7a5b14' : C.red
   const scoreBdr =
-    score >= 75 ? 'rgba(5,150,105,0.25)' : score >= 50 ? 'rgba(217,119,6,0.22)' : 'rgba(201,160,48,0.22)'
+    score >= 75 ? 'rgba(22,163,74,0.25)' : score >= 50 ? 'rgba(201,160,48,0.22)' : 'rgba(201,160,48,0.22)'
   const scoreBg =
-    score >= 75 ? 'rgba(22,163,74,0.14)' : score >= 50 ? 'rgba(217,119,6,0.06)' : 'rgba(201,160,48,0.05)'
+    score >= 75 ? 'rgba(22,163,74,0.14)' : score >= 50 ? 'rgba(201,160,48,0.06)' : 'rgba(201,160,48,0.05)'
 
   // Map each category score to a dot color. We surface the 5 categories
   // VidIQ users instantly recognise: CTR, retention, strategy,
   // consistency, engagement. Hover reveals the label + score.
   const dotFor = (v) => {
     if (v == null) return { c: 'rgba(20,19,15,0.20)', bdr: 'rgba(20,19,15,0.20)' }
-    if (v >= 75) return { c: '#2d7a4f', bdr: 'rgba(5,150,105,0.35)' }
-    if (v >= 50) return { c: '#b07d1a', bdr: 'rgba(217,119,6,0.35)' }
+    if (v >= 75) return { c: '#2d7a4f', bdr: 'rgba(22,163,74,0.35)' }
+    if (v >= 50) return { c: '#7a5b14', bdr: 'rgba(201,160,48,0.35)' }
     return { c: C.red, bdr: 'rgba(201,160,48,0.30)' }
   }
   const dots = (categories || []).map(([label, value]) => ({ label, value, ...dotFor(value) }))
@@ -1013,7 +1013,7 @@ export function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) 
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 3,
           fontSize: 10.5, fontWeight: 700, color: '#2d7a4f',
-          background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
+          background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.22)',
           padding: '3px 8px', borderRadius: 0,
           letterSpacing: '-0.05px',
           fontVariantNumeric: 'tabular-nums',
@@ -1224,7 +1224,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
     : 'No recent uploads'
   const verdictClr = pacePerWeek >= 3 ? '#2d7a4f'
     : pacePerWeek >= 1 ? SHELL.text2
-    : '#b07d1a'
+    : '#7a5b14'
 
   const headline = currentStreak >= 7 ? `${currentStreak}-day posting streak`
     : currentStreak >= 3 ? `On a ${currentStreak}-day streak`
@@ -1343,7 +1343,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
                 title={c === 0 ? 'No upload' : c === 1 ? '1 upload' : `${c} uploads`}
                 style={{
                   aspectRatio: '1 / 1',
-                  borderRadius: 4,
+                  borderRadius: 0,
                   background: cellColor(c),
                   border: c === 0 ? '1px solid rgba(20,19,15,0.04)' : '1px solid rgba(201,160,48,0.10)',
                 }}
@@ -1354,7 +1354,7 @@ export function PostingConsistencyCard({ videos, onDismiss }) {
             <span style={{ fontSize: 10, color: SHELL.text3, fontWeight: 600, letterSpacing: '0.04em', marginRight: 4 }}>Less</span>
             {[0, 1, 2, 3].map(n => (
               <span key={n} style={{
-                width: 11, height: 11, borderRadius: 3,
+                width: 11, height: 11, borderRadius: 0,
                 background: cellColor(n),
                 border: n === 0 ? '1px solid rgba(20,19,15,0.04)' : '1px solid rgba(201,160,48,0.10)',
               }}/>
@@ -1493,7 +1493,7 @@ export function BestTimeCard({ videos, onDismiss }) {
           </p>
         </div>
         <div>
-          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Avoid</p>
+          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Avoid</p>
           <p style={{ fontSize: 16, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
             {worst ? `${DAYS_SHORT[worst.dow]} · ${formatHour12(worst.h)}` : '—'}
           </p>
@@ -1547,7 +1547,7 @@ export function BestTimeCard({ videos, onDismiss }) {
                       width: '60%',
                       height: `${Math.max(4, heightPct * 100)}%`,
                       background: isTop ? '#c9a030' : 'rgba(20,19,15,0.12)',
-                      borderRadius: 3,
+                      borderRadius: 0,
                       transition: 'height 0.6s cubic-bezier(0.34,1.56,0.64,1)',
                     }} title={`${DAYS_LONG[i]}: ${fmtNum(Math.round(avg))} avg views`}/>
                   </div>
@@ -1595,7 +1595,7 @@ export function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
           fontSize: 10.5, fontWeight: 700, color: '#2d7a4f',
-          background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
+          background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.22)',
           padding: '3px 8px', borderRadius: 0,
           letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
         }}>
@@ -1729,15 +1729,15 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
   return (
     <FeedCard
       Icon={Lightbulb}
-      iconColor={'#b07d1a'}
-      iconBg="rgba(217,119,6,0.10)"
+      iconColor={'#7a5b14'}
+      iconBg="rgba(201,160,48,0.10)"
       category="Daily Ideas"
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
           fontSize: 10.5, fontWeight: 600, color: '#2d7a4f',
-          background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
+          background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.22)',
           padding: '3px 9px', borderRadius: 0,
           letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>
@@ -1752,7 +1752,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
           letterSpacing: '-0.15px', lineHeight: 1.3, margin: 0,
         }}>Start shooting one of these today</h3>
         <span style={{
-          fontSize: 12, fontWeight: 500, color: isStale ? '#b07d1a' : 'rgba(20,19,15,0.78)',
+          fontSize: 12, fontWeight: 500, color: isStale ? '#7a5b14' : 'rgba(20,19,15,0.78)',
           letterSpacing: '-0.05px',
         }}>{subline}</span>
       </div>
@@ -1764,7 +1764,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
           const score = idea.opportunityScore != null
             ? idea.opportunityScore
             : Math.max(65, 85 - i * 4)
-          const scoreClr = score >= 80 ? '#2d7a4f' : score >= 65 ? '#b07d1a' : 'rgba(20,19,15,0.78)'
+          const scoreClr = score >= 80 ? '#2d7a4f' : score >= 65 ? '#7a5b14' : 'rgba(20,19,15,0.78)'
           return (
             <div
               key={i}
@@ -1782,7 +1782,7 @@ export function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing
               {/* Rank badge, neutral charcoal, no amber tint */}
               <div style={{
                 flexShrink: 0,
-                width: 24, height: 24, borderRadius: 7,
+                width: 24, height: 24, borderRadius: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: 'rgba(20,19,15,0.06)',
                 fontSize: 11.5, fontWeight: 600, color: SHELL.text1,
@@ -1931,7 +1931,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
   const focused = suggestions[idx]
   const score   = Math.max(0, Math.min(100, Math.round(Number(focused?.score || 0))))
   const tone    = score >= 80 ? { bg: 'rgba(22,163,74,0.16)',  text: '#2d7a4f', bdr: 'rgba(22,163,74,0.32)' }
-                : score >= 50 ? { bg: 'rgba(217,118,6,0.16)',  text: '#b07d1a', bdr: 'rgba(217,118,6,0.32)' }
+                : score >= 50 ? { bg: 'rgba(201,160,48,0.16)',  text: '#7a5b14', bdr: 'rgba(201,160,48,0.32)' }
                 :                { bg: 'rgba(201,160,48,0.13)', text: '#7a5b14', bdr: 'rgba(201,160,48,0.32)' }
   const isApplying = applyingIdx === idx
   const isApplied  = appliedIdx  === idx
@@ -1979,7 +1979,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 28, height: 28, borderRadius: 8,
+              width: 28, height: 28, borderRadius: 0,
               border: 'none', background: 'transparent',
               color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
@@ -2002,7 +2002,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
         padding: 14,
         background: 'rgba(20,19,15,0.02)',
         border: '1px solid rgba(20,19,15,0.06)',
-        borderRadius: 12,
+        borderRadius: 0,
         marginBottom: 14,
       }}>
         <div style={{ flexShrink: 0, width: thumbWidth }}>
@@ -2017,7 +2017,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
                 display: 'block',
                 width: '100%', aspectRatio: thumbAspect,
                 objectFit: 'cover',
-                borderRadius: 12,
+                borderRadius: 0,
                 background: 'rgba(20,19,15,0.06)',
                 border: '1px solid rgba(20,19,15,0.08)',
               }}
@@ -2025,7 +2025,7 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
           ) : (
             <div style={{
               width: '100%', aspectRatio: thumbAspect,
-              borderRadius: 12,
+              borderRadius: 0,
               background: 'rgba(20,19,15,0.06)',
               border: '1px solid rgba(20,19,15,0.08)',
             }}/>
@@ -2231,7 +2231,7 @@ export function MissingDescriptionCard({
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 28, height: 28, borderRadius: 8,
+              width: 28, height: 28, borderRadius: 0,
               border: 'none', background: 'transparent',
               color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
@@ -2254,7 +2254,7 @@ export function MissingDescriptionCard({
         padding: 14,
         background: 'rgba(20,19,15,0.02)',
         border: '1px solid rgba(20,19,15,0.06)',
-        borderRadius: 12,
+        borderRadius: 0,
         marginBottom: 14,
       }}>
         <div style={{ flexShrink: 0, width: thumbWidth }}>
@@ -2269,7 +2269,7 @@ export function MissingDescriptionCard({
                 display: 'block',
                 width: '100%', aspectRatio: thumbAspect,
                 objectFit: 'cover',
-                borderRadius: 12,
+                borderRadius: 0,
                 background: 'rgba(20,19,15,0.06)',
                 border: '1px solid rgba(20,19,15,0.08)',
               }}
@@ -2277,7 +2277,7 @@ export function MissingDescriptionCard({
           ) : (
             <div style={{
               width: '100%', aspectRatio: thumbAspect,
-              borderRadius: 12,
+              borderRadius: 0,
               background: 'rgba(20,19,15,0.06)',
               border: '1px solid rgba(20,19,15,0.08)',
             }}/>
@@ -2402,7 +2402,7 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
   if (!keyword) return null
   const s = Math.max(0, Math.min(100, Number(score) || 0))
   const tone = s >= 75 ? { bg: 'rgba(22,163,74,0.20)', text: '#2d7a4f', bdr: 'rgba(22,163,74,0.35)' }
-             : s >= 50 ? { bg: 'rgba(217,118,6,0.20)', text: '#b07d1a', bdr: 'rgba(217,118,6,0.35)' }
+             : s >= 50 ? { bg: 'rgba(201,160,48,0.20)', text: '#7a5b14', bdr: 'rgba(201,160,48,0.35)' }
              :          { bg: 'rgba(201,160,48,0.16)', text: '#7a5b14', bdr: 'rgba(201,160,48,0.35)' }
   const momLabel = momentum === 'active' ? 'active'
                  : momentum === 'unclaimed' ? 'unclaimed'
@@ -2436,7 +2436,7 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 28, height: 28, borderRadius: 8,
+              width: 28, height: 28, borderRadius: 0,
               border: 'none', background: 'transparent',
               color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
@@ -2459,7 +2459,7 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
         padding: 14,
         background: 'rgba(20,19,15,0.02)',
         border: '1px solid rgba(20,19,15,0.06)',
-        borderRadius: 12,
+        borderRadius: 0,
         marginBottom: 14,
       }}>
         <div style={{
@@ -2584,7 +2584,7 @@ export function MissingTagsCard({
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 28, height: 28, borderRadius: 8,
+              width: 28, height: 28, borderRadius: 0,
               border: 'none', background: 'transparent',
               color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
@@ -2606,7 +2606,7 @@ export function MissingTagsCard({
         padding: 14,
         background: 'rgba(20,19,15,0.02)',
         border: '1px solid rgba(20,19,15,0.06)',
-        borderRadius: 12,
+        borderRadius: 0,
         marginBottom: 14,
       }}>
         <div style={{ flexShrink: 0, width: thumbWidth }}>
@@ -2621,7 +2621,7 @@ export function MissingTagsCard({
                 display: 'block',
                 width: '100%', aspectRatio: thumbAspect,
                 objectFit: 'cover',
-                borderRadius: 12,
+                borderRadius: 0,
                 background: 'rgba(20,19,15,0.06)',
                 border: '1px solid rgba(20,19,15,0.08)',
               }}
@@ -2629,7 +2629,7 @@ export function MissingTagsCard({
           ) : (
             <div style={{
               width: '100%', aspectRatio: thumbAspect,
-              borderRadius: 12,
+              borderRadius: 0,
               background: 'rgba(20,19,15,0.06)',
               border: '1px solid rgba(20,19,15,0.08)',
             }}/>
@@ -2872,7 +2872,7 @@ export function UnansweredCommentCard({
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 28, height: 28, borderRadius: 8,
+              width: 28, height: 28, borderRadius: 0,
               border: 'none', background: 'transparent',
               color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
@@ -2892,7 +2892,7 @@ export function UnansweredCommentCard({
         padding: 14,
         background: 'rgba(20,19,15,0.02)',
         border: '1px solid rgba(20,19,15,0.06)',
-        borderRadius: 12,
+        borderRadius: 0,
         marginBottom: 10,
       }}>
         <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
@@ -3081,7 +3081,7 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 28, height: 28, borderRadius: 8,
+              width: 28, height: 28, borderRadius: 0,
               border: 'none', background: 'transparent',
               color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
@@ -3410,7 +3410,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 28, height: 28, borderRadius: 8,
+              width: 28, height: 28, borderRadius: 0,
               border: 'none', background: 'transparent',
               color: 'rgba(20,19,15,0.36)',
               cursor: 'pointer',
@@ -3431,7 +3431,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
           padding: '16px 18px',
           background: 'rgba(20,19,15,0.02)',
           border: '1px dashed rgba(20,19,15,0.10)',
-          borderRadius: 12,
+          borderRadius: 0,
           color: SHELL.text2,
           fontSize: 13, fontWeight: 400, lineHeight: 1.55,
           letterSpacing: '-0.01em',
@@ -3458,7 +3458,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
                 padding: 0,
                 background: 'transparent',
                 border: 'none',
-                borderRadius: 12,
+                borderRadius: 0,
                 cursor: 'pointer',
                 textAlign: 'left',
                 transition: 'transform 0.18s cubic-bezier(0.2,0.7,0.3,1)',
@@ -3479,7 +3479,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
                       display: 'block',
                       width: '100%', aspectRatio: '16 / 9',
                       objectFit: 'cover',
-                      borderRadius: 12,
+                      borderRadius: 0,
                       background: 'rgba(20,19,15,0.06)',
                       border: '1px solid rgba(20,19,15,0.08)',
                     }}
@@ -3487,7 +3487,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
                 ) : (
                   <div style={{
                     width: '100%', aspectRatio: '16 / 9',
-                    borderRadius: 12,
+                    borderRadius: 0,
                     background: 'rgba(20,19,15,0.06)',
                     border: '1px solid rgba(20,19,15,0.08)',
                   }}/>
@@ -3495,7 +3495,7 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
                 {dur && dur !== '0:00' && (
                   <span style={{
                     position: 'absolute', right: 8, bottom: 8,
-                    padding: '3px 7px', borderRadius: 6,
+                    padding: '3px 7px', borderRadius: 0,
                     background: 'rgba(0,0,0,0.82)',
                     color: '#fff',
                     fontSize: 11.5, fontWeight: 600,
@@ -3604,7 +3604,7 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
           padding: '16px 18px',
           background: 'rgba(20,19,15,0.02)',
           border: '1px dashed rgba(20,19,15,0.10)',
-          borderRadius: 12,
+          borderRadius: 0,
           color: SHELL.text2,
           fontSize: 13, fontWeight: 400, lineHeight: 1.55,
           letterSpacing: '-0.01em',
@@ -3655,7 +3655,7 @@ export function CompetitorActivityCard({ items, competitorCount, refreshing, onR
               <div style={{
                 position: 'absolute', top: 8, right: 8,
                 background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)',
-                color: '#fff', width: 22, height: 22, borderRadius: 6,
+                color: '#fff', width: 22, height: 22, borderRadius: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <ExternalLink size={11} strokeWidth={2.4}/>
@@ -3765,7 +3765,7 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
               onChange={onToggle}
               style={{ width: 15, height: 15, accentColor: '#2d7a4f', cursor: 'pointer', flexShrink: 0 }}
             />
-            <div style={{ width: 26, height: 26, borderRadius: 8, background: checked ? 'rgba(22,163,74,0.14)' : color, border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 26, height: 26, borderRadius: 0, background: checked ? 'rgba(22,163,74,0.14)' : color, border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {checked
                 ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={'#2d7a4f'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
                 : <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
@@ -3825,7 +3825,7 @@ export function InsightCard({ insight, index, checked, onToggle, onDelete, onNav
 
             {/* Expected outcome */}
             {insight.expectedOutcome
-              ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 0, padding: '12px 14px' }}>
+              ? <div style={{ background: 'rgba(22,163,74,0.07)', border: '1px solid rgba(22,163,74,0.14)', borderRadius: 0, padding: '12px 14px' }}>
                   <p style={{ fontSize: 10, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
                   <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.72 }}>{insight.expectedOutcome}</p>
                 </div>
