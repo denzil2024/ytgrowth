@@ -37,11 +37,11 @@ import {
 /* Geist, already the chosen face across the redesigned surfaces. Same
    class of neutral grotesque VidIQ renders, so the type reads calm and
    modern without adding a new dependency. */
-if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-geist-font')) {
+if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-editorial-font')) {
   const link = document.createElement('link')
-  link.id = 'ytg-chat-geist-font'
+  link.id = 'ytg-chat-editorial-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
   document.head.appendChild(link)
 }
 
@@ -62,8 +62,8 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     .md-list-ul > li { padding-left: 20px; }
     .md-list-ul > li::before {
       content: ''; position: absolute; left: 4px; top: 11px;
-      width: 4px; height: 4px; border-radius: 100px;
-      background: rgba(20,19,15,0.36);
+      width: 4px; height: 4px; border-radius: 0;
+      background: #c9a030;
     }
     /* Numbered list, plain digit with a period. No badge pill;
        the structure carries itself via the indent. */
@@ -71,7 +71,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     .md-list-ol > li::before {
       content: counter(mdlist) '.';
       position: absolute; left: 0; top: 0;
-      color: rgba(20,19,15,0.55);
+      color: #7a5b14;
       font-size: 14px; font-weight: 600;
       font-variant-numeric: tabular-nums; line-height: inherit;
     }
@@ -80,7 +80,9 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
 }
 
 const FONT_STACK = "'Barlow', system-ui, -apple-system, sans-serif"
-const FONT_MONO  = "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
+const FONT_SERIF = "'Cormorant Garamond', Georgia, serif"
+const FONT_COND  = "'Barlow Condensed', sans-serif"
+const FONT_MONO  = "ui-monospace, SFMono-Regular, Menlo, monospace"
 
 /* ─── One neutral-zinc dark system. Three surface steps, a five-step
        text ramp, and brand red used in exactly two places: the enabled
@@ -158,7 +160,7 @@ const MARKDOWN_COMPONENTS = {
         <pre style={{
           margin: '10px 0 14px 0', padding: '12px 14px',
           background: 'rgba(20,19,15,0.04)', border: `1px solid ${C.hair}`,
-          borderRadius: 10, fontSize: 13, fontFamily: FONT_MONO,
+          borderRadius: 0, fontSize: 13, fontFamily: FONT_MONO,
           lineHeight: 1.6, color: C.t2, overflow: 'auto',
         }}><code>{children}</code></pre>
       )
@@ -168,11 +170,11 @@ const MARKDOWN_COMPONENTS = {
       // on a neutral chip, sparingly enough that only the keyword
       // tokens carry color, not the whole chip background.
       <code style={{
-        fontFamily: FONT_STACK, fontSize: '0.94em', fontWeight: 500,
-        color: '#f0a23b', letterSpacing: 'inherit',
-        background: 'rgba(20,19,15,0.05)',
-        border: `1px solid ${C.hair}`,
-        borderRadius: 6,
+        fontFamily: FONT_STACK, fontSize: '0.94em', fontWeight: 600,
+        color: '#7a5b14', letterSpacing: 'inherit',
+        background: 'rgba(201,160,48,0.10)',
+        border: `1px solid rgba(201,160,48,0.24)`,
+        borderRadius: 0,
         padding: '1px 6px',
       }}>{children}</code>
     )
@@ -182,7 +184,7 @@ const MARKDOWN_COMPONENTS = {
   blockquote: ({ children }) => (
     <blockquote style={{
       margin: '10px 0 14px 0', padding: '2px 0 2px 14px',
-      borderLeft: '2px solid #34d27b', color: C.t2, fontWeight: 400,
+      borderLeft: '2px solid #2d7a4f', color: C.t2, fontWeight: 400,
     }}>{children}</blockquote>
   ),
   // Section headers, plain bold, generous top gap so each section
@@ -424,11 +426,9 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
       style={{
         display: 'flex', flexDirection: 'column',
         background: C.raised,
-        border: `1px solid ${composerFocus ? C.hairStrong : C.hair}`,
-        borderRadius: 16, padding: '16px 16px 12px 20px',
-        boxShadow: composerFocus
-          ? '0 0 0 4px rgba(20,19,15,0.025), 0 10px 30px -12px rgba(0,0,0,0.5)'
-          : '0 6px 22px -14px rgba(0,0,0,0.5)',
+        border: `1px solid ${composerFocus ? 'rgba(201,160,48,0.45)' : C.hair}`,
+        borderRadius: 0, padding: '16px 16px 12px 20px',
+        boxShadow: composerFocus ? '0 0 0 3px rgba(201,160,48,0.10)' : 'none',
         transition: `border-color 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
       }}
     >
@@ -478,16 +478,16 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
             aria-label="Send message"
             style={{
               flexShrink: 0,
-              width: 38, height: 38, borderRadius: 999,
+              width: 38, height: 38, borderRadius: 0,
               border: 'none',
               background: isOff ? 'rgba(20,19,15,0.05)' : C.red,
-              color: isOff ? C.t5 : '#fff',
+              color: isOff ? C.t5 : 'var(--yd-on-gold)',
               cursor: isOff ? 'default' : 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              transition: `background 160ms ${C.spring}, filter 160ms ${C.spring}, transform 160ms ${C.spring}`,
+              transition: `background 160ms ${C.spring}, filter 160ms ${C.spring}`,
             }}
-            onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'scale(1.05)' } }}
-            onMouseLeave={e => { if (!isOff) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'scale(1)' } }}
+            onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.08)' } }}
+            onMouseLeave={e => { if (!isOff) { e.currentTarget.style.filter = 'none' } }}
           >
             <Send size={15} strokeWidth={2.1} />
           </button>
@@ -502,7 +502,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
       marginBottom: 12,
       background: 'rgba(201,160,48,0.09)',
       border: `1px solid rgba(201,160,48,0.22)`,
-      borderRadius: 12, padding: '10px 14px',
+      borderRadius: 0, padding: '10px 14px',
     }}>
       <p style={{ fontSize: 13, color: C.redText, fontWeight: 400, flex: 1, lineHeight: 1.5, letterSpacing: '-0.005em' }}>
         {sendError}
@@ -513,7 +513,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
           onClick={() => onNavigate?.('Settings')}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
-            padding: '7px 13px', borderRadius: 10,
+            padding: '7px 13px', borderRadius: 0,
             border: 'none', cursor: 'pointer',
             background: C.red, color: 'var(--yd-on-gold)',
             fontFamily: 'inherit', fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
@@ -553,7 +553,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
           style={{
             position: 'absolute', top: 14, right: 18, zIndex: 5,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 32, height: 32, borderRadius: 9,
+            width: 32, height: 32, borderRadius: 0,
             border: `1px solid ${C.hair}`, background: C.base, cursor: 'pointer',
             color: C.t3,
             transition: `color 140ms ${C.spring}, border-color 140ms ${C.spring}`,
@@ -580,7 +580,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
         <div style={{
           margin: 'auto', maxWidth: 420,
           background: 'rgba(201,160,48,0.09)', border: `1px solid rgba(201,160,48,0.22)`,
-          borderRadius: 12, padding: '14px 18px',
+          borderRadius: 0, padding: '14px 18px',
         }}>
           <p style={{ fontSize: 14, color: C.redText, fontWeight: 400, letterSpacing: '-0.005em' }}>
             {state.error}
@@ -598,9 +598,10 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
               }}>
                 <div style={{ width: '100%', maxWidth: 680, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <p className="ytg-fade-up" style={{
-                    fontSize: 30, fontWeight: 600, color: '#f4f4f5',
-                    letterSpacing: '-0.022em', lineHeight: 1.15,
-                    textAlign: 'center', margin: '0 0 9px',
+                    fontFamily: FONT_SERIF,
+                    fontSize: 42, fontWeight: 500, color: C.t1,
+                    letterSpacing: '-0.01em', lineHeight: 1.1,
+                    textAlign: 'center', margin: '0 0 10px',
                     animation: `ytgFadeUp 0.45s ${C.spring} both`, animationDelay: '40ms',
                   }}>Where should we start?</p>
                   <p className="ytg-fade-up" style={{
@@ -639,7 +640,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
                           onClick={() => send(p.label)}
                           style={{
                             display: 'inline-flex', alignItems: 'center', gap: 7,
-                            padding: '9px 16px', borderRadius: 999,
+                            padding: '9px 16px', borderRadius: 0,
                             background: 'rgba(20,19,15,0.025)',
                             border: `1px solid ${C.hair}`,
                             color: C.t3, fontFamily: 'inherit',
@@ -723,9 +724,9 @@ function Avatar() {
   return (
     <span style={{
       flexShrink: 0,
-      width: 32, height: 32, borderRadius: 9,
+      width: 32, height: 32, borderRadius: 0,
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      background: C.raised, border: `1px solid ${C.hair}`, color: C.t3,
+      background: C.raised, border: `1px solid ${C.hair}`, color: '#c9a030',
     }}>
       <Sparkles size={16} strokeWidth={1.8} />
     </span>
@@ -745,15 +746,15 @@ function Message({ role, content, sources }) {
       <div className="ytg-fade-up" style={{ display: 'flex', justifyContent: 'flex-end', ...fadeUp }}>
         <div style={{
           maxWidth: '76%',
-          background: C.raised,
-          border: `1px solid ${C.hair}`,
+          background: 'rgba(201,160,48,0.06)',
+          borderLeft: '2px solid #c9a030',
           color: C.t1,
-          borderRadius: '14px 14px 4px 14px',
-          padding: '12px 16px',
+          borderRadius: 0,
+          padding: '10px 16px',
           fontFamily: FONT_STACK,
           fontSize: 15, fontWeight: 400, letterSpacing: '-0.006em', lineHeight: 1.6,
           whiteSpace: 'pre-wrap',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.30), inset 0 1px 0 rgba(20,19,15,0.04)',
+          boxShadow: 'none',
         }}>{content}</div>
       </div>
     )
@@ -765,15 +766,16 @@ function Message({ role, content, sources }) {
         <AssistantBody text={content} />
         {sources && sources.length > 0 && (
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            marginTop: 12,
-            padding: '4px 10px',
+            display: 'inline-flex', alignItems: 'center', gap: 7,
+            marginTop: 14,
+            padding: '4px 11px',
             background: 'rgba(20,19,15,0.04)',
             border: `1px solid ${C.hair}`,
-            borderRadius: 100,
-            fontSize: 11.5, color: C.t3, fontWeight: 500, letterSpacing: '-0.005em',
+            borderRadius: 0,
+            fontFamily: FONT_COND, textTransform: 'uppercase', letterSpacing: '0.05em',
+            fontSize: 11.5, color: C.t3, fontWeight: 600,
           }}>
-            <Database size={11} strokeWidth={1.8} />
+            <Database size={11} strokeWidth={1.8} color="#c9a030" />
             <span>{sources.join('  ·  ')}</span>
           </div>
         )}
