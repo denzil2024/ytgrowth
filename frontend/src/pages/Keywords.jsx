@@ -12,14 +12,17 @@ function saveToDisk(keyword, result) {
   try { localStorage.setItem(LS_KEY, JSON.stringify({ keyword, result })) } catch {}
 }
 
-/* ─── Geist loaded page-scoped, matches Chat + Competitors. ──────────── */
-if (typeof document !== 'undefined' && !document.getElementById('kw-geist-font')) {
+/* ─── Editorial app fonts, page-scoped. Cormorant = display H1 + big numbers,
+       Barlow = body/UI, Barlow Condensed = labels/buttons. ──────────── */
+if (typeof document !== 'undefined' && !document.getElementById('kw-editorial-font')) {
   const link = document.createElement('link')
-  link.id = 'kw-geist-font'
+  link.id = 'kw-editorial-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
   document.head.appendChild(link)
 }
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const COND  = "'Barlow Condensed', sans-serif"
 
 /* ─── Styles, system elevation, hairline borders, 14px card radius.
        Matches the Competitors / Chat design grammar (Geist, centered
@@ -43,7 +46,7 @@ function useKwStyles() {
       .kw-card {
         background: ${C.card};
         border: 1px solid ${C.hair};
-        border-radius: 14px;
+        border-radius: 0;
         overflow: hidden;
         box-shadow: ${C.cardShadow};
         transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
@@ -71,8 +74,8 @@ function useKwStyles() {
       .kw-modal {
         background: ${C.bg};
         border: 1px solid ${C.hair};
-        border-radius: 20px;
-        box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+        border-radius: 0;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.18);
         width: 100%; max-width: 1040px;
         max-height: calc(100vh - 64px);
         overflow: auto;
@@ -85,7 +88,7 @@ function useKwStyles() {
 
       .kw-input {
         flex: 1; padding: 12px 20px;
-        border-radius: 100px; border: 1px solid ${C.hair};
+        border-radius: 0; border: 1px solid ${C.hair};
         background: ${C.surfaceInput}; font-size: 14px; font-weight: 500;
         font-family: 'Barlow', system-ui, sans-serif;
         outline: none;
@@ -99,17 +102,17 @@ function useKwStyles() {
       }
 
       .kw-btn-primary {
-        background: linear-gradient(180deg, #d4af3f 0%, #c9a030 100%);
-        color: #fff; border: none; border-radius: 100px;
-        padding: 12px 22px; font-size: 13px; font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
+        background: #c9a030;
+        color: var(--yd-on-gold); border: none; border-radius: 0;
+        padding: 12px 22px; font-size: 12px; font-weight: 600;
+        font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
         cursor: pointer; white-space: nowrap;
-        transition: filter 160ms cubic-bezier(0.32, 0.72, 0, 1), transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
-        letter-spacing: -0.01em;
-        box-shadow: 0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22);
+        transition: filter 160ms cubic-bezier(0.32, 0.72, 0, 1);
+        letter-spacing: 0.06em;
+        box-shadow: none;
         display: inline-flex; align-items: center; gap: 8px;
       }
-      .kw-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      .kw-btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
       .kw-btn-primary:disabled {
         background: rgba(20,19,15,0.06);
         color: ${C.text3};
@@ -119,9 +122,9 @@ function useKwStyles() {
 
       .kw-btn-ghost {
         background: ${C.card}; color: ${C.text2};
-        border: 1px solid ${C.hair}; border-radius: 100px;
-        padding: 11px 18px; font-size: 13px; font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
+        border: 1px solid ${C.hair}; border-radius: 0;
+        padding: 11px 18px; font-size: 12px; font-weight: 600;
+        font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.06em;
         cursor: pointer; white-space: nowrap;
         transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1), color 160ms cubic-bezier(0.32, 0.72, 0, 1), border-color 160ms cubic-bezier(0.32, 0.72, 0, 1);
         letter-spacing: -0.01em;
@@ -137,7 +140,7 @@ function useKwStyles() {
          (Research) and threat/score accents, never tab chrome. */
       .kw-tab-btn {
         padding: 8px 16px;
-        border-radius: 100px;
+        border-radius: 0;
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
@@ -166,7 +169,7 @@ function useKwStyles() {
       .kw-report-header {
         background: ${C.card};
         border: 1px solid ${C.hair};
-        border-radius: 14px;
+        border-radius: 0;
         box-shadow: ${C.cardShadow};
         padding: 18px 22px;
         display: flex; align-items: center; gap: 16px;
@@ -180,7 +183,7 @@ function useKwStyles() {
       }
       .kw-report-remove {
         position: absolute; top: 12px; right: 12px;
-        width: 28px; height: 28px; border-radius: 8px;
+        width: 28px; height: 28px; border-radius: 0;
         border: 1px solid transparent; background: transparent;
         color: ${C.text3}; cursor: pointer;
         display: flex; align-items: center; justify-content: center;
@@ -195,20 +198,20 @@ function useKwStyles() {
         color: #c9a030;
       }
       .kw-report-cta {
-        background: #c9a030; color: #fff;
-        border: 1px solid #c9a030; border-radius: 100px;
-        padding: 8px 18px; font-size: 12.5px; font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
+        background: #c9a030; color: var(--yd-on-gold);
+        border: 1px solid #c9a030; border-radius: 0;
+        padding: 9px 18px; font-size: 12px; font-weight: 600;
+        font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.06em;
         cursor: pointer; white-space: nowrap;
         transition: filter 0.15s;
         display: flex; align-items: center; gap: 6px;
-        box-shadow: 0 1px 3px rgba(201,160,48,0.20), 0 4px 14px rgba(201,160,48,0.25);
+        box-shadow: none;
       }
       .kw-report-cta:hover { filter: brightness(1.07); }
       .kw-report-chip {
         display: inline-flex; align-items: baseline; gap: 5px;
         background: ${C.amberBg}; border: 1px solid ${C.amberBdr};
-        border-radius: 100px; padding: 4px 12px;
+        border-radius: 0; padding: 4px 12px;
       }
       .kw-report-chip .val { font-size: 12px; font-weight: 600; color: ${C.text1}; }
       .kw-report-chip .lbl { font-size: 11px; color: ${C.amberHi}; font-weight: 600; }
@@ -219,9 +222,9 @@ function useKwStyles() {
         display: flex; align-items: center; gap: 14px;
         padding: 16px 18px;
         border: 1px solid ${C.hair};
-        border-radius: 12px;
+        border-radius: 0;
         cursor: pointer; background: ${C.card};
-        box-shadow: ${C.cardShadow};
+        box-shadow: none;
         transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1),
                     border-color 160ms cubic-bezier(0.32, 0.72, 0, 1),
                     box-shadow 160ms cubic-bezier(0.32, 0.72, 0, 1),
@@ -242,14 +245,14 @@ function useKwStyles() {
       .kw-intent-decide-btn {
         display: inline-flex; align-items: center; gap: 6px;
         margin-top: 16px;
-        padding: 7px 14px;
-        font-size: 12.5px; font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
-        letter-spacing: -0.01em;
+        padding: 8px 14px;
+        font-size: 12px; font-weight: 600;
+        font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
+        letter-spacing: 0.06em;
         color: ${C.text2};
         background: transparent;
         border: 1px solid ${C.hair};
-        border-radius: 100px;
+        border-radius: 0;
         cursor: pointer;
         transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
       }
@@ -265,10 +268,10 @@ function useKwStyles() {
          "take action now" moment across the app. */
       .kw-copy-btn {
         display: inline-flex; align-items: center; gap: 6px;
-        padding: 8px 16px; border-radius: 100px;
-        font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
-        font-family: 'Barlow', system-ui, sans-serif;
-        background: #c9a030; color: #fff;
+        padding: 9px 16px; border-radius: 0;
+        font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+        font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
+        background: #c9a030; color: var(--yd-on-gold);
         border: none; cursor: pointer;
         transition: filter 0.15s;
       }
@@ -285,9 +288,9 @@ function useKwStyles() {
          action repeated 5x so it stays quiet but tactile. */
       .kw-ghost-btn {
         display: inline-flex; align-items: center; gap: 6px;
-        padding: 7px 15px; border-radius: 100px;
-        font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
-        font-family: 'Barlow', system-ui, sans-serif;
+        padding: 8px 15px; border-radius: 0;
+        font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+        font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase;
         background: ${C.card}; color: ${C.text1};
         border: 1px solid ${C.hair}; cursor: pointer;
         box-shadow: ${C.cardShadow};
@@ -305,8 +308,8 @@ function useKwStyles() {
         transform: none;
       }
 
-      .kw-bar { height: 4px; border-radius: 4px; background: rgba(20,19,15,0.10); overflow: hidden; }
-      .kw-bar-fill { height: 4px; border-radius: 4px; transition: width 0.5s ease; }
+      .kw-bar { height: 4px; border-radius: 0; background: rgba(20,19,15,0.10); overflow: hidden; }
+      .kw-bar-fill { height: 4px; border-radius: 0; transition: width 0.5s ease; }
 
       .kw-spinner { width: 14px; height: 14px; border: 2px solid rgba(20,19,15,0.3); border-top-color: #fff; border-radius: 50%; animation: kwSpin 0.7s linear infinite; flex-shrink: 0; }
     `
@@ -324,8 +327,8 @@ function useKwStyles() {
 const C = {
   red:     '#c9a030', redBg:   'rgba(201,160,48,0.13)', redBdr:   'rgba(201,160,48,0.32)',
   green:   '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)',
-  amber:   '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)',
-  redHi:   '#7a5b14', greenHi: '#2d7a4f', amberHi: '#b07d1a',
+  amber:   '#c9a030', amberBg: 'rgba(201,160,48,0.13)', amberBdr: 'rgba(201,160,48,0.32)',
+  redHi:   '#7a5b14', greenHi: '#2d7a4f', amberHi: '#7a5b14',
   text1:   '#14130f',
   text2:   '#6b6862',
   text3:   '#6b6862',
@@ -341,8 +344,8 @@ const C = {
   hairHi:         'rgba(20,19,15,0.16)',
   wash:           'rgba(20,19,15,0.04)',
   washActive:     'rgba(20,19,15,0.06)',
-  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
-  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+  cardShadow:     'none',
+  cardShadowLift: 'none',
 }
 
 // Intent matching, semantic mapping within the strict palette:
@@ -373,7 +376,7 @@ function MomentumBadge({ momentum }) {
       fontSize: 10.5, fontWeight: 600,
       color: config.color, background: config.bg,
       border: `1px solid ${config.bdr}`,
-      borderRadius: 100, padding: '2px 8px',
+      borderRadius: 0, padding: '2px 8px',
       letterSpacing: '0.10em', textTransform: 'uppercase',
       flexShrink: 0,
     }}>{config.label}</span>
@@ -419,11 +422,11 @@ function KwDetailModal({ kw, C, onClose }) {
                 {kw.opportunityScore}/100
               </span>
               <button onClick={copyKeyword}
-                style={{ fontSize: 12, color: copied ? C.green : C.text2, background: C.cardFlat, border: `1px solid ${copied ? C.greenBdr : C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                style={{ fontSize: 12, color: copied ? C.green : C.text2, background: C.cardFlat, border: `1px solid ${copied ? C.greenBdr : C.border}`, borderRadius: 0, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: 'none' }}>
                 {copied ? 'Copied' : 'Copy keyword'}
               </button>
               <button onClick={onClose}
-                style={{ fontSize: 12, color: C.text3, background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                style={{ fontSize: 12, color: C.text3, background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 0, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: 'none' }}>
                 Close ✕
               </button>
             </div>
@@ -483,7 +486,7 @@ function KwDetailModal({ kw, C, onClose }) {
                         onClick={e => { if (!ytUrl) e.preventDefault() }}
                         style={{
                           display: 'block', textDecoration: 'none', color: 'inherit',
-                          borderRadius: 10, overflow: 'hidden',
+                          borderRadius: 0, overflow: 'hidden',
                           border: '1px solid rgba(20,19,15,0.08)', background: C.cardFlat,
                           transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
                         }}
@@ -522,7 +525,7 @@ function KwDetailModal({ kw, C, onClose }) {
                               position: 'absolute', bottom: 8, right: 8,
                               background: 'rgba(0,0,0,0.82)', color: '#fff',
                               fontSize: 11.5, fontWeight: 600,
-                              padding: '3px 7px', borderRadius: 5,
+                              padding: '3px 7px', borderRadius: 0,
                               fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
                               backdropFilter: 'blur(2px)',
                             }}>{fmtCompact(v.views)}</span>
@@ -557,11 +560,11 @@ function KwDetailModal({ kw, C, onClose }) {
           })()}
 
           {/* 3-col playbook, exact Outliers pattern (blue / amber / green) */}
-          <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
+          <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 0, padding: '20px 22px' }}>
             <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 16 }}>Keyword playbook</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
               {/* Blue, Why it works (numbered list, mirrors Quick actions) */}
-              <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+              <div style={{ background: 'rgba(20,19,15,0.04)', border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0, padding: '12px 14px' }}>
                 <p style={{ fontSize: 11, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {buildWhyItWorks(kw).map((s, i) => (
@@ -573,19 +576,19 @@ function KwDetailModal({ kw, C, onClose }) {
                 </ul>
               </div>
               {/* Amber, Quick actions (numbered list) */}
-              <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: '#b07d1a', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
+              <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: 0, padding: '12px 14px', boxShadow: 'none' }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#7a5b14', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {actions.map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: '#b07d1a', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#7a5b14', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                       <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               {/* Green, Why now */}
-              <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+              <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 0, padding: '12px 14px' }}>
                 <p style={{ fontSize: 11, fontWeight: 600, color: '#2d7a4f', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
                 <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.005em' }}>{buildWhyNow(kw)}</p>
               </div>
@@ -708,11 +711,11 @@ function VideoMetricsRow({ vph, outlierMult }) {
   const isStrong = outlierMult && outlierMult >= 3
   const outlierTone = isStrong
     ? { color: '#2d7a4f', bg: C.greenBg, bdr: C.greenBdr, label: 'Outlier' }
-    : { color: '#b07d1a', bg: C.amberBg, bdr: C.amberBdr, label: 'Above avg' }
+    : { color: '#7a5b14', bg: C.amberBg, bdr: C.amberBdr, label: 'Above avg' }
 
   const chipBase = {
     display: 'inline-flex', alignItems: 'center',
-    fontSize: 11, borderRadius: 100,
+    fontSize: 11, borderRadius: 0,
     padding: '3px 4px 3px 10px',
     fontVariantNumeric: 'tabular-nums',
     border: '1px solid',
@@ -725,7 +728,7 @@ function VideoMetricsRow({ vph, outlierMult }) {
   const valuePill = (color) => ({
     fontWeight: 600, color: C.text1,
     background: C.cardFlat, border: `1px solid ${color}40`,
-    borderRadius: 100, padding: '1px 8px',
+    borderRadius: 0, padding: '1px 8px',
     fontSize: 11, letterSpacing: '-0.01em',
   })
 
@@ -780,7 +783,7 @@ function MomentumChart({ timeline, height = 120 }) {
   const back  = counts.slice(half).reduce((a, b) => a + b, 0)
   const rising = back >= front
   const color = rising ? C.green : C.amber
-  const fillColor = rising ? 'rgba(22,163,74,0.10)' : 'rgba(217,119,6,0.10)'
+  const fillColor = rising ? 'rgba(22,163,74,0.10)' : 'rgba(201,160,48,0.10)'
 
   const xFor = i => padL + (i * innerW) / (n - 1)
   const yFor = c => padT + innerH - (c / maxCount) * innerH
@@ -869,7 +872,7 @@ function ScoreRing({ score }) {
           style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 28, fontWeight: 700, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+        <span style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 500, color, letterSpacing: '-0.01em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
         <span style={{ fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', marginTop: 2 }}>/100</span>
       </div>
     </div>
@@ -1030,7 +1033,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           darker so it doesn't disappear on light backgrounds. Matches
           Competitors. */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', marginBottom: 6, lineHeight: 1.12 }}>
           Keyword Research
         </h1>
         <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
@@ -1059,7 +1062,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
       {gated && (
         <div style={{
           background: 'rgba(201,160,48,0.06)', border: '1px solid rgba(201,160,48,0.2)',
-          borderRadius: 12, padding: '12px 16px', marginBottom: 14,
+          borderRadius: 0, padding: '12px 16px', marginBottom: 14,
           display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: C.text1,
         }}>
           <span style={{ flex: 1 }}>
@@ -1093,7 +1096,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
       {/* Error */}
       {error && (
         <div style={{
-          background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
+          background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 0,
           padding: '10px 14px', marginBottom: 14, color: '#7a5b14', fontSize: 14,
         }}>
           {error}
@@ -1136,7 +1139,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         fontSize: 11, fontWeight: 600,
                         color: C.green, background: C.greenBg,
                         border: `1px solid ${C.greenBdr}`,
-                        padding: '2px 9px', borderRadius: 100,
+                        padding: '2px 9px', borderRadius: 0,
                         fontVariantNumeric: 'tabular-nums',
                         letterSpacing: '-0.02em',
                       }}>{opt.keyword}</span>
@@ -1207,9 +1210,9 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
             return (
               <div style={{
-                background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 16,
+                background: C.cardFlat, border: '1px solid rgba(20,19,15,0.08)', borderRadius: 0,
                 padding: '28px 32px',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+                boxShadow: 'none',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
 
@@ -1225,14 +1228,14 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   </div>
 
                   {/* Amber 3px divider, matches Title Scorecard */}
-                  <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 2 }}/>
+                  <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 0 }}/>
 
                   {/* MIDDLE, AI verdict paragraph */}
                   <div style={{ flex: 1.3, minWidth: 0 }}>
                     <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
                       AI verdict
                     </p>
-                    <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.75, letterSpacing: '-0.005em' }}>
+                    <p style={{ fontSize: 14, fontWeight: 400, color: C.text1, lineHeight: 1.75, letterSpacing: '-0.005em' }}>
                       Your strongest keyword is <span style={{ fontWeight: 600, color: C.text1 }}>{result.topPick.keyword}</span> at <span style={{ fontWeight: 600, color: scoreCol }}>{topScore}/100</span>. {result.topPick.whyThisOne}
                       {result.seedIntent?.intentSummary && <> {result.seedIntent.intentSummary}</>}
                     </p>
@@ -1240,7 +1243,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
                   {/* Second amber divider */}
                   {rows.length > 0 && (
-                    <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 2 }}/>
+                    <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 0 }}/>
                   )}
 
                   {/* RIGHT, Intent breakdown rows */}
@@ -1261,7 +1264,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                               fontSize: 11, fontWeight: 600,
                               color: tone, background: toneBg,
                               border: `1px solid ${toneBdr}`,
-                              borderRadius: 100, padding: '2px 10px',
+                              borderRadius: 0, padding: '2px 10px',
                               letterSpacing: '0.08em', textTransform: 'uppercase',
                               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                             }}>{val}</span>
@@ -1338,9 +1341,9 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         onClick={e => { if (!ytUrl) e.preventDefault() }}
                         style={{
                           display: 'block', textDecoration: 'none', color: 'inherit',
-                          borderRadius: 12, overflow: 'hidden',
+                          borderRadius: 0, overflow: 'hidden',
                           border: '1px solid rgba(20,19,15,0.08)', background: C.cardFlat,
-                          boxShadow: '0 1px 2px rgba(15,15,25,0.04)',
+                          boxShadow: 'none',
                           transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
                         }}
                         onMouseEnter={e => {
@@ -1378,7 +1381,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                               position: 'absolute', bottom: 8, right: 8,
                               background: 'rgba(0,0,0,0.82)', color: '#fff',
                               fontSize: 11.5, fontWeight: 600,
-                              padding: '3px 7px', borderRadius: 5,
+                              padding: '3px 7px', borderRadius: 0,
                               fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
                               backdropFilter: 'blur(2px)',
                             }}>{fmtCompact(v.views)}</span>
@@ -1460,7 +1463,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
               <div style={{ marginBottom: 14, marginTop: 32 }}>
                 <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 4 }}>Ranked keywords</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Click any keyword for the playbook · <span style={{ color: '#2d7a4f', fontWeight: 600 }}>ACTIVE</span> = rising · <span style={{ color: '#b07d1a', fontWeight: 600 }}>OPEN</span> = underclaimed
+                  Click any keyword for the playbook · <span style={{ color: '#2d7a4f', fontWeight: 600 }}>ACTIVE</span> = rising · <span style={{ color: '#7a5b14', fontWeight: 600 }}>OPEN</span> = underclaimed
                 </p>
               </div>
 
@@ -1471,7 +1474,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                       <span style={{
                         fontSize: 11, fontWeight: 600, color: C.text3,
                         background: 'var(--yd-surface)', padding: '2px 8px',
-                        borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)',
+                        borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)',
                         fontVariantNumeric: 'tabular-nums',
                       }}>{result.keywords.length}</span>
                       <p style={{ fontSize: 13, fontWeight: 500, color: C.text2, lineHeight: 1.5, letterSpacing: '-0.01em' }}>
@@ -1585,7 +1588,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                             <span style={{
                               fontSize: 11, fontWeight: 600, color: C.text3,
                               background: 'var(--yd-surface)', padding: '2px 8px',
-                              borderRadius: 20, border: '1px solid rgba(20,19,15,0.08)',
+                              borderRadius: 0, border: '1px solid rgba(20,19,15,0.08)',
                               flexShrink: 0, fontVariantNumeric: 'tabular-nums',
                             }}>{cl.keywords?.length || 0}</span>
                           </div>
@@ -1600,7 +1603,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                                 background: C.greenBg,
                                 border: `1px solid ${C.greenBdr}`,
                                 color: '#2d7a4f',
-                                padding: '4px 11px', borderRadius: 100,
+                                padding: '4px 11px', borderRadius: 0,
                                 fontSize: 11.5, fontWeight: 500, letterSpacing: '-0.05px',
                               }}>{k}</span>
                             ))}
@@ -1631,7 +1634,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         {!isLast && (
                           <div style={{
                             width: 3, alignSelf: 'stretch',
-                            background: C.amber, flexShrink: 0, borderRadius: 2,
+                            background: C.amber, flexShrink: 0, borderRadius: 0,
                           }}/>
                         )}
                       </React.Fragment>
@@ -1665,7 +1668,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           ) : reports.length === 0 ? (
             <div style={{
               padding: '56px 24px', textAlign: 'center',
-              background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16,
+              background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 0,
               boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
             }}>
               <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
