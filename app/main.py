@@ -358,6 +358,13 @@ def _rebrand_channelbrain(html: str) -> str:
     html = html.replace("YTGrowth", "ChannelBrain")
     # Canonical / OG / schema URLs point at the ChannelBrain host.
     html = html.replace("https://ytgrowth.io", "https://channelbrain.online")
+    # Logo/home-link accessible name — Google reads this as the home page's app
+    # name, so it must say ChannelBrain (lowercase, missed by the swaps above).
+    html = html.replace('aria-label="ytgrowth home"', 'aria-label="ChannelBrain home"')
+    # Visible browser-mockup URL labels on the landing ("ytgrowth.io / audit"…).
+    # Leading ">" targets the span text only, never the isProd host check or the
+    # external social links (facebook/x/producthunt stay on the real accounts).
+    html = html.replace(">ytgrowth.io /", ">channelbrain.online /")
     # Favicon intentionally NOT swapped — ChannelBrain reuses the ytgrowth
     # growth mark (favicon.png), per the user's preference over the brain icon.
     return html
