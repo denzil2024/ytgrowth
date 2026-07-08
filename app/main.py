@@ -2,7 +2,7 @@ import os
 import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -330,14 +330,48 @@ def _static_cache_control(suffix: str) -> str | None:
     return None
 
 
+# ── ChannelBrain host rebrand ────────────────────────────────────────────────
+# channelbrain.online is the OAuth-client / dashboard brand (Google reviews the
+# consent screen, which must match the app's home page name). The SAME app
+# serves both domains, so when the request Host is channelbrain.online we
+# rebrand the served HTML from YTGrowth to ChannelBrain. This is HOST-GATED:
+# ytgrowth.io responses are never touched and serve byte-identical HTML.
+def _host_is_channelbrain(request: Request) -> bool:
+    host = (
+        request.headers.get("x-forwarded-host")
+        or request.headers.get("host")
+        or ""
+    ).split(",")[0].strip().lower()
+    return host == "channelbrain.online" or host.endswith(".channelbrain.online")
+
+
+def _rebrand_channelbrain(html: str) -> str:
+    """YTGrowth → ChannelBrain for the channelbrain.online host only.
+    Satisfies Google's requirement that the OAuth app's home page identifies
+    as 'ChannelBrain'. ytgrowth.io HTML never passes through here."""
+    # Visible wordmark: BrandLockup bakes "yt | growth .io" as separate span
+    # text nodes. Rewrite the text nodes so it reads "Channel | Brain".
+    html = html.replace(">yt</span>", ">Channel</span>")
+    html = html.replace(">growth</span>", ">Brain</span>")
+    html = html.replace(">.io</span>", "></span>")
+    # Product-name mentions in copy, FAQ, footer, alt text, JSON-LD.
+    html = html.replace("YTGrowth", "ChannelBrain")
+    # Canonical / OG / schema URLs point at the ChannelBrain host.
+    html = html.replace("https://ytgrowth.io", "https://channelbrain.online")
+    # Browser-tab favicon → ChannelBrain mark.
+    html = html.replace('href="/favicon.png"', 'href="/channelbrain-favicon.png"')
+    return html
+
+
 @app.get("/{full_path:path}")
-def serve_frontend(full_path: str):
+def serve_frontend(full_path: str, request: Request):
     file = DIST / full_path
     if file.is_file():
         cache = _static_cache_control(file.suffix)
         if cache:
             return FileResponse(file, headers={"Cache-Control": cache})
         return FileResponse(file)
+    is_cb = _host_is_channelbrain(request)
     # Pre-rendered route. scripts/prerender.js writes dist/<path>/index.html
     # for public, indexable pages (the landing page, /blog, every /blog/<slug>,
     # every /features/*, every /tools/*, plus the legal/contact pages). That
@@ -346,6 +380,11 @@ def serve_frontend(full_path: str):
     # without needing to execute JS.
     prerendered = file / "index.html"
     if file.is_dir() and prerendered.is_file():
+        if is_cb:
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(
+                content=_rebrand_channelbrain(prerendered.read_text(encoding="utf-8"))
+            )
         return FileResponse(prerendered)
     # Dead /blog/* URL. Every real post is prerendered to
     # dist/blog/<slug>/index.html and served above, so anything under blog/
@@ -362,5 +401,12 @@ def serve_frontend(full_path: str):
     from fastapi.responses import HTMLResponse
     rendered = _render_index_with_meta(full_path)
     if rendered is None:
+        if is_cb:
+            return HTMLResponse(
+                content=_rebrand_channelbrain((DIST / "index.html").read_text(encoding="utf-8")),
+                status_code=status,
+            )
         return FileResponse(DIST / "index.html", status_code=status)
+    if is_cb:
+        rendered = _rebrand_channelbrain(rendered)
     return HTMLResponse(content=rendered, status_code=status)

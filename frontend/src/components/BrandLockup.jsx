@@ -13,6 +13,9 @@
      tone    'dark'  → ink "growth" + ink divider   (light backgrounds)
              'light' → white "growth" + white divider (dark backgrounds) */
 
+import { isChannelBrain } from '../brandHost'
+import ChannelBrainLockup from './ChannelBrainLockup'
+
 const RED = '#e5251b'
 const INK = '#17171c'
 /* Wordmark set in the global UI sans (Barlow), not a bespoke font, so it
@@ -21,6 +24,10 @@ const FONT = "'Barlow', system-ui, sans-serif"
 const WEIGHT = 600
 
 export default function BrandLockup({ height = 30, tone = 'dark' }) {
+  // On channelbrain.online the whole app carries the ChannelBrain wordmark
+  // instead of yt|growth.io. ytgrowth.io renders exactly as before.
+  if (isChannelBrain()) return <ChannelBrainLockup height={height} tone={tone} />
+
   const ink = tone === 'light' ? '#ffffff' : INK
   const fontSize = Math.round(height * 0.72)
 

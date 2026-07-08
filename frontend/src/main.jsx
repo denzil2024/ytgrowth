@@ -3,10 +3,27 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { initUtm } from './utm.js'
+import { isChannelBrain } from './brandHost.js'
 
 // Capture UTM attribution off the URL on first paint and install the
 // /auth/login click interceptor, see utm.js.
 initUtm()
+
+// On channelbrain.online the page title must read "ChannelBrain", not
+// "YTGrowth" — the OAuth consent screen (app name ChannelBrain) has to match
+// the home page. Per-page effects set document.title with a hardcoded
+// "YTGrowth"; watch the <title> node and swap it on that host only. ytgrowth.io
+// is untouched.
+if (isChannelBrain()) {
+  const titleEl = document.querySelector('title')
+  const swap = () => {
+    if (titleEl && titleEl.textContent.includes('YTGrowth')) {
+      titleEl.textContent = titleEl.textContent.replace(/YTGrowth/g, 'ChannelBrain')
+    }
+  }
+  swap()
+  if (titleEl) new MutationObserver(swap).observe(titleEl, { childList: true })
+}
 
 /* ── Lazy-loaded third-party scripts ──────────────────────────────────────
  *
