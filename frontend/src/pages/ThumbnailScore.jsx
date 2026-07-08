@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { isChannelBrain } from '../brandHost'
+import { isChannelBrain, supportEmail } from '../brandHost'
 import { ChevronDown, Upload, Lightbulb } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
@@ -1212,14 +1212,14 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       }
       if (r.status === 402) { setCreditsOut(true); setState('ready1'); return }
       const d = await r.json()
-      if (!r.ok || d.error) throw new Error(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+      if (!r.ok || d.error) throw new Error(d.error || "Something went wrong on our end. Email " + supportEmail() + " and we'll sort it out.")
       setAnalysis(d.analysis)
       setState('ready2')
       window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch (e) {
       const msg = e.name === 'AbortError'
-        ? "Analysis timed out. Email support@ytgrowth.io if you need a credit refunded."
-        : (e.message || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+        ? "Analysis timed out. Email " + supportEmail() + " if you need a credit refunded."
+        : (e.message || "Something went wrong on our end. Email " + supportEmail() + " and we'll sort it out.")
       setError(msg)
       setState('ready1')
     } finally {

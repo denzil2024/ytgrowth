@@ -20,6 +20,7 @@
      onClose   , dismiss handler */
 
 import { useEffect } from 'react'
+import { supportEmail } from '../brandHost'
 
 const C = {
   red: '#c9a030', green: '#059669', amber: '#d97706',
@@ -72,14 +73,14 @@ const ERRORS = {
     title: 'Channel already connected',
     body: "This YouTube channel is already linked to another YTGrowth account. Sign in with that account, or pick a different channel.",
     primary: { label: 'Try a different channel', href: '/auth/login' },
-    secondary: { label: 'Need help? Contact support', href: 'mailto:support@ytgrowth.io' },
+    secondary: { label: 'Need help? Contact support', href: 'mailto:' + supportEmail()},
   },
   channel_locked: {
     icon: IconClock,
     title: 'Channel temporarily locked',
     body: "This channel was disconnected from another account in the last 30 days. We hold it for a short cool-down before it can be re-connected.",
     primary: { label: 'Try a different channel', href: '/auth/login' },
-    secondary: { label: 'Email support if this is your channel', href: 'mailto:support@ytgrowth.io' },
+    secondary: { label: 'Email support if this is your channel', href: 'mailto:' + supportEmail()},
   },
   channel_limit: {
     icon: IconStack,
@@ -107,21 +108,21 @@ const ERRORS = {
     title: 'Sign-in worked, audit failed',
     body: "You're signed in, but our first AI audit hit a snag. Open the dashboard and try a re-audit, we won't charge a credit for the failed run.",
     primary: { label: 'Open dashboard', href: '/dashboard' },
-    secondary: { label: 'Email support if this keeps happening', href: 'mailto:support@ytgrowth.io' },
+    secondary: { label: 'Email support if this keeps happening', href: 'mailto:' + supportEmail()},
   },
   quota_exceeded: {
     icon: IconClock,
     title: 'YTGrowth is temporarily at capacity',
     body: "We've hit our YouTube API quota for the day. This resets at midnight Pacific Time. Please try signing in again in a few hours, your account is fine, nothing is lost.",
     primary: { label: 'Try again', href: '/auth/login' },
-    secondary: { label: 'Email support if this keeps happening', href: 'mailto:support@ytgrowth.io' },
+    secondary: { label: 'Email support if this keeps happening', href: 'mailto:' + supportEmail()},
   },
   generic: {
     icon: IconAlert,
     title: 'Something went wrong signing you in',
     body: "We hit an unexpected error during sign-in. Try once more, if it keeps happening, our support team can dig in.",
     primary: { label: 'Try again', href: '/auth/login' },
-    secondary: { label: 'Email support', href: 'mailto:support@ytgrowth.io' },
+    secondary: { label: 'Email support', href: 'mailto:' + supportEmail()},
   },
 }
 

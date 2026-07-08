@@ -114,7 +114,7 @@ function CompetitorCardVisual() {
           <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'rgba(255,255,255,0.75)' }}>T</div>
           <div>
             <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: '#fff', letterSpacing: '-0.1px' }}>TechCreator Pro</p>
-            <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>142K subs · 4.6% avg CTR · posts every 4 days</p>
+            <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>142K subscribers · 4.6% avg CTR · posts every 4 days</p>
           </div>
         </div>
         <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: '#e6b35c', background: 'rgba(230,179,92,0.12)', border: '1px solid rgba(230,179,92,0.3)', padding: '4px 10px', letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0 }}>High threat</span>
@@ -240,7 +240,7 @@ const FAQS = [
   },
   {
     q: 'What counts as a "high threat" competitor?',
-    a: <>The AI scores threat level (low / medium / high) based on three things: how much subscriber overlap is likely (similar niche signal), topic similarity to your channel, and their posting velocity. A creator with 142K subs publishing 2x your cadence in your exact topic gets HIGH. A 1M-sub creator who only tangentially overlaps is usually MEDIUM or LOW because they&apos;re not pulling your audience.</>,
+    a: <>The AI scores threat level (low / medium / high) based on three things: how much subscriber overlap is likely (similar niche signal), topic similarity to your channel, and their posting velocity. A creator with 142K subscribers publishing 2x your cadence in your exact topic gets HIGH. A 1M-sub creator who only tangentially overlaps is usually MEDIUM or LOW because they&apos;re not pulling your audience.</>,
   },
   {
     q: 'Will this work for shorts-first channels?',
@@ -487,7 +487,7 @@ export default function CompetitorAnalysis() {
               { k: 'Channel metadata',          v: 'Subscribers, total views, video count, channel age, channel keywords' },
               { k: 'Posting behavior',          v: 'Average gap, top day, top hour, videos in last 30 days' },
               { k: 'Engagement signals',        v: 'Like-to-view, comment-to-view, like rate' },
-              { k: 'Your channel context',      v: 'Your subs, avg views, posting cadence, niche keywords' },
+              { k: 'Your channel context',      v: 'Your subscribers, avg views, posting cadence, niche keywords' },
               { k: 'AI model',                  v: 'Claude Sonnet 4.6 · 8K-token analysis · ~30s' },
             ].map((row, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '11px 0', borderBottom: i < 5 ? '1px solid var(--yte-line)' : 'none', alignItems: 'baseline' }}>

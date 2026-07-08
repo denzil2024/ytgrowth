@@ -25,7 +25,7 @@ import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import OnboardingCard from '../components/OnboardingCard'
 import { C, SHELL, CATEGORY_GRADIENT } from './dashboard/tokens'
-import { isChannelBrain } from '../brandHost'
+import { isChannelBrain, supportEmail } from '../brandHost'
 import {
   ytMaxThumbUrl, makeThumbOnError, makeThumbOnLoad,
   planBadge, healthScore,
@@ -904,7 +904,7 @@ export default function Dashboard() {
                       if (r.status === 402) { setCreditsOut(true); return }
                       if (r.status === 403) { setAuditLocked(true); return }  // re-audits are paid
                       const d = await r.json().catch(() => ({}))
-                      setReAuditError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+                      setReAuditError(d.error || "Something went wrong on our end. Email " + supportEmail() + " and we'll sort it out.")
                       setTimeout(() => setReAuditError(''), 8000)
                     })
                     .catch(() => {
@@ -1017,7 +1017,7 @@ export default function Dashboard() {
                           if (r.status === 402) { setCreditsOut(true); return }
                           if (r.status === 403) { setAuditLocked(true); return }  // re-audits are paid
                           const d = await r.json().catch(() => ({}))
-                          setReAuditError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+                          setReAuditError(d.error || "Something went wrong on our end. Email " + supportEmail() + " and we'll sort it out.")
                           setTimeout(() => setReAuditError(''), 8000)
                         })
                         .catch(() => {

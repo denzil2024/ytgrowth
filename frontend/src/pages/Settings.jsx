@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { supportEmail } from '../brandHost'
 import { Plus, ArrowRight, Check, Link2 } from 'lucide-react'
 import { loginUrl } from '../utm.js'
 
@@ -583,9 +584,9 @@ export default function Settings({ channelData }) {
         window.location.href = d.url
         return
       }
-      window.location.href = 'mailto:support@ytgrowth.io?subject=Manage%20billing'
+      window.location.href = 'mailto:' + supportEmail() + '?subject=Manage%20billing'
     } catch {
-      window.location.href = 'mailto:support@ytgrowth.io?subject=Manage%20billing'
+      window.location.href = 'mailto:' + supportEmail() + '?subject=Manage%20billing'
     } finally {
       setBillingBusy(false)
     }
@@ -972,8 +973,8 @@ export default function Settings({ channelData }) {
           <p className="set-card-title">Contact support</p>
           <p className="set-card-sub">Failed run, billing question, or anything else.</p>
         </div>
-        <a href="mailto:support@ytgrowth.io" className="set-btn-secondary">
-          support@ytgrowth.io
+        <a href={'mailto:' + supportEmail()} className="set-btn-secondary">
+          {supportEmail()}
         </a>
       </div>
 

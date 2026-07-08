@@ -7,3 +7,10 @@ export function isChannelBrain() {
   const h = window.location.hostname.toLowerCase()
   return h === 'channelbrain.online' || h.endsWith('.channelbrain.online')
 }
+
+/* Support address, host-matched so the ChannelBrain app never surfaces a
+   ytgrowth.io email. Requires support@channelbrain.online to route (Cloudflare
+   Email Routing → the real inbox). */
+export function supportEmail() {
+  return isChannelBrain() ? 'support@channelbrain.online' : 'support@ytgrowth.io'
+}

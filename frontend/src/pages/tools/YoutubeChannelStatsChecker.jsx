@@ -555,7 +555,7 @@ export default function YoutubeChannelStatsChecker() {
                       <div style={{ minWidth: 0, width: '100%' }}>
                         <p style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.1px', lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 4 }}>{c.title}</p>
                         <p style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--yte-muted)', fontWeight: 600, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px' }}>
-                          {c.subscribers >= 1e6 ? (c.subscribers / 1e6).toFixed(1) + 'M' : c.subscribers >= 1e3 ? (c.subscribers / 1e3).toFixed(1) + 'K' : c.subscribers} subs
+                          {c.subscribers >= 1e6 ? (c.subscribers / 1e6).toFixed(1) + 'M' : c.subscribers >= 1e3 ? (c.subscribers / 1e3).toFixed(1) + 'K' : c.subscribers} subscribers
                         </p>
                       </div>
                     </button>

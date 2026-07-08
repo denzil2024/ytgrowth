@@ -124,7 +124,7 @@ function OutlierVideoVisual() {
             I quit my 9–5 in 30 days | Real numbers
           </p>
           <p style={{ fontFamily: SANS, fontSize: 11.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>
-            CreatorMike · 8.2K subs · 3 weeks ago · 142K views
+            CreatorMike · 8.2K subscribers · 3 weeks ago · 142K views
           </p>
         </div>
       </div>
@@ -185,7 +185,7 @@ function BreakoutChannelsVisual() {
             <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: SERIF, fontSize: 15, fontWeight: 400, color: 'rgba(255,255,255,0.75)' }}>{c.name[0]}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: '#fff', letterSpacing: '-0.2px' }}>{c.name}</p>
-              <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{c.subs} subs · in your exact niche</p>
+              <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{c.subs} subscribers · in your exact niche</p>
             </div>
             <div style={{ textAlign: 'right', flexShrink: 0 }}>
               <p style={{ fontFamily: SANS, fontSize: 9.5, fontWeight: 700, color: GOLD, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Outlier</p>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { isChannelBrain } from '../brandHost'
+import { isChannelBrain, supportEmail } from '../brandHost'
 import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
@@ -810,7 +810,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         return
       }
       if (!res.ok) {
-        setError(data.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+        setError(data.error || "Something went wrong on our end. Email " + supportEmail() + " and we'll sort it out.")
         return
       }
       setIdeas(data.ideas || [])

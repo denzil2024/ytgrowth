@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { supportEmail } from '../brandHost'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import EstimateTag from '../components/EstimateTag'
 
@@ -302,7 +303,7 @@ function ReportCard({ data, video, onClose }) {
           ['CTR',             m.ctr_pct != null ? `${m.ctr_pct}%` : '—'],
           ['APV',             m.apv_pct != null ? `${m.apv_pct}%` : '—'],
           ['AVD',             m.avd_seconds != null ? `${m.avd_seconds}s` : '—'],
-          ['Subs gained',     m.subs_gained != null ? m.subs_gained : '—'],
+          ['Subscribers gained',     m.subs_gained != null ? m.subs_gained : '—'],
           ['Shares',          m.shares != null ? m.shares : '—'],
           ['vs baseline',     m.vs_baseline_pct != null ? `${m.vs_baseline_pct >= 0 ? '+' : ''}${m.vs_baseline_pct}%` : '—'],
         ].map(([lbl, val]) => (
@@ -501,7 +502,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
       // of falling through to a generic error.
       if (r.status === 403) { setLocked(true); setCreditsOut(true); return }
       const d = await r.json()
-      if (!r.ok) { setError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."); return }
+      if (!r.ok) { setError(d.error || "Something went wrong on our end. Email " + supportEmail() + " and we'll sort it out."); return }
       setResult(d)
       window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
       // Refresh the reports list so the eligible cards know which have an

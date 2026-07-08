@@ -33,7 +33,7 @@ export default function CompetitorPreview({ isMobile }) {
         <img src="/avatars/daniel.jpg" alt="" width="46" height="46" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ fontFamily: SANS, fontSize: 15, fontWeight: 600, color: INK, letterSpacing: '-0.2px' }}>Creator Lab</p>
-          <p style={{ fontFamily: SANS, fontSize: 12.5, color: MUT, marginTop: 2 }}>142K subs · 4.6% CTR · posts every 4 days</p>
+          <p style={{ fontFamily: SANS, fontSize: 12.5, color: MUT, marginTop: 2 }}>142K subscribers · 4.6% CTR · posts every 4 days</p>
         </div>
         <span style={{ flexShrink: 0, fontFamily: SANS, fontSize: 9.5, fontWeight: 700, color: ACCENT, border: '1px solid rgba(229,48,42,0.32)', padding: '3px 9px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>High threat</span>
       </div>

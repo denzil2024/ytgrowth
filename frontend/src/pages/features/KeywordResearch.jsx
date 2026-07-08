@@ -149,7 +149,7 @@ function KeywordTableVisual() {
       <div style={{ borderLeft: `3px solid ${GOLD}`, background: 'rgba(230,179,92,0.08)', padding: '12px 14px', marginTop: 14 }}>
         <p style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: GOLD, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Top pick</p>
         <p style={{ fontFamily: SANS, fontSize: 13, color: 'rgba(255,255,255,0.92)', fontWeight: 600, marginBottom: 4 }}>"home office cleaning vlog"</p>
-        <p style={{ fontFamily: SANS, fontSize: 11.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.55 }}>Newest top-5 video is 220 days old · top creators &lt; 50K subs · clear topic gap.</p>
+        <p style={{ fontFamily: SANS, fontSize: 11.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.55 }}>Newest top-5 video is 220 days old · top creators &lt; 50K subscribers · clear topic gap.</p>
       </div>
     </div>
   )
@@ -160,7 +160,7 @@ function ScoreBreakdownVisual() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {[
-        { label: 'Feasibility',  weight: 45, score: 100, body: 'Top-5 channels median &lt; 10K subs. Easy to outrank.' },
+        { label: 'Feasibility',  weight: 45, score: 100, body: 'Top-5 channels median &lt; 10K subscribers. Easy to outrank.' },
         { label: 'Traffic ceiling', weight: 30, score: 70, body: 'Top videos median 24K views. Solid headroom for a small channel.' },
         { label: 'Freshness',     weight: 25, score: 100, body: 'Newest top-5 video posted 220 days ago. Landscape is wide open.' },
       ].map((d, i) => (
@@ -210,7 +210,7 @@ const PIPELINE_OUTPUTS = [
   { icon: 'pulse',  title: 'Momentum tag per keyword',    body: 'Active (creators ship weekly) · Steady (normal) · Unclaimed (top videos &gt; 6 months old). Lets you spot landscapes nobody is currently fighting over.' },
   { icon: 'compass',title: 'Top pick + reason',           body: 'The single highest-opportunity keyword surfaced, with a one-sentence "why this one". So you stop scrolling and start scripting.' },
   { icon: 'tag',    title: 'Content angle per keyword',   body: 'Each kept keyword carries a one-sentence angle suggestion. Not a template. Anchored to the intent and the niche, so the angle reads as a video idea you’d publish.' },
-  { icon: 'gap',    title: 'Real competition snapshot',   body: 'For the top 10 by initial score: result count, top-5 median subs, top-5 median views, days since newest. Live YouTube data, not estimated. Your score is built on these numbers.' },
+  { icon: 'gap',    title: 'Real competition snapshot',   body: 'For the top 10 by initial score: result count, top-5 median subscribers, top-5 median views, days since newest. Live YouTube data, not estimated. Your score is built on these numbers.' },
 ]
 
 const ICON_PATHS = {

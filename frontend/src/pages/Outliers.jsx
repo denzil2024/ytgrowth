@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { supportEmail } from '../brandHost'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 import EstimateTag from '../components/EstimateTag'
@@ -695,7 +696,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
       const d = await r.json()
       if (myId !== reqIdRef.current) return
       if (!r.ok) {
-        setError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+        setError(d.error || "Something went wrong on our end. Email " + supportEmail() + " and we'll sort it out.")
       } else {
         setResult(d)
         window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
@@ -745,7 +746,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   const sortOptions   = tab === 'channel'
     ? [
         { k: 'outlier', label: 'Top outliers' },
-        { k: 'subs',    label: 'Most subs'    },
+        { k: 'subs',    label: 'Most subscribers'    },
         { k: 'hits',    label: 'Most hits'    },
       ]
     : [
@@ -1270,7 +1271,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           title="Unlock Outlier Scoring"
           description="See the thumbnails, titles, and channels winning in your niche right now, with a ranked outlier score so you know which to copy and which to ignore."
           bullets={[
-            'Top outlier videos in your niche, ranked by performance vs. subs',
+            'Top outlier videos in your niche, ranked by performance vs. subscribers',
             'Winning thumbnail patterns distilled into a reusable formula',
             "Breakout channels and keyword opportunities you're missing",
           ]}

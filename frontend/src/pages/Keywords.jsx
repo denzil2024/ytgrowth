@@ -607,7 +607,7 @@ function buildRowTooltip(kw) {
   const parts = [`${kw.intentMatch || '—'} match`, `Score ${kw.opportunityScore}`]
   const comp = kw.competition || {}
   if (comp.top_subs_median) {
-    parts.push(`Top channels ~${fmtCompact(comp.top_subs_median)} subs`)
+    parts.push(`Top channels ~${fmtCompact(comp.top_subs_median)} subscribers`)
   }
   if (comp.top_views_median) {
     parts.push(`Top videos ~${fmtCompact(comp.top_views_median)} views`)
@@ -626,7 +626,7 @@ function buildWhyItWorks(kw) {
   const intentUp = (kw.intentMatch || '—').replace(/^\w/, c => c.toUpperCase())
   out.push(`${intentUp} intent match at ${kw.opportunityScore}/100.`)
   if (comp.top_subs_median) {
-    out.push(`Top-5 competitors average ~${fmtCompact(comp.top_subs_median)} subs${comp.top_views_median ? ` with ${fmtCompact(comp.top_views_median)} median views` : ''}.`)
+    out.push(`Top-5 competitors average ~${fmtCompact(comp.top_subs_median)} subscribers${comp.top_views_median ? ` with ${fmtCompact(comp.top_views_median)} median views` : ''}.`)
   }
   if (typeof comp.days_since_newest === 'number') {
     out.push(`Newest top-5 video was ${comp.days_since_newest}d ago.`)

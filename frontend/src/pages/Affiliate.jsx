@@ -149,19 +149,19 @@ const TESTIMONIALS = [
   {
     quote: 'I mentioned YTGrowth in one video, not even a dedicated review, just a passing recommendation in a tools roundup. Six months later I am still collecting recurring commissions from that single video. That has never happened with any other affiliate program I have promoted.',
     name: 'Marcus T.',
-    role: 'Tech & Productivity · 42K subs',
+    role: 'Tech & Productivity · 42K subscribers',
     earning: '$340/mo',
   },
   {
     quote: 'The 30% recurring rate is genuinely the best I have seen in the YouTube tools space. VidIQ and TubeBuddy both offer one-time or lower-rate commissions. With YTGrowth I make more per referral, and I keep making it every single month. It is passive income that compounds.',
     name: 'Priya Nair',
-    role: 'Personal Finance · 28K subs',
+    role: 'Personal Finance · 28K subscribers',
     earning: '$510/mo',
   },
   {
     quote: 'I run a YouTube coaching business and I send every new client through my affiliate link. It practically offsets my own subscription cost within the first few referrals, and the ongoing commissions have become a meaningful line item in my monthly income.',
     name: 'James Oduya',
-    role: 'YouTube Coach · 67K subs',
+    role: 'YouTube Coach · 67K subscribers',
     earning: '$890/mo',
   },
 ]
