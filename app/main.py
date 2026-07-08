@@ -358,8 +358,8 @@ def _rebrand_channelbrain(html: str) -> str:
     html = html.replace("YTGrowth", "ChannelBrain")
     # Canonical / OG / schema URLs point at the ChannelBrain host.
     html = html.replace("https://ytgrowth.io", "https://channelbrain.online")
-    # Browser-tab favicon → ChannelBrain mark.
-    html = html.replace('href="/favicon.png"', 'href="/channelbrain-favicon.png"')
+    # Favicon intentionally NOT swapped — ChannelBrain reuses the ytgrowth
+    # growth mark (favicon.png), per the user's preference over the brain icon.
     return html
 
 
