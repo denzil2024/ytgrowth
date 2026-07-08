@@ -358,6 +358,11 @@ def _rebrand_channelbrain(html: str) -> str:
     html = html.replace("YTGrowth", "ChannelBrain")
     # Canonical / OG / schema URLs point at the ChannelBrain host.
     html = html.replace("https://ytgrowth.io", "https://channelbrain.online")
+    # Keep channelbrain.online OUT of Google's index — it's the app/login domain
+    # and mirrors ytgrowth.io content, which would be duplicate content in search.
+    # Does NOT affect Google's OAuth verification (that fetches the page live
+    # regardless of index status; noindex pages are still crawled).
+    html = html.replace('name="robots" content="index', 'name="robots" content="noindex')
     # Logo/home-link accessible name — Google reads this as the home page's app
     # name, so it must say ChannelBrain (lowercase, missed by the swaps above).
     html = html.replace('aria-label="ytgrowth home"', 'aria-label="ChannelBrain home"')
