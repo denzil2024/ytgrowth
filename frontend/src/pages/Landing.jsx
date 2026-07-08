@@ -22,6 +22,7 @@ const ED_GOLD   = '#e6b35c'
 const ED_LINE   = 'rgba(20,19,15,0.12)'
 import AuthErrorModal from '../components/AuthErrorModal'
 import BrandLockup from '../components/BrandLockup'
+import { isChannelBrain } from '../brandHost'
 import HeroDashboardPreview from '../components/landing/HeroDashboardPreview'
 import ChannelAuditPreview from '../components/landing/ChannelAuditPreview'
 import CompetitorPreview from '../components/landing/CompetitorPreview'
@@ -1030,7 +1031,7 @@ export default function Landing() {
               rel="noopener noreferrer"
             >
               <img
-                alt="YTGrowth - YouTube audit tool that turns data into growth actions | Product Hunt"
+                alt={`${isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} - YouTube audit tool that turns data into growth actions | Product Hunt`}
                 width="250"
                 height="54"
                 src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1132935&theme=light&t=1777325565998"
@@ -1696,9 +1697,9 @@ export default function Landing() {
           {/* FAQ list */}
           <div style={{ borderTop: '1px solid ' + ED_LINE }}>
             {[
-              { q: 'Is YTGrowth worth it when my channel is under 1,000 subscribers?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision. Right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
+              { q: `Is ${isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} worth it when my channel is under 1,000 subscribers?`, a: "Especially then. The smaller your channel, the higher the leverage of a single good decision. Right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
               { q: 'What happens when I run out of AI analyses before my month resets?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
-              { q: 'How is YTGrowth different from TubeBuddy or VidIQ, exactly?', a: "TubeBuddy and VidIQ show you dashboards and data. We run the actual AI analysis. Competitor gaps, keyword intent, title variants. And hand you the conclusion, not the raw numbers." },
+              { q: `How is ${isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} different from TubeBuddy or VidIQ, exactly?`, a: "TubeBuddy and VidIQ show you dashboards and data. We run the actual AI analysis. Competitor gaps, keyword intent, title variants. And hand you the conclusion, not the raw numbers." },
               { q: 'Can I cancel or change my subscription at any time?', a: "Yes. Monthly is month-to-month. Cancel whenever. Annual gives you the rest of your year. No cancellation fees, no guilt-trip retention email. Just done." },
               { q: 'Do unused monthly analyses roll over to the following month?', a: "Monthly included analyses reset every month. Use them or lose them. But top-up pack analyses never expire and never reset. They sit in your account until you need them." },
               { q: 'Can I purchase and use analysis packs without a subscription plan?', a: "Yes. Packs work standalone. Buy a pack, run analyses, no subscription required. If you have analyses, you have full access. Subscribe later and your pack analyses stack on top." },

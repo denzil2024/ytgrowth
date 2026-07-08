@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import BrandLockup from './BrandLockup'
+import { isChannelBrain } from '../brandHost'
 
 /* Shared site footer (big editorial sitemap rebuild, 2026-06-30). Dark band
    (#14130f, the editorial ink) as the page floor, bookending the dark
@@ -198,7 +199,7 @@ export default function LandingFooter() {
           <div style={{ marginTop: 6, marginBottom: 24 }}>
             <SocialIcons center />
           </div>
-          <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontFamily: SANS }}>© 2026 YTGrowth. All rights reserved.</p>
+          <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontFamily: SANS }}>© 2026 {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'}. All rights reserved.</p>
         </div>
       </footer>
     )
@@ -234,7 +235,7 @@ export default function LandingFooter() {
 
         {/* Tier 3. Copyright + legal strip */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', fontWeight: 500, letterSpacing: '0.01em', fontFamily: SANS }}>© 2026 YTGrowth. All rights reserved.</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', fontWeight: 500, letterSpacing: '0.01em', fontFamily: SANS }}>© 2026 {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'}. All rights reserved.</p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
             {LEGAL.map((l, i) => (
               <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontFamily: SANS, fontWeight: 500, letterSpacing: '0.01em', transition: 'color 0.15s' }}
