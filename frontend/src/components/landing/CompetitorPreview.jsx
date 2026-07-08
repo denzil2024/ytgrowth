@@ -3,6 +3,8 @@
    Barlow labels, restrained red accent. Shows a tracked rival: the AI read,
    their headline stats, and the top videos worth studying. */
 
+import { isChannelBrain } from '../../brandHost'
+
 const SERIF = "'Fraunces', Georgia, serif"
 const SANS = "'Barlow', system-ui, sans-serif"
 const INK = '#14130f'
@@ -19,7 +21,7 @@ export default function CompetitorPreview({ isMobile }) {
         <span style={{ display: 'flex', gap: 6 }}>
           {[0, 1, 2].map(i => <span key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(20,19,15,0.16)' }} />)}
         </span>
-        <span style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 500, color: MUT, marginLeft: 6 }}>ytgrowth.io / competitors</span>
+        <span style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 500, color: MUT, marginLeft: 6 }}>{isChannelBrain() ? 'channelbrain.online' : 'ytgrowth.io'} / competitors</span>
         <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: ACCENT }} />
           <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: ACCENT, letterSpacing: '0.14em', textTransform: 'uppercase' }}>Live</span>

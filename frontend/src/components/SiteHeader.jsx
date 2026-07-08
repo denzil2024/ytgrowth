@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import BrandLockup from './BrandLockup'
+import { isChannelBrain } from '../brandHost'
 
 /* ─── Shared site header (editorial rebuild) ─────────────────────────────
    Re-imagined 2026-06-30. Logo in an outlined sharp "card" hard-left (mirrors
@@ -204,7 +205,7 @@ export default function SiteHeader({ loggedIn = false }) {
       <nav className="sh-nav">
         <div className="sh-inner">
         <div className="sh-brand-zone">
-          <a href="/" className="sh-brand" aria-label="ytgrowth home">
+          <a href="/" className="sh-brand" aria-label={isChannelBrain() ? 'ChannelBrain home' : 'ytgrowth home'}>
             <BrandLockup height={28} />
           </a>
         </div>
