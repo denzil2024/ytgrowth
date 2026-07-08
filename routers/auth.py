@@ -242,13 +242,47 @@ def _free_audit_retry_days(channel_id: str) -> int:
         return 0  # fail open — never hard-block an audit on a DB hiccup
 
 
-def get_flow(autogenerate_pkce: bool = True):
+# Hosts we serve OAuth on. redirect_uri + all post-login redirects are derived
+# from the request's own host so login works identically on ytgrowth.io and
+# channelbrain.online without flipping an env var (and without breaking the
+# host-only session cookie: /login and /callback always land on the same host).
+# Anything NOT in this allowlist falls back to BASE_URL so a spoofed Host header
+# can never point the OAuth redirect at an attacker-controlled domain.
+_OAUTH_HOSTS = {
+    "ytgrowth.io", "www.ytgrowth.io",
+    "channelbrain.online", "www.channelbrain.online",
+}
+
+
+def _request_base(request: Request) -> str:
+    """Scheme+host for OAuth/redirects, taken from the (proxied) request host.
+    Cloudflare/Railway forward the original host + proto; we trust those only
+    for allowlisted hosts, else fall back to the configured BASE_URL."""
+    host = (
+        request.headers.get("x-forwarded-host")
+        or request.headers.get("host")
+        or ""
+    ).split(",")[0].strip().lower()
+    if host in _OAUTH_HOSTS:
+        proto = request.headers.get("x-forwarded-proto", "https").split(",")[0].strip()
+        return f"{proto}://{host}"
+    if host.startswith("localhost") or host.startswith("127.0.0.1"):
+        return f"http://{host}"
+    return BASE_URL
+
+
+def get_flow(autogenerate_pkce: bool = True, base_url: str | None = None):
     """Build a fresh OAuth Flow.
 
     PKCE code_verifier is auto-generated when starting a new auth (login). On
     callback we rebuild the flow with the verifier saved in the user's session
     cookie, so we pass autogenerate_pkce=False there to avoid clobbering it.
+
+    redirect_uri is derived from the caller's request host (base_url) so the
+    same OAuth client serves both ytgrowth.io and channelbrain.online. Both
+    callback URIs must be registered in Google Cloud Console.
     """
+    redirect_base = base_url or BACKEND_URL
     client_secret_env = os.environ.get("GOOGLE_CLIENT_SECRET_JSON")
     if client_secret_env:
         import tempfile
@@ -258,7 +292,7 @@ def get_flow(autogenerate_pkce: bool = True):
         flow = Flow.from_client_secrets_file(
             tmp_path,
             scopes=SCOPES,
-            redirect_uri=f"{BACKEND_URL}/auth/callback",
+            redirect_uri=f"{redirect_base}/auth/callback",
             autogenerate_code_verifier=autogenerate_pkce,
         )
         os.unlink(tmp_path)
@@ -266,7 +300,7 @@ def get_flow(autogenerate_pkce: bool = True):
         flow = Flow.from_client_secrets_file(
             "client_secret.json",
             scopes=SCOPES,
-            redirect_uri=f"{BACKEND_URL}/auth/callback",
+            redirect_uri=f"{redirect_base}/auth/callback",
             autogenerate_code_verifier=autogenerate_pkce,
         )
     return flow
@@ -295,7 +329,7 @@ def login(request: Request):
     if pending_utms:
         request.session["pending_utms"] = pending_utms
 
-    flow = get_flow(autogenerate_pkce=True)
+    flow = get_flow(autogenerate_pkce=True, base_url=_request_base(request))
     auth_url, state = flow.authorization_url(
         prompt="consent",
         access_type="offline"
@@ -492,9 +526,15 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
 
 @router.get("/callback")
 def callback(request: Request, background_tasks: BackgroundTasks):
+    # Host-derived base: the user stays on the same domain across the Google
+    # round-trip, so this matches the redirect_uri /login used and the host
+    # that holds the PKCE session cookie. Every redirect below uses it so the
+    # user lands back on the domain they started on (ytgrowth.io OR channelbrain.online).
+    base = _request_base(request)
+
     code = request.query_params.get("code")
     if not code:
-        return RedirectResponse(f"{BASE_URL}?error=no_code")
+        return RedirectResponse(f"{base}?error=no_code")
 
     session_id = request.session.get("session_id")
 
@@ -512,10 +552,10 @@ def callback(request: Request, background_tasks: BackgroundTasks):
     elif saved_verifier:
         # Cross-worker / restart fallback: rebuild a fresh flow and inject the
         # verifier we saved in the cookie at /login time.
-        flow = get_flow(autogenerate_pkce=False)
+        flow = get_flow(autogenerate_pkce=False, base_url=base)
         flow.code_verifier = saved_verifier
     else:
-        return RedirectResponse(f"{BASE_URL}?error=session_expired")
+        return RedirectResponse(f"{base}?error=session_expired")
 
     try:
         flow.fetch_token(code=code)
@@ -548,7 +588,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
 
         stats = get_channel_stats(creds)
         if not stats:
-            return RedirectResponse(f"{BASE_URL}?error=no_channel")
+            return RedirectResponse(f"{base}?error=no_channel")
 
         channel_id = stats["channel_id"]
 
@@ -664,7 +704,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
                         days_since = (datetime.datetime.utcnow() - existing.disconnected_at).days
                         if days_since < 30:
                             db.close()
-                            return RedirectResponse(f"{BASE_URL}?error=channel_locked")
+                            return RedirectResponse(f"{base}?error=channel_locked")
                         # Older than 30 days — allow transfer
                         existing.owner_email     = google_email
                         existing.is_active       = True
@@ -674,7 +714,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
                     else:
                         # Still active under another account
                         db.close()
-                        return RedirectResponse(f"{BASE_URL}?error=channel_taken")
+                        return RedirectResponse(f"{base}?error=channel_taken")
 
                 # Step 2 — check channel limit for this account
                 sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
@@ -688,7 +728,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
 
                 if active_channels >= channels_allowed:
                     db.close()
-                    return RedirectResponse(f"{BASE_URL}?error=channel_limit")
+                    return RedirectResponse(f"{base}?error=channel_limit")
 
                 # Step 3 — register or update channel
                 registry = db.query(ChannelRegistry).filter_by(
@@ -855,8 +895,8 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         # doesn't leak into subsequent logins.
         post_login = request.session.pop("after_login_redirect", None)
         if post_login and isinstance(post_login, str) and post_login.startswith("/"):
-            return RedirectResponse(f"{BASE_URL}{post_login}")
-        return RedirectResponse(f"{BASE_URL}/dashboard")
+            return RedirectResponse(f"{base}{post_login}")
+        return RedirectResponse(f"{base}/dashboard")
 
     except Exception as e:
         print(f"Callback error: {e}")
@@ -866,8 +906,8 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         # again later" instead of the misleading "audit failed" modal.
         err_str = str(e).lower()
         if "quotaexceeded" in err_str or ("quota" in err_str and "exceeded" in err_str):
-            return RedirectResponse(f"{BASE_URL}?error=quota_exceeded")
-        return RedirectResponse(f"{BASE_URL}?error=analysis_failed")
+            return RedirectResponse(f"{base}?error=quota_exceeded")
+        return RedirectResponse(f"{base}?error=analysis_failed")
 
 
 # Insights fields that are part of the paid audit deliverable. Free users get
@@ -1154,7 +1194,7 @@ def logout(request: Request):
         _pending_flows.pop(session_id, None)
         # Keep the DB row intact so re-login can restore cached insights
         # without triggering a fresh (token-consuming) analysis.
-    return RedirectResponse(f"{BASE_URL}")
+    return RedirectResponse(f"{_request_base(request)}")
 
 
 @router.get("/me")

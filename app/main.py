@@ -72,6 +72,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:5173",
         "https://ytgrowth.io",
+        "https://channelbrain.online",
     ],
     allow_credentials=True,
     allow_methods=["*"],
