@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { isChannelBrain } from '../brandHost'
 import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
@@ -274,7 +275,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
             Generate fresh video ideas?
           </h3>
           <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65, marginBottom: 14 }}>
-            YTGrowth will produce 10 new ideas based on:
+            {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} will produce 10 new ideas based on:
           </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
             {[

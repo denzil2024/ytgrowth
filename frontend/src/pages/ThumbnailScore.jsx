@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { isChannelBrain } from '../brandHost'
 import { ChevronDown, Upload, Lightbulb } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
@@ -1901,7 +1902,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                         <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(20,19,15,0.5)',
-                                       letterSpacing: '0.12em', textTransform: 'uppercase' }}>YTGrowth</span>
+                                       letterSpacing: '0.12em', textTransform: 'uppercase' }}>{isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'}</span>
                         <span style={{ fontSize: 12, color: 'rgba(20,19,15,0.2)' }}>·</span>
                         <span style={{ fontSize: 12, color: 'rgba(20,19,15,0.4)' }}>Thumbnail IQ</span>
                       </div>

@@ -9,10 +9,13 @@
    both the light editorial pages and the dark app shell. Pass `color` to pin
    it to a page's muted token when currentColor is too strong. */
 
-export default function EstimateTag({ label = 'YTGrowth estimate', color, style }) {
+import { isChannelBrain } from '../brandHost'
+
+export default function EstimateTag({ label, color, style }) {
+  const brand = isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'
   return (
     <span
-      title="Calculated by YTGrowth. This is our own analysis, not a YouTube metric."
+      title={`Calculated by ${brand}. This is our own analysis, not a YouTube metric.`}
       style={{
         fontSize: 9.5,
         fontWeight: 600,
@@ -24,7 +27,7 @@ export default function EstimateTag({ label = 'YTGrowth estimate', color, style 
         ...style,
       }}
     >
-      {label}
+      {label || `${brand} estimate`}
     </span>
   )
 }

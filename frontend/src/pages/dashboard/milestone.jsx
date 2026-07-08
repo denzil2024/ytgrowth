@@ -12,6 +12,7 @@ import {
 } from './tokens'
 import { fmtNum, formatAchievedDate } from './utils'
 import { YTGLogo } from './primitives'
+import { isChannelBrain } from '../../brandHost'
 
 export function StarBadge({ category, tier, size = 108 }) {
   const cat = CATEGORY_GRADIENT[category] || CATEGORY_GRADIENT.subs
@@ -130,7 +131,7 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
           fontSize: 22, fontWeight: 700, color: '#ffffff',
           letterSpacing: '-0.6px',
         }}>
-          YTGrowth<span style={{ color: '#c9a030' }}>.io</span>
+          {isChannelBrain() ? 'ChannelBrain' : <>YTGrowth<span style={{ color: '#c9a030' }}>.io</span></>}
         </span>
       </div>
 
@@ -283,7 +284,7 @@ export const MilestoneShareCard = forwardRef(function MilestoneShareCard(
             fontSize: 13, fontWeight: 700, color: '#0f0f13',
             letterSpacing: '-0.2px',
           }}>
-            YTGrowth.io
+            {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth.io'}
           </span>
           <span style={{ color: '#c8c8d0', fontSize: 14 }}>·</span>
           <span style={{
@@ -320,7 +321,7 @@ export function MilestoneShareModal({ milestone, channelName, channelThumbnail, 
       const url = canvas.toDataURL('image/png')
       const a = document.createElement('a')
       a.href = url
-      a.download = `ytgrowth-milestone-${milestone.category}-${milestone.tier}.png`
+      a.download = `${isChannelBrain() ? 'channelbrain' : 'ytgrowth'}-milestone-${milestone.category}-${milestone.tier}.png`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -333,7 +334,7 @@ export function MilestoneShareModal({ milestone, channelName, channelThumbnail, 
   }
 
   const handleShareX = () => {
-    const text = `I just hit ${fmtNum(milestone.tier)} ${MILESTONE_VERB[milestone.category]} on YouTube! 🎉\n\nTracked with YTGrowth.io`
+    const text = `I just hit ${fmtNum(milestone.tier)} ${MILESTONE_VERB[milestone.category]} on YouTube! 🎉\n\nTracked with ${isChannelBrain() ? 'ChannelBrain' : 'YTGrowth.io'}`
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
     window.open(url, '_blank', 'noopener,noreferrer')
   }

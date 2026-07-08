@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { isChannelBrain } from '../brandHost'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
@@ -1155,7 +1156,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             </div>
 
             <button onClick={() => runResearch('')} className="kw-intent-decide-btn">
-              Let YTGrowth decide
+              Let {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} decide
               <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M4 2l4 4-4 4"/>

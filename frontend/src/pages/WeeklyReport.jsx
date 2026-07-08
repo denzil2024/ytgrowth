@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { isChannelBrain } from '../brandHost'
 import UpsellGate from '../components/UpsellGate'
 
 // Editorial app fonts, page-scoped. Cormorant = display H1 + big numbers,
@@ -415,7 +416,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             now shared across every gated page. */}
         <UpsellGate
           title="Unlock weekly AI reports"
-          description="YTGrowth audits your channel every week and tells you the single thing to fix next, not a wall of data, a clear priority."
+          description={`${isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} audits your channel every week and tells you the single thing to fix next, not a wall of data, a clear priority.`}
           bullets={[
             'Biggest win, watch out, and priority, every week',
             'Fresh analysis delivered straight to your inbox',

@@ -25,6 +25,7 @@ import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import OnboardingCard from '../components/OnboardingCard'
 import { C, SHELL, CATEGORY_GRADIENT } from './dashboard/tokens'
+import { isChannelBrain } from '../brandHost'
 import {
   ytMaxThumbUrl, makeThumbOnError, makeThumbOnLoad,
   planBadge, healthScore,
@@ -771,7 +772,7 @@ export default function Dashboard() {
                 analysis, not YouTube metrics. Persistent so it shows on every
                 screen. */}
             <p style={{ margin: '12px 4px 0', fontSize: 10, lineHeight: 1.5, color: SHELL.text2, opacity: 0.7 }}>
-              Scores and grades in YTGrowth are our own analysis, not YouTube metrics.
+              Scores and grades in {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} are our own analysis, not YouTube metrics.
             </p>
           </div>
         )}
@@ -2115,7 +2116,7 @@ export default function Dashboard() {
                           }}>
                             <YTGLogo size={18}/>
                             <span style={{ fontSize: 14, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.3px' }}>
-                              YTGrowth<span style={{ color: '#7a5b14' }}>.io</span>
+                              {isChannelBrain() ? 'ChannelBrain' : <>YTGrowth<span style={{ color: '#7a5b14' }}>.io</span></>}
                             </span>
                           </div>
                         )}
