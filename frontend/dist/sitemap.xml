@@ -1982,6 +1982,12 @@
 
   <!-- Company -->
   <url>
+    <loc>https://ytgrowth.io/about</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://ytgrowth.io/affiliate</loc>
     <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
