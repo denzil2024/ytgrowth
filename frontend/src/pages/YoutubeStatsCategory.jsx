@@ -94,6 +94,13 @@ function useGlobalStyles() {
       .yts-faq-answer.open { grid-template-rows: 1fr; opacity: 1; }
       .yts-faq-answer-inner { overflow: hidden; }
 
+      .yts-data { width: 100%; border-collapse: collapse; background: var(--yte-surface); border: 1px solid var(--yte-line); font-family: ${SANS}; }
+      .yts-data th, .yts-data td { text-align: left; padding: 14px 18px; font-size: 14.5px; border-bottom: 1px solid var(--yte-line); vertical-align: top; }
+      .yts-data th { font-size: 10.5px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.12em; }
+      .yts-data td { color: var(--yte-soft); line-height: 1.5; font-variant-numeric: tabular-nums; }
+      .yts-data td.lead { font-weight: 600; color: var(--yte-ink); }
+      .yts-data tr:last-child td { border-bottom: none; }
+
       @media (max-width: 768px) {
         .yts-section-pad { padding-left: 22px !important; padding-right: 22px !important; }
         .yts-cta-pad { padding: 76px 24px !important; }
@@ -285,7 +292,49 @@ export default function YoutubeStatsCategory() {
         </div>
       </section>
 
-      {/* ══ HIGHLIGHTS / WHAT MAKES THEM BIG ══ */}
+      {/* ══ PER-HUB PROSE SECTIONS, each hub composes its own with original content ══ */}
+      {category.sections?.map((sec, si) => (
+        <section key={si} className="yts-section-pad" style={{ padding: isMobile ? '60px 22px' : '88px 48px', background: si % 2 === 0 ? 'var(--yte-surface)' : 'var(--yte-bg)', borderTop: '1px solid var(--yte-line)' }}>
+          <div className="yts-wrap">
+            <div style={{ marginBottom: sec.kind === 'breakdown' ? 34 : 26, maxWidth: 720 }}>
+              <Eyebrow>{sec.eyebrow}</Eyebrow>
+              <h2 className="yts-h2" style={{ fontSize: 'clamp(28px, 3.8vw, 42px)', textWrap: 'balance' }}>
+                {sec.heading}
+              </h2>
+            </div>
+            {sec.kind === 'breakdown' ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                {sec.items.map((row, i) => (
+                  <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
+                    <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                    <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
+                  </div>
+                ))}
+              </div>
+            ) : sec.kind === 'table' ? (
+              <div style={{ overflowX: 'auto' }}>
+                <table className="yts-data">
+                  <thead><tr>{sec.columns.map((c, i) => <th key={i}>{c}</th>)}</tr></thead>
+                  <tbody>
+                    {sec.rows.map((r, i) => (
+                      <tr key={i}>{r.map((cell, j) => <td key={j} className={j === 0 ? 'lead' : undefined}>{cell}</td>)}</tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div style={{ maxWidth: 720 }}>
+                {sec.paras.map((p, i) => (
+                  <p key={i} className="yts-lead" style={{ fontSize: isMobile ? 16 : 17.5, marginBottom: 16, textWrap: 'pretty' }}>{p}</p>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      ))}
+
+      {/* ══ HIGHLIGHTS, fallback only for hubs without their own sections ══ */}
+      {!category.sections && (
       <section className="yts-section-pad" style={{ padding: isMobile ? '64px 22px' : '96px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
         <div className="yts-wrap">
           <div style={{ marginBottom: 36, maxWidth: 720 }}>
@@ -308,6 +357,7 @@ export default function YoutubeStatsCategory() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ══ FAQ ══ */}
       <div className="yts-section-pad" style={{ background: 'var(--yte-bg)', padding: isMobile ? '60px 22px' : '104px 48px' }}>

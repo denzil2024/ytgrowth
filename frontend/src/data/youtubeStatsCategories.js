@@ -33,6 +33,30 @@ export const CATEGORY_META = [
       { q: 'How do gaming channels handle copyright on game footage?',
         a: 'Game publishers generally allow gameplay footage on YouTube under their content-creator policies, though some (Nintendo most famously) have stricter rules and may claim revenue on certain titles. The safe path: check each publisher\'s policy before building a channel around a single franchise, and add transformative commentary or facecam reactions so your videos qualify for fair use protections beyond what the publisher\'s policy alone covers.' },
     ],
+    sections: [
+      { kind: 'prose', eyebrow: 'Reach vs pay', heading: 'The most-watched niche pays among the least per view.',
+        paras: [
+          "Gaming leads YouTube in watch time and trails it in RPM. The audience is vast and loyal, yet the biggest-paying advertisers spend elsewhere. A gaming view is worth a fraction of a finance or tech view.",
+          "The leaderboard splits into two clear tiers. A handful of personalities and studios hold tens of millions of subscribers, and beneath them a long tail of faceless channels, mobile compilations, and kids' content scales on volume alone.",
+          "Durability comes from the game, not the creator. Viewers subscribe to a Minecraft channel for Minecraft, so the strongest channels anchor to one or two titles first. They branch out only once the identity is set.",
+        ] },
+      { kind: 'table', eyebrow: 'Where the money comes from', heading: 'Ads are the smallest line at the top.',
+        columns: ['Source', 'Priced on', 'Scale'],
+        rows: [
+          ['Long-form ads', 'CPM per 1,000 views', 'Low but steady'],
+          ['Shorts ads', 'Shared pool, ~$0.03–0.10 / 1K', 'Negligible'],
+          ['Channel memberships', 'Monthly, per member', 'Grows with loyalty'],
+          ['Twitch subs & bits', 'Monthly plus live tips', 'Often beats YouTube ads'],
+          ['Sponsorships', 'Flat fee per integration', 'Largest line at scale'],
+          ['Merchandise', 'Margin per unit', 'Tracks community size'],
+        ] },
+      { kind: 'breakdown', eyebrow: 'How the channels win', heading: 'The footage matters least.',
+        items: [
+          { h: 'The thumbnail is the whole game', p: "Gameplay footage looks alike across a niche, so the click comes down to the thumbnail and title. Winning channels test packaging constantly and re-thumbnail anything that stalls. The image is the product; the footage only delivers it." },
+          { h: 'Clips are the front door', p: "The fastest-growing channels cut their long videos and streams into vertical clips. The clips pull in new viewers cheaply. Those viewers then move to long-form and live, where the watch time and revenue sit." },
+          { h: 'Mind the made-for-kids switch', p: "Content aimed at children falls under COPPA. That strips personalized ads and disables comments, end screens, and notifications, cutting both RPM and reach. Channels serving kids plan for it early and lean on memberships and merch." },
+        ] },
+    ],
   },
 
   {
@@ -119,6 +143,24 @@ export const CATEGORY_META = [
         a: 'For market commentary: even small channels (5K–50K subs) can build a tight, engaged audience that takes their analysis seriously. For acquiring affiliate revenue: the curve really opens up around 50K subs, when audiences are large enough that affiliate-link clicks generate meaningful income. For brand deals: 100K+ subs is where finance brands start cold-outreaching for partnerships.' },
       { q: 'Is the finance niche oversaturated now?',
         a: 'Generic personal-finance is saturated. Specific niches inside finance are not: small-business accounting, freelance taxes, real-estate sub-categories (Section 8, mobile-home parks, short-term rentals), retirement for specific careers, geo-specific finance (UK ISAs, Canadian TFSAs, Australian super). The bar to break in is higher than 5 years ago, but the affiliate and ad economics are still better than every other YouTube category.' },
+    ],
+    sections: [
+      { kind: 'prose', eyebrow: 'Subs vs income', heading: 'The biggest finance channel is rarely the richest.',
+        paras: [
+          "Finance is the rare YouTube category where subscriber count is a poor proxy for income. A channel with a few hundred thousand subscribers regularly out-earns one several times its size. The value of a finance viewer comes from intent, not volume.",
+          "A viewer watching a Roth IRA or index-fund tutorial is minutes from opening a brokerage account. That single action pays the creator $50 to $300, and more over the viewer's lifetime. A viewer watching a market-crash reaction carries almost none of that value.",
+          "That gap pushes the durable channels toward the steadier lanes. Budgeting, debt payoff, and instructional investing never go out of date. Creators like Dave Ramsey and Graham Stephan built back catalogues that keep earning for years.",
+          "Crypto and active-trading channels sit at the opposite end. Their audiences swell in a bull market and vanish when the cycle turns. The top of the finance leaderboard looks nothing alike in a hype year and a flat one.",
+          "Production quality matters less here than in almost any other category. The audience is cautious with money and alert to a sales pitch. A screen recording of a real spreadsheet beats a polished studio set, as long as the reasoning holds up.",
+          "Credibility, not reach, is the currency of the niche. Creators who show their real numbers and name the risks are the ones whose audience acts: opening the account, buying the course, booking the call. That conversion is where most finance income is made.",
+        ] },
+      { kind: 'breakdown', eyebrow: 'The discipline', heading: 'In finance, discipline out-earns reach.',
+        items: [
+          { h: 'Specificity is the cheat code', p: "A narrow angle, freelance taxes, one country's retirement accounts, a single real-estate strategy, out-ranks and out-earns generic 'how to invest.' It matches exactly what a searcher typed and exactly the audience an advertiser pays to reach, so both the algorithm and the RPM reward it." },
+          { h: 'Evergreen compounds, news decays', p: "An index-fund explainer earns for five years; a 'market crash incoming' video earns for a week and then ages badly. The durable channels build a library of evergreen explainers as the product and treat timely news as top-of-funnel, not the thing they sell." },
+          { h: 'The disclaimer is the business model', p: "Finance is one of the few niches where restraint pays. Staying in education and personal experience, rather than direct advice, keeps advertisers comfortable and regulators uninterested, which is exactly what lets a channel run the high-value affiliate and sponsor deals underneath." },
+          { h: 'Every video points to one link', p: "The strongest finance channels do not treat ads as the goal. Each video answers a single question and funnels to one relevant tool, a broker, a budgeting app, a course, where the real money is. One clear call to action converts far better than five competing ones." },
+        ] },
     ],
   },
 

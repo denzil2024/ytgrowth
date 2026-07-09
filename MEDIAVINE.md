@@ -60,10 +60,147 @@ Mediavine. Journey fits our current size; full Mediavine does not yet.
   two combo page components now redirect to their parent hub (country hub / niche hub),
   and the hub-to-combo internal links were removed (the "See full top 50" links on the
   country hub and the "Filter by country" section on the category hub). No broken links.
-- **[TODO]** Enrich the ~33 hubs (14 category stats, 4 country stats, 14 niche earnings,
-  main hubs) into genuine, non-templated quality pages.
+- **[IN PROGRESS]** Enrich the ~33 hubs into genuine, non-templated quality pages.
+  Finance + gaming are done as reference hubs (LOCAL ONLY, not committed, running on the
+  dev server). See the full playbook in "Hub enrichment" below before touching anything.
 - **[TODO]** Build tier-1 topic clusters (genuine unique articles, Windsor.ai use-case
   style) targeting US/UK/CA/AU intent: monetization, sponsorship rates, tool comparisons.
+
+## Hub enrichment — READ THIS BEFORE TOUCHING A HUB
+
+Goal: make each kept hub a genuine, original, non-thin resource. NOT by stamping the same
+section template on every page. Each hub gets its own shape and its own content.
+
+### Where things stand
+- **Done, local only (NOT committed):** the `/youtube-stats` category hubs `finance` and
+  `gaming` are the two reference implementations. Review them on the dev server
+  (`cd frontend && npm run dev` → http://localhost:5173/youtube-stats/finance and
+  `/gaming`). The leaderboard is empty locally (backend off); that is expected.
+- **Remaining:** get the user's sign-off on finance + gaming FIRST, then continue one hub
+  at a time, then build + commit + push. Explicit tracker below.
+
+### Page tracker (tick as done)
+
+Category stats hubs — `youtube-stats/:slug`, data in `youtubeStatsCategories.js`:
+- [x] finance (reference)
+- [x] gaming (reference)
+- [ ] tech
+- [ ] beauty
+- [ ] cooking
+- [ ] fitness
+- [ ] music
+- [ ] education
+- [ ] vlogs
+- [ ] travel
+- [ ] comedy
+- [ ] sports
+- [ ] entertainment
+- [ ] news
+
+Country stats hubs — `youtube-stats/country/:slug`, data in `youtubeStatsCountries.js`
+(same `YoutubeStatsCountry.jsx` component; would need its own sections wiring):
+- [ ] united-states
+- [ ] united-kingdom
+- [ ] canada
+- [ ] australia
+
+Earnings niche hubs — `youtube-earnings/:niche`, SEPARATE component `NicheEarnings.jsx`,
+data `youtubeEarnings.js` `EARNINGS_META` (sections model not built here yet):
+- [ ] finance
+- [ ] tech
+- [ ] education
+- [ ] news
+- [ ] beauty
+- [ ] fitness
+- [ ] travel
+- [ ] cooking
+- [ ] vlogs
+- [ ] sports
+- [ ] gaming
+- [ ] comedy
+- [ ] entertainment
+- [ ] music
+
+Also un-migrated: the main `/youtube-stats` hub index and `/youtube-earnings` (`ToolsHub`)
+listing — decide whether they need enrichment or stay as directory pages.
+
+### How it is built
+- Component: `frontend/src/pages/YoutubeStatsCategory.jsx` renders a per-hub `sections`
+  array. Each section has a `kind`: `prose` (eyebrow + heading + paragraphs), `breakdown`
+  (title + description rows), or `table` (columns + rows). The old templated "What
+  separates the top X channels" highlights block is gated with `{!category.sections && ...}`
+  so any hub with its own `sections` skips it. Add new `kind`s (comparison, myth-vs-reality)
+  here when a niche wants them.
+- Data: `frontend/src/data/youtubeStatsCategories.js` — each category's `sections` array.
+  Finance shape = prose + breakdown. Gaming shape = prose + table + breakdown. Every hub
+  must be a DIFFERENT shape; do not give them all the same sequence.
+- Earnings niche hubs are a SEPARATE component/data (`NicheEarnings.jsx` /
+  `youtubeEarnings.js` `EARNINGS_META`); they will need their own sections work.
+
+### The formatting (use ONLY these tokens — do not invent)
+- Section headings: class `yts-h2` (Fraunces, weight 300, light). Genuinely written per
+  page — never a formula like "What the {niche} leaderboard shows".
+- Body paragraphs: class `yts-lead` (Barlow, weight 400).
+- Breakdown subheads (`h3`): Fraunces (SERIF), fontSize 21/23, **fontWeight 400**. This is
+  the correct original look. Do NOT shrink them to Barlow or a smaller size.
+- Table: class `yts-data`. `th` = Barlow 600 uppercase muted; `td` = Barlow 400; first
+  column `td.lead` = Barlow 600 ink.
+- Eyebrows: the `Eyebrow` component (Barlow 600 uppercase red). Must be DISTINCT per
+  section and per hub — no repeated "The landscape" across pages.
+
+### The writing (house standard)
+- Paragraphs 3-4 lines (5 only when forced). Split long ones.
+- Sentences tight, not long-winded. No 35-40 word run-ons stitched with "because / which
+  is why / and".
+- Every paragraph OPENS with a full substantive sentence. No short fragment openers
+  ("It comes down to X." / "That is why Y.").
+- Authoritative expert voice. No aphorisms or advice-blog clichés ("hype gets punished,
+  clarity gets rewarded"), no casual asides ("smell a pitch", "scroll on").
+- Concrete and specific: real numbers, named creators (e.g. Dave Ramsey, Graham Stephan),
+  real dynamics. That specificity is what makes a page not-thin.
+- Banned: the word "actually" anywhere; em-dashes; italics.
+- FAQs: lean toward more (8-9), each genuinely helpful and distinct, not padding.
+
+### Mistakes made in the build-out (do NOT repeat)
+1. **Over-reverting.** When the user flags a small formatting issue, fix that one thing.
+   Do NOT `git checkout HEAD -- <file>` to wipe uncommitted enrichment — it destroys work
+   that was never committed and cannot be recovered from git.
+2. **Same shape on every hub.** Landscape + playbook on all pages is just a new template.
+   Each hub needs a different composition of sections.
+3. **Inventing type weights/sizes.** A heavy Fraunces subhead out-bolds the light heading;
+   over-correcting by shrinking to small Barlow was also wrong. The answer is Fraunces 400
+   at 21/23 (see formatting above).
+4. **Generic labels/headings.** "The landscape" on every page, or "What the X leaderboard
+   shows" formulas. Make eyebrows and headings distinct and specific per page.
+5. **Filler prose.** Aphorisms and generic advice read as thin. Write concrete, authoritative,
+   specific copy.
+6. **Removing content the user approved.** When simplifying, only change what was flagged;
+   do not drop sections/tables that were working.
+7. **Not looking before declaring done.** ALWAYS screenshot the page and read it before
+   saying a UI change is done (see verification below). Multiple back-and-forths came from
+   guessing instead of viewing.
+8. **Acting before understanding the request.** The user said outright "I told you to stop
+   because you did not understand." When an instruction is ambiguous, do NOT rebuild or
+   delete on an assumption. Restate the specific intent in one line, or make one small
+   reversible change and show it — never take a large or destructive action on a guess.
+9. **Changing more than what was flagged.** When the user points at one thing (a label, a
+   font weight, a heading), change ONLY that. Do not also convert content to a different
+   format, drop a table, or restructure the section. Several loops came from "fixing" one
+   detail while silently altering others.
+10. **Misreading "revert" / "the formatting".** "Revert to how they were" meant revert the
+    FORMATTING, not delete the section. "The formatting we had in finance" meant keep the
+    serif subheads at full size. Read these literally and confirm scope before acting.
+11. **Verbosity.** The user repeatedly asked for brevity ("keep it brief", "stop the
+    stories", "you write too much"). Answer in a few lines, state results and decisions,
+    do not narrate deliberation or list options you won't pursue.
+
+### Verify before declaring a hub done
+- `node --check frontend/src/data/youtubeStatsCategories.js` (data parses).
+- `npx esbuild frontend/src/pages/YoutubeStatsCategory.jsx --outfile=/dev/null` (component
+  parses; exit 0).
+- Screenshot the live page with puppeteer against http://localhost:5173/... and READ it.
+- Scan the changed hub for the banned word "actually" and em-dashes.
+- Confirm eyebrows/headings do not repeat another hub's.
 
 ## Content philosophy (the lesson we learned)
 
