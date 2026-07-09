@@ -311,6 +311,24 @@ UTM_KEYS = ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term
 
 @router.get("/login")
 def login(request: Request):
+    # Consolidate ALL OAuth on the ChannelBrain host so the authenticated app is
+    # only ever ChannelBrain-branded. ytgrowth.io is the content brand and no
+    # longer initiates login: a login started on any non-ChannelBrain host is
+    # bounced to channelbrain.online first, carrying its query string (UTMs) so
+    # attribution survives. Localhost is exempt for local dev.
+    _host = (
+        request.headers.get("x-forwarded-host")
+        or request.headers.get("host")
+        or ""
+    ).split(",")[0].strip().lower()
+    _is_cb = _host == "channelbrain.online" or _host.endswith(".channelbrain.online")
+    _is_local = _host.startswith("localhost") or _host.startswith("127.0.0.1")
+    if not _is_cb and not _is_local:
+        qs = request.url.query
+        return RedirectResponse(
+            "https://channelbrain.online/auth/login" + (f"?{qs}" if qs else "")
+        )
+
     # Assign a session ID if the user doesn't have one yet
     if "session_id" not in request.session:
         request.session["session_id"] = str(uuid.uuid4())
