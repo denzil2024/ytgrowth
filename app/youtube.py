@@ -14,7 +14,11 @@ def get_channel_stats(credentials):
         mine=True
     )
     response = request.execute()
-    if not response["items"]:
+    # When the Google account has no YouTube channel, channels.list returns
+    # totalResults=0 and OMITS the "items" key entirely (not an empty list),
+    # so response["items"] would KeyError. .get() returns None → the caller
+    # redirects to ?error=no_channel instead of crashing into "audit failed".
+    if not response.get("items"):
         return None
     channel = response["items"][0]
     stats = channel["statistics"]
