@@ -17,6 +17,7 @@ const Privacy                          = lazy(() => import('./pages/Privacy'))
 const Refund                           = lazy(() => import('./pages/Refund'))
 const Affiliate                        = lazy(() => import('./pages/Affiliate'))
 const Contact                          = lazy(() => import('./pages/Contact'))
+const About                            = lazy(() => import('./pages/About'))
 const ChannelAudit                     = lazy(() => import('./pages/features/ChannelAudit'))
 const CompetitorAnalysis               = lazy(() => import('./pages/features/CompetitorAnalysis'))
 const SeoStudio                        = lazy(() => import('./pages/features/SeoStudio'))
@@ -66,6 +67,7 @@ function App() {
           <Route path="/refund" element={<Refund />} />
           <Route path="/affiliate" element={<Affiliate />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
           <Route path="/features/channel-audit"        element={<ChannelAudit />} />
           <Route path="/features/competitor-analysis"  element={<CompetitorAnalysis />} />
           <Route path="/features/seo-studio"           element={<SeoStudio />} />

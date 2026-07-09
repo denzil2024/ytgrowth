@@ -88,6 +88,7 @@ const RESOURCES = [
   { label: 'Top YouTube Channels', href: '/youtube-stats' },
   { label: 'Blog',                 href: '/blog' },
   { label: 'Pricing',              href: '/#pricing' },
+  { label: 'About',                href: '/about' },
   { label: 'Affiliates',           href: '/affiliate' },
   { label: 'Contact',              href: '/contact' },
 ]

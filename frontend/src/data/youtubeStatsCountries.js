@@ -139,37 +139,6 @@ export const COUNTRY_META = [
     ],
   },
 
-  {
-    id:    'india',
-    code:  'IN',
-    label: 'India',
-    flag:  '🇮🇳',
-    flagSrc: flagSrcFor('IN'),
-    blurb: 'Largest YouTube market by user count, dominated by Indian-language content. Lower per-view RPMs but enormous volume.',
-    seoTitle:       'Top YouTube Subscribers & Creators in India 2026: Live Rankings',
-    seoDescription: "Top YouTube subscribers and creators in India, ranked by live count from YouTube's API. Per-niche stats across gaming, tech, music, comedy. Updated daily.",
-    intro: [
-      "India is YouTube's largest market by user count. Hundreds of millions of Indian users consume content daily across English, Hindi, Tamil, Telugu, Bengali, Punjabi, and dozens of other regional languages. Indian YouTube has produced channels that rank among the platform's largest globally, including T-Series at the very top of the subscriber leaderboard.",
-      "Per-view RPMs are substantially lower in India than in tier-1 markets ($0.50-$2 per 1,000 views vs $4-$12 in the US), but volume more than compensates for the largest channels. Indian-language content has been the fastest-growing creator segment on YouTube globally over the past 5 years.",
-    ],
-    highlights: [
-      'Largest user base of any single country on the platform.',
-      'Per-view RPMs are 4-8x lower than tier-1 markets, but volume is 10-50x larger for top channels.',
-      'Indian-language content (Hindi, Tamil, Telugu, others) dominates the leaderboards more than English-language Indian content.',
-    ],
-    faqs: [
-      { q: "How much do top Indian YouTubers actually earn?",
-        a: "The very top tier (10M+ subs) earn substantial seven-figure annual incomes from YouTube alone, often complemented by larger income from brand deals and acting/production work. Mid-tier Indian creators (500K-2M subs) earn anywhere from $2K-$25K/month depending on category, audience country mix, and brand-deal activity. Per-view ad rates are low, but volume and increasingly competitive Indian brand-deal markets compensate." },
-      { q: "Why is India's per-view RPM so much lower than the US?",
-        a: "Because Indian advertisers historically spent less per impression than US/UK advertisers. This is changing, the Indian advertising market is growing fast, and YouTube CPMs in India have roughly doubled over the past 5 years. But per-view RPMs in India still run 4-8x lower than US rates because the underlying ad-buy economy is smaller. The gap is closing, not closed." },
-      { q: "Should Indian creators target English or regional languages?",
-        a: "Both work, with different upside. English content can reach the global audience and earn higher per-view RPMs but faces global competition. Regional-language content (Hindi, Tamil, Telugu, Punjabi, Bengali) has lower per-view rates but much less competition in India and very strong audience loyalty. Top Indian YouTubers in regional languages often have larger absolute incomes than equivalent-sized English-language Indian channels." },
-      { q: "Why is T-Series so massive on YouTube?",
-        a: "T-Series is India's largest music label. They release thousands of new music videos per year (Bollywood film soundtracks, Punjabi tracks, devotional music) and benefit from the long-tail viewing that Indian YouTube users do across decades of catalogue music. The combination of new uploads + a massive back catalogue of repeatedly-watched songs has made them YouTube's most-subscribed channel globally." },
-      { q: "What categories work best for Indian YouTube creators?",
-        a: "Education and exam-preparation content has been one of the fastest-growing Indian categories (UPSC, JEE, NEET prep channels). Comedy and sketch in Hindi and regional languages have produced huge channels. Cooking, devotional content, music, and tech reviews in regional languages all have strong audiences. Pure English-language Indian channels in finance, tech, and lifestyle have been growing fast as the urban English-speaking middle class expands." },
-    ],
-  },
 ]
 
 export const COUNTRY_LOOKUP_BY_SLUG = Object.fromEntries(COUNTRY_META.map(c => [c.id, c]))
