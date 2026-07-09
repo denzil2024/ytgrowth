@@ -61,8 +61,9 @@ Mediavine. Journey fits our current size; full Mediavine does not yet.
   and the hub-to-combo internal links were removed (the "See full top 50" links on the
   country hub and the "Filter by country" section on the category hub). No broken links.
 - **[IN PROGRESS]** Enrich the ~33 hubs into genuine, non-templated quality pages.
-  Finance + gaming are done as reference hubs (LOCAL ONLY, not committed, running on the
-  dev server). See the full playbook in "Hub enrichment" below before touching anything.
+  Finance + gaming are DONE and shipped (commit ed41ba7b4, pushed, live on ytgrowth.io).
+  They are the two reference hubs. See the full playbook in "Hub enrichment" below before
+  touching the rest.
 - **[TODO]** Build tier-1 topic clusters (genuine unique articles, Windsor.ai use-case
   style) targeting US/UK/CA/AU intent: monetization, sponsorship rates, tool comparisons.
 
@@ -72,10 +73,11 @@ Goal: make each kept hub a genuine, original, non-thin resource. NOT by stamping
 section template on every page. Each hub gets its own shape and its own content.
 
 ### Where things stand
-- **Done, local only (NOT committed):** the `/youtube-stats` category hubs `finance` and
-  `gaming` are the two reference implementations. Review them on the dev server
-  (`cd frontend && npm run dev` → http://localhost:5173/youtube-stats/finance and
-  `/gaming`). The leaderboard is empty locally (backend off); that is expected.
+- **Done and shipped (commit ed41ba7b4):** the `/youtube-stats` category hubs `finance`
+  and `gaming` are the two reference implementations, live on ytgrowth.io. To iterate
+  locally, run the dev server (`cd frontend && npm run dev` →
+  http://localhost:5173/youtube-stats/finance and `/gaming`). The leaderboard is empty
+  locally (backend off); that is expected.
 - **Remaining:** get the user's sign-off on finance + gaming FIRST, then continue one hub
   at a time, then build + commit + push. Explicit tracker below.
 
