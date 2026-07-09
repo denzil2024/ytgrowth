@@ -110,6 +110,11 @@ def _try_kickoff_free_peek(channel_id: str, channel: dict, videos: list) -> bool
     OutliersSearchCache so subsequent dashboard loads hydrate the card."""
     if not channel_id:
         return False
+    # Free plans no longer get the auto-peek — it fired an uncached Claude
+    # call per new channel with no credit charged. Cut 2026-07 to stop free
+    # signups burning Anthropic tokens. Paid users still get the auto-peek.
+    if _is_free_plan(channel_id):
+        return False
     lock = _refresh_locks.setdefault(f"peek:{channel_id}", threading.Lock())
     if not lock.acquire(blocking=False):
         return False

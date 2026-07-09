@@ -402,28 +402,42 @@ def _save_insights_to_db_row(session_id: str, insights: dict, analyzed_at: str) 
     return False
 
 
-def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full_data: dict, plan: str = "free", charged: bool = False):
-    """Run AI analysis after login and update session data when done.
+def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full_data: dict, plan: str = "free", charged: bool = False, use_ai: bool = True):
+    """Run the channel audit after login and update session data when done.
     If `charged=True`, the caller already spent 1 credit via check_and_deduct.
     Claude failures DO NOT refund — Anthropic still bills us on token use, so
     refunding compounds the loss. Users can email support@ytgrowth.io for a
     manual goodwill bump if a paid run failed.
+
+    When `use_ai=False` (free plan, 2026-07) the audit is computed with the
+    rule-based `_fallback_analysis` only — no Anthropic call — so free signups
+    stop burning tokens. We rewrite the fallback's error-flavoured summary so
+    it reads as a normal audit and does NOT trip the "fallback mode" re-audit
+    loop in /callback.
     """
     channel_id = stats.get("channel_id") if stats else None
     try:
-        insights = analyze_channel(
-            stats, videos,
-            analytics=full_data.get("analytics"),
-            video_analytics=full_data.get("video_analytics"),
-            traffic_sources=full_data.get("traffic_sources"),
-            shares=full_data.get("shares"),
-            device_types=full_data.get("device_types"),
-            geographies=full_data.get("geographies"),
-            demographics=full_data.get("demographics"),
-            dislikes=full_data.get("dislikes"),
-            playlist_adds=full_data.get("playlist_adds"),
-            plan=plan,
-        )
+        if use_ai:
+            insights = analyze_channel(
+                stats, videos,
+                analytics=full_data.get("analytics"),
+                video_analytics=full_data.get("video_analytics"),
+                traffic_sources=full_data.get("traffic_sources"),
+                shares=full_data.get("shares"),
+                device_types=full_data.get("device_types"),
+                geographies=full_data.get("geographies"),
+                demographics=full_data.get("demographics"),
+                dislikes=full_data.get("dislikes"),
+                playlist_adds=full_data.get("playlist_adds"),
+                plan=plan,
+            )
+        else:
+            insights = _fallback_analysis(stats, videos, full_data.get("analytics"))
+            insights["channelSummary"] = (
+                "Here is a data-based read of your channel from your public "
+                "metrics. Upgrade for a full AI-powered audit with deeper, "
+                "channel-specific recommendations."
+            )
         analyzed_at = datetime.datetime.utcnow().isoformat() + 'Z'
         # Always reload from DB and save back — don't rely on in-memory state
         data, creds = get_session(session_id)
@@ -874,7 +888,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
                 _stamp_last_audit(channel_id)
                 background_tasks.add_task(
                     _run_analysis_in_background,
-                    session_id, stats, videos, full_data, plan, True
+                    session_id, stats, videos, full_data, plan, True, False
                 )
             else:
                 # Paid: charge 1 credit. No refund on Claude failures
@@ -1106,6 +1120,7 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
         full_data,
         plan,
         True,
+        not is_free_plan,  # free plan → rule-based audit, no Anthropic call
     )
     return JSONResponse({"message": "Analysis started"})
 

@@ -473,13 +473,18 @@ def chat_state(request: Request, conversation_id: Optional[int] = None):
                 for r in rows
             ]
 
+        # Free plans get no AI coach messages (2026-07 cost cut). Report a
+        # zero allowance so the UI shows the upgrade prompt instead of an
+        # available bucket. Paid plans are unchanged.
+        _is_free = ((sub.plan or "free") or "free") == "free"
+        _allowance = 0 if _is_free else int(sub.chat_allowance or 0)
         return JSONResponse({
             "messages":         messages,
             "conversation_id":  conv.id if conv else None,
             "conversations":    _conversations_payload(db, channel_id),
-            "allowance":        int(sub.chat_allowance or 0),
+            "allowance":        _allowance,
             "used":             int(sub.chat_used or 0),
-            "remaining":        max(0, int(sub.chat_allowance or 0) - int(sub.chat_used or 0)),
+            "remaining":        max(0, _allowance - int(sub.chat_used or 0)),
             "plan":             sub.plan or "free",
             "sources":          _summarize_sources(data, channel_id),
         })
@@ -538,6 +543,11 @@ def chat_send(body: SendBody, request: Request):
         # Quota check
         allowance = int(sub.chat_allowance or 0)
         used      = int(sub.chat_used or 0)
+        # Free plans get no AI coach messages (2026-07 cost cut). Force the
+        # bucket to zero so the send is blocked before any Anthropic call and
+        # the UI shows the same upgrade prompt as running out.
+        if ((sub.plan or "free") or "free") == "free":
+            allowance = 0
         if used >= allowance:
             return JSONResponse({
                 "error": "out_of_messages",
