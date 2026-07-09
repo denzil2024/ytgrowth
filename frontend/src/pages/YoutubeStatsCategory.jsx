@@ -348,33 +348,6 @@ export default function YoutubeStatsCategory() {
         </div>
       </div>
 
-      {/* ══ FILTER BY COUNTRY, combo page links ══ */}
-      <section className="yts-section-pad" style={{ padding: isMobile ? '60px 22px 36px' : '88px 48px 44px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 22 }}>
-            <div>
-              <Eyebrow>Filter by country</Eyebrow>
-              <h2 className="yts-h2" style={{ fontSize: isMobile ? 24 : 30 }}>
-                Top {category.label.toLowerCase()} channels by <em>country.</em>
-              </h2>
-            </div>
-            <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-muted)', maxWidth: 420, lineHeight: 1.55, margin: 0 }}>
-              Drill into the {category.label.toLowerCase()} leaderboard for one specific YouTube market.
-            </p>
-          </div>
-          <div className="yts-country-grid">
-            {COUNTRY_META.map(co => (
-              <a key={co.id} href={`/youtube-stats/country/${co.id}/${category.id}`} className="yts-country-card">
-                <img src={co.flagSrc} alt={`${co.label} flag`} width={36} height={27} loading="lazy" style={{ borderRadius: 3, boxShadow: '0 1px 3px rgba(10,10,15,0.15)', display: 'block' }} />
-                <span style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.1px', textAlign: 'center' }}>
-                  {co.label}
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ══ RELATED CATEGORIES ══ */}
       <section className="yts-section-pad" style={{ padding: isMobile ? '24px 22px 64px' : '32px 48px 96px', background: 'var(--yte-surface)' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>

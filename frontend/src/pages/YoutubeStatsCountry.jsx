@@ -302,7 +302,6 @@ export default function YoutubeStatsCountry() {
                     {meta.blurb}
                   </p>
                 </div>
-                <a href={`/youtube-stats/country/${country.id}/${meta.id}`} className="yts-seeall">See full top 50 →</a>
               </div>
 
               <div className="yts-board">
