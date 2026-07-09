@@ -606,83 +606,6 @@ function LinkedIdeaCard({ idea }) {
   )
 }
 
-/* ─── Time helper ────────────────────────────────────────────────────────── */
-function timeAgo(isoStr) {
-  if (!isoStr) return ''
-  const d = Math.floor((Date.now() - new Date(isoStr).getTime()) / 86400000)
-  if (d === 0) return 'Today'
-  if (d === 1) return '1 day ago'
-  if (d < 30) return `${d} days ago`
-  const m = Math.floor(d / 30)
-  return `${m} month${m > 1 ? 's' : ''} ago`
-}
-
-/* ─── History panel ───────────────────────────────────────────────────────── */
-function HistoryPanel({ history, activeId, onSelect, onDelete }) {
-  if (!history || history.length < 2) return null
-  return (
-    <div style={{ marginTop: 24 }}>
-      <p style={{ fontSize: 12, fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase',
-                  letterSpacing: '0.06em', marginBottom: 10 }}>Previous Thumbnails</p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        {history.map(item => {
-          const isActive = item.id === activeId
-          const score = item.final_score ?? item.algorithm_score ?? 0
-          const max   = item.final_score != null ? 100 : 60
-          const col   = scoreColor(score, max)
-          return (
-            <div
-              key={item.id}
-              onClick={() => onSelect(item)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 10,
-                padding: '7px 10px', borderRadius: 0, cursor: 'pointer',
-                border: `1px solid ${isActive ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.06)'}`,
-                background: isActive ? C.cardFlat : C.surfaceInput,
-                transition: 'background 0.12s',
-              }}
-              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = '#f9f9fb' }}
-              onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = C.cardFlat }}
-            >
-              {item.thumbnail_b64
-                ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
-                       style={{ width: 48, height: 27, borderRadius: 0, objectFit: 'cover', flexShrink: 0 }}/>
-                : <div style={{ width: 48, height: 27, borderRadius: 0, background: '#e8e4dc', flexShrink: 0 }}/>
-              }
-              <span style={{ fontSize: 12, fontWeight: 500, color: col, flexShrink: 0,
-                             fontVariantNumeric: 'tabular-nums' }}>{score}/{max}</span>
-              {item.confirmed_keyword && (
-                <span style={{ fontSize: 12, color: '#9ca3af', flex: 1, overflow: 'hidden',
-                               textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {item.confirmed_keyword}
-                </span>
-              )}
-              <span style={{ fontSize: 12, color: '#9ca3af', flexShrink: 0 }}>
-                {timeAgo(item.uploaded_at)}
-              </span>
-              {item.linked_video_idea?.thumbnail_ready && (
-                <span style={{ fontSize: 12, fontWeight: 500, color: '#2d7a4f',
-                               background: '#dcfce7', borderRadius: 0, padding: '2px 6px', flexShrink: 0 }}>
-                  Ready
-                </span>
-              )}
-              <button
-                onClick={e => { e.stopPropagation(); onDelete(item.id) }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14,
-                         color: '#d1d5db', padding: '0 2px', flexShrink: 0, lineHeight: 1,
-                         fontFamily: 'inherit' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#c0392b' }}
-                onMouseLeave={e => { e.currentTarget.style.color = '#d1d5db' }}
-                title="Remove"
-              >×</button>
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
 /* ─── Upload panel (ideas dropdown + topic + file zone) ───────────────────── */
 /* Custom dropdown, replaces native <select> which renders as OS-default (ugly on Windows/Linux).
    Supports options with a primary label, optional right-side meta chip, optional divider. Closes on outside click. */
@@ -875,7 +798,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           />
 
           {selectedIdea && (
-            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 3, background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 0, padding: '12px 14px' }}>
+            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 3, background: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.18)', borderRadius: 0, padding: '12px 14px' }}>
               <p style={{ fontSize: 12.5, color: C.greenHi, fontWeight: 600, letterSpacing: '-0.1px' }}>
                 Using competitor-researched keyword: &quot;{selectedIdea.targetKeyword}&quot;
               </p>
@@ -1180,10 +1103,16 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
   }
 
   // ── Layer 2 handler ────────────────────────────────────────────────────────
-  async function handleAnalyze() {
-    if (!analysis?.id) return
+  async function handleAnalyze(target = null) {
+    // `target` upgrades a technical-only entry from the Previous tab in place:
+    // pull it in as the active analysis, switch to the results view, and run
+    // Layer 2 against its id. Falls back to the current analysis otherwise.
+    const active = target || analysis
+    if (!active?.id) return
+    if (target) { setAnalysis(target); setActiveTab('new') }
     // Client-side short-circuit for free-tier one-run users.
     if (gated) {
+      if (target) setState('ready1')
       setCreditsOut(true)
       return
     }
@@ -1195,7 +1124,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       const r = await fetch('/thumbnail/analyze', {
         method: 'POST', credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ thumbnail_id: analysis.id }),
+        body: JSON.stringify({ thumbnail_id: active.id }),
         signal: controller.signal,
       })
       if (r.status === 401) { window.location = '/'; return }
@@ -1246,15 +1175,6 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
         setState('idle')
       }
     }
-  }
-
-  // ── Restore a history entry as active ─────────────────────────────────────
-  function handleRestoreHistory(item) {
-    setAnalysis(item)
-    setMarkedReady(!!item.linked_video_idea?.thumbnail_ready)
-    setState(item.layer2_scores ? 'ready2' : 'ready1')
-    setDupMsg('')
-    setActiveTab('previous')
   }
 
   // ── Mark idea as Thumbnail Ready ───────────────────────────────────────────
@@ -1536,7 +1456,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                           {itemL2 && (itemL2.biggestWin || itemL2.biggestFix) && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
                               {itemL2.biggestWin && (
-                                <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 0, padding: '12px 16px' }}>
+                                <div style={{ background: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.18)', borderRadius: 0, padding: '12px 16px' }}>
                                   <p style={{ fontSize: 10, fontWeight: 600, color: C.greenHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest win</p>
                                   <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestWin}</p>
                                 </div>
@@ -1604,6 +1524,26 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                                 ))}
                               </div>
                             </div>
+                          )}
+
+                          {/* Technical-only entry: run the full AI analysis in place
+                              (previously a dead-end, the report could only be viewed). */}
+                          {!itemL2 && (
+                            <button
+                              onClick={() => handleAnalyze(item)}
+                              style={{
+                                width: '100%', marginTop: 2,
+                                padding: '12px 16px',
+                                background: C.red, color: 'var(--yd-on-gold)',
+                                border: 'none', borderRadius: 0, fontSize: 13, fontWeight: 600,
+                                cursor: 'pointer', fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em',
+                                transition: 'filter 0.15s',
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
+                              onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+                            >
+                              Run Full Thumbnail IQ · 1 credit
+                            </button>
                           )}
                         </div>
                       </div>
@@ -1700,7 +1640,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
               {state === 'ready2' && l2 && (l2.biggestWin || l2.biggestFix) && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
                   {l2.biggestWin && (
-                    <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 0, padding: '14px 18px' }}>
+                    <div style={{ background: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.18)', borderRadius: 0, padding: '14px 18px' }}>
                       <p style={{ fontSize: 10, fontWeight: 600, color: C.greenHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest win</p>
                       <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.65 }}>{l2.biggestWin}</p>
                     </div>
@@ -1777,7 +1717,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       {/* Benchmark stats strip, 3 small tiles below the main row */}
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 20, paddingTop: 18, borderTop: `1px solid ${C.border}` }}>
                         {[
-                          { label: 'Your score',    value: `${currentScore}/${currentMax}` },
+                          { label: 'Your score',    value: `${algoScore}/60`, sub: 'technical' },
                           { label: 'Niche average', value: analysis.niche_avg_score ? `${Math.round(analysis.niche_avg_score)}/60` : '—' },
                           { label: 'You beat',      value: analysis.user_percentile != null ? fmtPct(analysis.user_percentile) : '—', sub: 'of similar channels' },
                         ].map(s => (

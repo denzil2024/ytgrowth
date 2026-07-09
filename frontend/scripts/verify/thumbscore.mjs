@@ -29,5 +29,28 @@ try{
   out=path.join(__dirname,'thumbscore-results.png')
   await rp.screenshot({path:out,fullPage:true})
   console.log(`OK: wrote ${out}`)
+  // Technical-only results (Layer 1 only) — shows the "Run Full Thumbnail IQ" CTA
+  const r1=await ctx.newPage()
+  await r1.goto(`http://localhost:${PORT}/preview-thumbscore.html?state=ready1`,{waitUntil:'networkidle'})
+  await r1.evaluate(()=>document.fonts?document.fonts.ready:Promise.resolve())
+  await r1.waitForTimeout(2400)
+  out=path.join(__dirname,'thumbscore-ready1.png')
+  await r1.screenshot({path:out,fullPage:true})
+  console.log(`OK: wrote ${out}`)
+  // Previous tab with a full + a technical-only entry (both expanded)
+  const pv=await ctx.newPage()
+  await pv.goto(`http://localhost:${PORT}/preview-thumbscore.html?state=previous`,{waitUntil:'networkidle'})
+  await pv.evaluate(()=>document.fonts?document.fonts.ready:Promise.resolve())
+  await pv.waitForTimeout(1600)
+  // Switch to the Previous tab, then open every report to expose the accordions + Run button
+  await pv.getByText('Previous',{exact:false}).first().click().catch(()=>{})
+  await pv.waitForTimeout(500)
+  // Re-query each pass: opening one report changes its label to "Close",
+  // so grabbing all handles up front would miss the entries below it.
+  for(let i=0;i<4;i++){ const bt=pv.getByText('Open report').first(); if(await bt.count().catch(()=>0)){ await bt.click().catch(()=>{}); await pv.waitForTimeout(400) } }
+  await pv.waitForTimeout(600)
+  out=path.join(__dirname,'thumbscore-previous.png')
+  await pv.screenshot({path:out,fullPage:true})
+  console.log(`OK: wrote ${out}`)
   await ctx.close()
 }finally{await b.close();v.kill();try{execSync(`npx kill-port ${PORT}`,{stdio:'ignore'})}catch{}}
