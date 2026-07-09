@@ -358,11 +358,11 @@ def _rebrand_channelbrain(html: str) -> str:
     html = html.replace("YTGrowth", "ChannelBrain")
     # Canonical / OG / schema URLs point at the ChannelBrain host.
     html = html.replace("https://ytgrowth.io", "https://channelbrain.online")
-    # NOTE: channelbrain.online is intentionally left INDEXABLE during the OAuth
-    # review. A noindex tag here blocked Search Console "Request Indexing" and
-    # can make Google's home-page verification treat the page as not a real
-    # public page. Re-add noindex (or a canonical to ytgrowth.io) only AFTER
-    # ChannelBrain is verified. See [[project_youtube_api_compliance]].
+    # Keep channelbrain.online OUT of Google's index — it mirrors ytgrowth.io
+    # content and is the app/login domain, so indexing it would create duplicate
+    # content. ChannelBrain's OAuth branding is already verified, and noindex
+    # does not affect that (verification passed with this tag in place).
+    html = html.replace('name="robots" content="index', 'name="robots" content="noindex')
     # Logo/home-link accessible name — Google reads this as the home page's app
     # name, so it must say ChannelBrain (lowercase, missed by the swaps above).
     html = html.replace('aria-label="ytgrowth home"', 'aria-label="ChannelBrain home"')
