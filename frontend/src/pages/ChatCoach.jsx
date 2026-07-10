@@ -17,6 +17,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { useCheckoutAction } from '../checkout'
 import {
   Sparkles,         // Assistant mark (reads as "AI")
   Database,         // Sources line on assistant replies
@@ -218,6 +219,7 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [sendError, setSendError] = useState(null)
+  const { busy: coBusy, upgrade } = useCheckoutAction()
   // Conversation history. activeConversationId === null when the user
   // has no conversations yet (truly first-time empty state).
   const [conversations, setConversations] = useState([])
@@ -510,20 +512,22 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
       {outOfMessages && (
         <button
           type="button"
-          onClick={() => onNavigate?.('Settings')}
+          onClick={upgrade}
+          disabled={coBusy}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
             padding: '7px 13px', borderRadius: 0,
-            border: 'none', cursor: 'pointer',
+            border: 'none', cursor: coBusy ? 'default' : 'pointer',
             background: C.red, color: 'var(--yd-on-gold)',
-            fontFamily: 'inherit', fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
+            fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase',
+            fontSize: 12.5, fontWeight: 600, letterSpacing: '0.05em',
             flexShrink: 0, transition: `filter 140ms ${C.spring}`,
           }}
-          onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.08)'}
+          onMouseEnter={e => { if (!coBusy) e.currentTarget.style.filter = 'brightness(1.08)' }}
           onMouseLeave={e => e.currentTarget.style.filter = 'none'}
         >
-          Upgrade
-          <ArrowRight size={12} strokeWidth={2.2} />
+          {coBusy ? 'Opening…' : 'Upgrade'}
+          {!coBusy && <ArrowRight size={12} strokeWidth={2.2} />}
         </button>
       )}
     </div>
