@@ -288,6 +288,17 @@ export default function BlogPost() {
             { '@type': 'ListItem', position: 3, name: post.title, item: canonical },
           ],
         },
+        // FAQPage, emitted only for posts that carry a `faqs` array whose Q&As
+        // mirror the visible FAQ section (Google requires schema to match the
+        // page). Feeds Google rich results and AI answer engines. See MEDIAVINE.md.
+        ...(Array.isArray(post.faqs) && post.faqs.length ? [{
+          '@type': 'FAQPage',
+          mainEntity: post.faqs.map(f => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        }] : []),
       ],
     }
     let script = document.getElementById('bp-jsonld')

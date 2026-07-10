@@ -1716,13 +1716,23 @@ export const posts = [
   {
     slug: 'youtube-rpm',
     title: 'YouTube RPM Explained: What It Means, What Affects It, and How to Increase It',
-    excerpt: 'What YouTube RPM means, why it moves, the niches that pay 3 to 10x more than average, and the five levers that lift the number in your Revenue tab.',
+    excerpt: 'What YouTube RPM means, why it moves, the niches and countries that pay 3 to 10x more than average, and the levers that lift the number in your Revenue tab.',
     date: '2026-05-25',
-    updated: '2026-06-29',
+    updated: '2026-07-10',
     category: CATEGORIES.monetization,
     cover: '/blog/youtube-rpm-cover.jpg',
     author: 'Denzil',
     readTime: '12 min read',
+    faqs: [
+      { q: 'What is a good RPM for YouTube in 2026?', a: 'An RPM between $3 and $5 puts most channels in solid territory globally. Below $2 suggests a low-CPM niche, a majority of viewers from lower-CPM regions, or ad formats not fully enabled. Above $5 is strong for most content categories, and finance and legal channels regularly see $8 to $20. The right benchmark is your specific niche and audience geography, not a global average.' },
+      { q: 'Why is my YouTube RPM lower than my CPM?', a: 'This is normal. YouTube RPM is always lower than CPM because YouTube takes a 45% cut before paying creators, not every view is monetized, and RPM divides by total views rather than just monetized playbacks. If the gap is unusually large, check whether all your ad formats are enabled and what share of your views come from non-monetized sources.' },
+      { q: 'How do I calculate RPM from CPM?', a: 'There is no exact formula, but a useful estimate is RPM is roughly CPM times 0.55, which accounts for YouTube\'s 45% revenue share. The real number usually lands a little lower because RPM divides by all views, including the ones where no ad ran. To measure your own directly, take total revenue, divide by total views, and multiply by 1,000.' },
+      { q: 'How does US YouTube RPM compare to other regions?', a: 'Viewers in the US generate significantly more revenue per view than most other markets. A channel with a majority US audience can see RPM two to five times higher than the same channel with a majority of viewers from lower-CPM regions. The US, UK, Canada, and Australia consistently sit at the top of every RPM-by-country breakdown because advertisers there have larger budgets and higher customer acquisition costs. YouTube reads where your viewers are, not where you are, so a VPN or your own location changes nothing about your rate.' },
+      { q: 'Does YouTube Shorts RPM work the same way as long-form?', a: 'No. Shorts RPM operates on a different model. Long-form RPM comes from direct ad revenue on your specific videos, while Shorts revenue comes from a shared monthly pool distributed across eligible creators by their share of engaged views. Most creators see Shorts RPM between $0.03 and $0.08 per 1,000 views, roughly 95% lower than long-form. Use Shorts for growth, not revenue.' },
+      { q: 'How much does YouTube pay per 1,000 views?', a: 'That figure is your RPM. The global average for long-form sits around $2 to $8 per 1,000 views, but it swings hard on two things: your niche and your audience\'s country. A finance channel with a US audience can clear $20 per 1,000 views, while a gaming channel with a tier-three audience may see under $1. Your own number is in the Revenue tab: total revenue divided by total views, times 1,000.' },
+      { q: 'Why did my RPM suddenly drop?', a: 'The most common cause is seasonal: RPM falls 30 to 50 percent every January as advertiser budgets reset after Q4, then recovers through the year. Other causes are a traffic shift toward browse or lower-CPM countries, a spike in barely-monetized Shorts views diluting your average, or an ad format getting switched off. Filter the Revenue tab by month, geography, and format to find which one moved.' },
+      { q: 'Does made-for-kids content earn a lower RPM?', a: 'Yes, and by a wide margin. Content marked made for kids cannot run personalized ads under children\'s privacy rules, and personalized ads are where most advertiser competition and revenue sit. A made-for-kids video often earns a fraction of the RPM the same topic would earn aimed at a general audience. If your whole channel is set to made for kids, expect an RPM below your niche benchmark regardless of geography or format.' },
+    ],
     content: () => (
       <>
         <p>Two creators can post videos in the same week, pull similar view counts, and end up with completely different amounts in their <a href="/blog/google-adsense-youtube">AdSense accounts</a>. The difference is rarely about effort or production quality. It almost always comes down to YouTube RPM.</p>
@@ -1762,6 +1772,8 @@ export const posts = [
         </table>
 
         <p>This means two channels with identical CPM rates can show very different RPM figures depending on how diversified their revenue streams are. A channel with active memberships and consistent Super Chat during live streams will always show a higher RPM than a channel of the same size relying on ads alone.</p>
+
+        <p>It is just as important to know what RPM leaves out. <strong>RPM only counts money that flows through YouTube.</strong> Sponsorships, affiliate commissions, merchandise, digital products, and off-platform memberships are invisible to it, and for many mid-size creators those streams out-earn everything in the Revenue tab. RPM measures how well your channel turns views into platform revenue, not your total income as a creator.</p>
 
         <p>For a deeper look at how CPM works from the advertiser side, the <a href="/blog/youtube-cpm">YouTube CPM guide</a> covers the full breakdown.</p>
 
@@ -1891,13 +1903,45 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Look at your top 10 highest-RPM videos and identify the closest sub-niche they share. That sub-niche is almost always more valuable to advertisers than your channel's main category average. Build the next quarter's uploads around that sub-niche rather than your broader topic, and your channel-level RPM will lift without losing your existing audience.</blockquote>
 
+        <h2>YouTube RPM by Country</h2>
+
+        <p>Your audience's location can swing your RPM more than your niche does. <strong>A viewer in the United States is worth several times a viewer in a tier-three market</strong>, because advertisers in high-income countries bid far more to reach them. The same video, same niche, same view count, earns a different amount depending on where its viewers sit.</p>
+
+        <p>Here is how typical 2026 RPM breaks down by audience country for long-form content, blended across niches. A high-value niche like finance or B2B sits at or above the top of each range; entertainment or gaming sits below it.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Audience Country</th>
+              <th>Typical RPM (2026)</th>
+              <th>Tier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>United States</strong></td><td>$6 to $20+</td><td>Tier 1</td></tr>
+            <tr><td><strong>Australia</strong></td><td>$5 to $15</td><td>Tier 1</td></tr>
+            <tr><td><strong>United Kingdom</strong></td><td>$5 to $16</td><td>Tier 1</td></tr>
+            <tr><td><strong>Canada</strong></td><td>$5 to $14</td><td>Tier 1</td></tr>
+            <tr><td><strong>Germany</strong></td><td>$3 to $8</td><td>Tier 2</td></tr>
+            <tr><td><strong>United Arab Emirates</strong></td><td>$2 to $6</td><td>Tier 2</td></tr>
+            <tr><td><strong>Brazil</strong></td><td>$1 to $3</td><td>Tier 3</td></tr>
+            <tr><td><strong>India</strong></td><td>$0.80 to $3</td><td>Tier 3</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>The United States, United Kingdom, Canada, and Australia sit at the top of every RPM-by-country table</strong>, and the reason is economic, not technical. Advertisers in those markets have larger budgets and pay more to acquire a customer, so they bid harder for each impression. A channel that shifts its audience toward those four countries lifts its RPM without changing anything about its content.</p>
+
+        <p>This is why audience geography, not subscriber count, often decides which channels earn a living. A creator with 30,000 mostly-US viewers can out-earn one with 300,000 mostly tier-three viewers on the same topic. For the full picture by niche and market, our <a href="/youtube-earnings/finance">finance earnings by country</a> pages break the numbers down country by country.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Open the Geography filter in your Revenue tab and check what share of your views come from the US, UK, Canada, and Australia. If it is under half, your single biggest RPM lever is not a new ad format, it is content that pulls more tier-one viewers: search-driven, English-language, and universally relevant rather than region-specific.</blockquote>
+
         <h2>What Determines Your YouTube Channel RPM</h2>
 
         <p>Understanding your channel RPM requires looking beyond niche alone. <strong>Five factors move the number up or down independently of what content category you are in.</strong></p>
 
         <h3>Audience Geography</h3>
 
-        <p>Where your viewers are located is the single biggest variable in your RPM outside of niche. <strong>A US viewer generates three to five times more revenue per view than a viewer from a lower-CPM region.</strong> Check your audience geography breakdown in the Revenue tab inside YouTube Studio. If the majority of your views come from outside tier-one markets, your RPM will reflect that regardless of how strong your content is.</p>
+        <p>Where your viewers are located is the single biggest variable in your RPM outside of niche, which is why the country table above matters as much as the niche one. <strong>If most of your views come from outside tier-one markets, that alone caps your RPM regardless of how strong your content is.</strong> The fix is not a settings change. It is content that pulls more US, UK, Canadian, and Australian viewers into the mix.</p>
 
         <img src="/blog/youtube-rpm-geography.webp" alt="YouTube audience geography breakdown showing the revenue impact of tier-one country viewers versus lower-CPM regions" />
 
@@ -1905,7 +1949,7 @@ export const posts = [
 
         <p>Videos over eight minutes qualify for mid-roll ads. Mid-rolls add additional ad impressions within a single view, which increases revenue per view directly. <strong>The impact on your RPM is significant.</strong> A ten-minute video with two mid-rolls placed at natural breaks can generate two to three times the revenue of a five-minute video in the same niche with the same view count.</p>
 
-        <p>Auto-placement works but manual placement at genuine content breaks performs better because viewers are less likely to close the video when an ad interrupts a natural pause rather than mid-sentence.</p>
+        <p>Since May 2025 YouTube runs a hybrid model: it automatically adds mid-rolls at natural breakpoints on top of any you place by hand, and leaving both on is what maximizes revenue now. In YouTube's own testing, channels that kept automatic slots enabled alongside manual ones earned about 5 percent more than manual-only, and switching automatic off can now cost you revenue.</p>
 
         <h3>Ad Formats Enabled</h3>
 
@@ -1942,11 +1986,11 @@ export const posts = [
 
         <p><strong>Disabling any one of them removes an entire category of bidders from your inventory auction.</strong> Most creators have at least one format switched off without realising it. Check every video, not just new uploads.</p>
 
-        <h3>2. Push Video Length Past Eight Minutes and Place Mid-Rolls Manually</h3>
+        <h3>2. Push Video Length Past Eight Minutes and Turn On Both Mid-Roll Types</h3>
 
-        <p><strong>Eight minutes is the threshold for mid-roll eligibility.</strong> Every minute past that threshold is an opportunity to add an additional ad impression to a single view. When you enable mid-rolls, set placements manually at natural content breaks rather than using auto-placement.</p>
+        <p><strong>Eight minutes is the threshold for mid-roll eligibility.</strong> Every minute past that threshold is a chance to add another ad impression to a single view. When you enable mid-rolls, keep both automatic and manual placement switched on, a change from the old advice to place them all by hand.</p>
 
-        <p>An ad that interrupts a genuine pause in your delivery gets fewer closes than one that fires mid-sentence. More completions per mid-roll means more revenue per view.</p>
+        <p>Since May 2025 YouTube inserts its own mid-rolls at natural breaks, and its placement has improved to the point where manual-only setups can now earn less. Let YouTube fill the natural pauses and add your own only where you know a strong break sits, so no ad fires mid-sentence and more of them complete.</p>
 
         <h3>3. Improve Audience Retention Past the 50 Percent Mark</h3>
 
@@ -1994,13 +2038,31 @@ export const posts = [
 
         <p>Viewers in the US generate significantly more revenue per view than most other markets. A channel with a majority US audience can see RPM two to five times higher than the same channel with equivalent views but a majority of viewers from lower-CPM regions.</p>
 
-        <p>The US, UK, Canada, and Australia consistently sit at the top of every RPM by country breakdown because advertisers in those markets have larger budgets and higher customer acquisition costs.</p>
+        <p>The US, UK, Canada, and Australia consistently sit at the top of every RPM by country breakdown because advertisers in those markets have larger budgets and higher customer acquisition costs. YouTube reads where your viewers are, not where you are, so a VPN or your own location changes nothing about your rate.</p>
 
         <h3>Does YouTube Shorts RPM work the same way as long-form?</h3>
 
         <p>No. Shorts RPM operates on a fundamentally different model. Long-form RPM comes from direct ad revenue on your specific videos. Shorts revenue comes from a shared monthly pool distributed across eligible creators based on their share of engaged views.</p>
 
         <p>Most creators see Shorts RPM between $0.03 and $0.08 per 1,000 views. That is roughly 95% lower than long-form content in the same niche. Use Shorts for growth, not revenue.</p>
+
+        <h3>How Much Does YouTube Pay Per 1,000 Views?</h3>
+
+        <p>That figure is your RPM. The global average for long-form sits around $2 to $8 per 1,000 views, but it swings hard on two things: your niche and your audience's country. A finance channel with a US audience can clear $20 per 1,000 views, while a gaming channel with a tier-three audience may see under $1.</p>
+
+        <p>Your own number is in the Revenue tab: total revenue divided by total views, times 1,000.</p>
+
+        <h3>Why Did My RPM Suddenly Drop?</h3>
+
+        <p>The most common cause is seasonal. RPM falls 30 to 50 percent every January as advertiser budgets reset after Q4, then recovers through the year. If the drop lines up with the calendar, it is almost always this.</p>
+
+        <p>Other causes are a traffic shift toward browse or lower-CPM countries, a spike in barely-monetized Shorts views diluting your average, or an ad format getting switched off. Filter the Revenue tab by month, geography, and format to find which one moved.</p>
+
+        <h3>Does Made-for-Kids Content Earn a Lower RPM?</h3>
+
+        <p>Yes, and by a wide margin. Content marked made for kids cannot run personalized ads under children's privacy rules, and personalized ads are where most advertiser competition and revenue sit. A made-for-kids video often earns a fraction of the RPM the same topic would earn aimed at a general audience.</p>
+
+        <p>If your whole channel is set to made for kids, expect an RPM below your niche benchmark regardless of geography or format. It is one of the few factors that can override a strong niche.</p>
 
         <h2>RPM Is the Score That Counts</h2>
 
@@ -5285,24 +5347,32 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
     title: 'YouTube Trends: How to Find What\'s Trending and Use It Before It Peaks (2026)',
     excerpt: 'How to find YouTube trends early, validate real search demand, and publish before a topic saturates, plus the 2026 format shift every creator should plan around.',
     date: '2026-05-19',
-    updated: '2026-06-29',
+    updated: '2026-07-10',
     category: CATEGORIES.strategy,
     cover: '/blog/youtube-trends-cover.webp',
     author: 'Denzil',
     readTime: '17 min read',
+    faqs: [
+      { q: 'How does YouTube trending work?', a: 'A topic trends when its view velocity, engagement rate, and search volume growth cross a threshold that signals the algorithm to amplify it further. The algorithm does not start trends, it accelerates ones already gaining momentum. Since YouTube retired the Trending tab in 2025, no single public list defines what is trending anymore. Momentum now shows up across search, recommendations, and the category charts, which is why a video can keep climbing for days once it catches.' },
+      { q: 'What is trending on YouTube right now?', a: 'YouTube retired the single Trending tab in July 2025. To see broadly popular content now, open YouTube Charts at charts.youtube.com, which ranks the top videos by category for music, podcasts, and movie trailers. For niche-specific trends, the YouTube Studio Research tab is more useful, since it shows what your specific audience is actively searching for right now.' },
+      { q: 'What happened to the YouTube Trending tab?', a: 'YouTube removed the standalone Trending page and Trending Now list in July 2025 and replaced them with category-specific YouTube Charts for music, podcasts, and movie trailers. YouTube said trends had fragmented into many community-driven micro-trends that a single national list could no longer capture. Broad discovery now runs through Charts, the Explore menu, and personalized recommendations.' },
+      { q: 'What are the most searched topics on YouTube?', a: 'The most searched topics on YouTube consistently fall into music, gaming, finance, AI tools, fitness, and education. Within those categories, how-to content, product reviews, and beginner guides drive the highest search volume.' },
+      { q: 'How do I find trending topics for my specific niche?', a: 'Combine three signals: YouTube autocomplete for real-time search behavior, the YouTube Studio Research tab for audience-specific gaps, and Reddit\'s Rising tab for early cross-platform signals. A topic appearing across all three simultaneously is your highest confidence trend opportunity.' },
+      { q: 'How do I find trending YouTube Shorts?', a: 'Open the Trends page inside the Shorts feed (pause on a Short and tap Trends) to see rising audio and formats personalized to your niche. Tap the sound name on any Short to open its audio page and check how many videos already use it, a low count means it is still early. Then cross-check the YouTube Studio Research tab for breakout Shorts among your own audience before a format saturates.' },
+    ],
     content: () => (
       <>
-        <p>Timing is everything with YouTube trends. A trend video published at the right moment can pull ten times the views of the same video published a week later when the topic is saturated. The difference between those two outcomes is not talent or production quality. It is process.</p>
+        <p>The same trend video can pull ten thousand views or ten times that, and the deciding factor is usually not the video. It is the day it goes live. Publish while a topic is still climbing and the algorithm has room to carry you. Publish a week later, into a feed already crowded with established channels covering the same thing, and the ceiling drops before you even upload.</p>
 
-        <p>Most creators find trends too late. They see a topic blowing up on their feed, spend three days scripting and filming, and publish into a conversation that established channels have already dominated. The window closed before they got through the door.</p>
+        <p>Most creators find trends too late. A topic blows up on their feed, they spend three days scripting and filming, and they publish into a conversation the big channels already own. <strong>The window closed before they got through the door.</strong></p>
 
-        <p>The creators who consistently win with YouTube trending topics are not luckier. They have a repeatable system for spotting trends earlier, validating them faster, and turning them into published videos before the saturation point hits.</p>
+        <p>The creators who win with trending topics are not luckier or faster to react. <strong>They run a repeatable system that spots trends earlier, validates them against real search demand, and ships them before the topic saturates.</strong> That is the whole difference between a channel that grows with trends and one that always arrives after the peak.</p>
 
-        <p>This guide covers every method for finding trending YouTube videos in your niche, how to read the signals that separate a short-lived spike from a sustained trend worth building content around, and a weekly workflow you can follow to stay ahead of the curve without spending hours monitoring every platform every day.</p>
+        <p>This guide is that system. It covers every method for finding trending YouTube videos in your niche, how to tell a short-lived spike from a sustained trend worth building around, what changed when YouTube retired the Trending tab in 2025, and a weekly workflow that keeps you ahead of the curve without living inside every platform all day.</p>
 
         <h2>What Are YouTube Trends and How Do They Work</h2>
 
-        <p>A topic trends on YouTube when it crosses a threshold of view velocity, engagement rate, and search volume growth that triggers <a href="/blog/youtube-algorithm">the algorithm</a> to amplify it further. The algorithm does not create trends. It accelerates ones that are already gaining momentum organically.</p>
+        <p>A topic trends on YouTube when it crosses a threshold of view velocity, engagement rate, and search volume growth that triggers <a href="/blog/youtube-algorithm">the algorithm</a> to amplify it further. <strong>The algorithm does not create trends. It accelerates the ones already gaining momentum on their own.</strong> Your job is to catch that momentum early, not to manufacture it.</p>
 
         <p>Two 2026 algorithm shifts change how a trend pays off. YouTube now weighs viewer satisfaction, how good people feel after watching and not just how long they stayed, so a trend video that genuinely answers the moment gets pushed harder than one that simply holds attention.</p>
 
@@ -5327,35 +5397,33 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
           </tbody>
         </table>
 
-        <p>A viral spike rewards only the fastest publishers. By the time most creators notice it, the window has already closed. A sustained trend rewards creators who identify the rising signal early and build content around it before competition densifies.</p>
+        <p>A viral spike rewards only the fastest publishers. By the time most creators notice it, the window has already closed. A sustained trend is the opposite: <strong>it rewards the creator who spots the rising signal early and builds around it before competition densifies.</strong></p>
 
-        <p>The goal of a trend research system is not to chase every spike. It is to identify sustained trends at the earliest point of their growth curve, validate that they have real search demand behind them, and publish before the topic becomes too competitive for a smaller channel to rank in.</p>
+        <p>So the goal of a trend research system is not to chase every spike. <strong>It is to catch sustained trends at the earliest point of their growth curve</strong>, confirm they have real search demand behind them, and publish before the topic gets too competitive for a smaller channel to rank in.</p>
 
-        <h2>The YouTube Trending Tab</h2>
+        <h2>What Replaced the YouTube Trending Tab</h2>
 
-        <p>The YouTube Trending tab is the most direct way to see what trending YouTube videos are pulling views on the platform right now. It sits under the Explore section on the left navigation bar of the YouTube homepage and updates every 15 minutes.</p>
+        <p>For a decade the Trending tab was the first place creators looked to see what was taking off. That page is gone. In July 2025 YouTube retired the standalone Trending page and the Trending Now list, and the change rolled out across the platform later that month.</p>
 
-        <p>Most creators open it, see a wall of mainstream music videos and celebrity content, and close it. That surface-level view is not where the useful signals are.</p>
+        <p>The stated reason was that a single national list no longer reflects how people watch. Trends now form inside many small communities at once, so one ranked feed of twenty videos hid far more than it ever revealed.</p>
 
-        <img src="/blog/youtube-trends-youtube-trending.webp" alt="The YouTube Trending tab under Explore showing the Now, Music, Gaming, and Movies category tabs" />
+        <p>What sits in its place is <a href="https://charts.youtube.com" target="_blank" rel="noopener">YouTube Charts</a>, split by category instead of rolled into one feed. The active charts cover Trending Music Videos, Weekly Top Podcast Shows, and Trending Movie Trailers, and the Music tab now occupies the sidebar slot the Trending tab used to hold.</p>
 
-        <p>Here is how to use it correctly:</p>
+        <img src="/blog/youtube-trends-charts.webp" alt="YouTube Charts, the replacement for the Trending tab, showing category tabs for Trending, Music Videos, Songs, Artists, Shorts Songs, and Podcasts above the Weekly Top Music Videos chart" />
 
-        <ol>
-          <li>Go to the YouTube homepage and click <strong>Explore</strong> in the left navigation bar.</li>
-          <li>Click <strong>Trending</strong> to open the default view.</li>
-          <li>At the top of the page, switch between category tabs: <strong>Now, Music, Gaming, and Movies</strong>. The Now tab shows broadly trending content. The category tabs show what is trending within specific verticals.</li>
-          <li>Filter by country using the location setting in your YouTube account. A trend performing in the US may not have surfaced yet in your target market, giving you an early mover window.</li>
-          <li>Look for videos <strong>from smaller channels</strong> in the trending list. A video from a channel with under 100k subscribers appearing in the Trending tab is a strong signal that the topic has genuine demand rather than being pushed by an established audience.</li>
-        </ol>
+        <p>For everything outside those categories, discovery moved into the Explore menu and personalized recommendations rather than a fixed public ranking anyone can read at a glance.</p>
 
-        <p>The Trending tab shows you what is already performing. It is a lagging indicator, not a leading one. Use it to confirm a trend you have already spotted elsewhere rather than as your primary discovery tool.</p>
+        <p>For most creators this matters less than it first sounds, because the Trending tab was always a lagging indicator. By the time a video reached it, the topic had already saturated and the early publishing window had closed.</p>
 
-        <blockquote><strong>Pro Tip:</strong> Filter the Trending tab by your target audience's country rather than your own location. A trend that is peaking in the US but has not yet surfaced in the UK or Australia represents a geographic arbitrage window. You can publish into a market where the trend is rising but competition has not yet caught up.</blockquote>
+        <p>The charts that replaced it lean heavily toward music, podcasts, and film, which is genuinely useful if you work in those verticals and close to noise if you do not. The real discovery work now happens in the leading-indicator tools covered next: Google Trends, YouTube autocomplete, and the Studio Research tab. Those show you a trend while it is still climbing, which is the one thing the Trending tab never did.</p>
+
+        <blockquote><strong>Pro Tip:</strong> If you publish music, podcast, or entertainment content, open the relevant category chart and filter it to your target country. A track or show climbing the chart in the US but not yet in the UK or Australia is a geographic window. The same content, translated for a market where the trend has not landed yet, can reach viewers before local competition catches up.</blockquote>
 
         <h2>Google Trends for YouTube</h2>
 
-        <p>Google Trends for YouTube is one of the most underused research tools available to creators. Most people use Google Trends to check general web search popularity. The platform has a YouTube-specific filter that shows search volume trends exclusively on YouTube, which is a fundamentally different data set from general web searches.</p>
+        <p>Google Trends for YouTube is one of the most underused research tools available to creators. Most people use Google Trends to check general web search popularity and never touch the setting that matters here.</p>
+
+        <p><strong>It has a YouTube-specific filter that shows search behavior exclusively on YouTube, a fundamentally different data set from web search.</strong> What people Google and what they search on YouTube are not the same thing, and this filter is how you see the gap.</p>
 
         <img src="/blog/youtube-trends-google-trends.webp" alt="Google Trends with the search type switched to YouTube Search showing a rising 90-day curve and rising related queries" />
 
@@ -5407,7 +5475,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <img src="/blog/youtube-trends-youtube-inspiration-tab.webp" alt="The YouTube Studio Research and Inspiration tab showing audience search demand and content gaps" />
 
-        <p>The Research tab is the only tool that shows you YouTube keyword trends specific to your existing audience rather than the platform as a whole. A rising search term among your viewers is a trend signal with a pre-qualified audience attached to it.</p>
+        <p><strong>The Research tab is the only tool that shows you trends specific to your existing audience rather than the platform as a whole.</strong> A rising search term among your own viewers is a trend signal with a pre-qualified audience already attached to it, which makes it far higher confidence than anything a general tool surfaces.</p>
 
         <blockquote><strong>Pro Tip:</strong> Check the Research tab before every upload, not just when you are stuck for ideas. Your audience's search behavior shifts as your channel grows and attracts different viewer segments. A search gap that did not exist three months ago may represent your highest opportunity video right now.</blockquote>
 
@@ -5437,9 +5505,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
           </tbody>
         </table>
 
-        <p>The categories marked as rising consistently are where search demand is growing faster than content supply. Finance, AI and Technology, Education, and Personal Development all have more searches being made than quality videos being published to answer them. That supply gap is where smaller channels find the most traction.</p>
+        <p>The categories marked as rising consistently are where search demand is growing faster than content supply. Finance, AI and Technology, Education, and Personal Development all have more searches being made than quality videos being published to answer them. <strong>That supply gap is where a smaller channel finds the most traction</strong>, because you are competing for attention that existing videos are not yet satisfying.</p>
 
-        <p>YouTube Charts is a separate tool from the Trending tab that surfaces the most viewed and most searched content across music, podcasts, and video categories. Access it at <a href="https://charts.youtube.com" target="_blank" rel="noopener">charts.youtube.com</a>. It updates weekly and shows both current top performers and rising content, giving you a more structured view of YouTube trending topics than the Trending tab's real-time feed.</p>
+        <p>YouTube Charts, at <a href="https://charts.youtube.com" target="_blank" rel="noopener">charts.youtube.com</a>, is the structured companion to those real-time signals. It surfaces the most viewed content across music, podcasts, and video categories, updates weekly, and shows both current top performers and rising content. Its category focus makes it most useful for creators in music, podcasting, and entertainment, and a broader read on sustained demand than scrolling recommendations for everyone else.</p>
 
         <p>YouTube also publishes its own trend analysis at <a href="https://www.youtube.com/trends" target="_blank" rel="noopener">youtube.com/trends</a>, the Culture and Trends hub. It is less a real-time feed and more an editorial read on which formats, creators, and cultural moments are shaping the platform, broken down by region. Use it for the bigger-picture shifts, the format-level changes worth planning a quarter around, rather than the individual topic you film this week.</p>
 
@@ -5449,7 +5517,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h2>Social and Cross-Platform Trend Monitoring</h2>
 
-        <p>The most valuable YouTube trends are rarely born on YouTube. They originate on TikTok, X, and Reddit, then migrate to YouTube as creators translate short-form viral moments into longer, <a href="/blog/what-is-youtube-seo">search-optimized content</a>. The gap between a trend appearing on TikTok and saturating YouTube is typically 48 to 72 hours. That window is your earliest entry point.</p>
+        <p><strong>The most valuable YouTube trends are rarely born on YouTube.</strong> They start on TikTok, X, and Reddit, then migrate over as creators translate short-form viral moments into longer, <a href="/blog/what-is-youtube-seo">search-optimized content</a>. The gap between a trend appearing on TikTok and saturating YouTube is typically 48 to 72 hours. <strong>That window is your earliest entry point</strong>, and watching the source platforms is how you reach it before the topic lands on YouTube at all.</p>
 
         <h3>TikTok</h3>
 
@@ -5475,6 +5543,20 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <blockquote><strong>Pro Tip:</strong> Build a monitoring list of 10 to 15 Reddit subreddits, TikTok creators, and X accounts in your niche. Check this list once per day in under 15 minutes rather than scrolling platforms open-endedly. Structured monitoring produces better signals than passive consumption and protects your time from platform rabbit holes that produce nothing actionable.</blockquote>
 
+        <h2>How to Find Trending YouTube Shorts</h2>
+
+        <p>Shorts move faster than any other format on YouTube, and they run on their own trend signal: the sound, not just the topic. A Short built on a rising audio track in the first day or two of its climb can reach far past your subscriber count, while the same idea posted a week later lands flat. <strong>Finding the sound early is the whole game.</strong></p>
+
+        <p><strong>YouTube now has a Trends page built into the Shorts feed itself.</strong> Pause on any Short, tap Trends at the top of the screen, and you get trending audio and format inspiration personalized to your niche. This is the creator-facing feature, separate from the public Trending page that YouTube retired, and it is the fastest way to see which sounds are rising for an audience like yours.</p>
+
+        <p>Two more signals fill in the picture. Tap the sound name at the bottom of any Short to open its <strong>audio page</strong>, which shows how many Shorts already use that track. A few thousand videos means it is still early; hundreds of thousands means it has already peaked. The <strong>YouTube Studio Research tab</strong> then confirms demand against your own channel, surfacing breakout Shorts and content gaps from what your audience watched in the last 28 days.</p>
+
+        <p>Formats matter as much as sounds. In 2026 a trending Short is rarely a single topic. <strong>It is a repeatable structure you can publish every week without burning out:</strong> the day-in-the-life mini vlog, the food or fitness challenge, the quick DIY or how-to, the short explainer, the reaction over a rising track. Pick a structure that fits your niche, then swap the topic and the audio as trends move through it.</p>
+
+        <p>One caution before you reach for a viral song. Trending audio is not automatically cleared for monetized use, and a track that triggers <a href="/blog/copyright-free-music">Content ID</a> can divert your revenue to the rights holder. When a Short is meant to earn, lean on YouTube's own Shorts audio library or a <a href="/blog/copyright-free-music">licensed music source</a> rather than whatever is viral this week.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Save three to five rising sounds from the Shorts Trends page whenever you open it, before you need them. When you sit down to film you already have a shortlist of audio that is still climbing rather than peaked, and you can match a track to your niche in seconds instead of chasing one that has saturated by the time you publish.</blockquote>
+
         <h2>How to Turn a Trend Into a Video Before It Peaks</h2>
 
         <p>Finding a trend is the easy part. The creators who consistently win with YouTube trending topics are the ones who move from discovery to published video faster than everyone else without sacrificing the quality that makes the video worth watching.</p>
@@ -5483,13 +5565,13 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Step 1: Identify the Trend Signal</h3>
 
-        <p>A topic appears in your cross-platform monitoring. It shows up on the TikTok Discover page, a related Reddit post is gaining traction, and the Google Trends YouTube filter shows a rising curve over the last 7 days. Three signals pointing at the same topic simultaneously is your confirmation threshold.</p>
+        <p>A topic appears in your cross-platform monitoring. It shows up on the TikTok Discover page, a related Reddit post is gaining traction, and the Google Trends YouTube filter shows a rising curve over the last 7 days. <strong>Three signals pointing at the same topic at once is your confirmation threshold.</strong> One signal is noise. Three is a trend worth acting on.</p>
 
         <h3>Step 2: Validate Search Demand</h3>
 
         <p>Open YouTube autocomplete and type the topic. If multiple specific search phrases appear immediately, search demand exists. For a fast read on the related phrases and how crowded the term already is, run it through the free <a href="/tools/youtube-keyword-research">keyword research tool</a>, then open the YouTube Studio Research tab to check whether the topic appears in rising searches for your audience.</p>
 
-        <p>A trend with social momentum but no search demand is a spike. A trend with both is a sustained opportunity.</p>
+        <p><strong>A trend with social momentum but no search demand is a spike. A trend with both is a sustained opportunity.</strong> Search demand is what tells you people will still be looking for this a month from now, not just scrolling past it today.</p>
 
         <h3>Step 3: Find Your Specific Angle</h3>
 
@@ -5501,7 +5583,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Step 5: Optimize the Metadata Before Publishing</h3>
 
-        <p>Use the exact rising query phrases you found in Google Trends and YouTube autocomplete in your title and description. These are the phrases viewers are actively typing right now. A trend video with weak metadata loses to a slightly weaker video with precise keyword alignment. Your YouTube keyword search trends research is only as valuable as its execution in the metadata.</p>
+        <p>Use the exact rising query phrases you found in Google Trends and YouTube autocomplete in your title and description. These are the phrases viewers are actively typing right now. <strong>A trend video with weak metadata loses to a slightly weaker video with precise keyword alignment.</strong> All the research in the world is worth nothing if it never makes it into the title.</p>
 
         <h3>Step 6: Publish and Promote Immediately</h3>
 
@@ -5509,7 +5591,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <blockquote><strong>Pro Tip:</strong> Publish a YouTube Short on the same trend topic the same day as your long-form video. The Short captures the viewers who will not watch a full-length video on the topic and drives them to the long-form version for depth. Two pieces of content from one research session doubles your surface area during the trend window without doubling your production time.</blockquote>
 
-        <p>A trend video that ships today with a clear angle beats a perfect video that ships next week into a saturated topic every time.</p>
+        <p><strong>A trend video that ships today with a clear angle beats a perfect video that ships next week into a saturated topic, every time.</strong></p>
 
         <CtaCard
           to="/features/competitor-analysis"
@@ -5524,7 +5606,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>The Long-Form Comeback, Shorts as the Funnel</h3>
 
-        <p>After years of Shorts dominance, the 2026 algorithm has tilted back toward long-form. Videos over 10 minutes, and increasingly over 20, are getting preferential placement in suggested and home feeds, because longer watch time and the new satisfaction signal both reward depth over a quick hit.</p>
+        <p>After years of Shorts dominance, <strong>the 2026 algorithm has tilted back toward long-form.</strong> Videos over 10 minutes, and increasingly over 20, are getting preferential placement in suggested and home feeds, because longer watch time and the new satisfaction signal both reward depth over a quick hit.</p>
 
         <img src="/blog/youtube-trends-shorts.webp" alt="Shorts feeding discovery into long-form video as the dominant 2026 multi-format strategy" />
 
@@ -5558,7 +5640,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Authentic, Low-Production Content</h3>
 
-        <p>The polish arms race is reversing. Creators are trading heavily edited, high-gloss videos for unfiltered, direct-to-camera content that feels like a message from a friend, and even thumbnails are getting simpler. The 2026 viewer rewards intimacy and trust over production value, which is good news for smaller channels that could never out-produce a studio anyway.</p>
+        <p>The polish arms race is reversing. Creators are trading heavily edited, high-gloss videos for unfiltered, direct-to-camera content that feels like a message from a friend, and even thumbnails are getting simpler. <strong>The 2026 viewer rewards intimacy and trust over production value</strong>, which is good news for smaller channels that could never out-produce a studio anyway.</p>
 
         <p>Worth knowing what is cooling, too. Pure Shorts-only strategies, over-produced everything, and exaggerated clickbait thumbnails are all hitting diminishing returns as the algorithm leans on satisfaction and audiences tune out the formula. Chasing a peaking format is how you arrive late to a trend that is already on its way down.</p>
 
@@ -5577,7 +5659,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
             </tr>
           </thead>
           <tbody>
-            <tr><td>Monday</td><td>Check the YouTube Trending tab filtered by your category. Check YouTube Charts for rising content. Run Google Trends YouTube Search on your 2 to 3 core niche topics and note any rising curves over the last 30 days.</td><td>YouTube Trending tab, charts.youtube.com, Google Trends</td></tr>
+            <tr><td>Monday</td><td>Check YouTube Charts for rising content in your category. Run Google Trends YouTube Search on your 2 to 3 core niche topics and note any rising curves over the last 30 days.</td><td>charts.youtube.com, Google Trends</td></tr>
             <tr><td>Tuesday</td><td>Take Monday's strongest signals and type each into YouTube autocomplete using the letter-by-letter method. Record every specific phrase that appears.</td><td>YouTube search bar</td></tr>
             <tr><td>Wednesday</td><td>Open the YouTube Studio Research tab. Check whether Monday's topics appear in your audience's rising searches. Note any gap indicators.</td><td>YouTube Studio Analytics, Research tab</td></tr>
             <tr><td>Thursday</td><td>Check your Reddit, TikTok, and X monitoring list. Flag any topics from Monday now showing social traction. Two platform signals on the same topic crosses the confirmation threshold.</td><td>Reddit Rising tab, TikTok Discover, X Trending</td></tr>
@@ -5585,7 +5667,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
           </tbody>
         </table>
 
-        <p>The discipline of acting on one trend per week rather than researching ten and filming none is what separates creators who benefit from trend monitoring from those who treat it as a research exercise with no output.</p>
+        <p><strong>The discipline of acting on one trend per week beats researching ten and filming none.</strong> That single habit is what separates creators who benefit from trend monitoring from those who treat it as a research exercise that never produces a video.</p>
 
         <blockquote><strong>Pro Tip:</strong> The <a href="/features/competitor-analysis">Competitor Analysis</a> tool pulls trend-validated content suggestions directly from competitor performance data in your niche, surfacing the topics your competing channels are gaining traction on right now so you can identify gaps and act on them faster than the manual workflow alone allows.</blockquote>
 
@@ -5593,15 +5675,17 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>How Does YouTube Trending Work?</h3>
 
-        <p>A topic trends when its view velocity, engagement rate, and search volume growth cross a threshold that signals the algorithm to amplify it further. The algorithm does not start trends, it accelerates ones already gaining momentum. The Trending tab reflects sustained engagement over a rolling window rather than a single spike, which is why a video can keep climbing for days once it catches.</p>
+        <p>A topic trends when its view velocity, engagement rate, and search volume growth cross a threshold that signals the algorithm to amplify it further. The algorithm does not start trends, it accelerates ones already gaining momentum.</p>
+
+        <p>Since YouTube retired the Trending tab in 2025, no single public list defines what is trending anymore. Momentum now shows up across search, recommendations, and the category charts, which is why a video can keep climbing for days once it catches.</p>
 
         <h3>What is Trending on YouTube Right Now?</h3>
 
-        <p>Check the YouTube Trending tab under Explore on the homepage. It updates every 15 minutes and filters by category. For niche-specific trends, the YouTube Studio Research tab shows what your specific audience is actively searching for right now.</p>
+        <p>YouTube retired the single Trending tab in July 2025. To see broadly popular content now, open YouTube Charts at charts.youtube.com, which ranks the top videos by category for music, podcasts, and movie trailers. For niche-specific trends, the YouTube Studio Research tab is more useful, since it shows what your specific audience is actively searching for right now.</p>
 
-        <h3>How Often Does the YouTube Trending Tab Update?</h3>
+        <h3>What Happened to the YouTube Trending Tab?</h3>
 
-        <p>Every 15 minutes. However, videos appearing on it reflect sustained engagement momentum over a longer window, not just a single 15-minute spike.</p>
+        <p>YouTube removed the standalone Trending page and Trending Now list in July 2025 and replaced them with category-specific YouTube Charts for music, podcasts, and movie trailers. YouTube said trends had fragmented into many community-driven micro-trends that a single national list could no longer capture. Broad discovery now runs through Charts, the Explore menu, and personalized recommendations.</p>
 
         <h3>What Are the Most Searched Topics on YouTube?</h3>
 
@@ -5611,13 +5695,17 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <p>Combine three signals: YouTube autocomplete for real-time search behavior, the YouTube Studio Research tab for audience-specific gaps, and Reddit's Rising tab for early cross-platform signals. A topic appearing across all three simultaneously is your highest confidence trend opportunity.</p>
 
+        <h3>How Do I Find Trending YouTube Shorts?</h3>
+
+        <p>Open the Trends page inside the Shorts feed (pause on a Short and tap Trends) to see rising audio and formats personalized to your niche. Tap the sound name on any Short to open its audio page and check how many videos already use it, a low count means it is still early. Then cross-check the YouTube Studio Research tab for breakout Shorts among your own audience before a format saturates.</p>
+
         <h2>Stay Ahead of the Curve, Not Behind It</h2>
 
         <p>The creators who consistently benefit from YouTube trends are not the ones with the best instincts. They are the ones with the most reliable system for finding, validating, and acting on trends before the window closes.</p>
 
         <p>The methods in this guide work individually. Combined into the weekly workflow, they give you a structured process for identifying YouTube trending topics at the earliest point of their growth curve, validating them against real search demand, and publishing before the topic becomes too competitive to rank in.</p>
 
-        <p>Find the trend early. Validate it has search demand. Pick a specific angle no one else has covered. Publish fast.</p>
+        <p><strong>Find the trend early. Confirm it has search demand. Pick a specific angle no one else has covered. Publish fast.</strong></p>
 
         <p>That four-step process applied consistently every week compounds into a channel that grows with trends rather than chasing them after the fact. The YouTube search trends that will drive your biggest videos over the next 90 days are rising right now. The question is whether you find them before or after your competitors do.</p>
 
@@ -6418,19 +6506,28 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
   },
   {
     slug: 'youtube-cpm',
-    title: 'YouTube CPM Rates: The Best Niches and How to Maximize Your Ad Revenue',
-    excerpt: 'What YouTube CPM is and how it differs from RPM, the average rates by category, the niches that pay 10x more, and the levers that lift your CPM without changing niche.',
+    title: 'YouTube CPM Rates 2026: Best Niches and How to Maximize Ad Revenue',
+    excerpt: 'What YouTube CPM is and how it differs from RPM, the average rates by category and country, the niches that pay 10x more, and the levers that lift your CPM without changing niche.',
     date: '2026-05-17',
-    updated: '2026-06-29',
+    updated: '2026-07-10',
     category: CATEGORIES.monetization,
     cover: '/blog/youtube-cpm-cover.webp',
     author: 'Denzil',
     readTime: '13 min read',
+    faqs: [
+      { q: 'What is a good CPM on YouTube?', a: 'The all-niche average sits around $2 to $10, so anything in that band is normal. What counts as good depends entirely on your niche and audience country: finance and legal channels routinely clear $15 to $30 or more, while gaming and entertainment can be strong at $3 to $5.' },
+      { q: 'What is the difference between CPM and RPM?', a: 'CPM is what advertisers pay per 1,000 ad impressions, before YouTube takes its share. RPM is what you keep per 1,000 views after the 45% cut and across every revenue source, which is why RPM is always the lower of the two.' },
+      { q: 'Which country has the highest YouTube CPM?', a: 'Australia and the United States consistently top the table, followed by the UK, Canada, and Germany. Audiences in India and much of Southeast Asia sit at the low end, often under $3. YouTube reads where your viewers are, not where you are, so a VPN or your own location has no effect on your CPM.' },
+      { q: 'Why is my YouTube CPM so low?', a: 'It is almost always one of four things: a low-value niche, an audience concentrated in low-CPM countries, ad formats left disabled, or simply the January and February dip after Q4. Check each in your Revenue tab before assuming the niche is the problem.' },
+      { q: 'Do YouTube Shorts have a CPM?', a: 'Shorts monetize from a shared ad pool rather than direct video CPM, so the effective rate is a fraction of long-form. Use Shorts for discovery and reach, and rely on long-form for the CPM that pays the bills.' },
+      { q: 'How much does YouTube pay per 1,000 views?', a: 'What lands in your pocket per 1,000 views is your RPM, not your CPM. Across niches and countries it averages around $2 to $8 per 1,000 views for long-form, but a finance channel with a US audience can clear $20 while a gaming channel with a tier-three audience may see under $1. CPM is the advertiser-side number that feeds it: a $10 CPM turns into roughly $5.50 of RPM after YouTube\'s 45% cut and unmonetized views.' },
+      { q: 'Does made-for-kids content earn a lower CPM?', a: 'Yes, sharply. Content marked made for kids cannot run personalized ads under children\'s privacy rules, and personalized ads carry most of the advertiser demand. A made-for-kids video often sees a CPM far below its niche benchmark no matter how valuable the topic.' },
+    ],
     content: () => (
       <>
-        <p>Two YouTube channels can have the exact same number of views and earn completely different revenue. The difference is not luck. It is YouTube CPM.</p>
+        <p>Two YouTube channels can have the exact same number of views and earn completely different revenue. <strong>The difference is not luck. It is YouTube CPM.</strong></p>
 
-        <p>The niche you create content in determines how much advertisers are willing to pay to reach your audience. A finance channel and a gaming channel with identical view counts will not generate identical ad revenue. Advertisers bid more to reach viewers who are actively making financial decisions than viewers who are watching gameplay footage.</p>
+        <p>The niche you create content in determines how much advertisers are willing to pay to reach your audience. <strong>A finance channel and a gaming channel with identical view counts will not generate identical ad revenue.</strong> Advertisers bid more to reach viewers who are actively making financial decisions than viewers who are watching gameplay footage.</p>
 
         <p>Understanding CPM in YouTube is what separates creators who build <a href="/blog/youtube-as-a-business">sustainable revenue</a> from those who chase views without understanding why their earnings stay flat.</p>
 
@@ -6467,11 +6564,11 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
           <li><strong>Ad format:</strong> Skippable ads, non-skippable ads, and display ads each carry different CPM rates</li>
         </ul>
 
-        <p>Your CPM is set by advertiser demand, not by YouTube. The platform runs an auction system where advertisers bid for placement on videos that match their target audience. Higher demand for your audience means higher YouTube CPM rates on your channel.</p>
+        <p><strong>Your CPM is set by advertiser demand, not by YouTube.</strong> The platform runs an auction system where advertisers bid for placement on videos that match their target audience. Higher demand for your audience means higher YouTube CPM rates on your channel.</p>
 
         <h2>What Is the Average CPM for YouTube</h2>
 
-        <p>The average CPM for YouTube sits between $2 and $10 across all niches and geographies. That range is wide because CPM varies significantly depending on your content category, audience location, and the time of year you are publishing.</p>
+        <p><strong>The average CPM for YouTube sits between $2 and $10 across all niches and geographies.</strong> That range is wide because CPM varies significantly depending on your content category, audience location, and the time of year you are publishing.</p>
 
         <p>Here is how the tiers break down:</p>
 
@@ -6514,7 +6611,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
           </tbody>
         </table>
 
-        <p>The spread is dramatic. One million views from a US audience can earn several thousand dollars, while the same million from an audience in a low-CPM market might bring a few hundred for identical content. That single variable explains most of the revenue gap between channels of the same size in the same niche.</p>
+        <p>The spread is dramatic. One million views from a US audience can earn several thousand dollars, while the same million from an audience in a low-CPM market might bring a few hundred for identical content. <strong>That single variable explains most of the revenue gap between channels of the same size in the same niche.</strong></p>
 
         <img src="/blog/youtube-cpm-calculator.webp" alt="YouTube CPM varying by niche, audience location, and season" />
 
@@ -6583,7 +6680,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
           </tbody>
         </table>
 
-        <p>The pattern across every high CPM for YouTube category is the same. Advertisers pay more when your audience is actively making expensive purchasing decisions.</p>
+        <p>The pattern across every high CPM for YouTube category is the same. <strong>Advertisers pay more when your audience is actively making expensive purchasing decisions.</strong></p>
 
         <p>A viewer watching a video about choosing a financial advisor is worth more to an advertiser than a viewer watching a comedy sketch because the purchase intent signal is direct and immediate.</p>
 
@@ -6608,7 +6705,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Personal Finance and Investing</h3>
 
-        <p>This is the highest paying niche on YouTube without exception. Credit card companies, brokerage platforms, insurance providers, and wealth management firms all compete aggressively for the same audience.</p>
+        <p><strong>This is the highest paying niche on YouTube without exception.</strong> Credit card companies, brokerage platforms, insurance providers, and wealth management firms all compete aggressively for the same audience.</p>
 
         <img src="/blog/youtube-cpm-personal-finance.webp" alt="Personal finance content commanding the highest CPM on YouTube" />
 
@@ -6668,7 +6765,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Video length</h3>
 
-        <p>Videos over 8 minutes qualify for mid-roll ads. Mid-roll ads appear during the video rather than just at the start, which increases the total number of ad impressions per view. More impressions per view means more advertiser bids per video, which pushes your overall CPM higher.</p>
+        <p>Videos over 8 minutes qualify for mid-roll ads. Mid-roll ads appear during the video rather than just at the start, which increases the total number of ad impressions per view. <strong>More impressions per view means more advertiser bids per video, which pushes your overall CPM higher.</strong></p>
 
         <img src="/blog/youtube-cpm-video-length.webp" alt="Videos over 8 minutes qualifying for mid-roll ads and more impressions" />
 
@@ -6686,7 +6783,9 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Audience retention</h3>
 
-        <p>YouTube favors videos with strong <a href="/blog/youtube-watch-hours">watch time and retention</a> in its recommendation algorithm. Higher recommended placement means more impressions, which attracts more advertiser competition for your inventory. Strong retention is not just a growth metric. It is a direct CPM lever.</p>
+        <p>YouTube favors videos with strong <a href="/blog/youtube-watch-hours">watch time and retention</a> in its recommendation algorithm, and in 2026 it leans on engagement even harder. Engagement velocity and return-viewer rate now help decide which videos get premium, higher-paying ads.</p>
+
+        <p>That means a 150,000-view video with a loyal, engaged audience can out-earn a 500,000-view video with shallow watch time. <strong>Strong retention is not just a growth metric. It is a direct CPM lever.</strong></p>
 
         <h3>Geographic targeting</h3>
 
@@ -6722,7 +6821,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Which country has the highest YouTube CPM?</h3>
 
-        <p>Australia and the United States consistently top the table, followed by the UK, Canada, and Germany. Audiences in India and much of Southeast Asia sit at the low end, often under $3, which is why audience geography moves your earnings as much as niche does.</p>
+        <p>Australia and the United States consistently top the table, followed by the UK, Canada, and Germany. Audiences in India and much of Southeast Asia sit at the low end, often under $3, which is why audience geography moves your earnings as much as niche does. YouTube reads where your viewers are, not where you are, so a VPN or your own location has no effect on your CPM.</p>
 
         <h3>Why is my YouTube CPM so low?</h3>
 
@@ -6731,6 +6830,16 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
         <h3>Do YouTube Shorts have a CPM?</h3>
 
         <p>Shorts monetize from a shared ad pool rather than direct video CPM, so the effective rate is a fraction of long-form. Use Shorts for discovery and reach, and rely on long-form for the CPM that pays the bills.</p>
+
+        <h3>How much does YouTube pay per 1,000 views?</h3>
+
+        <p>What lands in your pocket per 1,000 views is your <a href="/blog/youtube-rpm">RPM</a>, not your CPM. Across niches and countries it averages around $2 to $8 per 1,000 views for long-form, but a finance channel with a US audience can clear $20 while a gaming channel with a tier-three audience may see under $1.</p>
+
+        <p>CPM is the advertiser-side number that feeds it. A $10 CPM turns into roughly $5.50 of RPM after YouTube's 45% cut and unmonetized views.</p>
+
+        <h3>Does made-for-kids content earn a lower CPM?</h3>
+
+        <p>Yes, sharply. Content marked made for kids cannot run personalized ads under children's privacy rules, and personalized ads carry most of the advertiser demand. A made-for-kids video often sees a CPM far below its niche benchmark no matter how valuable the topic.</p>
 
         <h2>Your Niche Is Your Monetization Strategy</h2>
 
@@ -9024,7 +9133,7 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h2>Step 1: Choose a High-CPM Niche (The $30 vs. $1 Difference)</h2>
 
-        <p>Two channels. One posts gaming content and earns $1.50 per 1,000 views. The other posts personal finance content and earns $22 per 1,000 views. Both put in the same hours. The niche made the difference. Understanding CPM before you film your first video is one of the most important financial decisions you will make on your journey to figure out how to create a YouTube channel and make money.</p>
+        <p>Two channels. One posts gaming content and earns $1.50 per 1,000 views. The other posts personal finance content and earns $22 per 1,000 views. Both put in the same hours. The niche made the difference, because it sets the <a href="/blog/youtube-rpm">RPM</a> advertisers will pay against your audience. Understanding CPM before you film your first video is one of the most important financial decisions you will make on your journey to figure out how to create a YouTube channel and make money.</p>
 
         <p>CPM stands for Cost Per Mille, meaning what advertisers pay per 1,000 ad impressions on your content. The higher the CPM, the more revenue each view generates. Advertisers in industries like finance, software, and real estate pay significantly more because their customers are worth significantly more to them.</p>
 
