@@ -84,8 +84,12 @@ export async function openCheckout(planKey) {
     // which reads as "broken" (especially on mobile where there's no console).
     // Send them to log in; they can re-click the plan when they land back.
     if (res.status === 401) {
+      // Carry the plan through login. sessionStorage is a same-origin fallback;
+      // the ?plan= param is what survives the ytgrowth → channelbrain hop (the
+      // backend turns it into /dashboard?pco_plan=… after auth). Without it the
+      // user logs in and nothing resumes.
       try { sessionStorage.setItem('ytg_pending_plan', planKey) } catch {}
-      window.location.href = '/auth/login'
+      window.location.href = '/auth/login?plan=' + encodeURIComponent(planKey)
       return
     }
 

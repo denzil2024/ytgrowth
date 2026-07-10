@@ -347,6 +347,20 @@ def login(request: Request):
     if pending_utms:
         request.session["pending_utms"] = pending_utms
 
+    # Carry a checkout the visitor started before signing in (clicked a paid
+    # plan on the landing page while logged out). The plan key rides in ?plan=
+    # and survives the OAuth round-trip via the session; the callback then
+    # redirects to /dashboard?pco_plan=… so the frontend resumes Paddle. Validated
+    # against the real price map so it can't be abused to inject a redirect.
+    _plan = request.query_params.get("plan", "")
+    if _plan:
+        try:
+            from routers.billing import PLAN_PRICE_MAP
+            if _plan in PLAN_PRICE_MAP:
+                request.session["after_login_redirect"] = f"/dashboard?pco_plan={_plan}"
+        except Exception:
+            pass
+
     flow = get_flow(autogenerate_pkce=True, base_url=_request_base(request))
     auth_url, state = flow.authorization_url(
         prompt="consent",

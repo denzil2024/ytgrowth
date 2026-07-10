@@ -245,11 +245,20 @@ export default function Dashboard() {
         setVideos(d.videos || [])
         setLoad(false)
         // Resume checkout if the user picked a paid plan on the landing page
-        // before signing in. The plan key was stashed by openCheckout() before
-        // the redirect to /auth/login; consume it once and open Paddle now
-        // that they're authenticated.
+        // before signing in. Cross-domain (ytgrowth → channelbrain) the plan
+        // rides in ?pco_plan= set by the login redirect; same-origin it may also
+        // be in sessionStorage. Consume whichever is present and open Paddle.
         let pending = null
-        try { pending = sessionStorage.getItem('ytg_pending_plan') } catch {}
+        try {
+          const qp = new URLSearchParams(window.location.search)
+          pending = qp.get('pco_plan')
+          if (pending) {
+            qp.delete('pco_plan')
+            const clean = window.location.pathname + (qp.toString() ? '?' + qp.toString() : '')
+            window.history.replaceState({}, '', clean)
+          }
+        } catch {}
+        if (!pending) { try { pending = sessionStorage.getItem('ytg_pending_plan') } catch {} }
         if (pending) {
           try { sessionStorage.removeItem('ytg_pending_plan') } catch {}
           openCheckout(pending)
