@@ -912,10 +912,9 @@ export default function Landing() {
     if (tab === 'monthly' || tab === 'annual') return 'subscription'
     return ['subscription','packs'].includes(tab) ? tab : 'packs'
   })
-  // Per-card billing cycle inside the Subscription tab. Each plan flips
-  // independently so the page only ever shows one toggle (the segmented
-  // pill inside that card), not a global one above the grid.
-  const [cycle, setCycle] = useState({ solo: 'monthly', growth: 'monthly', agency: 'monthly' })
+  // One shared billing cycle for the whole Subscription tab (single toggle
+  // above the grid; all three paid tiers flip together).
+  const [subCycle, setSubCycle] = useState('monthly')
   const [openFaq, setOpenFaq] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -1357,7 +1356,7 @@ export default function Landing() {
               <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Pricing</span>
               <span aria-hidden="true" style={{ width: 26, height: 1, background: ED_ACCENT }} />
             </div>
-            <h2 style={{ fontFamily: ED_SERIF, fontWeight: 300, fontSize: 'clamp(34px, 4.4vw, 54px)', letterSpacing: '-0.01em', color: ED_INK, lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>One good video idea <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>pays for a year.</em></h2>
+            <h2 style={{ fontFamily: ED_SERIF, fontWeight: 300, fontSize: 'clamp(34px, 4.4vw, 54px)', letterSpacing: '-0.01em', color: ED_INK, lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>One good video idea <em style={{ fontStyle: 'italic', color: ED_ACCENT }}>pays for itself.</em></h2>
             <p style={{ fontFamily: ED_SANS, fontSize: 17, color: ED_SOFT, lineHeight: 1.72, maxWidth: 640, margin: '0 auto' }}>The best YouTube tools for creators in one suite. AI-powered analysis across 5 tools that finds what's working in your niche, then tells you how to do more of it.</p>
           </div>
 
@@ -1379,8 +1378,13 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* ── SUBSCRIPTION ── (Monthly + Annual collapsed; cycle lives per-card) */}
+          {/* ── SUBSCRIPTION ── (single shared billing toggle above the grid) */}
           {pricingTab === 'subscription' && (
+            <>
+            <div style={{ textAlign: 'center', marginBottom: 22 }}>
+              <CycleToggle value={subCycle} onChange={setSubCycle} />
+              <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginTop: -2 }}>2 months free when you pay yearly</p>
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
               {/* Free. No toggle (no cycle to choose) */}
               <div className="ytg-pricing-card">
@@ -1399,11 +1403,10 @@ export default function Landing() {
 
               {/* Solo. Per-card cycle toggle */}
               {(() => {
-                const yr = cycle.solo === 'yearly'
+                const yr = subCycle === 'yearly'
                 return (
                   <div className="ytg-pricing-card">
                     <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo</p>
-                    <CycleToggle value={cycle.solo} onChange={v => setCycle(c => ({ ...c, solo: v }))} />
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
                       <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>{yr ? '$190' : '$19'}</p>
                       <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
@@ -1429,14 +1432,13 @@ export default function Landing() {
 
               {/* Growth. Featured, per-card cycle toggle */}
               {(() => {
-                const yr = cycle.growth === 'yearly'
+                const yr = subCycle === 'yearly'
                 return (
                   <div className="ytg-pricing-card-featured">
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                       <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth</p>
                       <span style={{ fontFamily: ED_SANS, fontSize: 10, fontWeight: 700, color: '#fff', background: ED_ACCENT, padding: '4px 9px', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{yr ? 'Best value' : 'Most popular'}</span>
                     </div>
-                    <CycleToggle value={cycle.growth} onChange={v => setCycle(c => ({ ...c, growth: v }))} />
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
                       <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>{yr ? '$490' : '$49'}</p>
                       <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
@@ -1462,11 +1464,10 @@ export default function Landing() {
 
               {/* Agency. Per-card cycle toggle */}
               {(() => {
-                const yr = cycle.agency === 'yearly'
+                const yr = subCycle === 'yearly'
                 return (
                   <div className="ytg-pricing-card">
                     <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency</p>
-                    <CycleToggle value={cycle.agency} onChange={v => setCycle(c => ({ ...c, agency: v }))} />
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
                       <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: yr ? 38 : 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>{yr ? '$1,490' : '$149'}</p>
                       <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
@@ -1490,6 +1491,7 @@ export default function Landing() {
                 )
               })()}
             </div>
+            </>
           )}
 
           {/* ── ANALYSIS PACKS ── */}
@@ -1508,7 +1510,7 @@ export default function Landing() {
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>5 AI analyses</p>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$1.00 per analysis</p>
-                  {['5 AI analyses, yours to keep', 'Works with any plan. Or no plan', 'Use across all tools', 'Stack on top of your monthly allowance', 'Never expire'].map((f, i) => (
+                  {['Never expire', 'Work across every tool', 'No subscription, stack on any plan'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
                   <button onClick={() => openCheckout('pack_5')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
@@ -1523,7 +1525,7 @@ export default function Landing() {
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>20 AI analyses</p>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$0.75 per analysis</p>
-                  {['20 AI analyses, yours to keep', 'Works with any plan. Or no plan', 'Use across all tools', 'Stack on top of your monthly allowance', 'Never expire'].map((f, i) => (
+                  {['Never expire', 'Work across every tool', 'No subscription, stack on any plan'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
                   <button onClick={() => openCheckout('pack_20')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
@@ -1541,7 +1543,7 @@ export default function Landing() {
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>60 AI analyses</p>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$0.70 per analysis</p>
-                  {['60 AI analyses, yours to keep', 'Works with any plan. Or no plan', 'Use across all tools', 'Stack on top of your monthly allowance', 'Never expire'].map((f, i) => (
+                  {['Never expire', 'Work across every tool', 'No subscription, stack on any plan'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
                   <button onClick={() => openCheckout('pack_60')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
@@ -1556,7 +1558,7 @@ export default function Landing() {
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>150 AI analyses</p>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$0.66 per analysis</p>
-                  {['150 AI analyses, yours to keep', 'Works with any plan. Or no plan', 'Use across all tools', 'Stack on top of your monthly allowance', 'Never expire'].map((f, i) => (
+                  {['Never expire', 'Work across every tool', 'No subscription, stack on any plan'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
                   <button onClick={() => openCheckout('pack_150')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
