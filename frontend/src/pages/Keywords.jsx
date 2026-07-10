@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { isChannelBrain } from '../brandHost'
+import { startUpgrade } from '../checkout'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
@@ -1070,7 +1071,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             You've used your free Keyword research this cycle. Your past reports stay available.
           </span>
           <button
-            onClick={() => window.location.href = '/?tab=monthly#pricing'}
+            onClick={startUpgrade}
             className="kw-btn-primary" style={{ padding: '7px 14px', fontSize: 12.5 }}>
             Upgrade
           </button>

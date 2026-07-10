@@ -98,7 +98,29 @@ better served pay-as-you-go than by a monthly plan.
 
 Ranked by estimated conversion damage. Update status as we go.
 
-### A1. Upsell gates link to the pricing page instead of opening checkout  — BUILT, pending deploy + test
+### A1. Every dashboard upgrade / top-up button now opens Paddle directly  — DONE (deploying)
+Two shared helpers in [checkout.js](frontend/src/checkout.js): `startTopUp()`
+(one-click `pack_60`) and `startUpgrade()` (billing-safe: existing subscribers
+go to the Paddle portal so we never create a duplicate subscription; free /
+no-sub users get a direct checkout for the next tier up). Every dashboard entry
+point was rewired off the `/?tab=...#pricing` navigation:
+- Gates: UpsellGate, CreditsEmptyModal (open Paddle directly, "See all" links kept as fallback)
+- Settings: "Upgrade plan" (x2) + "Top up credits"
+- UsageBar: quiet + alert "Upgrade" and "Top up"
+- Outliers, Keywords: inline "Upgrade" banners
+- Weekly Report: inline "Top up"
+- Dashboard nav: "Upgrade to connect more channels"
+Public marketing "Pricing" links (SiteHeader, LandingFooter, FeaturePage,
+features/*) intentionally still point at the pricing page.
+
+FOLLOW-UP A6: confirm the Paddle customer portal actually offers plan changes;
+if not, build an in-app subscription-update flow so existing subscribers can
+change tier without the portal. Until confirmed, subscriber upgrades land in
+the portal (safe, no double-charge, but may not expose tier switching).
+
+Original problem, for reference:
+
+### A1-orig. Upsell gates linked to the pricing page instead of opening checkout
 DONE in code (not yet pushed): [UpsellGate.jsx](frontend/src/components/UpsellGate.jsx)
 and [CreditsEmptyModal.jsx](frontend/src/components/CreditsEmptyModal.jsx) now open
 the Paddle overlay directly (with a loading state) instead of linking to the

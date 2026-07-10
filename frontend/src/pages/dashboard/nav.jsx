@@ -16,6 +16,7 @@ import {
   NAV_ICON_COL, NAV_GUTTER, NAV_PAD_X, SUB_INDENT,
 } from './tokens'
 import { sev, scoreColor, scoreLabel } from './utils'
+import { startUpgrade } from '../../checkout'
 
 export const NAV_ICONS = {
   Feed:     <LayoutDashboard size={ICON_SIZE} strokeWidth={ICON_STROKE} />,
@@ -615,7 +616,7 @@ export function ChannelSwitcher({ channels, channelsAllowed, canAddMore, current
                 <span style={{ fontSize: 14, color: '#7a5b14', fontWeight: 500 }}>+ Connect another channel</span>
               </div>
             : <div
-                onClick={() => { setOpen(false); window.location.href = '/#pricing' }}
+                onClick={() => { setOpen(false); startUpgrade() }}
                 style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s' }}
                 onMouseEnter={e => { e.currentTarget.style.background = SHELL.hoverBg }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { isChannelBrain } from '../brandHost'
+import { startTopUp } from '../checkout'
 import UpsellGate from '../components/UpsellGate'
 
 // Editorial app fonts, page-scoped. Cormorant = display H1 + big numbers,
@@ -500,7 +501,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             </p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
               This week&rsquo;s report will be skipped. Top up or upgrade to resume weekly delivery.{' '}
-              <a href="/#pricing" style={{ color: C.redHi, fontWeight: 600, textDecoration: 'none' }}>Top up →</a>
+              <button type="button" onClick={startTopUp} style={{ color: C.redHi, fontWeight: 600, background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit' }}>Top up →</button>
             </p>
           </div>
         </div>

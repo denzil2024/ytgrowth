@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supportEmail } from '../brandHost'
 import { Plus, ArrowRight, Check, Link2 } from 'lucide-react'
 import { loginUrl } from '../utm.js'
+import { startUpgrade, startTopUp } from '../checkout'
 
 // Editorial app faces: Cormorant = display H1, Barlow Condensed = labels/buttons.
 const SERIF = "'Cormorant Garamond', Georgia, serif"
@@ -736,11 +737,11 @@ export default function Settings({ channelData }) {
         {/* Shelf 3: actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           {!isTopPlan && (
-            <button className="set-btn-primary" onClick={() => window.location.href = '/?tab=monthly#pricing'}>
+            <button className="set-btn-primary" onClick={startUpgrade}>
               Upgrade plan
             </button>
           )}
-          <button className="set-btn-secondary" onClick={() => window.location.href = '/?tab=packs#pricing'}>
+          <button className="set-btn-secondary" onClick={startTopUp}>
             Top up credits
           </button>
           {hasActiveSub && (
@@ -844,7 +845,7 @@ export default function Settings({ channelData }) {
                   You have reached your channel limit. Upgrade to connect more.
                 </p>
               </div>
-              <button className="set-btn-primary" onClick={() => window.location.href = '/?tab=monthly#pricing'}>
+              <button className="set-btn-primary" onClick={startUpgrade}>
                 Upgrade plan
               </button>
             </div>

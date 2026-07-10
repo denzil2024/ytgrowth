@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { supportEmail } from '../brandHost'
+import { startUpgrade } from '../checkout'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 import EstimateTag from '../components/EstimateTag'
@@ -821,7 +822,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           <span style={{ flex: 1 }}>
             New Outliers searches require a paid plan. Your past reports stay available.
           </span>
-          <button onClick={() => window.location.href = '/?tab=monthly#pricing'}
+          <button onClick={startUpgrade}
             className="out-btn-primary" style={{ padding: '7px 14px', fontSize: 12.5 }}>
             Upgrade
           </button>

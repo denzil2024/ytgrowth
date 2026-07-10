@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { initPaddleRetain } from '../checkout'
+import { initPaddleRetain, startUpgrade, startTopUp } from '../checkout'
 
 /* Compact sidebar usage widget, shows what's LEFT (not used) so a fresh
    account with 3/3 reads as alive instead of dead-space. Number scales
@@ -102,7 +102,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
   // A text link, not a button: brand red (red is for CTAs), no chrome.
   const UpgradeLink = isFreePlan ? (
     <button
-      onClick={() => window.location.href = '/?tab=monthly'}
+      onClick={startUpgrade}
       style={{
         fontSize: 10.5, fontWeight: 700, color: C.goldInk,
         background: 'none', border: 'none', padding: 0, cursor: 'pointer',
@@ -198,7 +198,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
 
       <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
         <button
-          onClick={() => window.location.href = '/?tab=monthly'}
+          onClick={startUpgrade}
           style={{
             flex: 1, fontSize: 13, fontWeight: 700,
             padding: '8px 0', borderRadius: 0,
@@ -215,7 +215,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
           Upgrade
         </button>
         <button
-          onClick={() => window.location.href = '/?tab=packs'}
+          onClick={startTopUp}
           style={{
             flex: 1, fontSize: 12, fontWeight: 600,
             padding: '7px 0', borderRadius: 0,
