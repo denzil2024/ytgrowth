@@ -1,23 +1,29 @@
 import { useEffect, useState } from 'react'
 
-/* ── Design tokens, exact match to Dashboard.jsx / SeoOptimizer.jsx ───── */
+// Editorial app faces: Cormorant = display H1 + big numbers, Barlow Condensed
+// = uppercase labels/buttons, Barlow = body (loaded in useAdminStyles).
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const COND  = "'Barlow Condensed', system-ui, sans-serif"
+
+/* ── Design tokens, editorial app system: gold accent, canonical green,
+       NO foreign orange/emerald, ink text, flat surfaces. ───────────── */
 const C = {
-  red:      '#c9a030', redBg:    '#fff5f5', redBdr:    '#fecaca',
-  green:    '#059669', greenBg:  '#ecfdf5', greenBdr:  '#a7f3d0',
-  amber:    '#d97706', amberBg:  '#fffbeb', amberBdr:  '#fde68a',
-  text1:    'var(--yd-paper)',
+  red:      '#c9a030', redBg:    'rgba(201,160,48,0.13)', redBdr:    'rgba(201,160,48,0.32)',
+  green:    '#16a34a', greenBg:  'rgba(22,163,74,0.13)',  greenBdr:  'rgba(22,163,74,0.30)',
+  amber:    '#7a5b14', amberBg:  'rgba(201,160,48,0.10)',  amberBdr:  'rgba(201,160,48,0.24)',
+  text1:    '#14130f',
   text2:    '#4a4a58',
   text3:    '#8a8378',
-  border:   'rgba(10,10,15,0.07)',
-  bg:       '#fafafb',
-  surface:  '#ffffff',
+  border:   'rgba(10,10,15,0.10)',
+  bg:       'var(--yd-paper)',
+  surface:  'var(--yd-surface)',
 }
 
 const CARD = {
   background:   C.surface,
-  border:       '1px solid rgba(10,10,15,0.07)',
-  borderRadius: 14,
-  boxShadow:    '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7)',
+  border:       '1px solid rgba(10,10,15,0.10)',
+  borderRadius: 0,
+  boxShadow:    'none',
 }
 
 const PAGE_SIZE_SIGNUPS = 8
@@ -52,11 +58,11 @@ const COUNTRY_FLAGS = {
 /* ── Styles ─────────────────────────────────────────────────────────────── */
 function useAdminStyles() {
   useEffect(() => {
-    if (!document.getElementById('ytg-admin-geist')) {
+    if (!document.getElementById('ytg-admin-editorial-font')) {
       const link = document.createElement('link')
-      link.id  = 'ytg-admin-geist'
+      link.id  = 'ytg-admin-editorial-font'
       link.rel = 'stylesheet'
-      link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+      link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
       document.head.appendChild(link)
     }
     if (!document.getElementById('ytg-admin-styles-v2')) {
@@ -69,33 +75,23 @@ function useAdminStyles() {
         .adm p,.adm span,.adm div,.adm h1,.adm h2,.adm h3 { margin:0; }
         .adm .num { font-variant-numeric:tabular-nums; }
 
-        /* Light stat card, suite card grammar: white, hairline, 14px,
-           single soft shadow + inset highlight. No pseudo textures. */
+        /* Light stat card, flat editorial: surface, hairline, radius 0, no shadow. */
         .adm-stat-card {
-          background:#ffffff;
-          border:1px solid rgba(10,10,15,0.07); border-radius:14px;
+          background:var(--yd-surface);
+          border:1px solid rgba(10,10,15,0.10); border-radius:0;
           padding:22px 24px;
-          box-shadow:0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7);
           cursor:default; position:relative; overflow:hidden;
         }
 
-        /* Hero RED stat card, purposeful colour kept (the page's focal
-           anchor), but the dot-grid texture and triple shadow are gone.
-           One confident red shadow + a single soft top-edge sheen. */
+        /* Hero GOLD stat card, the page's focal anchor. Flat gold fill,
+           radius 0, no shadow, no texture, editorial system. */
         .adm-stat-card-red {
           position:relative; overflow:hidden;
-          background:linear-gradient(160deg, #c9a030 0%, #a67f1e 55%, #7a5b14 100%);
-          border:none; border-radius:14px;
+          background:#c9a030;
+          border:none; border-radius:0;
           padding:22px 24px;
           color:#ffffff;
-          box-shadow:0 1px 2px rgba(201,160,48,0.28), 0 12px 32px -10px rgba(201,160,48,0.45), inset 0 1px 0 rgba(20,19,15,0.22);
           cursor:default;
-        }
-        .adm-stat-card-red::after {
-          content:''; position:absolute; top:-60px; right:-60px;
-          width:200px; height:200px; border-radius:50%;
-          background:radial-gradient(circle, rgba(20,19,15,0.14) 0%, transparent 65%);
-          pointer-events:none;
         }
 
         /* 7-day sparkline. Thin bars, today on the right. */
@@ -115,7 +111,7 @@ function useAdminStyles() {
         .adm-mrr-bars { display:flex; flex-direction:column; gap:9px; margin-top:18px; }
         .adm-mrr-bar-row { display:grid; grid-template-columns: 58px 1fr 60px; align-items:center; gap:10px; }
         .adm-mrr-bar-label {
-          font-size:10.5px; font-weight:800; letter-spacing:0.08em;
+          font-size:10.5px; font-weight:700; letter-spacing:0.08em;
           text-transform:uppercase; color:rgba(20,19,15,0.78);
         }
         .adm-mrr-bar-track {
@@ -154,8 +150,7 @@ function useAdminStyles() {
         }
         .adm-engage-fill {
           height:100%; border-radius:99px;
-          background: linear-gradient(90deg, #2d7a4f 0%, #059669 100%);
-          box-shadow: 0 0 8px rgba(5,150,105,0.30), inset 0 1px 0 rgba(20,19,15,0.30);
+          background: linear-gradient(90deg, #2d7a4f 0%, #16a34a 100%);
           transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
         }
 
@@ -163,22 +158,22 @@ function useAdminStyles() {
         /* Delta chip, replaces inline trend text */
         .adm-delta {
           display:inline-flex; align-items:center; gap:3px;
-          padding:2px 8px; border-radius:100px;
-          font-size:11px; font-weight:700; line-height:1;
+          padding:2px 8px; border-radius:0;
+          font-size:11px; font-weight:600; line-height:1;
           font-variant-numeric:tabular-nums; letter-spacing:-0.05px;
         }
 
-        /* Section title block, bigger, bolder, with a real subhead "vibe" */
+        /* Section title block */
         .adm-section-title {
           display:flex; align-items:center; gap:10px;
         }
         .adm-section-title h2 {
-          font-size:17px; font-weight:700; color:var(--yd-paper); letter-spacing:-0.3px;
+          font-size:17px; font-weight:600; color:#14130f; letter-spacing:-0.3px;
         }
         .adm-section-count {
-          font-size:11.5px; font-weight:700; color:#8a8378;
-          background:#f1f1f6; border:1px solid #e6e6ec;
-          padding:2px 9px; border-radius:100px;
+          font-size:11.5px; font-weight:600; color:#8a8378;
+          background:rgba(20,19,15,0.05); border:1px solid rgba(10,10,15,0.10);
+          padding:2px 9px; border-radius:0;
           font-variant-numeric:tabular-nums;
         }
         .adm-section-sub {
@@ -205,13 +200,12 @@ function useAdminStyles() {
         .adm-pulse-strip {
           display:flex; align-items:center; gap:18px; flex-wrap:wrap;
           padding:13px 22px; margin-bottom:16px;
-          background:#ffffff;
-          border:1px solid rgba(10,10,15,0.07); border-radius:14px;
-          box-shadow:0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7);
+          background:var(--yd-surface);
+          border:1px solid rgba(10,10,15,0.10); border-radius:0;
         }
         .adm-pulse-eyebrow {
           display:flex; align-items:center; gap:8px; flex-shrink:0;
-          font-size:11px; font-weight:700; letter-spacing:0.10em;
+          font-size:11px; font-weight:600; letter-spacing:0.10em;
           text-transform:uppercase; color:#8a8378;
         }
         .adm-pulse-divider {
@@ -224,11 +218,11 @@ function useAdminStyles() {
           display:inline-flex; align-items:baseline; gap:6px;
         }
         .adm-pulse-num {
-          font-size:16px; font-weight:800; color:var(--yd-paper);
+          font-size:16px; font-weight:600; color:#14130f;
           letter-spacing:-0.3px; font-variant-numeric:tabular-nums;
         }
         .adm-pulse-num.dim { color:#8a8378; }
-        .adm-pulse-num.up  { color:#059669; }
+        .adm-pulse-num.up  { color:#16a34a; }
         .adm-pulse-label {
           font-size:12px; color:#8a8378; font-weight:500;
         }
@@ -239,14 +233,13 @@ function useAdminStyles() {
         .adm-row { transition:background 0.13s; }
         .adm-row:hover { background:rgba(10,10,15,0.022) !important; }
         .adm-pg-btn { transition:background 0.15s,color 0.15s,border-color 0.15s; }
-        .adm-pg-btn:not(:disabled):hover { background:rgba(10,10,15,0.025) !important; border-color:rgba(10,10,15,0.18) !important; color:var(--yd-paper) !important; }
+        .adm-pg-btn:not(:disabled):hover { background:rgba(10,10,15,0.025) !important; border-color:rgba(10,10,15,0.18) !important; color:#14130f !important; }
         .adm-sec-btn { transition:border-color 0.16s,color 0.16s,box-shadow 0.16s,transform 0.16s; }
-        .adm-sec-btn:hover { border-color:rgba(10,10,15,0.18) !important; color:var(--yd-paper) !important; box-shadow:0 4px 16px rgba(15,15,25,0.06) !important; transform:translateY(-1px); }
+        .adm-sec-btn:hover { border-color:rgba(10,10,15,0.18) !important; color:#14130f !important; box-shadow:0 4px 16px rgba(15,15,25,0.06) !important; transform:translateY(-1px); }
 
         /* Red primary refresh button (matches ytg-dash-btn-primary on Dashboard) */
         .adm-refresh-btn:hover:not(:disabled) {
-          filter:brightness(1.06); transform:translateY(-1px);
-          box-shadow:0 1px 2px rgba(201,160,48,0.30), 0 8px 22px -6px rgba(201,160,48,0.45) !important;
+          filter:brightness(1.07);
         }
 
         /* Empty state */
@@ -301,7 +294,7 @@ function planBadge(plan) {
   if (p.includes('solo'))     return { bg: C.amberBg,  color: C.amber, bdr: C.amberBdr }
   if (p.includes('lifetime')) return { bg: C.greenBg,  color: C.green, bdr: C.greenBdr }
   if (p.includes('pack'))     return { bg: C.amberBg,  color: C.amber, bdr: C.amberBdr }
-  return { bg: '#14130f', color: C.text2, bdr: C.border }
+  return { bg: 'rgba(20,19,15,0.05)', color: C.text2, bdr: C.border }
 }
 
 /* plan bar accent: 3 tiers, paid plans get vivid green/amber/red, free is neutral */
@@ -323,7 +316,7 @@ function PlanBadge({ plan }) {
       display: 'inline-block',
       background: b.bg, color: b.color, border: `1px solid ${b.bdr}`,
       fontSize: 10, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase',
-      padding: '3px 9px', borderRadius: 100, whiteSpace: 'nowrap',
+      padding: '3px 9px', borderRadius: 0, whiteSpace: 'nowrap',
     }}>{planLabel(plan)}</span>
   )
 }
@@ -377,7 +370,7 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
         <div style={{ position: 'relative', zIndex: 1 }}>
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(20,19,15,0.82)', marginBottom: 12 }}>{label}</p>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
-            <p className="num" style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-0.6px', color: '#fff', lineHeight: 1 }}>{value}</p>
+            <p className="num" style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 500, letterSpacing: '-0.01em', color: '#fff', lineHeight: 1 }}>{value}</p>
             {delta && (
               <span className="adm-delta" style={{
                 color: '#fff',
@@ -424,11 +417,11 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
       <div style={{ position: 'relative', zIndex: 1 }}>
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, flexWrap: 'wrap' }}>
-          <p className="num" style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-0.6px', color: col, lineHeight: 1 }}>{value}</p>
+          <p className="num" style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 500, letterSpacing: '-0.01em', color: col, lineHeight: 1 }}>{value}</p>
           {delta && (
             <span className="adm-delta" style={{
               color: delta.tone === 'up' ? C.green : delta.tone === 'down' ? C.red : C.text2,
-              background: delta.tone === 'up' ? C.greenBg : delta.tone === 'down' ? C.redBg : '#14130f',
+              background: delta.tone === 'up' ? C.greenBg : delta.tone === 'down' ? C.redBg : 'rgba(20,19,15,0.06)',
               border: `1px solid ${delta.tone === 'up' ? C.greenBdr : delta.tone === 'down' ? C.redBdr : C.border}`,
             }}>
               <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
@@ -508,7 +501,7 @@ function FunnelCard({ stats }) {
       label:    'Active this week',
       sub:      'Audited a channel in the last 7 days',
       count:    stats.active_7d || 0,
-      barColor: 'linear-gradient(90deg, #2d7a4f 0%, #059669 100%)',
+      barColor: 'linear-gradient(90deg, #2d7a4f 0%, #16a34a 100%)',
       accent:   C.green,
       drop:     Math.max(0, total - (stats.active_7d || 0)),
       dropLabel:"haven't audited this week",
@@ -546,7 +539,7 @@ function FunnelCard({ stats }) {
                   <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 3 }}>{step.sub}</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexShrink: 0 }}>
-                  <span className="num" style={{ fontSize: 24, fontWeight: 800, color: valueColor, letterSpacing: '-0.5px', lineHeight: 1 }}>{fmtNum(step.count)}</span>
+                  <span className="num" style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: valueColor, letterSpacing: '-0.01em', lineHeight: 1 }}>{fmtNum(step.count)}</span>
                   {!step.isTotal && (
                     <span className="num" style={{ fontSize: 12.5, color: C.text3, fontWeight: 600 }}>{pct.toFixed(1)}%</span>
                   )}
@@ -612,12 +605,12 @@ function Pager({ page, total, onPage, pageSize = PAGE_SIZE_SIGNUPS }) {
   const totalPages = Math.ceil(total / pageSize)
   if (totalPages <= 1) return null
   const btnStyle = (disabled) => ({
-    padding: '6px 16px', borderRadius: 100,
+    padding: '6px 16px', borderRadius: 0,
     border: '1px solid rgba(10,10,15,0.10)',
     background: C.surface, color: disabled ? C.text3 : C.text2,
     fontSize: 12.5, fontWeight: 600, fontFamily: 'inherit',
     cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1,
-    boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(20,19,15,0.7)',
+    boxShadow: 'none',
   })
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px', borderTop: `1px solid ${C.border}`, background: '#fafafc' }}>
@@ -682,7 +675,7 @@ function BreakdownsCard({ plans, sources, countries, totalForPlan, totalForUtm, 
           const active = tab === t.key
           return (
             <button key={t.key} onClick={() => setTab(t.key)} style={{
-              padding: '6px 14px', borderRadius: 100,
+              padding: '6px 14px', borderRadius: 0,
               fontSize: 13, fontWeight: active ? 600 : 500,
               fontFamily: 'inherit', letterSpacing: '-0.01em',
               color: active ? C.text1 : C.text3,
@@ -852,9 +845,9 @@ export default function Admin() {
 
   if (error) return (
     <div className="adm" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: 12, textAlign: 'center' }}>
-      <div style={{ width: 48, height: 48, borderRadius: 13, background: C.redBg, border: `1px solid ${C.redBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>⚠</div>
+      <div style={{ width: 48, height: 48, borderRadius: 0, background: C.redBg, border: `1px solid ${C.redBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>⚠</div>
       <p style={{ fontSize: 15, fontWeight: 700, color: C.text1 }}>{error}</p>
-      <button onClick={() => load(true)} style={{ padding: '8px 20px', borderRadius: 100, border: `1px solid ${C.border}`, background: C.surface, color: C.text2, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Try again</button>
+      <button onClick={() => load(true)} style={{ padding: '8px 20px', borderRadius: 0, border: `1px solid ${C.border}`, background: C.surface, color: C.text2, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Try again</button>
     </div>
   )
 
@@ -952,11 +945,11 @@ export default function Admin() {
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-            <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', lineHeight: 1.1 }}>Admin</h1>
+            <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', lineHeight: 1.12 }}>Admin</h1>
             <span style={{
-              fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-              color: '#8a8378', background: '#f1f1f6', border: '1px solid #e6e6ec',
-              padding: '3px 9px', borderRadius: 100,
+              fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase',
+              color: '#8a8378', background: 'rgba(20,19,15,0.05)', border: '1px solid rgba(10,10,15,0.10)',
+              padding: '3px 9px', borderRadius: 0,
             }}>Internal</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500 }}>
@@ -970,14 +963,14 @@ export default function Admin() {
           onClick={() => load(false)}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '9px 20px', borderRadius: 100, border: 'none',
-            background: 'linear-gradient(180deg, #d4af3f 0%, #c9a030 100%)',
-            color: '#ffffff', fontSize: 13, fontWeight: 600,
-            cursor: refreshing ? 'wait' : 'pointer', fontFamily: 'inherit',
-            letterSpacing: '-0.01em',
-            boxShadow: '0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22)',
+            padding: '9px 20px', borderRadius: 0, border: 'none',
+            background: C.red,
+            color: 'var(--yd-on-gold)', fontSize: 12, fontWeight: 600,
+            cursor: refreshing ? 'wait' : 'pointer',
+            fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.06em',
+            boxShadow: 'none',
             opacity: refreshing ? 0.65 : 1,
-            transition: 'filter 0.18s, transform 0.18s, box-shadow 0.18s',
+            transition: 'filter 0.18s',
           }}
         >
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
@@ -1152,8 +1145,8 @@ export default function Admin() {
                           background: usagePct > 80
                             ? 'linear-gradient(90deg, #c9a030 0%, #c9a030 100%)'
                             : usagePct > 55
-                              ? 'linear-gradient(90deg, #fbbf24 0%, #d97706 100%)'
-                              : 'linear-gradient(90deg, #2d7a4f 0%, #059669 100%)',
+                              ? 'linear-gradient(90deg, #c9a030 0%, #7a5b14 100%)'
+                              : 'linear-gradient(90deg, #2d7a4f 0%, #16a34a 100%)',
                           boxShadow: `0 0 6px ${barClr}55, inset 0 1px 0 rgba(20,19,15,0.30)`,
                         }} />
                       </div>
@@ -1181,13 +1174,13 @@ export default function Admin() {
                 disabled={topupSending || topupData.eligible_count === 0}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '9px 20px', borderRadius: 100, border: 'none',
-                  background: topupData.eligible_count === 0 ? 'rgba(10,10,15,0.06)' : 'linear-gradient(180deg, #d4af3f 0%, #c9a030 100%)',
-                  color: topupData.eligible_count === 0 ? C.text3 : '#ffffff',
-                  fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
+                  padding: '9px 20px', borderRadius: 0, border: 'none',
+                  background: topupData.eligible_count === 0 ? 'rgba(10,10,15,0.06)' : C.red,
+                  color: topupData.eligible_count === 0 ? C.text3 : 'var(--yd-on-gold)',
+                  fontSize: 12, fontWeight: 600, letterSpacing: '0.06em',
                   cursor: (topupSending || topupData.eligible_count === 0) ? 'not-allowed' : 'pointer',
-                  fontFamily: 'inherit', whiteSpace: 'nowrap',
-                  boxShadow: topupData.eligible_count === 0 ? 'inset 0 1px 0 rgba(20,19,15,0.6)' : '0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22)',
+                  fontFamily: COND, textTransform: 'uppercase', whiteSpace: 'nowrap',
+                  boxShadow: 'none',
                   opacity: topupSending ? 0.65 : 1,
                   transition: 'filter 0.16s, transform 0.16s',
                 }}
@@ -1223,7 +1216,7 @@ export default function Admin() {
                       return (
                         <div key={u.email + i} style={{
                           display: 'flex', alignItems: 'center', gap: 12,
-                          padding: '8px 12px', borderRadius: 10,
+                          padding: '8px 12px', borderRadius: 0,
                           background: '#fafafc', border: `1px solid ${C.border}`,
                         }}>
                           <Avatar name={name} size={28} />
@@ -1236,7 +1229,7 @@ export default function Admin() {
                             color: u.used >= 3 ? C.red : C.amber,
                             background: u.used >= 3 ? C.redBg : C.amberBg,
                             border: `1px solid ${u.used >= 3 ? C.redBdr : C.amberBdr}`,
-                            padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+                            padding: '2px 8px', borderRadius: 0, flexShrink: 0,
                           }}>
                             {u.used} / 3 used
                           </span>
@@ -1254,12 +1247,12 @@ export default function Admin() {
 
               {/* Result / error feedback */}
               {topupResult && (
-                <div style={{ marginTop: 18, padding: '12px 14px', background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 10, color: C.green, fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
+                <div style={{ marginTop: 18, padding: '12px 14px', background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 0, color: C.green, fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
                   ✓ Queued {topupResult.queued} {topupResult.queued === 1 ? 'email' : 'emails'}. Sending in the background, refresh in a few seconds to see the count drop as recipients are marked sent.
                 </div>
               )}
               {topupError && (
-                <div style={{ marginTop: 18, padding: '12px 14px', background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10, color: C.red, fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
+                <div style={{ marginTop: 18, padding: '12px 14px', background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 0, color: C.red, fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
                   {topupError}
                 </div>
               )}
@@ -1283,10 +1276,10 @@ export default function Admin() {
         ]
 
         const statusStyle = (s) => {
-          if (s === 'shipped')  return { c: C.green, bg: '#ecfdf5', b: '#a7f3d0', label: 'Shipped' }
-          if (s === 'planned')  return { c: C.amber, bg: '#fffbeb', b: '#fde68a', label: 'Planned' }
-          if (s === 'declined') return { c: C.text3, bg: '#14130f', b: C.border,  label: 'Declined' }
-          return                       { c: C.text2, bg: '#14130f', b: C.border,  label: 'New' }
+          if (s === 'shipped')  return { c: C.green, bg: C.greenBg, b: C.greenBdr, label: 'Shipped' }
+          if (s === 'planned')  return { c: C.amber, bg: C.amberBg, b: C.amberBdr, label: 'Planned' }
+          if (s === 'declined') return { c: C.text3, bg: 'rgba(20,19,15,0.05)', b: C.border,  label: 'Declined' }
+          return                       { c: C.text2, bg: 'rgba(20,19,15,0.05)', b: C.border,  label: 'New' }
         }
 
         return (
@@ -1297,7 +1290,7 @@ export default function Admin() {
               sub="Submitted via Settings or the /feedback share link"
               right={
                 <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 500 }}>
-                  Share link: <code style={{ background: '#14130f', border: `1px solid ${C.border}`, padding: '2px 7px', borderRadius: 6, fontSize: 11.5, color: C.text2 }}>/feedback</code>
+                  Share link: <code style={{ background: 'rgba(20,19,15,0.05)', border: `1px solid ${C.border}`, padding: '2px 7px', borderRadius: 0, fontSize: 11.5, color: C.text2 }}>/feedback</code>
                 </span>
               }
             >
@@ -1313,7 +1306,7 @@ export default function Admin() {
                     onClick={() => setFrFilter(f.key)}
                     style={{
                       display: 'inline-flex', alignItems: 'center', gap: 6,
-                      padding: '6px 13px', borderRadius: 100,
+                      padding: '6px 13px', borderRadius: 0,
                       border: `1px solid ${active ? 'rgba(10,10,15,0.10)' : C.border}`,
                       background: active ? 'rgba(10,10,15,0.055)' : C.surface,
                       color: active ? C.text1 : C.text2,
@@ -1327,7 +1320,7 @@ export default function Admin() {
                       fontSize: 10.5, fontWeight: 700,
                       background: active ? 'rgba(10,10,15,0.06)' : '#f1f1f6',
                       color: active ? C.text2 : C.text3,
-                      padding: '1px 7px', borderRadius: 100,
+                      padding: '1px 7px', borderRadius: 0,
                       fontVariantNumeric: 'tabular-nums',
                     }}>{f.count}</span>
                   </button>
@@ -1361,7 +1354,7 @@ export default function Admin() {
                             <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</p>
                             <span style={{
                               fontSize: 10, fontWeight: 700, color: sty.c, background: sty.bg,
-                              border: `1px solid ${sty.b}`, padding: '2px 8px', borderRadius: 100,
+                              border: `1px solid ${sty.b}`, padding: '2px 8px', borderRadius: 0,
                               letterSpacing: '0.05em', textTransform: 'uppercase', flexShrink: 0,
                             }}>{sty.label}</span>
                           </div>
@@ -1373,7 +1366,7 @@ export default function Admin() {
                           onClick={(e) => { e.stopPropagation(); setFrStatus(r.id, NEXT_STATUS[r.status] || 'new') }}
                           disabled={frBusy === r.id}
                           style={{
-                            padding: '5px 13px', borderRadius: 100,
+                            padding: '5px 13px', borderRadius: 0,
                             border: `1px solid ${C.border}`, background: C.surface,
                             color: C.text2, fontSize: 11.5, fontWeight: 600,
                             cursor: frBusy === r.id ? 'wait' : 'pointer', fontFamily: 'inherit',
@@ -1387,7 +1380,7 @@ export default function Admin() {
                       </div>
                       {open && (
                         <div style={{ padding: '0 24px 16px', display: 'flex', gap: 12 }}>
-                          <div style={{ flex: 1, padding: '13px 15px', background: '#fafafc', border: `1px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text2, lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>
+                          <div style={{ flex: 1, padding: '13px 15px', background: '#fafafc', border: `1px solid ${C.border}`, borderRadius: 0, fontSize: 13, color: C.text2, lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>
                             {r.description}
                           </div>
                         </div>

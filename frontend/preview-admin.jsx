@@ -10,6 +10,7 @@
  */
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import './src/index.css'
 import Admin from './src/pages/Admin.jsx'
 
 const params = new URLSearchParams(window.location.search)
