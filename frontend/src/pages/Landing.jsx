@@ -910,7 +910,7 @@ export default function Landing() {
     // Both now resolve to the consolidated Subscription tab; the per-card
     // toggle decides cycle.
     if (tab === 'monthly' || tab === 'annual') return 'subscription'
-    return ['subscription','lifetime','founder','packs'].includes(tab) ? tab : 'subscription'
+    return ['subscription','packs'].includes(tab) ? tab : 'subscription'
   })
   // Per-card billing cycle inside the Subscription tab. Each plan flips
   // independently so the page only ever shows one toggle (the segmented
@@ -1366,8 +1366,6 @@ export default function Landing() {
             <div style={{ display: 'inline-flex', background: '#efece4', border: '1px solid rgba(20,19,15,0.10)', borderRadius: 0, padding: 4, gap: 2, flexWrap: 'nowrap', flexShrink: 0, margin: isMobile ? '0 auto' : undefined }}>
               {[
                 ['subscription', 'Subscription'],
-                ['lifetime',     'Lifetime'],
-                ['founder',      isMobile ? 'Bundles' : 'Founder Bundles'],
                 ['packs',        isMobile ? 'Packs' : 'Analysis Packs'],
               ].map(([val, label]) => (
                 <button key={val} onClick={() => setPricingTab(val)} style={{
@@ -1494,125 +1492,6 @@ export default function Landing() {
             </div>
           )}
 
-          {/* ── LIFETIME ── */}
-          {pricingTab === 'lifetime' && (
-            <div>
-              <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
-                Pay once. Get the monthly analyses forever. Limited to the first <strong style={{ color: 'var(--ytg-text)' }}>500 buyers</strong>. After that, this page goes away.
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
-                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Solo</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$149</p>
-                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~8 months of Solo</p>
-                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Worth $456 over 2 years of subscription</p>
-                  {['Full channel audit (up to 3 channels)', '20 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', 'One-time payment, no subscription'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                  ))}
-                  <p style={{ fontFamily: ED_SANS, fontSize: 12, color: ED_ACCENT, fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
-                  <button onClick={() => openCheckout('solo_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
-                </div>
-
-                <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Growth</p>
-                    <span style={{ fontFamily: ED_SANS, fontSize: 10, fontWeight: 700, color: '#fff', background: ED_ACCENT, padding: '4px 9px', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Best deal</span>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$349</p>
-                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~7 months of Growth</p>
-                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Worth $1,176 over 2 years of subscription</p>
-                  {['Full channel audit (up to 5 channels)', '50 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails', 'One-time payment, no subscription'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
-                  ))}
-                  <p style={{ fontFamily: ED_SANS, fontSize: 12, color: ED_ACCENT, fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
-                  <button onClick={() => openCheckout('growth_lifetime')} className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
-                </div>
-
-                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Agency</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Manage your whole roster of channels, forever.</p>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$897</p>
-                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~6 months of Agency</p>
-                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Worth $3,576 over 2 years of subscription</p>
-                  {['Full channel audit (up to 10 channels, pooled)', '150 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 10 rivals)', 'Thumbnail IQ (maximum credits)', 'Weekly reports + priority support', 'One-time payment, no subscription'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                  ))}
-                  <p style={{ fontFamily: ED_SANS, fontSize: 12, color: ED_ACCENT, fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available. Limited spots</p>
-                  <button onClick={() => openCheckout('agency_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── FOUNDER BUNDLES ── */}
-          {pricingTab === 'founder' && (
-            <div>
-              <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
-                The all-in option. Lifetime access plus a bonus stack of analyses to hit the ground running. For the early believers.
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
-                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Solo</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$169</p>
-                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Solo + 60 bonus analyses</p>
-                  <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You're getting $190+ in value</p>
-                  {['Full channel audit (up to 3 channels)', '20 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', '+60 bonus analyses, on us. Never expire'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                  ))}
-                  <button onClick={() => openCheckout('founder_solo')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</button>
-                </div>
-
-                <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Growth</p>
-                    <span style={{ fontFamily: ED_SANS, fontSize: 10, fontWeight: 700, color: '#fff', background: ED_ACCENT, padding: '4px 9px', borderRadius: 0, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Most popular</span>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$389</p>
-                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Growth + 75 bonus analyses</p>
-                  <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You're getting $490+ in value</p>
-                  {['Full channel audit (up to 5 channels)', '50 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer + Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails', '+75 bonus analyses, on us. Never expire'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
-                  ))}
-                  <button onClick={() => openCheckout('founder_growth')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</button>
-                </div>
-
-                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Agency</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow your whole roster, start with ammo loaded.</p>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$949</p>
-                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
-                  </div>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Agency + 150 bonus analyses</p>
-                  <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginBottom: 22 }}>You're getting $1,100+ in value</p>
-                  {['Full channel audit (up to 10 channels, pooled)', '150 AI analyses/month. Forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer + Video Ideas', 'Competitor Analysis (up to 10 rivals)', 'Thumbnail IQ (maximum credits)', 'Weekly reports + priority support', '+150 bonus analyses, on us. Never expire'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                  ))}
-                  <button onClick={() => openCheckout('founder_agency')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</button>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* ── ANALYSIS PACKS ── */}
           {pricingTab === 'packs' && (
             <div>
@@ -1703,8 +1582,7 @@ export default function Landing() {
               { q: 'Can I cancel or change my subscription at any time?', a: "Yes. Monthly is month-to-month. Cancel whenever. Annual gives you the rest of your year. No cancellation fees, no guilt-trip retention email. Just done." },
               { q: 'Do unused monthly analyses roll over to the following month?', a: "Monthly included analyses reset every month. Use them or lose them. But top-up pack analyses never expire and never reset. They sit in your account until you need them." },
               { q: 'Can I purchase and use analysis packs without a subscription plan?', a: "Yes. Packs work standalone. Buy a pack, run analyses, no subscription required. If you have analyses, you have full access. Subscribe later and your pack analyses stack on top." },
-              { q: 'Is the lifetime deal truly lifetime, and what happens if you shut down?', a: "If we shut down, you get a pro-rated refund based on time remaining against a 5-year expected lifespan. We're also small enough that your lifetime deal revenue genuinely helps us stay running. You're part of the bet." },
-              { q: 'Can I manage and analyze multiple client channels on the agency plan?', a: "Yes. Agency supports up to 10 channels (5 on lifetime agency deals) with pooled analyses. You run the analyses, you own the insights, your clients see the results." },
+              { q: 'Can I manage and analyze multiple client channels on the agency plan?', a: "Yes. Agency supports up to 10 channels with pooled analyses. You run the analyses, you own the insights, your clients see the results." },
             ].map((item, i) => {
               const isOpen = openFaq === i
               const num = String(i + 1).padStart(2, '0')
