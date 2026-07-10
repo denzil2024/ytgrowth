@@ -5,7 +5,7 @@ checkout, and upsell flow so users convert without friction or confusion.
 Update this file as items ship or new bugs surface. Newest status at the top
 of each section.
 
-Last updated: 2026-07-10
+Last updated: 2026-07-10 (session 2: dashboard finish + landing pricing + login resume)
 
 ---
 
@@ -87,10 +87,36 @@ better served pay-as-you-go than by a monthly plan.
   Commit `fad48430f`.
 - **channelbrain checkout handoff.** On channelbrain.online, `openCheckout`
   ([frontend/src/checkout.js](frontend/src/checkout.js)) resolves the authed
-  purchase (price + channel_id + email) then redirects to
-  `https://ytgrowth.io/?pco=1&price=...&ch=...&em=...`. A receiver in
-  [frontend/src/main.jsx](frontend/src/main.jsx) opens the Paddle overlay there
-  and cleans the URL. Attribution survives; no second login. Commit `fad48430f`.
+  purchase (price + channel_id + email) then redirects to a dedicated
+  **`/checkout`** page on ytgrowth.io ([frontend/src/pages/Checkout.jsx](frontend/src/pages/Checkout.jsx)),
+  which opens the Paddle overlay and shows cross-brand reassurance. Attribution
+  survives; no second login. Commits `fad48430f`, `053226add`.
+- **Every dashboard upgrade/top-up opens Paddle directly** (gates, Settings,
+  usage bar, Outliers/Keywords banners, Weekly Report, nav, AI Coach) via shared
+  `startUpgrade` / `startTopUp` / `useCheckoutAction` helpers, with an
+  "Opening…" busy state. Commits `6fa5f1021`, `d06073e02`, `7e34f7075`, `0ef36f1da`.
+- **CreditsEmptyModal migrated to the editorial design system** (flat gold,
+  Cormorant, sharp). Commit `93c3a9b7e`.
+- **/checkout served from a bare SPA shell**, not the baked Landing, so the
+  handoff no longer flashes the Landing page. prerender.js saves `dist/_shell.html`;
+  serve_frontend serves it for /checkout + /dashboard. Commit `f51d74607`.
+- **Gate flicker removed**: re-audit, Video Review, Video Ideas open the upsell
+  up front instead of flashing the running state. Commit `5b0e26803`.
+- **Landing pricing polish**: one shared Monthly/Yearly toggle (was 3 per-card),
+  tighter pack bullets, headline "pays for itself". Commit `c00670574`.
+- **Resume checkout after login.** A logged-out user clicking a pricing card is
+  now taken through login and Paddle opens automatically. The plan rides
+  `/auth/login?plan=` → session `after_login_redirect` → `/dashboard?pco_plan=`
+  (survives the ytgrowth→channelbrain hop; sessionStorage was lost there before).
+  Commit `e0c85c593`.
+
+### Two real billing bugs fixed (do not regress)
+- **Pack purchase no longer corrupts the subscription row.** `_activate` in
+  [routers/billing.py](routers/billing.py) returns early for packs and only tops
+  up `pack_balance` (was overwriting plan/status/allowance/channels). Commit `b4df0e632`.
+- **No duplicate-subscription double-charge.** `/billing/checkout` returns
+  `has_active_sub`; `openCheckout` routes an existing subscriber's plan purchase
+  to the Paddle portal instead of a fresh checkout. Commit `b4df0e632`.
 
 ---
 
@@ -181,10 +207,12 @@ Even once open, Paddle steps through email → address → card on separate page
 We prefill email. Switch the checkout to one-page in the Paddle dashboard
 (Checkout settings) to cut steps. Action: user to toggle in Paddle.
 
-### A4. Login wall for cold visitors  — OPEN (partly inherent)
-Clicking a plan while logged out forces Google sign-in + YouTube connect before
-payment. We need the channel for attribution, so some of this is inherent, but
-worth revisiting whether we can defer the connect step.
+### A4. Login wall for cold visitors  — IMPROVED (resume now works)
+Clicking a plan while logged out still requires Google sign-in + YouTube connect
+(inherent — we need the channel for attribution). But the checkout now RESUMES
+automatically after login (commit `e0c85c593`); previously the user logged in and
+nothing happened, they had to click upgrade again. Still open: whether to defer
+the connect step for cold traffic.
 
 ### A7. Gate flicker: running/loading state flashed before the paywall  — DONE
 Clicking a paid action as a free user briefly showed the running state (audit
@@ -238,10 +266,27 @@ against both domains if checkout breaks again.
 
 ---
 
-## 8. Open questions
+## 8. What's left (as of session 2)
 
-- Rename the "Analysis Packs" tab to "Credits" / "Buy Credits"? (pending)
-- One-page vs multi-page Paddle checkout: confirm the toggle exists on our
-  Paddle plan.
-- Should the dashboard upgrade CTA open checkout inline, or is the ytgrowth
-  redirect acceptable long-term?
+Everything mechanical is done: every upgrade/top-up path works one-click, no
+landing flash, no gate flicker, no double-charge, pack bug fixed, checkout
+resumes after login. Remaining items are NOT code:
+
+Needs the user (external / judgment):
+- **A3** Paddle: switch checkout to one-page (Paddle dashboard Checkout setting).
+- **A6** Paddle: confirm the customer portal actually lets subscribers change
+  tier. Subscriber upgrades route there safely; if it can't switch plans, build
+  an in-app subscription-update flow.
+- **Copy call:** keep or soften the gate trust line "Trusted by creators growing
+  their channels every week."
+- **Default call:** keep Solo $19 as the gate-upgrade default and $42 pack as the
+  top-up default, or change.
+- **One real test:** a logged-out purchase from a pricing card, to confirm Paddle
+  pops after sign-in (the plan-carrying is verified live; only the Google step is
+  unautomatable).
+
+Lower-priority polish (not money-losing):
+- The gates' secondary "See all plans / See all options" links still open the
+  full marketing landing inside the dashboard. A small in-app pricing view would
+  be cleaner.
+- Rename the "Analysis Packs" tab to "Credits"? (open)
