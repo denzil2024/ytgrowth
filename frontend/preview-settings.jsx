@@ -1,7 +1,7 @@
 /*
  * Preview harness for Settings. Mounts the component standalone with a
- * mocked /auth/me + /feedback/mine so I can render each state and
- * screenshot via Playwright before shipping a design change.
+ * mocked /auth/me + /feedback/mine so each state can be screenshot before
+ * shipping a design change.
  *
  * Query params:
  *   ?state=default  (default) — Solo plan, 2 of 3 channels, healthy credits,
@@ -11,6 +11,7 @@
  */
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import './src/index.css'
 import Settings from './src/pages/Settings.jsx'
 
 const params = new URLSearchParams(window.location.search)
@@ -76,40 +77,17 @@ const FEEDBACK = state === 'low' ? [] : [
 const origFetch = window.fetch
 window.fetch = async (url, opts) => {
   const u = String(url)
-  if (u.includes('/auth/me'))      return new Response(JSON.stringify(ME),                 { headers: { 'Content-Type': 'application/json' } })
+  if (u.includes('/auth/me'))       return new Response(JSON.stringify(ME),                    { headers: { 'Content-Type': 'application/json' } })
   if (u.includes('/feedback/mine')) return new Response(JSON.stringify({ requests: FEEDBACK }), { headers: { 'Content-Type': 'application/json' } })
   return origFetch(url, opts)
 }
 
-// Variant B mimics the landing-page type system: DM Sans for display
-// (h1 / card titles / eyebrows), Inter for body + UI. Variant A is the
-// shipped app font (Geist), untouched.
-const fontOverride = `
-  .font-landing .set-page, .font-landing .set-page * { font-family: 'Inter', system-ui, sans-serif !important; }
-  .font-landing .set-h1, .font-landing .set-card-title, .font-landing .set-eyebrow,
-  .font-landing .set-btn-primary, .font-landing .set-btn-secondary { font-family: 'DM Sans', system-ui, sans-serif !important; }
-`
-
-const Label = (t, sub) => React.createElement('div', {
-  style: { maxWidth: 1040, margin: '0 auto 14px', fontFamily: "'Geist',system-ui", }
-},
-  React.createElement('div', { style: { fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#fb6a60' } }, t),
-  React.createElement('div', { style: { fontSize: 13, color: '#b2b3bb', marginTop: 4 } }, sub),
-)
-
-const settingsEl = () => React.createElement(Settings, {
-  channelData: { channel: { channel_name: ME.display_name, thumbnail: ME.profile_picture } },
-})
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement('div', {
-    style: { padding: '40px 24px 80px', boxSizing: 'border-box', background: 'var(--yd-paper)', minHeight: '100vh' }
+    style: { padding: '36px 40px 80px', boxSizing: 'border-box', background: 'var(--yd-paper)', minHeight: '100vh' }
   },
-    React.createElement('style', null, fontOverride),
-    Label('A — Current app font (Geist)', 'What ships today across the dark app'),
-    settingsEl(),
-    React.createElement('div', { style: { height: 64 } }),
-    Label('B — Landing fonts (DM Sans + Inter)', 'Matches the marketing site: DM Sans titles, Inter body'),
-    React.createElement('div', { className: 'font-landing' }, settingsEl()),
+    React.createElement(Settings, {
+      channelData: { channel: { channel_name: ME.display_name, thumbnail: ME.profile_picture } },
+    })
   )
 )

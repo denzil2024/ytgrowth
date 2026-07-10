@@ -56,20 +56,16 @@ try {
 const browser = await chromium.launch()
 try {
   const ctx = await browser.newContext({ viewport: { width: 1200, height: 1320 }, deviceScaleFactor: 1.3 })
-  const page = await ctx.newPage()
-  await page.goto(`http://localhost:${PORT}/preview-settings.html?state=default`, { waitUntil: 'networkidle' })
-  await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve())
-  await page.waitForTimeout(1000)
-  // Variant A (Geist) — top of page
-  let out = path.join(__dirname, 'settings-fontA.png')
-  await page.screenshot({ path: out })
-  console.log(`OK: wrote ${out}`)
-  // Variant B (DM Sans + Inter) — scroll the .font-landing block into view
-  await page.evaluate(() => document.querySelector('.font-landing').scrollIntoView({ block: 'start' }))
-  await page.waitForTimeout(500)
-  out = path.join(__dirname, 'settings-fontB.png')
-  await page.screenshot({ path: out })
-  console.log(`OK: wrote ${out}`)
+  for (const st of ['default', 'low']) {
+    const page = await ctx.newPage()
+    await page.goto(`http://localhost:${PORT}/preview-settings.html?state=${st}`, { waitUntil: 'networkidle' })
+    await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve())
+    await page.waitForTimeout(1000)
+    const out = path.join(__dirname, `settings-${st}.png`)
+    await page.screenshot({ path: out, fullPage: true })
+    console.log(`OK: wrote ${out}`)
+    await page.close()
+  }
   await ctx.close()
 } finally {
   await browser.close()

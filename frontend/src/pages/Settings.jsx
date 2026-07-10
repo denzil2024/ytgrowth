@@ -3,6 +3,10 @@ import { supportEmail } from '../brandHost'
 import { Plus, ArrowRight, Check, Link2 } from 'lucide-react'
 import { loginUrl } from '../utm.js'
 
+// Editorial app faces: Cormorant = display H1, Barlow Condensed = labels/buttons.
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const COND  = "'Barlow Condensed', system-ui, sans-serif"
+
 /* ── Design tokens ──────────────────────────────────────────────────────────
    Aligned with the Competitors design north-star, dark theme. Geist font,
    1040 centered, dark gradient cards + single shadow, hairline
@@ -16,9 +20,9 @@ const C = {
   green:    '#2d7a4f',
   greenBg:  'rgba(22,163,74,0.16)',
   greenBdr: 'rgba(22,163,74,0.34)',
-  amber:    '#b07d1a',
-  amberBg:  'rgba(217,119,6,0.14)',
-  amberBdr: 'rgba(217,119,6,0.34)',
+  amber:    '#7a5b14',
+  amberBg:  'rgba(201,160,48,0.13)',
+  amberBdr: 'rgba(201,160,48,0.32)',
   ink:      '#14130f',
   ink60:    '#6b6862',
   ink55:    '#6b6862',
@@ -33,7 +37,7 @@ const C = {
    Each returns a solid, a lighter top-of-gradient, a glow and a soft tint. */
 function creditAccent(state) {
   if (state === 'empty') return { solid: '#c9a030', light: '#d4af3f', glow: 'rgba(201,160,48,0.30)' }
-  if (state === 'low')   return { solid: '#b07d1a', light: '#f59e0b', glow: 'rgba(217,119,6,0.34)' }
+  if (state === 'low')   return { solid: '#7a5b14', light: '#c9a030', glow: 'rgba(201,160,48,0.32)' }
   return                        { solid: '#2d7a4f', light: '#22c55e', glow: 'rgba(22,163,74,0.32)' }
 }
 
@@ -41,11 +45,11 @@ function creditAccent(state) {
       styles, input styles. Same pattern as Competitors / Chat. ───────────── */
 function useSettingsStyles() {
   useEffect(() => {
-    if (!document.getElementById('ytg-set-geist-font')) {
+    if (!document.getElementById('ytg-set-editorial-font')) {
       const link = document.createElement('link')
-      link.id = 'ytg-set-geist-font'
+      link.id = 'ytg-set-editorial-font'
       link.rel = 'stylesheet'
-      link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+      link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap'
       document.head.appendChild(link)
     }
     if (document.getElementById('ytg-set-styles-v3')) return
@@ -78,29 +82,27 @@ function useSettingsStyles() {
       /* H1 + subtitle match the shared standard across every redesigned
          page (Competitors / Outliers / Keywords / Video Ideas / SEO). */
       .set-h1 {
-        font-size: 26px; font-weight: 600; color: ${C.ink};
-        letter-spacing: -0.7px; line-height: 1.1;
+        font-family: ${SERIF};
+        font-size: 32px; font-weight: 500; color: ${C.ink};
+        letter-spacing: -0.01em; line-height: 1.12;
       }
       .set-subtitle {
         font-size: 14px; font-weight: 500; color: ${C.ink55};
         margin-top: 6px !important; letter-spacing: -0.005em;
       }
 
+      /* Flat editorial cards: hairline, radius 0, no shadow. */
       .set-card {
-        background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
+        background: var(--yd-surface);
         border: 1px solid ${C.hairline};
-        border-radius: 14px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04);
+        border-radius: 0;
+        box-shadow: none;
       }
-      /* Hero reads one tier above the rest: deeper layered shadow + a
-         brighter inset sheen. Grammar unchanged, just more presence. */
       .set-card-hero {
-        background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
+        background: var(--yd-surface);
         border: 1px solid ${C.hairline};
-        border-radius: 14px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4),
-                    0 14px 36px -10px rgba(0,0,0,0.55),
-                    inset 0 1px 0 rgba(20,19,15,0.05);
+        border-radius: 0;
+        box-shadow: none;
       }
 
       .set-divider { height: 1px; background: ${C.hairline}; width: 100%; }
@@ -125,32 +127,29 @@ function useSettingsStyles() {
 
       /* ── Buttons ──────────────────────────────────────────────────────── */
       .set-btn-primary {
-        background: linear-gradient(180deg, ${C.redLight} 0%, ${C.red} 100%);
-        color: #fff; border: none; border-radius: 100px;
-        padding: 8px 18px; font-size: 13px; font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
-        cursor: pointer; white-space: nowrap;
-        letter-spacing: -0.01em; text-decoration: none;
+        background: ${C.red};
+        color: var(--yd-on-gold); border: none; border-radius: 0;
+        padding: 9px 18px; font-size: 12px; font-weight: 600;
+        font-family: ${COND}; text-transform: uppercase; letter-spacing: 0.06em;
+        cursor: pointer; white-space: nowrap; text-decoration: none;
         display: inline-flex; align-items: center; gap: 6px;
-        box-shadow: 0 1px 2px rgba(201,160,48,0.30), inset 0 1px 0 rgba(20,19,15,0.22);
-        transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
+        box-shadow: none;
+        transition: filter 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
-      .set-btn-primary:active:not(:disabled) { transform: translateY(0); filter: brightness(0.98); }
-      .set-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+      .set-btn-primary:hover:not(:disabled) { filter: brightness(1.07); }
+      .set-btn-primary:active:not(:disabled) { filter: brightness(0.98); }
+      .set-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
       .set-btn-secondary {
-        background: rgba(20,19,15,0.04); color: ${C.ink};
-        border: 1px solid rgba(20,19,15,0.12); border-radius: 100px;
-        padding: 7px 16px; font-size: 13px; font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
+        background: transparent; color: ${C.ink};
+        border: 1px solid rgba(20,19,15,0.16); border-radius: 0;
+        padding: 8px 16px; font-size: 12px; font-weight: 600;
+        font-family: ${COND}; text-transform: uppercase; letter-spacing: 0.06em;
         cursor: pointer; white-space: nowrap;
-        letter-spacing: -0.01em;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04);
-        transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
+        box-shadow: none;
+        transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-btn-secondary:hover { background: rgba(20,19,15,0.07); border-color: rgba(20,19,15,0.20); transform: translateY(-1px); }
-      .set-btn-secondary:active { transform: translateY(0); }
+      .set-btn-secondary:hover { background: rgba(20,19,15,0.05); border-color: rgba(20,19,15,0.28); }
 
       .set-btn-text {
         background: transparent; color: ${C.ink55};
@@ -165,21 +164,19 @@ function useSettingsStyles() {
       .set-btn-text:hover { color: ${C.ink}; gap: 7px; }
 
       .set-btn-danger-outline {
-        background: rgba(201,160,48,0.10); color: #7a5b14;
-        border: 1px solid rgba(201,160,48,0.32); border-radius: 100px;
-        padding: 7px 16px; font-size: 13px; font-weight: 600;
-        font-family: 'Barlow', system-ui, sans-serif;
+        background: transparent; color: #7a5b14;
+        border: 1px solid rgba(201,160,48,0.40); border-radius: 0;
+        padding: 8px 16px; font-size: 12px; font-weight: 600;
+        font-family: ${COND}; text-transform: uppercase; letter-spacing: 0.06em;
         cursor: pointer; white-space: nowrap;
-        letter-spacing: -0.01em;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-        transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
+        box-shadow: none;
+        transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-btn-danger-outline:hover { background: rgba(201,160,48,0.18); border-color: rgba(201,160,48,0.48); transform: translateY(-1px); }
-      .set-btn-danger-outline:active { transform: translateY(0); }
+      .set-btn-danger-outline:hover { background: rgba(201,160,48,0.10); border-color: rgba(201,160,48,0.60); }
 
       .set-btn-row-disconnect {
         background: transparent; color: ${C.ink45};
-        border: none; padding: 5px 8px; border-radius: 7px;
+        border: none; padding: 5px 8px; border-radius: 0;
         font-size: 12.5px; font-weight: 600;
         font-family: 'Barlow', system-ui, sans-serif;
         cursor: pointer; letter-spacing: -0.01em;
@@ -197,36 +194,36 @@ function useSettingsStyles() {
       .set-input {
         width: 100%; padding: 11px 14px;
         background: var(--yd-surface);
-        border: 1px solid rgba(20,19,15,0.12);
-        border-radius: 12px;
+        border: 1px solid rgba(20,19,15,0.16);
+        border-radius: 0;
         font-size: 14px; font-weight: 400; color: ${C.ink};
         font-family: 'Barlow', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
+        box-shadow: none;
         transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
       }
       .set-input::placeholder { color: rgba(20,19,15,0.34); font-weight: 400; }
       .set-input:focus {
-        border-color: rgba(201,160,48,0.45);
-        box-shadow: 0 0 0 4px rgba(201,160,48,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
+        border-color: rgba(201,160,48,0.55);
+        box-shadow: 0 0 0 3px rgba(201,160,48,0.12);
       }
 
       .set-textarea {
         width: 100%; padding: 12px 14px;
         background: var(--yd-surface);
-        border: 1px solid rgba(20,19,15,0.12);
-        border-radius: 12px;
+        border: 1px solid rgba(20,19,15,0.16);
+        border-radius: 0;
         font-size: 14px; font-weight: 400; color: ${C.ink};
         font-family: 'Barlow', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em; line-height: 1.55;
         resize: vertical; min-height: 104px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
+        box-shadow: none;
         transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
       }
       .set-textarea::placeholder { color: rgba(20,19,15,0.34); font-weight: 400; }
       .set-textarea:focus {
-        border-color: rgba(201,160,48,0.45);
-        box-shadow: 0 0 0 4px rgba(201,160,48,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.03);
+        border-color: rgba(201,160,48,0.55);
+        box-shadow: 0 0 0 3px rgba(201,160,48,0.12);
       }
 
       /* Channel row, hover wash bleeds into the card padding via the
@@ -234,7 +231,7 @@ function useSettingsStyles() {
       .set-channel-row {
         display: flex; align-items: center; gap: 14px;
         padding: 13px 12px; margin: 0 -12px;
-        border-radius: 11px;
+        border-radius: 0;
         transition: background 160ms cubic-bezier(0.32,0.72,0,1);
       }
       .set-channel-row:hover { background: rgba(20,19,15,0.04); }
@@ -242,7 +239,7 @@ function useSettingsStyles() {
       .set-connect-row {
         display: flex; align-items: center; gap: 8px;
         padding: 13px 12px; margin: 0 -12px;
-        border-radius: 11px;
+        border-radius: 0;
         text-decoration: none;
         color: ${C.red}; font-size: 14px; font-weight: 600;
         letter-spacing: -0.01em; cursor: pointer;
@@ -379,9 +376,9 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
       zIndex: 1000,
     }}>
       <div style={{
-        background: 'linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%)', borderRadius: 16,
+        background: 'var(--yd-surface)', borderRadius: 0,
         padding: '24px 26px', maxWidth: 400, width: '90%',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.4), 0 24px 56px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(20,19,15,0.05)',
+        boxShadow: '0 20px 48px -12px rgba(0,0,0,0.25)',
         border: `1px solid ${C.hairline}`,
       }}>
         <p style={{ fontSize: 15, fontWeight: 600, color: C.ink, letterSpacing: '-0.01em', marginBottom: 8 }}>{title}</p>
@@ -625,7 +622,7 @@ export default function Settings({ channelData }) {
             <img src={avatarPic} alt="" style={{
               width: 44, height: 44, borderRadius: '50%',
               objectFit: 'cover', flexShrink: 0,
-              boxShadow: '0 0 0 1px rgba(20,19,15,0.10), 0 2px 8px rgba(0,0,0,0.45)',
+              boxShadow: '0 0 0 1px rgba(20,19,15,0.10)',
             }} />
           ) : (
             <div style={{
@@ -634,7 +631,7 @@ export default function Settings({ channelData }) {
               alignItems: 'center', justifyContent: 'center',
               fontSize: 15, fontWeight: 600, color: C.ink,
               flexShrink: 0,
-              boxShadow: '0 0 0 1px rgba(20,19,15,0.10), 0 2px 8px rgba(0,0,0,0.45)',
+              boxShadow: '0 0 0 1px rgba(20,19,15,0.10)',
             }}>
               {initial || (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ color: C.ink45 }}>
@@ -665,8 +662,7 @@ export default function Settings({ channelData }) {
               ...planBadgeStyle(me?.plan),
               fontSize: 11, fontWeight: 600, letterSpacing: '0.06em',
               textTransform: 'uppercase', padding: '4px 11px',
-              borderRadius: 100, display: 'inline-block',
-              boxShadow: 'inset 0 1px 0 rgba(20,19,15,0.5)',
+              borderRadius: 0, display: 'inline-block',
             }}>{planLabel(me?.plan)}</span>
             {compactBillingLabel(me) && (
               <p style={{ fontSize: 12, fontWeight: 400, color: C.ink55, marginTop: 8, letterSpacing: '-0.005em' }}>
@@ -802,7 +798,7 @@ export default function Settings({ channelData }) {
                         border: `1px solid ${C.greenBdr}`,
                         fontSize: 10, fontWeight: 600, letterSpacing: '0.06em',
                         textTransform: 'uppercase', padding: '2px 8px 2px 7px',
-                        borderRadius: 100, flexShrink: 0,
+                        borderRadius: 0, flexShrink: 0,
                       }}>
                         <span style={{ width: 5, height: 5, borderRadius: '50%', background: C.green }} />
                         Active
@@ -946,7 +942,7 @@ export default function Settings({ channelData }) {
                       </div>
                       <span style={{
                         fontSize: 10, fontWeight: 600, color: sty.c, background: sty.bg,
-                        border: `1px solid ${sty.b}`, padding: '3px 9px', borderRadius: 100,
+                        border: `1px solid ${sty.b}`, padding: '3px 9px', borderRadius: 0,
                         letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0,
                       }}>{sty.label}</span>
                     </div>
@@ -980,10 +976,10 @@ export default function Settings({ channelData }) {
 
       {/* ── Danger zone ─────────────────────────────────────────────────── */}
       <div style={{
-        background: 'rgba(201,160,48,0.025)',
-        border: '1px solid rgba(201,160,48,0.10)',
-        borderRadius: 14,
-        boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(20,19,15,0.04)',
+        background: 'rgba(201,160,48,0.03)',
+        border: '1px solid rgba(201,160,48,0.20)',
+        borderRadius: 0,
+        boxShadow: 'none',
         padding: '20px 24px',
         marginBottom: 48,
         display: 'flex', alignItems: 'center', gap: 16,
