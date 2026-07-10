@@ -41,6 +41,8 @@ PRICE_META = {
     "pri_01kn95zq1axgmvgsczmx5zqqer": {"plan": "lifetime_solo",  "billing": "lifetime", "analyses": 20,  "channels": 3,  "is_lifetime": True,  "bonus": 60},
     "pri_01kn9624a48c9y2sjnbj8g36f2": {"plan": "lifetime_growth", "billing": "lifetime", "analyses": 50,  "channels": 5,  "is_lifetime": True,  "bonus": 75},
     "pri_01kn965gbdb7vwfw3fx3pfqv45": {"plan": "lifetime_agency", "billing": "lifetime", "analyses": 150, "channels": 10, "is_lifetime": True,  "bonus": 150},
+    # $5 starter pack — lowest-barrier entry, 5 analyses.
+    "pri_01kx5gpqxnbmnxa13xfw66e1vk":           {"plan": "pack",           "billing": "one-time", "analyses": 5,   "channels": 1,  "is_lifetime": False, "bonus": 0},
     "pri_01kn96mpe190we3mx5bjycn3mj": {"plan": "pack",           "billing": "one-time", "analyses": 20,  "channels": 1,  "is_lifetime": False, "bonus": 0},
     "pri_01kn96ppcz3jvd1n07f97ndbh8": {"plan": "pack",           "billing": "one-time", "analyses": 60,  "channels": 1,  "is_lifetime": False, "bonus": 0},
     "pri_01kn96r93fxz2chsfrzyezazqr": {"plan": "pack",           "billing": "one-time", "analyses": 150, "channels": 1,  "is_lifetime": False, "bonus": 0},
@@ -276,6 +278,7 @@ PLAN_PRICE_MAP = {
     "solo_annual":     "pri_01kn926r754n8h11zm9p25svd8",
     "growth_annual":   "pri_01kn9297gcehrm86engxwp1r0h",
     "agency_annual":   "pri_01kn92b8fcnsb70t5bc0cf5hdq",
+    "pack_5":          "pri_01kx5gpqxnbmnxa13xfw66e1vk",
     "pack_20":         "pri_01kn96mpe190we3mx5bjycn3mj",
     "pack_60":         "pri_01kn96ppcz3jvd1n07f97ndbh8",
     "pack_150":        "pri_01kn96r93fxz2chsfrzyezazqr",

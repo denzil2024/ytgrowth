@@ -12,7 +12,17 @@
  * openCheckout(planKey), opens the Paddle overlay checkout.
  */
 
+import { isChannelBrain } from './brandHost.js'
+
 const PADDLE_TOKEN = 'live_2af860b645fca6f106c9d79f8d2'
+
+// Paddle only approves checkout on ytgrowth.io. channelbrain.online (the
+// dashboard brand) is deliberately NOT added to Paddle, so opening the
+// overlay there is blocked by Paddle with a 403 ("Transaction checkout
+// creation is blocked for this vendor"). When a checkout is initiated on
+// channelbrain, we resolve the authed checkout data here and hand it off to
+// ytgrowth.io to open the overlay on the approved domain.
+const CHECKOUT_ORIGIN = 'https://ytgrowth.io'
 
 // main.jsx sets window.__paddleReady = loadPaddle. If for some reason
 // it isn't there (e.g., during a unit test), fall back to a no-op promise
@@ -59,6 +69,21 @@ export async function openCheckout(planKey) {
     const data = await res.json()
     if (!data.price_id) {
       console.error('[checkout] No price_id returned:', data)
+      return
+    }
+
+    // On channelbrain.online Paddle blocks the overlay (unapproved domain).
+    // Hand the resolved checkout off to ytgrowth.io — it opens the overlay
+    // there (see the receiver in main.jsx). The price + attribution ride in
+    // the URL so ytgrowth.io needs no session of its own.
+    if (isChannelBrain()) {
+      const p = new URLSearchParams({
+        pco:   '1',
+        price: data.price_id,
+        ch:    data.channel_id || '',
+        em:    data.email      || '',
+      })
+      window.location.href = `${CHECKOUT_ORIGIN}/?${p.toString()}`
       return
     }
 

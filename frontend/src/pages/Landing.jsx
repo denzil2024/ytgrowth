@@ -910,7 +910,7 @@ export default function Landing() {
     // Both now resolve to the consolidated Subscription tab; the per-card
     // toggle decides cycle.
     if (tab === 'monthly' || tab === 'annual') return 'subscription'
-    return ['subscription','packs'].includes(tab) ? tab : 'subscription'
+    return ['subscription','packs'].includes(tab) ? tab : 'packs'
   })
   // Per-card billing cycle inside the Subscription tab. Each plan flips
   // independently so the page only ever shows one toggle (the segmented
@@ -1365,8 +1365,8 @@ export default function Landing() {
           <div style={{ overflowX: isMobile ? 'auto' : 'visible', marginBottom: isMobile ? 32 : 48, display: 'flex', justifyContent: isMobile ? 'flex-start' : 'center', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', paddingLeft: isMobile ? 20 : 0 }}>
             <div style={{ display: 'inline-flex', background: '#efece4', border: '1px solid rgba(20,19,15,0.10)', borderRadius: 0, padding: 4, gap: 2, flexWrap: 'nowrap', flexShrink: 0, margin: isMobile ? '0 auto' : undefined }}>
               {[
-                ['subscription', 'Subscription'],
                 ['packs',        isMobile ? 'Packs' : 'Analysis Packs'],
+                ['subscription', 'Subscription'],
               ].map(([val, label]) => (
                 <button key={val} onClick={() => setPricingTab(val)} style={{
                   padding: '9px 18px', borderRadius: 0, border: 'none', cursor: 'pointer',
@@ -1498,7 +1498,22 @@ export default function Landing() {
               <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
                 No subscription needed. Buy a pack, run analyses whenever you want. They never expire and work across all tools.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, marginBottom: 20, maxWidth: isMobile ? 480 : '100%', margin: isMobile ? '0 auto 20px' : '0 0 20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14, marginBottom: 20, maxWidth: isMobile ? 480 : '100%', margin: isMobile ? '0 auto 20px' : '0 0 20px' }}>
+                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Starter</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Just enough to try the paid tools.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 52, letterSpacing: '-1px', color: ED_INK, lineHeight: 1 }}>$5</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>5 AI analyses</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$1.00 per analysis</p>
+                  {['5 AI analyses, yours to keep', 'Works with any plan. Or no plan', 'Use across all tools', 'Stack on top of your monthly allowance', 'Never expire'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                  ))}
+                  <button onClick={() => openCheckout('pack_5')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
+                </div>
+
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Quick Boost</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>A top-up when you run low mid-sprint.</p>

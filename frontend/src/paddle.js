@@ -18,6 +18,7 @@ export const PRICES = {
   solo_annual:     'pri_01kn926r754n8h11zm9p25svd8',
   growth_annual:   'pri_01kn9297gcehrm86engxwp1r0h',
   agency_annual:   'pri_01kn92b8fcnsb70t5bc0cf5hdq',
+  pack_5:          'pri_01kx5gpqxnbmnxa13xfw66e1vk',
   pack_quick:      'pri_01kn96mpe190we3mx5bjycn3mj',
   pack_power:      'pri_01kn96ppcz3jvd1n07f97ndbh8',
   pack_arsenal:    'pri_01kn96r93fxz2chsfrzyezazqr',
