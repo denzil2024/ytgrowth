@@ -443,7 +443,7 @@ function fmtNum(n) {
   return n.toLocaleString()
 }
 
-export default function Autopsy({ videos = [], channelId = '', optimizations = [], goToTracked = null }) {
+export default function Autopsy({ videos = [], channelId = '', optimizations = [], plan = 'free', freeTierFeatures = null, goToTracked = null }) {
   // Map video_id → boolean for fast lookup of "this video also has a tracked
   // optimisation." Drives the small cross-link on each Reports row that lets
   // the user jump to the deltas-view counterpart of the AI-verdict view.
@@ -455,7 +455,11 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
   const [result,   setResult]    = useState(null)  // { id, video_id, video_title, thumbnail, result }
   const [error,    setError]     = useState('')
   const [creditsOut, setCreditsOut] = useState(false)
-  const [locked, setLocked] = useState(false)  // free user hit the paid-only gate (403)
+  // Video Review is paid-only for free users. Know it up front so clicking Run
+  // opens the upsell immediately instead of flashing the analysing state first.
+  const [locked, setLocked] = useState(
+    (plan || 'free') === 'free' && freeTierFeatures?.autopsy === 'locked'
+  )
   const [videoSort, setVideoSort] = useState('date')
 
   // Build "videos at least 7 days old" client-side from the same `videos`
@@ -486,6 +490,8 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
 
   async function runAutopsy(video) {
     if (running) return
+    // Paid-only for free users: open the upsell without the analysing flash.
+    if (locked) { setCreditsOut(true); return }
     setRunning(video.video_id)
     setError('')
     setResult(null)
@@ -807,7 +813,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
 
       <CreditsEmptyModal
         open={creditsOut}
-        onClose={() => { setCreditsOut(false); setLocked(false) }}
+        onClose={() => setCreditsOut(false)}
         featureName={locked ? 'Video Review' : 'autopsies'}
         lockMode={locked}
       />

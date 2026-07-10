@@ -186,6 +186,16 @@ Clicking a plan while logged out forces Google sign-in + YouTube connect before
 payment. We need the channel for attribution, so some of this is inherent, but
 worth revisiting whether we can defer the connect step.
 
+### A7. Gate flicker: running/loading state flashed before the paywall  — DONE
+Clicking a paid action as a free user briefly showed the running state (audit
+scanning card, tool loading, cleared results) before swapping to the upsell.
+Fixed everywhere: Dashboard re-audit + Autopsy + Video Ideas now open the
+upsell up front (short-circuit before any running state); the other paid tools
+(Keywords, Thumbnails, SEO, Competitors, Outliers, Video Optimize) already
+short-circuited / render-replaced. Remaining (acceptable): a paying user who
+runs out of credits mid-run sees a brief loading state before the out-of-credits
+modal — honest and minor, not fixed.
+
 ### A5. No feedback on button click  — DONE
 Added a shared `useCheckoutAction()` hook in [checkout.js](frontend/src/checkout.js)
 that gives every upgrade/top-up button an "Opening…" busy + disabled state

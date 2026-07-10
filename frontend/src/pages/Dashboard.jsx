@@ -2830,7 +2830,7 @@ export default function Dashboard() {
 
           {nav === 'Outliers' && <Outliers channelData={data} onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
-          {nav === 'Autopsy' && <Autopsy videos={videos} channelId={data?.channel?.channel_id} optimizations={optimizations} goToTracked={() => { setNav('Videos'); setVideosTab('tracked') }} />}
+          {nav === 'Autopsy' && <Autopsy videos={videos} channelId={data?.channel?.channel_id} optimizations={optimizations} plan={billingPlan} freeTierFeatures={freeTierFeatures} goToTracked={() => { setNav('Videos'); setVideosTab('tracked') }} />}
 
           {/* ── REFERRALS ────────────────────────────────────────────── */}
           {nav === 'Referrals' && <Referrals />}

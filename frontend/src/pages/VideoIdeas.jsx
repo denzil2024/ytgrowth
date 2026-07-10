@@ -787,6 +787,12 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
 
   async function handleRefresh() {
     if (refreshing) return
+    // Refresh is paid-only for free users. Open the upsell up front instead of
+    // spinning the button first, then swapping to the gate.
+    if ((plan || 'free') === 'free' && freeTierFeatures?.video_ideas_refresh === 'locked') {
+      setRefreshGated(true)
+      return
+    }
     setRefreshing(true)
     setError('')
     try {
