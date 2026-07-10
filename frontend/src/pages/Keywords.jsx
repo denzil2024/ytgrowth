@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { isChannelBrain } from '../brandHost'
-import { startUpgrade } from '../checkout'
+import { useCheckoutAction } from '../checkout'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
@@ -883,6 +883,7 @@ function ScoreRing({ score }) {
 
 /* ─── Component ─────────────────────────────────────────────────────────── */
 export default function Keywords({ plan, freeTierFeatures }) {
+  const { busy: coBusy, upgrade } = useCheckoutAction()
   // Free-tier one-run gate. Pre-loaded from /auth/me; flips to true on a
   // live 403 from /keywords/research. Backend is authoritative.
   const [gated, setGated] = useState(
@@ -1071,9 +1072,9 @@ export default function Keywords({ plan, freeTierFeatures }) {
             You've used your free Keyword research this cycle. Your past reports stay available.
           </span>
           <button
-            onClick={startUpgrade}
+            onClick={upgrade} disabled={coBusy}
             className="kw-btn-primary" style={{ padding: '7px 14px', fontSize: 12.5 }}>
-            Upgrade
+            {coBusy ? 'Opening…' : 'Upgrade'}
           </button>
         </div>
       )}

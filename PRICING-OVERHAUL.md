@@ -148,11 +148,16 @@ Target: modal → one button ("Buy 60 credits – $42") → Paddle opens → pay
 Fix: give the gates a direct `openCheckout(planKey)` CTA for the most likely
 plan/pack; keep "see all plans" as a secondary link.
 
-### A2. Domain jump confuses users  — OPEN
-See section 2. Necessary for Paddle, but the full-page bounce to a different
-brand mid-checkout needs smoothing + reassurance copy (backlog B1). Consider:
-a brief interstitial ("Taking you to secure checkout…") or making the landing
-target a clean checkout page rather than the marketing home.
+### A2. Domain jump confuses users  — DONE (deployed + verified)
+The channelbrain checkout handoff used to land on the full marketing homepage
+(ytgrowth.io/?pco=...), which read as "it dumped me on the landing page." Now
+it lands on a dedicated minimal [/checkout](frontend/src/pages/Checkout.jsx)
+page that opens the Paddle overlay itself and shows reassurance copy
+("You're on ytgrowth.io, our secure payment page; ChannelBrain and YTGrowth
+are the same product"). Verified live with a Puppeteer probe: the page renders,
+Paddle checkout-service returns 201, overlay opens. Also fixed a latent trap:
+the SPA catch-all (`Navigate to "/"`) would have bounced /checkout back to the
+landing, so /checkout is now a real route.
 
 ### A3. Paddle overlay is multi-page  — OPEN (Paddle dashboard setting, not code)
 Even once open, Paddle steps through email → address → card on separate pages.
@@ -164,16 +169,18 @@ Clicking a plan while logged out forces Google sign-in + YouTube connect before
 payment. We need the channel for attribution, so some of this is inherent, but
 worth revisiting whether we can defer the connect step.
 
-### A5. No feedback on button click / silent failure  — OPEN
-`openCheckout` has no spinner or disabled state. If Paddle is slow or a fetch
-errors, the button looks dead (console error only) and users give up. Add a
-loading state + a visible error/fallback.
+### A5. No feedback on button click  — DONE
+Added a shared `useCheckoutAction()` hook in [checkout.js](frontend/src/checkout.js)
+that gives every upgrade/top-up button an "Opening…" busy + disabled state
+during the fetch-then-redirect gap. Wired into Settings, the usage bar,
+Outliers, Keywords, and Weekly Report. The gates already had it. (Nav menu
+item excluded: its menu closes on click, so no button remains to update.)
 
-### B1. Cross-brand reassurance copy  — OPEN (user-requested)
-Reassure users that YTGrowth and ChannelBrain are the same product, in BOTH:
-- the ytgrowth.io site (e.g. footer / checkout context), and
-- the ChannelBrain dashboard (e.g. a small note near billing/upgrade).
-So the domain jump and the two names never read as sketchy.
+### B1. Cross-brand reassurance copy  — IN PROGRESS
+Done: the /checkout handoff page carries the "same product, same account"
+reassurance, and Settings shows a line on channelbrain that checkout opens on
+ytgrowth.io. Still consider: a footer line on ytgrowth.io and anywhere else the
+two brand names could confuse a first-time buyer.
 
 ---
 

@@ -12,6 +12,7 @@
  * openCheckout(planKey), opens the Paddle overlay checkout.
  */
 
+import { useState, useCallback } from 'react'
 import { isChannelBrain } from './brandHost.js'
 
 const PADDLE_TOKEN = 'live_2af860b645fca6f106c9d79f8d2'
@@ -143,5 +144,21 @@ export async function startUpgrade() {
   } catch (err) {
     console.error('[checkout] startUpgrade failed:', err)
     return openCheckout('solo_monthly')
+  }
+}
+
+// Hook that gives a button a shared "Opening…" busy state around startUpgrade /
+// startTopUp, so the button never looks dead during the fetch-then-redirect
+// gap. busy stays true until the promise settles (or the page navigates away).
+export function useCheckoutAction() {
+  const [busy, setBusy] = useState(false)
+  const run = useCallback((fn) => {
+    setBusy(true)
+    Promise.resolve(fn()).finally(() => setBusy(false))
+  }, [])
+  return {
+    busy,
+    upgrade: useCallback(() => run(startUpgrade), [run]),
+    topUp:   useCallback(() => run(startTopUp),   [run]),
   }
 }

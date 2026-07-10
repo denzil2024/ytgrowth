@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { supportEmail } from '../brandHost'
-import { startUpgrade } from '../checkout'
+import { useCheckoutAction } from '../checkout'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 import EstimateTag from '../components/EstimateTag'
@@ -517,6 +517,7 @@ function MetaChip({ tint = 'neutral', icon, children }) {
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 export default function Outliers({ channelData, onNavigate, plan, freeTierFeatures }) {
+  const { busy: coBusy, upgrade } = useCheckoutAction()
   // Free-tier feature flag, Outliers is fully gated for free users. All
   // hooks still declared below (React rules); the actual render-replace
   // happens at the bottom of the component.
@@ -822,9 +823,9 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           <span style={{ flex: 1 }}>
             New Outliers searches require a paid plan. Your past reports stay available.
           </span>
-          <button onClick={startUpgrade}
+          <button onClick={upgrade} disabled={coBusy}
             className="out-btn-primary" style={{ padding: '7px 14px', fontSize: 12.5 }}>
-            Upgrade
+            {coBusy ? 'Opening…' : 'Upgrade'}
           </button>
         </div>
       )}

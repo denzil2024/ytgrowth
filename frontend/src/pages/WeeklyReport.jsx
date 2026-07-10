@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { isChannelBrain } from '../brandHost'
-import { startTopUp } from '../checkout'
+import { useCheckoutAction } from '../checkout'
 import UpsellGate from '../components/UpsellGate'
 
 // Editorial app fonts, page-scoped. Cormorant = display H1 + big numbers,
@@ -272,6 +272,7 @@ function ReportBody({ rd, isLatest }) {
 }
 
 export default function WeeklyReport({ channelId, channelEmail, plan, channelStats, analytics, healthScore }) {
+  const { busy: coBusy, topUp } = useCheckoutAction()
   const [reports,    setReports]    = useState(null)
   const [loading,    setLoading]    = useState(true)
   const [emailOn,    setEmailOn]    = useState(true)
@@ -501,7 +502,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             </p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
               This week&rsquo;s report will be skipped. Top up or upgrade to resume weekly delivery.{' '}
-              <button type="button" onClick={startTopUp} style={{ color: C.redHi, fontWeight: 600, background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit' }}>Top up →</button>
+              <button type="button" onClick={topUp} disabled={coBusy} style={{ color: C.redHi, fontWeight: 600, background: 'none', border: 'none', padding: 0, cursor: coBusy ? 'default' : 'pointer', font: 'inherit' }}>{coBusy ? 'Opening…' : 'Top up →'}</button>
             </p>
           </div>
         </div>

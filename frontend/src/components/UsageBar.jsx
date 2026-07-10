@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { initPaddleRetain, startUpgrade, startTopUp } from '../checkout'
+import { initPaddleRetain, useCheckoutAction } from '../checkout'
 
 /* Compact sidebar usage widget, shows what's LEFT (not used) so a fresh
    account with 3/3 reads as alive instead of dead-space. Number scales
@@ -25,6 +25,7 @@ function refillLabel(iso) {
 
 export default function UsageBar({ channelId, email, dark = false, onPlan, onUsage }) {
   const [usage, setUsage] = useState(null)
+  const { busy: coBusy, upgrade, topUp } = useCheckoutAction()
 
   useEffect(() => {
     let active = true
@@ -102,10 +103,11 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
   // A text link, not a button: brand red (red is for CTAs), no chrome.
   const UpgradeLink = isFreePlan ? (
     <button
-      onClick={startUpgrade}
+      onClick={upgrade}
+      disabled={coBusy}
       style={{
         fontSize: 10.5, fontWeight: 700, color: C.goldInk,
-        background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+        background: 'none', border: 'none', padding: 0, cursor: coBusy ? 'default' : 'pointer',
         fontFamily: 'inherit', letterSpacing: '0.01em', flexShrink: 0,
         display: 'inline-flex', alignItems: 'center', gap: 3,
         transition: 'filter 0.15s',
@@ -113,10 +115,12 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
       onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.15)' }}
       onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
     >
-      Upgrade
-      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-      </svg>
+      {coBusy ? 'Opening…' : 'Upgrade'}
+      {!coBusy && (
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      )}
     </button>
   ) : null
 
@@ -198,11 +202,12 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
 
       <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
         <button
-          onClick={startUpgrade}
+          onClick={upgrade}
+          disabled={coBusy}
           style={{
             flex: 1, fontSize: 13, fontWeight: 700,
             padding: '8px 0', borderRadius: 0,
-            cursor: 'pointer', border: 'none',
+            cursor: coBusy ? 'default' : 'pointer', border: 'none',
             fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase', letterSpacing: '0.08em',
             background: 'var(--yd-gold)',
             color: 'var(--yd-on-gold)',
@@ -212,14 +217,15 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
           onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)' }}
           onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
         >
-          Upgrade
+          {coBusy ? 'Opening…' : 'Upgrade'}
         </button>
         <button
-          onClick={startTopUp}
+          onClick={topUp}
+          disabled={coBusy}
           style={{
             flex: 1, fontSize: 12, fontWeight: 600,
             padding: '7px 0', borderRadius: 0,
-            cursor: 'pointer',
+            cursor: coBusy ? 'default' : 'pointer',
             background: dark ? 'transparent' : '#ffffff',
             border: `1px solid ${dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec'}`,
             color: C.text2, fontFamily: 'inherit',
@@ -228,7 +234,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
           onMouseEnter={e => { e.currentTarget.style.background = dark ? 'rgba(255,255,255,0.06)' : '#f7f7fa'; e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.28)' : '#d6d6de' }}
           onMouseLeave={e => { e.currentTarget.style.background = dark ? 'transparent' : '#ffffff'; e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec' }}
         >
-          + Pack
+          {coBusy ? 'Opening…' : '+ Pack'}
         </button>
       </div>
     </div>

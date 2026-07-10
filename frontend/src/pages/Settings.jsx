@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supportEmail, isChannelBrain } from '../brandHost'
 import { Plus, ArrowRight, Check, Link2 } from 'lucide-react'
 import { loginUrl } from '../utm.js'
-import { startUpgrade, startTopUp } from '../checkout'
+import { useCheckoutAction } from '../checkout'
 
 // Editorial app faces: Cormorant = display H1, Barlow Condensed = labels/buttons.
 const SERIF = "'Cormorant Garamond', Georgia, serif"
@@ -416,6 +416,7 @@ export default function Settings({ channelData }) {
   useSettingsStyles()
   const [me, setMe] = useState(null)
   const [loading, setLoading] = useState(true)
+  const { busy: coBusy, upgrade, topUp } = useCheckoutAction()
   const [disconnectTarget, setDisconnectTarget] = useState(null)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [toggleWorking, setToggleWorking] = useState(false)
@@ -737,12 +738,12 @@ export default function Settings({ channelData }) {
         {/* Shelf 3: actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           {!isTopPlan && (
-            <button className="set-btn-primary" onClick={startUpgrade}>
-              Upgrade plan
+            <button className="set-btn-primary" onClick={upgrade} disabled={coBusy}>
+              {coBusy ? 'Opening…' : 'Upgrade plan'}
             </button>
           )}
-          <button className="set-btn-secondary" onClick={startTopUp}>
-            Top up credits
+          <button className="set-btn-secondary" onClick={topUp} disabled={coBusy}>
+            {coBusy ? 'Opening…' : 'Top up credits'}
           </button>
           {hasActiveSub && (
             <button
@@ -851,8 +852,8 @@ export default function Settings({ channelData }) {
                   You have reached your channel limit. Upgrade to connect more.
                 </p>
               </div>
-              <button className="set-btn-primary" onClick={startUpgrade}>
-                Upgrade plan
+              <button className="set-btn-primary" onClick={upgrade} disabled={coBusy}>
+                {coBusy ? 'Opening…' : 'Upgrade plan'}
               </button>
             </div>
           )}
