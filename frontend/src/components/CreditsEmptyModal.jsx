@@ -22,9 +22,9 @@ import { useEffect, useState } from 'react'
 import { openCheckout } from '../checkout'
 
 const C = {
-  red: '#c9a030', green: '#059669', amber: '#d97706',
-  text1: '#0f0f13', text2: '#4a4a58', text3: '#8a8378',
-  border: '#e6e6ec',
+  gold: '#c9a030', goldInk: '#7a5b14', green: '#2d7a4f',
+  ink: '#14130f', soft: '#6b6862', muted: '#8a8378',
+  border: 'rgba(20,19,15,0.08)',
 }
 
 function daysUntil(iso) {
@@ -100,10 +100,10 @@ export default function CreditsEmptyModal({
         onClick={e => e.stopPropagation()}
         style={{
           position: 'relative',
-          background: '#ffffff',
-          border: '1px solid rgba(201,160,48,0.2)',
-          borderRadius: 20,
-          boxShadow: '0 20px 50px rgba(0,0,0,0.22)',
+          background: 'var(--yd-surface)',
+          border: '1px solid rgba(201,160,48,0.32)',
+          borderRadius: 0,
+          boxShadow: '0 16px 40px rgba(0,0,0,0.16)',
           padding: '30px 36px 28px',
           maxWidth: 520, width: '100%',
           textAlign: 'center',
@@ -116,36 +116,43 @@ export default function CreditsEmptyModal({
           aria-label="Close"
           style={{
             position: 'absolute', top: 14, right: 14,
-            width: 32, height: 32, borderRadius: 10,
+            width: 32, height: 32, borderRadius: 0,
             border: 'none', background: 'transparent',
-            color: C.text3, cursor: 'pointer',
+            color: C.muted, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.15s, color 0.15s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#14130f'; e.currentTarget.style.color = C.text1 }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text3 }}>
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = C.ink }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.muted }}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M3 3l8 8M11 3l-8 8"/>
           </svg>
         </button>
 
-        {/* Credits-bolt icon, red gradient square, matches UpsellGate's lock */}
+        {/* Icon: flat gold square, ink glyph (matches UpsellGate). Lock for a
+            paid-feature gate; credits-bolt for an out-of-credits state. */}
         <div style={{
-          width: 50, height: 50, borderRadius: 14,
-          background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
+          width: 50, height: 50, borderRadius: 0,
+          background: C.gold,
           margin: '0 auto 18px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(20,19,15,0.25)`,
         }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-          </svg>
+          {lockMode ? (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--yd-on-gold)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          ) : (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--yd-on-gold)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          )}
         </div>
 
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 30, fontWeight: 500, color: C.ink, letterSpacing: '-0.01em', lineHeight: 1.15, marginBottom: 10 }}>
           {lockMode ? `${featureName} is a paid feature` : "You're out of credits"}
         </h2>
-        <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 18, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
+        <p style={{ fontSize: 14, color: C.soft, lineHeight: 1.6, marginBottom: 18, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
           {lockMode
             ? `Upgrade to a paid plan to unlock ${featureName}. Plans start at $19/mo and include a monthly credit allowance.`
             : `You've used all your monthly ${featureName}. Your past reports stay available, upgrade your plan or grab a credit pack to keep running new ones.`}
@@ -155,9 +162,9 @@ export default function CreditsEmptyModal({
         {refillLine && (
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            fontSize: 12.5, fontWeight: 600, color: C.amber,
-            background: '#fffbeb', border: '1px solid #fde68a',
-            padding: '5px 12px', borderRadius: 100, marginBottom: 20,
+            fontSize: 12.5, fontWeight: 600, color: C.goldInk,
+            background: 'rgba(201,160,48,0.08)', border: '1px solid rgba(201,160,48,0.28)',
+            padding: '5px 12px', borderRadius: 0, marginBottom: 20,
             letterSpacing: '-0.05px',
           }}>
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -174,14 +181,14 @@ export default function CreditsEmptyModal({
           const primaryBtn = {
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             width: '100%', maxWidth: 360,
-            background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
-            color: '#ffffff', fontSize: 14, fontWeight: 700,
-            padding: '13px 24px', borderRadius: 999,
-            border: 'none', cursor: busy ? 'default' : 'pointer', letterSpacing: '-0.1px',
-            boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(20,19,15,0.22)`,
-            opacity: busy ? 0.7 : 1,
+            background: C.gold, color: 'var(--yd-on-gold)',
+            fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase',
+            fontSize: 13, fontWeight: 600, letterSpacing: '0.06em',
+            padding: '13px 24px', borderRadius: 0,
+            border: 'none', cursor: busy ? 'default' : 'pointer',
+            boxShadow: 'none', opacity: busy ? 0.7 : 1,
           }
-          const subLink = { fontSize: 12.5, color: C.text3, fontWeight: 600, textDecoration: 'none' }
+          const subLink = { fontSize: 12.5, color: C.soft, fontWeight: 500, textDecoration: 'none' }
           const subBtn = { ...subLink, background: 'none', border: 'none', cursor: busy ? 'default' : 'pointer', padding: 0 }
           const arrow = (
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -226,7 +233,7 @@ export default function CreditsEmptyModal({
                 alt=""
                 style={{
                   width: 28, height: 28, borderRadius: '50%',
-                  border: '2px solid #ffffff',
+                  border: '2px solid var(--yd-surface)',
                   marginLeft: i === 0 ? 0 : -9,
                   objectFit: 'cover',
                   boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
@@ -236,7 +243,7 @@ export default function CreditsEmptyModal({
               />
             ))}
           </div>
-          <span style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, textAlign: 'left', lineHeight: 1.4 }}>
+          <span style={{ fontSize: 12.5, color: C.muted, fontWeight: 500, textAlign: 'left', lineHeight: 1.4 }}>
             Trusted by creators growing<br/>their channels every week
           </span>
         </div>
