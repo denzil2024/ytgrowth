@@ -25,6 +25,28 @@ const PADDLE_TOKEN = 'live_2af860b645fca6f106c9d79f8d2'
 // ytgrowth.io to open the overlay on the approved domain.
 const CHECKOUT_ORIGIN = 'https://ytgrowth.io'
 
+// Recurring-subscription plan keys (NOT the one-time packs). Buying one of
+// these while already subscribed would create a duplicate subscription, so
+// openCheckout routes an existing subscriber to the Paddle portal instead.
+const SUBSCRIPTION_PLANS = new Set([
+  'solo_monthly', 'growth_monthly', 'agency_monthly',
+  'solo_annual',  'growth_annual',  'agency_annual',
+])
+
+// Open the Paddle customer portal (change tier / update card / cancel).
+// Returns true if the redirect was issued, false if the portal is unavailable
+// so callers can fall back.
+async function openBillingPortal() {
+  try {
+    const pr = await fetch('/billing/portal', { credentials: 'include' })
+    const pd = await pr.json().catch(() => ({}))
+    if (pr.ok && pd.url) { window.location.href = pd.url; return true }
+  } catch (err) {
+    console.error('[checkout] portal failed:', err)
+  }
+  return false
+}
+
 // main.jsx sets window.__paddleReady = loadPaddle. If for some reason
 // it isn't there (e.g., during a unit test), fall back to a no-op promise
 // so callers still resolve.
@@ -73,6 +95,16 @@ export async function openCheckout(planKey) {
       return
     }
 
+    // Never open a fresh subscription checkout for someone who already has an
+    // active subscription — Paddle would create a SECOND subscription and
+    // double-charge them. Route them to the portal to change tier instead.
+    // (One-time packs are always fine to buy, subscribed or not.)
+    if (SUBSCRIPTION_PLANS.has(planKey) && data.has_active_sub) {
+      if (await openBillingPortal()) return
+      window.location.href = `${CHECKOUT_ORIGIN}/?tab=subscription#pricing`
+      return
+    }
+
     // On channelbrain.online Paddle blocks the overlay (unapproved domain).
     // Hand the resolved checkout off to ytgrowth.io — it opens the overlay
     // there (see the receiver in main.jsx). The price + attribution ride in
@@ -103,48 +135,18 @@ export async function openCheckout(planKey) {
   }
 }
 
-// Next tier up from the user's current plan, used by startUpgrade().
-const NEXT_PLAN = {
-  free:   'solo_monthly',
-  solo:   'growth_monthly',
-  growth: 'agency_monthly',
-  agency: 'agency_monthly',
-}
-
 // One-click credit top-up. Packs are one-time and never create a subscription,
 // so this is always safe to open directly in Paddle for any user.
 export function startTopUp() {
   return openCheckout('pack_60')
 }
 
-// One-click plan upgrade, from anywhere in the dashboard. Critical billing
-// safety: a user who ALREADY has an active subscription must NOT get a fresh
-// checkout (that would create a second subscription and double-charge them),
-// so we send them to the Paddle portal to change tier. Free / no-subscription
-// users get a direct checkout for the next tier up.
-export async function startUpgrade() {
-  try {
-    const r = await fetch('/billing/usage', { credentials: 'include' })
-    if (r.status === 401) {
-      try { sessionStorage.setItem('ytg_pending_plan', 'solo_monthly') } catch {}
-      window.location.href = '/auth/login'
-      return
-    }
-    const u = await r.json().catch(() => ({}))
-    const hasActiveSub = u.status === 'active' && !u.is_lifetime
-    if (hasActiveSub) {
-      const pr = await fetch('/billing/portal', { credentials: 'include' })
-      const pd = await pr.json().catch(() => ({}))
-      if (pr.ok && pd.url) { window.location.href = pd.url; return }
-      // Portal unavailable → fall back to the pricing page on the approved domain.
-      window.location.href = `${CHECKOUT_ORIGIN}/?tab=subscription#pricing`
-      return
-    }
-    return openCheckout(NEXT_PLAN[u.plan] || 'solo_monthly')
-  } catch (err) {
-    console.error('[checkout] startUpgrade failed:', err)
-    return openCheckout('solo_monthly')
-  }
+// One-click plan upgrade, from anywhere in the dashboard. openCheckout guards
+// existing subscribers into the Paddle portal (so we never create a duplicate
+// subscription), which makes this safe for everyone: free / no-sub users get a
+// Solo checkout, active subscribers are routed to the portal to change tier.
+export function startUpgrade() {
+  return openCheckout('solo_monthly')
 }
 
 // Hook that gives a button a shared "Opening…" busy state around startUpgrade /

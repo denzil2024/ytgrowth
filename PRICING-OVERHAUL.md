@@ -113,10 +113,27 @@ point was rewired off the `/?tab=...#pricing` navigation:
 Public marketing "Pricing" links (SiteHeader, LandingFooter, FeaturePage,
 features/*) intentionally still point at the pricing page.
 
-FOLLOW-UP A6: confirm the Paddle customer portal actually offers plan changes;
-if not, build an in-app subscription-update flow so existing subscribers can
-change tier without the portal. Until confirmed, subscriber upgrades land in
-the portal (safe, no double-charge, but may not expose tier switching).
+FOLLOW-UP A6: subscriber upgrades now route to the Paddle portal from a SINGLE
+guard in openCheckout (below), so no path can double-subscribe. The webhook
+handles the portal's `subscription.updated` (updates allowance/plan/channels)
+and now stores `paddle_subscription_id` so the portal deep-links to the sub.
+STILL TO CONFIRM: that the Paddle portal UI actually exposes plan switching for
+our price set (a Paddle dashboard config). If it doesn't, build an in-app
+subscription-update flow. Until then subscribers can manage/cancel in the
+portal; upgrading tier may need that config enabled.
+
+### Real bugs fixed (2026-07-10, "not patches" pass)
+1. **Pack purchase corrupted the subscription row.** `_activate` in
+   [billing.py](routers/billing.py) set plan/status/allowance/channels BEFORE
+   the pack guard, so buying a pack overwrote `plan`→"pack", dropped
+   `channels_allowed`→1 (downgrading paying subscribers), and set
+   `status`→"active" (making free users look subscribed). Fixed: packs now
+   return early and ONLY top up `pack_balance`.
+2. **Duplicate-subscription double-charge.** A logged-in subscriber clicking any
+   plan (pricing page OR an "Upgrade" button) got a fresh checkout = a SECOND
+   Paddle subscription. Fixed at the root: `/billing/checkout` returns
+   `has_active_sub`, and `openCheckout` routes subscription-plan purchases for
+   active subscribers to the portal. Packs are always allowed.
 
 Original problem, for reference:
 

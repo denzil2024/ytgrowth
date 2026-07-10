@@ -93,13 +93,24 @@ def _activate(sub: UserSubscription, meta: dict, customer_id: str, subscription_
     is_life  = meta["is_lifetime"]
     bonus    = meta["bonus"]
 
+    # Always record the Paddle customer so the billing portal works later.
+    sub.paddle_customer_id = customer_id
+
+    # Pack purchases ONLY top up the never-expiring pack balance. They must NOT
+    # touch plan / status / allowance / channels — doing so would downgrade a
+    # paying subscriber's channel count and make a free user look "active".
+    # (Must return BEFORE the subscription mutations below.)
+    if plan == "pack":
+        sub.pack_balance = (sub.pack_balance or 0) + analyses + bonus
+        return
+
+    # Subscription / lifetime activation.
     sub.plan              = plan
     sub.billing_cycle     = billing
     sub.monthly_allowance = analyses
     sub.channels_allowed  = channels
     sub.is_lifetime       = is_life
     sub.status            = "active"
-    sub.paddle_customer_id = customer_id
 
     if subscription_id:
         sub.paddle_subscription_id = subscription_id
@@ -111,13 +122,7 @@ def _activate(sub: UserSubscription, meta: dict, customer_id: str, subscription_
         sub.chat_allowance = _chat_allowance_for(plan)
         sub.reset_date     = next_reset_date()
 
-    # Pack purchases just top up the balance
-    if plan == "pack":
-        sub.pack_balance = (sub.pack_balance or 0) + analyses
-        sub.plan   = sub.plan if sub.plan != "free" else "free"  # keep existing plan
-        sub.status = sub.status if sub.status != "free" else "free"
-
-    # Founder bonus analyses
+    # Founder bonus analyses (lifetime bundles carry a bonus stack).
     if bonus > 0:
         sub.pack_balance = (sub.pack_balance or 0) + bonus
 
@@ -229,6 +234,8 @@ async def paddle_webhook(request: Request):
                 sub.monthly_allowance = meta["analyses"]
                 sub.plan              = meta["plan"]
                 sub.channels_allowed  = meta["channels"]
+                if subscription_id:
+                    sub.paddle_subscription_id = subscription_id
                 db.commit()
                 print(f"[webhook] subscription.updated: updated plan to {meta['plan']} for channel {channel_id}")
             else:
@@ -299,7 +306,27 @@ def get_checkout(plan: str, request: Request):
     channel_id = user_data.get("channel", {}).get("channel_id", "")
     email      = user_data.get("channel", {}).get("email", "")
 
-    return JSONResponse({"price_id": price_id, "channel_id": channel_id, "email": email})
+    # Whether the user already has an active recurring subscription. The frontend
+    # uses this to route an "upgrade" to the Paddle portal instead of opening a
+    # fresh checkout — a fresh subscription checkout for an existing subscriber
+    # creates a SECOND subscription and double-charges them.
+    has_active_sub = False
+    db = SessionLocal()
+    try:
+        from app.analysis_gate import _resolve_billing_channel
+        billing_channel = _resolve_billing_channel(db, channel_id)
+        sub = db.query(UserSubscription).filter_by(channel_id=billing_channel).first()
+        if sub:
+            has_active_sub = (sub.status == "active") and not sub.is_lifetime
+    finally:
+        db.close()
+
+    return JSONResponse({
+        "price_id":       price_id,
+        "channel_id":     channel_id,
+        "email":          email,
+        "has_active_sub": has_active_sub,
+    })
 
 
 # ── Usage endpoint (frontend reads this) ───────────────────────────────────────
