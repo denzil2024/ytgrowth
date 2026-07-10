@@ -83,7 +83,7 @@ export async function openCheckout(planKey) {
         ch:    data.channel_id || '',
         em:    data.email      || '',
       })
-      window.location.href = `${CHECKOUT_ORIGIN}/?${p.toString()}`
+      window.location.href = `${CHECKOUT_ORIGIN}/checkout?${p.toString()}`
       return
     }
 

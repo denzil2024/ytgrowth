@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supportEmail } from '../brandHost'
+import { supportEmail, isChannelBrain } from '../brandHost'
 import { Plus, ArrowRight, Check, Link2 } from 'lucide-react'
 import { loginUrl } from '../utm.js'
 import { startUpgrade, startTopUp } from '../checkout'
@@ -756,6 +756,12 @@ export default function Settings({ channelData }) {
             </button>
           )}
         </div>
+
+        {isChannelBrain() && (
+          <p style={{ fontSize: 11.5, color: C.ink55, marginTop: 12, lineHeight: 1.5, letterSpacing: '-0.005em' }}>
+            Secure checkout opens on ytgrowth.io, our payment site. ChannelBrain and YTGrowth are the same product, same account.
+          </p>
+        )}
       </div>
 
       {/* ── Channels card ───────────────────────────────────────────────── */}

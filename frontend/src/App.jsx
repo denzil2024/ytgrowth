@@ -12,6 +12,7 @@ import { Suspense, lazy } from 'react'
 
 const Landing                          = lazy(() => import('./pages/Landing'))
 const Dashboard                        = lazy(() => import('./pages/Dashboard'))
+const Checkout                         = lazy(() => import('./pages/Checkout'))
 const Terms                            = lazy(() => import('./pages/Terms'))
 const Privacy                          = lazy(() => import('./pages/Privacy'))
 const Refund                           = lazy(() => import('./pages/Refund'))
@@ -62,6 +63,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/refund" element={<Refund />} />

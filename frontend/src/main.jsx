@@ -122,31 +122,9 @@ if (typeof navigator !== 'undefined' && !navigator.webdriver) {
 // checkout.js awaits this before calling Paddle.Checkout.open or
 // Paddle.Initialize. Returning the promise means callers either get the
 // resolved Paddle global (already loaded) or wait for the in-flight load.
+// The cross-domain checkout handoff from channelbrain.online lands on the
+// /checkout route, which opens the overlay itself (see pages/Checkout.jsx).
 window.__paddleReady = loadPaddle
-
-// Cross-domain checkout handoff. Paddle only approves ytgrowth.io, so a
-// checkout started on channelbrain.online redirects here with the resolved
-// price + attribution in the URL (see checkout.js). Open the overlay, then
-// strip the params so a refresh doesn't re-trigger it. Skipped during the
-// Puppeteer prerender pass (navigator.webdriver).
-if (typeof navigator !== 'undefined' && !navigator.webdriver) {
-  const q = new URLSearchParams(window.location.search)
-  if (q.get('pco') === '1' && q.get('price')) {
-    const price      = q.get('price')
-    const channel_id = q.get('ch') || ''
-    const email      = q.get('em') || ''
-    loadPaddle().then(() => {
-      window.Paddle.Checkout.open({
-        items: [{ priceId: price, quantity: 1 }],
-        customData: { channel_id, email },
-        customer: email ? { email } : undefined,
-      })
-    }).catch(() => {})
-    ;['pco', 'price', 'ch', 'em'].forEach(k => q.delete(k))
-    const clean = window.location.pathname + (q.toString() ? '?' + q.toString() : '')
-    window.history.replaceState({}, '', clean)
-  }
-}
 
 // If scripts/prerender.js stamped the doc as pre-rendered, hydrate the
 // existing markup so AI crawlers see real HTML and users don't get a
