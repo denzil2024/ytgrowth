@@ -71,6 +71,7 @@ export default function Dashboard() {
   const [nav,     setNav]    = useState('Overview')
   const [selectedVideoId, setSelectedVideoId] = useState(null)
   const [analyzingAI, setAnalyzingAI] = useState(false)
+  const [auditStarting, setAuditStarting] = useState(false)  // post-click, pre-confirm: no full-page swap until the run is allowed
   const [reAuditError, setReAuditError] = useState('')
   const [refreshingStats, setRefreshingStats] = useState(false)
   const [creditsOut, setCreditsOut] = useState(false)
@@ -895,11 +896,18 @@ export default function Dashboard() {
 
                 const runFirstAudit = () => {
                   setReAuditError('')
-                  setAnalyzingAI(true)
+                  setAuditStarting(true)
                   fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
                     .then(async r => {
-                      if (r.ok) { window.dispatchEvent(new CustomEvent('ytg:credits-changed')); return }
-                      setAnalyzingAI(false)
+                      setAuditStarting(false)
+                      // Only enter the running state once the server confirms the
+                      // run is allowed, so a gated user never sees the progress
+                      // card flash before the paywall.
+                      if (r.ok) {
+                        setAnalyzingAI(true)
+                        window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
+                        return
+                      }
                       if (r.status === 401) { window.location = '/'; return }
                       if (r.status === 402) { setCreditsOut(true); return }
                       if (r.status === 403) { setAuditLocked(true); return }  // re-audits are paid
@@ -908,7 +916,7 @@ export default function Dashboard() {
                       setTimeout(() => setReAuditError(''), 8000)
                     })
                     .catch(() => {
-                      setAnalyzingAI(false)
+                      setAuditStarting(false)
                       setReAuditError("Couldn't reach our servers. Check your connection and try again.")
                       setTimeout(() => setReAuditError(''), 8000)
                     })
@@ -957,7 +965,7 @@ export default function Dashboard() {
                           We need to analyse your channel before we can show Priority Actions, growth patterns, and milestone tracking. Costs 1 credit and takes about 30 seconds.
                         </p>
                       </div>
-                      <button className="ytg-dash-btn-primary" disabled={analyzingAI} onClick={runFirstAudit} style={{ flexShrink: 0 }}>
+                      <button className="ytg-dash-btn-primary" disabled={analyzingAI || auditStarting} onClick={runFirstAudit} style={{ flexShrink: 0 }}>
                         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                           <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
                         </svg>
@@ -994,26 +1002,23 @@ export default function Dashboard() {
                   {/* Re-Audit */}
                   <button
                     className="ytg-dash-btn-primary"
-                    disabled={analyzingAI}
+                    disabled={analyzingAI || auditStarting}
                     onClick={() => {
-                      const prevInsights = data?.insights
                       setReAuditError('')
-                      setAnalyzingAI(true)
-                      setData(prev => ({ ...prev, insights: null }))
+                      setAuditStarting(true)
                       fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
                         .then(async r => {
+                          setAuditStarting(false)
+                          // Only clear the current audit + show progress once the
+                          // server confirms the re-audit is allowed, so a gated
+                          // user never sees the view flash before the paywall.
                           if (r.ok) {
+                            setAnalyzingAI(true)
+                            setData(prev => ({ ...prev, insights: null }))
                             window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
                             return
                           }
-                          // Failure: restore prior insights, surface a clear message
-                          setData(prev => ({ ...prev, insights: prevInsights }))
-                          setAnalyzingAI(false)
-                          if (r.status === 401) {
-                            // Auth expired, bounce back to login.
-                            window.location = '/'
-                            return
-                          }
+                          if (r.status === 401) { window.location = '/'; return }
                           if (r.status === 402) { setCreditsOut(true); return }
                           if (r.status === 403) { setAuditLocked(true); return }  // re-audits are paid
                           const d = await r.json().catch(() => ({}))
@@ -1021,18 +1026,17 @@ export default function Dashboard() {
                           setTimeout(() => setReAuditError(''), 8000)
                         })
                         .catch(() => {
-                          setData(prev => ({ ...prev, insights: prevInsights }))
-                          setAnalyzingAI(false)
+                          setAuditStarting(false)
                           setReAuditError("Couldn't reach our servers. Check your connection and try again.")
                           setTimeout(() => setReAuditError(''), 8000)
                         })
                     }}
-                    style={{ opacity: analyzingAI ? 0.65 : 1 }}
+                    style={{ opacity: (analyzingAI || auditStarting) ? 0.65 : 1 }}
                   >
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                       <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
                     </svg>
-                    {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(20,19,15,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
+                    {(analyzingAI || auditStarting) ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(20,19,15,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
                   </button>
 
                   {/* Refresh stats, with flash feedback */}

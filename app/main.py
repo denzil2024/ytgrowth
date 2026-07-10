@@ -384,6 +384,24 @@ def serve_frontend(full_path: str, request: Request):
             return FileResponse(file, headers={"Cache-Control": cache})
         return FileResponse(file)
     is_cb = _host_is_channelbrain(request)
+
+    # Client-only app routes (/checkout, /dashboard) have NO prerendered HTML.
+    # Without this, they fall through to the SPA fallback below, which serves the
+    # baked Landing index.html — so a full-page load flashes the Landing page for
+    # a moment before React routes to the real page (users saw this on the
+    # cross-domain checkout handoff). Serve the BARE Vite shell (empty #root, no
+    # prerender marker) instead: nothing paints until React renders the route.
+    _APP_SHELL_ROUTES = ("checkout", "dashboard")
+    _norm = full_path.strip("/")
+    if _norm in _APP_SHELL_ROUTES or _norm.startswith(tuple(r + "/" for r in _APP_SHELL_ROUTES)):
+        shell = DIST / "_shell.html"
+        if shell.is_file():
+            from fastapi.responses import HTMLResponse
+            html = shell.read_text(encoding="utf-8")
+            if is_cb:
+                html = _rebrand_channelbrain(html)
+            return HTMLResponse(content=html)
+
     # Pre-rendered route. scripts/prerender.js writes dist/<path>/index.html
     # for public, indexable pages (the landing page, /blog, every /blog/<slug>,
     # every /features/*, every /tools/*, plus the legal/contact pages). That

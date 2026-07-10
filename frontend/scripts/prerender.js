@@ -518,6 +518,19 @@ async function main() {
   const routes = await buildRoutes()
   console.log(`[prerender] ${routes.length} routes`)
 
+  // Preserve the BARE Vite shell (empty #root, no prerender marker) BEFORE the
+  // render loop overwrites dist/index.html with the baked Landing. FastAPI
+  // serves this for client-only app routes (/checkout, /dashboard) so a
+  // full-page load of them doesn't paint the Landing HTML for a moment before
+  // React routes to the real page. See serve_frontend in app/main.py.
+  try {
+    const bareShell = await readFile(join(DIST, 'index.html'), 'utf-8')
+    await writeFile(join(DIST, '_shell.html'), bareShell)
+    console.log('[prerender] saved bare SPA shell → dist/_shell.html')
+  } catch (e) {
+    console.warn('[prerender] could not save _shell.html:', e.message)
+  }
+
   const coverByRoute = await discoverBlogCovers()
   console.log(`[prerender] ${coverByRoute.size} blog covers mapped for og:image swap`)
 
