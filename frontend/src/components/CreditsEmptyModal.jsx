@@ -19,6 +19,7 @@
                    Buy-pack CTA if they already have a pack). */
 
 import { useEffect, useState } from 'react'
+import { openCheckout } from '../checkout'
 
 const C = {
   red: '#c9a030', green: '#059669', amber: '#d97706',
@@ -44,6 +45,8 @@ export default function CreditsEmptyModal({
 }) {
   // Self-fetch usage so callers don't have to plumb reset_date/pack balance.
   const [usage, setUsage] = useState(null)
+  const [busy, setBusy] = useState(false)
+  const go = (plan) => { setBusy(true); openCheckout(plan).finally(() => setBusy(false)) }
   useEffect(() => {
     if (!open) return
     if (resetDate != null && packBalance != null) return
@@ -69,7 +72,6 @@ export default function CreditsEmptyModal({
   if (!open) return null
 
   const effectiveReset = resetDate ?? usage?.reset_date ?? null
-  const effectivePack  = packBalance ?? usage?.pack_balance ?? 0
   const days = daysUntil(effectiveReset)
   const refillLine = days == null
     ? null
@@ -165,38 +167,48 @@ export default function CreditsEmptyModal({
           </div>
         )}
 
-        {/* Primary CTA, mirrors UpsellGate */}
-        <a
-          href="/?tab=monthly#pricing"
-          style={{
+        {/* Primary CTA, opens the Paddle overlay directly. Locked feature =>
+            needs a plan (packs don't unlock plan-gated tools); out of credits
+            => a pack is the fast top-up. */}
+        {(() => {
+          const primaryBtn = {
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             width: '100%', maxWidth: 360,
             background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
-            color: '#ffffff',
-            fontSize: 14, fontWeight: 700,
+            color: '#ffffff', fontSize: 14, fontWeight: 700,
             padding: '13px 24px', borderRadius: 999,
-            textDecoration: 'none', letterSpacing: '-0.1px',
+            border: 'none', cursor: busy ? 'default' : 'pointer', letterSpacing: '-0.1px',
             boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(20,19,15,0.22)`,
-          }}>
-          Upgrade plan
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </a>
-        <div style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginTop: 10, marginBottom: 8 }}>
-          Plans from <span style={{ fontWeight: 700, color: C.text2 }}>$19/mo</span> · cancel anytime
-        </div>
-
-        {/* Pack link, hide if user already has pack credits */}
-        {effectivePack <= 0 && (
-          <div>
-            <a
-              href="/?tab=packs#pricing"
-              style={{ fontSize: 12.5, fontWeight: 600, color: C.text3, textDecoration: 'none' }}>
-              Or grab a one-time credit pack →
-            </a>
-          </div>
-        )}
+            opacity: busy ? 0.7 : 1,
+          }
+          const subLink = { fontSize: 12.5, color: C.text3, fontWeight: 600, textDecoration: 'none' }
+          const subBtn = { ...subLink, background: 'none', border: 'none', cursor: busy ? 'default' : 'pointer', padding: 0 }
+          const arrow = (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          )
+          return lockMode ? (
+            <>
+              <button type="button" onClick={() => go('solo_monthly')} disabled={busy} style={primaryBtn}>
+                {busy ? 'Opening checkout…' : 'Get Solo for $19/mo'}{!busy && arrow}
+              </button>
+              <div style={{ marginTop: 10, marginBottom: 8 }}>
+                <a href="/?tab=subscription#pricing" style={subLink}>See all plans, cancel anytime →</a>
+              </div>
+            </>
+          ) : (
+            <>
+              <button type="button" onClick={() => go('pack_60')} disabled={busy} style={primaryBtn}>
+                {busy ? 'Opening checkout…' : 'Buy 60 credits for $42'}{!busy && arrow}
+              </button>
+              <div style={{ marginTop: 10, marginBottom: 8, display: 'flex', gap: 14, justifyContent: 'center' }}>
+                <button type="button" onClick={() => go('pack_20')} disabled={busy} style={subBtn}>Buy 20 for $15</button>
+                <a href="/?tab=packs#pricing" style={subLink}>See all options →</a>
+              </div>
+            </>
+          )
+        })()}
 
         {/* Trust stack, same testimonial avatars as UpsellGate, tuned to the
             light card (white avatar ring, light divider) so every paywall

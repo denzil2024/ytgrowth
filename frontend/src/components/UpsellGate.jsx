@@ -18,6 +18,9 @@
                       what they're missing (Weekly Report pattern). If
                       omitted, the card renders solo on the page background. */
 
+import { useState } from 'react'
+import { openCheckout } from '../checkout'
+
 const C = {
   red: '#c9a030', green: '#2d7a4f', amber: '#b07d1a',
   text1: '#14130f', text2: '#6b6862', text3: '#6b6862',
@@ -30,9 +33,13 @@ export default function UpsellGate({
   bullets = [],
   note = null,
   showPackLink = true,
-  primaryCta = 'See monthly plans',
+  primaryCta = 'Get Solo for $19/mo',
+  primaryPlan = 'solo_monthly',   // opened directly in Paddle on click
+  packPlan = 'pack_20',           // the secondary one-time pack
   previewContent = null,
 }) {
+  const [busy, setBusy] = useState(false)
+  const go = (plan) => { setBusy(true); openCheckout(plan).finally(() => setBusy(false)) }
   const card = (
     <div style={{
       background: 'var(--yd-surface)',
@@ -93,9 +100,11 @@ export default function UpsellGate({
         </div>
       )}
 
-      {/* Primary CTA */}
-      <a
-        href="/?tab=monthly#pricing"
+      {/* Primary CTA, opens the Paddle overlay directly (no pricing-page trip) */}
+      <button
+        type="button"
+        onClick={() => go(primaryPlan)}
+        disabled={busy}
         style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           width: '100%', maxWidth: 360,
@@ -104,28 +113,34 @@ export default function UpsellGate({
           fontFamily: "'Barlow Condensed', sans-serif", textTransform: 'uppercase',
           fontSize: 13, fontWeight: 600,
           padding: '13px 24px', borderRadius: 0,
-          textDecoration: 'none', letterSpacing: '0.06em',
-          boxShadow: 'none',
+          border: 'none', cursor: busy ? 'default' : 'pointer',
+          letterSpacing: '0.06em', boxShadow: 'none', opacity: busy ? 0.7 : 1,
         }}
       >
-        {primaryCta}
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </a>
-      <div style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginTop: 10, marginBottom: showPackLink ? 8 : 0 }}>
-        Plans from <span style={{ fontWeight: 600, color: C.text2 }}>$19/mo</span> · cancel anytime
+        {busy ? 'Opening checkout…' : primaryCta}
+        {!busy && (
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        )}
+      </button>
+      <div style={{ marginTop: 10, marginBottom: showPackLink ? 8 : 0 }}>
+        <a href="/?tab=subscription#pricing" style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, textDecoration: 'none' }}>
+          See all plans, cancel anytime →
+        </a>
       </div>
 
-      {/* Secondary pack link, only on Weekly Report (per product spec). */}
+      {/* Secondary one-time pack, only where a pack unlocks the feature. */}
       {showPackLink && (
         <div>
-          <a
-            href="/?tab=packs#pricing"
-            style={{ fontSize: 12.5, fontWeight: 600, color: C.text3, textDecoration: 'none' }}
+          <button
+            type="button"
+            onClick={() => go(packPlan)}
+            disabled={busy}
+            style={{ fontSize: 12.5, fontWeight: 600, color: C.text3, background: 'none', border: 'none', cursor: busy ? 'default' : 'pointer', padding: 0 }}
           >
-            Or grab a one-time credit pack →
-          </a>
+            Or buy 20 credits for $15 →
+          </button>
         </div>
       )}
 
