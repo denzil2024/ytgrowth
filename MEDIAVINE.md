@@ -396,33 +396,111 @@ do well, so lean in. On every page:
   topic), user corrected it to "VIEWS", already 16:9 at 1280x720, no crop needed.
   No inline charts (siblings youtube-rpm/youtube-cpm have 6-8 each); flagged, not built, since
   it's new scope beyond writing. NOT built, NOT pushed.
-- [NEXT: START HERE in the next chat] The on-page target list is DONE (only the low-value
-  not-touched rows remain: money-calculator, competitor-analysis, vidiq-review, youtube-stats).
-  Two forward tracks:
-  1. NEW GUIDES from a keyword shortlist the user supplied 2026-07-11. Viability was researched
-     (live SERP + our coverage). NONE are covered by a dedicated post yet. Verdicts:
-     - WRITE (do first): **youtube banner size** (specs, beatable snippet, pairs with the
-       youtube-thumbnail-size post) ; **how much does youtube pay for 1 million views** (best
-       money opportunity; we own the RPM/CPM cluster + money calculator = the tool edge the SERP
-       rewards) ; **how to start a youtube video** (the HOOK/INTRO/retention angle, NOT starting
-       a channel; mid/small-blog SERP, no giants; our youtube-watch-hours retention depth is the
-       edge).
-     - WRITE with caveat: **cash cow youtube channels** (winnable, on-niche, but differentiate
-       from faceless-youtube-channel-ideas so it doesn't cannibalize; link to it, don't dupe).
-     - EXPAND EXISTING (don't write new): **how often should you post on youtube** -> fold into
-       best-time-to-post; a standalone loses to vidIQ's "we analyzed 5M channels" data post.
-     - SKIP: **best video editing software for youtube** (Adobe/Canva/Zapier + affiliate wall,
-       no edge) ; **ai tools for youtube** (the explicitly-banned saturated head term).
-     Follow the new-route publishing workflow (source + prerender.js buildRoutes + sitemap +
-     build + push) and the article research process (top-10 coverage matrix first).
+- [DEPLOYED 2026-07-12] Third and fourth of the shortlist, then full deploy of all four posts
+  plus the tool. **blog/how-to-start-a-youtube-video**: live-SERP research found the literal
+  query is dominated by full production tutorials (Uppbeat, Descript, Metricool, Uscreen),
+  NOT a narrow hook-only piece as the original plan assumed, corrected course with the user's
+  sign-off to a full 8-step walkthrough with the hook-writing section made deliberately deep
+  (our unique retention-research edge) rather than the narrow angle. **blog/cash-cow-youtube-
+  channels**: differentiated from faceless-youtube-channel-ideas by covering the BUSINESS MODEL
+  (production models with real cost math, portfolio scaling, realistic income) rather than niche
+  picks, which stayed on the faceless post. Led honestly with the 2026 finding that pure-AI-
+  automation cash cow channels are getting squeezed (algorithm now filters mass-produced content
+  at the CHANNEL level, not just per-video, verified against YouTube's own AI-disclosure Help
+  page, not just third-party blogs). Skipped named-channel dollar-figure claims throughout (user
+  call on the 1M-views post applied consistently; competitors researched for this post cite
+  "$30,000/month"-style figures for named channels with zero sourcing, confirms the skip was
+  right). 2 real fetched thumbnail examples (WatchMojo list format, BRIGHT SIDE AI-composited
+  format) instead of a fabricated mockup.
+  Then **built + committed + pushed all 4 posts and the Banner Resizer tool live** (commit
+  6b1f09a7): full rebuild with BUILD_API_URL=https://ytgrowth.io, 98 routes verified, sitemap.xml
+  and llms.txt entries added for all 4 posts (had been missed per-post, caught before deploy),
+  staged only this session's actual files (not git add -A; repo had a lot of unrelated untracked
+  clutter from other work), verified live post-deploy by real page title, not just HTTP 200.
+  GSC RE-INDEX LIST for these 4 (submit via URL Inspection -> Request Indexing):
+    https://ytgrowth.io/blog/youtube-banner-size
+    https://ytgrowth.io/blog/youtube-1-million-views
+    https://ytgrowth.io/blog/how-to-start-a-youtube-video
+    https://ytgrowth.io/blog/cash-cow-youtube-channels
+    https://ytgrowth.io/tools/youtube-banner-resizer
+
+### Mistakes made across the 2026-07-11/07-12 session — do NOT repeat
+
+The user explicitly asked these be logged so a future chat does not repeat them.
+
+1. **Did not regenerate postsMeta.js immediately after adding a post.** Treated
+   `node scripts/gen-blog-meta.js` as gated behind "don't build without asking," when it is a
+   small, separate metadata-only script, not a build, nothing gets bundled or deployed. Caused
+   real frustration over something the user considers simple hygiene. Fix: run it the moment a
+   post is added to posts.jsx, every time, no asking. See feedback_regenerate_postsmeta_on_add.
+2. **Inserted a new post in the middle of the array instead of at the top.** Multiple posts can
+   share the same `date` string, and Array.sort is stable, so ties resolve by original array
+   order. A new post buried mid-array loses the "featured/newest" slot to older same-date posts
+   even with an identical date. Always insert a brand-new post object at position 0, right after
+   `export const posts = [`, not wherever is topically convenient.
+3. **A Python line-ending bug while moving a post block.** Used `open(path, 'r')`/`'w'` in
+   Python text mode on Windows to cut/paste lines in posts.jsx, which silently converted the
+   ENTIRE file from LF to CRLF. This broke gen-blog-meta.js's LF-only regex parser with a
+   confusing "no post blocks parsed" error unrelated to the actual edit. Any Python rewrite of a
+   repo text file must use binary mode (`'rb'`/`'wb'`) or explicit `newline='\n'`, never plain
+   text mode, on this Windows checkout.
+4. **Introduced a duplicate `slug:` key while fixing the above**, a rushed copy-paste during the
+   recovery. Re-run the esbuild parse check immediately after any manual line-surgery edit, not
+   just at the end of a batch of edits.
+5. **Repeated the identical "Search [phrase] and you will get..." intro across two different
+   posts.** Never grepped existing posts for the opening rhetorical device before finalizing a
+   new one. Grep for the pattern before finalizing every new intro; vary the opening move every
+   time. See feedback_no_repeated_intro_formula.
+6. **"actually" and other banned words slipped through in H2/H3 heading text, not just body
+   `<p>` text**, more than once across multiple posts. The banned-word check must scan the
+   entire post section including headings, not only paragraph tags.
+7. **Forgot the visible FAQ section (mirroring the `faqs` array) on the first draft of 2 posts.**
+   The array alone only drives the JSON-LD schema; Google requires the schema to mirror visible
+   content. This is an established, already-documented pattern on this site and should be
+   included in the first draft by default, not patched in after the fact.
+8. **Sitemap.xml entries missed for 3 of 4 new posts** until the final pre-deploy build. Sitemap
+   is hand-maintained, NOT auto-generated from posts.jsx. Add the sitemap entry the moment each
+   post is written, not as a batch afterthought right before a deploy.
+9. **llms.txt entries missed for all 4 new posts**, same root cause as #8, caught at the same
+   late point. Add both immediately per post as part of the standard publishing checklist.
+10. **Long, comma-chain run-on sentences across all 4 posts**, caught only after the user
+    flagged the pattern directly ("very long sentences sounds funny"). The specific pattern: a
+    subject interrupted by a triple appositive before its verb, or 3+ independent clauses joined
+    by commas instead of periods. Proofread every finished paragraph for this before calling a
+    post done, do not wait to be told. See feedback_no_long_comma_chains.
+11. **Defaulted to shallow (top-3) competitor research** on two separate articles; had to be
+    told twice, on different posts, to expand to the full top 10. Default to a full top-10 pass
+    on every new article's research phase, not top 3, unless told otherwise.
+12. **Drafted posts without considering real images**, until told directly. Real images
+    (thumbnails, live channel pages fetched via Puppeteer) are available without fabricating
+    anything; always consider and mention this rather than silently shipping text-only. See
+    feedback_always_flag_image_needs.
+13. **The Banner Resizer tool's first version had a real bug**: a blank safe-zone preview on the
+    very first image drop, because the `<canvas>` element does not exist yet at that point in
+    the render (it is gated behind `result &&`). Only caught because of an insisted-on
+    interactive test (drop a file, click every tab). Any new interactive tool needs an actual
+    browser test of every control, not just a screenshot of the empty state, before being called
+    done.
+14. **The tool's first draft deviated from the documented canonical type scale** (H1/H2 sizes,
+    eyebrow tracking) by copying an existing sibling page that itself had the same undetected
+    drift. Check new UI against the WRITTEN design-language spec directly, not only against
+    what already shipped, since the already-shipped page can itself be off-spec.
+- [NEXT: START HERE in the next chat] All four new-guide posts are written and deployed. The
+  remaining low-value not-touched on-page rows: money-calculator, competitor-analysis,
+  vidiq-review, youtube-stats. Two forward tracks:
+  1. Remaining shortlist items: **how often should you post on youtube** -> fold into
+     best-time-to-post (a standalone loses to vidIQ's "we analyzed 5M channels" data post), not
+     yet done. SKIP remain skipped: best video editing software for youtube, ai tools for
+     youtube.
   2. OFF-PAGE AUTHORITY (the real US-ranking gate, still not started): the linkable-data-study
      articles ("we analyzed 50,000 channels and here's what we found about thumbnails...") built
      from our proprietary cache/registry data. This is what unlocks the authority-gated head
      terms (adsense, analytics, what-is-seo, keyword-tool). See the project memory
      project_linkable_data_studies. User confirmed 2026-07-11: rank the high-impression pages
      on-page FIRST (now done), THEN build the data-study engine.
-  Re-check the US positions of the 9 shipped pages in GSC in ~2-4 weeks to measure long-tail
-  movement (FAQ rich results + CTR + freshness); head terms will not move without track 2.
+  Re-check the US positions of the 9 previously-shipped pages plus these 4 new ones in GSC in
+  ~2-4 weeks to measure movement (FAQ rich results + CTR + freshness); head terms will not move
+  without track 2.
 
 ## Hub enrichment — READ THIS BEFORE TOUCHING A HUB
 
