@@ -38,6 +38,7 @@ const TOOL_GROUPS = [
     { href: '/tools/youtube-thumbnail-tester',     name: 'Thumbnail Tester',     blurb: 'A/B compare thumbnails before you upload.' },
     { href: '/tools/youtube-thumbnail-downloader', name: 'Thumbnail Downloader', blurb: 'Grab any video thumbnail in full resolution.' },
     { href: '/tools/youtube-thumbnail-resizer',    name: 'Thumbnail Resizer',    blurb: 'Resize to the exact YouTube spec and safe zones.' },
+    { href: '/tools/youtube-banner-resizer',       name: 'Banner Resizer',       blurb: 'Export at 2560x1440 with a live safe-zone preview.' },
   ]},
 ]
 

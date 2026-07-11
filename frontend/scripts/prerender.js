@@ -109,6 +109,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Thumbnail Resizer 2026: Free Image & Size Converter',
     description: 'Free YouTube thumbnail resizer. Resize any image to HD (1280x720), Full HD, or 4K. Auto-fits under YouTube\'s 2MB cap, runs in your browser.',
   },
+  '/tools/youtube-banner-resizer': {
+    title:       'YouTube Banner Resizer 2026: Free Safe Zone Preview Tool',
+    description: 'Free YouTube banner resizer with a live safe zone preview. Export the exact 2560x1440 spec and see what mobile, desktop, and TV viewers will actually see before you upload.',
+  },
   '/tools/youtube-channel-name-generator': {
     title:       'YouTube Name Generator 2026: Free Channel Name Ideas for YouTubers',
     description: 'Free YouTube channel name generator. 60+ creative name ideas for YouTubers, vloggers, and gaming channels. No signup, no AI hallucinations.',
@@ -263,6 +267,7 @@ async function buildRoutes() {
     '/tools/youtube-keyword-research',
     '/tools/youtube-thumbnail-downloader',
     '/tools/youtube-thumbnail-resizer',
+    '/tools/youtube-banner-resizer',
     '/tools/youtube-channel-name-generator',
     '/tools/youtube-video-ideas-generator',
     '/tools/youtube-title-generator',

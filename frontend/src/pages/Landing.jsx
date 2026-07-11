@@ -3,7 +3,7 @@ import {
   Gauge, Search, KeyRound, TrendingUp, Swords, Image,
   DollarSign, Coins, Wallet, Type, AlignLeft, Tags, Hash,
   ListOrdered, Badge as BadgeIcon, Lightbulb, Columns2, Crop, Download,
-  Trophy, BarChart3, BookOpen, Handshake, Mail,
+  Trophy, BarChart3, BookOpen, Handshake, Mail, GalleryHorizontal,
 } from 'lucide-react'
 import { openCheckout } from '../checkout'
 import LandingFooter from '../components/LandingFooter'
@@ -560,6 +560,7 @@ const RESOURCES_GROUPS = [
       { href: '/tools/youtube-thumbnail-tester',     label: 'Thumbnail Tester (A/B)', Icon: Columns2 },
       { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer',      Icon: Crop },
       { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader',   Icon: Download },
+      { href: '/tools/youtube-banner-resizer',       label: 'Banner Resizer',         Icon: GalleryHorizontal },
     ],
   },
   {

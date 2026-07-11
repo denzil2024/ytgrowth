@@ -168,6 +168,10 @@ channel. Full archive at https://ytgrowth.io/blog.
 - [The 5-Pillar YouTube SEO Tool Stack to Dominate the Algorithm (And the Secret CTR Stack)](https://ytgrowth.io/blog/seo-tools-for-youtube): The five-pillar tool stack for keyword research, optimization, competitor intel, CTR, and analytics, all working together.
 - [How to Monetize Your YouTube Channel in 2026](https://ytgrowth.io/blog/youtube-partner-program): The two-tier Partner Program structure plus a Bridge Strategy that reaches your first paycheck faster than the standard approach.
 - [Stop Searching for Generators: The 6-Step Roadmap to 1,000 Free YouTube Subscribers](https://ytgrowth.io/blog/free-subs-on-youtube): A six-step organic roadmap to your first 1,000 subscribers and the monetization threshold, without banned subscriber generators.
+- [YouTube Banner Size in 2026: Exact Dimensions, Safe Zone, and How to Never Get Cropped](https://ytgrowth.io/blog/youtube-banner-size): The exact 2560x1440 banner spec, the 1546x423 safe zone that decides what mobile shows, and a free tool that previews the crop before you upload.
+- [How Much Does YouTube Pay for 1 Million Views? The Real Math (2026)](https://ytgrowth.io/blog/youtube-1-million-views): The actual RPM formula behind every "how much does YouTube pay" claim, our own reconciled niche and country numbers, and a free calculator.
+- [How to Start a YouTube Video: The Complete Process (and the Hook Most Guides Skip)](https://ytgrowth.io/blog/how-to-start-a-youtube-video): The complete idea-to-upload process, plus the real retention science behind the first 30 seconds that decides whether anyone watches the rest.
+- [Cash Cow YouTube Channels in 2026: The Honest Business Model](https://ytgrowth.io/blog/cash-cow-youtube-channels): The production models, real cost math, and why the pure-automation version of the cash cow channel model is getting squeezed in 2026.
 
 ## Important links
 

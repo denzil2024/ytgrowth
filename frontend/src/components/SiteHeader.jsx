@@ -42,6 +42,7 @@ const TOOLS_ALL = [
   { href: '/tools/youtube-channel-name-generator',      label: 'Channel Name Generator' },
   { href: '/tools/youtube-thumbnail-resizer',           label: 'Thumbnail Resizer' },
   { href: '/tools/youtube-thumbnail-downloader',        label: 'Thumbnail Downloader' },
+  { href: '/tools/youtube-banner-resizer',              label: 'Banner Resizer' },
 ]
 
 function Dropdown({ trigger, items, width = 320, footer }) {

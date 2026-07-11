@@ -31,6 +31,7 @@ const YoutubeSubscriberMoneyCalculator = lazy(() => import('./pages/tools/Youtub
 const YoutubeChannelStatsChecker       = lazy(() => import('./pages/tools/YoutubeChannelStatsChecker'))
 const YoutubeKeywordResearch           = lazy(() => import('./pages/tools/YoutubeKeywordResearch'))
 const YoutubeThumbnailResizer          = lazy(() => import('./pages/tools/YoutubeThumbnailResizer'))
+const YoutubeBannerResizer             = lazy(() => import('./pages/tools/YoutubeBannerResizer'))
 const YoutubeChannelNameGenerator      = lazy(() => import('./pages/tools/YoutubeChannelNameGenerator'))
 const YoutubeVideoIdeasGenerator       = lazy(() => import('./pages/tools/YoutubeVideoIdeasGenerator'))
 const YoutubeTitleGenerator            = lazy(() => import('./pages/tools/YoutubeTitleGenerator'))
@@ -82,6 +83,7 @@ function App() {
           <Route path="/tools/youtube-channel-stats-checker"       element={<YoutubeChannelStatsChecker />} />
           <Route path="/tools/youtube-keyword-research"            element={<YoutubeKeywordResearch />} />
           <Route path="/tools/youtube-thumbnail-resizer"           element={<YoutubeThumbnailResizer />} />
+          <Route path="/tools/youtube-banner-resizer"              element={<YoutubeBannerResizer />} />
           <Route path="/tools/youtube-channel-name-generator"      element={<YoutubeChannelNameGenerator />} />
           <Route path="/tools/youtube-video-ideas-generator"       element={<YoutubeVideoIdeasGenerator />} />
           <Route path="/tools/youtube-title-generator"             element={<YoutubeTitleGenerator />} />

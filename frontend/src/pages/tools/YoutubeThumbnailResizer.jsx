@@ -68,7 +68,7 @@ function useGlobalStyles() {
       .ytr-wrap { max-width: 1040px; margin: 0 auto; }
       .ytr-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .ytr-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
-      .ytr-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
+      .ytr-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.14em; }
       .ytr-h1 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; color: var(--yte-ink); }
       .ytr-h1 em { font-style: italic; color: var(--yte-accent); }
       .ytr-h2 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; color: var(--yte-ink); }
@@ -401,7 +401,7 @@ export default function YoutubeThumbnailResizer() {
     return null
   }, [result])
 
-  const H2 = isMobile ? 28 : 42
+  const H2 = isMobile ? 28 : 40
 
   return (
     <div style={{ background: 'var(--yte-bg)', minHeight: '100vh', fontFamily: SANS, color: 'var(--yte-ink)' }}>
@@ -416,7 +416,7 @@ export default function YoutubeThumbnailResizer() {
             <span aria-hidden="true" className="ytr-eyebrow-rule" />
             <span className="ytr-eyebrow-text">Free · Browser-based · Private</span>
           </div>
-          <h1 className="ytr-h1" style={{ fontSize: isMobile ? 34 : 56, marginBottom: 20, maxWidth: 860, textWrap: 'balance' }}>
+          <h1 className="ytr-h1" style={{ fontSize: isMobile ? 36 : 60, marginBottom: 20, maxWidth: 860, textWrap: 'balance' }}>
             YouTube thumbnail resizer. <em>HD, Full HD, 4K.</em>
           </h1>
           <p className="ytr-lead" style={{ fontSize: isMobile ? 16 : 17.5, maxWidth: 720, marginBottom: 12, textWrap: 'pretty' }}>

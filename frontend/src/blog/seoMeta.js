@@ -3,6 +3,7 @@
 // SERP display without touching article copy. Consumed in BlogPost.jsx.
 export const BLOG_SEO = {
   "best-youtube-mic": { title: "Best Microphone for YouTube 2026: 12 Picks for Every Budget", description: "The best microphone for YouTube in 2026, from $50 to $400. Specific picks for USB, XLR, wireless, and on-camera, with prices and who each is for." },
+  "youtube-banner-size": { title: "YouTube Banner Size 2026: Dimensions & Safe Zone", description: "The exact 2560x1440 YouTube banner size, the 1546x423 safe zone that decides what mobile shows, and a free tool that previews the crop before you upload." },
   "copyright-free-music": { title: "Copyright-Free Music for YouTube: Best Free Sources", description: "The safest free and royalty-free music for YouTube, how Content ID really works, and how to add music to any video without a copyright strike." },
   "youtube-ctr": { title: "What's a Good YouTube CTR? 2026 Benchmarks", description: "A good YouTube CTR is roughly 4 to 10 percent, but it depends on traffic source, niche, and channel size. The real benchmarks and how to read them." },
   "what-is-youtube-seo": { title: "What Is YouTube SEO? The Complete 2026 Guide", description: "YouTube SEO turns good content into found content: keyword research, metadata, engagement signals, and channel authority. The full 2026 guide." },

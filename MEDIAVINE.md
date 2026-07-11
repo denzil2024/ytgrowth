@@ -92,23 +92,23 @@ Status column: tick as each is audited + fixed + shipped.
 
 | Page | US impressions | US position | Intent | Status |
 |---|---|---|---|---|
-| blog/youtube-keyword-research-tools | 3,887 | 53.4 | keyword tool | [ ] |
-| features/keyword-research | 2,969 | 70.6 | keyword tool | [ ] |
-| blog/youtube-trends | 1,516 | 26.9 | trends | [ ] |
-| blog/google-adsense-youtube | 765 | 38.2 | money | [ ] |
-| tools/youtube-keyword-research | 660 | 70.2 | keyword tool | [ ] |
-| blog/youtube-analytics | 544 | 35.9 | analytics | [ ] |
-| blog/youtube-rpm | 541 | 28.6 | money | [ ] |
-| blog/youtube-analytics-tools | 535 | 65.8 | tool | [ ] |
-| blog/what-is-youtube-seo | 500 | 66.5 | seo | [ ] |
-| blog/youtube-cpm | 422 | 32.9 | money | [ ] |
-| blog/youtube-description-template | 401 | 55.0 | seo | [ ] |
-| tools/youtube-money-calculator | 365 | 89.0 | money | [ ] |
-| features/competitor-analysis | 291 | 69.9 | tool | [ ] |
-| blog/best-youtube-mic | 277 | 23.7 | gear | [ ] |
-| blog/vidiq-review | 275 | 33.4 | review | [ ] |
-| blog/youtube-tags | 250 | 55.7 | seo | [ ] |
-| youtube-stats | 190 | 54.2 | tool | [ ] |
+| blog/youtube-keyword-research-tools | 3,887 | 53.4 | keyword tool | [x] SHIPPED 07-11 (light: FAQ schema + bolds + 1 inbound; authority-gated) |
+| features/keyword-research | 2,969 | 70.6 | keyword tool | [ ] authority-gated, LEAVE |
+| blog/youtube-trends | 1,516 | 26.9 | trends | [x] SHIPPED 07-11 (outlier method, 7-ways table, TikTok CC) |
+| blog/google-adsense-youtube | 765 | 38.2 | money | [x] SHIPPED 07-11 (title, US pay numbers, FAQ schema) |
+| tools/youtube-keyword-research | 660 | 70.2 | keyword tool | [ ] authority-gated, LEAVE |
+| blog/youtube-analytics | 544 | 35.9 | analytics | [x] SHIPPED 07-11 (2026 features, metrics glossary) |
+| blog/youtube-rpm | 541 | 28.6 | money | [x] SHIPPED 07-10 |
+| blog/youtube-analytics-tools | 535 | 65.8 | tool | [x] SHIPPED 07-11 (Viewstats added) |
+| blog/what-is-youtube-seo | 500 | 66.5 | seo | [x] SHIPPED 07-11 (Google-ranking + checklist; #1 inbound hub) |
+| blog/youtube-cpm | 422 | 32.9 | money | [x] SHIPPED 07-10 |
+| blog/youtube-description-template | 401 | 55.0 | seo | [x] SHIPPED 07-11 (6->15 templates + generator embed) |
+| tools/youtube-money-calculator | 365 | 89.0 | money | [ ] not touched |
+| features/competitor-analysis | 291 | 69.9 | tool | [ ] not touched |
+| blog/best-youtube-mic | 277 | 23.7 | gear | [x] SHIPPED 07-11 (Fifine, best-for col; CLOSEST to page 1, most winnable) |
+| blog/vidiq-review | 275 | 33.4 | review | [ ] not touched |
+| blog/youtube-tags | 250 | 55.7 | seo | [x] SHIPPED 07-11 (fixed FALSE thesis + tool funnel) |
+| youtube-stats | 190 | 54.2 | tool | [ ] not touched |
 
 ### Audit finding 2026-07-10 — the keyword-tool cluster is authority-gated, DEPRIORITIZE
 
@@ -138,11 +138,15 @@ Real climbs from page 3 to page 1 are realistic here. Work order, most-winnable 
 
 | # | Page | US impr | US pos | Why winnable | Status |
 |---|---|---|---|---|---|
-| 1 | blog/youtube-trends | 1,516 | 26.9 | most impressions of the group, mid-tier SERP; needs 2026 freshness (YouTube killed the Trending tab July 2025) | [~] in progress |
-| 2 | blog/youtube-rpm | 541 | 28.6 | money intent, beatable blog SERP, feeds the monetization cluster | [~] in progress |
-| 3 | blog/youtube-cpm | 422 | 32.9 | money intent, pairs with rpm | [~] on-page done |
-| 4 | blog/google-adsense-youtube | 765 | 38.2 | high impressions, money intent | [ ] |
+| 1 | blog/youtube-trends | 1,516 | 26.9 | most impressions of the group, mid-tier SERP; needs 2026 freshness (YouTube killed the Trending tab July 2025) | [x] SHIPPED 07-10 |
+| 2 | blog/youtube-rpm | 541 | 28.6 | money intent, beatable blog SERP, feeds the monetization cluster | [x] SHIPPED 07-10 |
+| 3 | blog/youtube-cpm | 422 | 32.9 | money intent, pairs with rpm | [x] SHIPPED 07-10 (on-page) |
+| 4 | blog/google-adsense-youtube | 765 | 38.2 | high impressions, money intent | [ ] NEXT |
 | 5 | blog/youtube-analytics | 544 | 35.9 | analytics intent, mid SERP | [ ] |
+
+On-page work on 1-3 is done and LIVE, but per the ranking-reality section below, the US climb
+still depends on off-page AUTHORITY (not yet started). "Shipped" = the page is improved and
+deployed, NOT "will rank page 1". Re-check the US positions in Search Console in ~2-4 weeks.
 
 ### What actually moves a page to page 1 in the US (do NOT mistake polish for ranking)
 
@@ -299,6 +303,126 @@ do well, so lean in. On every page:
   array (7). NOT built/committed/pushed. Open: user review at http://localhost:5174/blog/youtube-cpm.
   NOTE: "on-page done" != "will rank page 1 US". Per the ranking-reality section above, the US
   climb for cpm/rpm depends on AUTHORITY (off-page), which is a separate track not yet started.
+- [DEPLOYED 2026-07-10] Built (BUILD_API_URL=https://ytgrowth.io, prerender verify = 93 routes
+  OK, blog meta regenerated), committed the specific files only (posts.jsx, postsMeta.js,
+  BlogPost.jsx, the charts webp, MEDIAVINE.md, rebuilt dist), pushed to main. Commit 071e7389e.
+  Verified LIVE on ytgrowth.io: cpm 2026 title, rpm "RPM by Country" + FAQPage, trends Charts
+  section + charts image (200), cpm FAQPage. Live pages to submit for re-indexing in Search
+  Console (URL Inspection -> Request Indexing):
+    https://ytgrowth.io/blog/youtube-trends
+    https://ytgrowth.io/blog/youtube-rpm
+    https://ytgrowth.io/blog/youtube-cpm
+  (also touched, one internal link: https://ytgrowth.io/blog/youtube-as-a-business, optional.)
+- [DEPLOYED 2026-07-11] BIG two-track pass across the 8 remaining target pages, built + pushed
+  live. Commit ec88fedfe (BUILD_API_URL=https://ytgrowth.io, verify 93 routes OK, dist rebuilt,
+  specific files staged: posts.jsx/postsMeta.js/seoMeta.js + dist). Verified LIVE on ytgrowth.io
+  (adsense/description-template titles, tags false-thesis gone, FAQPage present). Per page:
+  - google-adsense-youtube: title -> "YouTube AdSense 2026: Requirements, Setup & How It Pays",
+    concrete US pay ranges ($2-8 typical), FAQPage schema. Head term intent-gated (Google's own
+    docs); wins the requirements/pay long-tail.
+  - youtube-description-template: 6 -> 15 copy-paste templates (8 niche + worked example),
+    EMBEDDED the description generator (was a buried link), title "15 ... Free Copy-Paste".
+    THE most winnable of the batch (SERP pos 5-10 are template-count + generator pages).
+  - best-youtube-mic: added Fifine AM8 (2026 budget consensus we lacked), "Best for" column,
+    price ladder, FAQ schema, title with "12 Picks". Pos ~23.7 = CLOSEST to page 1, fragmented
+    SERP (no DR-90 wall) = genuinely winnable on-page.
+  - youtube-trends: retargeted title to "How to Find Trending YouTube Topics in 2026 (7 Free
+    Ways)", added outlier-detection method + link to /features/outliers, 7-ways table, TikTok
+    Creative Center, Exploding Topics, 2 FAQs.
+  - youtube-analytics: "What's New in 2026" (Ask Studio, engaged views, paid/organic, device
+    split) + a 13-row metrics glossary + 2 FAQs. Head term authority+intent-gated; wins metric
+    long-tail.
+  - youtube-analytics-tools: added Viewstats (biggest 2026 gap), "what changed in 2026 (AI)",
+    2 FAQs. Authority-gated; freshness lifts it off page 6.
+  - youtube-tags: FIXED A FALSE THESIS (page had claimed tags are "the primary signal" - wrong
+    for 2026). Now honest (tags = minor signal), added "How to Add Tags", FAQ schema, and a
+    FUNNEL to our /tools/youtube-tag-generator + hashtag-generator. Title pivoted honest.
+  - what-is-youtube-seo: added "Ranking on Google" section + ranking-factor checklist table +
+    3 FAQs + thumbnail specs. It is the site's #1 inbound hub (22), so NO inbound added.
+  - youtube-keyword-research-tools: LIGHT pass only (FAQ schema + bolds + 1 inbound). Authority-
+    gated per the finding above; left title alone (ranks page 1 for the comparison query).
+  Cross-cutting this session: FAQPage schema now on every page that lacked it (all 45+ FAQ
+  answers emit JSON-LD); an AI-citation BOLD pass on citable prose claims across the batch;
+  and INTERNAL LINK JUICE to the starved targets (adsense 2->4, mic 0->5, description-template
+  2->5, trends 4->6, analytics 10->13, analytics-tools 3->5, tags 5->7). Method locked: audit
+  each page vs the live top-10 US SERP FIRST, then fix intent/title/schema/gaps + link juice +
+  bolds. Honest verdict held every page (head terms authority-gated; we win the long-tail).
+  GSC RE-INDEX LIST (submit via URL Inspection -> Request Indexing):
+    https://ytgrowth.io/blog/google-adsense-youtube
+    https://ytgrowth.io/blog/youtube-description-template
+    https://ytgrowth.io/blog/best-youtube-mic
+    https://ytgrowth.io/blog/youtube-trends
+    https://ytgrowth.io/blog/youtube-analytics
+    https://ytgrowth.io/blog/youtube-analytics-tools
+    https://ytgrowth.io/blog/youtube-tags
+    https://ytgrowth.io/blog/what-is-youtube-seo
+    https://ytgrowth.io/blog/youtube-keyword-research-tools
+
+- [WRITTEN, NOT BUILT/PUSHED 2026-07-11] blog/youtube-banner-size. First of the new-guide
+  shortlist ("write first" bucket). Full process: learned house style from best-youtube-mic +
+  youtube-thumbnail-size, researched live top-10 SERP (Snappa, Wyzowl, Kreatli + others),
+  built a coverage matrix, closed a real gap (the 1235x338 minimum-canvas safe zone competitors
+  had and we lacked). Built a NEW free tool to beat the competitor tool-sites' offering:
+  /tools/youtube-banner-resizer (2560x1440 export, live safe-zone preview with TV/Desktop/
+  Mobile tabs darkening the crop on one canvas, none of Snappa/Wyzowl/Kreatli/Kapwing combine
+  resize + safe-zone preview in one flow). Found + fixed a real bug during testing (preview
+  canvas was blank on first drop, canvas ref didn't exist yet on first render). Wired into
+  routes/ToolsHub/SiteHeader/Landing mega-menu/prerender meta/sitemap. Added 4 REAL banner
+  examples (MKBHD, MrBeast, Andrei Jikh, Jacksepticeye), fetched live via Puppeteer from
+  YouTube's CDN (no API key, no quota), swapped out 2 initial picks (Graham Stephan = no
+  text/branding, Markiplier = temporary movie-promo takeover, neither taught the lesson).
+  Full verification pass done: FAQ schema mirrors visible content (8/8), bold density matches
+  house style (~1/38 words), banned words clean, internal links added both directions
+  (inbound from youtube-channel-audit, youtube-channel-optimization, youtube-sponsorships;
+  outbound to youtube-thumbnail-size, youtube-channel-audit, youtube-channel-optimization),
+  all images have descriptive alt text, page rendered end-to-end in-browser with zero console/
+  network errors. Cover image cropped from a user-supplied real photo (no fabricated images).
+  NOT built, NOT pushed, per explicit instruction (do not build until told).
+- [WRITTEN, NOT BUILT/PUSHED 2026-07-11] blog/youtube-1-million-views. Second of the shortlist.
+  Expanded research to the full top 10 (not just top 3) per user request, found the space full
+  of wildly inconsistent guessed numbers with no shown math, used that honestly as the intro
+  hook. Reconciled every figure against our OWN already-published RPM/CPM/Shorts-pay/Partner-
+  Program numbers (no self-contradiction across the site) rather than reusing competitor
+  numbers. Closed a real gap: the monetized playback rate (30-70%, no official YouTube figure)
+  explaining why RPM < CPM. Deliberately kept lean (~2,060 words incl. FAQ) since depth already
+  lives in the linked pillar posts, this page's job is the quick specific answer + calculator
+  CTA. User called skip on named-creator dollar estimates (several competitors do this; we
+  treat it as guessing dressed as fact). Verification pass: FAQ schema mirrors visible content
+  (8/8), bold density ~1/37.5 words matching house reference, 7 outbound + 6 inbound links
+  across 6 different posts (max one inbound per source, none forced), zero console/network
+  errors on render. Caught + fixed a real flow issue (a myth bullet was restating the exact
+  mechanism the next section explained in depth) and a fresh "actually" that slipped in.
+  Cover image: user's first upload had "1 MILLION SUBSCRIBERS" baked into the graphic (wrong
+  topic), user corrected it to "VIEWS", already 16:9 at 1280x720, no crop needed.
+  No inline charts (siblings youtube-rpm/youtube-cpm have 6-8 each); flagged, not built, since
+  it's new scope beyond writing. NOT built, NOT pushed.
+- [NEXT: START HERE in the next chat] The on-page target list is DONE (only the low-value
+  not-touched rows remain: money-calculator, competitor-analysis, vidiq-review, youtube-stats).
+  Two forward tracks:
+  1. NEW GUIDES from a keyword shortlist the user supplied 2026-07-11. Viability was researched
+     (live SERP + our coverage). NONE are covered by a dedicated post yet. Verdicts:
+     - WRITE (do first): **youtube banner size** (specs, beatable snippet, pairs with the
+       youtube-thumbnail-size post) ; **how much does youtube pay for 1 million views** (best
+       money opportunity; we own the RPM/CPM cluster + money calculator = the tool edge the SERP
+       rewards) ; **how to start a youtube video** (the HOOK/INTRO/retention angle, NOT starting
+       a channel; mid/small-blog SERP, no giants; our youtube-watch-hours retention depth is the
+       edge).
+     - WRITE with caveat: **cash cow youtube channels** (winnable, on-niche, but differentiate
+       from faceless-youtube-channel-ideas so it doesn't cannibalize; link to it, don't dupe).
+     - EXPAND EXISTING (don't write new): **how often should you post on youtube** -> fold into
+       best-time-to-post; a standalone loses to vidIQ's "we analyzed 5M channels" data post.
+     - SKIP: **best video editing software for youtube** (Adobe/Canva/Zapier + affiliate wall,
+       no edge) ; **ai tools for youtube** (the explicitly-banned saturated head term).
+     Follow the new-route publishing workflow (source + prerender.js buildRoutes + sitemap +
+     build + push) and the article research process (top-10 coverage matrix first).
+  2. OFF-PAGE AUTHORITY (the real US-ranking gate, still not started): the linkable-data-study
+     articles ("we analyzed 50,000 channels and here's what we found about thumbnails...") built
+     from our proprietary cache/registry data. This is what unlocks the authority-gated head
+     terms (adsense, analytics, what-is-seo, keyword-tool). See the project memory
+     project_linkable_data_studies. User confirmed 2026-07-11: rank the high-impression pages
+     on-page FIRST (now done), THEN build the data-study engine.
+  Re-check the US positions of the 9 shipped pages in GSC in ~2-4 weeks to measure long-tail
+  movement (FAQ rich results + CTR + freshness); head terms will not move without track 2.
 
 ## Hub enrichment — READ THIS BEFORE TOUCHING A HUB
 
