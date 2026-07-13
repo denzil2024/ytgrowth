@@ -3056,7 +3056,7 @@ export const posts = [
 
         <p>The Keyword Inspector surfaces long-tail variations with lower competition than head terms, which is particularly valuable for smaller channels trying to rank against established competitors. The AI Daily Ideas feature pulls <a href="/blog/youtube-trends">trending topic suggestions</a> from your niche based on what similar channels are currently gaining traction on.</p>
 
-        <p>Pricing starts at $7.50 per month on annual billing. The free plan includes basic keyword research with five related keywords per search and competition scoring.</p>
+        <p>Pricing starts at $7.50 per month on annual billing. The free plan includes basic keyword research with five related keywords per search and competition scoring. See the <a href="/blog/vidiq-review">full vidIQ review</a> for the complete pricing breakdown and where users hit friction.</p>
 
         <h3>2. TubeBuddy</h3>
 
@@ -6951,13 +6951,22 @@ Free studio checklist: https://yoursite.com/checklist
   {
     slug: 'vidiq-review',
     title: 'vidIQ Review (2026): Is It Worth It, and the Free Alternative',
-    excerpt: 'An honest vidIQ review for 2026: what the extension does, what the plans cost, where users hit billing and accuracy issues, and how to cover the same jobs free.',
+    excerpt: 'An honest vidIQ review for 2026: what the extension does, what the plans cost (including the Coaching tier most reviews skip), the real Capterra rating, where users hit billing and accuracy issues, and how to cover the same jobs free.',
     date: '2026-05-18',
-    updated: '2026-06-29',
+    updated: '2026-07-13',
     category: CATEGORIES.seo,
     cover: '/blog/vidiq-review-cover.webp',
     author: 'Denzil',
-    readTime: '13 min read',
+    readTime: '14 min read',
+    faqs: [
+      { q: 'Is vidIQ free?', a: 'The vidIQ Chrome extension is free and genuinely useful on its own. The free tier of the platform exists but is heavily capped to push you toward the paid Boost plan. So vidIQ is free to start, not free to rely on at depth.' },
+      { q: 'Is vidIQ worth it in 2026?', a: 'For a monetised channel or agency where $39 a month is negligible, the paid plan can be worth it for the on-YouTube overlay alone. For a pre-revenue creator, it usually is not, because the core jobs can be done without a subscription.' },
+      { q: 'How do I cancel a vidIQ subscription?', a: 'Cancel from the vidIQ web dashboard under account or billing settings, not through the Chrome extension. Do this before your renewal date, since vidIQ bills in advance and refunds are not guaranteed once a cycle starts. Given how often billing disputes show up in reviews, screenshot the cancellation confirmation the moment you see it.' },
+      { q: 'Does vidIQ support multiple YouTube channels?', a: 'Yes, but it is priced per channel on most tiers, not pooled. Max and Enterprise are built for agencies managing several channels, while Boost is really sized for one channel done well. Running three channels on Boost-level plans multiplies the monthly cost fast, so check the per-channel math before committing an agency workflow to it.' },
+      { q: 'Is the vidIQ Chrome extension safe?', a: 'Yes. The vidiq extension is a mature, regularly updated product available through the official browser stores with millions of users. The complaints are about billing and data accuracy, not security.' },
+      { q: 'Is vidIQ better than TubeBuddy?', a: "Neither wins outright, they solve overlapping jobs with different emphasis. vidIQ leans toward research and daily content ideas; TubeBuddy leans toward in-Studio workflow tools like bulk editing and A/B thumbnail testing. If your bottleneck is deciding what to film, vidIQ's Daily Ideas has the edge. If it is production workflow inside YouTube Studio, TubeBuddy fits better." },
+      { q: 'What is the best free vidIQ alternative?', a: "The strongest free alternative covers vidIQ's four core jobs (keyword research, competitor analysis, title optimisation, and ideas) without a recurring charge. Spotting video outliers in your niche is the highest-leverage of those jobs and the one most worth doing weekly. Install the free vidIQ extension, skip the Boost subscription unless your channel already pays for it without thinking, and run the same research jobs through a free alternative until your revenue makes the question irrelevant." },
+    ],
     content: () => (
       <>
         <p>If you have searched for a vidiq review, you are almost certainly asking two questions: is the paid plan worth the money, and is there a way to get the same data without paying for it. This review answers both directly, without the affiliate-link spin that most "reviews" of this tool are built around.</p>
@@ -7092,6 +7101,7 @@ Free studio checklist: https://yoursite.com/checklist
             <tr><td>Pro</td><td>~$7.50/mo (billed yearly)</td><td>The entry paid tier. More keyword and competitor data, still limited.</td></tr>
             <tr><td>Boost</td><td>~$39/mo monthly, ~$16.58/mo billed annually</td><td>The real paid tier most upgrade prompts push toward. Higher AI credits, thumbnails, unlimited trends, AI coach.</td></tr>
             <tr><td>Max</td><td>~$39 to $79/mo</td><td>Highest credits, more AI coach usage, clipping tools.</td></tr>
+            <tr><td>Coaching</td><td>~$99 to $159/mo</td><td>Adds recurring one-on-one strategy sessions on top of Max. The tier most creators have never heard of until they see the upsell.</td></tr>
             <tr><td>Enterprise</td><td>Custom</td><td>Multi-channel teams.</td></tr>
           </tbody>
         </table>
@@ -7128,13 +7138,14 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>Where vidIQ Frustrates People</h2>
 
-        <p>An honest vidiq review cannot skip this part. On public review platforms like Trustpilot, Capterra, and the Better Business Bureau, the same four complaints come up repeatedly, and they are worth knowing before you put a card in:</p>
+        <p>An honest vidiq review cannot skip this part. vidIQ sits at a respectable 4.3 out of 5 on Capterra across 61 verified reviews, so this is not a product in real trouble. But on public review platforms like Trustpilot, Capterra, and the Better Business Bureau, the same five complaints come up repeatedly, and they are worth knowing before you put a card in:</p>
 
         <ul>
           <li><strong>Billing and cancellation.</strong> The single most common complaint is that cancelling is harder than signing up, with users reporting continued charges after they believed they had cancelled and difficulty getting refunds. This shows up often enough across independent platforms to treat as a known risk, not an isolated incident.</li>
           <li><strong>Data accuracy.</strong> Users frequently report that vidIQ's keyword volume and competition numbers do not match what they see in YouTube's own data. The scores are directional, not precise, and treating them as exact figures leads to bad decisions.</li>
           <li><strong>The causality trap.</strong> The complaint underneath most negative reviews. vidIQ tells you what is being searched. It cannot make your video rank. Creators target a "green" keyword, the video does not take off, and they conclude the tool is broken, when a weak thumbnail or hook is what lost the placement. No research tool replaces that.</li>
           <li><strong>The good stuff is paywalled.</strong> The extension hooks you with visible-but-locked numbers. The keyword depth, competitor tracking, and AI tools that inform decisions sit behind Boost. A lot of the value you see is intentionally just out of reach until you pay.</li>
+          <li><strong>Extension performance.</strong> A smaller but recurring complaint on Capterra: the Chrome extension's constant on-page overlay can noticeably slow down lower-spec machines, especially with several tabs of YouTube open at once. Worth testing on your own setup before you build a daily workflow around it.</li>
         </ul>
 
         <p>None of this makes vidIQ a scam. It makes it a tool with an aggressive upgrade funnel and a billing experience that has annoyed a meaningful number of paying users. Go in with that expectation set.</p>
@@ -7236,9 +7247,21 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>For a monetised channel or agency where $39 a month is negligible, the paid plan can be worth it for the on-YouTube overlay alone. For a pre-revenue creator, it usually is not, because the core jobs can be done without a subscription.</p>
 
+        <h3>How do I cancel a vidIQ subscription?</h3>
+
+        <p>Cancel from the vidIQ web dashboard under account or billing settings, not through the Chrome extension. Do this before your renewal date, since vidIQ bills in advance and refunds are not guaranteed once a cycle starts. Given how often billing disputes show up in reviews, screenshot the cancellation confirmation the moment you see it.</p>
+
+        <h3>Does vidIQ support multiple YouTube channels?</h3>
+
+        <p>Yes, but it is priced per channel on most tiers, not pooled. Max and Enterprise are built for agencies managing several channels, while Boost is really sized for one channel done well. Running three channels on Boost-level plans multiplies the monthly cost fast, so check the per-channel math before committing an agency workflow to it.</p>
+
         <h3>Is the vidIQ Chrome extension safe?</h3>
 
         <p>Yes. The vidiq extension is a mature, regularly updated product available through the official browser stores with millions of users. The complaints are about billing and data accuracy, not security.</p>
+
+        <h3>Is vidIQ better than TubeBuddy?</h3>
+
+        <p>Neither wins outright, they solve overlapping jobs with different emphasis. vidIQ leans toward research and daily content ideas; TubeBuddy leans toward in-Studio workflow tools like bulk editing and A/B thumbnail testing. If your bottleneck is deciding what to film, vidIQ's Daily Ideas has the edge. If it is production workflow inside YouTube Studio, TubeBuddy fits better.</p>
 
         <h3>What is the best free vidIQ alternative?</h3>
 
@@ -11888,7 +11911,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <img src="/blog/seo-tools-for-youtube-vidiq.webp" alt="VidIQ keyword search interface and Velocity metric" />
 
-        <p>VidIQ's strongest feature is its Velocity metric, which tracks views per hour to identify topics gaining traction in real time. Its VidIQ keyword search functionality surfaces keyword scores that combine search volume and competition into a single actionable number, making it easier to prioritize which terms to target.</p>
+        <p>VidIQ's strongest feature is its Velocity metric, which tracks views per hour to identify topics gaining traction in real time. Its VidIQ keyword search functionality surfaces keyword scores that combine search volume and competition into a single actionable number, making it easier to prioritize which terms to target. For the full breakdown of what it costs and where it frustrates people, see the <a href="/blog/vidiq-review">full vidIQ review</a>.</p>
 
         <p><strong>Best for:</strong> Creators who want real-time trend data and a broad overview of keyword performance across their niche.</p>
 
@@ -12021,7 +12044,9 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>5. The Ultimate Tool: Mastering Native YouTube Analytics</h2>
 
-        <p>Every tool in this guide costs money at some level. The most important one is completely free and already sitting inside your YouTube Studio dashboard. Native YouTube Analytics gives you direct access to the behavioral data the algorithm uses to make promotion decisions, and most creators scroll past it without understanding what they are looking at. If you outgrow Studio and need competitor or cross-channel data, our <a href="/blog/youtube-analytics-tools">YouTube analytics tools roundup</a> compares the dedicated options.</p>
+        <p>Every tool in this guide costs money at some level. The most important one is completely free and already sitting inside your YouTube Studio dashboard. Native YouTube Analytics gives you direct access to the behavioral data the algorithm uses to make promotion decisions, and most creators scroll past it without understanding what they are looking at.</p>
+
+        <p>If you outgrow Studio and need competitor or cross-channel data, our <a href="/blog/youtube-analytics-tools">YouTube analytics tools roundup</a> compares the dedicated options.</p>
 
         <p>The 30-second mark is the single most important data point in your entire YouTube video SEO strategy. If audience retention drops sharply in the first half-minute, YouTube's algorithm stops recommending that video regardless of how well the title and description are optimized. A perfectly keyworded video with a weak hook is invisible. The retention curve does not lie, and checking it after every upload should be non-negotiable.</p>
 

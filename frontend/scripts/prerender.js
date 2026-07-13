@@ -86,8 +86,8 @@ const META_BY_ROUTE = {
     description: 'Every free YTGrowth tool in one place: YouTube money calculators, title, description, tag and hashtag generators, thumbnail tester, keyword research, channel stats, and more. No login.',
   },
   '/tools/youtube-money-calculator': {
-    title:       'YouTube Earnings Calculator 2026: Free Revenue & Income Estimator',
-    description: 'Free YouTube calculator for channel earnings, ad revenue, and income. AdSense, CPM, RPM, and views-to-money math by niche. Monthly and yearly estimates.',
+    title:       'YouTube Money Calculator 2026: Earnings by Niche & Country',
+    description: 'Free YouTube money calculator with real RPM by niche and audience country, not one flat range. Type your monthly views and get an honest earnings estimate.',
   },
   '/tools/youtube-subscriber-money-calculator': {
     title:       'YouTube Subscriber Money Calculator 2026: Per-Sub Earnings',
@@ -151,7 +151,7 @@ const META_BY_ROUTE = {
   },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
-    description: 'Top YouTube channels and creators ranked by live subscriber count across 14 niches. Free statistics, updated daily, no signup.',
+    description: 'Top YouTube channels and creators ranked by subscriber count across 14 niches. Free statistics, refreshed monthly, no signup.',
   },
 }
 
@@ -181,7 +181,7 @@ for (const country of COUNTRY_META) {
   for (const cat of CATEGORY_META) {
     META_BY_ROUTE[`/youtube-stats/country/${country.id}/${cat.id}`] = {
       title:       `Top 50 ${cat.label} YouTube Channels in ${country.label} 2026 | YTGrowth`,
-      description: `The top 50 ${cat.label.toLowerCase()} YouTube channels in ${country.label}, ranked by live subscriber count from YouTube's API. Updated daily, free.`,
+      description: `The top 50 ${cat.label.toLowerCase()} YouTube channels in ${country.label}, ranked by subscriber count from YouTube's API. Refreshed monthly, free.`,
     }
   }
 }

@@ -44,9 +44,11 @@ interpretation step that most creators outsource.
   competitors. Returns a prioritized action list with severity tags.
 
 - **Competitor Analysis**: You pick 2–10 channels in your niche.
-  YTGrowth analyzes their last 30+ uploads and surfaces the patterns
-  that explain why they're outperforming you (titles, thumbnails,
-  posting times, topic mix, hook style).
+  YTGrowth runs their last 30 uploads through 7 dimensions (topics,
+  title/SEO, posting cadence, video length, engagement, thumbnails,
+  content gaps) and returns a threat-level score, a ranked gap report
+  with a specific action and impact tag per gap, and ready-to-publish
+  video ideas, not just raw stats to interpret yourself.
 
 - **SEO Studio**: Title and description optimizer that scores against
   search demand, keyword fit, hook strength, length, and competitor
@@ -119,6 +121,35 @@ an AI audit on top of the same data and tells you specifically what to
 change, in what order, and why. The Channel Audit alone replaces the kind
 of report a YouTube growth consultant would charge $300–$500 for.
 
+## Free Tools
+
+No signup, no email, free forever. Full list at https://ytgrowth.io/tools.
+
+Calculators:
+- [YouTube Money Calculator](https://ytgrowth.io/tools/youtube-money-calculator): Real RPM by niche and audience country, not one flat range. Type your monthly views for an earnings estimate.
+- [YouTube Subscriber Money Calculator](https://ytgrowth.io/tools/youtube-subscriber-money-calculator): Estimate earnings, ad revenue, and pay per subscriber, with view-per-sub ratios and niche CPM.
+- [YouTube Shorts Money Calculator](https://ytgrowth.io/tools/youtube-shorts-money-calculator): Estimate Shorts ad earnings from the shared-pool RPM by views and country, and why Shorts pay less than long-form.
+
+Research & analysis:
+- [YouTube Keyword Research](https://ytgrowth.io/tools/youtube-keyword-research): See the real competition for any keyword: ranking channel size, view ceiling, and how crowded the term is.
+- [YouTube Channel Stats Checker](https://ytgrowth.io/tools/youtube-channel-stats-checker): Live subscriber count, total views, monthly uploads, and engagement for any public channel.
+- [Top YouTube Channels by Subscribers](https://ytgrowth.io/youtube-stats): Leaderboards across 14 niches and 4 countries (US, UK, Canada, Australia), refreshed monthly from YouTube's own API, 500K-subscriber minimum to filter out noise.
+
+Generators:
+- [YouTube Title Generator](https://ytgrowth.io/tools/youtube-title-generator): A dozen click-worthy title ideas, plus a scorer for any title on length, numbers, power words, and keyword fit.
+- [YouTube Description Generator](https://ytgrowth.io/tools/youtube-description-generator): Builds an SEO-friendly description with a keyword hook, timestamps, links, and hashtags.
+- [YouTube Tag Generator](https://ytgrowth.io/tools/youtube-tag-generator): Enter a topic, get relevant tags and variations trimmed to YouTube's 500-character limit.
+- [YouTube Hashtag Generator](https://ytgrowth.io/tools/youtube-hashtag-generator): Enter a topic, get relevant hashtags for the title or description.
+- [YouTube Chapter Generator](https://ytgrowth.io/tools/youtube-chapter-generator): Builds a chapter block that passes YouTube's rules (starts at 0:00, 3+ chapters, 10s apart), with live validation.
+- [YouTube Video Ideas Generator](https://ytgrowth.io/tools/youtube-video-ideas-generator): 90+ proven content idea formats across 9 categories.
+- [YouTube Channel Name Generator](https://ytgrowth.io/tools/youtube-channel-name-generator): 60+ name ideas for YouTubers, vloggers, and gaming channels.
+
+Thumbnails:
+- [YouTube Thumbnail Tester](https://ytgrowth.io/tools/youtube-thumbnail-tester): Compare two thumbnails side by side at real feed size, on mobile and suggested.
+- [YouTube Thumbnail Downloader](https://ytgrowth.io/tools/youtube-thumbnail-downloader): Download any thumbnail from a video URL in HD, Max Res, JPG, or PNG.
+- [YouTube Thumbnail Resizer](https://ytgrowth.io/tools/youtube-thumbnail-resizer): Resize any image to HD, Full HD, or 4K, auto-fit under YouTube's 2MB cap, runs in the browser.
+- [YouTube Banner Resizer](https://ytgrowth.io/tools/youtube-banner-resizer): Export at the exact 2560x1440 spec with a live safe-zone preview for mobile, desktop, and TV.
+
 ## Guides and articles
 
 In-depth guides on growing, optimizing, and monetizing a YouTube
@@ -144,7 +175,7 @@ channel. Full archive at https://ytgrowth.io/blog.
 - [Why Is My YouTube Channel Not Growing? 10 Reasons and How to Fix Each One](https://ytgrowth.io/blog/youtube-channel-not-growing): The 10 real reasons a channel stops growing, a three-metric diagnostic to find which is yours, and the priority order to fix them in.
 - [YouTube Trends: How to Find What's Trending and Use It Before It Peaks (2026)](https://ytgrowth.io/blog/youtube-trends): How to find YouTube trends and trending topics early, validate real search demand, and publish before the topic saturates.
 - [Google AdSense for YouTube: How It Works, Setup, and Getting Paid (2026)](https://ytgrowth.io/blog/google-adsense-youtube): How Google AdSense for YouTube works: setup and linking, the approval and tax steps, when you get paid, and the mistakes that get accounts suspended.
-- [vidIQ Review (2026): Is It Worth It, and the Free Alternative](https://ytgrowth.io/blog/vidiq-review): An honest 2026 vidIQ review: what the extension does, what the plans cost, where users hit billing and accuracy issues, and how to cover the same jobs free.
+- [vidIQ Review (2026): Is It Worth It, and the Free Alternative](https://ytgrowth.io/blog/vidiq-review): An honest 2026 vidIQ review: what the extension does, every pricing tier including Coaching, the real Capterra rating, where users hit billing and accuracy issues, and how to cover the same jobs free.
 - [YouTube Video Ideas for Beginners: 10 Ideas That Work With Zero Subscribers](https://ytgrowth.io/blog/youtube-video-ideas): 10 search-driven, low-production video formats that work from zero subscribers, plus a research framework for finding your own ideas.
 - [YouTube CPM Rates: The Best Niches and How to Maximize Your Ad Revenue](https://ytgrowth.io/blog/youtube-cpm): What CPM is and how it differs from RPM, average rates by category, the niches that pay 10x more, and the levers that lift your CPM without changing niche.
 - [YouTube Tags for Views: The Best Tags to Use and How to Find Them](https://ytgrowth.io/blog/youtube-tags): What makes a tag drive views, the best tags by niche, hashtags vs metadata tags, and a 15-tag system for every upload.

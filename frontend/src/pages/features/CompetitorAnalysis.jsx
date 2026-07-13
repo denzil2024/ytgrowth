@@ -227,6 +227,10 @@ const PLAN_LIMITS = [
 
 const FAQS = [
   {
+    q: 'How do I know which channels are my real competitors?',
+    a: <>Start with channels serving the same audience at a similar size, not just the biggest names in your niche. Search your core keywords in an incognito window and note who shows up repeatedly, or check who YouTube suggests after your own videos. Inside the tool, search by keyword instead of pasting a URL and we surface matching channels to pick from.</>,
+  },
+  {
     q: 'Do I need permission from a competitor to analyze their channel?',
     a: <>No. We only read public data. What is on their channel page and what the YouTube API exposes about videos that are already published. We never scrape private analytics, never pretend to be them, and never contact them. Anyone visiting their channel can see the same numbers; we just structure them and run an AI competitive analysis on top.</>,
   },
@@ -248,7 +252,7 @@ const FAQS = [
   },
   {
     q: 'How is the gap analysis different from just watching their videos myself?',
-    a: <>You&apos;d need to watch all 30 of their recent uploads, log titles, dates, durations, view counts, then look up search volume for missing keywords, then cross-reference against what your channel covers, then prioritize. That&apos;s a 6–10 hour exercise per competitor. The AI does it in 60 seconds with the same rigor. And structures the output so each gap comes with a specific "how to capture" action and an impact tag, not just observations.</>,
+    a: <>You&apos;d need to watch all 30 of their recent uploads, log titles, dates, durations, view counts, then look up search volume for missing keywords, then cross-reference against what your channel covers, then prioritize. That&apos;s a 6–10 hour exercise per competitor, and our <a href="/blog/youtube-competitor-analysis" style={{ color: 'var(--yte-accent)', fontWeight: 600 }}>full manual method</a> walks through exactly how to do it by hand. The AI does it in 60 seconds with the same rigor. And structures the output so each gap comes with a specific "how to capture" action and an impact tag, not just observations.</>,
   },
   {
     q: 'Will the audit benchmark my channel against their stats?',
@@ -265,6 +269,18 @@ const FAQS = [
   {
     q: 'Can I export the analysis or share it with a client?',
     a: <>The analysis stays inside your YTGrowth dashboard for now. Every result is saved per channel and can be re-opened anytime, and it feeds into your next channel audit as additional context (the audit becomes more useful the more competitors you&apos;ve analyzed). PDF / shareable-link export is on the roadmap; if it&apos;s a deal-breaker for your agency workflow, email support and we&apos;ll prioritize.</>,
+  },
+  {
+    q: 'Is there a standard view-to-subscriber ratio I should benchmark against?',
+    a: <>Be wary of any fixed target. View-to-subscriber ratios swing hugely by niche and channel size, so a one-size-fits-all number is misleading. The honest benchmark is relative, how a video performs against that channel&apos;s own recent median, which is how our <a href="/features/outliers" style={{ color: 'var(--yte-accent)', fontWeight: 600 }}>Outliers tool</a> scores it, as a multiplier of the niche median, not a flat percentage.</>,
+  },
+  {
+    q: 'Is this useful for agencies reporting to a client, not just solo creators?',
+    a: <>Yes. The Agency plan pools 10 tracked channels, and the threat-level tag plus the ranked gap report are built to summarize in a client update without you writing the narrative from scratch: what changed, which rival is pulling ahead, and the specific move to counter it. It won&apos;t generate a branded slide deck (see the export question above), but the substance of the report is there.</>,
+  },
+  {
+    q: 'How is this different from vidIQ or TubeBuddy\'s competitor tracking?',
+    a: <>VidIQ and TubeBuddy show you the raw numbers, views-per-hour, growth rates, keyword lists, and leave the interpretation to you. YTGrowth runs an AI analysis on the same kind of public data and tells you specifically what to change: which gap to fill first, which title pattern to copy, each with an impact tag. If you want more dashboards, they&apos;re the better fit. If you want a ranked list of moves, this is built for that.</>,
   },
 ]
 

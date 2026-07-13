@@ -256,7 +256,7 @@ export default function YoutubeStatsCategory() {
                 Loading the leaderboard…
               </p>
               <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', maxWidth: 460, margin: '0 auto', lineHeight: 1.6 }}>
-                If this hangs, the daily refresh hasn't fired yet. Reload in a minute and the list will appear.
+                If this hangs, it's a temporary loading hiccup, not stale data. Reload in a minute and the list will appear.
               </p>
             </div>
           )}

@@ -68,7 +68,19 @@ MEDIAVINE.md's ranking-reality section for how to tell the two apart.
       substantial content change.
 - [ ] `llms.txt`: update the one-line description to mention new coverage.
       This is a live acquisition channel (see project_llms_txt_traffic), not
-      an afterthought.
+      an afterthought. AI-assistant clicks are a major source of traffic, so
+      this file matters as much as the meta tags, not less.
+- [ ] If the page being optimized is a `/tools/*` page, confirm it (and every
+      sibling free tool) actually appears in llms.txt's "Free Tools" section,
+      not just the blog. Tools were invisible there entirely until 2026-07-13.
+- [ ] Write every llms.txt description from the page's OWN verified source
+      (its `prerender.js` meta entry, or the component itself), never from a
+      hub/marketing blurb (e.g. ToolsHub.jsx card text). Hub blurbs are
+      loose and can be flat wrong: one pass claimed a tool showed an
+      "earnings estimate" it does not have, and attributed a "safe zone"
+      feature to the wrong tool entirely. If a description makes a specific,
+      checkable claim (a count, a limit, a rule), grep the actual component
+      for it before shipping the line.
 
 ## 5. Internal links pass (both directions)
 
@@ -127,3 +139,12 @@ check for them by default instead of rediscovering them one at a time:
    an actual rendered measurement, missing paragraphs that ran 6 to 9 lines.
 6. New content authored in the same session introducing its own "actually"
    or forced links, not just pre-existing issues.
+7. Found on the money-calculator pass (2026-07-13): the entire `/tools`
+   surface (16 free tools) was missing from llms.txt, only blog posts were
+   listed. When added, the first draft copied ToolsHub.jsx's marketing
+   blurbs and shipped two factual errors (a tool got credited with a feature
+   it doesn't have, another got a different tool's feature). Fixed by
+   rewriting every line from the verified `prerender.js` description and
+   spot-checking specific numeric claims against the actual component.
+   Lesson: a hub/marketing blurb is not a verified source, treat it the same
+   as an unverified competitor claim, check it against the real page.

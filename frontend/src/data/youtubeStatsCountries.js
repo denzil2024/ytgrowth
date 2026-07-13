@@ -19,7 +19,7 @@ export const COUNTRY_META = [
     flagSrc: flagSrcFor('US'),
     blurb: 'The largest YouTube market in the world by ad spend. Where the highest-RPM channels live.',
     seoTitle:       'Top YouTube Channels USA 2026: Subscribers, Creators, Stats',
-    seoDescription: "Top YouTube channels in the USA and United States, ranked by live subscriber count. Per-niche stats for gaming, tech, finance, music. Updated daily.",
+    seoDescription: "Top YouTube channels in the USA and United States, ranked by subscriber count. Per-niche stats for gaming, tech, finance, music. Refreshed monthly.",
     intro: [
       "The United States is YouTube's largest single market by advertising spend. Channels with US-heavy audiences earn the platform's highest effective RPMs because brand demand from US advertisers (finance, tech, software, healthcare, automotive) outbids almost every other geography per impression.",
       "The leaderboards here are filtered to channels that surface in YouTube's US regional search results. That captures both US-based creators and international channels with strong US viewership. Browse by category to see who's leading in gaming, tech, beauty, finance, and 10 other niches.",
@@ -39,7 +39,7 @@ export const COUNTRY_META = [
       { q: "How does YouTube decide which channels surface in US results?",
         a: "YouTube's algorithm uses regionCode hints from the searcher's IP, account language, and historical viewing patterns. Channels with viewership concentrated in the US (or in English-speaking markets adjacent to the US) tend to rank highest in US search, regardless of where the creator is based. The leaderboards here use 'relevance' ordering against a niche query, then filter to channels above 500K subscribers to remove noise." },
       { q: "How often does this data update?",
-        a: "Once every 24 hours. The daily refresh runs at 05:30 UTC and replaces each (category, region) cache wholesale, so departed channels don't linger. Subscriber counts and video counts are pulled fresh from YouTube's API on each refresh." },
+        a: "Once a month, on the 1st, at 05:30 UTC. Subscriber rankings at this scale don't shift week to week, so a monthly refresh keeps the leaderboard accurate for what matters, who's in the top ranks, and replaces each (category, region) cache wholesale so departed channels don't linger." },
     ],
   },
 
@@ -51,7 +51,7 @@ export const COUNTRY_META = [
     flagSrc: flagSrcFor('GB'),
     blurb: 'High-RPM English-language market with a distinctive creator culture. Strong in vlogs, comedy, sports, gaming.',
     seoTitle:       'Top YouTube Channels UK 2026: Subscribers, Creators, Stats',
-    seoDescription: "Top YouTube channels in the UK and United Kingdom, ranked by live subscriber count. Per-niche stats for gaming, tech, finance, music. Updated daily.",
+    seoDescription: "Top YouTube channels in the UK and United Kingdom, ranked by subscriber count. Per-niche stats for gaming, tech, finance, music. Refreshed monthly.",
     intro: [
       "The United Kingdom is one of YouTube's most lucrative non-US markets. UK-heavy channels typically earn RPMs only slightly below US levels, and UK viewers are valued by advertisers as part of the broader tier-1 English-speaking bloc.",
       "British YouTube has its own creator culture, especially in vlogs, comedy, gaming, and sports commentary. The leaderboards below are filtered to channels surfacing in YouTube's UK regional search results, capturing both UK-based creators and international channels with strong British viewership.",
@@ -83,7 +83,7 @@ export const COUNTRY_META = [
     flagSrc: flagSrcFor('CA'),
     blurb: 'Tier-1 RPM market with strong creator output in tech, gaming, fitness, and outdoor content.',
     seoTitle:       'Top YouTube Channels Canada 2026: Subscribers, Creators, Stats',
-    seoDescription: "Top YouTube channels in Canada, ranked by live subscriber count. Per-niche stats for gaming, tech, finance, music, comedy. Updated daily.",
+    seoDescription: "Top YouTube channels in Canada, ranked by subscriber count. Per-niche stats for gaming, tech, finance, music, comedy. Refreshed monthly.",
     intro: [
       "Canada sits firmly in YouTube's tier-1 advertising market. Canadian RPMs run close to US rates, and Canadian creators typically attract sponsorship demand from both Canadian and US brands targeting the North American market.",
       "The Canadian creator economy is concentrated in English-language content, with a substantial French-language sub-market in Quebec. Tech, gaming, fitness, and outdoor content are all categories where Canadian creators have built outsized audiences relative to the country's population.",
@@ -115,7 +115,7 @@ export const COUNTRY_META = [
     flagSrc: flagSrcFor('AU'),
     blurb: 'Smallest tier-1 market by population but punches above its weight in lifestyle, fitness, food, and tech.',
     seoTitle:       'Top YouTube Channels Australia 2026: Subscribers, Creators, Stats',
-    seoDescription: "Top YouTube channels in Australia, ranked by live subscriber count. Per-niche stats for gaming, tech, finance, music, comedy. Updated daily.",
+    seoDescription: "Top YouTube channels in Australia, ranked by subscriber count. Per-niche stats for gaming, tech, finance, music, comedy. Refreshed monthly.",
     intro: [
       "Australia is the smallest tier-1 YouTube market by population but punches above its weight in creator output. Australian RPMs are similar to UK levels (slightly below US), and Australian channels often build large international audiences because the cultural and linguistic distance to North America is small enough that content travels easily.",
       "Strong Australian categories include lifestyle and fitness, food and recipes, outdoor and adventure, tech reviews, and sports (especially cricket, AFL, NRL). The leaderboards below capture channels surfacing in YouTube's Australian regional search results.",

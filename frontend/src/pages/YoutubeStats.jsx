@@ -24,21 +24,40 @@ const SANS  = "'Barlow', system-ui, sans-serif"
 
 const FAQS = [
   { q: 'Where does this data come from?',
-    a: "Directly from YouTube. We call YouTube Data API v3 (search.list + channels.list) once per day, pull the top channels in each niche, and cache the result. Subscriber count, total views, and video count come straight from YouTube's own statistics endpoint, the same one YouTube Studio uses." },
+    a: "Directly from YouTube. We call YouTube Data API v3 (search.list + channels.list) to pull the top channels in each niche, and cache the result. Subscriber count, total views, and video count come straight from YouTube's own statistics endpoint, the same one YouTube Studio uses." },
   { q: 'How are the rankings calculated?',
-    a: "By live subscriber count, descending. We search for channels matching each niche query (e.g. \"gaming youtube channel\"), filter out anything below 500K subscribers (cuts random small channels that share a name with a popular one), then rank what's left by subs. The number you see is the count YouTube returned during the most recent refresh, which is shown as the \"updated\" timestamp." },
+    a: "By subscriber count, descending. We search for channels matching each niche query (e.g. \"gaming youtube channel\"), filter out anything below 500K subscribers (cuts random small channels that share a name with a popular one), then rank what's left by subs. The number you see is the count YouTube returned during the most recent refresh, which is shown as the \"updated\" timestamp." },
   { q: 'How often does this update?',
-    a: "Once every 24 hours. The refresh runs at 05:30 UTC and replaces each category's cached list wholesale, so departed channels don't linger. If a channel changed name, hid its sub count, or fell below 500K subs, it drops off the next refresh." },
+    a: "Once a month, on the 1st. That sounds infrequent, but rankings at this scale don't move fast: a channel with 50 million subscribers isn't swapping places with a rival week to week. A monthly refresh keeps the leaderboard accurate for the part that matters, who's in the top ranks, without the cost of checking daily. Each refresh replaces every category's cached list wholesale, so departed channels don't linger and new entrants surface." },
   { q: 'Why are some channels missing? My favourite isn\'t here.',
     a: "Two common reasons. (1) The channel is below the 500K subscriber threshold, which we use to filter out small same-named channels that show up in YouTube's search results. (2) YouTube's relevance-sorted search didn't surface it within the top 50 candidates for that niche query. We don't curate a hand-picked list, so a channel either matches the query strongly enough to surface or it doesn't." },
   { q: 'Can I look up a specific channel?',
     a: 'Yes. Use the free <a href="/tools/youtube-channel-stats-checker" style="color: var(--yte-accent); font-weight: 600; text-decoration: none;">Channel Stats Checker</a> to pull stats for any channel by URL or handle. No subscriber threshold there, and it works for channels of any size.' },
   { q: 'Are the subscriber counts real-time?',
-    a: 'Within a 24-hour window. YouTube\'s public API returns subscriber counts rounded to the nearest hundred (or thousand for large channels), so they\'re close to live but not second-by-second. For the precise to-the-second count of a single channel, use the channel\'s own about page on YouTube.' },
+    a: 'No, they reflect the most recent monthly refresh, not the current second. YouTube\'s public API also rounds subscriber counts to the nearest hundred (or thousand for large channels), so a number here is always an approximation, not a live feed. For the current, precise count of a single channel, use the channel\'s own about page on YouTube.' },
   { q: 'Why a 500K minimum?',
     a: "Because YouTube's search-by-name returns lookalikes. Search for \"drake\" and you get the artist plus thousands of channels named after him by random users with 5 subs each. Filtering at 500K guarantees the leaderboard shows real, established channels and not noise." },
-  { q: 'Will you add more categories or per-country breakdowns?',
-    a: "Yes. The next iteration adds country dimensions (top channels in each niche by region: US, UK, Canada, Australia, India, etc.) and per-category landing pages with the full top 50 for each niche. This page is the v1 hub, drilldowns are next." },
+  { q: 'Why only 4 countries (US, UK, Canada, Australia)?',
+    a: "We'd rather cover a handful of countries well than dozens sparsely with thin, auto-generated lists padded out for size. These four represent the audiences most creators and brands research first, and each list is built from real regional search results, not a placeholder. More may be added over time, but only where the data genuinely holds up." },
+]
+
+// Ordering options for each leaderboard. All three use data already in the
+// cached response (subscribers, total_views, video_count), so switching
+// costs nothing extra: no new API calls, just a client-side re-sort.
+const SORT_OPTIONS = [
+  { key: 'subscribers', label: 'Subscribers' },
+  { key: 'total_views', label: 'Views' },
+  { key: 'video_count', label: 'Videos' },
+]
+
+// Real, sourced history of the #1 spot. Dates verified against Wikipedia's
+// "List of most-subscribed YouTube channels" and the PewDiePie vs T-Series
+// coverage of the 2018-2019 handoff. Static content, not pulled from the
+// live API, so it costs zero quota and doesn't go stale between refreshes.
+const MILESTONES = [
+  { channel: 'PewDiePie', period: 'Aug 2013 – Apr 2019', note: 'Held #1 for a combined 1,920+ days across four separate runs, the longest total reign on record. T-Series briefly took the top spot for a few days in March 2019 before PewDiePie regained it.' },
+  { channel: 'T-Series', period: 'Apr 2019 – Jun 2024', note: 'Overtook PewDiePie for good on April 14, 2019, and became the first channel ever to cross 100 million subscribers weeks later. The rivalry was big enough to spawn its own Wikipedia page.' },
+  { channel: 'MrBeast', period: 'Jun 2024 – present', note: 'Passed T-Series on June 1, 2024, and posted on social media that he had "finally avenged PewDiePie." Now sits well clear of #2 at 500M+ subscribers.' },
 ]
 
 function useBreakpoint() {
@@ -84,6 +103,14 @@ function useGlobalStyles() {
       .yts-jump-row { display: flex; gap: 7px; flex-wrap: wrap; }
       .yts-jump-chip { background: var(--yte-surface); border: 1px solid var(--yte-line); color: var(--yte-soft); font-family: ${SANS}; font-size: 12.5px; font-weight: 500; letter-spacing: 0.01em; padding: 7px 14px; border-radius: 0; text-decoration: none; transition: border-color 0.15s, color 0.15s, background 0.15s; }
       .yts-jump-chip:hover { border-color: var(--yte-accent); color: var(--yte-accent); background: var(--yte-accent-soft); }
+
+      /* Sort toggle: quiet grey active state, not red. Red is for primary
+         CTAs only, this is a view switch. */
+      .yts-sort-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+      .yts-sort-label { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 2px; }
+      .yts-sort-btn { background: var(--yte-surface); border: 1px solid var(--yte-line); color: var(--yte-soft); font-family: ${SANS}; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 0; cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; }
+      .yts-sort-btn:hover { border-color: var(--yte-line-2); color: var(--yte-ink); }
+      .yts-sort-btn.active { background: var(--yte-bg-2); border-color: var(--yte-line-2); color: var(--yte-ink); }
 
       .yts-seeall { display: inline-flex; align-items: center; gap: 6px; font-family: ${SANS}; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yte-soft); text-decoration: none; white-space: nowrap; padding: 9px 16px; border: 1px solid var(--yte-line); transition: color 0.15s, border-color 0.15s; }
       .yts-seeall:hover { color: var(--yte-accent); border-color: var(--yte-accent); }
@@ -159,13 +186,13 @@ function fmtVideoCount(n) {
   return n + ' videos'
 }
 
-// The leaderboard is rebuilt on a rolling refresh and the 500K+ rankings
-// barely move week to week, so we stamp the badge with the current date
-// (rendered client-side) rather than the raw fetch time. A relative
-// "26d ago" read as abandoned; a live date reads as current and rolls
-// over on its own with no backend coupling.
-function todayLabel() {
-  return new Date().toLocaleDateString('en-US', {
+// The leaderboard refreshes monthly (quota cost, see app/scheduler.py), so
+// this must show the real fetched_at date, never today's date. A fabricated
+// "updated today" badge on data that can be up to 30 days old is exactly
+// the kind of claim that erodes trust once anyone checks it.
+function fmtUpdatedDate(iso) {
+  if (!iso) return null
+  return new Date(iso).toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric',
   })
 }
@@ -184,13 +211,14 @@ export default function YoutubeStats() {
     return (i && i.region === 'global') ? i.data : null
   })
   const [openFaq, setOpenFaq] = useState(0)
+  const [sortBy, setSortBy]   = useState('subscribers')
 
   useEffect(() => {
     document.title = 'Top YouTube Subscribers & Creators 2026: Live Channel Statistics | YTGrowth'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = 'Top YouTube channels and creators ranked by live subscriber count across 14 niches. Free statistics, updated daily, no signup.'
+    meta.content = 'Top YouTube channels and creators ranked by subscriber count across 14 niches. Free statistics, refreshed monthly, no signup.'
   }, [])
 
   useEffect(() => {
@@ -203,12 +231,25 @@ export default function YoutubeStats() {
   // Render in our preferred CATEGORY_META order, but only for categories
   // that have rows in the cache. Skip empty categories rather
   // than rendering a half-broken section.
+  //
+  // Sort happens on the FULL cached pool (up to 50 per category, see
+  // app/top_channels.py fetch_grouped) before slicing to 15, not on an
+  // already-subscriber-sorted top 15. Re-sorting a truncated list would
+  // silently exclude channels that rank higher on views or video count
+  // but sit outside the subscriber-based top 15. No extra API cost:
+  // this is the same cached data, just re-ordered client-side.
   const sections = useMemo(() => {
     if (!data?.groups) return []
     return CATEGORY_META
-      .map(meta => ({ meta, rows: (data.groups[meta.id] || []).slice(0, 15) }))
+      .map(meta => {
+        const all = data.groups[meta.id] || []
+        const ordered = sortBy === 'subscribers'
+          ? all
+          : [...all].sort((a, b) => (b[sortBy] || 0) - (a[sortBy] || 0))
+        return { meta, rows: ordered.slice(0, 15) }
+      })
       .filter(s => s.rows.length > 0)
-  }, [data])
+  }, [data, sortBy])
 
   const H1 = isMobile ? 34 : 56
   const H2 = isMobile ? 26 : 36
@@ -227,7 +268,7 @@ export default function YoutubeStats() {
             Top YouTube subscribers, creators, <em>ranked by live data.</em>
           </h1>
           <p className="yts-lead" style={{ fontSize: isMobile ? 16 : 17.5, maxWidth: 680, marginBottom: 28, textWrap: 'pretty' }}>
-            Browse the biggest channels in {CATEGORY_META.length} niches, pulled directly from YouTube's API and ranked by real subscriber count. Refreshed every 24 hours, free to read, no signup.
+            Browse the biggest channels in {CATEGORY_META.length} niches, pulled directly from YouTube's API and ranked by real subscriber count. Refreshed monthly, free to read, no signup.
           </p>
 
           {/* Stats strip */}
@@ -241,11 +282,15 @@ export default function YoutubeStats() {
               <span style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.4px' }}>700+</span>
               <span style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--yte-muted)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>channels</span>
             </div>
-            <span style={{ width: 1, height: 18, background: 'var(--yte-line)' }} />
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0f7a43', boxShadow: '0 0 0 3px rgba(15,122,67,0.18)' }} />
-              <span style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', fontWeight: 600 }}>updated {todayLabel()}</span>
-            </div>
+            {fmtUpdatedDate(data?.fetched_at) && (
+              <>
+                <span style={{ width: 1, height: 18, background: 'var(--yte-line)' }} />
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0f7a43', boxShadow: '0 0 0 3px rgba(15,122,67,0.18)' }} />
+                  <span style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', fontWeight: 600 }}>updated {fmtUpdatedDate(data.fetched_at)}</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -256,6 +301,19 @@ export default function YoutubeStats() {
           <div className="yts-jump-row">
             {CATEGORY_META.map(c => (
               <a key={c.id} href={`#${c.id}`} className="yts-jump-chip">{c.label}</a>
+            ))}
+          </div>
+          <div className="yts-sort-row">
+            <span className="yts-sort-label">Sort by</span>
+            {SORT_OPTIONS.map(opt => (
+              <button
+                key={opt.key}
+                type="button"
+                className={`yts-sort-btn${sortBy === opt.key ? ' active' : ''}`}
+                onClick={() => setSortBy(opt.key)}
+              >
+                {opt.label}
+              </button>
             ))}
           </div>
         </div>
@@ -302,7 +360,7 @@ export default function YoutubeStats() {
                 Loading the leaderboard…
               </p>
               <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', maxWidth: 460, margin: '0 auto', lineHeight: 1.6 }}>
-                If this hangs, the daily refresh hasn't fired yet. Reload in a minute and it'll appear.
+                If this hangs, it's a temporary loading hiccup, not stale data. Reload in a minute and it'll appear.
               </p>
             </div>
           )}
@@ -356,6 +414,37 @@ export default function YoutubeStats() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ══ HISTORY ══ */}
+      <section className="yts-section-pad" style={{ padding: isMobile ? '56px 22px' : '80px 48px', background: 'var(--yte-surface)', borderTop: '1px solid var(--yte-line)', borderBottom: '1px solid var(--yte-line)' }}>
+        <div className="yts-wrap">
+          <div style={{ maxWidth: 720, marginBottom: 32 }}>
+            <Eyebrow>Some context</Eyebrow>
+            <h2 className="yts-h2" style={{ fontSize: isMobile ? 24 : 30, marginBottom: 14 }}>
+              Who's really held <em>#1.</em>
+            </h2>
+            <p className="yts-lead" style={{ fontSize: 15.5 }}>
+              A live number is only half the picture. Here's how the top spot changed hands over the years, and why children's channels make up such a large share of today's leaderboard.
+            </p>
+          </div>
+
+          <div style={{ background: 'var(--yte-bg)', border: '1px solid var(--yte-line)' }}>
+            {MILESTONES.map((m, i) => (
+              <div key={m.channel} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '200px 1fr', gap: isMobile ? 6 : 24, padding: '20px 22px', borderBottom: i < MILESTONES.length - 1 ? '1px solid var(--yte-line)' : 'none' }}>
+                <div>
+                  <p style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px', marginBottom: 3 }}>{m.channel}</p>
+                  <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', fontWeight: 600, letterSpacing: '0.02em' }}>{m.period}</p>
+                </div>
+                <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', lineHeight: 1.65, margin: 0 }}>{m.note}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="yts-lead" style={{ fontSize: 14.5, marginTop: 24, maxWidth: 720 }}>
+            Look through the categories above and children's channels like Cocomelon show up near the very top, often ahead of channels with much larger cultural footprints. That's not a fluke: young kids rewatch a small rotation of videos endlessly, and parents trust a handful of brands, which produces an unusually loyal, low-churn audience that compounds views faster than almost any other category.
+          </p>
         </div>
       </section>
 
