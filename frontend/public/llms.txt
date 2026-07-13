@@ -133,7 +133,7 @@ Calculators:
 Research & analysis:
 - [YouTube Keyword Research](https://ytgrowth.io/tools/youtube-keyword-research): See the real competition for any keyword: ranking channel size, view ceiling, and how crowded the term is.
 - [YouTube Channel Stats Checker](https://ytgrowth.io/tools/youtube-channel-stats-checker): Live subscriber count, total views, monthly uploads, and engagement for any public channel.
-- [Top YouTube Channels by Subscribers](https://ytgrowth.io/youtube-stats): Leaderboards across 14 niches and 4 countries (US, UK, Canada, Australia), refreshed monthly from YouTube's own API, 500K-subscriber minimum to filter out noise.
+- [Top YouTube Channels by Subscribers](https://ytgrowth.io/youtube-stats): Leaderboards across 14 niches and 4 countries (US, UK, Canada, Australia), refreshed monthly from YouTube's own API, 500K-subscriber minimum to filter out noise. Country pages: [United States](https://ytgrowth.io/youtube-stats/country/united-states), [United Kingdom](https://ytgrowth.io/youtube-stats/country/united-kingdom), [Canada](https://ytgrowth.io/youtube-stats/country/canada), [Australia](https://ytgrowth.io/youtube-stats/country/australia).
 
 Generators:
 - [YouTube Title Generator](https://ytgrowth.io/tools/youtube-title-generator): A dozen click-worthy title ideas, plus a scorer for any title on length, numbers, power words, and keyword fit.
