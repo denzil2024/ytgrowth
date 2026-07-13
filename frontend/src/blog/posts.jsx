@@ -91,6 +91,175 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-ai-policy',
+    title: 'The 2026 YouTube AI Crackdown: What Gets Demonetized (and the Made-Up Rules You Can Ignore)',
+    excerpt: 'YouTube terminated 16 channels with 35 million subscribers in one wave, and the panic that followed invented rules the policy never contained. What the inauthentic content policy says, who gets demonetized, and the made-up thresholds you can stop worrying about.',
+    date: '2026-07-13',
+    category: CATEGORIES.monetization,
+    cover: '/blog/youtube-ai-policy-cover.jpg',
+    coverAlt: 'A human hand clasping a robotic hand, the human-plus-AI production model that stays monetizable under YouTube\'s 2026 rules',
+    author: 'Denzil',
+    readTime: '10 min read',
+    faqs: [
+      { q: 'Does YouTube demonetize AI content?', a: 'Not for being AI. YouTube\'s inauthentic content policy targets mass-produced, templated content that adds no original insight or perspective, whether AI made it or not. A channel using AI tools inside a genuinely original production, with a real script and real editorial decisions, remains eligible for monetization.' },
+      { q: 'Is AI voiceover allowed on YouTube?', a: 'Yes. An AI or cloned voice narrating an original script is not a policy violation, and a synthetic voice over stock footage does not even require the AI disclosure label. The risk appears when the voiceover is reading templated or scraped scripts across dozens of near-identical videos, which is what the inauthentic content policy exists to catch.' },
+      { q: 'What is YouTube\'s inauthentic content policy?', a: 'It is the YouTube Partner Program rule covering mass-produced or repetitive content: videos that look made from a template with little variation, or content easily replicable at scale. It was renamed from "repetitious content" on July 15, 2025, and YouTube described the rename as a minor update to a longstanding guideline, not a new rule.' },
+      { q: 'Is the 30 percent commentary rule real?', a: 'No. Neither the claim that commentary under 30 percent of runtime triggers a review, nor the claim that five videos with less than 20 percent script variation get bulk-demonetized, appears anywhere in YouTube\'s published policies. YouTube\'s standard is qualitative: whether the content is original and authentic, not any percentage threshold.' },
+      { q: 'Do I have to label my videos as AI-generated?', a: 'Only when the content is realistic: it makes a real person appear to say or do something they did not, alters footage of a real event or place, or shows a realistic scene that never occurred. Clearly unrealistic content, AI-assisted scripts and thumbnails, and standard editing help need no label. YouTube states that disclosing does not limit reach or monetization.' },
+      { q: 'What happens if I do not disclose AI content?', a: 'YouTube can apply the label for you, and creators who consistently avoid disclosure risk content removal or suspension from the Partner Program. The penalty path is aimed at repeated, deliberate non-disclosure of realistic synthetic content, not at a creator who misjudged a borderline case once.' },
+      { q: 'Can faceless channels still be monetized in 2026?', a: 'Yes. Faceless describes a format, and formats are not violations. Plenty of monetized channels never show a face. The channels losing monetization are the ones pairing the faceless format with templated, mass-produced output. A faceless channel with original scripts, real editing decisions, and its own voice remains monetizable.' },
+      { q: 'How many channels did YouTube terminate in the 2026 crackdown?', a: 'Press coverage of the January 2026 wave counted 16 channels with roughly 35 million combined subscribers and 4.7 billion lifetime views, earning an estimated $10 million a year in ad revenue. They were terminated for mass-produced content under the inauthentic content policy, not for the presence of AI tools.' },
+      { q: 'How do I appeal if my channel is demonetized?', a: 'YouTube Studio shows the reason for the suspension, and you can appeal within 21 days. Reviews typically come back within days, up to about two weeks. If the appeal is rejected, you wait 90 days before reapplying to the Partner Program. Appeals succeed on evidence of originality, like your production process and script work, not on explaining intent.' },
+    ],
+    content: () => (
+      <>
+        <p>In January 2026, YouTube terminated 16 channels with a combined <strong>35 million subscribers and 4.7 billion lifetime views</strong>. Press estimates put their ad revenue near $10 million a year. Creator forums read the wave as the start of a war on AI content, and the panic that followed invented a set of rules YouTube has never published.</p>
+
+        <p>Both halves of that story need separating. <strong>The enforcement is real</strong>, and if you run a faceless or AI-assisted channel you should understand exactly what it targets. But a large share of what now circulates as "the new rules" appears nowhere in YouTube's policies. This guide covers what YouTube published, what it enforced, and <strong>which rules creators made up</strong>.</p>
+
+        <h2>What YouTube's Inauthentic Content Policy Says</h2>
+
+        <p>The policy itself is short. YouTube defines inauthentic content as <strong>"mass-produced or repetitive content"</strong>, including content that looks like it was made with a template with little to no variation across videos, or content that is easily replicable at scale. That is the entire standard, and it applies to monetization: channels built on this content cannot earn under the <a href="/blog/youtube-partner-program">YouTube Partner Program</a>.</p>
+
+        <p>The name is newer than the rule. On <strong>July 15, 2025</strong>, YouTube renamed its longstanding "repetitious content" policy to "inauthentic content". TeamYouTube called the change "a minor update to our longstanding guideline" and confirmed that <strong>no new policies were added</strong>. The rename mattered because it signaled where enforcement was heading, not because the text changed.</p>
+
+        <p>YouTube's own violation examples make the target concrete: readings of material you did not create, songs modified only in pitch or speed, mass-produced videos built from a similar template, and <strong>AI-generated content made with generic templates</strong> that adds no original insight or perspective. The full list sits in YouTube's <a href="https://support.google.com/youtube/answer/1311392" target="_blank" rel="noopener">channel monetization policies</a>.</p>
+
+        <p>Just as important is what the same page allows: reusing your own intro and outro across videos, making similar videos where <strong>each one covers its specific subject with real substance</strong>, and editing short clips together with an explanatory narrative. Format repetition is fine. Substance repetition is not.</p>
+
+        <h2>The Enforcement Wave That Started the Panic</h2>
+
+        <p>The crackdown built for months before January. In August 2025, reporting by The Guardian preceded the removal of three AI-heavy channels. In December 2025, YouTube terminated Screen Culture and KH Studio, two operations with over 2 million combined subscribers built on <strong>fake AI movie trailers</strong>.</p>
+
+        <p>Then came the January 2026 sweep, with CEO Neal Mohan reportedly calling low-effort AI content a <strong>top enforcement priority for 2026</strong>. The terminated channels were not small. Press coverage names a biblical-stories channel at 5.87 million subscribers and an animated-narration channel at 5.95 million, both running high-volume templated output.</p>
+
+        <p>Read the list closely and the pattern is consistent. <strong>None of these channels were terminated for using AI.</strong> They were terminated for being mass-produced: the same structure, the same synthetic narration, the same visual template, published at a volume no original production could sustain. AI lowered the cost of operating at that scale. The policy caught the scale, not the tool.</p>
+
+        <h2>The Three Policies Everyone Conflates</h2>
+
+        <p>Most of the confusion around "YouTube's AI rules" comes from three separate policies being discussed as if they were one. They cover different things and carry <strong>different penalties</strong>.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Policy</th>
+              <th>What it covers</th>
+              <th>What breaking it costs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Inauthentic content</strong></td><td>Mass-produced or repetitive content, AI-made or not</td><td>Channel loses monetization; the worst cases are terminated</td></tr>
+            <tr><td><strong>Reused content</strong></td><td>Borrowed material (clips, compilations, reactions) without original commentary or editing</td><td>Channel loses monetization until a successful appeal</td></tr>
+            <tr><td><strong>AI disclosure</strong></td><td>Realistic synthetic media: real people, real events, realistic scenes</td><td>Label applied for you; repeated non-disclosure risks removal or YPP suspension</td></tr>
+          </tbody>
+        </table>
+
+        <p>The reused content policy did not change in 2025 or 2026. Reaction videos, clips, and compilations <strong>remain monetizable</strong> when you add significant commentary, editing, or educational value. And the disclosure rule is not a monetization rule at all: it is a transparency requirement for realistic synthetic media, covered in its own section below.</p>
+
+        <h2>The Made-Up Rules You Can Ignore</h2>
+
+        <p>The pages ranking for this topic are full of confident, specific thresholds. The two most repeated: videos where commentary covers <strong>less than 30 percent of runtime</strong> "trigger review", and five or more videos with <strong>less than 20 percent script variation</strong> get bulk-demonetized. Both numbers spread across dozens of AI-tool blogs in early 2026, each citing the others.</p>
+
+        <p><strong>Neither number exists in any YouTube policy.</strong> YouTube's published standard contains no percentages at all. It is qualitative: is the content original and authentic, or is it templated and replicable at scale? A specific threshold is easier to sell than a judgment call, which is exactly why the invented versions keep spreading.</p>
+
+        <p>Three more claims deserve naming. "Faceless channels get flagged automatically" is false as policy, though the format now draws closer scrutiny than it used to. "AI voiceover means automatic demonetization" is false: a synthetic voice reading an original script violates nothing. And "one AI video demonetizes your whole channel" inverts how enforcement works, which weighs <strong>the channel's overall pattern</strong>, not a single upload.</p>
+
+        <h2>What Gets Flagged vs What Stays Safe</h2>
+
+        <p>Strip out the folklore and the real risk picture, drawn from the published policy and the channels enforcement has hit so far, sorts into three tiers.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Risk</th>
+              <th>Production pattern</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>High</strong></td><td>Fully automated pipelines: scraped or templated scripts, synthetic narration, stock or AI visuals, published daily with no human editorial pass</td></tr>
+            <tr><td><strong>Medium</strong></td><td>Heavy AI production with thin variation: the same structure in every video, AI music playlists over static images, re-narrated versions of existing content</td></tr>
+            <tr><td><strong>Low</strong></td><td>AI used inside an original production: drafted scripts you rewrite, your own cloned voice, AI-assisted editing, thumbnails, and research</td></tr>
+          </tbody>
+        </table>
+
+        <p>The honest way to self-assess is the substitution test. If a viewer could swap your channel for five others in the niche and notice nothing, <strong>the algorithm can make the same substitution</strong>, and the policy reads that interchangeability as mass production. Your specific perspective, on camera or not, is the compliance strategy.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="See how your channel reads from the outside"
+          sub="The free AI audit reviews your channel the way an outside reviewer would: what looks strong, what looks templated, and what to fix first. No card needed."
+          button="Run a free audit →"
+        />
+
+        <h2>Do You Need the AI Disclosure Label?</h2>
+
+        <p>The disclosure rule is separate from monetization and narrower than most creators assume. YouTube requires the "altered or synthetic content" disclosure only when your content is <strong>realistic</strong>: it makes a real person appear to say or do something they did not, alters footage of a real event or place, or generates a realistic scene that never occurred.</p>
+
+        <p>A long list of everyday AI use needs <strong>no label at all</strong>: AI-written scripts and thumbnails, beauty filters and color correction, audio cleanup, caption generation, clearly unrealistic or animated content, and cloning your own voice for narration. A synthetic voice over stock footage, the standard faceless setup, does not require disclosure either.</p>
+
+        <p>When disclosure applies, it costs you nothing: YouTube states plainly that disclosing <strong>does not limit a video's reach or its ability to earn</strong>. Skipping it is what carries risk. YouTube can apply the label for you, and consistent non-disclosure can escalate to content removal or Partner Program suspension. The full rule is in YouTube's <a href="https://support.google.com/youtube/answer/14328491" target="_blank" rel="noopener">disclosure guidelines</a>.</p>
+
+        <h2>If You Run a Faceless Channel</h2>
+
+        <p>Faceless is a format, not a violation, and the format still monetizes when the production behind it is original. The <a href="/blog/faceless-youtube-channel-ideas">faceless channel ideas guide</a> ranks the niches and covers the compliance line in detail, and the <a href="/blog/cash-cow-youtube-channels">cash cow channels guide</a> covers the production models that hold up under the 2026 rules.</p>
+
+        <p>There is a real cost worth stating honestly: enforcement at this scale runs on automated systems, and <strong>some legitimate human-made faceless channels have been caught in the sweep</strong>. Reporting on the crackdown documents creators with years of original voiceover work facing demonetization reviews because their format resembles the automated channels the policy targets.</p>
+
+        <p>The practical hardening is the same work that makes a channel good: scripts with a point of view a template could not produce, <strong>visible editorial decisions</strong>, varied structure across uploads, and the disclosure label where it applies. If a human review ever reads your channel, the goal is that the originality is obvious in any three videos a reviewer opens.</p>
+
+        <h2>If Your Channel Gets Demonetized</h2>
+
+        <p>YouTube sometimes gives a 7-day advance notice before removing a channel from the Partner Program, and Studio shows the specific policy cited. From there you can <strong>appeal within 21 days</strong>. Decisions typically come back within days, up to about two weeks.</p>
+
+        <p>Appeals succeed on evidence, not sincerity. Reviewers reject explanations of intent and accept <strong>proof of originality</strong>: your scripting process, project files, drafts, recording sessions, anything that shows a human production behind the uploads. If the appeal fails, the wait is 90 days before you can reapply, so the first attempt is worth preparing properly.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Does YouTube demonetize AI content?</h3>
+
+        <p><strong>Not for being AI.</strong> YouTube's inauthentic content policy targets mass-produced, templated content that adds no original insight or perspective, whether AI made it or not. A channel using AI tools inside a genuinely original production, with a real script and real editorial decisions, remains eligible for monetization.</p>
+
+        <h3>Is AI voiceover allowed on YouTube?</h3>
+
+        <p><strong>Yes.</strong> An AI or cloned voice narrating an original script is not a policy violation, and a synthetic voice over stock footage does not even require the AI disclosure label. The risk appears when the voiceover is reading templated or scraped scripts across dozens of near-identical videos, which is what the inauthentic content policy exists to catch.</p>
+
+        <h3>What is YouTube's inauthentic content policy?</h3>
+
+        <p>It is the YouTube Partner Program rule covering <strong>mass-produced or repetitive content</strong>: videos that look made from a template with little variation, or content easily replicable at scale. It was renamed from "repetitious content" on July 15, 2025, and YouTube described the rename as a minor update to a longstanding guideline, not a new rule.</p>
+
+        <h3>Is the 30 percent commentary rule real?</h3>
+
+        <p><strong>No.</strong> Neither the claim that commentary under 30 percent of runtime triggers a review, nor the claim that five videos with less than 20 percent script variation get bulk-demonetized, appears anywhere in YouTube's published policies. YouTube's standard is qualitative: whether the content is original and authentic, not any percentage threshold.</p>
+
+        <h3>Do I have to label my videos as AI-generated?</h3>
+
+        <p><strong>Only when the content is realistic:</strong> it makes a real person appear to say or do something they did not, alters footage of a real event or place, or shows a realistic scene that never occurred. Clearly unrealistic content, AI-assisted scripts and thumbnails, and standard editing help need no label. YouTube states that disclosing does not limit reach or monetization.</p>
+
+        <h3>What happens if I do not disclose AI content?</h3>
+
+        <p>YouTube can <strong>apply the label for you</strong>, and creators who consistently avoid disclosure risk content removal or suspension from the Partner Program. The penalty path is aimed at repeated, deliberate non-disclosure of realistic synthetic content, not at a creator who misjudged a borderline case once.</p>
+
+        <h3>Can faceless channels still be monetized in 2026?</h3>
+
+        <p><strong>Yes.</strong> Faceless describes a format, and formats are not violations. Plenty of monetized channels never show a face. The channels losing monetization are the ones pairing the faceless format with templated, mass-produced output. A faceless channel with original scripts, real editing decisions, and its own voice remains monetizable.</p>
+
+        <h3>How many channels did YouTube terminate in the 2026 crackdown?</h3>
+
+        <p>Press coverage of the January 2026 wave counted <strong>16 channels</strong> with roughly 35 million combined subscribers and 4.7 billion lifetime views, earning an estimated $10 million a year in ad revenue. They were terminated for mass-produced content under the inauthentic content policy, not for the presence of AI tools.</p>
+
+        <h3>How do I appeal if my channel is demonetized?</h3>
+
+        <p>YouTube Studio shows the reason for the suspension, and you can <strong>appeal within 21 days</strong>. Reviews typically come back within days, up to about two weeks. If the appeal is rejected, you wait 90 days before reapplying to the Partner Program. Appeals succeed on evidence of originality, like your production process and script work, not on explaining intent.</p>
+
+        <h2>AI Was Never the Violation</h2>
+
+        <p>Every channel YouTube has terminated in this crackdown shares one trait, and it is not the presence of AI. It is that <strong>nothing about the content required a particular human to exist</strong>. The scripts, the voice, the structure: all of it could have come from anywhere, and did, thousands of times over.</p>
+
+        <p>That standard is passable on purpose. Add the thing that cannot be scraped or templated, your judgment about what matters and why, and the 2026 rules stop being a threat. They become <strong>a filter that removes your cheapest competition</strong>. The creators who lose to this policy were never building anything YouTube wanted to pay for.</p>
+      </>
+    ),
+  },
+  {
     slug: 'cash-cow-youtube-channels',
     title: 'Cash Cow YouTube Channels in 2026: The Honest Business Model',
     excerpt: 'Most guides sell you the dream: pick a niche, plug it into an AI tool, run five channels at once. What they skip is that YouTube is now actively filtering AI-generated volume, and the pure-automation version of this model is dying. The production models, real cost math, and what still works.',
@@ -184,7 +353,7 @@ export const posts = [
 
         <h2>Staying Compliant</h2>
 
-        <p><strong>The line YouTube enforces is reused and repetitive content, not AI tools themselves.</strong> Uploading templated scripts with minor variation, reusing the same narration structure across dozens of videos, or republishing content with no original commentary or editing is what triggers the inauthentic content policy. Detection now runs at the <strong>channel level</strong>, not just per video, so a portfolio built entirely on the same formulaic pattern is a bigger risk than any single upload. The <a href="/blog/faceless-youtube-channel-ideas">faceless channel ideas guide</a> covers this rule in full, including exactly what separates a compliant faceless channel from one that gets flagged.</p>
+        <p><strong>The line YouTube enforces is reused and repetitive content, not AI tools themselves.</strong> Uploading templated scripts with minor variation, reusing the same narration structure across dozens of videos, or republishing content with no original commentary or editing is what triggers <a href="/blog/youtube-ai-policy">the inauthentic content policy</a>. Detection now runs at the <strong>channel level</strong>, not just per video, so a portfolio built entirely on the same formulaic pattern is a bigger risk than any single upload. The <a href="/blog/faceless-youtube-channel-ideas">faceless channel ideas guide</a> covers this rule in full, including exactly what separates a compliant faceless channel from one that gets flagged.</p>
 
         <p>A separate rule applies specifically to realistic AI video: YouTube requires creators to disclose when AI generates or meaningfully alters photorealistic scenes, footage depicting real events, or content that makes it look like someone did or said something they did not. This does not cover an AI voice narrating over real stock footage, that combination does not require the label. It applies to fully AI-generated photorealistic video, the kind common on automated mystery and history channels. Disclosure is a checkbox in YouTube Studio's upload flow, and <strong>disclosed content is not penalized</strong>, only undisclosed AI content that YouTube detects risks a manually applied label or Partner Program penalties.</p>
 
@@ -1349,7 +1518,7 @@ export const posts = [
 
         <ul>
           <li><strong>The 500-subscriber fan-funding tier.</strong> You no longer have to wait for the full 1,000-subscriber threshold to start earning through memberships and tips, which lets smaller channels monetize months earlier.</li>
-          <li><strong>The inauthentic-content crackdown.</strong> The 2025 policy tightening means low-effort AI Shorts farms that once slipped through can no longer monetize, which has raised the bar for everyone.</li>
+          <li><strong>The inauthentic-content crackdown.</strong> <a href="/blog/youtube-ai-policy">The 2025 policy tightening</a> means low-effort AI Shorts farms that once slipped through can no longer monetize, which has raised the bar for everyone.</li>
           <li><strong>The Shorts Fund is gone for good.</strong> Revenue sharing is the only ad-based path now, so flat per-view bonus payments are a thing of the past.</li>
         </ul>
 
@@ -1680,7 +1849,7 @@ export const posts = [
 
         <p>The appeal is real. You never show your face, the production scales without a studio or a presenter, and AI voiceover and editing tools have dropped the barrier low enough that one person can run a channel that used to need a small team. Faceless formats also travel well: a well-narrated video on geography or true crime works for a global audience without a personality to carry it. Run as a repeatable, multi-channel operation, this is exactly what the <a href="/blog/cash-cow-youtube-channels">cash cow channel model</a> is built on.</p>
 
-        <p>The catch is that everyone else has noticed the same thing. The easy niches are crowded, and YouTube has drawn a hard line through the laziest version of the model. In 2025 it clarified its <a href="/blog/youtube-partner-program">monetization rules</a> around reused and mass-produced content, sometimes described as the inauthentic-content update, and it targets channels that churn out templated, repetitive videos with no original input. <strong>Faceless is allowed and profitable. Faceless on full autopilot is not.</strong> We come back to exactly what trips the rule later, because it shapes which of these ideas are worth pursuing.</p>
+        <p>The catch is that everyone else has noticed the same thing. The easy niches are crowded, and YouTube has drawn a hard line through the laziest version of the model. In 2025 it clarified its <a href="/blog/youtube-partner-program">monetization rules</a> around reused and mass-produced content, sometimes described as <a href="/blog/youtube-ai-policy">the inauthentic-content update</a>, and it targets channels that churn out templated, repetitive videos with no original input. <strong>Faceless is allowed and profitable. Faceless on full autopilot is not.</strong> We come back to exactly what trips the rule later, because it shapes which of these ideas are worth pursuing.</p>
 
         <h2>The Highest-Paying Faceless Niches, Ranked by CPM and RPM</h2>
 
@@ -6888,7 +7057,7 @@ Free studio checklist: https://yoursite.com/checklist
         <ul>
           <li><strong>Invalid traffic:</strong> bought views, bots, or view-exchange schemes. Google detects this and disables the account, not just the video.</li>
           <li><strong>Clicking your own ads:</strong> or asking viewers to. This is the classic instant-ban mistake.</li>
-          <li><strong>Reused content:</strong> compilations or reuploaded material with no transformation fail monetization review.</li>
+          <li><strong>Reused content:</strong> compilations or reuploaded material with no transformation fail monetization review, as does mass-produced content under <a href="/blog/youtube-ai-policy">the inauthentic content policy</a>.</li>
           <li><strong>Multiple AdSense accounts:</strong> one person is allowed one AdSense account. A second one gets both flagged.</li>
         </ul>
 
@@ -10260,7 +10429,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>Video Essays.</strong> Business failure breakdowns, internet culture deep dives, and corporate history content perform exceptionally well in this format. The audience comes for the story and stays for the analysis. A well-researched script with clean motion graphics consistently outperforms a talking-head video on the same topic.</li>
           <li><strong>Geopolitics and Map Animations.</strong> This model builds massive audiences through high-value educational content delivered entirely through animation, narration, and data visualization. The retention rates in this sub-niche are among the highest on the platform because the content triggers genuine curiosity and delivers clear informational payoff.</li>
           <li><strong>Crime and Mystery.</strong> True crime and unsolved mystery content leverages the internet rabbit hole effect, where one video naturally leads a viewer into the next. Playlists in this category generate Watch Sessions at a higher rate than almost any other faceless format, which feeds directly into algorithmic distribution.</li>
-          <li><strong>Production Value is Non-Negotiable.</strong> Faceless channels live and die by the quality of their motion graphics, pacing, and <a href="/blog/best-youtube-mic">audio</a>. AI voiceovers have improved significantly and are now viable for polished content when paired with strong scripts. Stock footage alone is not enough. The editing must carry the storytelling weight that a presenter would otherwise provide.</li>
+          <li><strong>Production Value is Non-Negotiable.</strong> Faceless channels live and die by the quality of their motion graphics, pacing, and <a href="/blog/best-youtube-mic">audio</a>. AI voiceovers have improved significantly and are now viable for polished content when paired with strong scripts that stay on the right side of <a href="/blog/youtube-ai-policy">YouTube's AI content rules</a>. Stock footage alone is not enough. The editing must carry the storytelling weight that a presenter would otherwise provide.</li>
         </ul>
 
         <img src="/blog/youtube-niche-faceless-channels.webp" alt="Faceless YouTube channel formats: video essays, geopolitics, and true crime built on motion graphics" />
@@ -12206,7 +12375,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>Enable Two-Step Verification</strong> on your Google account before applying. Without it, YouTube will not process your application regardless of your metrics.</li>
         </ul>
 
-        <blockquote><strong>Warning:</strong> Reused Content is the number one reason YPP applications get rejected. YouTube defines reused content as videos that repurpose clips from movies, other creators, or third-party sources without significant original commentary or transformation. Compilation channels, reaction videos with minimal input, and slideshow videos with no original narration all fall into this category. You cannot monetize low-effort content, and submitting an application with it on your channel will result in an immediate rejection.</blockquote>
+        <blockquote><strong>Warning:</strong> Reused Content is the number one reason YPP applications get rejected. YouTube defines reused content as videos that repurpose clips from movies, other creators, or third-party sources without significant original commentary or transformation. Compilation channels, reaction videos with minimal input, and slideshow videos with no original narration all fall into this category. You cannot monetize low-effort content, and submitting an application with it on your channel will result in an immediate rejection. The related <a href="/blog/youtube-ai-policy">inauthentic content policy</a> applies the same originality bar to mass-produced and templated videos, AI-made or not.</blockquote>
 
         <img src="/blog/youtube-partner-program-step-4.webp" alt="YouTube Studio compliance check and YPP application path" />
 

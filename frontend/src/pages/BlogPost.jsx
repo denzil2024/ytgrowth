@@ -347,7 +347,7 @@ export default function BlogPost() {
         <div className="bp-section-pad" style={{ maxWidth: 1180, margin: '0 auto', position: 'relative' }}>
           <div className="bp-hero-image">
             {post.cover
-              ? <img src={post.cover} alt={post.title} onError={(e) => { e.currentTarget.style.display = 'none' }} />
+              ? <img src={post.cover} alt={post.coverAlt || post.title} onError={(e) => { e.currentTarget.style.display = 'none' }} />
               : <HeroImageFallback title={post.title} />}
           </div>
         </div>

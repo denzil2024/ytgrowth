@@ -518,20 +518,85 @@ The user explicitly asked these be logged so a future chat does not repeat them.
   the full reusable weekly process) and `frontend/scripts/verify/check-blog-paragraphs.mjs` (real
   rendered-line checker, replaces eyeballing character counts). NOT built, NOT pushed.
 
-- [NEXT: START HERE in the next chat] Build + push the best-time-to-post update above once
-  reviewed. Then two forward tracks remain:
-  1. Remaining shortlist: fold "how often should you post" is now done (above). SKIP remain
-     skipped: best video editing software for youtube, ai tools for youtube. Untouched low-value
-     on-page rows: money-calculator, competitor-analysis, vidiq-review, youtube-stats.
-  2. OFF-PAGE AUTHORITY (the real US-ranking gate, still not started): the linkable-data-study
-     articles ("we analyzed 50,000 channels and here's what we found about thumbnails...") built
-     from our proprietary cache/registry data. This is what unlocks the authority-gated head
-     terms (adsense, analytics, what-is-seo, keyword-tool). See the project memory
-     project_linkable_data_studies. Blocked in part on moat item #3 (time-series snapshots),
-     which the user confirmed must be built regardless of priority order (see above); not started.
-  Re-check the US positions of the 9 previously-shipped pages plus the 4 new-guide posts in GSC
-  in ~2-4 weeks to measure movement (FAQ rich results + CTR + freshness); head terms will not
-  move without track 2.
+- [DONE 2026-07-13] The full ranked-by-impressions target-page table above is now 100% shipped.
+  Last four (money-calculator, competitor-analysis, vidiq-review, youtube-stats) done same day,
+  each with full top-10 competitor research per page (not shortcuts, see the entries above and
+  the git log for commits cbfa79a0b and 366630b8f). youtube-stats also got a real trust-bug fix
+  (the whole country/category family was falsely claiming daily/24-hour refresh when the job is
+  deliberately monthly for quota reasons) plus a zero-quota-cost sort toggle and a sourced
+  history section. All 4 country pages' titles then got a second pass (US/UK dropped the
+  "USA"/"UK" abbreviation for the full country name; Canada/Australia gained the missing "in"),
+  each backed by 10 real competitor titles, not assumption. Both commits built, pushed, verified
+  live by fetching the actual title tags post-deploy.
+
+## New content initiative — IN PROGRESS (started 2026-07-13)
+
+Topic research done (Reddit-style question mining + AI-answer clustering; no GSC export
+needed yet). 5-topic queue approved, #2 (monetization timeline) dropped as already covered
+by free-subs/partner-program/watch-hours. Remaining queue after #1: shorts-vs-long-form,
+too-late-to-start-youtube, restart-youtube-channel.
+
+- [WRITTEN 2026-07-13, NOT BUILT/PUSHED] blog/youtube-ai-policy ("The 2026 YouTube AI
+  Crackdown"). Targets the #1 conversational AI-assistant fear query ("will AI content get
+  my channel demonetized"). Research verified against PRIMARY sources (both YouTube Help
+  pages fetched directly: policy 1311392, disclosure 14328491), enforcement wave confirmed
+  via TheNextWeb + multiple outlets. UNIQUE angle no competitor has: debunks the fake
+  "30% commentary" / "20% script variation" thresholds circulating as fact across the
+  low-authority SERP (verified they appear in no YouTube policy). 9 FAQs with FAQPage
+  schema (mirror verified word-for-word programmatically), 2 external links to the primary
+  YouTube Help pages, CtaCard mid-article (channel-audit), creative final H2 ("AI Was
+  Never the Violation"). Inbound links added from 4 genuine spots: cash-cow (Staying
+  Compliant), faceless-channel-ideas, youtube-shorts-pay, youtube-partner-program (reused-
+  content warning). seoMeta (58/148 chars, measured), sitemap, llms.txt, postsMeta all
+  done. Verified: parses, zero banned words, 35 paragraphs all <=5 rendered lines, dev
+  200. OPEN: cover image needed (youtube-ai-policy-cover.jpg, user-supplied, 16:9), then
+  build + push on go-ahead.
+
+## NEXT: new content initiative details (original notes, 2026-07-13)
+
+**The business context driving this:** sessions dropped from ~50-60/day to ~30-40/day after
+cutting the low-tier programmatic pages (see "Progress log" above, 2026-07-09). That cut was
+correct for the Mediavine tier-1 requirement, but it means we now need new content to rebuild
+volume, not just rank-fix existing pages.
+
+**The user's proposed angle:** since AI-assistant referrals are our #1 traffic source (see
+project_llms_txt_traffic memory), find out what people actually type into AI assistants
+(ChatGPT, Perplexity, etc.) as long conversational questions in this niche, and write topics
+targeting that phrasing directly, rather than guessing from traditional keyword tools.
+
+**Checked first, before doing any research: do we have real data on this, or would it be a
+guess?** Investigated the codebase directly (not assumed). Verdict: **no real data source
+exists in this repo.** GA4 is wired (client-side only, tag `G-MFMVT6Q5RB`) and auto-detects
+referrer *domain* (chatgpt.com vs perplexity.ai), but that data lives only in Google's GA4
+console, not in any local export/table, and even GA4 cannot see the actual chat/search query
+text someone typed, only the domain they arrived from. No server-side referrer logging exists
+anywhere in routers/*.py. The only attribution capture is `UTM_KEYS` in routers/auth.py, which
+only fires on first signup via explicit UTM query params, which AI assistants generally don't
+attach when they cite/link out. So the oft-cited "57% of sessions from AI-assistant referrals"
+figure has no traceable in-repo source; it was almost certainly read once directly from the GA4
+web console, not a live pipeline. Bottom line: we cannot see literal private LLM query logs,
+full stop, and should not pretend otherwise.
+
+**Three real, executable alternatives identified, none started yet:**
+1. **Our own GSC query data** — the actual, already-typed conversational queries landing on our
+   existing content today. Highest-signal option we actually have, but needs a fresh Search
+   Console export from the user (same manual pull that kicked off the tier-1 push originally).
+2. **Reddit/forum research** — real people posting long, multi-clause questions about YouTube
+   growth/monetization, often literally quoting what they asked an AI assistant. Executable via
+   WebSearch/WebFetch right now, no export needed.
+3. **AI Overview "People also ask" clustering** — Google's own AI answer boxes reveal the exact
+   question phrasing it associates with a topic in this niche. Also executable right now.
+
+**Next chat should:** ask the user which of the three to start with (or all three), then run
+the same rigor as the rest of this doc: full research before writing, present the topic list
++ coverage matrix before drafting, follow the standard publishing workflow (source + prerender
+route + sitemap + llms.txt + build + push, see feedback_regenerate_postsmeta_on_add and the
+"Publishing workflow for new public routes" rules in CLAUDE.md).
+
+Separately, still open and unblocked by the above: OFF-PAGE AUTHORITY (the linkable-data-study
+articles built from proprietary cache/registry data, see project_linkable_data_studies) remains
+the real unlock for authority-gated head terms, still not started, partly gated on moat item #3
+(time-series snapshots), which the user has confirmed must be built regardless of priority order.
 
 ## Hub enrichment — READ THIS BEFORE TOUCHING A HUB
 
