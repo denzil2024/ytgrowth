@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-CP2iHdEU.js";import{a as t,o as n}from"./index-DYJEf2vn.js";var r=e();function i(){let{countrySlug:e}=n();return(0,r.jsx)(t,{to:e?`/youtube-stats/country/${e}`:`/youtube-stats`,replace:!0})}export{i as default};

@@ -45,7 +45,10 @@ Mediavine. Journey fits our current size; full Mediavine does not yet.
 
 ## The two blockers before we apply
 
-1. **Thin content cleared** (programmatic pages handled).
+1. **Thin content NOT cleared yet.** The worst offenders (granular combo pages) are deleted,
+   but the kept hubs still need enrichment (2 of ~33 done: finance, gaming). This is PENDING,
+   intentionally paused while we focus on new posts and the tier-1 ranking push. We will come
+   back and expand hubs bit by bit.
 2. **Tier-1 (US/UK/CA/AU) is the plurality of traffic**, sustained ~60 days before we apply.
 
 ## Progress log
@@ -219,6 +222,11 @@ do well, so lean in. On every page:
   page fully close it?
 
 ### How each page gets fixed (one page at a time, no blind work)
+
+The full reusable checklist (research, content, schema, metadata, internal
+links, verification, deploy) now lives in `SEO-OPTIMIZATION-CHECKLIST.md` at
+the repo root. Use it for every weekly optimization pass. The summary below
+stays as the short version.
 
 1. Audit against the live top-ranking pages FIRST; build a coverage matrix; present it.
    Check for intent/question gaps too (see the lens above), not just missing sections.
@@ -485,22 +493,45 @@ The user explicitly asked these be logged so a future chat does not repeat them.
     eyebrow tracking) by copying an existing sibling page that itself had the same undetected
     drift. Check new UI against the WRITTEN design-language spec directly, not only against
     what already shipped, since the already-shipped page can itself be off-spec.
-- [NEXT: START HERE in the next chat] All four new-guide posts are written and deployed. The
-  remaining low-value not-touched on-page rows: money-calculator, competitor-analysis,
-  vidiq-review, youtube-stats. Two forward tracks:
-  1. Remaining shortlist items: **how often should you post on youtube** -> fold into
-     best-time-to-post (a standalone loses to vidIQ's "we analyzed 5M channels" data post), not
-     yet done. SKIP remain skipped: best video editing software for youtube, ai tools for
-     youtube.
+- [DONE 2026-07-13, NOT BUILT/PUSHED] Folded "how often should you post on youtube" into
+  best-time-to-post. Researched the live top-10, found the sources contradict each other (one
+  claims 2x/week grows 3x faster, a separate creator test found no lift from 3x/week), resolved
+  it honestly (quality-held-constant vs. diluted) instead of picking a side. Checked first
+  whether we have real proprietary channel/upload-frequency data to back a claim: confirmed we
+  do NOT (subscriber counts get overwritten not logged, ChannelMetrics is dead code, upload
+  cadence is computed live and discarded, Milestone is too sparse). User committed to building
+  moat item #3 (time-series snapshots) plus manual video sampling regardless, but that is
+  separate future infrastructure work, not blocking, not started.
+  New H2 "How Often Should You Post on YouTube?" + frequency-by-content-type table + channel-
+  stage guidance + break-risk answer. FAQ expanded 6 -> 8 (added a `faqs` array, this post never
+  had FAQPage schema before). Full verification and cleanup pass, each caught a real gap:
+  paragraphs measured via actual rendered height (not char-count guessing), 4 paragraphs found
+  running 6-9 lines and split. Internal links: was down to 1 inbound link site-wide, added 5 from
+  genuinely on-topic passages (how-to-start-a-youtube-video, more-views-on-youtube,
+  youtube-channel-not-growing, youtube-algorithm, youtube-shorts-algorithm) + 1 outbound from the
+  new section, both directions per the method. Metadata: seoMeta.js title/description updated
+  (description was also over the 155-char guideline, trimmed), sitemap lastmod bumped, llms.txt
+  updated, excerpt (feeds JSON-LD description + visible dek, separate from seoMeta) updated,
+  readTime corrected 12->14 after the content grew. Schema verified end to end: FAQPage
+  Q&A mirrors visible text word-for-word, dateModified reads the new `updated` field correctly.
+  Produced two reusable artifacts from this pass: `SEO-OPTIMIZATION-CHECKLIST.md` (repo root,
+  the full reusable weekly process) and `frontend/scripts/verify/check-blog-paragraphs.mjs` (real
+  rendered-line checker, replaces eyeballing character counts). NOT built, NOT pushed.
+
+- [NEXT: START HERE in the next chat] Build + push the best-time-to-post update above once
+  reviewed. Then two forward tracks remain:
+  1. Remaining shortlist: fold "how often should you post" is now done (above). SKIP remain
+     skipped: best video editing software for youtube, ai tools for youtube. Untouched low-value
+     on-page rows: money-calculator, competitor-analysis, vidiq-review, youtube-stats.
   2. OFF-PAGE AUTHORITY (the real US-ranking gate, still not started): the linkable-data-study
      articles ("we analyzed 50,000 channels and here's what we found about thumbnails...") built
      from our proprietary cache/registry data. This is what unlocks the authority-gated head
      terms (adsense, analytics, what-is-seo, keyword-tool). See the project memory
-     project_linkable_data_studies. User confirmed 2026-07-11: rank the high-impression pages
-     on-page FIRST (now done), THEN build the data-study engine.
-  Re-check the US positions of the 9 previously-shipped pages plus these 4 new ones in GSC in
-  ~2-4 weeks to measure movement (FAQ rich results + CTR + freshness); head terms will not move
-  without track 2.
+     project_linkable_data_studies. Blocked in part on moat item #3 (time-series snapshots),
+     which the user confirmed must be built regardless of priority order (see above); not started.
+  Re-check the US positions of the 9 previously-shipped pages plus the 4 new-guide posts in GSC
+  in ~2-4 weeks to measure movement (FAQ rich results + CTR + freshness); head terms will not
+  move without track 2.
 
 ## Hub enrichment — READ THIS BEFORE TOUCHING A HUB
 
