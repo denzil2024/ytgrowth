@@ -2,6 +2,7 @@
 // and card excerpt. Keeps <title> <=60 and meta description <=155 for clean
 // SERP display without touching article copy. Consumed in BlogPost.jsx.
 export const BLOG_SEO = {
+  "shorts-vs-long-form": { title: "Do YouTube Shorts Hurt Your Channel? Honest 2026 Answer", description: "YouTube says Shorts cannot hurt long-form. A 250-channel study measured declines. An 18,000-channel dataset says niche decides. The honest answer." },
   "youtube-ai-policy": { title: "YouTube AI Demonetization 2026: Real Rules vs Made-Up Ones", description: "What YouTube's inauthentic content policy says, who the 2026 AI crackdown hit, the fake 30% rule creators keep repeating, and how to stay monetized." },
   "best-youtube-mic": { title: "Best Microphone for YouTube 2026: 12 Picks for Every Budget", description: "The best microphone for YouTube in 2026, from $50 to $400. Specific picks for USB, XLR, wireless, and on-camera, with prices and who each is for." },
   "youtube-banner-size": { title: "YouTube Banner Size 2026: Dimensions & Safe Zone", description: "The exact 2560x1440 YouTube banner size, the 1546x423 safe zone that decides what mobile shows, and a free tool that previews the crop before you upload." },

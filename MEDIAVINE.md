@@ -533,8 +533,26 @@ The user explicitly asked these be logged so a future chat does not repeat them.
 
 Topic research done (Reddit-style question mining + AI-answer clustering; no GSC export
 needed yet). 5-topic queue approved, #2 (monetization timeline) dropped as already covered
-by free-subs/partner-program/watch-hours. Remaining queue after #1: shorts-vs-long-form,
-too-late-to-start-youtube, restart-youtube-channel.
+by free-subs/partner-program/watch-hours. Remaining queue: too-late-to-start-youtube, restart-youtube-channel.
+
+- [WRITTEN 2026-07-14, NOT BUILT/PUSHED] blog/shorts-vs-long-form ("Do YouTube Shorts Hurt
+  Your Channel? The Honest 2026 Answer"). Second of the queue. Research: 10 competitors
+  deep-fetched (not just search summaries; user called out an earlier 6-page shortcut and a
+  too-shallow outline, both corrected). Primary-source verified: YouTube's own recommendations
+  Help page (16559651, direct quotes), Rene Ritchie + Todd Beaupré exact quotes, Beaupré's Aug
+  2022 cross-format recommendation announcement, arXiv 250-channel study (with its design
+  limitation stated honestly), AIR 18,000-channel niche dataset (correlational caveat kept),
+  March 31 2025 Shorts view-count change (engaged views distinction). Differentiator: the only
+  page reconciling the official "no harm" position with the academic decline data and the
+  niche-dependent dataset; niche table is the centerpiece. 14 sections, 9 FAQs (mirror verified
+  programmatically), CtaCard mid-article (Outliers, framed as Shorts-as-topic-validation).
+  Consistency fix shipped alongside: grow-youtube-channel's 1:3 Shorts-heavy ratio contradicted
+  the new 25-40% data, reconciled with a launch-tactic qualifier + link rather than leaving two
+  pages disagreeing. Inbound links from 4 older posts (shorts-algorithm, shorts-pay,
+  watch-hours, grow-youtube-channel) + 1 outbound to youtube-ai-policy on the mass-clipping
+  passage. seoMeta (55/146 measured), sitemap, llms.txt, postsMeta done. Verified: parses,
+  zero banned words, all 49 paragraphs <=5 rendered lines, dev 200. OPEN: cover image needed
+  (shorts-vs-long-form-cover.jpg, 16:9, user-supplied), then build + push on go-ahead.
 
 - [WRITTEN 2026-07-13, NOT BUILT/PUSHED] blog/youtube-ai-policy ("The 2026 YouTube AI
   Crackdown"). Targets the #1 conversational AI-assistant fear query ("will AI content get
