@@ -533,9 +533,38 @@ The user explicitly asked these be logged so a future chat does not repeat them.
 
 Topic research done (Reddit-style question mining + AI-answer clustering; no GSC export
 needed yet). 5-topic queue approved, #2 (monetization timeline) dropped as already covered
-by free-subs/partner-program/watch-hours. Remaining queue: too-late-to-start-youtube, restart-youtube-channel.
+by free-subs/partner-program/watch-hours. Remaining queue: restart-youtube-channel
+("delete and start over vs rebrand"), research not started.
 
-- [WRITTEN 2026-07-14, NOT BUILT/PUSHED] blog/shorts-vs-long-form ("Do YouTube Shorts Hurt
+- [DEPLOYED 2026-07-15, commit 9f997cfd9] blog/too-late-to-start ("Is It Too Late to Start
+  a YouTube Channel? The Honest 2026 Answer"). Third of the queue. Honest-odds centerpiece
+  (90% six-month dropout, disputed 8-15.5mo subscriber averages presented as a disagreement,
+  top-tier view concentration), plus the four intent-space gaps the user pushed for: money
+  timeline, YouTube-vs-TikTok compounding argument, "am I too old" treatment, verified named
+  example only (Vanessa Kanbi; anonymous Medium case studies rejected). Primary sources:
+  YouTube Help recommendations page + Neal Mohan 2026 letter (Hype feature, $100B/4yr,
+  200B daily Shorts views). 9 mirrored FAQs, 3 tables + profile bullets (added after the
+  user flagged the draft as plain prose), intro rewritten + 10-fix flow pass on user review.
+  4 inbound links (grow-youtube-channel, youtube-video-ideas, free-subs, youtube-niche).
+  Live-verified, IndexNow-pinged. PROCESS RULES from this stretch (user-flagged): outlines
+  from coverage matrix + full intent space, never a habitual section count (flagged twice,
+  memory feedback_no_template_section_counts); check every draft for tables/bullets before
+  presenting; proofread for flow and comma chains unprompted.
+
+- Also this stretch: Bing/AI-citation infrastructure. IndexNow key live
+  (8d8a60f8a4407e834e20f01752dba5c9.txt) + all 114 sitemap URLs submitted (202), sitemap
+  submitted in Bing Webmaster Tools by the user. Fixed ALL out-of-range titles/descriptions
+  site-wide: 7 blog posts missing seoMeta entries (f1fea1738) + 26 non-blog routes (tools,
+  youtube-stats family incl. dropping the " | YTGrowth" suffix, /about; 7e291b59a). Full-dist
+  sweep now zero offenders (entity-decoded measurement). Bing Index tab still shows stale
+  pre-07-11 errors on some URLs until recrawl; live HTML verified clean incl. as bingbot.
+  SECURITY (0d5fa7218): a 94MB WordPress client-site backup incl. real wp-config.php sat in
+  frontend/public/wordpress since 07-12 and was published via wholesale dist staging on
+  07-13; removed from repo + live site, backup moved to Desktop/wordpress-backup-recovered.
+  OPEN: user must rotate that WordPress DB password; file remains in git history unless
+  purged (BFG/filter-repo, user decision).
+
+- [DEPLOYED 2026-07-14, commit 3aed3002d] blog/shorts-vs-long-form ("Do YouTube Shorts Hurt
   Your Channel? The Honest 2026 Answer"). Second of the queue. Research: 10 competitors
   deep-fetched (not just search summaries; user called out an earlier 6-page shortcut and a
   too-shallow outline, both corrected). Primary-source verified: YouTube's own recommendations
