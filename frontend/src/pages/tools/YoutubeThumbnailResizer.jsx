@@ -288,7 +288,7 @@ export default function YoutubeThumbnailResizer() {
   const preset = useMemo(() => PRESETS.find(p => p.id === presetId) || PRESETS[0], [presetId])
 
   useEffect(() => {
-    document.title = 'YouTube Thumbnail Resizer 2026: Free Image & Size Converter | YTGrowth'
+    document.title = 'YouTube Thumbnail Resizer 2026: Free Image & Size Converter'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()

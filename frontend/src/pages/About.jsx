@@ -235,7 +235,7 @@ export default function About() {
   useStyles()
   useEffect(() => {
     document.title = 'About YTGrowth'
-    const desc = 'About YTGrowth: an independent YouTube research and optimization studio founded by Denzil Otieno on one idea, that better information beats more of it. Meet the founder and the philosophy behind the product.'
+    const desc = 'About YTGrowth: an independent YouTube research and optimization studio founded by Denzil Otieno on one idea, that better information beats more of it.'
     let tag = document.querySelector('meta[name="description"]')
     if (!tag) { tag = document.createElement('meta'); tag.setAttribute('name', 'description'); document.head.appendChild(tag) }
     tag.setAttribute('content', desc)

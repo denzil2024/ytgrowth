@@ -165,7 +165,7 @@ export default function YoutubeStatsCountry() {
 
   useEffect(() => {
     if (!country) return
-    document.title = country.seoTitle + ' | YTGrowth'
+    document.title = country.seoTitle
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()

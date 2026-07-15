@@ -369,7 +369,7 @@ export default function YoutubeVideoIdeasGenerator() {
   const urlInitRef = useRef(false)
 
   useEffect(() => {
-    document.title = 'YouTube Video Ideas Generator 2026: Free Topic & Content Idea Tool'
+    document.title = 'YouTube Video Ideas Generator 2026: Free Topic Ideas'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()

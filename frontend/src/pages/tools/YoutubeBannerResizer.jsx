@@ -325,7 +325,7 @@ export default function YoutubeBannerResizer() {
   const device = useMemo(() => DEVICES.find(d => d.id === deviceId) || DEVICES[0], [deviceId])
 
   useEffect(() => {
-    document.title = 'YouTube Banner Resizer 2026: Free Safe Zone Preview Tool | YTGrowth'
+    document.title = 'YouTube Banner Resizer 2026: Free Safe Zone Preview Tool'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()

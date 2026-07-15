@@ -83,7 +83,7 @@ const META_BY_ROUTE = {
   },
   '/tools': {
     title:       'Free YouTube Tools 2026: Calculators, Generators & Analyzers',
-    description: 'Every free YTGrowth tool in one place: YouTube money calculators, title, description, tag and hashtag generators, thumbnail tester, keyword research, channel stats, and more. No login.',
+    description: 'Every free YTGrowth tool in one place: money calculators, title, tag and hashtag generators, thumbnail tester, keyword research, and channel stats. No login.',
   },
   '/tools/youtube-money-calculator': {
     title:       'YouTube Money Calculator 2026: Earnings by Niche & Country',
@@ -94,15 +94,15 @@ const META_BY_ROUTE = {
     description: 'Free YouTube subscriber money calculator. Estimate earnings, ad revenue, and pay per subscriber. View-per-sub ratios, niche CPM, monthly and yearly income.',
   },
   '/tools/youtube-channel-stats-checker': {
-    title:       'YouTube Channel Stats Checker 2026: Free Live Statistics & Analytics',
+    title:       'YouTube Channel Stats Checker 2026: Free Live Statistics',
     description: 'Free YouTube channel stats checker. Live subscriber count, total views, monthly uploads, and engagement for any public channel. No login.',
   },
   '/tools/youtube-keyword-research': {
-    title:       'Free YouTube Keyword Research Tool 2026: Competition & Volume',
+    title:       'Free YouTube Keyword Research Tool 2026: Competition Data',
     description: 'Free YouTube keyword research tool. See the real competition for any keyword: ranking channel size, view ceiling, and how crowded the term is. No login.',
   },
   '/tools/youtube-thumbnail-downloader': {
-    title:       'YouTube Thumbnail Downloader 2026: Free HD Image Grabber & Saver',
+    title:       'YouTube Thumbnail Downloader 2026: Free HD Grabber',
     description: 'Free YouTube thumbnail downloader and grabber. Download or get any thumbnail from a YouTube video URL in HD, Max Res, JPG, or PNG. No watermark, no signup.',
   },
   '/tools/youtube-thumbnail-resizer': {
@@ -111,18 +111,18 @@ const META_BY_ROUTE = {
   },
   '/tools/youtube-banner-resizer': {
     title:       'YouTube Banner Resizer 2026: Free Safe Zone Preview Tool',
-    description: 'Free YouTube banner resizer with a live safe zone preview. Export the exact 2560x1440 spec and see what mobile, desktop, and TV viewers will actually see before you upload.',
+    description: 'Free YouTube banner resizer with a live safe zone preview. Export the exact 2560x1440 spec and see what mobile, desktop, and TV viewers get before you upload.',
   },
   '/tools/youtube-channel-name-generator': {
-    title:       'YouTube Name Generator 2026: Free Channel Name Ideas for YouTubers',
+    title:       'YouTube Channel Name Generator 2026: Free Name Ideas',
     description: 'Free YouTube channel name generator. 60+ creative name ideas for YouTubers, vloggers, and gaming channels. No signup, no AI hallucinations.',
   },
   '/tools/youtube-video-ideas-generator': {
-    title:       'YouTube Video Ideas Generator 2026: Free Topic & Content Idea Tool',
+    title:       'YouTube Video Ideas Generator 2026: Free Topic Ideas',
     description: 'Free YouTube video ideas generator. 90+ proven content idea formats across 9 categories. No signup, no AI hallucinations, instant results.',
   },
   '/tools/youtube-title-generator': {
-    title:       'YouTube Title Generator 2026: Free Title Ideas + CTR Analyzer',
+    title:       'YouTube Title Generator 2026: Free Ideas + CTR Analyzer',
     description: 'Free YouTube title generator and analyzer. Get a dozen click-worthy title ideas, then score any title on length, numbers, power words, and keyword fit.',
   },
   '/tools/youtube-shorts-money-calculator': {
@@ -150,7 +150,7 @@ const META_BY_ROUTE = {
     description: 'Free YouTube thumbnail tester. Compare two thumbnails side by side at the real feed size, on mobile and suggested. Pick the winner before you post.',
   },
   '/youtube-stats': {
-    title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
+    title:       'Top YouTube Channels by Subscribers 2026: Live Statistics',
     description: 'Top YouTube channels and creators ranked by subscriber count across 14 niches. Free statistics, refreshed monthly, no signup.',
   },
 }
@@ -160,7 +160,7 @@ const META_BY_ROUTE = {
  * runtime React page exactly. */
 for (const cat of CATEGORY_META) {
   META_BY_ROUTE[`/youtube-stats/${cat.id}`] = {
-    title:       `${cat.seoTitle} | YTGrowth`,
+    title:       cat.seoTitle,
     description: cat.seoDescription,
   }
 }
@@ -169,7 +169,7 @@ for (const cat of CATEGORY_META) {
  * shared country metadata. */
 for (const country of COUNTRY_META) {
   META_BY_ROUTE[`/youtube-stats/country/${country.id}`] = {
-    title:       `${country.seoTitle} | YTGrowth`,
+    title:       country.seoTitle,
     description: country.seoDescription,
   }
 }
