@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import {
   Gift,
   LogOut,
@@ -71,6 +71,12 @@ export default function Dashboard() {
   const [nav,     setNav]    = useState('Overview')
   const [selectedVideoId, setSelectedVideoId] = useState(null)
   const [analyzingAI, setAnalyzingAI] = useState(false)
+  // analyzed_at at the moment the current audit run started. The completion
+  // poll accepts insights ONLY when analyzed_at moved past this baseline;
+  // "insights !== null" alone is not completion, because the backend keeps
+  // the PREVIOUS audit in the DB while the new one runs, and a poll could
+  // read it back and end the progress card on stale results.
+  const auditBaselineRef = useRef(undefined)
   const [auditStarting, setAuditStarting] = useState(false)  // post-click, pre-confirm: no full-page swap until the run is allowed
   const [reAuditError, setReAuditError] = useState('')
   const [refreshingStats, setRefreshingStats] = useState(false)
@@ -263,7 +269,10 @@ export default function Dashboard() {
           try { sessionStorage.removeItem('ytg_pending_plan') } catch {}
           openCheckout(pending)
         }
-        if (d.insights === null) setAnalyzingAI(true)
+        if (d.insights === null) {
+          auditBaselineRef.current = d.analyzed_at ?? null
+          setAnalyzingAI(true)
+        }
         // Mark genuinely new users (no audit yet) as in onboarding. Only
         // they ever see the getting-started flow; established users never
         // get the flag, so the flow never spams them.
@@ -475,7 +484,13 @@ export default function Dashboard() {
       fetch('/auth/data', { credentials: 'include' })
         .then(r => r.json())
         .then(d => {
-          if (d.insights !== null) {
+          // Completion = fresh insights, not just any insights. A poll can
+          // read back the PREVIOUS audit (the backend never persists null
+          // insights, so the old audit stays in the DB while the new run is
+          // in flight). Accepting that ended the card in ~4s on stale data.
+          const isFresh = d.insights !== null
+            && (d.analyzed_at ?? null) !== auditBaselineRef.current
+          if (isFresh) {
             setData(d)
             setAuditFinishing(true)
             clearInterval(interval)
@@ -913,6 +928,7 @@ export default function Dashboard() {
                       // run is allowed, so a gated user never sees the progress
                       // card flash before the paywall.
                       if (r.ok) {
+                        auditBaselineRef.current = data?.analyzed_at ?? null
                         setAnalyzingAI(true)
                         window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
                         return
@@ -1022,6 +1038,7 @@ export default function Dashboard() {
                           // server confirms the re-audit is allowed, so a gated
                           // user never sees the view flash before the paywall.
                           if (r.ok) {
+                            auditBaselineRef.current = data?.analyzed_at ?? null
                             setAnalyzingAI(true)
                             setData(prev => ({ ...prev, insights: null }))
                             window.dispatchEvent(new CustomEvent('ytg:credits-changed'))

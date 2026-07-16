@@ -1,4 +1,4 @@
-/* AuditProgress, premium full-screen-card audit experience.
+/* AuditProgress, staged audit-progress card.
 
    Replaces the previous "Running AI audit…" spinner with a staged
    progress card that explains what's happening while Claude is
@@ -9,6 +9,10 @@
    passes done=true so the user always sees the "Almost ready..."
    moment land.
 
+   Chassis mirrors .ytg-card (editorial system): flat surface, hairline
+   border, radius 0, no shadow, themed via the --yd-* variables so the
+   light/dark toggle covers it. Accent is gold; green marks done stages.
+
    Props:
      done   , flips true when the parent has the insights payload
      onDone , optional callback fired once the progress bar reaches
@@ -17,13 +21,6 @@
 */
 
 import { useEffect, useRef, useState } from 'react'
-
-const C = {
-  red: '#c9a030', redDeep: '#a50f07',
-  text1: '#14130f', text2: '#6b6862', text3: '#6b6862',
-  border: 'rgba(20,19,15,0.08)', borderSoft: 'rgba(20,19,15,0.06)',
-  green: '#2d7a4f', greenSoft: 'rgba(22,163,74,0.16)',
-}
 
 const STAGES = [
   {
@@ -128,48 +125,38 @@ export default function AuditProgress({ done = false, onDone }) {
     <div className="ap-wrap">
       <style>{`
         .ap-wrap {
-          position: relative;
-          background: linear-gradient(180deg,var(--yd-surface) 0%,var(--yd-surface) 100%);
-          border: 1px solid ${C.border};
-          border-radius: 22px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(20,19,15,0.04);
-          padding: 30px 34px 28px;
+          background: var(--yd-surface);
+          border: 1px solid var(--yd-line);
+          border-radius: 0;
+          box-shadow: none;
+          padding: 28px 32px;
+          margin-bottom: 24px;
           font-family: 'Barlow', system-ui, sans-serif;
-          overflow: hidden;
           animation: apIn 0.4s cubic-bezier(0.2, 0.7, 0.3, 1);
-          max-width: 640px; width: 100%;
-          margin: 0 auto;
         }
-        .ap-wrap::before {
-          content: '';
-          position: absolute; top: 0; left: 0; right: 0; height: 3px;
-          background: linear-gradient(90deg, ${C.red} 0%, #fca5a5 50%, ${C.red} 100%);
-          background-size: 200% 100%;
-          animation: apSlide 1.8s linear infinite;
-        }
-        @keyframes apSlide { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
         @keyframes apIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
-        @keyframes apPulse { 0%, 100% { transform: scale(1) } 50% { transform: scale(1.08) } }
-        @keyframes apSpin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+        @keyframes apDot { 0%, 100% { opacity: 1 } 50% { opacity: 0.35 } }
+        @keyframes apChip { 0%, 100% { opacity: 1 } 50% { opacity: 0.72 } }
 
         .ap-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
-          text-transform: uppercase; color: ${C.red};
-          margin-bottom: 14px;
+          font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+          text-transform: uppercase; color: var(--yd-gold-ink);
+          margin-bottom: 10px;
         }
         .ap-eyebrow .ap-dot {
           width: 7px; height: 7px; border-radius: 50%;
-          background: ${C.red};
-          animation: apPulse 1.4s ease-in-out infinite;
+          background: var(--yd-gold);
+          animation: apDot 1.4s ease-in-out infinite;
         }
         .ap-title {
-          font-size: 22px; font-weight: 700; color: ${C.text1};
-          letter-spacing: -0.45px; line-height: 1.25;
+          font-size: 22px; font-weight: 700; color: var(--yd-ink);
+          letter-spacing: -0.5px; line-height: 1.25;
           margin-bottom: 6px;
         }
         .ap-sub {
-          font-size: 14px; color: ${C.text3}; line-height: 1.55;
+          font-size: 14px; font-weight: 400; color: var(--yd-soft);
+          line-height: 1.55; max-width: 560px;
           margin-bottom: 24px;
         }
 
@@ -177,77 +164,71 @@ export default function AuditProgress({ done = false, onDone }) {
           margin-bottom: 24px;
         }
         .ap-track {
-          height: 6px; border-radius: 100px;
-          background: rgba(20,19,15,0.08);
+          height: 6px; border-radius: 0;
+          background: var(--yd-wash2);
           overflow: hidden;
-          position: relative;
         }
         .ap-track-fill {
           height: 100%;
-          background: linear-gradient(90deg, ${C.red} 0%, #fca5a5 100%);
-          border-radius: 100px;
+          background: var(--yd-gold);
           transition: width 0.4s cubic-bezier(0.2, 0.7, 0.3, 1);
-          box-shadow: 0 0 8px rgba(201,160,48,0.35);
         }
         .ap-track-row {
           display: flex; justify-content: space-between; align-items: baseline;
           margin-top: 9px;
         }
         .ap-track-status {
-          font-size: 12px; color: ${C.text2}; font-weight: 600;
-          letter-spacing: -0.1px;
+          font-size: 12.5px; font-weight: 400; color: var(--yd-muted);
         }
         .ap-track-pct {
-          font-size: 13px; color: ${C.text1}; font-weight: 700;
+          font-size: 13px; color: var(--yd-ink); font-weight: 600;
           font-variant-numeric: tabular-nums;
           letter-spacing: -0.2px;
         }
 
         .ap-stages {
-          display: flex; flex-direction: column; gap: 4px;
+          display: flex; flex-direction: column;
         }
         .ap-stage {
           display: flex; align-items: center; gap: 14px;
-          padding: 10px 0;
-          border-top: 1px solid ${C.borderSoft};
-          transition: opacity 0.4s, filter 0.4s;
+          padding: 11px 0;
+          border-top: 1px solid var(--yd-line-lo);
+          transition: opacity 0.4s;
         }
-        .ap-stage:first-child { border-top: none; }
         .ap-stage[data-state="pending"] { opacity: 0.46; }
         .ap-stage[data-state="active"]  { opacity: 1; }
         .ap-stage[data-state="done"]    { opacity: 1; }
         .ap-stage-ico {
-          width: 32px; height: 32px; border-radius: 10px;
+          width: 32px; height: 32px; border-radius: 0;
           display: inline-flex; align-items: center; justify-content: center;
           flex-shrink: 0;
-          transition: background 0.3s, color 0.3s, transform 0.3s;
+          transition: background 0.3s, color 0.3s;
         }
-        .ap-stage[data-state="pending"] .ap-stage-ico { background: rgba(20,19,15,0.06); color: ${C.text3}; }
-        .ap-stage[data-state="active"]  .ap-stage-ico { background: ${C.red}; color: #ffffff; box-shadow: 0 4px 12px rgba(201,160,48,0.35); }
-        .ap-stage[data-state="done"]    .ap-stage-ico { background: ${C.greenSoft}; color: ${C.green}; }
-        .ap-stage[data-state="active"]  .ap-stage-ico-inner { animation: apSpin 1.8s linear infinite; transform-origin: center; }
+        .ap-stage[data-state="pending"] .ap-stage-ico { background: var(--yd-wash); color: var(--yd-muted); }
+        .ap-stage[data-state="active"]  .ap-stage-ico { background: var(--yd-gold); color: var(--yd-on-gold); animation: apChip 1.4s ease-in-out infinite; }
+        .ap-stage[data-state="done"]    .ap-stage-ico { background: var(--yd-green-soft); color: var(--yd-green); }
 
         .ap-stage-text { flex: 1; min-width: 0; }
         .ap-stage-label {
-          font-size: 14px; font-weight: 600; color: ${C.text1};
+          font-size: 14px; font-weight: 600; color: var(--yd-ink);
           letter-spacing: -0.15px; line-height: 1.35; margin-bottom: 2px;
         }
-        .ap-stage[data-state="pending"] .ap-stage-label { color: ${C.text2}; }
+        .ap-stage[data-state="pending"] .ap-stage-label { color: var(--yd-soft); }
         .ap-stage-sub {
-          font-size: 12.5px; color: ${C.text3}; line-height: 1.5;
+          font-size: 12.5px; font-weight: 400; color: var(--yd-muted); line-height: 1.5;
         }
 
         .ap-stage-end {
           flex-shrink: 0;
-          font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+          font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: ${C.text3};
+          color: var(--yd-muted);
         }
-        .ap-stage[data-state="active"] .ap-stage-end { color: ${C.red}; }
-        .ap-stage[data-state="done"]   .ap-stage-end { color: ${C.green}; }
+        .ap-stage[data-state="active"] .ap-stage-end { color: var(--yd-gold-ink); }
+        .ap-stage[data-state="done"]   .ap-stage-end { color: var(--yd-green); }
 
         @media (max-width: 540px) {
-          .ap-wrap { padding: 24px 22px 22px; }
+          .ap-wrap { padding: 22px 20px; }
           .ap-title { font-size: 19px; }
           .ap-stage-sub { display: none; }
         }
@@ -288,7 +269,7 @@ export default function AuditProgress({ done = false, onDone }) {
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                 ) : (
-                  <span className="ap-stage-ico-inner" style={{ display: 'inline-flex' }}>{s.icon}</span>
+                  <span style={{ display: 'inline-flex' }}>{s.icon}</span>
                 )}
               </span>
               <div className="ap-stage-text">

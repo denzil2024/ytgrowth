@@ -1038,10 +1038,18 @@ def get_data(request: Request):
                 row = db.query(UserSession).filter_by(session_id=session_id).first()
                 if row and row.user_data_json:
                     db_data = json.loads(row.user_data_json)
-                    if db_data.get("insights") is not None:
-                        # DB is fresher than this worker's memory — adopt
-                        # the DB copy and converge the in-memory cache so
-                        # the next request on this worker is also fresh.
+                    # Adopt the DB copy ONLY when it is genuinely fresher, i.e.
+                    # its analyzed_at differs from this worker's. During a
+                    # re-audit the DB intentionally keeps the PREVIOUS audit
+                    # (null insights are never persisted), so "DB has insights"
+                    # alone is NOT freshness: adopting on that alone returned
+                    # the old audit on the first 4s poll, ended the progress
+                    # card early, and clobbered the pending state in memory
+                    # while Claude was still running.
+                    if (
+                        db_data.get("insights") is not None
+                        and db_data.get("analyzed_at") != data.get("analyzed_at")
+                    ):
                         data = db_data
                         _user_data[session_id] = data
                         print(f"[/auth/data] synced fresh insights from DB for {session_id[:8]}")
