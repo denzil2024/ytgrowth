@@ -2,6 +2,7 @@
 // and card excerpt. Keeps <title> <=60 and meta description <=155 for clean
 // SERP display without touching article copy. Consumed in BlogPost.jsx.
 export const BLOG_SEO = {
+  "restart-youtube-channel": { title: "Delete Your YouTube Channel and Start Over? 2026 Guide", description: "Almost never delete: subscribers survive any rebrand, a new channel re-earns monetization from zero, and most dead channels have one fixable problem." },
   "too-late-to-start": { title: "Is It Too Late to Start a YouTube Channel? (2026 Answer)", description: "Not too late, but 90% of new channels go silent within six months. The real odds, what changed for and against you in 2026, and who should not start." },
   "cash-cow-youtube-channels": { title: "Cash Cow YouTube Channels: The 2026 Business Model", description: "Cash cow channels still work in 2026, but pure automation is dying. The three production models, real per-video cost math, and the hybrid approach that earns." },
   "how-to-start-a-youtube-video": { title: "How to Start a YouTube Video: The Full 2026 Process", description: "How to start a YouTube video in eight steps, from topic research to upload, plus the first-30-seconds hook science that decides if anyone keeps watching." },
