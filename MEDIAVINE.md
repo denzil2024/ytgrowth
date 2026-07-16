@@ -533,8 +533,28 @@ The user explicitly asked these be logged so a future chat does not repeat them.
 
 Topic research done (Reddit-style question mining + AI-answer clustering; no GSC export
 needed yet). 5-topic queue approved, #2 (monetization timeline) dropped as already covered
-by free-subs/partner-program/watch-hours. Remaining queue: restart-youtube-channel
-("delete and start over vs rebrand"), research not started.
+by free-subs/partner-program/watch-hours. QUEUE COMPLETE 2026-07-16: all four posts
+shipped and live (youtube-ai-policy, shorts-vs-long-form, too-late-to-start,
+restart-youtube-channel). Next content decision is open: either a new topic-research
+round (same conversational-AI-query method, or the GSC-export option from the original
+three), or pivot to the off-page authority track (linkable data studies), or resume
+hub enrichment. Do not pick without surfacing the trade-off.
+
+- [DEPLOYED 2026-07-16, commit 59589aec9] blog/restart-youtube-channel ("Should You
+  Delete Your YouTube Channel and Start Over in 2026?"). Fourth and final queue post.
+  Full SERP cluster deep-read (8 pages fetched: Uppbeat, Ventress, Nakisha Wynn,
+  MakeUseOf, CheckMonetize, Prodvigate, YouTube Help delete/hide page; forums via
+  snippets, TubeBuddy/Quora/BHW 403). Verified mechanics: subscriptions tied to channel
+  ID (rebrand loses nothing); CheckMonetize's "old handle 301 redirects" claim is FALSE,
+  we advise updating links; Google inactive-account policy exempts accounts with videos.
+  Unique sections: diagnose-before-deleting (audit CtaCard), monetization stakes
+  (rebrand keeps YPP vs re-earning 1K/4K), primary-sourced myth-busting. 3 tables +
+  3 bullet lists (structure now checked before presenting, per the plain-prose flag on
+  the previous post). 8 mirrored FAQs. 3 inbound (channel-audit, channel-not-growing,
+  too-late-to-start), 6 outbound + 2 external. Title set per user (typo 2016->2026
+  corrected). Schema verified on rendered page (BlogPosting all fields + BreadcrumbList
+  + FAQPage 8). Live-verified + IndexNow 200 (also re-pinged too-late-to-start, which
+  gained its Mohan-letter external link in the same commit).
 
 - [DEPLOYED 2026-07-15, commit 9f997cfd9] blog/too-late-to-start ("Is It Too Late to Start
   a YouTube Channel? The Honest 2026 Answer"). Third of the queue. Honest-odds centerpiece
