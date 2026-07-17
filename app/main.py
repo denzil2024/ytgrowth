@@ -5,10 +5,29 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 load_dotenv()
+
+
+class HeadSafeHTMLResponse(HTMLResponse):
+    """HTMLResponse that omits the body on HEAD requests, same as Starlette's
+    FileResponse already does. FastAPI's APIRoute does not auto-register HEAD
+    for @app.get like plain Starlette Route does, so the SPA catch-all route
+    below explicitly allows GET and HEAD; this keeps every HTMLResponse it
+    returns spec-correct for HEAD instead of sending a full body. Bing's
+    crawler and URL Inspection tool issue HEAD requests to check accessibility
+    before indexing, and a body-bearing (or previously: 405) HEAD response
+    reads to Bing as the page being broken."""
+    async def __call__(self, scope, receive, send):
+        if scope.get("method", "").upper() == "HEAD":
+            await send({"type": "http.response.start", "status": self.status_code, "headers": self.raw_headers})
+            await send({"type": "http.response.body", "body": b""})
+            if self.background is not None:
+                await self.background()
+            return
+        await super().__call__(scope, receive, send)
 
 
 @asynccontextmanager
@@ -375,7 +394,7 @@ def _rebrand_channelbrain(html: str) -> str:
     return html
 
 
-@app.get("/{full_path:path}")
+@app.api_route("/{full_path:path}", methods=["GET", "HEAD"])
 def serve_frontend(full_path: str, request: Request):
     file = DIST / full_path
     if file.is_file():
@@ -396,11 +415,10 @@ def serve_frontend(full_path: str, request: Request):
     if _norm in _APP_SHELL_ROUTES or _norm.startswith(tuple(r + "/" for r in _APP_SHELL_ROUTES)):
         shell = DIST / "_shell.html"
         if shell.is_file():
-            from fastapi.responses import HTMLResponse
             html = shell.read_text(encoding="utf-8")
             if is_cb:
                 html = _rebrand_channelbrain(html)
-            return HTMLResponse(content=html)
+            return HeadSafeHTMLResponse(content=html)
 
     # Pre-rendered route. scripts/prerender.js writes dist/<path>/index.html
     # for public, indexable pages (the landing page, /blog, every /blog/<slug>,
@@ -411,8 +429,7 @@ def serve_frontend(full_path: str, request: Request):
     prerendered = file / "index.html"
     if file.is_dir() and prerendered.is_file():
         if is_cb:
-            from fastapi.responses import HTMLResponse
-            return HTMLResponse(
+            return HeadSafeHTMLResponse(
                 content=_rebrand_channelbrain(prerendered.read_text(encoding="utf-8"))
             )
         return FileResponse(prerendered)
@@ -428,15 +445,14 @@ def serve_frontend(full_path: str, request: Request):
     status = 404 if norm.startswith("blog/") else 200
 
     # SPA fallback — inject route-specific SEO meta tags.
-    from fastapi.responses import HTMLResponse
     rendered = _render_index_with_meta(full_path)
     if rendered is None:
         if is_cb:
-            return HTMLResponse(
+            return HeadSafeHTMLResponse(
                 content=_rebrand_channelbrain((DIST / "index.html").read_text(encoding="utf-8")),
                 status_code=status,
             )
         return FileResponse(DIST / "index.html", status_code=status)
     if is_cb:
         rendered = _rebrand_channelbrain(rendered)
-    return HTMLResponse(content=rendered, status_code=status)
+    return HeadSafeHTMLResponse(content=rendered, status_code=status)
