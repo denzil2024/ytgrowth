@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 import { useProseStyles } from '../blog/proseStyles.jsx'
+import { brandName } from '../brandHost'
 
 /* Refund Policy. Styled as a single blog post (the .bp-prose editorial
    system). All legal content preserved verbatim. */
@@ -20,7 +21,8 @@ function useBreakpoint() {
 
 export default function Refund() {
   useProseStyles()
-  useEffect(() => { document.title = 'Refund Policy, YTGrowth' }, [])
+  const BRAND = brandName()
+  useEffect(() => { document.title = `Refund Policy, ${BRAND}` }, [BRAND])
   const { isMobile } = useBreakpoint()
 
   return (
@@ -43,7 +45,7 @@ export default function Refund() {
       {/* Body */}
       <section className="bp-section-pad" style={{ padding: isMobile ? '36px 22px 64px' : '64px 48px 96px', background: 'var(--yte-bg)' }}>
         <article className="bp-prose">
-          <p>Because YTGrowth provides a free trial before any payment is required, all purchases are non-refundable. By the time you upgrade, you have already used the product and know exactly what you are paying for.</p>
+          <p>Because {BRAND} provides a free trial before any payment is required, all purchases are non-refundable. By the time you upgrade, you have already used the product and know exactly what you are paying for.</p>
 
           <hr />
 

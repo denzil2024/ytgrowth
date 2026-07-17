@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 import { useProseStyles } from '../blog/proseStyles.jsx'
+import { brandName } from '../brandHost'
 
 /* Terms of Service. Styled as a single blog post (the .bp-prose editorial
    system). All legal content preserved verbatim. */
@@ -20,7 +21,8 @@ function useBreakpoint() {
 
 export default function Terms() {
   useProseStyles()
-  useEffect(() => { document.title = 'Terms of Service, YTGrowth' }, [])
+  const BRAND = brandName()
+  useEffect(() => { document.title = `Terms of Service, ${BRAND}` }, [BRAND])
   const { isMobile } = useBreakpoint()
 
   return (
@@ -43,13 +45,13 @@ export default function Terms() {
       {/* Body */}
       <section className="bp-section-pad" style={{ padding: isMobile ? '36px 22px 64px' : '64px 48px 96px', background: 'var(--yte-bg)' }}>
         <article className="bp-prose">
-          <p>These Terms of Service ("Terms") govern your access to and use of YTGrowth ("Service"). By creating an account or using the Service, you agree to be bound by these Terms.</p>
+          <p>These Terms of Service ("Terms") govern your access to and use of {BRAND} ("Service"). By creating an account or using the Service, you agree to be bound by these Terms.</p>
 
           <hr />
 
           <h2>1. The Service</h2>
-          <p>YTGrowth is an AI-powered YouTube channel analysis platform providing channel insights, competitor analysis, SEO optimization, keyword research, and video optimization tools. Each use of a tool consumes one token from your account balance.</p>
-          <p>YTGrowth uses YouTube API Services. By accessing or using the Service, you also agree to be bound by the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noreferrer">YouTube Terms of Service</a>. Your use of any YouTube data through the Service is subject to those terms and to the <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">Google Privacy Policy</a>.</p>
+          <p>{BRAND} is an AI-powered YouTube channel analysis platform providing channel insights, competitor analysis, SEO optimization, keyword research, and video optimization tools. Each use of a tool consumes one token from your account balance.</p>
+          <p>{BRAND} uses YouTube API Services. By accessing or using the Service, you also agree to be bound by the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noreferrer">YouTube Terms of Service</a>. Your use of any YouTube data through the Service is subject to those terms and to the <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">Google Privacy Policy</a>.</p>
 
           <h2>2. Accounts &amp; Eligibility</h2>
           <p>You must be at least 13 years old to use the Service. By connecting your Google account, you authorize us to access your YouTube channel data and analytics as permitted by the scopes you approve. You are responsible for maintaining the security of your account.</p>
@@ -67,7 +69,7 @@ export default function Terms() {
           <p>Payments are processed by Paddle, our authorised reseller and Merchant of Record. All prices are in USD. Subscription plans are billed monthly or annually in advance.</p>
 
           <h2>5. Refunds &amp; Cancellations</h2>
-          <p>Refund requests submitted within 14 days of purchase will be honoured. Because YTGrowth provides a free trial before any payment is required, by the time you upgrade you have already used the product and know exactly what you are paying for. Paddle, as our Merchant of Record, also reserves the right to issue refunds at their discretion to prevent chargebacks. Full details at <a href="/refund">ytgrowth.io/refund</a>.</p>
+          <p>Refund requests submitted within 14 days of purchase will be honoured. Because {BRAND} provides a free trial before any payment is required, by the time you upgrade you have already used the product and know exactly what you are paying for. Paddle, as our Merchant of Record, also reserves the right to issue refunds at their discretion to prevent chargebacks. Full details in our <a href="/refund">refund policy</a>.</p>
 
           <h2>6. Acceptable Use</h2>
           <ul>

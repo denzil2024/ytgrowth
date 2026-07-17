@@ -15,3 +15,10 @@ export function isChannelBrain() {
 export function supportEmail() {
   return 'royalbluemedia.agency@gmail.com'
 }
+
+/* Brand name for prose (legal pages etc.), host-matched so a Google
+   reviewer rendering channelbrain.online never sees "YTGrowth" in the
+   hydrated page text. */
+export function brandName() {
+  return isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'
+}

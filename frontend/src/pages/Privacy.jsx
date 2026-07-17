@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 import { useProseStyles } from '../blog/proseStyles.jsx'
+import { brandName } from '../brandHost'
 
 /* Privacy Policy. Styled as a single blog post (the .bp-prose editorial
    system: Fraunces serif headings, Barlow body, warm paper, sharp flat
@@ -21,7 +22,8 @@ function useBreakpoint() {
 
 export default function Privacy() {
   useProseStyles()
-  useEffect(() => { document.title = 'Privacy Policy, YTGrowth' }, [])
+  const BRAND = brandName()
+  useEffect(() => { document.title = `Privacy Policy, ${BRAND}` }, [BRAND])
   const { isMobile } = useBreakpoint()
 
   return (
@@ -44,9 +46,9 @@ export default function Privacy() {
       {/* Body */}
       <section className="bp-section-pad" style={{ padding: isMobile ? '36px 22px 64px' : '64px 48px 96px', background: 'var(--yte-bg)' }}>
         <article className="bp-prose">
-          <p>YTGrowth is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights over it.</p>
+          <p>{BRAND} is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights over it.</p>
 
-          <p>YTGrowth uses YouTube API Services. By using YTGrowth you agree to the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noreferrer">YouTube Terms of Service</a>, and your data handled through those services is also governed by the <a href="http://www.google.com/policies/privacy" target="_blank" rel="noreferrer">Google Privacy Policy</a>.</p>
+          <p>{BRAND} uses YouTube API Services. By using {BRAND} you agree to the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noreferrer">YouTube Terms of Service</a>, and your data handled through those services is also governed by the <a href="http://www.google.com/policies/privacy" target="_blank" rel="noreferrer">Google Privacy Policy</a>.</p>
 
           <hr />
 
@@ -78,10 +80,10 @@ export default function Privacy() {
           <p>We do not sell your data to any third party, ever.</p>
 
           <h2>4. Google API Limited Use Disclosure</h2>
-          <p>YTGrowth's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer">Google API Services User Data Policy</a>, including the Limited Use requirements. We only access scopes required to provide the Service and do not use your Google data to serve advertising or for any purpose beyond delivering the features described in this policy.</p>
+          <p>{BRAND}'s use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer">Google API Services User Data Policy</a>, including the Limited Use requirements. We only access scopes required to provide the Service and do not use your Google data to serve advertising or for any purpose beyond delivering the features described in this policy.</p>
 
           <h2>4a. OAuth Scopes We Request</h2>
-          <p>When you sign in with Google, YTGrowth requests the following OAuth scopes. We request only what is necessary to provide the Service:</p>
+          <p>When you sign in with Google, {BRAND} requests the following OAuth scopes. We request only what is necessary to provide the Service:</p>
           <table>
             <thead>
               <tr>
@@ -92,7 +94,7 @@ export default function Privacy() {
             <tbody>
               {[
                 { scope: 'openid', reason: 'Confirms your identity via Google Sign-In.' },
-                { scope: 'https://www.googleapis.com/auth/userinfo.email', reason: 'Retrieves your email address to create and identify your YTGrowth account.' },
+                { scope: 'https://www.googleapis.com/auth/userinfo.email', reason: `Retrieves your email address to create and identify your ${BRAND} account.` },
                 { scope: 'https://www.googleapis.com/auth/userinfo.profile', reason: 'Retrieves your name and profile picture to personalise your dashboard.' },
                 { scope: 'https://www.googleapis.com/auth/youtube', reason: 'Reads your YouTube channel data (videos, titles, descriptions, thumbnails) and allows updating video metadata (title, description, tags) when you use the SEO Studio editor.' },
                 { scope: 'https://www.googleapis.com/auth/yt-analytics.readonly', reason: 'Reads YouTube Analytics data (impressions, CTR, watch time, traffic sources) to power the growth insights on your dashboard. Read-only, we never modify analytics data.' },
@@ -104,7 +106,7 @@ export default function Privacy() {
               ))}
             </tbody>
           </table>
-          <p>You can revoke any of these permissions at any time via <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">Google Account Permissions</a>. Revoking access will disconnect your YouTube channel from YTGrowth.</p>
+          <p>You can revoke any of these permissions at any time via <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">Google Account Permissions</a>. Revoking access will disconnect your YouTube channel from {BRAND}.</p>
 
           <h2>5. Data Security &amp; Protection Mechanisms</h2>
           <p>We take the following technical and organisational measures to protect your data, including sensitive information such as OAuth tokens and YouTube Analytics data:</p>
