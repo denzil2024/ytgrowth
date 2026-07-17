@@ -15,6 +15,11 @@ Last updated: 2026-07-17
   per call (up to 50 items each), so analyzing 100K videos costs roughly
   2,000-10,000 units. search.list stays expensive (100 units/call), use the
   existing caches for keyword-level data wherever possible.
+- SEARCH CAVEAT (2026-07-17): a separate "Search Queries per day" sub-limit of
+  **100 search.list requests/day** was NOT raised with the bump. Studies built
+  on batch endpoints are unaffected; anything search.list-heavy (keyword
+  seeding, SERP sampling) budgets against 100/day until the user's quota-edit
+  request for that sub-limit is approved.
 - Every study must state its quota math before it runs, and every fetch script
   must respect `YT_QUOTA_PAUSED=1`.
 - Publishing follows the standard workflow (source + prerender + sitemap +

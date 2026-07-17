@@ -4,7 +4,7 @@ Read these rules before any code change. They are not suggestions.
 
 ## Quota discipline (hard rule)
 
-This product runs on YouTube Data API v3 with **260,000 units per day** (quota increase granted by Google, confirmed by the user 2026-07-17; previously 10,000). Every search.list call costs **100 units**. Every videos.list / channels.list / playlistItems.list call costs 1 unit. Burning the daily quota locks out every user from login and every feature until midnight Pacific reset.
+This product runs on YouTube Data API v3 with **260,000 units per day** (quota increase granted by Google, confirmed by the user 2026-07-17; previously 10,000). CRITICAL NUANCE discovered 2026-07-17: the project also carries a separate **"Search Queries per day" sub-limit of 100 requests** that Google did NOT raise with the bump, so search.list is effectively capped at ~100 calls/day (the old 10K-units-worth) regardless of the 260K total. Batch endpoints (videos/channels/playlistItems.list) have the full 260K headroom. The user has been pointed at the self-serve quota edit for the search sub-limit; until it is raised, plan search.list work against a 100/day budget. Every search.list call costs **100 units**. Every videos.list / channels.list / playlistItems.list call costs 1 unit. Burning the daily quota locks out every user from login and every feature until midnight Pacific reset.
 
 The codebase has hard-won quota infrastructure shipped over an intense day of work. Do not weaken, remove, or bypass any of it. Specifically:
 
