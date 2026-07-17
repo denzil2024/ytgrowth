@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-CP2iHdEU.js";import{o as t,s as n}from"./index-DPLXlRM5.js";var r=e();function i(){let{niche:e}=n();return(0,r.jsx)(t,{to:e?`/youtube-earnings/${e}`:`/tools/youtube-money-calculator`,replace:!0})}export{i as default};

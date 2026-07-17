@@ -91,6 +91,219 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-demonetization',
+    title: 'Why YouTube Demonetized Your Channel: The 2026 Diagnosis Guide',
+    excerpt: 'The word "demonetized" covers five different problems, a yellow icon, a copyright claim, a strike, a Partner Program suspension, or termination, and each one carries its own fix and its own deadline. Here is how to tell which one hit you, and what YouTube\'s July 2026 update changed underneath it.',
+    date: '2026-07-17',
+    category: CATEGORIES.monetization,
+    cover: '/blog/youtube-demonetization-cover.jpg',
+    coverAlt: 'A creator sitting at a laptop covered in stickers, head in hand, the kind of moment a demonetization notice triggers',
+    author: 'Denzil',
+    readTime: '11 min read',
+    faqs: [
+      { q: 'Does a demonetized video still get views?', a: 'Yes, it still gets views. Demonetization removes or limits ads, but it does not touch the video\'s presence in search or recommendations, since YouTube treats ad suitability and discovery as separate systems, so a yellow icon carries no official reach penalty. Even a suspended channel keeps its videos public, meaning what you lose in the end is the ad revenue, while the audience stays put.' },
+      { q: 'Why was my channel demonetized for no reason?', a: 'There is always a cited reason, YouTube just buries it well. Open Studio and check the email account tied to your channel, since a channel-level suspension names the specific policy behind it, most often reused content or inauthentic content, while a video-level issue shows up in the Content list\'s Restrictions column instead. Finding that citation is step one, because your appeal has to answer it directly.' },
+      { q: 'How long does YouTube demonetization last?', a: 'That depends entirely on which problem you are dealing with. A yellow icon lasts until a human review overturns it, a copyright strike expires after 90 days once you complete Copyright School, and a Partner Program suspension lasts until a successful appeal or a minimum 90-day wait if that appeal fails. Termination is the one that is permanent, unless an appeal against it succeeds.' },
+      { q: 'Can swearing get my channel demonetized?', a: 'Rarely the channel, and usually not even the video. Moderate profanity is compatible with full ads under the advertiser-friendly guidelines, and it is strong profanity used repeatedly, or dropped into the first seconds of a video, that pushes an individual upload to limited ads. Even then it only affects that one video\'s yellow icon, since channel-level suspensions come from content policy violations rather than language.' },
+      { q: 'Does AI content get channels demonetized in 2026?', a: 'Not for being AI specifically. The January 2026 enforcement wave hit channels for mass-produced, templated output, and AI simply happens to be the cheapest way to produce content at that scale, while AI tools used inside a genuinely original production remain fine. The full policy, along with the made-up rules circulating around it, is covered in our YouTube AI policy guide.' },
+      { q: 'What is the difference between the yellow and grey dollar icons?', a: 'Yellow means the video is monetized but running limited or no ads because of an ad-suitability rating you can appeal, while grey means monetization is switched off entirely, whether because you turned it off yourself, the video is not eligible, or your channel is not currently monetizing at all. Think of yellow as a rating problem and grey as a status problem.' },
+      { q: 'Do Content ID claims demonetize my channel?', a: 'No, they do not. A Content ID claim is video-level and fully automated, meaning the rights holder can run ads on that one video and take the revenue, track it, or block it outright, while your channel\'s overall standing stays untouched no matter how many claims accumulate. It is copyright strikes that are genuinely dangerous, since three within 90 days terminates the channel.' },
+      { q: 'Does demonetization hurt my views or reach?', a: 'By policy, no. YouTube states plainly that ad suitability and recommendations run as separate systems, and that neither the disclosure process nor the rating process limits reach. Creators do report view drops after demonetization, though there is no controlled evidence separating a real penalty from the panic-driven upload changes that tend to follow one, so it is fairest to treat reach loss here as unproven.' },
+      { q: 'Can a terminated channel come back?', a: 'Only through a successful termination appeal, which is a different form from the standard monetization appeal. Termination removes the channel entirely and bans you from starting a new one, so the usual 90-day reapplication path does not apply here. A suspension is the recoverable version of this problem, since your channel and videos stay up and YPP re-entry remains possible, which makes knowing which one you are dealing with worth confirming before you act.' },
+      { q: 'How do I find out which video caused my demonetization?', a: 'For a channel-level suspension there is often no single video to point to, since reviewers assess your channel theme, most-viewed videos, newest uploads, and whatever drives your watch time as a whole, which means auditing those same surfaces yourself. For video-level problems it is simpler: sort the Content list by the Restrictions column and every claim, rating, and strike is listed against its video.' },
+    ],
+    content: () => (
+      <>
+        <p>When creators say "demonetized," they are usually describing one of five very different problems: a yellow icon limiting ads on a single video, a copyright claim, a community guidelines strike, a channel-wide suspension from the Partner Program, or the rare full termination. <strong>Each one carries its own fix and its own deadline.</strong></p>
+
+        <p>That word carries so much weight that most advice built around it turns out to be useless, since the fix for a yellow icon does nothing for a suspension, and appealing the wrong problem burns a window you cannot reopen. This guide works as a diagnosis path: find which of the five problems is genuinely yours, then read that section. The 2026 enforcement wave and <strong>YouTube's July 2026 policy clarification</strong> each sit under the specific problem they affect, rather than floating in a general overview.</p>
+
+        <h2>What the Notice Is Telling You</h2>
+
+        <p>YouTube always tells you which problem you have, it just does not say so loudly. The answer sits in three places: the icon column of your Studio Content list, the <strong>Restrictions column</strong> beside it, and whatever landed in the email account tied to your channel. Match what you are seeing against the table below to find your problem number.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What you see</th>
+              <th>What it means</th>
+              <th>Your problem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Yellow dollar icon on a video</td><td>Limited or no ads: that video failed an ad-suitability check</td><td>Problem 1</td></tr>
+            <tr><td>"Copyright claim" under Restrictions</td><td>Content ID matched someone's material; they can take that video's revenue</td><td>Problem 2</td></tr>
+            <tr><td>Copyright strike email</td><td>A rights holder filed a formal takedown; three in 90 days ends the channel</td><td>Problem 2</td></tr>
+            <tr><td>"Your channel is suspended from the YouTube Partner Program"</td><td>A channel-level policy decision, in 2026 usually inauthentic or reused content</td><td>Problem 3</td></tr>
+            <tr><td>Community guidelines strike</td><td>A content rule violation, separate from copyright</td><td>Problem 4</td></tr>
+            <tr><td>Grey dollar icon</td><td>Monetization is off or ineligible: settings, thresholds, or inactivity</td><td>Problem 5</td></tr>
+          </tbody>
+        </table>
+
+        <p>A green icon simply means that video is fine, whatever else is going on with the rest of your channel. YouTube's own <a href="https://support.google.com/youtube/answer/9208564" target="_blank" rel="noopener">monetization icon guide</a> has the full reference, though the icons only name what is wrong; the sections below are where the fixes live.</p>
+
+        <h2>Problem 1: Limited Ads on One Video (the Yellow Icon)</h2>
+
+        <p>This is both the most common problem on this list and the least serious. A yellow icon means YouTube's automated systems rated one video as unsuitable for some or all advertisers under the <strong>advertiser-friendly guidelines</strong>, the usual categories being profanity, violence, adult themes, and sensitive events, while your channel's overall standing stays untouched.</p>
+
+        <p>Since the ratings run on machine classification at upload, they are wrong often enough that appealing has become routine rather than exceptional. The nuance most creators miss is placement rather than presence: <strong>moderate profanity throughout a video is compatible with full ads</strong>, while strong profanity repeated across the runtime, or dropped into the opening seconds, is what tips the rating against you.</p>
+
+        <p>The fix runs in two steps: self-certify accurately at upload, since a consistent, honest record earns your future ratings more trust from the system, and when a rating still looks wrong, <strong>request the human review</strong> sitting in the video's monetization panel. Human decisions stick in both directions, so save that request for videos where you are genuinely confident the rating is wrong, rather than firing it off on reflex.</p>
+
+        <h2>Problem 2: Copyright Claims and Strikes (Two Very Different Things)</h2>
+
+        <p>Copyright produces more demonetization confusion than any other cause on this list, largely because two mechanisms with wildly different stakes get called by the same word. A <strong>Content ID claim</strong> is automated and routine; a <strong>copyright strike</strong> is a formal legal takedown, and it is the one worth taking seriously.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Content ID claim</th>
+              <th>Copyright strike</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Trigger</strong></td><td>Automated match against a rights database</td><td>A rights holder manually files a takedown request</td></tr>
+            <tr><td><strong>What happens</strong></td><td>They monetize, track, or block that one video</td><td>The video comes down; your channel takes a strike</td></tr>
+            <tr><td><strong>Channel damage</strong></td><td>None, however many claims you collect</td><td>Three strikes in 90 days terminates the channel</td></tr>
+            <tr><td><strong>Your move</strong></td><td>Trim or swap the content in Studio, or dispute; the claimant has 30 days to respond</td><td>Ask for a retraction, or file a counter-notification; the strike expires after 90 days with Copyright School</td></tr>
+          </tbody>
+        </table>
+
+        <p>One myth deserves killing here, the fair-use disclaimer. Writing "no copyright infringement intended" in your description, or invoking fair use as a caption, <strong>protects you from nothing</strong>, because fair use is a legal defense argued after the fact rather than a label that prevents a claim from landing in the first place. Content ID matches audio and video fingerprints against a database; it never reads your description at all.</p>
+
+        <p>Music is behind most of these claims. If your videos lean on tracks you never licensed, that is almost certainly where your claims are coming from, and the <a href="/blog/copyright-free-music">copyright-free music guide</a> covers the sources that are genuinely safe and how Content ID treats each one.</p>
+
+        <h2>Problem 3: Channel-Level Suspension (the 2026 Problem)</h2>
+
+        <p>This is the one behind the headlines, an email stating your channel has been suspended from the Partner Program under the <a href="https://support.google.com/youtube/answer/1311392" target="_blank" rel="noopener">channel monetization policies</a>. In 2026 that suspension overwhelmingly cites one of two policies: <strong>reused content</strong>, meaning borrowed material without meaningful original value, or <strong>inauthentic content</strong>, meaning mass-produced and templated output.</p>
+
+        <p>The enforcement history is worth getting straight, since most coverage collapses two separate events into one. In <strong>December 2025</strong>, YouTube terminated Screen Culture and KH Studio, fake-AI-movie-trailer operations with over 2 million combined subscribers, months after a Deadline investigation had already gotten them demonetized. Then in <strong>January 2026</strong>, days after CEO Neal Mohan's letter named "AI slop" a top priority for the year, YouTube removed 16 channels with roughly 35 million subscribers and 4.7 billion views under its spam and deceptive practices policies.</p>
+
+        <p>What matters for an ordinary channel is the pattern underneath all of it: none of these terminations targeted AI as a tool, they targeted <strong>interchangeability</strong>, the quality of a channel whose output could be swapped with a hundred others and nobody would notice the difference. If your own suspension cites inauthentic content, the <a href="/blog/youtube-ai-policy">YouTube AI policy guide</a> breaks down the full policy in depth, including what gets flagged versus what stays safe, and the made-up rules, like the "30 percent commentary" threshold, that circulate as fact but appear nowhere in writing.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Not sure how your channel reads to a reviewer?"
+          sub="The free AI audit reviews your channel the way an outside reviewer would: what looks strong, what looks templated, and what to fix first. No card needed."
+          button="Run a free audit →"
+        />
+
+        <h2>Problem 4: Community Guidelines Strikes</h2>
+
+        <p>Community guidelines strikes run on a separate ladder from copyright, with their own escalation path: a one-time warning for a first violation, then <strong>three strikes within 90 days terminates the channel</strong> outright. Strikes also feed into monetization reviews, since a channel collecting them is visibly failing the "follows YouTube's rules" half of the Partner Program bargain.</p>
+
+        <p>Each strike can be appealed individually, and the calculus is straightforward: appeal when the removal genuinely misread your content, news reporting flagged as violence, education flagged as harmful, and accept the correction quietly when it did not. Strikes expire after 90 days, so the real survival strategy during an active one is <strong>staying compliant</strong> and waiting it out.</p>
+
+        <h2>Problem 5: The Quiet Causes Nobody Writes About</h2>
+
+        <p>Three demonetizations arrive without any drama at all. The first is <strong>inactivity</strong>: YouTube may turn off monetization for channels that have not uploaded a video or posted to the Community tab in six months or more, and the reset is just as quiet, since a single community post is enough to count as activity again, which makes this the most preventable item on the whole list.</p>
+
+        <p>The second is the threshold myth running in reverse. Dropping back below 1,000 subscribers or 4,000 watch hours <strong>does not automatically remove you</strong> from the Partner Program, YouTube says so directly, so if your monetization vanished, the thresholds were never the reason.</p>
+
+        <p>The third is <strong>invalid traffic</strong>, which covers clicking your own ads, asking viewers to click them, or buying traffic that generates fake impressions. This one gets enforced from the AdSense side of the house and can limit or disable ad serving before any YouTube policy is ever cited, so if your revenue dropped to near zero with no Studio notice explaining why, AdSense is where to look.</p>
+
+        <h2>What Changed in July 2026 (and What Did Not)</h2>
+
+        <p>On <strong>July 13, 2026</strong>, YouTube updated its monetization policy language, and if your suspension is recent, this is the wording reviewers are applying. The update names three things: "generic or repetitive" content, meaning videos that look "made with a template, or that may feel repetitive to viewers"; a newly named <strong>"unsatisfying or off-putting content"</strong> category covering material built on emotionally manipulative formulas or shock value; and a hard line on AI personas, where content whose AI avatar "presents itself as a human expert providing advice" on health, legal, financial, or political topics cannot monetize.</p>
+
+        <p>The honest read is that YouTube frames this as clarification rather than new rules, and the underlying policy remains the same inauthentic content standard introduced in July 2025. What genuinely changed is that <strong>the written rules now match what enforcement was already doing</strong> in practice, and the AI-expert ban became explicit for the first time, which matters given that YouTube shipped creator AI avatar tools back in April 2026. The line YouTube drew is a fine one: an avatar can present your content, but it cannot pose as a human authority while doing it.</p>
+
+        <h2>Every Deadline in One Table</h2>
+
+        <p>Demonetization runs on clocks, and missing one converts a recoverable problem into a 90-day wait. These are the windows, from YouTube's own <a href="https://support.google.com/youtube/answer/9564590" target="_blank" rel="noopener">appeal documentation</a> and copyright process.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Situation</th>
+              <th>Window</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Appeal a scheduled suspension before it lands</td><td>7 days from the advance notice</td></tr>
+            <tr><td>Appeal after a suspension takes effect</td><td>21 days</td></tr>
+            <tr><td>YouTube's decision on a monetization appeal</td><td>Within 14 days</td></tr>
+            <tr><td>Re-admission to YPP after a successful appeal</td><td>Within 30 days</td></tr>
+            <tr><td>Reapply after a rejected appeal</td><td>90 days from the suspension date</td></tr>
+            <tr><td>Claimant response to a Content ID dispute</td><td>30 days</td></tr>
+            <tr><td>Copyright strike expiry (with Copyright School)</td><td>90 days</td></tr>
+          </tbody>
+        </table>
+
+        <p>The 90-day number is the one that deserves real respect, since a failed appeal costs you a quarter of a year of ad revenue before you are even eligible to reapply, which is exactly why the first appeal is worth preparing carefully rather than firing off quickly.</p>
+
+        <h2>How to Appeal (What Works and What Fails)</h2>
+
+        <p>Start from the citation rather than from how the suspension feels. Studio names the specific policy behind it, and <strong>the appeal has to answer that exact citation</strong>: a reused-content appeal built around your editing process does nothing for an inauthentic-content flag built around templated structure.</p>
+
+        <p>Evidence beats sincerity here every time. Reviewers reject explanations of intent but accept <strong>proof of production</strong>: script drafts, project files, recording sessions, the messy artifacts that show a real human made the thing. Where YouTube offers a video appeal format, take it, since showing your face and your process is itself evidence of the authenticity the policy is asking for.</p>
+
+        <p>Fix the actual problem before you file the appeal. One that says "we removed the 40 templated videos and here is what replaced them" beats "we believe we comply" every time, and if the catalog that earned the flag is still sitting there live when a reviewer looks, <strong>they will see the same thing the algorithm already flagged</strong>.</p>
+
+        <h2>Audit Yourself Before YouTube Does</h2>
+
+        <p>Channel reviews focus on a few specific surfaces: your channel theme, your most-viewed videos, your newest uploads, and whatever drives your watch time, and that same list doubles as your self-audit. Open your ten most-viewed and ten newest videos and ask the substitution question honestly: <strong>could these belong to any other channel in the niche?</strong> If the structure, the voice, and the thumbnails all look interchangeable with everyone else's, the answer is yes.</p>
+
+        <p>Run that check on a regular schedule rather than only reaching for it during a crisis. The channels that survived the 2026 wave were consistently the ones whose originality was obvious in any three videos a reviewer happened to open, and the <a href="/blog/youtube-channel-audit">channel audit guide</a> has the full checklist if you want to run the complete version.</p>
+
+        <h2>If the Appeal Fails</h2>
+
+        <p>The 90-day path itself is straightforward, if slow: remove or rework the flagged class of content, keep uploading compliant videos so the reapplication reviewer sees a changed channel, and reapply once day 90 arrives. During that gap, YPP features like ads, memberships, and Supers are off, but <strong>off-platform income keeps flowing regardless</strong>, since sponsorships and affiliate revenue never ran through the Partner Program in the first place.</p>
+
+        <p>The harder question is whether to keep the channel at all, and the short answer is that a <strong>rebrand keeps everything</strong>: subscribers follow the channel ID, and a re-admitted channel keeps its YPP standing, while deleting and starting fresh means re-earning 1,000 subscribers and 4,000 watch hours from zero. The full decision tree, including the rare cases where starting over really is the right call, lives in the <a href="/blog/restart-youtube-channel">starting-over guide</a>.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Does a demonetized video still get views?</h3>
+
+        <p><strong>Yes, it still gets views.</strong> Demonetization removes or limits ads, but it does not touch the video's presence in search or recommendations, since YouTube treats ad suitability and discovery as separate systems, so a yellow icon carries no official reach penalty. Even a suspended channel keeps its videos public, meaning what you lose in the end is the ad revenue, while the audience stays put.</p>
+
+        <h3>Why was my channel demonetized for no reason?</h3>
+
+        <p>There is always a cited reason, YouTube just buries it well. Open Studio and check the email account tied to your channel, since a channel-level suspension names the specific policy behind it, most often reused content or inauthentic content, while a video-level issue shows up in the Content list's <strong>Restrictions column</strong> instead. Finding that citation is step one, because your appeal has to answer it directly.</p>
+
+        <h3>How long does YouTube demonetization last?</h3>
+
+        <p>That depends entirely on which problem you are dealing with. A yellow icon lasts until a human review overturns it, a copyright strike expires after <strong>90 days</strong> once you complete Copyright School, and a Partner Program suspension lasts until a successful appeal or a minimum 90-day wait if that appeal fails. Termination is the one that is permanent, unless an appeal against it succeeds.</p>
+
+        <h3>Can swearing get my channel demonetized?</h3>
+
+        <p><strong>Rarely the channel</strong>, and usually not even the video. Moderate profanity is compatible with full ads under the advertiser-friendly guidelines, and it is strong profanity used repeatedly, or dropped into the first seconds of a video, that pushes an individual upload to limited ads. Even then it only affects that one video's yellow icon, since channel-level suspensions come from content policy violations rather than language.</p>
+
+        <h3>Does AI content get channels demonetized in 2026?</h3>
+
+        <p><strong>Not for being AI specifically.</strong> The January 2026 enforcement wave hit channels for mass-produced, templated output, and AI simply happens to be the cheapest way to produce content at that scale, while AI tools used inside a genuinely original production remain fine. The full policy, along with the made-up rules circulating around it, is covered in our <a href="/blog/youtube-ai-policy">YouTube AI policy guide</a>.</p>
+
+        <h3>What is the difference between the yellow and grey dollar icons?</h3>
+
+        <p>Yellow means the video is monetized but running <strong>limited or no ads</strong> because of an ad-suitability rating you can appeal, while grey means monetization is switched off entirely, whether because you turned it off yourself, the video is not eligible, or your channel is not currently monetizing at all. Think of yellow as a rating problem and grey as a status problem.</p>
+
+        <h3>Do Content ID claims demonetize my channel?</h3>
+
+        <p><strong>No, they do not.</strong> A Content ID claim is video-level and fully automated, meaning the rights holder can run ads on that one video and take the revenue, track it, or block it outright, while your channel's overall standing stays untouched no matter how many claims accumulate. It is copyright strikes that are genuinely dangerous, since three within 90 days terminates the channel.</p>
+
+        <h3>Does demonetization hurt my views or reach?</h3>
+
+        <p><strong>By policy, no.</strong> YouTube states plainly that ad suitability and recommendations run as separate systems, and that neither the disclosure process nor the rating process limits reach. Creators do report view drops after demonetization, though there is no controlled evidence separating a real penalty from the panic-driven upload changes that tend to follow one, so it is fairest to treat reach loss here as unproven.</p>
+
+        <h3>Can a terminated channel come back?</h3>
+
+        <p>Only through a successful termination appeal, which is a different form from the standard monetization appeal. Termination removes the channel entirely and bans you from starting a new one, so the usual 90-day reapplication path does not apply here. A <strong>suspension is the recoverable version</strong> of this problem, since your channel and videos stay up and YPP re-entry remains possible, which makes knowing which one you are dealing with worth confirming before you act.</p>
+
+        <h3>How do I find out which video caused my demonetization?</h3>
+
+        <p>For a channel-level suspension there is often no single video to point to, since reviewers assess your channel theme, most-viewed videos, newest uploads, and whatever drives your watch time as a whole, which means <strong>auditing those same surfaces</strong> yourself. For video-level problems it is simpler: sort the Content list by the Restrictions column and every claim, rating, and strike is listed against its video.</p>
+
+        <h2>The Icon Is Not the Verdict</h2>
+
+        <p>Nearly every demonetization arrives with its reason already written down somewhere, in an icon, a Restrictions entry, or a policy citation sitting in your inbox. The panic move is appealing everything at once while fixing nothing, and the move that works is the one this whole guide is built around: <strong>read the notice, name the specific problem, and run that problem's fix</strong> inside its deadline.</p>
+
+        <p>Stated honestly, the 2026 context favors you if you make real videos. The enforcement wave, the July wording, the AI-persona ban, all of it works to remove channels whose content never required any particular human to exist in the first place. If yours genuinely does require you, demonetization becomes a process problem with a documented exit rather than <strong>a verdict on your channel's worth</strong>, and the creators who treat it that way are the ones who end up coming back.</p>
+      </>
+    ),
+  },
+  {
     slug: 'restart-youtube-channel',
     title: 'Should You Delete Your YouTube Channel and Start Over in 2026?',
     excerpt: 'Deleting a channel is one of the few truly irreversible actions on YouTube, and most of the reasons creators reach for it are myths. What deleting really destroys, what you can change without losing anything, when a fresh start genuinely wins, and the test that decides it with data instead of frustration.',
@@ -181,7 +394,7 @@ export const posts = [
         <p>The new-channel case is real; it is just narrower than frustration makes it feel. It comes down to four situations.</p>
 
         <ul>
-          <li><strong>Active strikes or policy trouble.</strong> A channel carrying community-guideline strikes or copyright problems is unstable ground, and no revival plan fixes a compliance record.</li>
+          <li><strong>Active strikes or policy trouble.</strong> A channel carrying community-guideline strikes or copyright problems is unstable ground, and no revival plan fixes a compliance record. Before deciding, the <a href="/blog/youtube-demonetization">demonetization diagnosis guide</a> sorts out which notices are genuinely recoverable versus which ones mean the channel is done for.</li>
           <li><strong>A truly different audience.</strong> Gaming to personal finance is not a pivot; it is a different channel for different people. If almost none of your current subscribers would want the new content, their presence tells the system the wrong story about who your videos are for.</li>
           <li><strong>Wrong-audience baggage at scale.</strong> A back catalog that keeps pulling in viewers who will never click the new direction can depress your early signals in a way unlisting only partly solves.</li>
           <li><strong>The psychological fresh start.</strong> Least measurable, still legitimate. If the old channel carries enough dread that you avoid uploading at all, a channel you are excited to post on beats a channel you have abandoned.</li>
@@ -830,7 +1043,7 @@ export const posts = [
 
         <p>YouTube sometimes gives a 7-day advance notice before removing a channel from the Partner Program, and Studio shows the specific policy cited. From there you can <strong>appeal within 21 days</strong>. Decisions typically come back within days, up to about two weeks.</p>
 
-        <p>Appeals succeed on evidence, not sincerity. Reviewers reject explanations of intent and accept <strong>proof of originality</strong>: your scripting process, project files, drafts, recording sessions, anything that shows a human production behind the uploads. If the appeal fails, the wait is 90 days before you can reapply, so the first attempt is worth preparing properly.</p>
+        <p>Appeals succeed on evidence, not sincerity. Reviewers reject explanations of intent and accept <strong>proof of originality</strong>: your scripting process, project files, drafts, recording sessions, anything that shows a human production behind the uploads. If the appeal fails, the wait is 90 days before you can reapply, so the first attempt is worth preparing properly. And if you are not certain an inauthentic-content flag is even what you have, the <a href="/blog/youtube-demonetization">demonetization diagnosis guide</a> separates the five problems that all get called "demonetized" and the deadlines attached to each.</p>
 
         <h2>Frequently Asked Questions</h2>
 
@@ -1434,7 +1647,7 @@ export const posts = [
 
         <p><strong>Content ID</strong> is the automated one. It scans every upload against a massive database of registered audio, and a match places a <strong>Content ID claim</strong> on your video, often within minutes, even if you used only a few seconds. A claim is not a punishment. Depending on what the rightsholder chose, it can run ads on your video with the revenue going to them, mute the audio, or block the video in some countries. Your channel is not penalized.</p>
 
-        <p>A <strong>copyright strike</strong> is the serious one. It is a manual legal takedown request from a rightsholder, and <strong>three strikes in 90 days terminates your channel</strong>. Using cleared copyright-free music protects you from both, but the distinction matters: a claim costs you the video's ad revenue, while a strike threatens the whole channel.</p>
+        <p>A <strong>copyright strike</strong> is the serious one. It is a manual legal takedown request from a rightsholder, and <strong>three strikes in 90 days terminates your channel</strong>. Using cleared copyright-free music protects you from both, but the distinction matters: a claim costs you the video's ad revenue, while a strike threatens the whole channel. If one of these has already landed on you, the <a href="/blog/youtube-demonetization">demonetization diagnosis guide</a> walks through the response for each.</p>
 
         <blockquote><strong>Key point:</strong> a Content ID claim is not a copyright strike. If a track you licensed gets a false claim, you do not lose anything by disputing it with your license as proof. Claims are common and reversible; strikes are rare and dangerous.</blockquote>
 
@@ -12998,7 +13211,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <img src="/blog/youtube-partner-program-step-4.webp" alt="YouTube Studio compliance check and YPP application path" />
 
-        <p>The other compliance factor to understand is the <strong>Yellow Dollar Sign</strong>. When YouTube's system flags a video as not advertiser-friendly, it replaces the green dollar sign in Studio with a yellow one, significantly limiting the ads shown against that video. Content involving strong language, controversial topics, or sensitive subjects triggers this flag most often. Keeping your content clean against the YouTube monetization rules from the start protects your revenue potential before you even reach Tier 2.</p>
+        <p>The other compliance factor to understand is the <strong>Yellow Dollar Sign</strong>. When YouTube's system flags a video as not advertiser-friendly, it replaces the green dollar sign in Studio with a yellow one, significantly limiting the ads shown against that video. Content involving strong language, controversial topics, or sensitive subjects triggers this flag most often. Keeping your content clean against the YouTube monetization rules from the start protects your revenue potential before you even reach Tier 2. If flags do start appearing, the <a href="/blog/youtube-demonetization">demonetization diagnosis guide</a> explains what each icon and notice means and how to appeal it.</p>
 
         <h2>Step 5: Optimize for High CPM and Long-Term ROI</h2>
 
