@@ -73,7 +73,13 @@ then #3/#4 (they upgrade best-time-to-post, our highest-impression page), then
    videos = 1,000 units). Powers "how videos age" studies. Worst case for the
    whole run ~4,100 units/week.
 
-Status: ALL FOUR LOGGERS BUILT AND DEPLOYED 2026-07-17. Logger 1 runs nightly at
+Status: ALL FOUR LOGGERS BUILT AND DEPLOYED 2026-07-17. First nightly snapshot
+expected the night of 2026-07-17; first weekly runs Sunday 2026-07-20 — next
+session must VERIFY rows are appearing in all four tables. Quota-extension form
+for the search.list sub-limit (2,600/day) SUBMITTED to Google 2026-07-17;
+top_n 3→5, weekly top-channels, and the last 3 seed keywords are user-approved
+but GATED on that approval. Study #1 (video length by niche) is NOT gated:
+batch endpoints only, can start any time. Logger 1 runs nightly at
 23:55 UTC (scheduler job `cache_hit_snapshots`); logger 2 runs Sundays 05:00 UTC
 (job `channel_snapshots`, module app/channel_snapshots.py, MAX_CHANNELS cap
 10,000 = ~200 units/run, YT_QUOTA_PAUSED-guarded). Both tested idempotent on a
