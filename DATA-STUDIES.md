@@ -74,6 +74,30 @@ Status: ALL FOUR LOGGERS BUILT AND DEPLOYED 2026-07-17. Logger 1 runs nightly at
 10,000 = ~200 units/run, YT_QUOTA_PAUSED-guarded). Both tested idempotent on a
 scratch DB before deploy. Next: run study #1.
 
+## Coverage: what gets captured (updated 2026-07-17)
+
+Everything YouTube-shaped that any visitor generates, logged in or out:
+keyword searches (incl. anonymous free-tool reads — ac: suggestion reads now
+bump hit_count so misses on the competition cache still count), AI analyses,
+connected channels, leaderboard channels, anonymous stats-checker lookups
+(both id- and handle-keyed), and competitor channels users analyze. All
+aggregate, never per-user.
+
+## Proactive seeding policy
+
+We do not wait for traffic to grow the moat. When a planned study or product
+area needs data we don't organically have yet, we seed it deliberately with
+the 260K/day quota:
+
+- Expand the nightly niche warmer's seed list toward the niches a study needs.
+- Expand the top-channels universe (more categories/regions) to widen the
+  channel-snapshot base.
+- One-off keyword seeds via scripts/seed_keyword_cache.py-style scripts.
+
+Rules: state quota math first, keep every seed inside the existing cache
+tables so the loggers pick it up automatically, and prefer seeding areas tied
+to a named study or page, not indiscriminate crawling.
+
 ## Backlog — add new study ideas here
 
 - (add ideas as they come up; include the stats needed and whether they exist

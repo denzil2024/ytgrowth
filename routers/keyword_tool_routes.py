@@ -265,9 +265,21 @@ def _read_suggestions_cache(norm_key: str):
             return None
         try:
             data = json.loads(row.result_json)
-            return data if isinstance(data, list) else None
         except Exception:
             return None
+        if not isinstance(data, list):
+            return None
+        # Count the read: every anonymous lookup touches this ac: row, so
+        # bumping here is what makes free-tool demand visible to the nightly
+        # cache_hit_snapshots job even when the kw: competition row is a miss.
+        try:
+            row.hit_count = (row.hit_count or 0) + 1
+            row.last_hit_at = datetime.datetime.now(datetime.timezone.utc)
+            db.commit()
+        except Exception:
+            try: db.rollback()
+            except Exception: pass
+        return data
     except Exception:
         return None
     finally:

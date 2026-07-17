@@ -35,8 +35,11 @@ def _collect_channel_ids(db) -> dict[str, str | None]:
     Category comes from TopChannelCache only; registry and public-tool
     channels get None and can be classified later if a study needs it.
     """
+    import json as _json
+
     from database.models import (
         ChannelRegistry, TopChannelCache, PublicChannelStatsCache,
+        CompetitorAnalysisCache,
     )
     ids: dict[str, str | None] = {}
 
@@ -54,10 +57,25 @@ def _collect_channel_ids(db) -> dict[str, str | None]:
             if ids[cid] is None:
                 ids[cid] = category
 
-    for (key,) in db.query(PublicChannelStatsCache.cache_key).filter(
-        PublicChannelStatsCache.cache_key.like("id:%")
+    # Competitor channels users analyze are real channels in our users'
+    # niches — prime study material, previously dropped.
+    for (cid,) in db.query(CompetitorAnalysisCache.competitor_id).distinct():
+        if cid:
+            ids.setdefault(cid, None)
+
+    # Anonymous stats-checker lookups. id: keys carry the channel id
+    # directly; handle: keys carry it inside result_json -> channel.id.
+    for key, body in db.query(
+        PublicChannelStatsCache.cache_key, PublicChannelStatsCache.result_json
     ):
-        cid = key[3:]
+        cid = None
+        if key.startswith("id:"):
+            cid = key[3:]
+        elif key.startswith("handle:"):
+            try:
+                cid = ((_json.loads(body) or {}).get("channel") or {}).get("id")
+            except Exception:
+                cid = None
         if cid:
             ids.setdefault(cid, None)
 
