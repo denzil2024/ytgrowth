@@ -4,7 +4,7 @@ Read these rules before any code change. They are not suggestions.
 
 ## Quota discipline (hard rule)
 
-This product runs on YouTube Data API v3, which gives **10,000 units per day** on the free tier (Google's quota bump is pending, may be 1M+ when granted but assume 10K until confirmed). Every search.list call costs **100 units**. Every videos.list / channels.list / playlistItems.list call costs 1 unit. Burning the daily quota locks out every user from login and every feature until midnight Pacific reset.
+This product runs on YouTube Data API v3 with **260,000 units per day** (quota increase granted by Google, confirmed by the user 2026-07-17; previously 10,000). Every search.list call costs **100 units**. Every videos.list / channels.list / playlistItems.list call costs 1 unit. Burning the daily quota locks out every user from login and every feature until midnight Pacific reset.
 
 The codebase has hard-won quota infrastructure shipped over an intense day of work. Do not weaken, remove, or bypass any of it. Specifically:
 
@@ -144,16 +144,19 @@ Never end a post with a generic "Final Thoughts" or "Conclusion" heading. The fi
 
 # Future plans and context
 
-## Pending: Google YouTube Data API quota bump
+## GRANTED: Google YouTube Data API quota bump (2026-07-17)
 
-The user applied for a quota increase from the 10K daily Data API tier. As of writing, two acknowledgement emails have been received from Google's YouTube Compliance team, indicating active review. Until the bump lands, treat 10K as the operating budget and keep the quota discipline above.
-
-When the bump lands (typically 1M+ units/day for audited apps):
-- `top_n` in Keyword Research can move back up from 3 to 5 or higher
-- Top Channels refresh can move back from monthly to weekly
-- Some short-TTL caches can be relaxed without risk
-
-Do NOT make these changes preemptively. Wait for the user to confirm the bump arrived.
+Google granted a quota increase to **260,000 units per day** (26x the old 10K), confirmed
+by the user on 2026-07-17. The quota-discipline rules above still apply: caching remains
+the moat and the compounding-data strategy is unchanged. What changes is headroom, not
+philosophy. Candidate relaxations (each still needs explicit user approval before shipping,
+with quota math in the commit message):
+- `top_n` in Keyword Research back up from 3 to 5 or higher
+- Top Channels refresh from monthly back to weekly (~8,400 units/run, now ~3% of a day)
+- Short-TTL caches relaxed where user experience gains
+- One-off backfills like scripts/seed_keyword_cache.py (~5,100 units) are now trivially
+  affordable
+None of these have been applied yet as of 2026-07-17.
 
 ## Moat build-out (ordered queue — work through in this order, do not skip)
 
