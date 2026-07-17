@@ -448,6 +448,40 @@ class ChannelMetricSnapshot(Base):
     category      = Column(String,     nullable=True)
 
 
+class ChannelVideo(Base):
+    """Upload history per tracked channel — moat item #3c (DATA-STUDIES.md).
+
+    One row per discovered video, written once and never overwritten. The
+    weekly video-snapshots job walks each tracked channel's uploads playlist
+    (first page, 1 unit/channel) and inserts anything new, then fetches
+    duration + initial stats for the new ids in batched videos.list calls.
+    published_at + duration_seconds power the cadence, best-time-to-post,
+    and Shorts-mix studies; is_short is derived (duration <= 62s)."""
+    __tablename__ = "channel_videos"
+    video_id         = Column(String,  primary_key=True)
+    channel_id       = Column(String,  nullable=False, index=True)
+    title            = Column(String,  nullable=True)
+    published_at     = Column(DateTime, nullable=True, index=True)
+    duration_seconds = Column(Integer, nullable=True)
+    is_short         = Column(Boolean, nullable=True)
+    discovered_at    = Column(DateTime, default=_now)
+
+
+class VideoMetricSnapshot(Base):
+    """Weekly view/like/comment counts per recent video — moat item #3d.
+
+    One row per (date, video_id) for videos younger than TRACK_DAYS at run
+    time, so we can measure how videos accumulate views over their first
+    months ("how videos age" studies). Older videos stop being tracked
+    automatically, which keeps the weekly quota cost flat."""
+    __tablename__ = "video_metric_snapshots"
+    snapshot_date = Column(Date,       primary_key=True)
+    video_id      = Column(String,     primary_key=True)
+    views         = Column(BigInteger, nullable=True)
+    likes         = Column(BigInteger, nullable=True)
+    comments      = Column(BigInteger, nullable=True)
+
+
 class PublicChannelStatsCache(Base):
     """Public /tools/youtube-channel-stats-checker lookup cache.
     Anonymous, no-auth endpoint that costs 3 YouTube units per lookup

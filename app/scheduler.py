@@ -265,6 +265,33 @@ scheduler.add_job(
 )
 
 
+# ── Job: Weekly video snapshots (upload history + video stats) ────────────────
+# Sundays 05:30 UTC, after channel snapshots. Discovers new uploads for
+# tracked channels (1 unit/channel) and snapshots views/likes/comments for
+# videos under 180 days old (1 unit/50). Worst case ~4,100 units/week at the
+# caps in app/video_snapshots.py (moat items #3c/#3d, see DATA-STUDIES.md).
+
+def _run_video_snapshots():
+    if _quota_paused():
+        print("[video_snapshots] run skipped — YT_QUOTA_PAUSED=1")
+        return
+    try:
+        from app.video_snapshots import run_video_snapshots
+        run_video_snapshots()
+    except Exception as e:
+        print(f"[video_snapshots] job failed: {e}")
+
+
+scheduler.add_job(
+    _run_video_snapshots,
+    trigger="cron",
+    day_of_week="sun",
+    hour=5, minute=30,  # Sundays 05:30 UTC
+    id="video_snapshots",
+    replace_existing=True,
+)
+
+
 # ── Niche outliers: now lazy per-channel ──────────────────────────────────────
 # The dashboard hero card used to read from a shared per-niche cache that this
 # job refreshed weekly. We replaced that with a per-channel cache populated
