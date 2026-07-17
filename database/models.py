@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, BigInteger, Float, DateTime, Text, Boolean, UniqueConstraint, create_engine
+from sqlalchemy import Column, String, Integer, BigInteger, Float, Date, DateTime, Text, Boolean, UniqueConstraint, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -402,6 +402,50 @@ class AIOutputCache(Base):
     output_json   = Column(Text,     nullable=False)
     cached_at     = Column(DateTime, default=_now, index=True)
     hit_count     = Column(Integer,  default=0)
+
+
+class CacheHitSnapshot(Base):
+    """Daily snapshot of cache hit counts — moat item #3 (see DATA-STUDIES.md).
+
+    One row per (date, source, cache_key): a nightly scheduler job copies the
+    current hit_count of every non-zero row in youtube_search_cache (source
+    'search') and ai_output_cache (source 'ai') so demand becomes a time
+    series instead of a single overwritten total. Costs zero YouTube quota;
+    it is a pure DB copy.
+
+    `label` preserves the human-readable identity (original_query for search
+    rows, function_name for AI rows) because the weekly cache cleanup deletes
+    low-hit cache rows, and without the label here the snapshot would decay
+    into unreadable hashes. No user identities are stored — the caches are
+    cross-user by design, so this logs aggregate demand from both logged-in
+    users and the anonymous free tools."""
+    __tablename__ = "cache_hit_snapshots"
+    snapshot_date = Column(Date,    primary_key=True)
+    source        = Column(String,  primary_key=True)   # 'search' | 'ai'
+    cache_key     = Column(String,  primary_key=True)
+    label         = Column(String,  nullable=True)
+    hit_count     = Column(Integer, nullable=False)
+
+
+class ChannelMetricSnapshot(Base):
+    """Weekly snapshot of channel-level public stats — moat item #3b (see
+    DATA-STUDIES.md). One row per (date, channel_id). A weekly scheduler job
+    collects every channel id we know about (ChannelRegistry, TopChannelCache,
+    and id-keyed PublicChannelStatsCache rows) and saves subscribers, total
+    views, and video count instead of overwriting them, so channel growth
+    becomes measurable over time ("how fast do finance channels grow").
+
+    Cost: batched channels.list at 1 unit per 50 channels, so even 10,000
+    channels is 200 units/week. `category` carries the TopChannelCache
+    category when known, else null. Only public stats are stored, never
+    owner identities."""
+    __tablename__ = "channel_metric_snapshots"
+    snapshot_date = Column(Date,       primary_key=True)
+    channel_id    = Column(String,     primary_key=True)
+    subscribers   = Column(BigInteger, nullable=True)
+    total_views   = Column(BigInteger, nullable=True)
+    video_count   = Column(Integer,    nullable=True)
+    category      = Column(String,     nullable=True)
 
 
 class PublicChannelStatsCache(Base):

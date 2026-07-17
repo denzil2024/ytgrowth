@@ -58,8 +58,11 @@ then #3/#4 (they upgrade best-time-to-post, our highest-impression page), then
    (public leaderboards). Cost: ~1 unit per 50 channels via batched
    channels.list, negligible.
 
-Status: neither logger built yet as of 2026-07-17. Build order: logger 1, then
-logger 2, then run study #1.
+Status: BOTH LOGGERS BUILT AND DEPLOYED 2026-07-17. Logger 1 runs nightly at
+23:55 UTC (scheduler job `cache_hit_snapshots`); logger 2 runs Sundays 05:00 UTC
+(job `channel_snapshots`, module app/channel_snapshots.py, MAX_CHANNELS cap
+10,000 = ~200 units/run, YT_QUOTA_PAUSED-guarded). Both tested idempotent on a
+scratch DB before deploy. Next: run study #1.
 
 ## Backlog — add new study ideas here
 

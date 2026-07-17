@@ -165,6 +165,106 @@ scheduler.add_job(
 )
 
 
+# ── Job: Daily cache-hit snapshots ────────────────────────────────────────────
+# Runs nightly at 23:55 UTC, just before the day ends. Copies the current
+# hit_count of every non-zero row in youtube_search_cache and ai_output_cache
+# into cache_hit_snapshots (moat item #3, see DATA-STUDIES.md). Turns cache
+# demand into a time series for the trend / data-study articles. Pure DB
+# copy: zero YouTube quota. Idempotent — re-running replaces today's rows.
+
+def _run_cache_hit_snapshots():
+    try:
+        from database.models import (
+            SessionLocal, CacheHitSnapshot, YoutubeSearchCache, AIOutputCache,
+        )
+        db = SessionLocal()
+        try:
+            today = datetime.datetime.now(datetime.timezone.utc).date()
+            db.query(CacheHitSnapshot).filter(
+                CacheHitSnapshot.snapshot_date == today
+            ).delete(synchronize_session=False)
+
+            search_rows = (
+                db.query(
+                    YoutubeSearchCache.cache_key,
+                    YoutubeSearchCache.original_query,
+                    YoutubeSearchCache.hit_count,
+                )
+                .filter(YoutubeSearchCache.hit_count > 0)
+                .all()
+            )
+            ai_rows = (
+                db.query(
+                    AIOutputCache.input_hash,
+                    AIOutputCache.function_name,
+                    AIOutputCache.hit_count,
+                )
+                .filter(AIOutputCache.hit_count > 0)
+                .all()
+            )
+            db.bulk_save_objects(
+                [
+                    CacheHitSnapshot(
+                        snapshot_date=today, source="search",
+                        cache_key=k, label=q, hit_count=h,
+                    )
+                    for k, q, h in search_rows
+                ]
+                + [
+                    CacheHitSnapshot(
+                        snapshot_date=today, source="ai",
+                        cache_key=k, label=f, hit_count=h,
+                    )
+                    for k, f, h in ai_rows
+                ]
+            )
+            db.commit()
+            print(
+                f"[cache_hit_snapshots] wrote {len(search_rows)} search + "
+                f"{len(ai_rows)} ai rows for {today}"
+            )
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[cache_hit_snapshots] job failed: {e}")
+
+
+scheduler.add_job(
+    _run_cache_hit_snapshots,
+    trigger="cron",
+    hour=23, minute=55,  # Daily 23:55 UTC — end-of-day totals
+    id="cache_hit_snapshots",
+    replace_existing=True,
+)
+
+
+# ── Job: Weekly channel metrics snapshots ─────────────────────────────────────
+# Sundays 05:00 UTC. Saves every known channel's public stats (subs, views,
+# video count) into channel_metric_snapshots instead of overwriting them
+# (moat item #3b, see DATA-STUDIES.md). Cost: 1 unit per 50 channels via
+# batched channels.list, hard-capped at ~200 units/run by MAX_CHANNELS.
+
+def _run_channel_snapshots():
+    if _quota_paused():
+        print("[channel_snapshots] run skipped — YT_QUOTA_PAUSED=1")
+        return
+    try:
+        from app.channel_snapshots import snapshot_channels
+        snapshot_channels()
+    except Exception as e:
+        print(f"[channel_snapshots] job failed: {e}")
+
+
+scheduler.add_job(
+    _run_channel_snapshots,
+    trigger="cron",
+    day_of_week="sun",
+    hour=5, minute=0,  # Sundays 05:00 UTC
+    id="channel_snapshots",
+    replace_existing=True,
+)
+
+
 # ── Niche outliers: now lazy per-channel ──────────────────────────────────────
 # The dashboard hero card used to read from a shared per-niche cache that this
 # job refreshed weekly. We replaced that with a per-channel cache populated
