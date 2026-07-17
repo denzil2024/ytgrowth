@@ -759,6 +759,12 @@ try:
         "ALTER TABLE user_email_preferences ADD COLUMN reengagement_email_sent_at TIMESTAMP",
         "ALTER TABLE user_email_preferences ADD COLUMN plan_change_email_sent_at TIMESTAMP",
         "ALTER TABLE user_sessions ADD COLUMN owner_email TEXT",
+        # youtube_search_cache predates the last_hit_at column on prod; without
+        # this ALTER every full-row ORM read/write of the table errors on
+        # Postgres (caught 2026-07-17 when the keyword seed script's writes
+        # failed with UndefinedColumn).
+        "ALTER TABLE youtube_search_cache ADD COLUMN last_hit_at TIMESTAMP",
+        "CREATE INDEX IF NOT EXISTS ix_youtube_search_cache_last_hit_at ON youtube_search_cache (last_hit_at)",
         "CREATE TABLE IF NOT EXISTS user_accounts (email TEXT PRIMARY KEY, google_id TEXT, display_name TEXT, profile_picture TEXT, created_at DATETIME)",
         "ALTER TABLE user_accounts ADD COLUMN utm_source TEXT",
         "ALTER TABLE user_accounts ADD COLUMN utm_medium TEXT",
