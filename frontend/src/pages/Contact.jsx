@@ -150,7 +150,7 @@ const STEPS = [
   {
     n: '01',
     title: 'You email us, anything',
-    body: 'Write support@ytgrowth.io from any address. One line or ten paragraphs. Attach a screenshot or don\'t. We\'ll figure it out from whatever you send.',
+    body: 'Write royalbluemedia.agency@gmail.com from any address. One line or ten paragraphs. Attach a screenshot or don\'t. We\'ll figure it out from whatever you send.',
   },
   {
     n: '02',
@@ -207,8 +207,8 @@ export default function Contact() {
                 <span aria-hidden="true" className="ct-eyebrow-rule" />
                 <span className="ct-eyebrow-text">Direct line</span>
               </div>
-              <a href="mailto:support@ytgrowth.io" style={{ display: 'inline-block', fontFamily: SERIF, fontSize: isMobile ? 26 : 32, fontWeight: 400, letterSpacing: '-0.6px', color: 'var(--yte-ink)', textDecoration: 'none', lineHeight: 1.15, marginBottom: 10, wordBreak: 'break-word' }}>
-                support@ytgrowth.io
+              <a href="mailto:royalbluemedia.agency@gmail.com" style={{ display: 'inline-block', fontFamily: SERIF, fontSize: isMobile ? 26 : 32, fontWeight: 400, letterSpacing: '-0.6px', color: 'var(--yte-ink)', textDecoration: 'none', lineHeight: 1.15, marginBottom: 10, wordBreak: 'break-word' }}>
+                royalbluemedia.agency@gmail.com
               </a>
               <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', lineHeight: 1.6, marginBottom: 24 }}>
                 One human reads every message and replies, usually within four hours, seven days a week.
@@ -225,7 +225,7 @@ export default function Contact() {
                   </div>
                 ))}
               </div>
-              <a href="mailto:support@ytgrowth.io" className="contact-btn contact-btn-full">
+              <a href="mailto:royalbluemedia.agency@gmail.com" className="contact-btn contact-btn-full">
                 Email us →
               </a>
             </div>

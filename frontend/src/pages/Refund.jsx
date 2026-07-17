@@ -48,13 +48,13 @@ export default function Refund() {
           <hr />
 
           <h2>Exception</h2>
-          <p>The only exception is a major technical failure on our end that makes the product completely unusable for more than 7 consecutive days. In that case, contact <strong>support@ytgrowth.io</strong> and we will make it right.</p>
+          <p>The only exception is a major technical failure on our end that makes the product completely unusable for more than 7 consecutive days. In that case, contact <strong>royalbluemedia.agency@gmail.com</strong> and we will make it right.</p>
 
           <h2>Merchant of Record</h2>
           <p>As our Merchant of Record, Paddle reserves the right to issue refunds at their discretion to prevent chargebacks.</p>
 
           <h2>Contact</h2>
-          <p>Questions? Email <strong>support@ytgrowth.io</strong>.</p>
+          <p>Questions? Email <strong>royalbluemedia.agency@gmail.com</strong>.</p>
         </article>
       </section>
 

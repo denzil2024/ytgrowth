@@ -131,13 +131,13 @@ def analyze_competitor(channel_id: str, request: Request):
         ai_analysis = analyze_competitor_with_ai(data["channel"], videos, comp_data)
     except Exception as e:
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
 
     if not isinstance(ai_analysis, dict):
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
 

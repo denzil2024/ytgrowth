@@ -111,7 +111,7 @@ def analyze(body: AnalyzeBody, request: Request):
     except Exception as e:
         print(f"[autopsy] analyze error: {e}")
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
 

@@ -8,9 +8,10 @@ export function isChannelBrain() {
   return h === 'channelbrain.online' || h.endsWith('.channelbrain.online')
 }
 
-/* Support address, host-matched so the ChannelBrain app never surfaces a
-   ytgrowth.io email. Requires support@channelbrain.online to route (Cloudflare
-   Email Routing → the real inbox). */
+/* Support address. One real, always-routing inbox on every host (user
+   decision 2026-07-17): no ytgrowth.io email anywhere, and
+   support@channelbrain.online never had routing set up, so both hosts show
+   the monitored Gmail. */
 export function supportEmail() {
-  return isChannelBrain() ? 'support@channelbrain.online' : 'support@ytgrowth.io'
+  return 'royalbluemedia.agency@gmail.com'
 }

@@ -141,7 +141,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'What marketing materials are available?',
-    a: 'We provide talking points, screenshots, and feature descriptions you can use in your content. The most effective affiliates, however, simply record themselves using the tool. A genuine walkthrough of your own channel insights converts far better than any banner or template we could give you. Reach out to support@ytgrowth.io and we will send you everything we have.',
+    a: 'We provide talking points, screenshots, and feature descriptions you can use in your content. The most effective affiliates, however, simply record themselves using the tool. A genuine walkthrough of your own channel insights converts far better than any banner or template we could give you. Reach out to royalbluemedia.agency@gmail.com and we will send you everything we have.',
   },
 ]
 
@@ -484,7 +484,7 @@ export default function Affiliate() {
             </div>
             <h2 className="aff-h2" style={{ fontSize: 'clamp(34px, 4.4vw, 54px)', marginBottom: 14, textWrap: 'balance' }}>Every question <em>answered.</em></h2>
             <p className="aff-lead" style={{ fontSize: 14.5, maxWidth: 300 }}>
-              If something is not covered here, email <span style={{ color: 'var(--yte-ink)', fontWeight: 600 }}>support@ytgrowth.io</span>, we reply same day.
+              If something is not covered here, email <span style={{ color: 'var(--yte-ink)', fontWeight: 600 }}>royalbluemedia.agency@gmail.com</span>, we reply same day.
             </p>
           </div>
 

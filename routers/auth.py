@@ -438,7 +438,7 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
     """Run the channel audit after login and update session data when done.
     If `charged=True`, the caller already spent 1 credit via check_and_deduct.
     Claude failures DO NOT refund — Anthropic still bills us on token use, so
-    refunding compounds the loss. Users can email support@ytgrowth.io for a
+    refunding compounds the loss. Users can email royalbluemedia.agency@gmail.com for a
     manual goodwill bump if a paid run failed.
 
     When `use_ai=False` (free plan, 2026-07) the audit is computed with the
@@ -511,7 +511,7 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
 
             # First report: generate immediately on channel connect — paid plans only,
             # costs 1 credit (no refund on failure — Anthropic still bills us; users
-            # email support@ytgrowth.io for goodwill bumps). Free plan shows an
+            # email royalbluemedia.agency@gmail.com for goodwill bumps). Free plan shows an
             # upgrade nudge in the Weekly Report tab instead.
             channel_id = stats.get("channel_id")
             email = (data or {}).get("email", "")  # data is None when creds were missing
@@ -538,7 +538,7 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
                                 generate_and_send_report(channel_id, email, data, db2)
                             except Exception as gen_err:
                                 # Claude already ran — credit stays consumed; users can
-                                # email support@ytgrowth.io if their report didn't arrive.
+                                # email royalbluemedia.agency@gmail.com if their report didn't arrive.
                                 print(f"First report generation error: {gen_err}")
                             finally:
                                 db2.close()
@@ -553,7 +553,7 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
         print(f"Background analysis error: {e}")
         traceback.print_exc()
         # Claude already ran (or attempted) — credit stays consumed. Users
-        # can email support@ytgrowth.io for a manual goodwill bump.
+        # can email royalbluemedia.agency@gmail.com for a manual goodwill bump.
         # Land a rule-based fallback so the audit-progress card stops spinning;
         # the user gets a usable audit plus a re-audit path, not a dead screen.
         try:
@@ -1128,7 +1128,7 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
         _stamp_last_audit(channel_id)
     else:
         # Paid: charge 1 credit up-front. No refund on Claude failures —
-        # Anthropic still bills us. Users email support@ytgrowth.io if a
+        # Anthropic still bills us. Users email royalbluemedia.agency@gmail.com if a
         # Re-Audit fails.
         from app.analysis_gate import check_and_deduct
         gate = check_and_deduct(channel_id)

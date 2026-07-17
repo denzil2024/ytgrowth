@@ -125,13 +125,13 @@ export default function Privacy() {
             <li>Request deletion of your data (right to be forgotten).</li>
             <li>Revoke Google OAuth access at any time via your Google account settings.</li>
           </ul>
-          <p>To exercise any of these rights, email <strong>support@ytgrowth.io</strong>.</p>
+          <p>To exercise any of these rights, email <strong>royalbluemedia.agency@gmail.com</strong>.</p>
 
           <h2>7. Cookies</h2>
           <p>We use a single session cookie (<code>ytg_session</code>) to keep you logged in. We do not use advertising or tracking cookies.</p>
 
           <h2>8. Contact</h2>
-          <p>Privacy questions? Email <strong>support@ytgrowth.io</strong>.</p>
+          <p>Privacy questions? Email <strong>royalbluemedia.agency@gmail.com</strong>.</p>
         </article>
       </section>
 

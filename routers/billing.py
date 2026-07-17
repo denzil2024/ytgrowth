@@ -423,7 +423,7 @@ def billing_portal(request: Request):
 
     if not PADDLE_API_KEY:
         return JSONResponse(
-            {"error": "Billing portal is temporarily unavailable. Email support@ytgrowth.io."},
+            {"error": "Billing portal is temporarily unavailable. Email royalbluemedia.agency@gmail.com."},
             status_code=503,
         )
 
@@ -440,7 +440,7 @@ def billing_portal(request: Request):
 
     if not customer_id:
         return JSONResponse(
-            {"error": "No billing account found. If you have a paid plan, email support@ytgrowth.io."},
+            {"error": "No billing account found. If you have a paid plan, email royalbluemedia.agency@gmail.com."},
             status_code=409,
         )
 
@@ -464,14 +464,14 @@ def billing_portal(request: Request):
     except Exception as e:
         print(f"[billing/portal] Paddle request failed: {e}")
         return JSONResponse(
-            {"error": "Billing portal is temporarily unavailable. Email support@ytgrowth.io."},
+            {"error": "Billing portal is temporarily unavailable. Email royalbluemedia.agency@gmail.com."},
             status_code=503,
         )
 
     if resp.status_code not in (200, 201):
         print(f"[billing/portal] Paddle {resp.status_code}: {resp.text[:500]}")
         return JSONResponse(
-            {"error": "Billing portal is temporarily unavailable. Email support@ytgrowth.io."},
+            {"error": "Billing portal is temporarily unavailable. Email royalbluemedia.agency@gmail.com."},
             status_code=503,
         )
 
@@ -484,7 +484,7 @@ def billing_portal(request: Request):
 
     if not portal_url:
         return JSONResponse(
-            {"error": "Billing portal is temporarily unavailable. Email support@ytgrowth.io."},
+            {"error": "Billing portal is temporarily unavailable. Email royalbluemedia.agency@gmail.com."},
             status_code=503,
         )
 

@@ -114,13 +114,13 @@ def research_keywords(body: KeywordResearchRequest, request: Request):
     except Exception as e:
         print(f"[keywords] research error: {e}")
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
 
     if "error" in result and len(result) == 1:
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
 

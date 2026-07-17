@@ -310,7 +310,7 @@ def run_weekly_reports():
     Resend's 100/day free limit.
 
     Paid plans only. Each send deducts 1 credit (NOT refunded on failure —
-    Anthropic still bills us; users email support@ytgrowth.io if a report
+    Anthropic still bills us; users email royalbluemedia.agency@gmail.com if a report
     didn't arrive). Free plan users are skipped — the dashboard shows an
     upgrade nudge.
     """
@@ -381,7 +381,7 @@ def run_weekly_reports():
                     continue
 
                 # Generate + send. Claude already ran once we hit this — credit
-                # stays consumed on failure; users email support@ytgrowth.io.
+                # stays consumed on failure; users email royalbluemedia.agency@gmail.com.
                 try:
                     success = generate_and_send_report(channel_id, email, user_data, db)
                 except Exception as gen_err:

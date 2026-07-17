@@ -830,13 +830,13 @@ Return ONLY valid JSON, no markdown:
     except json.JSONDecodeError as e:
         print(f"[video_ideas] JSON parse error: {e}")
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
     except Exception as e:
         print(f"[video_ideas] refresh error: {e}")
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
     finally:

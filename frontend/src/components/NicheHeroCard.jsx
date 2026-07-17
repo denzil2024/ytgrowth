@@ -582,7 +582,7 @@ function EmptyOutlier({ reason, onNavigate }) {
             <p className="nh-empty-sub">
               {isGenerating
                 ? 'Usually takes 15 to 30 seconds. The card refreshes here automatically.'
-                : 'Try refreshing the page. If this keeps happening, email support@ytgrowth.io.'}
+                : 'Try refreshing the page. If this keeps happening, email royalbluemedia.agency@gmail.com.'}
             </p>
           </div>
         </div>

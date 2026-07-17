@@ -232,7 +232,7 @@ def analyze(body: TitleAnalyzeRequest, request: Request):
         import traceback
         print(f"[seo/analyze] error: {traceback.format_exc()}")
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
 
@@ -280,13 +280,13 @@ def generate_description(body: DescriptionRequest, request: Request):
         )
     except Exception as e:
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
 
     if error and not descriptions:
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
     # Tag description output onto the analysis row keyed by the title the
@@ -342,7 +342,7 @@ def optimize_video_route(body: OptimizeVideoRequest, request: Request):
         import traceback
         print(f"[seo/optimize-video] error: {traceback.format_exc()}")
         return JSONResponse(
-            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            {"error": "Something went wrong on our end. Email royalbluemedia.agency@gmail.com and we'll sort it out."},
             status_code=500,
         )
 

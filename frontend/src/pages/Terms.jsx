@@ -80,7 +80,7 @@ export default function Terms() {
           <p>The Service is provided "as is". AI-generated insights are for informational purposes only. We do not guarantee specific growth outcomes. Our total liability shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
 
           <h2>8. Contact</h2>
-          <p>Questions? Email <strong>support@ytgrowth.io</strong>.</p>
+          <p>Questions? Email <strong>royalbluemedia.agency@gmail.com</strong>.</p>
         </article>
       </section>
 
