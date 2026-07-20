@@ -7667,9 +7667,9 @@ Free studio checklist: https://yoursite.com/checklist
   {
     slug: 'google-adsense-youtube',
     title: 'Google AdSense for YouTube: How It Works, Setup, and Getting Paid (2026)',
-    excerpt: 'How Google AdSense for YouTube works: setup and linking, the approval and tax steps, when you get paid, and the mistakes that get accounts suspended.',
+    excerpt: 'How Google AdSense for YouTube works: setup and linking, the approval and tax steps, multiple channels and the under-18 rules, when you get paid, and the mistakes that get accounts suspended.',
     date: '2026-05-19',
-    updated: '2026-06-29',
+    updated: '2026-07-20',
     category: CATEGORIES.monetization,
     cover: '/blog/google-adsense-youtube-cover.webp',
     author: 'Denzil',
@@ -7678,13 +7678,15 @@ Free studio checklist: https://yoursite.com/checklist
       { q: 'Is Google AdSense free?', a: 'Yes. Creating and linking AdSense costs nothing. It is a payment account, not a paid product.' },
       { q: 'How much does AdSense pay per 1,000 views?', a: 'In the US it typically lands between $2 and $8 per 1,000 views after YouTube takes its cut, but niche swings it hard. Entertainment and gaming often sit near $1 to $3, while finance, software, and business channels with a US audience regularly clear $12 to $20 or more. Niche and audience country drive it far more than raw view count.' },
       { q: 'How long does AdSense approval take?', a: 'The AdSense link is usually instant to 24 hours. The longer wait is Partner Program review, which typically runs a few weeks after you meet the threshold.' },
-      { q: 'Can one AdSense account serve multiple YouTube channels?', a: 'Yes. Multiple channels can pay into one AdSense account, and their earnings combine toward the single $100 payout threshold.' },
+      { q: 'Can one AdSense account serve multiple YouTube channels?', a: 'Yes, with no cap on the number of channels, as long as they all share the same legal payee. Their earnings combine toward one $100 threshold. A channel owned by a different person or business needs its own AdSense account; linking it to yours instead gets flagged as a duplicate and turns off monetization on that channel.' },
       { q: 'Do YouTube Shorts earn through AdSense?', a: 'Yes. Shorts ad revenue is paid through the same AdSense account, but from the Shorts ad pool with a different split than long-form.' },
-      { q: 'What is the AdSense minimum payout?', a: '$100. Below that, your balance rolls forward each month until it clears the threshold.' },
+      { q: 'What is the AdSense minimum payout?', a: '$100 by default, and below that your balance rolls forward each month until it clears the threshold. You can raise this yourself in AdSense settings if you would rather receive fewer, larger payments.' },
       { q: 'Do you need a website for YouTube AdSense?', a: 'No. A YouTube AdSense account is hosted and tied to the channel. You do not need a website or to place any ad code.' },
       { q: 'Can you lose your AdSense account?', a: 'Yes. Invalid traffic, clicking your own ads, or repeated policy violations can suspend it, which removes all ad income at once.' },
       { q: 'Is Google AdSense the same as Google Ads?', a: 'No. AdSense pays creators. Google Ads is where advertisers spend money. As a creator you only ever use AdSense.' },
       { q: 'Why is AdSense not showing in YouTube Studio?', a: 'Almost always a wrong-account link, missing tax info, or unverified address. Check that the AdSense login matches the channel owner first.' },
+      { q: 'What is the minimum age for Google AdSense?', a: '18. Under that age, the only way to monetize is linking your channel to an AdSense account owned by a parent or guardian, who receives every payment. At 18, you can reactivate your own account or open a new one by contacting AdSense support to verify your identity.' },
+      { q: 'Can I change my AdSense payment threshold?', a: 'Yes. In AdSense, under Payments → Payments info → Manage settings, you can raise your threshold above the $100 default. You cannot change how often payments go out, but you can temporarily hold a payment if you want to skip a cycle.' },
     ],
     content: () => (
       <>
@@ -7846,6 +7848,22 @@ Free studio checklist: https://yoursite.com/checklist
 
         <blockquote><strong>Pro Tip:</strong> The $100 threshold is per AdSense account, not per channel. If you run several channels under one AdSense account, their earnings combine toward the same $100, so you reach payout faster than people expect. Running a <a href="/blog/cash-cow-youtube-channels">portfolio of channels</a> this way is a common structure once one channel is proven.</blockquote>
 
+        <p>The $100 is also a default, not a fixed ceiling. In AdSense, under Payments → Payments info → Manage settings, you can raise your own payment threshold to any higher value, useful if you would rather receive fewer, larger payments than a monthly $100 trickle. Google does not let you change the payment frequency itself, but it does let you temporarily hold payments if you want to skip a cycle.</p>
+
+        <h2>Can One AdSense Account Serve Multiple YouTube Channels?</h2>
+
+        <p>Yes, and there is no cap on how many. Every channel under the same legal payee can link to the same AdSense account, and their earnings pool toward one $100 threshold, which is exactly why creators running a <a href="/blog/cash-cow-youtube-channels">portfolio of channels</a> consolidate under one account rather than juggling several.</p>
+
+        <p>The rule that trips people up is the payee match rather than the channel count. Google allows <strong>one AdSense account per payee</strong>, so if a second channel belongs to a different legal owner, a different person or a separate business entity, it needs its own AdSense account. Linking it to yours instead gets flagged as a duplicate account and monetization is turned off on the associated channel.</p>
+
+        <p>Once a channel is linked to an AdSense account, you can only change that link once every <strong>32 days</strong>, so picking the right account the first time avoids a month-long wait if you get it wrong.</p>
+
+        <h2>If You Are Under 18: How Monetization Works</h2>
+
+        <p>AdSense requires the account holder to be <strong>18 or older</strong>, full stop. There is no lowered threshold or special youth track. If you are younger than that and your channel qualifies for the Partner Program, the only path to monetizing is linking your channel to an AdSense account owned by a parent or guardian, using their own Google account.</p>
+
+        <p>Practically, this means the adult's name and tax details are what AdSense has on file, and every payment lands in their bank account rather than yours. How that money then reaches you is a conversation to have with them directly, since YouTube and AdSense play no part in that handoff. The moment you turn 18, you are not stuck: you can either take over your own previously-disapproved AdSense account or open a new one, and reactivating an old account just requires contacting AdSense support to verify your identity and age.</p>
+
         <h2>How Much Does YouTube AdSense Pay?</h2>
 
         <p>This guide is about the plumbing, not the rates. The short version: you keep 55% of long-form ad revenue and roughly 45% of the Shorts ad pool. The rest goes to YouTube.</p>
@@ -7921,7 +7939,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h3>Can one AdSense account serve multiple YouTube channels?</h3>
 
-        <p>Yes. Multiple channels can pay into one AdSense account, and their earnings combine toward the single $100 payout threshold.</p>
+        <p>Yes, with no cap on the number of channels, as long as they all share the same legal payee. Their earnings combine toward one $100 threshold. A channel owned by a different person or business needs its own AdSense account; linking it to yours instead gets flagged as a duplicate and turns off monetization on that channel.</p>
 
         <h3>Do YouTube Shorts earn through AdSense?</h3>
 
@@ -7929,7 +7947,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h3>What is the AdSense minimum payout?</h3>
 
-        <p>$100. Below that, your balance rolls forward each month until it clears the threshold.</p>
+        <p>$100 by default, and below that your balance rolls forward each month until it clears the threshold. You can raise this yourself in AdSense settings if you would rather receive fewer, larger payments.</p>
 
         <h3>Do you need a website for YouTube AdSense?</h3>
 
@@ -7946,6 +7964,14 @@ Free studio checklist: https://yoursite.com/checklist
         <h3>Why is AdSense not showing in YouTube Studio?</h3>
 
         <p>Almost always a wrong-account link, missing tax info, or unverified address. Check that the AdSense login matches the channel owner first.</p>
+
+        <h3>What is the minimum age for Google AdSense?</h3>
+
+        <p><strong>18.</strong> Under that age, the only way to monetize is linking your channel to an AdSense account owned by a parent or guardian, who receives every payment. At 18, you can reactivate your own account or open a new one by contacting AdSense support to verify your identity.</p>
+
+        <h3>Can I change my AdSense payment threshold?</h3>
+
+        <p><strong>Yes.</strong> In AdSense, under Payments → Payments info → Manage settings, you can raise your threshold above the $100 default. You cannot change how often payments go out, but you can temporarily hold a payment if you want to skip a cycle.</p>
       </>
     ),
   },
