@@ -3,6 +3,7 @@ import { isChannelBrain } from '../brandHost'
 import { useCheckoutAction } from '../checkout'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
+import EstimateTag from '../components/EstimateTag'
 
 const API = import.meta.env.VITE_API_URL || ''
 const LS_KEY = 'ytg_keywords_v1'
@@ -1228,6 +1229,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     <p style={{ fontSize: 12, fontWeight: 600, color: C.text1, marginTop: 4, maxWidth: 140, lineHeight: 1.35, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                       {result.topPick.keyword}
                     </p>
+                    <div style={{ marginTop: 6 }}><EstimateTag color={C.text3} /></div>
                   </div>
 
                   {/* Amber 3px divider, matches Title Scorecard */}

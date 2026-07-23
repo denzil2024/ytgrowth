@@ -24,6 +24,7 @@ import { openCheckout } from '../checkout'
 import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import OnboardingCard from '../components/OnboardingCard'
+import EstimateTag from '../components/EstimateTag'
 import { C, SHELL, CATEGORY_GRADIENT } from './dashboard/tokens'
 import { isChannelBrain, supportEmail } from '../brandHost'
 import {
@@ -675,6 +676,7 @@ export default function Dashboard() {
                       transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)',
                     }}/>
                   </div>
+                  <div style={{ marginTop: 6 }}><EstimateTag color={SHELL.text3} /></div>
                 </div>
               )
             })()}
@@ -1328,6 +1330,7 @@ export default function Dashboard() {
                           }}/>
                         </div>
                         <p style={subMeta}>{haveScore ? <>Out of <span style={{ color: SHELL.text1, fontWeight: 600 }}>100</span></> : 'Run an audit'}</p>
+                        {haveScore && <EstimateTag color={SHELL.text3} style={{ marginTop: 2 }} />}
                       </div>
                     </div>
 

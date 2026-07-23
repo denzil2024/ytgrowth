@@ -21,6 +21,7 @@
 */
 
 import { useState } from 'react'
+import EstimateTag from './EstimateTag'
 
 /* YouTube titles arrive HTML-escaped (&amp;, &#39;, &quot;…). Decode so they
    render as real characters instead of literal entity text. */
@@ -244,6 +245,7 @@ export function VideoResultCard({ item, kind, onOpen }) {
               </div>
             ))}
           </div>
+          <div style={{ marginBottom: 10 }}><EstimateTag color={C.text3} /></div>
           <button
             onClick={onOpen}
             style={{
@@ -362,6 +364,7 @@ export function ChannelResultCard({ item, onOpen }) {
               </div>
             ))}
           </div>
+          <div style={{ marginBottom: 10 }}><EstimateTag color={C.text3} /></div>
           <button
             onClick={onOpen}
             style={{
