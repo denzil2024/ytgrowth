@@ -215,6 +215,30 @@ def _build_overview():
                 "last_audit_at":     ch.last_audit_at.isoformat() if ch.last_audit_at else None,
             })
 
+        # ── Monthly signups, full history ─────────────────────────────────
+        # Powers the growth-rate view external reporting asks for (e.g. an
+        # acquisition listing). Grouped in Python, not SQL date functions,
+        # so it works identically on SQLite (dev) and Postgres (prod).
+        all_created = (
+            db.query(UserAccount.created_at)
+              .filter(UserAccount.created_at.isnot(None))
+              .order_by(UserAccount.created_at.asc())
+              .all()
+        )
+        month_counts: dict[str, int] = {}
+        for (created,) in all_created:
+            key = created.strftime("%Y-%m")
+            month_counts[key] = month_counts.get(key, 0) + 1
+        monthly_signups = []
+        cumulative = 0
+        for month in sorted(month_counts.keys()):
+            cumulative += month_counts[month]
+            monthly_signups.append({
+                "month":      month,
+                "signups":    month_counts[month],
+                "cumulative": cumulative,
+            })
+
         return JSONResponse({
             "stats": {
                 "total_users":      int(total_users),
@@ -232,6 +256,7 @@ def _build_overview():
             "unknown_country_count":     unknown_country_count,
             "recent_signups":    recent_signups,
             "top_users":         top_users,
+            "monthly_signups":   monthly_signups,
             "generated_at":      now.isoformat(),
         })
     finally:

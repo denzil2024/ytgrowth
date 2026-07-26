@@ -568,6 +568,54 @@ function FunnelCard({ stats }) {
   )
 }
 
+/* ── Monthly growth, full signup history ──────────────────────────────────
+   One row per calendar month since the first account was ever created, plus
+   the running cumulative total. Screenshot this for external reporting that
+   asks for a growth rate (e.g. an acquisition listing) — it shows the whole
+   trend in one card instead of just the last 7 days. */
+function MonthlyGrowthCard({ monthlySignups }) {
+  const rows = monthlySignups || []
+  const maxSignups = Math.max(1, ...rows.map(r => r.signups))
+  const firstMonth = rows[0]?.month
+  const lastRow    = rows[rows.length - 1]
+
+  return (
+    <div style={{ ...CARD, marginBottom: 36, overflow: 'hidden' }}>
+      <div className="adm-section-cardhdr">
+        <div style={{ minWidth: 0 }}>
+          <div className="adm-section-title">
+            <h2>Monthly growth</h2>
+          </div>
+          <p className="adm-section-sub">
+            {firstMonth ? `Every calendar month since the first signup (${firstMonth}).` : 'No signups yet.'}
+          </p>
+        </div>
+        {lastRow && (
+          <span className="num" style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', flexShrink: 0 }}>
+            {fmtNum(lastRow.cumulative)}
+            <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, fontFamily: COND, textTransform: 'uppercase', letterSpacing: '0.05em', marginLeft: 8 }}>total</span>
+          </span>
+        )}
+      </div>
+      <div style={{ padding: '20px 24px 24px' }}>
+        {rows.length === 0 ? (
+          <EmptyState eyebrow="No data">Signups will appear here month by month once accounts start coming in.</EmptyState>
+        ) : (
+          rows.map((r, i) => (
+            <BarRow
+              key={r.month}
+              label={`${r.month} — ${fmtNum(r.cumulative)} total`}
+              count={r.signups}
+              total={maxSignups}
+              accent={C.green}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  )
+}
+
 /* ── Empty state ─────────────────────────────────────────────────────────── */
 function EmptyState({ eyebrow = 'Empty', children }) {
   return (
@@ -1053,6 +1101,9 @@ export default function Admin() {
 
       {/* ── Conversion funnel ────────────────────────────────────────────── */}
       <FunnelCard stats={s} />
+
+      {/* ── Monthly growth, full history ─────────────────────────────────── */}
+      <MonthlyGrowthCard monthlySignups={data.monthly_signups} />
 
       {/* ── Two-column body: Recent signups | Tabbed Breakdowns ────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: 20, marginBottom: 40 }}>
