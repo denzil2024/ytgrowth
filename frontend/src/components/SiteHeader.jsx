@@ -237,7 +237,7 @@ export default function SiteHeader({ loggedIn = false }) {
           ) : loggedIn ? (
             <a href="/dashboard" className="sh-cta">Dashboard</a>
           ) : (
-            <a href="/auth/login" className="sh-cta">Get started free</a>
+            <a href="/auth/login" className="sh-cta">Start for $5</a>
           )}
         </div>
         </div>
@@ -271,7 +271,7 @@ export default function SiteHeader({ loggedIn = false }) {
               <a href="/dashboard" className="sh-cta" style={{ justifyContent: 'center', height: 'auto', padding: '13px 22px', fontSize: 14 }}>Dashboard</a>
             ) : (
               <>
-                <a href="/auth/login" className="sh-cta" style={{ justifyContent: 'center', height: 'auto', padding: '13px 22px', fontSize: 14 }}>Get started free</a>
+                <a href="/auth/login" className="sh-cta" style={{ justifyContent: 'center', height: 'auto', padding: '13px 22px', fontSize: 14 }}>Start for $5</a>
                 <a href="/auth/login" className="sh-mm-loginlink">Log in</a>
               </>
             )}

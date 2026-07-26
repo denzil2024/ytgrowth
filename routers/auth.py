@@ -187,61 +187,6 @@ def _fanout_insights_to_channel(channel_id: str, insights: dict, analyzed_at: st
         db.close()
 
 
-# ── Free-tier audit policy (2026-05-18) ────────────────────────────────────
-# The Channel Audit is free for free-plan users and does NOT draw from the
-# 5-credit trial pool. To stop it being an uncached-Claude money leak, a
-# free user's MANUAL re-audit is rate-limited to once every 7 days. The
-# first/signup audit and the paid auto-refresh are unaffected.
-_FREE_AUDIT_COOLDOWN_DAYS = 7
-
-
-def _stamp_last_audit(channel_id: str) -> None:
-    """Record now() as the channel's last audit time. Free audits skip
-    check_and_deduct (which used to stamp this), so we stamp explicitly so
-    the manual-re-audit cooldown has a source of truth."""
-    if not channel_id:
-        return
-    try:
-        db = SessionLocal()
-        from database.models import ChannelRegistry
-        reg = db.query(ChannelRegistry).filter_by(channel_id=channel_id).first()
-        if reg:
-            reg.last_audit_at = datetime.datetime.utcnow()
-            db.commit()
-    except Exception as e:
-        print(f"[audit] last_audit_at stamp failed for {channel_id}: {e}")
-    finally:
-        try:
-            db.close()
-        except Exception:
-            pass
-
-
-def _free_audit_retry_days(channel_id: str) -> int:
-    """0 if a free user may re-audit now, else whole days until they can.
-    Based on ChannelRegistry.last_audit_at; missing/old → allowed."""
-    if not channel_id:
-        return 0
-    try:
-        db = SessionLocal()
-        from database.models import ChannelRegistry
-        reg = db.query(ChannelRegistry).filter_by(channel_id=channel_id).first()
-        last = reg.last_audit_at if reg else None
-        db.close()
-        if not last:
-            return 0
-        if last.tzinfo is not None:
-            last = last.replace(tzinfo=None)
-        elapsed = datetime.datetime.utcnow() - last
-        remaining = datetime.timedelta(days=_FREE_AUDIT_COOLDOWN_DAYS) - elapsed
-        if remaining.total_seconds() <= 0:
-            return 0
-        return max(1, -(-remaining.days) if remaining.days else 1)
-    except Exception as e:
-        print(f"[audit] cooldown check failed for {channel_id}: {e}")
-        return 0  # fail open — never hard-block an audit on a DB hiccup
-
-
 # Hosts we serve OAuth on. redirect_uri + all post-login redirects are derived
 # from the request's own host so login works identically on ytgrowth.io and
 # channelbrain.online without flipping an env var (and without breaking the
@@ -842,19 +787,21 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             "fallback mode" in str(existing_insights.get("channelSummary", "")).lower()
         )
 
-        # Plan drives audit policy (2026-05-18):
-        #   Free  → audit is free + off the 5-credit pool. Auto-runs ONLY on
-        #           first signup / fallback. The 7-day auto-refresh is paid-
-        #           only; a free user re-audits via the manual button, which
-        #           is rate-limited to once / 7 days in /refresh-analysis.
-        #   Paid  → unchanged: auto-refresh once the audit is > 7 days old.
+        # No free trial (2026-07-26): every audit, free plan or paid, is
+        # gated by check_and_deduct below. is_free_plan only controls the
+        # 7-day auto-refresh window (paid-only).
         try:
             _pdb = SessionLocal()
             _psub = _pdb.query(UserSubscription).filter_by(channel_id=channel_id).first()
             plan = (_psub.plan if _psub else "free") or "free"
+            _credits_remaining = (
+                max(0, (_psub.monthly_allowance or 0) - (_psub.monthly_used or 0)) + (_psub.pack_balance or 0)
+                if _psub else 0
+            )
             _pdb.close()
         except Exception:
             plan = "free"
+            _credits_remaining = 0
         is_free_plan = plan == "free"
 
         if not existing_insights or is_fallback:
@@ -910,31 +857,27 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             _upsert_email_preferences(channel_id, google_email)
 
         # plan / is_free_plan already resolved above (before needs_analysis).
+        # Charge 1 credit regardless of plan. No refund on Claude failures
+        # (Anthropic still bills us). Out of credits → skip silently; they
+        # still land on the dashboard (and get redirected to load credits
+        # below if this is a free plan with nothing left).
         if needs_analysis:
-            if is_free_plan:
-                # Free audit: no credit charged, NOT drawn from the 5-credit
-                # trial pool. needs_analysis is already restricted to first
-                # signup / fallback for free, so this is the one-time intro
-                # audit. Stamp last_audit_at so the manual-re-audit 7-day
-                # cooldown has a baseline.
-                _stamp_last_audit(channel_id)
+            from app.analysis_gate import check_and_deduct
+            gate = check_and_deduct(channel_id)
+            if gate.get("allowed"):
                 background_tasks.add_task(
                     _run_analysis_in_background,
-                    session_id, stats, videos, full_data, plan, True, False
+                    session_id, stats, videos, full_data, plan, True
                 )
             else:
-                # Paid: charge 1 credit. No refund on Claude failures
-                # (Anthropic still bills us). Out of credits → skip silently;
-                # they still land on the dashboard.
-                from app.analysis_gate import check_and_deduct
-                gate = check_and_deduct(channel_id)
-                if gate.get("allowed"):
-                    background_tasks.add_task(
-                        _run_analysis_in_background,
-                        session_id, stats, videos, full_data, plan, True
-                    )
-                else:
-                    print(f"[callback] Skipping audit for {channel_id[:8]} — out of credits")
+                print(f"[callback] Skipping audit for {channel_id[:8]} — out of credits")
+
+        # No free tier (2026-07-26): a free-plan login with nothing in the
+        # bank (never bought a pack) skips the dashboard and goes straight
+        # to loading the $5 Starter pack. Reuses the same pco_plan resume
+        # mechanism as a pre-login pricing click (see /login above).
+        if is_free_plan and _credits_remaining <= 0 and "after_login_redirect" not in request.session:
+            request.session["after_login_redirect"] = "/dashboard?pco_plan=pack_5"
 
         # If a share-link entry point (e.g. /feedback) stashed a destination
         # before kicking off OAuth, honour it. One-shot — popped on use so it
@@ -1099,47 +1042,20 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
     sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
     plan = (sub.plan if sub else "free") or "free"
     db.close()
-    is_free_plan = plan == "free"
 
-    if is_free_plan:
-        # Free plan: the FIRST audit is free (the signup hook). RE-audits are a
-        # paid feature — refreshing the audit as the channel grows is part of
-        # the upgrade. This both stops the recurring uncached-Claude cost on a
-        # cohort that doesn't pay, and gives a concrete reason to upgrade.
-        # A failed first audit lands a "fallback mode" insights blob; allow a
-        # free retry in that case so a broken first run isn't paywalled.
-        existing = data.get("insights")
-        is_fallback = bool(
-            existing and "fallback mode" in str(existing.get("channelSummary", "")).lower()
+    # No free tier (2026-07-26): every re-audit, on any plan, charges 1
+    # credit up-front. No refund on Claude failures — Anthropic still bills
+    # us. Users email royalbluemedia.agency@gmail.com if a re-audit fails.
+    from app.analysis_gate import check_and_deduct
+    gate = check_and_deduct(channel_id)
+    if not gate.get("allowed"):
+        return JSONResponse(
+            {
+                "error": gate.get("message") or "You're out of analyses. Top up or upgrade to continue.",
+                "show_upgrade": True,
+            },
+            status_code=402,
         )
-        already_audited = bool(existing) and not is_fallback
-        if already_audited:
-            return JSONResponse(
-                {
-                    "error": (
-                        "Re-audits are a paid feature. Your first audit is free; "
-                        "upgrade to refresh it on demand as your channel grows."
-                    ),
-                    "show_upgrade": True,
-                    "locked": True,
-                },
-                status_code=403,
-            )
-        _stamp_last_audit(channel_id)
-    else:
-        # Paid: charge 1 credit up-front. No refund on Claude failures —
-        # Anthropic still bills us. Users email royalbluemedia.agency@gmail.com if a
-        # Re-Audit fails.
-        from app.analysis_gate import check_and_deduct
-        gate = check_and_deduct(channel_id)
-        if not gate.get("allowed"):
-            return JSONResponse(
-                {
-                    "error": gate.get("message") or "You're out of analyses. Top up or upgrade to continue.",
-                    "show_upgrade": True,
-                },
-                status_code=402,
-            )
 
     # Show "loading" state for THIS session only — never persist null insights
     # to the DB. If we wrote null and the user logged out/in (or hit another
@@ -1160,7 +1076,7 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
         full_data,
         plan,
         True,
-        not is_free_plan,  # free plan → rule-based audit, no Anthropic call
+        True,  # credit was just charged (pack or subscription) — full AI audit
     )
     return JSONResponse({"message": "Analysis started"})
 
@@ -1289,7 +1205,7 @@ def get_me(request: Request):
         status           = sub.status if sub else "free"
         billing_cycle    = sub.billing_cycle if sub else "none"
         is_lifetime      = sub.is_lifetime if sub else False
-        monthly_allowance = sub.monthly_allowance if sub else 3
+        monthly_allowance = sub.monthly_allowance if sub else 0
         monthly_used     = sub.monthly_used if sub else 0
         monthly_remaining = max(0, monthly_allowance - monthly_used)
         pack_balance     = sub.pack_balance if sub else 0

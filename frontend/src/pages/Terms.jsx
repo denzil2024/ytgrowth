@@ -59,7 +59,7 @@ export default function Terms() {
           <h2>3. Tokens &amp; Usage</h2>
           <p>Access to AI-powered tools is metered by tokens. One token equals one analysis run.</p>
           <ul>
-            <li>Free plan: a one-time trial of analysis credits, no monthly refill, no credit card required.</li>
+            <li>New accounts: 0 analysis credits by default. Load a one-time Analysis Pack or subscribe to begin.</li>
             <li>Subscriptions (Solo, Growth, Agency): tokens reset each billing period. Unused tokens do not roll over.</li>
             <li>Lifetime plans: monthly token allocation renews every calendar month, forever.</li>
             <li>Analysis Packs: one-time token purchases that never expire and stack with any plan.</li>
@@ -69,7 +69,7 @@ export default function Terms() {
           <p>Payments are processed by Paddle, our authorised reseller and Merchant of Record. All prices are in USD. Subscription plans are billed monthly or annually in advance.</p>
 
           <h2>5. Refunds &amp; Cancellations</h2>
-          <p>Refund requests submitted within 14 days of purchase will be honoured. Because {BRAND} provides a free trial before any payment is required, by the time you upgrade you have already used the product and know exactly what you are paying for. Paddle, as our Merchant of Record, also reserves the right to issue refunds at their discretion to prevent chargebacks. Full details in our <a href="/refund">refund policy</a>.</p>
+          <p>All purchases are final and non-refundable, credits are digital goods delivered instantly upon purchase. The only exception is a major technical failure on our end that makes the product unusable for more than 7 consecutive days. Paddle, as our Merchant of Record, also reserves the right to issue refunds at their discretion to prevent chargebacks. Full details in our <a href="/refund">refund policy</a>.</p>
 
           <h2>6. Acceptable Use</h2>
           <ul>

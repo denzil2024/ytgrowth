@@ -250,7 +250,7 @@ const DATA_INPUTS = [
 ]
 
 const PLAN_LIMITS = [
-  { plan: 'Free',    actions: '5',   note: 'Trial · first audit free' },
+  { plan: 'Starter', actions: '5',   note: '$5 one-time · credits never expire' },
   { plan: 'Solo',    actions: '8',   note: '20 audits / month · 3 channels' },
   { plan: 'Growth',  actions: '12',  note: '50 audits / month · 5 channels' },
   { plan: 'Agency',  actions: '15',  note: '150 audits / month · 10 pooled channels' },
@@ -324,11 +324,11 @@ export default function ChannelAudit() {
             YTGrowth pulls your full YouTube data, runs it through an AI tuned on the signals YouTube’s recommendation engine rewards, and returns a prioritized list of fixes. Each with the specific problem, why it matters now, the exact action to take, and the metric you’ll see move.
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <a href="/auth/login" className="ca-btn ca-btn-lg">Audit my channel free →</a>
+            <a href="/auth/login" className="ca-btn ca-btn-lg">Audit my channel, $5 →</a>
             <a href="#how" className="ca-ghost">See how it works</a>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', marginTop: 22, letterSpacing: '0.03em' }}>
-            Free trial · first audit free · no credit card · ~60 seconds per run
+            $5 to start · 5 audits, credits never expire · ~60 seconds per run
           </p>
         </div>
       </section>

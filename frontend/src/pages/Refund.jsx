@@ -45,7 +45,7 @@ export default function Refund() {
       {/* Body */}
       <section className="bp-section-pad" style={{ padding: isMobile ? '36px 22px 64px' : '64px 48px 96px', background: 'var(--yte-bg)' }}>
         <article className="bp-prose">
-          <p>Because {BRAND} provides a free trial before any payment is required, all purchases are non-refundable. By the time you upgrade, you have already used the product and know exactly what you are paying for.</p>
+          <p>All purchases are final and non-refundable. Credits are digital goods delivered instantly and usable the moment you buy, the same as any other prepaid credit product.</p>
 
           <hr />
 

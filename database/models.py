@@ -51,7 +51,7 @@ class UserSubscription(Base):
     email             = Column(String, nullable=True, index=True)
     plan              = Column(String,  default="free")   # free|solo|growth|agency|lifetime_solo|lifetime_growth|lifetime_agency
     billing_cycle     = Column(String,  default="none")   # monthly|annual|lifetime|none
-    monthly_allowance = Column(Integer, default=5)          # free tier: 5 lifetime trial credits (no refill)
+    monthly_allowance = Column(Integer, default=0)          # no free trial (2026-07-26): new users start at 0, must load credits
     monthly_used      = Column(Integer, default=0)        # paid: resets on reset_date; free: never resets
     pack_balance      = Column(Integer, default=0)        # never expires, stacks
     reset_date        = Column(DateTime, nullable=True)   # next monthly reset (set for free + paid)
@@ -853,18 +853,14 @@ try:
         "CREATE INDEX IF NOT EXISTS ix_outliers_reports_channel_id ON outliers_reports (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_outliers_reports_query_lower ON outliers_reports (query_lower)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_outliers_reports_channel_query_intent ON outliers_reports (channel_id, query_lower, confirmed_keyword_lower)",
-        # Free plan change 2026-05-18: 3-per-month-with-reset → 5 lifetime,
-        # NO refill. Existing free users PRESERVE monthly_used (a user who
-        # spent 2 of 3 keeps 3 of 5 — deliberately not a fresh 5, that would
-        # cost real Anthropic money on a cohort that does not pay). Free is
-        # identified by allowance < 20: every paid tier (Solo 20, Growth 50,
-        # Agency 150, lifetime variants) sits at or above 20, so this is
-        # paid-safe and stays correct if new free-string values appear.
-        # Idempotent: once a free row is at allowance=5/reset_date=NULL it
-        # re-matches (5 < 20) and is set to the same values, monthly_used
-        # untouched. Replaces the contradictory 2026-04-23/24 lines that
-        # would otherwise flip allowance back to 3 and zero usage every boot.
-        "UPDATE user_subscriptions SET monthly_allowance = 5, reset_date = NULL WHERE monthly_allowance < 20",
+        # RETIRED 2026-07-26. This ran unconditionally on every boot and set
+        # monthly_allowance = 5 for every row under 20, which include brand
+        # new signups (allowance = 0 as of the no-free-trial change). Left
+        # running, it would silently re-grant 5 free credits to every new
+        # signup on the very next deploy. It already did its one-time job
+        # migrating the pre-2026-05-18 cohort; every existing account has
+        # long since converged, so removing it changes nothing for them.
+        # Do NOT re-add a blanket "allowance < N" backfill here again.
         # Clamp carried-over usage so a legacy heavy user (e.g. old 9999
         # allowance, used 8) can't show a negative remaining. Floors the
         # trial at "0 of 5 left", never below.

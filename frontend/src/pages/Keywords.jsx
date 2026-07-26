@@ -1766,7 +1766,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           open={creditsOut}
           onClose={() => setCreditsOut(false)}
           title="Keyword research is a paid feature"
-          description="Keyword research isn't part of the free trial. Upgrade to unlock it, with YouTube autocomplete, related searches, and opportunity-ranked scoring every time."
+          description="Keyword research isn't included in the analysis packs. Upgrade to unlock it, with YouTube autocomplete, related searches, and opportunity-ranked scoring every time."
           bullets={[
             'Unlimited keyword research runs every month',
             'Real search volume and competition via YouTube + SerpAPI',

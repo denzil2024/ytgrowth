@@ -317,7 +317,7 @@ export default function YoutubeKeywordResearch() {
                 <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', lineHeight: 1.65, marginBottom: 18 }}>
                   Connect your channel for the full Keyword Research feature: opportunities scored against your channel size, keyword clusters, and a free AI audit.
                 </p>
-                <a href="/auth/login" className="kwt-btn" style={{ width: '100%' }}>Get my free audit →</a>
+                <a href="/auth/login" className="kwt-btn" style={{ width: '100%' }}>Get my audit, $5 →</a>
                 <p style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--yte-muted)', textAlign: 'center', marginTop: 10, letterSpacing: '0.03em' }}>Free trial · no card · upgrade anytime</p>
               </div>
             </div>

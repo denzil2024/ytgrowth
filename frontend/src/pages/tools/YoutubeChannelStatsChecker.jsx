@@ -463,11 +463,11 @@ export default function YoutubeChannelStatsChecker() {
                     Track {ch.title}'s every upload, title, and thumbnail
                   </h3>
                   <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'rgba(255,255,255,0.68)', lineHeight: 1.65 }}>
-                    Competitor Analysis tracks up to 10 channels weekly, surfaces their top-performing titles, finds content gaps in your niche, and emails you a digest. Free AI audit included.
+                    Competitor Analysis tracks up to 10 channels weekly, surfaces their top-performing titles, finds content gaps in your niche, and emails you a digest. AI audit included.
                   </p>
                 </div>
                 <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px 32px', background: 'var(--yte-accent)', color: '#fff', fontFamily: SANS, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                  Get started free →
+                  Start for $5 →
                 </a>
               </div>
             </div>

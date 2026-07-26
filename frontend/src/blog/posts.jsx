@@ -16,9 +16,9 @@
  *   - <img src="/blog/your-image.webp" alt="..." />   (drop image in frontend/public/blog/)
  *
  * Promo / upsell components for use inside post content:
- *   - <CtaButton to="/dashboard">Try free</CtaButton>            - small inline pill
+ *   - <CtaButton to="/dashboard">Start for $5</CtaButton>         - small inline pill
  *   - <CtaCard to="/features/seo-studio"
- *              title="..."  sub="..."  button="Try free →" />    - full-row promo card
+ *              title="..."  sub="..."  button="Start for $5 →" />    - full-row promo card
  *
  * Cover image specs: 16:9 aspect ratio, 1600x900 (preferred) or 1200x675.
  * Save to frontend/public/blog/your-slug-cover.jpg and set cover field.
@@ -27,7 +27,7 @@
  */
 
 /* Inline pill button - drop into the post body to drive a click. */
-export function CtaButton({ to = '/dashboard', children = 'Try free →' }) {
+export function CtaButton({ to = '/dashboard', children = 'Start for $5 →' }) {
   return <a href={to} className="bp-cta-inline">{children}</a>
 }
 
@@ -67,7 +67,7 @@ export function TemplateBlock({ text }) {
 
 /* Row-style promo card - title + sub on the left, red pill on the right.
    Use to upsell a specific feature or surface a free tool inside a post. */
-export function CtaCard({ to = '/dashboard', title, sub, button = 'Try free →' }) {
+export function CtaCard({ to = '/dashboard', title, sub, button = 'Start for $5 →' }) {
   return (
     <a href={to} className="bp-cta-card-link">
       <span className="bp-cta-card-text">
@@ -186,7 +186,7 @@ export const posts = [
           to="/features/channel-audit"
           title="Not sure how your channel reads to a reviewer?"
           sub="The free AI audit reviews your channel the way an outside reviewer would: what looks strong, what looks templated, and what to fix first. No card needed."
-          button="Run a free audit →"
+          button="Start my audit, $5 →"
         />
 
         <h2>Problem 4: Community Guidelines Strikes</h2>
@@ -339,7 +339,7 @@ export const posts = [
           to="/features/channel-audit"
           title="Diagnose the channel before you delete it"
           sub="The free AI audit reads your channel the way a stranger would: where the packaging fails, where viewers leave, and what to fix first. Know what is broken before deciding it cannot be fixed."
-          button="Run a free audit →"
+          button="Start my audit, $5 →"
         />
 
         <h2>The Myths Pushing You to Delete</h2>
@@ -1020,7 +1020,7 @@ export const posts = [
           to="/features/channel-audit"
           title="See how your channel reads from the outside"
           sub="The free AI audit reviews your channel the way an outside reviewer would: what looks strong, what looks templated, and what to fix first. No card needed."
-          button="Run a free audit →"
+          button="Start my audit, $5 →"
         />
 
         <h2>Do You Need the AI Disclosure Label?</h2>
@@ -1517,7 +1517,7 @@ export const posts = [
           to="/features/channel-audit"
           title="See what is really holding your channel back"
           sub="A new mic helps, but only if audio is your weak link. Run a free channel audit to find the retention and packaging gaps costing you reach, so you upgrade the thing that truly moves your views."
-          button="Run a free audit →"
+          button="Start my audit, $5 →"
         />
 
         <h2>The Best Mic for What You Really Make</h2>

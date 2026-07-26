@@ -172,13 +172,13 @@ def check_and_deduct(channel_id: str, amount: int = 1) -> dict:
 # single run per monthly cycle (cycle = subscription.reset_date window).
 # ───────────────────────────────────────────────────────────────────────────
 
-# Free trial model (2026-05-18):
+# No free trial (2026-07-26):
 #
-# A free user gets a 5-credit lifetime pool (no monthly refill). Those
-# credits can ONLY be spent on the three converter features below. Spending
-# is enforced by check_and_deduct() in the route, NOT here — this gate only
-# decides "is this feature reachable on the free plan at all". Outliers
-# charges 3 of the 5, Competitors and SEO Studio charge 1 each.
+# A free-plan user starts with 0 credits (monthly_allowance column default).
+# These three features are reachable in principle, but spending is enforced
+# by check_and_deduct() in the route, NOT here — with 0 credits and no pack
+# purchased, that call rejects immediately. A free-plan user who buys a pack
+# spends it here. Outliers charges 3, Competitors and SEO Studio charge 1 each.
 TRIAL_FEATURES = {"outliers", "seo", "competitors"}
 
 # Everything else is paid-only on the free plan. The route returns a

@@ -142,7 +142,7 @@ function CtaButtons() {
       }}
         onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
         onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
-      >Get started free</a>
+      >Start for $5</a>
       <a href="/#pricing" style={{
         background: 'transparent', color: '#fff', fontWeight: 600, fontSize: 12.5,
         padding: '14px 24px', borderRadius: 0, textDecoration: 'none', fontFamily: SANS,

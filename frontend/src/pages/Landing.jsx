@@ -1011,7 +1011,7 @@ export default function Landing() {
             <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: ED_ACCENT, color: '#fff', fontFamily: ED_SANS, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '17px 34px', textDecoration: 'none', transition: 'filter 0.18s, transform 0.18s' }}
               onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
               onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
-            >Audit my channel free →</a>
+            >Audit my channel, $5 →</a>
             <a href="#pricing" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#ffffff', color: ED_SOFT, fontFamily: ED_SANS, fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '17px 30px', textDecoration: 'none', border: '1px solid rgba(20,19,15,0.14)', transition: 'color 0.15s, border-color 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.color = ED_INK; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.28)' }}
               onMouseLeave={e => { e.currentTarget.style.color = ED_SOFT; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.14)' }}
@@ -1020,7 +1020,7 @@ export default function Landing() {
 
           {/* Trust line */}
           <p style={{ fontFamily: ED_SANS, fontSize: 13, fontWeight: 500, color: ED_MUTED, letterSpacing: '0.02em' }}>
-            No card required &nbsp;·&nbsp; 5 free audits when you sign up &nbsp;·&nbsp; Cancel anytime
+$5 to start &nbsp;·&nbsp; 5 analyses, credits never expire &nbsp;·&nbsp; No subscription
           </p>
 
           {/* Product Hunt badge */}
@@ -1118,8 +1118,8 @@ export default function Landing() {
             <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 22, background: ED_ACCENT, color: '#fff', fontFamily: ED_SANS, fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '16px 32px', textDecoration: 'none', transition: 'filter 0.18s, transform 0.18s' }}
               onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
               onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
-            >Run my free audit →</a>
-            <p style={{ fontFamily: ED_SANS, fontSize: 12.5, color: ED_MUTED, marginTop: 13 }}>Your first audit is free. No card required.</p>
+            >Run my audit, $5 →</a>
+            <p style={{ fontFamily: ED_SANS, fontSize: 12.5, color: ED_MUTED, marginTop: 13 }}>$5 gets you 5 full audits. Credits never expire.</p>
           </div>
           <ChannelAuditPreview isMobile={isMobile} />
         </div>
@@ -1387,19 +1387,19 @@ export default function Landing() {
               <p style={{ fontFamily: ED_SANS, fontSize: 12.5, fontWeight: 700, color: ED_ACCENT, marginTop: -2 }}>2 months free when you pay yearly</p>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
-              {/* Free. No toggle (no cycle to choose) */}
+              {/* Starter pack. No toggle (one-time, not a cycle) */}
               <div className="ytg-pricing-card">
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
-                <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1, marginBottom: 4 }}>$0</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>5 free analyses</p>
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Full access to our best features, then upgrade</p>
-                {['Full channel audit (first one free)', '5 analyses to spend on the tools below', 'Outliers, find proven winning videos', 'Competitor Analysis (1 rival)', 'SEO Studio (full)'].map((f, i) => (
+                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Starter</p>
+                <p style={{ fontFamily: ED_SERIF, fontWeight: 400, fontSize: 46, letterSpacing: '-1px', color: ED_INK, lineHeight: 1, marginBottom: 4 }}>$5</p>
+                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>5 analyses, one-time</p>
+                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Credits never expire, no subscription</p>
+                {['Full channel audit', '5 analyses to spend on the tools below', 'Outliers, find proven winning videos', 'Competitor Analysis (1 rival)', 'SEO Studio (full)'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
                 <div style={{ borderTop: '1px solid rgba(10,10,15,0.07)', marginTop: 6, paddingTop: 12 }}>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', lineHeight: 1.6, margin: 0 }}>Paid only: Keyword Explorer, Thumbnail IQ, Title Optimizer, Video Ideas, Autopsy, weekly reports.</p>
                 </div>
-                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
+                <button onClick={() => openCheckout('pack_5')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
               </div>
 
               {/* Solo. Per-card cycle toggle */}
