@@ -270,7 +270,12 @@ export default function Dashboard() {
           try { sessionStorage.removeItem('ytg_pending_plan') } catch {}
           openCheckout(pending)
         }
-        if (d.insights === null) {
+        // Never show the "Analyzing…" spinner while a forced checkout redirect
+        // is in flight. A 0-credit signup has insights=null but no audit ever
+        // ran (the backend safety gate blocks it), so this used to strand
+        // users on a fake spinner forever if the checkout redirect silently
+        // failed (ad blocker, cookie hiccup, etc.) — no error, no way out.
+        if (d.insights === null && !pending) {
           auditBaselineRef.current = d.analyzed_at ?? null
           setAnalyzingAI(true)
         }

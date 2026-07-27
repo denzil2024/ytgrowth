@@ -394,6 +394,31 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
     """
     channel_id = stats.get("channel_id") if stats else None
     try:
+        # Hard, independent safety gate (2026-07-26, after a free-tier Claude
+        # cost leak was reported live). Never trust the caller's use_ai flag
+        # alone — re-check directly against the DB, right here, immediately
+        # before the only Claude call this function can make. A free-plan
+        # channel with 0 real spendable credits (monthly + pack) NEVER
+        # reaches analyze_channel, no matter what upstream gates decided.
+        if use_ai and channel_id:
+            try:
+                _vdb = SessionLocal()
+                try:
+                    _vsub = _vdb.query(UserSubscription).filter_by(channel_id=channel_id).first()
+                finally:
+                    _vdb.close()
+                _real_credits = (
+                    max(0, (_vsub.monthly_allowance or 0) - (_vsub.monthly_used or 0)) + (_vsub.pack_balance or 0)
+                    if _vsub else 0
+                )
+                _is_free = (not _vsub) or ((_vsub.plan or "free") == "free")
+                if _is_free and _real_credits <= 0:
+                    print(f"[safety-gate] Blocked Claude call for {channel_id[:8]} — free plan, 0 real credits")
+                    use_ai = False
+            except Exception as _ve:
+                print(f"[safety-gate] check failed for {channel_id[:8]}: {_ve} — failing closed (no Claude call)")
+                use_ai = False
+
         if use_ai:
             insights = analyze_channel(
                 stats, videos,
