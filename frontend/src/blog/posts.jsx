@@ -91,6 +91,240 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'start-youtube-channel',
+    title: 'How to Start a YouTube Channel in 2026: The Complete Setup Guide',
+    excerpt: 'Nearly every guide walks through the same six or seven steps in the same order, then gives the two decisions that determine how much of your setup you redo later, personal versus Brand Account, and whether your phone alone is enough, a single throwaway line. The complete process, with both given the depth they deserve.',
+    date: '2026-07-28',
+    category: CATEGORIES.growth,
+    cover: '/blog/start-youtube-channel-cover.jpg',
+    coverAlt: 'A creator setting up a brand-new YouTube channel on a laptop, profile and banner still blank',
+    author: 'Denzil',
+    readTime: '14 min read',
+    faqs: [
+      { q: 'How do I start a YouTube channel?', a: 'Sign in to YouTube with a Google account, choose between a personal channel and a Brand Account, pick a name and handle, add a profile picture and banner, then verify your phone number to unlock longer uploads. From there the account setup itself only takes minutes, the real work is planning what you will make.' },
+      { q: 'Do I need a Google account to start a YouTube channel?', a: 'Yes, every YouTube channel runs on a Google account underneath it, even a Brand Account, since Brand Accounts are still managed through a personal Google login behind the scenes. If you already use Gmail, Google Drive, or Google Photos, that same account can become your channel with no extra signup.' },
+      { q: 'Should I use a personal account or a Brand Account for YouTube?', a: 'Choose a Brand Account if you ever plan to add a manager, run the channel as a business, or keep your channel identity separate from your personal Google profile. Choose personal only if the channel will always be a one-person operation tied to your own name, since switching later is possible but rebuilds your channel\'s ownership structure from scratch.' },
+      { q: 'Can I start a YouTube channel entirely on my phone?', a: 'Yes, the full setup, filming, editing, and uploading can all happen on a phone using the YouTube app and YouTube Studio app. The one place a phone genuinely falls short is deep analytics work and bulk editing across many videos, both of which are easier on desktop once your channel has real history to review.' },
+      { q: 'How do I create a YouTube channel for my business?', a: 'Set it up as a Brand Account rather than a personal channel, since a Brand Account lets multiple team members manage the channel without sharing a single login, and it keeps the channel\'s identity separate from any one employee\'s personal Google account. Everything else in the setup process is identical to a personal channel.' },
+      { q: 'What equipment do I need to start a YouTube channel?', a: 'A modern smartphone, a clip-on microphone under $30, and a window for natural light cover the first several months of most channels. Audio quality affects viewer retention more than video quality, so if you can only upgrade one thing before you start, upgrade the microphone rather than the camera.' },
+      { q: 'How long does it take to start making money on YouTube?', a: 'You need 1,000 subscribers and 4,000 public watch hours in the trailing 12 months, or the Shorts equivalent, before YouTube even lets you apply to the Partner Program. Most new channels that post consistently and pick a real niche reach that threshold in 6 to 18 months, though the range varies enormously by niche and upload frequency.' },
+      { q: 'How do I choose a niche for a new YouTube channel?', a: 'Start from a topic you already know enough about to make videos for a year without running out of ideas, then check real search demand for that topic before committing, rather than guessing. A niche you can sustain beats a trending one you will abandon in six weeks.' },
+      { q: 'Do I need to show my face to start a YouTube channel?', a: 'No, faceless channels built around screen recordings, stock footage, voiceover, or animation are a fully viable format, and several of the largest channels in finance, tech, and true crime run this way. It does close off vlogging and reaction content specifically, so the decision should follow from your content type rather than camera shyness alone.' },
+      { q: 'How much does it cost to start a YouTube channel?', a: 'Zero dollars for the channel itself, YouTube is free to create and free to upload to. Realistic early costs are a microphone, and eventually paid tools once you outgrow YouTube Studio\'s free analytics, but neither is required before your first video.' },
+    ],
+    content: () => (
+      <>
+        <p>Typing "how to start a YouTube channel" into Google returns millions of results, and nearly every one of them walks through the same six or seven steps in the same order: sign in, name your channel, add a banner, pick a niche, upload. <strong>That checklist is accurate.</strong> It is also missing the two decisions that quietly determine how much of your setup you end up redoing later: whether you create a <strong>personal account or a Brand Account</strong>, and whether you need anything beyond <strong>the phone already in your pocket.</strong></p>
+
+        <p>Both of those choices get one line in most guides, if they get mentioned at all. Neither is trivial to unwind once videos, subscribers, and a channel history are attached to the wrong one. This is the complete process, start to finish, with those two decisions given the depth they deserve, plus the <strong>free tools</strong> that turn each planning step from a guess into something you can check before you commit.</p>
+
+        <h2>Choose Your Account Type Before You Choose a Name</h2>
+
+        <p>Every YouTube channel sits on top of a Google account, so if you already use Gmail or Google Drive, you already have what you need. What most guides skip is the fork that comes immediately after signing in: <strong>personal channel or Brand Account.</strong> Pick before you name anything, since the name, handle, and branding you choose next attach to whichever one you select.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Personal Channel</th>
+              <th>Brand Account</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Tied to</strong></td><td>Your individual Google account</td><td>A separate identity, still run through a Google login behind the scenes</td></tr>
+            <tr><td><strong>Managers</strong></td><td>Only you, unless you share your Google password</td><td>Multiple people can manage it without sharing a single login</td></tr>
+            <tr><td><strong>Best for</strong></td><td>A one-person channel tied to your own name</td><td>Businesses, teams, or any channel you want kept separate from your personal profile</td></tr>
+            <tr><td><strong>Switching later</strong></td><td>Possible, but rebuilds the ownership structure from scratch</td><td>Possible, same caveat in reverse</td></tr>
+          </tbody>
+        </table>
+
+        <p>A Brand Account costs nothing extra and takes the same few minutes to set up. The only real reason to skip it is certainty that the channel will always be a solo project tied to your own name. If there is any chance you will bring on an editor, a co-host, or run the channel as a registered business, <strong>starting as a Brand Account saves a migration later.</strong></p>
+
+        <p>Once the account type is settled, pick a name and handle. <strong>Short, easy to spell, and related to your niche</strong> beats clever every time, since viewers who cannot remember or type your name cannot find you again. If nothing is landing, the free <a href="/tools/youtube-channel-name-generator">Channel Name Generator</a> gives you real options built from your niche in seconds rather than a blank text box.</p>
+
+        <blockquote><strong>Quick Tip:</strong> check your handle across YouTube, Instagram, and TikTok before you commit. A name that is free on YouTube but already taken everywhere else forces a mismatched handle later, right when you have an audience who already knows you by the first one.</blockquote>
+
+        <p>Last in this step: verify your phone number. It is <strong>not optional in practice</strong>, since an unverified channel is capped at short uploads and cannot go live, and YouTube asks for it the moment you try to upload anything longer. While you are in settings, turn on <strong>two-step verification</strong> too, a channel with any real subscriber count is a target worth locking down properly from day one.</p>
+
+        <p>One setting almost every guide skips entirely: in YouTube Studio, go to <strong>Settings → Channel → Basic Info</strong> and add 5 to 10 channel keywords describing what your channel covers. Viewers never see them, but they are a direct signal YouTube's system uses to understand your channel's topic, separate from the tags on any individual video, and worth filling in before your first upload rather than after.</p>
+
+        <h2>You Can Do All of This From Your Phone</h2>
+
+        <p>Nothing above requires a computer. Install the YouTube app, tap your profile icon, and select "Your channel," and if you do not have one yet, the app prompts you to create it right there. The <strong>YouTube Studio app</strong> handles everything else, and it genuinely covers the whole early phase:</p>
+
+        <ul>
+          <li><strong>Channel creation and branding.</strong> Set your name, handle, profile picture, and banner from the app in a few minutes.</li>
+          <li><strong>Filming and basic editing.</strong> Most phones shoot 4K by default, and free apps like CapCut handle cuts, text, and audio cleanup without a desktop.</li>
+          <li><strong>Uploading and metadata.</strong> Title, description, tags, thumbnail, and visibility settings are all available directly at upload, right from the app.</li>
+          <li><strong>Early analytics.</strong> Views, watch time, and the retention graph for individual videos all render inside the Studio app.</li>
+        </ul>
+
+        <p>A phone genuinely runs out of road in only two places: <strong>deep analytics work</strong> once you have months of data to compare, and bulk editing across a large back catalog. Neither of those is a first-video problem. For the entire setup, planning, filming, and uploading phase, a phone is a complete toolkit for the job.</p>
+
+        <h2>Brand Your Channel Before Your First Upload</h2>
+
+        <p>A blank channel page reads as unfinished to anyone who lands on it before your first video is even live, so branding should happen first. Six elements do the actual work:</p>
+
+        <ul>
+          <li><strong>Profile picture.</strong> A clear, simple image that still reads well at the small thumbnail size it appears at next to a video.</li>
+          <li><strong>Banner.</strong> Treat it as a billboard, not just decoration: a short line on what the channel is about plus an upload schedule or a direct "Subscribe for weekly tips" earns more than a purely visual design. The <a href="/blog/youtube-banner-size">banner size guide</a> covers the exact dimensions so nothing gets cropped oddly across desktop, mobile, and TV.</li>
+          <li><strong>Watermark.</strong> Optional, but it reinforces branding on every video and gives viewers a one-click subscribe button while they watch.</li>
+          <li><strong>About section.</strong> The part people skip and should not. A clear couple of sentences on what the channel covers and how often you post does real work, both for a visitor deciding whether to subscribe and for YouTube's own understanding of your channel.</li>
+          <li><strong>Links.</strong> Any social profiles or a website you want visible directly on your channel page.</li>
+          <li><strong>Channel trailer.</strong> If you already have a few videos ready, a short trailer playing for new visitors converts noticeably better than an empty page with no context.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> write your about section primarily for a first-time visitor deciding whether to subscribe. State what the channel covers, who it is for, and how often you post, in that order, and save keyword-heavy language for your video descriptions instead.</blockquote>
+
+        <h2>Plan Your Content Strategy Before You Film Anything</h2>
+
+        <p>This is the step that decides whether the channel survives past month three. Four questions, answered honestly, before you film anything:</p>
+
+        <ul>
+          <li><strong>Does this niche have real, ongoing demand,</strong> or does it just feel exciting to you this week?</li>
+          <li><strong>Can you make videos on this topic for a year</strong> without running out of angles, since a trending subject you cannot sustain is a worse foundation than a narrower one you can?</li>
+          <li><strong>Who specifically is this for?</strong> A channel trying to reach everyone reaches no one in particular.</li>
+          <li><strong>What is already ranking or trending in this space,</strong> and where is the obvious gap nobody has filled yet?</li>
+        </ul>
+
+        <p>That last question deserves <strong>real research</strong>. Look at who else is already making videos in your space before you film a single one, note what they cover well, what they cover poorly, and where an angle is sitting unclaimed. The free <a href="/features/competitor-analysis">Competitor Analysis</a> tool runs this research against real channel data instead of a manual scroll through search results.</p>
+
+        <p>Most beginners pick a niche on instinct and find out months later that <strong>almost nobody was searching for it.</strong> Checking real demand before you commit is a five-minute step that saves a year of effort aimed at an audience that was never there.</p>
+
+        <CtaCard
+          to="/features/keyword-research"
+          title="Don't guess whether your niche has real demand"
+          sub="The free Keyword Research tool shows actual search volume and competition for any topic before you build a channel around it. No signup."
+          button="Check my niche, free →"
+        />
+
+        <h2>From Idea to Finished Video</h2>
+
+        <p>Once your niche is validated, the next problem is never running out of things to say about it. The free <a href="/tools/youtube-video-ideas-generator">Video Ideas Generator</a> plugs your niche into <strong>90-plus proven content formats</strong> and returns a working list instead of a blank page, and the full <a href="/blog/youtube-video-ideas">video ideas guide</a> covers the format types in more depth if you want to build your own system.</p>
+
+        <p>Test each idea against real search volume before you script it. An idea that sounds good in your head and an idea people are searching for are not always the same thing. The same Keyword Research tool from the planning step works here too, this time on individual video topics instead of the whole channel.</p>
+
+        <p>Write the script before you touch a camera. Even a loose bullet outline beats improvising on the spot for most beginners.</p>
+
+        <p>The <strong>opening ten seconds</strong> deserve more attention than the rest of the script combined, since that is where nearly all first-video drop-off happens. The <a href="/blog/how-to-start-a-youtube-video">complete video-production guide</a> covers scripting, hooks, and filming in full depth if you want the extended version of this step.</p>
+
+        <p>Equipment matters less than most new creators assume, and it scales with your budget rather than gating you at the start:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Budget</th>
+              <th>Setup</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>$0</strong></td><td>Phone camera, natural light from a window, phone's built-in mic</td></tr>
+            <tr><td><strong>Under $50</strong></td><td>Add a clip-on lavalier microphone, the single highest-leverage upgrade</td></tr>
+            <tr><td><strong>Under $200</strong></td><td>Add a basic ring light or softbox for consistent lighting regardless of time of day</td></tr>
+            <tr><td><strong>$300+</strong></td><td>Entry camera or capture card, only worth it once phone limitations are the actual bottleneck</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Viewers forgive a soft picture far more readily than hollow or noisy sound</strong>, so if the budget only stretches to one upgrade, the microphone wins every time. The full breakdown at every budget is in the <a href="/blog/best-youtube-mic">best microphone for YouTube guide</a>.</p>
+
+        <blockquote><strong>Quick Tip:</strong> film in one session where possible. Stopping and restarting is where most first-time creators lose momentum and never finish, so if you misspeak, pause and pick back up rather than resetting the whole take, you can cut around it later.</blockquote>
+
+        <p>When you edit, cut anything that does not move the video forward: <strong>dead air, false starts, filler words.</strong> A rough cut with zero dead air beats a beautifully graded video that drags.</p>
+
+        <p>If your videos use music, stick to sources that clear the rights. A huge share of copyright claims come from "no copyright" tracks that were never properly licensed in the first place, covered fully in the <a href="/blog/copyright-free-music">copyright-free music guide</a>.</p>
+
+        <h2>Publish and Get Found</h2>
+
+        <p>Upload as <strong>MP4, 16:9 aspect ratio, at least 1080p</strong>, since YouTube compresses everything on upload and a higher-resolution source gives that compression more detail to work with. Before you hit publish, run through this checklist:</p>
+
+        <ul>
+          <li><strong>Title.</strong> States the specific outcome or question the video answers. The <a href="/blog/youtube-title">title guide</a> covers the formulas that consistently earn the click, and the free <a href="/tools/youtube-title-generator">Title Generator</a> gives you a starting point in seconds.</li>
+          <li><strong>Thumbnail.</strong> Built to spec and designed for a phone screen first, since most viewers decide in under a second based on the image alone. The <a href="/blog/youtube-thumbnail-size">thumbnail size guide</a> covers the exact dimensions and safe zones.</li>
+          <li><strong>Description.</strong> A keyword-rich opening line, a short summary, and timestamps if the video runs past five minutes. The <a href="/blog/youtube-description-template">description template guide</a> has ready structures, and the free <a href="/tools/youtube-description-generator">Description Generator</a> builds one instantly.</li>
+          <li><strong>Tags.</strong> The metadata layer YouTube uses to understand what your video is about. The free <a href="/tools/youtube-tag-generator">Tag Generator</a> builds a ranked list from your topic.</li>
+          <li><strong>Captions.</strong> Help accessibility and search both, and take a few minutes to add before you publish.</li>
+          <li><strong>End screens and cards.</strong> Point to your next video so a viewer stays on your channel instead of back in their feed, worth adding once you have more than one video live.</li>
+        </ul>
+
+        <p>Once you have three or more videos in a niche, group them into a <strong>playlist</strong>, one of the easiest ways to turn a single view into several. And do not skip <a href="/blog/youtube-shorts-algorithm">Shorts</a>: a 30 to 60 second clip pulled from your strongest long-form moment gives that video a <strong>second discovery channel almost for free.</strong></p>
+
+        <h2>Grow Past Your First Videos</h2>
+
+        <p><strong>Consistency beats frequency.</strong> A channel that reliably posts every week outperforms one that posts daily for a month and then goes quiet, since viewers subscribe partly on the expectation of when your next video lands. Four tactics do most of the work once you have a small library:</p>
+
+        <ul>
+          <li><strong>Post on a predictable schedule.</strong> The <a href="/blog/best-time-to-post">best time to post guide</a> covers population-level timing data, useful early on, though your own channel's data beats any generic chart once you have a few weeks of history.</li>
+          <li><strong>Reply to comments, especially in the first hour after a video goes live.</strong> YouTube's own data shows a real correlation between creator engagement and subscriber growth.</li>
+          <li><strong>Promote new videos on whatever other platforms you already use.</strong> A Short, a post, a story, anywhere your existing audience already checks.</li>
+          <li><strong>Collaborate with similarly sized creators in your niche.</strong> A shared audience is one of the fastest ways to grow past your own subscriber base's ceiling.</li>
+        </ul>
+
+        <h2>Measure What's Working, Then Fix What Isn't</h2>
+
+        <p>YouTube Studio's free analytics cover more than most beginners ever open. Watch your <a href="/blog/youtube-analytics">Audience Retention graph</a> on every video. If the steepest drop-off sits in the first 30 seconds, <strong>the fix is the opening, not the topic or the thumbnail.</strong> That single graph tells you more about what to change next time than any other metric on the page.</p>
+
+        <p>Monetization has a hard floor before you can even apply to the <a href="/blog/youtube-partner-program">Partner Program</a>:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Requirement</th>
+              <th>Threshold</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Subscribers</strong></td><td>1,000</td></tr>
+            <tr><td><strong>Watch hours (long-form)</strong></td><td>4,000 public hours in the trailing 12 months</td></tr>
+            <tr><td><strong>Shorts equivalent</strong></td><td>10 million public Shorts views in the trailing 90 days</td></tr>
+            <tr><td><strong>Typical timeline</strong></td><td>6 to 18 months for a consistent channel in a real niche</td></tr>
+          </tbody>
+        </table>
+
+        <blockquote><strong>Pro Tip:</strong> ad revenue is rarely the whole picture even once you clear those thresholds. Sponsorships and affiliate income tend to outpace ads for smaller, engaged channels well before either monetization threshold is hit, so do not treat the Partner Program as the only revenue path worth planning around.</blockquote>
+
+        <p>If weeks pass with no movement, resist the urge to redesign everything at once. Most stalled channels have <strong>one specific, findable problem</strong> rather than a dozen small ones, and the <a href="/blog/youtube-channel-not-growing">channel not growing guide</a> walks through how to isolate it before you touch anything.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How do I start a YouTube channel?</h3>
+        <p>Sign in to YouTube with a Google account, choose between a personal channel and a Brand Account, pick a name and handle, add a profile picture and banner, then verify your phone number to unlock longer uploads. The account setup itself only takes minutes, the real work is <strong>planning what you will make</strong>.</p>
+
+        <h3>Do I need a Google account to start a YouTube channel?</h3>
+        <p><strong>Yes</strong>, every YouTube channel runs on a Google account underneath it, even a Brand Account, since Brand Accounts are still managed through a personal Google login behind the scenes. If you already use Gmail, Google Drive, or Google Photos, that same account can become your channel with no extra signup.</p>
+
+        <h3>Should I use a personal account or a Brand Account for YouTube?</h3>
+        <p>Choose a <strong>Brand Account</strong> if you ever plan to add a manager, run the channel as a business, or keep your channel identity separate from your personal Google profile. Choose personal only if the channel will always be a one-person operation tied to your own name, since switching later is possible but rebuilds your channel's ownership structure from scratch.</p>
+
+        <h3>Can I start a YouTube channel entirely on my phone?</h3>
+        <p><strong>Yes</strong>, the full setup, filming, editing, and uploading can all happen on a phone using the YouTube app and YouTube Studio app. The one place a phone genuinely falls short is deep analytics work and bulk editing across many videos, both easier on desktop once your channel has real history to review.</p>
+
+        <h3>How do I create a YouTube channel for my business?</h3>
+        <p>Set it up as a <strong>Brand Account</strong> rather than a personal channel, since a Brand Account lets multiple team members manage the channel without sharing a single login, and it keeps the channel's identity separate from any one employee's personal Google account. Everything else in the setup process is identical to a personal channel.</p>
+
+        <h3>What equipment do I need to start a YouTube channel?</h3>
+        <p>A modern smartphone, a clip-on microphone under $30, and a window for natural light cover the first several months of most channels. <strong>Audio quality affects viewer retention more than video quality</strong>, so if you can only upgrade one thing before you start, upgrade the microphone rather than the camera.</p>
+
+        <h3>How long does it take to start making money on YouTube?</h3>
+        <p>You need <strong>1,000 subscribers and 4,000 public watch hours</strong> in the trailing 12 months, or the Shorts equivalent, before YouTube even lets you apply to the Partner Program. Most new channels that post consistently and pick a real niche reach that threshold in 6 to 18 months, though the range varies enormously by niche and upload frequency.</p>
+
+        <h3>How do I choose a niche for a new YouTube channel?</h3>
+        <p>Start from a topic you already know enough about to make videos for a year without running out of ideas, then <strong>check real search demand</strong> for that topic before committing, rather than guessing. A niche you can sustain beats a trending one you will abandon in six weeks.</p>
+
+        <h3>Do I need to show my face to start a YouTube channel?</h3>
+        <p><strong>No</strong>, faceless channels built around screen recordings, stock footage, voiceover, or animation are a fully viable format, and several of the largest channels in finance, tech, and true crime run this way. It does close off vlogging and reaction content specifically, so the decision should follow from your content type rather than camera shyness alone.</p>
+
+        <h3>How much does it cost to start a YouTube channel?</h3>
+        <p><strong>Zero dollars</strong> for the channel itself, YouTube is free to create and free to upload to. Realistic early costs are a microphone, and eventually paid tools once you outgrow YouTube Studio's free analytics, but neither is required before your first video.</p>
+
+        <h2>The Setup Is the Easy Part</h2>
+
+        <p>Every technical step above, the account, the branding, the upload, is mechanical enough to finish in an afternoon. <strong>The two decisions that compound over time</strong> are the ones this guide gave real depth to: picking the account structure your channel will still be using at 100,000 subscribers, and picking a niche real people are searching for instead of one that only sounds good to you.</p>
+
+        <p>Get those two right and the rest of this guide is just execution, one video, one upload, one week at a time, until the channel that looked empty on day one stops looking new.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-demonetization',
     title: 'Why YouTube Demonetized Your Channel: The 2026 Diagnosis Guide',
     excerpt: 'The word "demonetized" covers five different problems, a yellow icon, a copyright claim, a strike, a Partner Program suspension, or termination, and each one carries its own fix and its own deadline. Here is how to tell which one hit you, and what YouTube\'s July 2026 update changed underneath it.',
@@ -13472,7 +13706,12 @@ export function getPostBySlug(slug) {
 }
 
 export function getRelatedPosts(currentSlug, max = 3) {
-  return posts.filter(p => p.slug !== currentSlug).slice(0, max)
+  const current = posts.find(p => p.slug === currentSlug)
+  if (!current) return posts.slice(0, max)
+  const sameCategory = posts.filter(p => p.slug !== currentSlug && p.category === current.category)
+  if (sameCategory.length >= max) return sameCategory.slice(0, max)
+  const rest = posts.filter(p => p.slug !== currentSlug && p.category !== current.category)
+  return [...sameCategory, ...rest].slice(0, max)
 }
 
 export function formatPostDate(isoDate) {
