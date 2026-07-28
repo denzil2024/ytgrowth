@@ -91,6 +91,510 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'gaming-youtube-channel',
+    title: 'How to Start a Gaming YouTube Channel: The Complete Guide',
+    excerpt: 'Every guide in this space pushes its own paid recording software and skips the one thing that separates a gaming channel from a general one, timing content around the game itself. The full setup, an honest free-tool recommendation, and the content calendar built around release cycles instead of guesswork.',
+    date: '2026-07-28',
+    category: CATEGORIES.growth,
+    cover: '/blog/gaming-youtube-channel-cover.jpg',
+    coverAlt: 'A gamer at a PC setup with a capture card and microphone, a game recording session visible on the monitor',
+    author: 'Denzil',
+    readTime: '13 min read',
+    faqs: [
+      { q: 'How do I start a gaming YouTube channel with no experience?', a: 'Pick one game and one specific viewer outcome, ranked climbing tips for Valorant rather than just Valorant gameplay, record with free software like OBS Studio, and publish consistently for several weeks before judging results. Experience comes from the reps, not from a perfect first video.' },
+      { q: 'Do I need a gaming PC to start a gaming channel, or is a console enough?', a: 'A console works fine and most consoles can record and share clips natively. The real difference is capture: PC gives you free software like OBS Studio, while console requires either the built-in share feature or an external capture card for full control over quality and editing.' },
+      { q: 'What software should I use to record gameplay?', a: 'OBS Studio, free and open source, is the honest default for PC. It handles local recording and live streaming with no watermark and no subscription, unlike most of the paid tools gaming guides tend to recommend.' },
+      { q: 'Do I need a capture card?', a: 'Only if you are recording from a console and want full editing control over the footage. PC gameplay records natively through software like OBS with no extra hardware, and most consoles can export basic clips without one too.' },
+      { q: 'What is the best microphone for a gaming channel?', a: 'A USB headset with a boom mic is the cheapest starting point and solves two problems at once, game audio in your ears and clear commentary on the recording. A dedicated desk microphone is the first real upgrade once commentary becomes the main draw rather than the gameplay itself.' },
+      { q: 'Should I focus on one game or play multiple games?', a: 'One game builds authority and a loyal audience far faster than jumping between titles. Multi-game channels do exist and can work, but almost always after the channel already has a defined viewer outcome that holds across different games, a format or personality rather than a single title.' },
+      { q: 'How do I pick a name for a gaming channel?', a: 'Short, easy to spell, and tied to your niche or personality rather than one specific game, since you may outgrow that game someday. Check availability across YouTube, Twitch, and Discord before committing, and the free Channel Name Generator can build options from your niche in seconds.' },
+      { q: 'How often should I upload gaming videos?', a: 'Pick whatever schedule you can sustain for months rather than the most ambitious one you can imagine for a single week. Two uploads a week held consistently for six months outperforms a daily schedule that collapses after ten days.' },
+      { q: 'Can I make money from a gaming channel without streaming?', a: 'Yes. Ad revenue through the Partner Program, sponsorships from game studios and peripheral brands, and affiliate codes for games or gear all work on pre-recorded videos with no live streaming required.' },
+      { q: 'Is it too late to start a gaming YouTube channel in 2026?', a: 'No, though the space is genuinely crowded, tens of millions of gaming channels exist. What still works is the same thing that always worked: a specific niche, a real viewer outcome, and consistency long enough to compound. The full argument is in the too late to start guide.' },
+    ],
+    content: () => (
+      <>
+        <p>Every major guide to starting a gaming channel is written by a company selling recording or editing software, and each one recommends its own paid product as step one. None of them name <strong>OBS Studio</strong>, the free, open-source tool that is the actual industry default for PC capture and streaming. That pattern repeats across the whole space: real advice wrapped around a product pitch.</p>
+
+        <p>This skips the pitch and covers what a gaming channel needs: niche, setup, and an honest tool recommendation. It also covers the one thing every other guide misses entirely: <strong>timing content around the game itself</strong> rather than a generic upload calendar. If you have not set up the channel yet, the <a href="/blog/start-youtube-channel">full setup guide</a> covers account type, branding, and the parts that apply to every niche.</p>
+
+        <h2>Pick a Niche: Game Plus Viewer Outcome</h2>
+
+        <p>"I make Valorant videos" is not a niche, it is a topic. <strong>"Ranked-climb tips for Valorant players stuck in Gold"</strong> is a niche, because it names the game and the specific result a viewer walks away with. That second version tells a potential subscriber exactly why they should come back next week.</p>
+
+        <p>Focusing on one game builds authority and a loyal audience far faster than jumping between titles, since viewers subscribe to channels that consistently deliver one kind of value. Multi-game channels can work too. That almost always happens once the channel already has a defined viewer outcome, a format, a sense of humor, a teaching style, that holds across different titles rather than one game carrying the whole identity.</p>
+
+        <h2>The Gaming Content-Type Menu</h2>
+
+        <p>Gaming splits into more distinct formats than almost any other niche. Picking one deliberately beats drifting between all of them:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>What it delivers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Let's Play</strong></td><td>Full or extended playthrough with commentary, built for viewers who want the journey as much as the outcome</td></tr>
+            <tr><td><strong>Walkthrough/guide</strong></td><td>Solves a specific stuck point, a boss, a puzzle, a build, high search intent</td></tr>
+            <tr><td><strong>Speedrun</strong></td><td>Optimized, fastest-possible completion, appeals to a competitive, technical audience</td></tr>
+            <tr><td><strong>Review</strong></td><td>Evaluates a game's mechanics, value, and worth buying, timed around release windows</td></tr>
+            <tr><td><strong>Esports commentary</strong></td><td>Analysis or casting of competitive matches, needs real game knowledge</td></tr>
+            <tr><td><strong>Reaction</strong></td><td>Live response to trailers, updates, or other creators' content, lowest production bar</td></tr>
+            <tr><td><strong>Lore/analysis</strong></td><td>Deep dives into story and world-building, rewards long-form, patient viewers</td></tr>
+            <tr><td><strong>News/updates</strong></td><td>Covers patches, leaks, and announcements, needs speed and consistency to compete</td></tr>
+          </tbody>
+        </table>
+
+        <p>Most successful channels lead with one format and use the rest as occasional variety. <strong>Let's Play is the single most saturated format in gaming</strong>, plain playthroughs with commentary are what nearly every new gaming channel defaults to. Leaning toward a more specific angle instead, a walkthrough for one exact stuck point, a speedrun category, a review timed to launch, clears a path that a generic playthrough does not.</p>
+
+        <h2>PC or Console</h2>
+
+        <p>This decision shapes everything downstream, and almost no guide asks it before diving into equipment lists. <strong>PC gives you free capture software and full editing control</strong> with no extra hardware. Console still works well, and most modern consoles can record and share clips natively, but full editing control over that footage generally means either the console's own creator tools or an external capture card.</p>
+
+        <p>Neither path is wrong. PC has a lower cost floor for capture; console has a lower cost floor for the machine itself if you already own one for gaming.</p>
+
+        <h2>Recording Software, Without the Vendor Bias</h2>
+
+        <p><strong>OBS Studio</strong> is free, open source, and handles both local recording and live streaming with no watermark and no subscription. It has a real learning curve compared to the paid one-click tools most guides push, but the investment pays back immediately in flexibility: scene switching, webcam overlay, and multi-source recording all come standard.</p>
+
+        <blockquote><strong>Quick Tip:</strong> record at your game's native frame rate instead of a fixed 30fps default. Fast-paced games look noticeably smoother at 60fps, and viewers notice choppy motion in gaming content faster than in almost any other genre.</blockquote>
+
+        <p>Console creators without a capture card can start with the console's own share and clip features, genuinely usable for short-form content, and add a capture card later once longer-form editing becomes the goal.</p>
+
+        <h2>Equipment Beyond the Capture</h2>
+
+        <p>A <strong>USB headset with a boom mic</strong> solves two problems in one purchase: clean game audio in your ears and clear commentary on the recording. It is the right starting point for almost every new gaming channel, cheap, decent, and immediately functional.</p>
+
+        <p>A dedicated desk microphone is the first real upgrade, worth making once commentary becomes the main draw rather than the gameplay itself. A headset mic will always sound thinner than a proper condenser or dynamic mic sitting a few inches from your mouth. The <a href="/blog/best-youtube-mic">best microphone for YouTube guide</a> covers picks at every budget.</p>
+
+        <p>A webcam is optional early on, useful for face-cam reaction content but not required for gameplay-focused formats like walkthroughs or speedruns.</p>
+
+        <h2>Naming and Branding</h2>
+
+        <p>Keep the name tied to your <strong>niche or personality</strong> rather than one specific game, since outgrowing that title someday is common even for creators who start hyper-focused. If nothing is landing, the free <a href="/tools/youtube-channel-name-generator">Channel Name Generator</a> builds real options from your niche in seconds, and the <a href="/blog/start-youtube-channel">setup guide</a> covers profile picture, banner, and the rest of the branding checklist that applies regardless of niche.</p>
+
+        <h2>Timing Content Around the Game Itself</h2>
+
+        <p>This is the gap nobody else in this space covers, and it is a genuine SEO advantage. General content calendars run on a fixed weekly rhythm. <strong>Gaming content has a second calendar layered on top: the game's own release cycle.</strong></p>
+
+        <ul>
+          <li><strong>Launch windows.</strong> Search volume for a new game spikes hard in its first two weeks. A review or early-impressions video published day one competes for a flood of demand that does not exist a month later.</li>
+          <li><strong>Patch days.</strong> Balance changes and new content drops create a fresh wave of "what changed" searches every single patch, a recurring, predictable content opportunity most channels ignore.</li>
+          <li><strong>Tournament and esports schedules.</strong> Major competitive events spike interest in a game overall, a good window for broader content even if you never cover the tournament directly.</li>
+        </ul>
+
+        <p>Check a game's official roadmap and patch history before you plan a month of content. Aligning uploads with these dates gets you in front of search demand that a generic weekly schedule misses entirely.</p>
+
+        <p>Gaming clips are some of the most natural <a href="/blog/youtube-shorts-algorithm">Shorts</a> material on the whole platform, a clutch play, a funny death, a broken combo. Cutting one 30 to 60 second clip from every long-form upload gives it a second discovery path at almost no extra work.</p>
+
+        <CtaCard
+          to="/features/keyword-research"
+          title="Check the search demand before you commit to a game"
+          sub="The free Keyword Research tool shows real volume so you can confirm a niche is worth building around before you invest weeks into it."
+          button="Check my niche, free →"
+        />
+
+        <h2>A Repeatable Weekly Workflow</h2>
+
+        <p>A simple pipeline prevents the burnout that kills most new gaming channels within the first two months:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Task</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Early week</strong></td><td>Plan the video, check the game's patch notes or release calendar for timing opportunities</td></tr>
+            <tr><td><strong>Mid week</strong></td><td>Record, ideally in one session to preserve momentum</td></tr>
+            <tr><td><strong>Late week</strong></td><td>Edit, title, thumbnail, and schedule the upload</td></tr>
+            <tr><td><strong>After publish</strong></td><td>Check the retention graph, respond to comments, note what worked for next week</td></tr>
+          </tbody>
+        </table>
+
+        <p>The <a href="/tools/youtube-video-ideas-generator">Video Ideas Generator</a> helps fill the planning stage fast on weeks when the game's own calendar is quiet. Gameplay footage is forgiving, but the first ten seconds are not. Viewers scroll past a slow intro just as fast on a gaming channel as anywhere else, and the <a href="/blog/how-to-start-a-youtube-video">video-production guide</a> covers hooks and structure in depth.</p>
+
+        <h2>Building a Gaming Community</h2>
+
+        <p>Gaming audiences engage off-platform more than almost any other niche. A <strong>Discord server</strong>, even a small one, gives viewers a place to talk between uploads and gives you a direct line to what they want next.</p>
+
+        <p>Collaborating with similarly sized creators exposes your channel to an audience that already likes gaming content adjacent to yours, a duo playthrough, a multiplayer session, a reaction to each other's videos, whatever format fits. The free <a href="/features/competitor-analysis">Competitor Analysis</a> tool helps spot which channels in your game are worth reaching out to.</p>
+
+        <p>Running the channel with a co-host, an editor, or a small team gets easier with the right account structure too, the <a href="/blog/youtube-brand-account">Brand Account guide</a> covers adding managers without sharing a single login.</p>
+
+        <h2>Monetization Beyond Ads</h2>
+
+        <p>Ad revenue through the <a href="/blog/youtube-partner-program">Partner Program</a> is the baseline, but gaming carries monetization angles most niches do not. <strong>Game studios sponsor coverage directly</strong> around launches, and affiliate codes for games, gear, or gaming-adjacent software convert well with an audience already primed to buy exactly those things. If any of your content is live, Super Chats and channel memberships add a real-time layer on top. Both are gaming-audience staples a purely pre-recorded channel never sees.</p>
+
+        <h2>The Honest Numbers</h2>
+
+        <p>Tens of millions of gaming channels already exist, and pretending otherwise does nobody any favors. What still works is what always worked: <strong>a specific niche, a real viewer outcome, and consistency held long enough to compound.</strong> The <a href="/blog/too-late-to-start">too late to start guide</a> covers the full argument for why saturation alone has never been the reason a channel fails.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How do I start a gaming YouTube channel with no experience?</h3>
+        <p>Pick one game and one specific viewer outcome, ranked climbing tips for Valorant rather than just Valorant gameplay, record with free software like OBS Studio, and publish consistently for several weeks before judging results. <strong>Experience comes from the reps</strong>, not from a perfect first video.</p>
+
+        <h3>Do I need a gaming PC to start a gaming channel, or is a console enough?</h3>
+        <p>A console works fine and most consoles can record and share clips natively. The real difference is capture: PC gives you free software like OBS Studio, while console requires either the built-in share feature or an external capture card for full control over quality and editing.</p>
+
+        <h3>What software should I use to record gameplay?</h3>
+        <p><strong>OBS Studio</strong>, free and open source, is the honest default for PC. It handles local recording and live streaming with no watermark and no subscription, unlike most of the paid tools gaming guides tend to recommend.</p>
+
+        <h3>Do I need a capture card?</h3>
+        <p>Only if you are recording from a console and want full editing control over the footage. PC gameplay records natively through software like OBS with no extra hardware, and most consoles can export basic clips without one too.</p>
+
+        <h3>What is the best microphone for a gaming channel?</h3>
+        <p>A <strong>USB headset with a boom mic</strong> is the cheapest starting point and solves two problems at once, game audio in your ears and clear commentary on the recording. A dedicated desk microphone is the first real upgrade once commentary becomes the main draw rather than the gameplay itself.</p>
+
+        <h3>Should I focus on one game or play multiple games?</h3>
+        <p><strong>One game builds authority and a loyal audience far faster</strong> than jumping between titles. Multi-game channels do exist and can work, but almost always after the channel already has a defined viewer outcome that holds across different games, a format or personality rather than a single title.</p>
+
+        <h3>How do I pick a name for a gaming channel?</h3>
+        <p>Short, easy to spell, and tied to your niche or personality rather than one specific game, since you may outgrow that game someday. Check availability across YouTube, Twitch, and Discord before committing, and the free <a href="/tools/youtube-channel-name-generator">Channel Name Generator</a> can build options from your niche in seconds.</p>
+
+        <h3>How often should I upload gaming videos?</h3>
+        <p>Pick whatever schedule you can sustain for months rather than the most ambitious one you can imagine for a single week. <strong>Two uploads a week held consistently for six months</strong> outperforms a daily schedule that collapses after ten days.</p>
+
+        <h3>Can I make money from a gaming channel without streaming?</h3>
+        <p><strong>Yes.</strong> Ad revenue through the Partner Program, sponsorships from game studios and peripheral brands, and affiliate codes for games or gear all work on pre-recorded videos with no live streaming required.</p>
+
+        <h3>Is it too late to start a gaming YouTube channel in 2026?</h3>
+        <p><strong>No</strong>, though the space is genuinely crowded, tens of millions of gaming channels exist. What still works is the same thing that always worked: a specific niche, a real viewer outcome, and consistency long enough to compound. The full argument is in the <a href="/blog/too-late-to-start">too late to start guide</a>.</p>
+
+        <h2>The Game Has Its Own Calendar Too</h2>
+
+        <p>The software, the mic, the upload schedule: all of it stays close to identical across every niche on this site. What makes a gaming channel different is that <strong>the content calendar has a second layer</strong>: launches, patches, and tournaments that create real, predictable search demand on their own timeline.</p>
+
+        <p>Build the channel on a real niche, record with tools that do not cost you a subscription, and let the game's own calendar do some of the planning work for you.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-brand-account',
+    title: 'How to Create a YouTube Brand Account (And When You Need One)',
+    excerpt: 'YouTube can quietly convert your channel into a Brand Account without you ever choosing one. This covers both directions, creating one on purpose and converting an existing channel, plus the roles and permissions that are the actual reason teams switch.',
+    date: '2026-07-28',
+    category: CATEGORIES.growth,
+    cover: '/blog/youtube-brand-account-cover.jpg',
+    coverAlt: 'Two people looking at a laptop together, one pointing at a YouTube Studio permissions screen',
+    author: 'Denzil',
+    readTime: '12 min read',
+    faqs: [
+      { q: 'What is the difference between a personal YouTube channel and a Brand Account?', a: 'A personal channel is tied directly to one Google login, so only that person can manage it without handing over their password. A Brand Account sits on its own identity with role-based permissions, so multiple people can upload, edit, or check analytics without ever seeing the owner\'s Gmail credentials.' },
+      { q: 'Why did my YouTube channel suddenly become a Brand Account?', a: 'YouTube converts a channel automatically the moment its name no longer matches the owner\'s personal Google name. This happens without a confirmation prompt, so plenty of creators end up managing a Brand Account without ever having chosen one on purpose.' },
+      { q: 'How do I convert my existing channel to a Brand Account?', a: 'In YouTube Studio, go to Settings, then Channel, then Advanced settings, and select Move channel to a Brand Account. YouTube walks you through creating a new Brand Account or moving into an existing one from there.' },
+      { q: 'What happens to my comments and custom URL when I convert to a Brand Account?', a: 'Any comments your channel posted as itself, on other videos, get deleted permanently, and a custom URL usually needs to be re-verified or re-claimed after the move. Save your custom URL details and export a backup with Google Takeout before converting.' },
+      { q: 'How do I add a manager to my YouTube Brand Account?', a: 'In YouTube Studio, go to Settings, then Permissions, then Manage Permissions. Invite the new person by email and assign a role, Manager, Communications Manager, or Owner, based on how much access the task requires.' },
+      { q: 'What happens to my channel if the Primary Owner leaves or deletes their account?', a: 'The channel is deleted along with it, Google states this directly. Regular Owner and Manager access is safely revocable and never affects the channel itself, but the Primary Owner role should only ever sit with a Google account the business permanently controls, never an outside contractor or an employee who might leave.' },
+      { q: 'Can I have multiple Brand Accounts under one Google login?', a: 'Yes, a single Google account can create and manage several Brand Accounts, each with its own separate channel, permissions, and settings. This is common for agencies or creators running more than one niche channel.' },
+      { q: 'Do YouTube Brand Accounts still exist in 2026?', a: 'Yes. Google restructured parts of the underlying Brand Account infrastructure in 2021, but the YouTube-facing features, multiple managers, a separate identity, role-based permissions, are all still fully functional and are still how YouTube recommends setting up a channel with more than one person behind it.' },
+      { q: 'Does switching to a Brand Account affect monetization?', a: 'No. Monetization status, watch hours, subscriber count, and Partner Program standing all move with the channel, not the account type. A conversion does not reset or pause anything related to earnings.' },
+      { q: 'Can I convert a Brand Account back to a personal channel?', a: 'Not directly. YouTube does not offer a reverse conversion path, so the practical workaround is creating a new personal channel and migrating content across manually, which is exactly why the decision is worth getting right the first time.' },
+    ],
+    content: () => (
+      <>
+        <p>A YouTube channel can become a Brand Account without anyone deliberately choosing one. The moment a channel's name stops matching the owner's personal Google name, YouTube quietly creates a Brand Account to hold it, <strong>no prompt, no confirmation screen.</strong> That single fact confuses more creators than almost anything else this guide covers.</p>
+
+        <p>This covers both directions: creating a Brand Account on purpose, from scratch or by converting an existing personal channel, and the feature that justifies the switch, <strong>roles and permissions</strong> that let someone manage your channel without ever seeing your Gmail password. If you have not decided between account types yet, the <a href="/blog/start-youtube-channel">setup guide</a> covers that decision first.</p>
+
+        <h2>Why Your Channel Might Already Be One</h2>
+
+        <p>Check before you assume: open <strong>YouTube Studio → Settings → Channel → Advanced settings.</strong> If you see an option to move or manage a Brand Account rather than a plain personal-channel label, <strong>YouTube already converted you at some point</strong>, usually the moment you renamed your channel away from your own name.</p>
+
+        <p>A second, quicker test: try inviting someone as a channel manager. Personal channels do not offer this option at all, since there is no separate identity to grant access to. If the invite flow exists, <strong>you are already on a Brand Account.</strong></p>
+
+        <h2>Creating One From Scratch</h2>
+
+        <p>The exact tap sequence depends on whether you are starting on desktop or mobile. The <a href="/blog/start-youtube-channel">full setup guide</a> covers the desktop flow, and the <a href="/blog/youtube-channel-phone">phone-only guide</a> covers the mobile path, Settings → Create a new channel → "Use a business or other name." <strong>Both roads end at the same place:</strong> a channel with its own identity, ready for the permissions below.</p>
+
+        <h2>Converting an Existing Personal Channel</h2>
+
+        <p>In <strong>YouTube Studio → Settings → Channel → Advanced settings</strong>, select <strong>Move channel to a Brand Account.</strong> YouTube then walks you through either creating a new Brand Account or moving into one that already exists.</p>
+
+        <p>Two things break in the move, and <strong>almost nothing else covers either one clearly:</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What happens</th>
+              <th>What to do about it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Comments deleted</strong></td><td>Any comment your channel posted on other videos, as itself, is permanently removed. There is no recovery after the fact.</td></tr>
+            <tr><td><strong>Custom URL reset</strong></td><td>Your custom URL often needs to be re-verified or re-claimed post-move. Write down the exact URL and eligibility details first.</td></tr>
+          </tbody>
+        </table>
+
+        <blockquote><strong>Quick Tip:</strong> export a full backup with <a href="https://takeout.google.com" target="_blank" rel="noopener">Google Takeout</a> before converting, videos, comments, and settings included. It costs five minutes and undoes nothing if the move goes smoothly, but it is the only safety net if something does not transfer the way you expected.</blockquote>
+
+        <h2>Roles and Permissions, in Real Depth</h2>
+
+        <p>This is the feature that makes a Brand Account worth the setup. Every person you add gets exactly the access their task requires, never your password:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Can do</th>
+              <th>Cannot do</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Primary Owner</strong></td><td>Everything, including deleting the channel and reassigning every other role</td><td>Nothing is restricted</td></tr>
+            <tr><td><strong>Owner</strong></td><td>Upload, edit, manage other managers, view full analytics</td><td>Cannot delete the channel or move it to another Brand Account</td></tr>
+            <tr><td><strong>Manager</strong></td><td>Upload, edit videos, respond to comments, view analytics</td><td>Cannot delete the channel or manage other people's permissions</td></tr>
+            <tr><td><strong>Communications Manager</strong></td><td>Respond to comments and messages, view analytics</td><td>Cannot upload, edit, or change any channel settings</td></tr>
+          </tbody>
+        </table>
+
+        <p>Start every new person at the <strong>lowest role their task needs.</strong> An editor who only touches thumbnails and titles does not need Owner access, and a social media assistant answering comments needs Communications Manager, not Manager. Permissions are easy to raise later and much harder to walk back once someone has grown used to full access.</p>
+
+        <h2>Adding a Manager</h2>
+
+        <p>In YouTube Studio, go to <strong>Settings → Permissions → Manage Permissions.</strong> This opens the Brand Account's permissions page directly. Click <strong>Invite New Users</strong>, enter their email, and assign the role from the table above.</p>
+
+        <p>The invited person accepts through their own Google account, so their existing login works immediately, no new password, no shared credentials, and <strong>removing access later is a single click</strong> on your end whenever the working relationship ends.</p>
+
+        <h2>Why Teams Want This</h2>
+
+        <p>Two reasons come up again and again, and neither is really about the "team" framing most explainers lead with:</p>
+
+        <ul>
+          <li><strong>Nobody shares a password.</strong> A personal channel forces you to hand over your actual Gmail login to give someone editing access, which means they can read your email too. A Brand Account grants exactly the channel access needed and nothing else.</li>
+          <li><strong>Regular managers survive staff turnover.</strong> When an employee or contractor with Manager or Owner access leaves, revoking it is a single click, and the channel itself never moves.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> that survival guarantee has one exception, and Google states it plainly: <strong>if the Primary Owner's Google account is ever deleted, the channel is deleted with it.</strong> Never make an outside contractor or an employee who might leave the Primary Owner. Keep that role with a Google account the business itself controls, and give everyone else Owner or Manager access instead, both of which are safely revocable.</blockquote>
+
+        <p>One more restriction worth knowing before you need it: Google requires you to have held Owner status for <strong>at least 7 days</strong> before you can remove another owner or manager, or transfer Primary Owner status to yourself. Plan management changes a week ahead rather than the day they become urgent.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="About to hand off management to someone new?"
+          sub="Run a free Channel Audit first, so whoever you bring on inherits a clear list of what's already working and what needs fixing."
+          button="Start my audit, $5 →"
+        />
+
+        <h2>Who Should Use One</h2>
+
+        <p><strong>A Brand Account earns its setup time the moment more than one person touches the channel.</strong> That covers agencies managing client channels, often alongside a <a href="/features/competitor-analysis">Competitor Analysis</a> workflow across several accounts at once, businesses with a marketing team, ecommerce brands with rotating staff, media companies, and any creator handing off editing or thumbnail work to someone else.</p>
+
+        <p>Stay personal if the channel will <strong>always</strong> be a one-person operation tied to your own name. The setup is faster, and there is no permissions system to maintain because there is nobody else to grant access to.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What is the difference between a personal YouTube channel and a Brand Account?</h3>
+        <p>A personal channel is tied directly to one Google login, so only that person can manage it without handing over their password. A Brand Account sits on its own identity with role-based permissions, so multiple people can upload, edit, or check analytics without ever seeing the owner's Gmail credentials. The <a href="/blog/start-youtube-channel">full setup guide</a> covers the decision in more depth.</p>
+
+        <h3>Why did my YouTube channel suddenly become a Brand Account?</h3>
+        <p>YouTube converts a channel automatically the moment its name no longer matches the owner's personal Google name. This happens <strong>without a confirmation prompt</strong>, so plenty of creators end up managing a Brand Account without ever having chosen one on purpose.</p>
+
+        <h3>How do I convert my existing channel to a Brand Account?</h3>
+        <p>In YouTube Studio, go to Settings, then Channel, then Advanced settings, and select <strong>Move channel to a Brand Account.</strong> YouTube walks you through creating a new Brand Account or moving into an existing one from there.</p>
+
+        <h3>What happens to my comments and custom URL when I convert to a Brand Account?</h3>
+        <p>Any comments your channel posted as itself, on other videos, get deleted permanently, and a custom URL usually needs to be re-verified or re-claimed after the move. <strong>Save your custom URL details and export a backup with Google Takeout</strong> before converting.</p>
+
+        <h3>How do I add a manager to my YouTube Brand Account?</h3>
+        <p>In YouTube Studio, go to Settings, then Permissions, then Manage Permissions. Invite the new person by email and assign a role, Manager, Communications Manager, or Owner, based on how much access the task requires.</p>
+
+        <h3>What happens to my channel if the Primary Owner leaves or deletes their account?</h3>
+        <p><strong>The channel is deleted along with it</strong>, Google states this directly. Regular Owner and Manager access is safely revocable and never affects the channel itself, but the Primary Owner role should only ever sit with a Google account the business permanently controls, never an outside contractor or an employee who might leave.</p>
+
+        <h3>Can I have multiple Brand Accounts under one Google login?</h3>
+        <p><strong>Yes</strong>, a single Google account can create and manage several Brand Accounts, each with its own separate channel, permissions, and settings. This is common for agencies or creators running more than one niche channel.</p>
+
+        <h3>Do YouTube Brand Accounts still exist in 2026?</h3>
+        <p><strong>Yes.</strong> Google restructured parts of the underlying Brand Account infrastructure in 2021, but the YouTube-facing features, multiple managers, a separate identity, role-based permissions, are all still fully functional and are still how YouTube recommends setting up a channel with more than one person behind it.</p>
+
+        <h3>Does switching to a Brand Account affect monetization?</h3>
+        <p><strong>No.</strong> Monetization status, watch hours, subscriber count, and <a href="/blog/youtube-partner-program">Partner Program</a> standing all move with the channel, not the account type. A conversion does not reset or pause anything related to earnings.</p>
+
+        <h3>Can I convert a Brand Account back to a personal channel?</h3>
+        <p><strong>Not directly.</strong> YouTube does not offer a reverse conversion path, so the practical workaround is creating a new personal channel and migrating content across manually, which is exactly why the decision is worth getting right the first time.</p>
+
+        <h2>Delegation Without the Shared Password</h2>
+
+        <p>Strip away the terminology and a Brand Account solves one problem: <strong>letting someone help without handing them the keys to everything.</strong> Roles, managers, and the conversion process all exist in service of that single idea.</p>
+
+        <p>If you are still solo and plan to stay that way, none of this changes anything today. <strong>The moment a second person needs real access</strong>, this is the setup that lets you grant it without a shared password sitting in a group chat somewhere.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-channel-phone',
+    title: 'How to Make a YouTube Channel on Your Phone: The Complete Mobile-Only Guide',
+    excerpt: 'Setup is a quarter of what happens on a phone-only channel. Filming, editing, thumbnails, and publishing all run on the same device too, plus the settings and workarounds almost nobody covers.',
+    date: '2026-07-28',
+    category: CATEGORIES.growth,
+    cover: '/blog/youtube-channel-phone-cover.jpg',
+    coverAlt: 'A creator filming a YouTube video using only a smartphone on a small tripod, no computer in sight',
+    author: 'Denzil',
+    readTime: '13 min read',
+    faqs: [
+      { q: 'Can I really run a whole YouTube channel from just my phone?', a: 'Yes, setup, filming, editing, publishing, and checking analytics all work entirely inside the YouTube and YouTube Studio apps. The only place a phone falls short is heavy multi-video editing and deep historical analytics once your channel has months of data to compare.' },
+      { q: 'Do I need the YouTube app, or can I use a browser instead?', a: 'The app is faster for day-to-day use, but a phone browser works too if you turn on desktop mode first. Some Studio settings, particularly uploading a channel banner, are easier or only available in desktop mode rather than the plain mobile site.' },
+      { q: 'How do I upload a channel banner from my phone?', a: 'Open desktop mode in Safari or Chrome, since the standard mobile browser view often will not let you select and upload a banner image. From there, YouTube Studio\'s customization page works the same as it does on a computer.' },
+      { q: 'What is the best free video editing app for YouTube on a phone?', a: 'CapCut is the most recommended free option, with AI captions and a beginner-friendly interface. PowerDirector is a solid alternative on lower-RAM phones where CapCut can run slowly, since it is lighter on system resources.' },
+      { q: 'Can I edit thumbnails on my phone?', a: 'Yes, free apps like Canva and PicsArt handle custom thumbnail design directly on a phone, and you can swap a thumbnail on an already-published video from inside YouTube Studio\'s mobile interface without touching a computer.' },
+      { q: 'What microphone should I use if I am only filming on my phone?', a: 'Your phone\'s own earpiece headphones with an inline mic are a genuinely free starting option, and they outperform a phone\'s built-in mic at arm\'s length. A clip-on lavalier mic under $30 is the first real upgrade once you can afford one.' },
+      { q: 'Do I need a tripod to film on my phone?', a: 'Not strictly, but a small phone tripod under $15 removes handheld shake and frees both hands, which matters the moment you are demonstrating anything or filming solo. It is one of the highest-value cheap purchases for a phone-only setup.' },
+      { q: 'How do I set the made-for-kids status on my channel from mobile?', a: 'Every video and channel needs an audience setting, adult or made-for-kids, and YouTube requires you to declare it before a video goes fully public. The option appears directly in the mobile upload flow under audience settings, no desktop required.' },
+      { q: 'Can I see my channel analytics on my phone?', a: 'Yes, the YouTube Studio app shows views, watch time, subscriber changes, and the retention graph for individual videos. Deep historical comparisons across many videos are still easier on desktop once you have real history to review.' },
+      { q: 'Is there anything I genuinely cannot do from a phone?', a: 'Bulk editing across a large video catalog and heavy multi-track editing are the two honest limits. Everything else in this guide, from account setup through publishing, works natively on a phone with no compromise.' },
+    ],
+    content: () => (
+      <>
+        <p>Every step of running a YouTube channel works on a phone, all the way past the setup. <strong>Filming, editing, designing a thumbnail, and publishing</strong> all happen inside two free apps, with nothing routed through a laptop or a desktop editor at any point, and the specific taps, apps, and settings that make each step work are exactly what most guides skip past.</p>
+
+        <p>This is the deep version: the mobile-specific account setup, then everything after it that almost nothing else covers, filming, editing, and publishing, all from the same device the channel was created on. If you have not picked an account type yet, the <a href="/blog/start-youtube-channel">full channel setup guide</a> covers personal versus Brand Account first.</p>
+
+        <h2>App or Browser</h2>
+
+        <p>The <strong>YouTube app</strong> is the default path for almost everything in this guide, fast, built for touch, and it covers setup, filming, editing basics, and publishing without ever opening a browser. Install it, along with the separate <strong>YouTube Studio app</strong> for channel management and analytics.</p>
+
+        <p>A phone browser works too, with one catch: the standard mobile view hides several Studio options, most notably <strong>uploading a channel banner</strong>. Turn on desktop mode first:</p>
+
+        <ul>
+          <li><strong>Safari (iPhone).</strong> Tap the "aA" icon in the address bar, then select "Request Desktop Website."</li>
+          <li><strong>Chrome (Android).</strong> Open the three-dot menu and check "Desktop site."</li>
+        </ul>
+
+        <p>Desktop mode unlocks the full Studio interface inside your existing browser, no app required. This is worth using if you would rather not install another app, or you are on a shared or work device.</p>
+
+        <h2>Creating the Channel</h2>
+
+        <p>The tap sequence is different depending on which account type you picked in the <a href="/blog/start-youtube-channel">setup guide</a>, personal or Brand Account, and mixing them up is <strong>the single most common mobile setup mistake.</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Account type</th>
+              <th>Path on mobile</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Personal</strong></td><td>Profile icon → Your channel → the app prompts you to create one on the spot</td></tr>
+            <tr><td><strong>Brand Account</strong></td><td>Profile icon → Settings → Create a new channel → choose "Use a business or other name"</td></tr>
+          </tbody>
+        </table>
+
+        <p>Either path ends the same way: type a name and choose a handle, the part of your URL after the @ symbol, then confirm. Picking Brand Account here is just the start, the <a href="/blog/youtube-brand-account">full Brand Account guide</a> covers roles, permissions, and adding a manager once the channel exists.</p>
+
+        <blockquote><strong>Quick Tip:</strong> if nothing you type is landing, the free <a href="/tools/youtube-channel-name-generator">Channel Name Generator</a> builds real options from your niche in seconds, all from the same phone.</blockquote>
+
+        <h2>Branding, Entirely on the Phone</h2>
+
+        <p>Six elements make a channel look finished, and every one of them is editable from mobile:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Element</th>
+              <th>Where it lives</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Profile picture</strong></td><td>YouTube app → Your channel → Edit</td></tr>
+            <tr><td><strong>Banner</strong></td><td>Desktop mode in your browser (see above), or Studio app on newer versions</td></tr>
+            <tr><td><strong>Watermark</strong></td><td>Studio app → Customization → Branding</td></tr>
+            <tr><td><strong>Channel trailer</strong></td><td>Studio app → Customization → Layout, plays for visitors who have not subscribed yet</td></tr>
+            <tr><td><strong>Featured video</strong></td><td>Studio app → Customization → Layout, plays for returning subscribers instead</td></tr>
+            <tr><td><strong>About, links, contact</strong></td><td>Studio app → Customization → Basic info</td></tr>
+          </tbody>
+        </table>
+
+        <p>Trailer and featured video are the two elements almost every setup guide skips entirely. They serve different visitors: a <strong>trailer</strong> is your pitch to someone who has never subscribed, while a <strong>featured video</strong> greets people who already have. Pointing both at the same clip means <strong>one of the two placements does nothing.</strong> The <a href="/blog/youtube-banner-size">banner size guide</a> covers exact dimensions so nothing crops oddly across devices.</p>
+
+        <h2>The Settings Almost Nobody Covers</h2>
+
+        <p>Buried inside Studio's mobile settings are a handful of items that never make it into most setup guides:</p>
+
+        <ul>
+          <li><strong>Currency and country.</strong> Set once, early, since it determines how your future ad revenue displays and reports.</li>
+          <li><strong>Channel keywords.</strong> Settings → Channel → Basic info, 5 to 10 keywords describing your channel's topic, separate from the tags on any individual video.</li>
+          <li><strong>Made-for-kids designation.</strong> Required at the channel level and again per video, covered in more depth in the publishing section below.</li>
+          <li><strong>Second channel.</strong> One Google account can hold multiple channels, useful if you want to keep a personal channel and a niche channel fully separate.</li>
+        </ul>
+
+        <p>Last: verify your phone number. It is <strong>not optional in practice</strong>, since an unverified channel is capped at short uploads and cannot go live.</p>
+
+        <h2>Research Your Niche Before You Film</h2>
+
+        <p>The <a href="/blog/start-youtube-channel">full setup guide</a> covers niche and audience research in depth, the short version here: check <strong>real search demand</strong> before you commit to a topic, rather than picking on instinct. The free <a href="/features/keyword-research">Keyword Research</a> tool runs entirely in a mobile browser, so this step never requires a desktop either.</p>
+
+        <h2>Filming on a Phone</h2>
+
+        <p>A modern phone camera is genuinely good enough to start. Three things make the biggest visible difference:</p>
+
+        <ul>
+          <li><strong>Audio.</strong> Your phone's own wired earpiece headphones, the kind with an inline microphone, outperform the phone's built-in mic at arm's length, and cost nothing extra if you already own a pair. A clip-on lavalier under $30 is the first real upgrade.</li>
+          <li><strong>Lighting.</strong> A window with natural daylight beats almost any cheap artificial light. Face the light, do not put it behind you.</li>
+          <li><strong>Stability.</strong> A small phone tripod under $15 removes handheld shake and frees both your hands, worth buying before almost anything else on this list.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> film landscape, not portrait, unless every video is going straight to Shorts. Switching orientation mid-channel confuses new visitors browsing your uploads and looks inconsistent on the channel page.</blockquote>
+
+        <p>For scripting and the specific mechanics of a strong opening, the <a href="/blog/how-to-start-a-youtube-video">complete video-production guide</a> covers hooks and structure in full depth, all of which applies identically whether you are filming on a phone or a camera.</p>
+
+        <h2>Editing on a Phone</h2>
+
+        <p><strong>CapCut</strong> is the most recommended free option, with AI captions, a beginner-friendly interface, and enough features to finish a genuinely polished video. On older or lower-RAM phones where CapCut runs slowly, <strong>PowerDirector</strong> is the lighter alternative worth trying instead.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>App</th>
+              <th>Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>CapCut</strong></td><td>Most phones, AI captions, effects, free</td></tr>
+            <tr><td><strong>PowerDirector</strong></td><td>Older or lower-RAM phones needing a lighter app</td></tr>
+            <tr><td><strong>InShot</strong></td><td>Quick trims and simple text overlays, minimal learning curve</td></tr>
+          </tbody>
+        </table>
+
+        <p>Being honest about the limits here matters more than pretending they do not exist. <strong>Heavy multi-track editing and bulk editing across a large video catalog</strong> are still genuinely easier on desktop software. For a single video with cuts, text, and basic color, a phone editor gets you all the way to a finished file.</p>
+
+        <h2>Publishing From Your Phone</h2>
+
+        <p>Tap Upload inside the YouTube app, select your file, and fill in title, description, and privacy before it goes live. Two steps in this flow <strong>specifically trip up first-time phone creators:</strong></p>
+
+        <ul>
+          <li><strong>Audience setting.</strong> Every video needs a declared audience, made-for-kids or not, before it can publish. It appears directly in the mobile upload flow and cannot be skipped.</li>
+          <li><strong>Thumbnail.</strong> YouTube can auto-generate one from your footage, but a custom thumbnail <strong>earns more clicks.</strong> Free apps like <strong>Canva</strong> or <strong>PicsArt</strong> build one entirely on a phone, and you can swap the thumbnail on an already-published video from inside Studio's mobile interface at any time, <strong>no re-upload required.</strong></li>
+        </ul>
+
+        <CtaCard
+          to="/tools/youtube-thumbnail-tester"
+          title="Not sure which phone-made thumbnail wins?"
+          sub="The free Thumbnail Tester compares options side by side before you commit, all from a phone browser. No signup."
+          button="Try the Thumbnail Tester →"
+        />
+
+        <p><strong>Title and description matter just as much on mobile as on desktop.</strong> The free <a href="/tools/youtube-title-generator">Title Generator</a> and <a href="/tools/youtube-description-generator">Description Generator</a> both run in a mobile browser and give you a starting point in seconds rather than a blank field. The <a href="/blog/youtube-thumbnail-size">thumbnail size guide</a> covers the exact spec so nothing gets cropped on upload.</p>
+
+        <h2>Managing Your Channel After You Publish</h2>
+
+        <p>The <strong>Studio app</strong> covers everything day to day: views, watch time, subscriber changes, comments, and the <a href="/blog/youtube-analytics">retention graph</a> for each video. Watch that graph on every upload, a steep drop-off in the first 30 seconds points to the opening, not the topic or the thumbnail.</p>
+
+        <p>Where the app genuinely runs out of road is <strong>deep historical comparison</strong> once you have months of videos to analyze side by side, and bulk edits across a large catalog. Neither is a problem for a new channel's first several months.</p>
+
+        <h2>Nothing on This List Needs a Desktop</h2>
+
+        <p>Every step above, setup, filming, editing, thumbnails, publishing, analytics, runs natively on a phone. The two genuine exceptions, deep historical analytics and bulk multi-video editing, only show up once a channel already has real history behind it, <strong>which is a good problem to have.</strong></p>
+
+        <p>Start with what is already in your pocket. The equipment upgrades can wait until the channel gives you a reason to make them.</p>
+      </>
+    ),
+  },
+  {
     slug: 'start-youtube-channel',
     title: 'How to Start a YouTube Channel in 2026: The Complete Setup Guide',
     excerpt: 'Nearly every guide walks through the same six or seven steps in the same order, then gives the two decisions that determine how much of your setup you redo later, personal versus Brand Account, and whether your phone alone is enough, a single throwaway line. The complete process, with both given the depth they deserve.',
@@ -138,7 +642,7 @@ export const posts = [
           </tbody>
         </table>
 
-        <p>A Brand Account costs nothing extra and takes the same few minutes to set up. The only real reason to skip it is certainty that the channel will always be a solo project tied to your own name. If there is any chance you will bring on an editor, a co-host, or run the channel as a registered business, <strong>starting as a Brand Account saves a migration later.</strong></p>
+        <p>A Brand Account costs nothing extra and takes the same few minutes to set up. The only real reason to skip it is certainty that the channel will always be a solo project tied to your own name. If there is any chance you will bring on an editor, a co-host, or run the channel as a registered business, <strong>starting as a Brand Account saves a migration later.</strong> The <a href="/blog/youtube-brand-account">full Brand Account guide</a> covers converting an existing channel, roles and permissions, and adding a manager in depth.</p>
 
         <p>Once the account type is settled, pick a name and handle. <strong>Short, easy to spell, and related to your niche</strong> beats clever every time, since viewers who cannot remember or type your name cannot find you again. If nothing is landing, the free <a href="/tools/youtube-channel-name-generator">Channel Name Generator</a> gives you real options built from your niche in seconds rather than a blank text box.</p>
 
@@ -159,7 +663,7 @@ export const posts = [
           <li><strong>Early analytics.</strong> Views, watch time, and the retention graph for individual videos all render inside the Studio app.</li>
         </ul>
 
-        <p>A phone genuinely runs out of road in only two places: <strong>deep analytics work</strong> once you have months of data to compare, and bulk editing across a large back catalog. Neither of those is a first-video problem. For the entire setup, planning, filming, and uploading phase, a phone is a complete toolkit for the job.</p>
+        <p>A phone genuinely runs out of road in only two places: <strong>deep analytics work</strong> once you have months of data to compare, and bulk editing across a large back catalog. Neither of those is a first-video problem. For the entire setup, planning, filming, and uploading phase, a phone is a complete toolkit for the job. The <a href="/blog/youtube-channel-phone">phone-only guide</a> covers filming, editing, and thumbnail apps in full depth if a phone is the entire setup you are running.</p>
 
         <h2>Brand Your Channel Before Your First Upload</h2>
 
@@ -189,7 +693,7 @@ export const posts = [
 
         <p>That last question deserves <strong>real research</strong>. Look at who else is already making videos in your space before you film a single one, note what they cover well, what they cover poorly, and where an angle is sitting unclaimed. The free <a href="/features/competitor-analysis">Competitor Analysis</a> tool runs this research against real channel data instead of a manual scroll through search results.</p>
 
-        <p>Most beginners pick a niche on instinct and find out months later that <strong>almost nobody was searching for it.</strong> Checking real demand before you commit is a five-minute step that saves a year of effort aimed at an audience that was never there.</p>
+        <p>Most beginners pick a niche on instinct and find out months later that <strong>almost nobody was searching for it.</strong> Checking real demand before you commit is a five-minute step that saves a year of effort aimed at an audience that was never there. If gaming is the niche, the <a href="/blog/gaming-youtube-channel">gaming channel guide</a> covers content types, equipment, and the release-cycle timing that general advice misses.</p>
 
         <CtaCard
           to="/features/keyword-research"

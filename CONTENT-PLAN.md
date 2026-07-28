@@ -27,9 +27,9 @@ Pillar
 ~~6. How to Start a YouTube Channel~~ — published 2026-07-28 as `start-youtube-channel`
 
 Setup by device/account type/niche (3)
-7. How to Make a YouTube Channel on Your Phone
-8. How to Create a YouTube Brand Account
-9. How to Start a Gaming YouTube Channel
+~~7. How to Make a YouTube Channel on Your Phone~~ — published 2026-07-28 as `youtube-channel-phone`
+~~8. How to Create a YouTube Brand Account~~ — published 2026-07-28 as `youtube-brand-account`
+~~9. How to Start a Gaming YouTube Channel~~ — published 2026-07-28 as `gaming-youtube-channel`
 
 ## Rules
 
