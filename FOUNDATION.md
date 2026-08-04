@@ -178,6 +178,12 @@ Video Ideas cluster, spokes that failed:
 - "youtube content ideas" (500/mo) — near-duplicate of the pillar, would cannibalize it.
 - "youtube thumbnail ideas", "faceless youtube channel ideas", "youtube banner ideas" — live
   posts already cover these.
+- "youtube video ideas for beginners" — confirmed as a spoke back on 2026-07-28, caught 2026-07-28
+  right before writing it: the live pillar's actual title is "YouTube Video Ideas for Beginners:
+  10 Ideas That Work With Zero Subscribers", same intent already. Would have cannibalized the
+  pillar. This one slipped through the original spoke-confirmation pass because the check was
+  against the pillar's slug and keyword, not its actual on-page title/framing — worth checking
+  the live title, not just the slug, when confirming future spokes against an existing pillar.
 
 Faceless youtube channel — dropped 2026-07-28. Only 68 rows total, and only 9 clear 500/mo.
 After removing near-duplicates of the pillar itself and of the already-live post

@@ -15,10 +15,12 @@ to its sibling spokes.
 Pillar
 ~~1. YouTube Video Ideas~~ — already live as `youtube-video-ideas`
 
-Ideas by format/audience (4)
-2. YouTube Video Ideas For Beginners
-3. YouTube Shorts Ideas
-4. YouTube Challenge Video Ideas
+Ideas by format/audience (4, one merged into the pillar)
+~~2. YouTube Video Ideas For Beginners~~ — merged 2026-07-28: the live pillar's actual title is
+"YouTube Video Ideas for Beginners: 10 Ideas That Work With Zero Subscribers", same intent
+already. Writing a dedicated post would cannibalize it. Caught before writing, not after.
+~~3. YouTube Shorts Ideas~~ — published 2026-07-28 as `youtube-shorts-ideas`
+~~4. YouTube Challenge Video Ideas~~ — published 2026-07-28 as `youtube-challenge-ideas`
 5. Vlog Ideas
 
 ## Growth Content → Starting a Channel (keyword-mapped 2026-07-28)
