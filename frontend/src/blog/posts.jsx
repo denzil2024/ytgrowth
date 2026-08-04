@@ -93,7 +93,7 @@ export const posts = [
   {
     slug: 'youtube-challenge-ideas',
     title: 'YouTube Challenge Video Ideas: The Complete Guide',
-    excerpt: 'Every challenge idea list draws from the same fifteen or twenty stunts. The idea was never the scarce resource, adapting one to your specific niche is. The real categories, the safety guidance most lists skip, and how a challenge video makes real money.',
+    excerpt: 'A challenge video needs a stake, a reaction, and a stunt viewers have not already seen a hundred versions of. Most idea lists nail the first two and quietly skip the third. The real categories, the safety guidance most lists skip, and how a challenge video makes real money.',
     date: '2026-07-28',
     category: CATEGORIES.strategy,
     cover: '/blog/youtube-challenge-ideas-cover.jpg',
@@ -114,7 +114,7 @@ export const posts = [
     ],
     content: () => (
       <>
-        <p>Every list of YouTube challenge ideas draws from the same pool: Try Not to Laugh, the Whisper Challenge, 24 hours in a box fort, the same fifteen or twenty stunts reordered under a new headline. <strong>The idea was never the scarce resource here.</strong> What separates a challenge video that breaks out from one that reads as a copy is how specifically it gets adapted to a channel's own niche and audience rather than which stunt gets picked off the list.</p>
+        <p>Picking a challenge format takes five minutes. <strong>Making it look like nobody else's version</strong> takes real thought, and it is the part almost nothing written about this topic spends any real time on. A stake, a visible reaction, and a stunt viewers have not already watched a hundred times over, that third piece is where the actual work lives.</p>
 
         <p>This covers the real categories worth knowing, plus three things almost none of the giant idea lists mention: how to adapt a format instead of copying it, the safety guidance several guides skip while still recommending ice baths and extreme spice eating, and how a challenge video makes real money. For format ideas beyond challenges, the <a href="/blog/youtube-video-ideas">video ideas guide</a> and <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> cover the rest of the content menu.</p>
 
@@ -137,6 +137,8 @@ export const posts = [
             <tr><td><strong>24-hour/extreme</strong></td><td>Trapped-somewhere formats, survival scenarios, single-location endurance</td></tr>
             <tr><td><strong>Couples</strong></td><td>Not-my-arms challenges, relationship trivia, yoga or trust-based formats</td></tr>
             <tr><td><strong>Kids-friendly</strong></td><td>Bean boozled, who-wore-it-better, guessing and observation games</td></tr>
+            <tr><td><strong>Money/business</strong></td><td>Flip a small amount of money into more, survive on a strict budget, a side hustle attempted from zero</td></tr>
+            <tr><td><strong>Skill/DIY</strong></td><td>Learn a language, an instrument, or a craft to a specific level within a set deadline, build something from scratch on camera</td></tr>
           </tbody>
         </table>
 
@@ -168,6 +170,8 @@ export const posts = [
         <h2>Thumbnails and Titles Built for Challenge Content</h2>
 
         <p>A clear before-or-during moment with a visible reaction, surprise, discomfort, triumph, earns more clicks than a posed shot. The stake itself, the amount of time, money, or spice level, belongs directly in the thumbnail text rather than buried in the title alone. The free <a href="/features/thumbnail-iq">Thumbnail IQ</a> tool scores a thumbnail against what genuinely drives clicks in your niche before you commit to one, and the <a href="/tools/youtube-title-generator">Title Generator</a> builds options that lead with the stake.</p>
+
+        <p>One production detail worth getting right early: whatever music plays under the challenge needs to come from a source that genuinely clears the rights, since a copyright claim on a video that already took real effort to film is a frustrating way to lose the upload. The <a href="/blog/copyright-free-music">copyright-free music guide</a> covers sources that are genuinely safe to use.</p>
 
         <h2>The Monetization Angle</h2>
 
@@ -241,7 +245,7 @@ export const posts = [
     ],
     content: () => (
       <>
-        <p>Every list of YouTube Shorts ideas reads the same way: a numbered grid of formats, quick tips, before-and-afters, trend participation, funny clips, with a line at the bottom about hooks and trending audio treated as an afterthought. That ordering is backwards. <strong>The hook and the loop decide whether any format on the list works at all</strong>, and burying that filter under the idea list is why so many creators film a "good idea" that still gets swiped past.</p>
+        <p>A YouTube Short has under sixty seconds total and roughly two of them to earn the rest. <strong>Everything about whether a format works follows from that one constraint</strong>, the hook that stops a scroll, the ending that loops back into itself, before the topic even enters the conversation. Miss the constraint and a genuinely good idea still gets swiped past.</p>
 
         <p>This covers the formats in full, organized by what each one requires, but starts with the filter first. If you want the deeper mechanics behind why Shorts distribution behaves this way, the <a href="/blog/youtube-shorts-algorithm">Shorts algorithm guide</a> covers the Viewed vs. Swiped Away ratio in depth. If you are looking for long-form ideas instead, the <a href="/blog/youtube-video-ideas">video ideas guide</a> covers 10 formats that work with zero subscribers.</p>
 
@@ -727,7 +731,7 @@ export const posts = [
     ],
     content: () => (
       <>
-        <p>Every step of running a YouTube channel works on a phone, all the way past the setup. <strong>Filming, editing, designing a thumbnail, and publishing</strong> all happen inside two free apps, with nothing routed through a laptop or a desktop editor at any point, and the specific taps, apps, and settings that make each step work are exactly what most guides skip past.</p>
+        <p>Most beginners assume a laptop has to enter the picture somewhere, if not for filming then for editing or uploading. It never does. <strong>Filming, editing, designing a thumbnail, and publishing</strong> all happen inside two free apps, and the specific taps, screens, and settings that make each step work are what this guide covers in full.</p>
 
         <p>This is the deep version: the mobile-specific account setup, then everything after it that almost nothing else covers, filming, editing, and publishing, all from the same device the channel was created on. If you have not picked an account type yet, the <a href="/blog/start-youtube-channel">full channel setup guide</a> covers personal versus Brand Account first.</p>
 
