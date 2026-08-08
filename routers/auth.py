@@ -1345,28 +1345,30 @@ def get_me(request: Request):
 
 @router.delete("/delete-account")
 def delete_account(request: Request):
-    """Permanently delete the account. Preserves all data rows — only clears session and marks channels inactive."""
+    """Permanently deletes the account: cancels any active Paddle
+    subscription, purges every row tied to this email across the app (see
+    app/account_deletion.py for the full table list), best-effort revokes
+    the Google OAuth grant, and clears every session (all devices)."""
     session_id = request.session.get("session_id")
-    user_data, _ = get_session(session_id)
+    user_data, creds = get_session(session_id)
     if not user_data:
         return JSONResponse({"error": "Not authenticated"}, status_code=401)
 
     google_email = user_data.get("email", "")
 
+    result = {"channel_ids": [], "session_ids": [], "deleted_counts": {}}
     db = SessionLocal()
     try:
-        # Mark all channels inactive
         if google_email:
-            channels = db.query(ChannelRegistry).filter_by(owner_email=google_email).all()
-            for ch in channels:
-                ch.is_active       = False
-                ch.disconnected_at = datetime.datetime.utcnow()
+            from routers.billing import cancel_paddle_subscriptions
+            from app.account_deletion import purge_user_data
 
-        # Delete the session row
-        if session_id:
-            row = db.query(UserSession).filter_by(session_id=session_id).first()
-            if row:
-                db.delete(row)
+            channel_ids = [
+                row.channel_id
+                for row in db.query(ChannelRegistry).filter_by(owner_email=google_email).all()
+            ]
+            cancel_paddle_subscriptions(db, channel_ids)
+            result = purge_user_data(db, google_email)
 
         db.commit()
     except Exception as e:
@@ -1376,11 +1378,31 @@ def delete_account(request: Request):
     finally:
         db.close()
 
-    # Clear in-memory caches
-    if session_id:
-        _user_data.pop(session_id, None)
-        _user_creds.pop(session_id, None)
-        _pending_flows.pop(session_id, None)
-        request.session.pop("session_id", None)
+    print(f"[account-deletion] purged {google_email}: {result['deleted_counts']}")
+
+    # Best-effort Google OAuth grant revocation — not fatal if it fails
+    # (network hiccup, already revoked). Revoking the refresh_token also
+    # invalidates the access_token it minted.
+    token_to_revoke = getattr(creds, "refresh_token", None) or getattr(creds, "token", None)
+    if token_to_revoke:
+        try:
+            import requests
+            requests.post(
+                "https://oauth2.googleapis.com/revoke",
+                params={"token": token_to_revoke},
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                timeout=8,
+            )
+        except Exception as e:
+            print(f"[account-deletion] Google token revoke failed (non-fatal): {e}")
+
+    # Clear in-memory caches for every session this account had, not just
+    # the one making this request (a deleted account may be logged in on
+    # multiple devices).
+    for sid in result["session_ids"] or [session_id]:
+        _user_data.pop(sid, None)
+        _user_creds.pop(sid, None)
+        _pending_flows.pop(sid, None)
+    request.session.pop("session_id", None)
 
     return JSONResponse({"success": True})

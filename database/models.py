@@ -36,6 +36,11 @@ class UserSession(Base):
     creds_json = Column(Text, nullable=False)
     user_data_json = Column(Text, nullable=False)
     updated_at = Column(DateTime, default=_now, onupdate=_now)
+    # Backfilled on every /callback login (routers/auth.py). Was previously only
+    # added via the raw-SQL migration below without a matching Column here, so
+    # SQLAlchemy silently never persisted writes to it — added 2026-08 so
+    # account deletion can actually find every session a user owns.
+    owner_email = Column(String, nullable=True)
 
 class VideoOptimizeCache(Base):
     __tablename__ = "video_optimize_cache"

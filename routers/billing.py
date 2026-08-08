@@ -196,6 +196,41 @@ def _stash_pending_purchase(db, email: str, meta: dict, customer_id: str, subscr
         print(f"[webhook] pending purchase stash error: {e}")
 
 
+def cancel_paddle_subscriptions(db, channel_ids: list) -> None:
+    """Immediately cancels any active Paddle subscription tied to these
+    channel_ids. Called from routers/auth.py delete_account BEFORE the local
+    UserSubscription row (which holds paddle_subscription_id) is deleted.
+
+    Best-effort per subscription — one failure never blocks the rest of
+    account deletion. A failed cancel is logged as ALERT so it can be
+    cancelled manually in the Paddle dashboard; deletion proceeds either way
+    since the local data purge is the part the user is waiting on.
+    """
+    if not channel_ids or not PADDLE_API_KEY:
+        return
+    subs = db.query(UserSubscription).filter(
+        UserSubscription.channel_id.in_(channel_ids),
+        UserSubscription.status == "active",
+        UserSubscription.paddle_subscription_id.isnot(None),
+    ).all()
+    for sub in subs:
+        try:
+            import requests
+            resp = requests.post(
+                f"{PADDLE_API_BASE}/subscriptions/{sub.paddle_subscription_id}/cancel",
+                headers={
+                    "Authorization": f"Bearer {PADDLE_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                json={"effective_from": "immediately"},
+                timeout=12,
+            )
+            if resp.status_code not in (200, 201):
+                print(f"[account-deletion] ALERT could not cancel Paddle subscription {sub.paddle_subscription_id} for channel {sub.channel_id}: {resp.status_code} {resp.text[:300]}")
+        except Exception as e:
+            print(f"[account-deletion] ALERT Paddle cancel request failed for {sub.paddle_subscription_id} (channel {sub.channel_id}): {e}")
+
+
 def redeem_pending_purchases(db, email: str, channel_id: str) -> bool:
     """Apply every unredeemed PendingPurchase for `email` onto `channel_id`'s
     subscription. Called from routers/auth.py /callback right after a brand
