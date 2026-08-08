@@ -62,11 +62,11 @@ const META_BY_ROUTE = {
     description: '10-dimension AI YouTube channel audit covering traffic, retention, CTR, SEO, and thumbnails. Scored, benchmarked vs your niche, with priority fixes.',
   },
   '/features/competitor-analysis': {
-    title:       'YouTube Competitor Analysis: Track Up to 10 Channels',
+    title:       'YouTube Competitor Tracker: AI Gap Analysis Tool',
     description: 'Track up to 10 YouTube competitors. AI surfaces winning title patterns, content gaps, and posting times you can copy. Free to start.',
   },
   '/features/seo-studio': {
-    title:       'YouTube SEO Tool: Title and Description Optimizer',
+    title:       'SEO Studio: Score and Optimize Every YouTube Title',
     description: 'Score every YouTube title against search demand, keyword fit, and competitor patterns. Optimize descriptions for discovery. Apply via YouTube API.',
   },
   '/features/thumbnail-iq': {
@@ -74,7 +74,7 @@ const META_BY_ROUTE = {
     description: 'Two-layer YouTube thumbnail scoring. Algorithmic CTR check plus vision AI compared against winning thumbnails in your niche.',
   },
   '/features/keyword-research': {
-    title:       'Free YouTube Keyword Research Tool with Real Data',
+    title:       'YouTube Keyword Explorer: Real Competition Data & Scoring',
     description: 'Find low-competition YouTube keywords with real ranking data. Score by competitor size, view ceiling, and content freshness. Free tier included.',
   },
   '/features/outliers': {
