@@ -296,6 +296,27 @@ class ChannelRegistry(Base):
     last_audit_at      = Column(DateTime, nullable=True)
 
 
+class PendingPurchase(Base):
+    """A Paddle payment completed before any YouTube channel was connected
+    (pay-before-signup flow, 2026-08). Redeemed onto the new channel's
+    UserSubscription the first time that email completes Google OAuth."""
+    __tablename__ = "pending_purchases"
+    id                      = Column(Integer, primary_key=True, autoincrement=True)
+    email                   = Column(String, nullable=False, index=True)
+    plan                    = Column(String, nullable=False)
+    billing_cycle           = Column(String, nullable=True)
+    analyses                = Column(Integer, default=0)
+    channels                = Column(Integer, default=1)
+    is_lifetime             = Column(Boolean, default=False)
+    bonus                   = Column(Integer, default=0)
+    paddle_customer_id      = Column(String, nullable=True)
+    paddle_subscription_id  = Column(String, nullable=True)
+    source_id               = Column(String, nullable=True, unique=True)
+    redeemed_at             = Column(DateTime, nullable=True)
+    redeemed_channel_id     = Column(String, nullable=True)
+    created_at              = Column(DateTime, default=_now)
+
+
 class TopChannelCache(Base):
     """Daily-refreshed cache of top YouTube channels per category. Curated
     handle seed lives in app/top_channels.py; the scheduler refreshes the
@@ -918,6 +939,12 @@ try:
         "CREATE INDEX IF NOT EXISTS ix_email_sequences_scheduled_at ON email_sequences (scheduled_at)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_email_sequence_user_num ON email_sequences (user_email, email_number)",
         "ALTER TABLE email_sequences ADD COLUMN attempts INTEGER DEFAULT 0",
+        # Pay-before-signup (2026-08): a Paddle purchase made before any
+        # channel is connected. Redeemed onto the channel's UserSubscription
+        # the first time that email completes Google OAuth.
+        "CREATE TABLE IF NOT EXISTS pending_purchases (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, plan TEXT NOT NULL, billing_cycle TEXT, analyses INTEGER DEFAULT 0, channels INTEGER DEFAULT 1, is_lifetime BOOLEAN DEFAULT 0, bonus INTEGER DEFAULT 0, paddle_customer_id TEXT, paddle_subscription_id TEXT, source_id TEXT, redeemed_at DATETIME, redeemed_channel_id TEXT, created_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_pending_purchases_email ON pending_purchases (email)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_pending_purchases_source_id ON pending_purchases (source_id)",
     ]:
         try:
             _conn.execute(_text(_stmt))

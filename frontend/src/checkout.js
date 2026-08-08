@@ -54,6 +54,15 @@ function ensurePaddle() {
   return window.__paddleReady ? window.__paddleReady() : Promise.resolve()
 }
 
+// Pay-before-signup (2026-08): a logged-out visitor can no longer resume
+// checkout by first creating an account — Landing.jsx registers a handler
+// here (via setPrepayHandler) that opens PrepayModal for the plan they
+// clicked instead of redirecting straight into Google OAuth. Pages that
+// never register a handler (none currently trigger openCheckout while
+// logged out) fall back to the old /auth/login redirect.
+let _prepayHandler = null
+export function setPrepayHandler(fn) { _prepayHandler = fn }
+
 /**
  * Re-initialise Paddle with the logged-in customer's Paddle ID.
  * Call this once after /billing/usage resolves and returns a paddle_customer_id.
@@ -84,10 +93,11 @@ export async function openCheckout(planKey) {
     // which reads as "broken" (especially on mobile where there's no console).
     // Send them to log in; they can re-click the plan when they land back.
     if (res.status === 401) {
-      // Carry the plan through login. sessionStorage is a same-origin fallback;
-      // the ?plan= param is what survives the ytgrowth → channelbrain hop (the
-      // backend turns it into /dashboard?pco_plan=… after auth). Without it the
-      // user logs in and nothing resumes.
+      if (_prepayHandler) { _prepayHandler(planKey); return }
+      // Fallback for pages with no PrepayModal mounted. Carry the plan
+      // through login: sessionStorage is a same-origin fallback; ?plan= is
+      // what survives the ytgrowth → channelbrain hop (the backend turns it
+      // into /dashboard?pco_plan=… after auth).
       try { sessionStorage.setItem('ytg_pending_plan', planKey) } catch {}
       window.location.href = '/auth/login?plan=' + encodeURIComponent(planKey)
       return

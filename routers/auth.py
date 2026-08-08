@@ -15,7 +15,7 @@ from app.milestones import check_and_record as _check_milestones, get_state as _
 from app.milestone_email import send_milestone_emails as _send_milestone_emails
 from database.models import (
     UserSession, UserEmailPreferences, UserSubscription,
-    UserAccount, ChannelRegistry, SessionLocal,
+    UserAccount, ChannelRegistry, PendingPurchase, SessionLocal,
 )
 
 router = APIRouter()
@@ -611,9 +611,23 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         # ── Upsert user_accounts ──────────────────────────────────────────
         is_new_signup    = False
         signup_utms      = {}
+        # Pay-before-signup (2026-08): no free accounts. A brand-new email
+        # may only get a UserAccount row if it already completed a Paddle
+        # purchase (see routers/billing.py PendingPurchase / prepay checkout).
+        # REQUIRE_PREPAY=0 is the kill switch for an instant rollback without
+        # a redeploy. Existing accounts are never touched by this gate.
+        require_prepay = os.environ.get("REQUIRE_PREPAY", "1") != "0"
         try:
             db = SessionLocal()
             account = db.query(UserAccount).filter_by(email=google_email).first()
+            if not account and require_prepay:
+                has_pending = db.query(PendingPurchase).filter(
+                    PendingPurchase.email == (google_email or "").strip().lower(),
+                    PendingPurchase.redeemed_at.is_(None),
+                ).first() is not None
+                if not has_pending:
+                    db.close()
+                    return RedirectResponse(f"{base}?error=payment_required")
             if not account:
                 # First time we've seen this Google account — pull any pending
                 # UTM attribution off the session and persist it.
@@ -632,6 +646,10 @@ def callback(request: Request, background_tasks: BackgroundTasks):
                 db.add(account)
                 is_new_signup = True
                 signup_utms   = pending_utms
+                if require_prepay:
+                    db.flush()
+                    from routers.billing import redeem_pending_purchases
+                    redeem_pending_purchases(db, google_email, channel_id)
             else:
                 account.display_name    = display_name
                 account.profile_picture = profile_picture

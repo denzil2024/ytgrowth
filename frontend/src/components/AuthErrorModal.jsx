@@ -124,6 +124,13 @@ const ERRORS = {
     primary: { label: 'Try again', href: '/auth/login' },
     secondary: { label: 'Email support', href: 'mailto:' + supportEmail()},
   },
+  payment_required: {
+    icon: IconLock,
+    title: 'Purchase a plan first',
+    body: "YTGrowth no longer offers free accounts. Pick a plan or the $5 starter pack, then connect your YouTube channel using the same Google account you used to pay.",
+    primary: { label: 'View plans', href: '/#pricing' },
+    secondary: { label: 'Already paid? Email support', href: 'mailto:' + supportEmail()},
+  },
 }
 
 export default function AuthErrorModal({ open, errorCode, onClose }) {

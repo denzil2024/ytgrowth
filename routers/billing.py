@@ -4,12 +4,13 @@ Paddle billing integration:
 - GET  /billing/usage    — returns current user's usage for the frontend bar
 """
 import os
+import re
 import json
 import hmac
 import hashlib
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
-from database.models import SessionLocal, UserSubscription, UserEmailPreferences, ChannelRegistry
+from database.models import SessionLocal, UserSubscription, UserEmailPreferences, ChannelRegistry, PendingPurchase
 from routers.auth import get_session
 from app.utils import get_or_create_subscription, next_reset_date
 
@@ -159,6 +160,72 @@ def _recover_channel_id(db, email: str, customer_id: str) -> str:
     return ""
 
 
+def _stash_pending_purchase(db, email: str, meta: dict, customer_id: str, subscription_id: str, source_id: str) -> None:
+    """Record a Paddle payment that arrived with no channel_id and no
+    recoverable existing customer — i.e. a brand-new buyer paying before
+    connecting a YouTube channel (pay-before-signup, 2026-08). Redeemed by
+    `redeem_pending_purchases` the moment that email completes Google OAuth.
+
+    Idempotent on source_id (the Paddle transaction/subscription id) so a
+    retried webhook delivery never double-credits the eventual signup.
+    """
+    if not email:
+        print(f"[webhook] ALERT could not stash pending purchase — no email. customer_id={customer_id}")
+        return
+    try:
+        if source_id:
+            existing = db.query(PendingPurchase).filter_by(source_id=source_id).first()
+            if existing:
+                return
+        db.add(PendingPurchase(
+            email=email.strip().lower(),
+            plan=meta["plan"],
+            billing_cycle=meta["billing"],
+            analyses=meta["analyses"],
+            channels=meta["channels"],
+            is_lifetime=meta["is_lifetime"],
+            bonus=meta["bonus"],
+            paddle_customer_id=customer_id or None,
+            paddle_subscription_id=subscription_id or None,
+            source_id=source_id or None,
+        ))
+        db.commit()
+        print(f"[webhook] stashed pending purchase for {email} — plan={meta['plan']}, will redeem on next signup")
+    except Exception as e:
+        db.rollback()
+        print(f"[webhook] pending purchase stash error: {e}")
+
+
+def redeem_pending_purchases(db, email: str, channel_id: str) -> bool:
+    """Apply every unredeemed PendingPurchase for `email` onto `channel_id`'s
+    subscription. Called from routers/auth.py /callback right after a brand
+    new UserAccount is created. Returns True if at least one purchase was
+    redeemed. Caller is responsible for committing db.
+    """
+    if not email or not channel_id:
+        return False
+    rows = (
+        db.query(PendingPurchase)
+        .filter(PendingPurchase.email == email.strip().lower(), PendingPurchase.redeemed_at.is_(None))
+        .all()
+    )
+    if not rows:
+        return False
+    import datetime as _dt
+    sub = get_or_create_subscription(db, channel_id, email)
+    for row in rows:
+        meta = {
+            "plan": row.plan, "billing": row.billing_cycle or "one-time",
+            "analyses": row.analyses or 0, "channels": row.channels or 1,
+            "is_lifetime": bool(row.is_lifetime), "bonus": row.bonus or 0,
+        }
+        _activate(sub, meta, row.paddle_customer_id or "", row.paddle_subscription_id)
+        row.redeemed_at = _dt.datetime.utcnow()
+        row.redeemed_channel_id = channel_id
+    print(f"[prepay] redeemed {len(rows)} pending purchase(s) for {email} onto channel {channel_id}")
+    return True
+
+
 # ── Webhook handler ────────────────────────────────────────────────────────────
 
 @router.post("/webhook")
@@ -201,8 +268,14 @@ async def paddle_webhook(request: Request):
         if event_type == "transaction.completed":
             # One-time purchases and lifetime plans
             meta = meta_from_price_id(data)
-            if not meta or not channel_id:
-                print(f"[webhook] ALERT transaction.completed could not resolve channel — PAID BUT NOT UPGRADED. email={email} customer_id={customer_id} custom={custom}")
+            if not meta:
+                print(f"[webhook] ALERT transaction.completed could not resolve price meta — PAID BUT NOT UPGRADED. email={email} customer_id={customer_id} custom={custom}")
+                return JSONResponse({"ok": True})
+            if not channel_id:
+                # No channel yet — buyer is paying before connecting a YouTube
+                # channel (pay-before-signup). Stash it; /auth/callback redeems
+                # it onto the channel the first time this email signs in.
+                _stash_pending_purchase(db, email, meta, customer_id, "", str(data.get("id", "")))
                 return JSONResponse({"ok": True})
 
             sub = get_or_create_subscription(db, channel_id, email)
@@ -218,6 +291,8 @@ async def paddle_webhook(request: Request):
                 _activate(sub, meta, customer_id, subscription_id)
                 db.commit()
                 print(f"[webhook] subscription.activated: activated {meta['plan']} for channel {channel_id}")
+            elif meta and not channel_id:
+                _stash_pending_purchase(db, email, meta, customer_id, subscription_id, subscription_id)
             else:
                 print(f"[webhook] ALERT subscription.activated could not resolve channel/meta — PAID BUT NOT UPGRADED. email={email} customer_id={customer_id} custom={custom}")
 
@@ -327,6 +402,41 @@ def get_checkout(plan: str, request: Request):
         "email":          email,
         "has_active_sub": has_active_sub,
     })
+
+
+_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+@router.get("/checkout-prepay")
+def get_checkout_prepay(plan: str, email: str):
+    """Same as /checkout but for a logged-out visitor with no channel yet
+    (pay-before-signup). No session required — the payment is reconciled to
+    a channel later, in routers/auth.py /callback, via redeem_pending_purchases."""
+    price_id = PLAN_PRICE_MAP.get(plan)
+    if not price_id:
+        return JSONResponse({"error": "Unknown plan"}, status_code=400)
+
+    email = (email or "").strip().lower()
+    if not _EMAIL_RE.match(email):
+        return JSONResponse({"error": "Enter a valid email"}, status_code=400)
+
+    return JSONResponse({"price_id": price_id, "email": email})
+
+
+@router.get("/prepay-status")
+def get_prepay_status(email: str):
+    """Polled by the frontend prepay modal after Paddle's checkout.completed
+    event fires client-side, to know when the async webhook has landed the
+    PendingPurchase row so it's safe to send the buyer into Google OAuth."""
+    email = (email or "").strip().lower()
+    if not email:
+        return JSONResponse({"ready": False})
+    db = SessionLocal()
+    try:
+        row = db.query(PendingPurchase).filter_by(email=email, redeemed_at=None).first()
+        return JSONResponse({"ready": bool(row)})
+    finally:
+        db.close()
 
 
 # ── Usage endpoint (frontend reads this) ───────────────────────────────────────

@@ -5,7 +5,8 @@ import {
   ListOrdered, Badge as BadgeIcon, Lightbulb, Columns2, Crop, Download,
   Trophy, BarChart3, BookOpen, Handshake, Mail, GalleryHorizontal,
 } from 'lucide-react'
-import { openCheckout } from '../checkout'
+import { openCheckout, setPrepayHandler } from '../checkout'
+import PrepayModal from '../components/PrepayModal'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 
@@ -901,6 +902,7 @@ function Testimonials({ isMobile }) {
 const AUTH_ERROR_CODES = new Set([
   'no_channel', 'channel_taken', 'channel_locked', 'channel_limit',
   'no_code', 'session_expired', 'analysis_failed', 'quota_exceeded',
+  'payment_required',
 ])
 
 export default function Landing() {
@@ -920,8 +922,17 @@ export default function Landing() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [authError, setAuthError] = useState(null)
+  const [prepayPlan, setPrepayPlan] = useState(null)
   const { isMobile, isTablet } = useBreakpoint()
   useGlobalStyles()
+
+  // Pay-before-signup (2026-08): a logged-out visitor clicking any pricing
+  // button hits openCheckout() -> 401 -> this handler instead of the old
+  // straight-to-/auth/login redirect. See checkout.js setPrepayHandler.
+  useEffect(() => {
+    setPrepayHandler((planKey) => setPrepayPlan(planKey))
+    return () => setPrepayHandler(null)
+  }, [])
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -982,6 +993,11 @@ export default function Landing() {
         open={!!authError}
         errorCode={authError}
         onClose={() => setAuthError(null)}
+      />
+      <PrepayModal
+        open={!!prepayPlan}
+        planKey={prepayPlan}
+        onClose={() => setPrepayPlan(null)}
       />
 
 
