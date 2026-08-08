@@ -91,6 +91,244 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-vlog-ideas',
+    title: 'YouTube Vlog Ideas: Every Format, From Phone-Only to Full Kit',
+    excerpt: 'Most vlog idea lists never say which ideas need real gear and which work with the phone already in your pocket. That distinction decides whether you film today or wait. The full breakdown by effort level, the voiceover option for camera-shy creators, and an honest read on how often to post.',
+    date: '2026-08-08',
+    category: CATEGORIES.strategy,
+    cover: '/blog/youtube-vlog-ideas-cover.jpg',
+    coverAlt: 'A creator filming a day-in-the-life vlog with a phone propped on a small tripod in a bright kitchen',
+    author: 'Denzil',
+    readTime: '14 min read',
+    faqs: [
+      { q: 'What are good vlog ideas for beginners?', a: 'Day-in-the-life, get-ready-with-me, and grocery haul or meal prep formats are the easiest starting points, since all three film with a phone in a single location and need no plot beyond whatever is already happening that day.' },
+      { q: 'Do I need a camera to start vlogging, or can I use my phone?', a: 'A phone handles nearly every format: daily vlogs, talking-head updates, food and hobby content, anything filmed handheld in one place. A dedicated camera and stabilizer only become useful for travel vlogs and multi-angle setups. The phone-only channel guide covers the full setup if that is genuinely all you have right now.' },
+      { q: 'Do I have to show my face in a vlog?', a: 'No. A voiceover recorded over B-roll carries the same day-in-the-life or travel structure while keeping you off-camera through nearly all of the runtime. It solves the discomfort of being watched while talking, which is usually the real barrier, not the filming itself.' },
+      { q: 'How long should a vlog be?', a: 'Most run 8 to 15 minutes for long-form, though the day itself should decide the length rather than a fixed target. A quiet routine day supports a shorter cut. A trip, or an errand run that goes sideways, earns the extra minutes.' },
+      { q: 'How often should I post vlogs?', a: 'Twice a week is a realistic starting cadence. Daily only works with a repurposing pipeline already in place, cutting one day of footage into a long-form video plus a couple of Shorts. Posting daily with no pipeline burns out a new channel faster than it grows one.' },
+      { q: 'Can vlogs be YouTube Shorts?', a: 'Yes. A 30-second cut of a day\'s three or four best moments, carried by on-screen text instead of narration, works as a mini vlog in its own right rather than just a trailer for the full video.' },
+      { q: 'Is vlogging too saturated to start in 2026?', a: 'The generic version is saturated. A vlog built around a specific niche, routine, or personality still has room, the same way search-driven content always does regardless of how many creators are active in a format. The saturation is in copying, not in the format itself.' },
+      { q: 'Do vlogs make money the same way as other YouTube videos?', a: 'Yes, through the same ad revenue as any monetized video, plus sponsorships that fit naturally into a routine. A product used on camera during a normal day reads as far less forced than the same placement dropped into a scripted video.' },
+      { q: 'Should I get permission before filming other people in my vlogs?', a: 'Yes, before you film, not after the video is already edited and ready to publish. That includes partners, roommates, coworkers, and especially children, who cannot meaningfully consent to a permanent public record of themselves. Blur a face or cut a scene rather than assume it would have been fine.' },
+      { q: 'How do I find new vlog ideas when I run out?', a: 'Check the Trends tab in YouTube Studio for what your specific audience is already searching for, and use a free video ideas generator to turn your niche into proven formats on the days a routine day-in-the-life does not feel like enough on its own.' },
+    ],
+    content: () => (
+      <>
+        <p>A vlog idea list is only useful if it says which ideas need a camera, a decent mic, and a free afternoon, and which ones work with the phone already in your pocket. Most skip that distinction entirely. Gear-ready versus phone-only decides whether today is a filming day or a waiting day.</p>
+
+        <p>This covers the format menu in full, organized by what each one costs to attempt, plus three things the standard idea list skips entirely: a voiceover option for anyone who does not want to talk to a camera for ten minutes straight, an honest read on posting cadence and early growth, and the consent question that comes up the moment another person ends up in frame.</p>
+
+        <p>For long-form ideas beyond vlogging, the <a href="/blog/youtube-video-ideas">video ideas guide</a> covers 10 formats that work from zero subscribers, and the <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> covers the short-form version of everything below.</p>
+
+        <h2>Start With What You Already Have</h2>
+
+        <p><strong>Every format below works at two different tiers</strong>, and almost no vlog idea list separates them. A phone with decent light handles nearly everything a beginner needs. A dedicated camera, a lav mic, and a stabilizer open up a second set of ideas, but none of them are a requirement to start.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>What it unlocks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Phone only</strong></td><td>Daily vlogs, talking-head updates, nearly every food and hobby format, anything filmed handheld in a single location</td></tr>
+            <tr><td><strong>Upgraded kit</strong></td><td>Travel vlogs needing stabilization, low-light filming, multi-angle setups, anything relying on a lav mic for clean audio while moving</td></tr>
+          </tbody>
+        </table>
+
+        <p>The <a href="/blog/youtube-channel-phone">phone-only channel guide</a> covers the full setup, audio included, if a phone is genuinely all you are working with for now. Nothing below requires waiting on a gear upgrade that has not happened yet.</p>
+
+        <h2>Daily and Lifestyle Vlogs</h2>
+
+        <p>The most searched vlog format by a wide margin, and the easiest to start today. A morning routine, a work-from-home day, a weekend errand run: none of it needs a plot, just a camera rolling through whatever is already happening.</p>
+
+        <ul>
+          <li><strong>Day-in-the-life:</strong> the default starting point for a reason. Film normal hours as they happen and let editing find the story afterward instead of scripting one in advance.</li>
+          <li><strong>Get-ready-with-me:</strong> a routine, whether skincare, workout prep, or packing a bag, narrated in real time. Low setup, high rewatch value for the audience segment that already searches this format.</li>
+          <li><strong>Home tour or apartment update:</strong> works once as a full tour and again every time something changes: a new piece of furniture, a small renovation, a reorganized room.</li>
+          <li><strong>Grocery haul or meal prep:</strong> combines two searched formats, food and daily life, into one video viewers watch for the routine as much as the recipes.</li>
+          <li><strong>Seasonal or holiday routine:</strong> the same daily-vlog format tied to a specific week of the year: decorating, prepping a holiday meal, closing out the year. It resurfaces in search every time that season comes back around.</li>
+        </ul>
+
+        <h2>Student and Campus Vlogs</h2>
+
+        <p>A built-in audience searches for exactly this content every semester, and it needs nothing beyond a phone and whatever is already on the calendar.</p>
+
+        <ul>
+          <li><strong>Study-with-me:</strong> real-time or sped-up footage of a study session, usually filmed in a single continuous take with minimal editing.</li>
+          <li><strong>Dorm room or campus tour:</strong> works once as a full tour and again every time the setup changes, the same logic as a home tour.</li>
+          <li><strong>Exam season or finals week vlog:</strong> a stretch of a few stressful days with a clear, relatable stake already built in.</li>
+          <li><strong>A day in the life as a student:</strong> the standard daily-vlog format narrowed to a specific, searchable identity: a major, a year, a particular school.</li>
+        </ul>
+
+        <h2>Travel Vlogs, Local Included</h2>
+
+        <p>Nearly every travel vlog guide assumes a flight and a week off work. The local version runs on the same instincts at a fraction of the cost, and it is the version a beginner can film this weekend instead of waiting for a trip to happen.</p>
+
+        <ul>
+          <li><strong>Day trip or local hidden gem:</strong> a hike, a lake, a small town an hour away, filmed with the same structure as a full travel vlog: arrival, exploration, a payoff moment.</li>
+          <li><strong>Budget breakdown:</strong> the real cost of a trip, itemized and published after you return. Viewers planning the same destination search for this specifically before they book anything.</li>
+          <li><strong>Packing video:</strong> what went in the bag versus what never left it, tied to a specific destination or trip length rather than a generic packing list.</li>
+          <li><strong>"What I wish I knew before visiting X":</strong> mistakes, scams, timing, logistics: framed as a warning rather than a highlight reel. It answers a question a viewer is actively planning around instead of showing off a trip that already happened.</li>
+          <li><strong>Neighborhood food tour:</strong> no flight required, just three or four spots within your own city treated with the same curiosity as a foreign destination.</li>
+        </ul>
+
+        <h2>Food, Fitness, and Hobby Vlogs</h2>
+
+        <p>Whatever already fills a weekly routine is a vlog with the camera turned on for one extra hour. A cooking session, a workout, a hobby practiced for reasons that have nothing to do with YouTube, all convert into content without inventing a new activity to justify filming.</p>
+
+        <ul>
+          <li><strong>Cooking or recipe vlogs:</strong> narrate the process instead of scripting a formal recipe video, mistakes and substitutions included.</li>
+          <li><strong>Fitness journey vlogs:</strong> a single workout filmed weekly builds into a progress record viewers follow for the arc, not just the exercises.</li>
+          <li><strong>Hobby progress vlogs:</strong> learning an instrument, a craft, or a sport on camera gives every upload a built-in before-and-after even when the individual sessions are unremarkable.</li>
+        </ul>
+
+        <blockquote><strong>Quick Tip:</strong> pick the hobby or routine you would keep doing even without a camera present. It is the difference between a channel that runs out of material in a month and one with a year of footage already lined up.</blockquote>
+
+        <h2>Challenge and Entertainment Vlogs</h2>
+
+        <p>A vlog built around a genuine event rather than a routine day earns attention the calendar hands you for free, no stunt required to justify filming:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>What carries it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Milestone vlog</strong></td><td>A move, a first day at a new job, hitting a savings goal, a real before-and-after already built in</td></tr>
+            <tr><td><strong>Reaction or first-time-trying vlog</strong></td><td>A first attempt at a new food, place, or activity, carried by genuine unscripted reaction</td></tr>
+            <tr><td><strong>Live-event vlog</strong></td><td>A concert, a meetup, a local festival, filmed as your experience of it rather than coverage of the event itself</td></tr>
+            <tr><td><strong>Unboxing or first-use vlog</strong></td><td>Woven into a normal day instead of filmed in isolation, so the product moment sits inside a routine viewers already recognize</td></tr>
+          </tbody>
+        </table>
+
+        <p>For the stunt-driven version of this format, built around a stake and a payoff rather than a real event, the <a href="/blog/youtube-challenge-ideas">challenge video guide</a> covers the full categories, the safety guidance several lists skip, and how the format makes money.</p>
+
+        <h2>Vlogging With Friends and Family</h2>
+
+        <p>A second person in frame changes the format: reaction shots, natural conversation, a built-in second personality for the channel. It is one of the more reliable ways to keep a solo vlog from feeling repetitive over time.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>What it adds</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Roommate or partner day-in-the-life</strong></td><td>The same daily-vlog structure, split between two people's perspectives on the same shared day</td></tr>
+            <tr><td><strong>Family event coverage</strong></td><td>A holiday, a birthday, a reunion, filmed as your experience of it rather than a formal recap</td></tr>
+            <tr><td><strong>Friend collab vlog</strong></td><td>Swap channels for a day, or film a shared activity from both people's cameras and cut it as one video</td></tr>
+            <tr><td><strong>Kid or pet milestone updates</strong></td><td>A low-frequency recurring series rather than a daily fixture, built around genuine change rather than manufactured content</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Get consent from anyone who appears on camera before you film</strong>, not after the video is already edited and ready to publish. That includes a partner, roommates, coworkers, and especially children, who cannot meaningfully consent to a permanent public record of themselves. Blur a face or cut a scene rather than assume it would have been fine.</p>
+
+        <h2>The Voiceover Option</h2>
+
+        <p>Not every vlog needs a face talking directly to camera for the full runtime. A voiceover recorded over B-roll carries the same day-in-the-life or travel structure while keeping the creator off-camera through nearly all of it, on camera only when a moment calls for it.</p>
+
+        <p>This solves the biggest reason camera-shy creators avoid vlogging entirely: the discomfort of being watched while talking on camera. Narrate after the footage is shot, over a coffee the next morning, and the on-camera pressure disappears without losing the format.</p>
+
+        <p>The <a href="/blog/faceless-youtube-channel-ideas">faceless channel ideas guide</a> covers the fully off-camera version if showing up on screen at all is off the table.</p>
+
+        <h2>Shorts-Native Mini Vlogs</h2>
+
+        <p>Not every vlog moment needs to survive into a 10-minute cut. Some formats work better shot for Shorts from the start, no long-form footage behind them at all:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>How it's built</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Three-moment day recap</strong></td><td>The single best clip from morning, afternoon, and evening, stitched together with on-screen text instead of narration</td></tr>
+            <tr><td><strong>60-second get-ready-with-me</strong></td><td>The full routine sped up into a single continuous cut, no talking required</td></tr>
+            <tr><td><strong>One-question vlogs</strong></td><td>A single follower question or daily prompt answered in under 30 seconds, filmed the moment it happens rather than saved for a full video</td></tr>
+          </tbody>
+        </table>
+
+        <p>The <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> covers the hook-and-loop mechanics that decide whether a clip like this gets watched past the first two seconds.</p>
+
+        <h2>How Often to Post and What to Expect</h2>
+
+        <p>Twice a week is a realistic starting cadence for a new vlog channel. Daily only works once a repurposing pipeline exists, long-form footage cut down into a couple of Shorts from the same shoot.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Cadence</th>
+              <th>What it requires</th>
+              <th>Risk</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>2x per week</strong></td><td>A single weekly filming session, edited across two uploads</td><td>Low. The realistic starting point for most new channels.</td></tr>
+            <tr><td><strong>3-4x per week</strong></td><td>A repurposing habit, one shoot split into a long-form video plus Shorts</td><td>Moderate. Sustainable only once editing time is under control.</td></tr>
+            <tr><td><strong>Daily</strong></td><td>A full repurposing pipeline already running, or a life genuinely eventful enough to fill it</td><td>High. The most common cause of a new vlog channel going quiet within a month.</td></tr>
+          </tbody>
+        </table>
+
+        <p>Early growth on a vlog channel tends to look flatter for longer than other formats, since a viewer usually needs several videos before deciding to follow a person rather than a topic. The <a href="/blog/restart-youtube-channel">channel restart guide</a> and the <a href="/blog/too-late-to-start">is it too late to start guide</a> both cover realistic growth timelines if the first month's numbers feel discouraging.</p>
+
+        <CtaCard
+          to="/features/keyword-research"
+          title="Check the topic has real demand before you film"
+          sub="The free Keyword Research tool shows actual search volume, so a vlog topic is a checked bet instead of a guess."
+          button="Check my topic, free →"
+        />
+
+        <h2>Validate Before You Film</h2>
+
+        <p>Every category above works better once a specific topic is checked for real demand instead of guessed at. Search the exact phrase on YouTube first and see what already ranks, then check real search volume with the <a href="/features/keyword-research">Keyword Research</a> tool. The free <a href="/tools/youtube-video-ideas-generator">Video Ideas Generator</a> helps on the days a routine day-in-the-life does not feel like enough on its own.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What are good vlog ideas for beginners?</h3>
+        <p><strong>Day-in-the-life, get-ready-with-me, and grocery haul or meal prep formats</strong> are the easiest starting points, since all three film with a phone in a single location and need no plot beyond whatever is already happening that day.</p>
+
+        <h3>Do I need a camera to start vlogging, or can I use my phone?</h3>
+        <p>A phone handles nearly every format: daily vlogs, talking-head updates, food and hobby content, anything filmed handheld in one place. A dedicated camera and stabilizer only become useful for travel vlogs and multi-angle setups. The <a href="/blog/youtube-channel-phone">phone-only channel guide</a> covers the full setup if that is genuinely all you have right now.</p>
+
+        <h3>Do I have to show my face in a vlog?</h3>
+        <p><strong>No.</strong> A voiceover recorded over B-roll carries the same day-in-the-life or travel structure while keeping you off-camera through nearly all of the runtime. It solves the discomfort of being watched while talking, which is usually the real barrier, not the filming itself.</p>
+
+        <h3>How long should a vlog be?</h3>
+        <p>Most run 8 to 15 minutes for long-form, though the day itself should decide the length rather than a fixed target. A quiet routine day supports a shorter cut. A trip, or an errand run that goes sideways, earns the extra minutes.</p>
+
+        <h3>How often should I post vlogs?</h3>
+        <p><strong>Twice a week is a realistic starting cadence.</strong> Daily only works with a repurposing pipeline already in place, cutting one day of footage into a long-form video plus a couple of Shorts. Posting daily with no pipeline burns out a new channel faster than it grows one.</p>
+
+        <h3>Can vlogs be YouTube Shorts?</h3>
+        <p><strong>Yes.</strong> A 30-second cut of a day's three or four best moments, carried by on-screen text instead of narration, works as a mini vlog in its own right rather than just a trailer for the full video.</p>
+
+        <h3>Is vlogging too saturated to start in 2026?</h3>
+        <p>The generic version is saturated. A vlog built around a specific niche, routine, or personality still has room, the same way search-driven content always does regardless of how many creators are active in a format. The saturation is in copying, not in the format itself.</p>
+
+        <h3>Do vlogs make money the same way as other YouTube videos?</h3>
+        <p><strong>Yes</strong>, through the same ad revenue as any monetized video, plus sponsorships that fit naturally into a routine. A product used on camera during a normal day reads as far less forced than the same placement dropped into a scripted video.</p>
+
+        <h3>Should I get permission before filming other people in my vlogs?</h3>
+        <p><strong>Yes, before you film</strong>, not after the video is already edited and ready to publish. That includes partners, roommates, coworkers, and especially children, who cannot meaningfully consent to a permanent public record of themselves. Blur a face or cut a scene rather than assume it would have been fine.</p>
+
+        <h3>How do I find new vlog ideas when I run out?</h3>
+        <p>Check the Trends tab in YouTube Studio for what your specific audience is already searching for, and use a free video ideas generator to turn your niche into proven formats on the days a routine day-in-the-life does not feel like enough on its own.</p>
+
+        <h2>Post the Boring Day First</h2>
+
+        <p>The instinct is to wait for a trip, a milestone, or a life change worth documenting before pressing record. That instinct is what keeps a vlog channel at zero uploads for months. The ordinary Tuesday, the unremarkable errands, the plain get-ready-with-me: all of it works as a first video precisely because it needs nothing special to happen first.</p>
+
+        <p>Film the version available today, phone in hand, nothing rented or bought first. The gear upgrades, the travel footage, the recurring cast of friends all layer on once the channel has something to build from. It rarely arrives the other way around.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-challenge-ideas',
     title: 'YouTube Challenge Video Ideas: The Complete Guide',
     excerpt: 'A challenge video needs a stake, a reaction, and a stunt viewers have not already seen a hundred versions of. Most idea lists nail the first two and quietly skip the third. The real categories, the safety guidance most lists skip, and how a challenge video makes real money.',
@@ -116,7 +354,7 @@ export const posts = [
       <>
         <p>Picking a challenge format takes five minutes. <strong>Making it look like nobody else's version</strong> takes real thought, and it is the part almost nothing written about this topic spends any real time on. A stake, a visible reaction, and a stunt viewers have not already watched a hundred times over, that third piece is where the actual work lives.</p>
 
-        <p>This covers the real categories worth knowing, plus three things almost none of the giant idea lists mention: how to adapt a format instead of copying it, the safety guidance several guides skip while still recommending ice baths and extreme spice eating, and how a challenge video makes real money. For format ideas beyond challenges, the <a href="/blog/youtube-video-ideas">video ideas guide</a> and <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> cover the rest of the content menu.</p>
+        <p>This covers the real categories worth knowing, plus three things almost none of the giant idea lists mention: how to adapt a format instead of copying it, the safety guidance several guides skip while still recommending ice baths and extreme spice eating, and how a challenge video makes real money. For format ideas beyond challenges, the <a href="/blog/youtube-video-ideas">video ideas guide</a>, the <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a>, and the <a href="/blog/youtube-vlog-ideas">vlog ideas guide</a> cover the rest of the content menu.</p>
 
         <h2>Pick a Category, Not a Stunt</h2>
 
@@ -247,7 +485,7 @@ export const posts = [
       <>
         <p>A YouTube Short has under sixty seconds total and roughly two of them to earn the rest. <strong>Everything about whether a format works follows from that one constraint</strong>, the hook that stops a scroll, the ending that loops back into itself, before the topic even enters the conversation. Miss the constraint and a genuinely good idea still gets swiped past.</p>
 
-        <p>This covers the formats in full, organized by what each one requires, but starts with the filter first. If you want the deeper mechanics behind why Shorts distribution behaves this way, the <a href="/blog/youtube-shorts-algorithm">Shorts algorithm guide</a> covers the Viewed vs. Swiped Away ratio in depth. If you are looking for long-form ideas instead, the <a href="/blog/youtube-video-ideas">video ideas guide</a> covers 10 formats that work with zero subscribers.</p>
+        <p>This covers the formats in full, organized by what each one requires, but starts with the filter first. If you want the deeper mechanics behind why Shorts distribution behaves this way, the <a href="/blog/youtube-shorts-algorithm">Shorts algorithm guide</a> covers the Viewed vs. Swiped Away ratio in depth. If you are looking for long-form ideas instead, the <a href="/blog/youtube-video-ideas">video ideas guide</a> covers 10 formats that work with zero subscribers, and the <a href="/blog/youtube-vlog-ideas">vlog ideas guide</a> covers the routine-driven version in full.</p>
 
         <h2>What Makes a Shorts Idea Work</h2>
 
@@ -8688,7 +8926,7 @@ Free studio checklist: https://yoursite.com/checklist
     title: 'Google AdSense for YouTube: How It Works, Setup, and Getting Paid (2026)',
     excerpt: 'How Google AdSense for YouTube works: setup and linking, the approval and tax steps, multiple channels and the under-18 rules, when you get paid, and the mistakes that get accounts suspended.',
     date: '2026-05-19',
-    updated: '2026-07-20',
+    updated: '2026-08-08',
     category: CATEGORIES.monetization,
     cover: '/blog/google-adsense-youtube-cover.webp',
     author: 'Denzil',
@@ -8882,6 +9120,22 @@ Free studio checklist: https://yoursite.com/checklist
         <p>AdSense requires the account holder to be <strong>18 or older</strong>, full stop. There is no lowered threshold or special youth track. If you are younger than that and your channel qualifies for the Partner Program, the only path to monetizing is linking your channel to an AdSense account owned by a parent or guardian, using their own Google account.</p>
 
         <p>Practically, this means the adult's name and tax details are what AdSense has on file, and every payment lands in their bank account rather than yours. How that money then reaches you is a conversation to have with them directly, since YouTube and AdSense play no part in that handoff. The moment you turn 18, you are not stuck: you can either take over your own previously-disapproved AdSense account or open a new one, and reactivating an old account just requires contacting AdSense support to verify your identity and age.</p>
+
+        <h2>The Ad Formats Actually Running on Your Videos</h2>
+
+        <p>AdSense does not pick the ad format, YouTube does, based on the toggles you leave on in Studio and the length of your video. Knowing what each format looks like tells you why a viewer saw what they saw, and why two videos with the same view count can pay differently.</p>
+
+        <ul>
+          <li><strong>Skippable in-stream ads:</strong> the standard pre-roll or mid-roll, skippable after 5 seconds. The most common format and the one most of your ad revenue comes from.</li>
+          <li><strong>Non-skippable in-stream ads:</strong> up to 15 seconds (30 seconds on connected TV), no skip option. Higher pay per view than skippable, but riskier for retention if overused.</li>
+          <li><strong>Bumper ads:</strong> a 6-second non-skippable ad, built for brand recall rather than a message that needs explaining. Lower per-view pay than the two formats above.</li>
+          <li><strong>Watch feed and Subscriptions feed ads:</strong> the thumbnail-style ads mixed into search results, the homepage, and Related videos. You do not control these directly, they are placement, not a Studio toggle.</li>
+          <li><strong>Shorts ads:</strong> full-screen ads that appear between Shorts in the feed. Revenue from these feeds the separate Shorts ad pool your RPM draws from.</li>
+        </ul>
+
+        <p><strong>Overlay ads and sponsored cards are dead.</strong> Both still show up in older AdSense guides, but <a href="https://support.google.com/youtube/answer/2467968" target="_blank" rel="noopener">YouTube stopped running overlay ads in April 2023</a>. If a guide still lists them as something to toggle on, it has not been updated since.</p>
+
+        <p>Back in Studio, the only formats you control directly are skippable, non-skippable, and bumper, through the ad format checkboxes on each upload. Leaving all three on gives the auction more inventory to bid on, which is the standard advice in the earnings section below.</p>
 
         <h2>How Much Does YouTube AdSense Pay?</h2>
 
@@ -9400,6 +9654,8 @@ Free studio checklist: https://yoursite.com/checklist
 
         <blockquote><strong>Pro Tip:</strong> Film your day in the life content in segments throughout the day rather than trying to reconstruct it after the fact. Authentic footage of real moments performs better than staged recreations, and it takes less time to edit because the structure already exists in the footage itself.</blockquote>
 
+        <p>If this format is the direction your channel is heading, the <a href="/blog/youtube-vlog-ideas">vlog ideas guide</a> covers the full menu beyond routines, travel, food, and the voiceover option for anyone who would rather not talk to camera for the full runtime.</p>
+
         <h2>5. Behind the Scenes Videos</h2>
 
         <p>Behind the scenes content is the fastest trust builder available to a new channel. Viewers are naturally curious about the process behind the content they consume, and showing yours removes the polished barrier between creator and audience before you have built any other form of credibility.</p>
@@ -9527,7 +9783,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>The best YouTube content ideas for beginners are the ones that get filmed today. A perfectly planned video that never gets made does not build a channel. Ten imperfect videos that go live do.</p>
 
-        <p>Every format in this guide works with zero subscribers because each one is built on search demand, low production barriers, and evergreen relevance. Pick one idea that fits <a href="/blog/youtube-niche">your niche</a>, research the specific angle with the most search potential, and film it before you have a reason not to. Once you have a few uploads, the <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> covers how to turn that same footage into a second discovery channel, and the <a href="/blog/youtube-challenge-ideas">challenge video guide</a> covers a format that works well once you are ready to film something bigger.</p>
+        <p>Every format in this guide works with zero subscribers because each one is built on search demand, low production barriers, and evergreen relevance. Pick one idea that fits <a href="/blog/youtube-niche">your niche</a>, research the specific angle with the most search potential, and film it before you have a reason not to. Once you have a few uploads, the <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> covers how to turn that same footage into a second discovery channel, the <a href="/blog/youtube-vlog-ideas">vlog ideas guide</a> covers the routine-driven format in full, and the <a href="/blog/youtube-challenge-ideas">challenge video guide</a> covers a format that works well once you are ready to film something bigger.</p>
 
         <p>The creators who grow consistently are not the ones who waited until everything was perfect. They are the ones who started, learned from the data their first ten videos produced, and adjusted faster than everyone else who was still planning.</p>
 
