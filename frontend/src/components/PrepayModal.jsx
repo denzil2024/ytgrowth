@@ -21,6 +21,15 @@
 */
 
 import { useEffect, useState, useRef } from 'react'
+import { isChannelBrain } from '../brandHost'
+
+// Paddle only approves checkout on ytgrowth.io (see checkout.js CHECKOUT_ORIGIN)
+// -- calling Paddle.Checkout.open() on channelbrain.online fails with Paddle's
+// own generic "Something went wrong" overlay. Landing.jsx (and this modal)
+// mount identically on both hosts, so a logged-out visitor can hit this from
+// channelbrain.online. Hand off to the existing /checkout page on ytgrowth.io,
+// same as checkout.js already does for the logged-in flow.
+const CHECKOUT_ORIGIN = 'https://ytgrowth.io'
 
 const SERIF  = "'Fraunces', Georgia, serif"
 const SANS   = "'Barlow', system-ui, sans-serif"
@@ -121,6 +130,13 @@ export default function PrepayModal({ open, onClose, planKey = 'pack_5' }) {
         setStage('form')
         return
       }
+
+      if (isChannelBrain()) {
+        const p = new URLSearchParams({ pco: '1', prepay: '1', price: data.price_id, em: cleaned })
+        window.location.href = `${CHECKOUT_ORIGIN}/checkout?${p.toString()}`
+        return
+      }
+
       await paddleReady
       window.Paddle.Checkout.open({
         items: [{ priceId: data.price_id, quantity: 1 }],
