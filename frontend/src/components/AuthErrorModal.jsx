@@ -226,11 +226,15 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
           {cfg.body}
         </p>
 
-        {/* Primary CTA, flat solid red, matches the pricing CTAs on the page */}
+        {/* Primary CTA, flat solid red, matches the pricing CTAs on the page.
+            onClose fires alongside navigation -- for a same-page anchor like
+            /#pricing the browser only scrolls, it never unmounts this modal,
+            so without this the card sits on top blocking the view. */}
         <a
           href={cfg.primary.href}
           target={cfg.primary.external ? '_blank' : undefined}
           rel={cfg.primary.external ? 'noopener noreferrer' : undefined}
+          onClick={onClose}
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             width: '100%', maxWidth: 340,
@@ -251,6 +255,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
           <div style={{ marginTop: 16 }}>
             <a
               href={cfg.secondary.href}
+              onClick={onClose}
               style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 600, color: MUTED, textDecoration: 'none' }}>
               {cfg.secondary.label} →
             </a>
