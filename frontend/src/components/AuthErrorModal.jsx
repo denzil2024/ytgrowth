@@ -1,12 +1,10 @@
 /* AuthErrorModal, centred modal for auth-callback failures.
 
-   Visual DNA mirrors CreditsEmptyModal exactly (red gradient icon → title →
-   description → primary red-gradient CTA → secondary text link → close X) so
-   error states feel like the paywall: a serious, branded surface, not a
-   peripheral toast.
-
-   The auth-callback in routers/auth.py redirects to /?error=<code>; the
-   landing page reads that param and mounts this with the matching key.
+   Mounted from Landing.jsx (routers/auth.py redirects to /?error=<code> on
+   every host, including channelbrain.online) — so this follows Landing's
+   own editorial system (Fraunces headings, flat radius-0, solid accent red,
+   no gradients) instead of a generic SaaS gradient-modal look. Redesigned
+   2026-08 to actually match the page it's shown on.
 
    Each error gets:
      - an icon that fits the cause (YouTube glyph for no_channel, etc.)
@@ -22,11 +20,14 @@
 import { useEffect } from 'react'
 import { supportEmail } from '../brandHost'
 
-const C = {
-  red: '#c9a030', green: '#059669', amber: '#d97706',
-  text1: '#0f0f13', text2: '#4a4a58', text3: '#8a8378',
-  border: '#e6e6ec',
-}
+/* Editorial tokens, matching Landing.jsx's ED_* constants exactly. */
+const SERIF  = "'Fraunces', Georgia, serif"
+const SANS   = "'Barlow', system-ui, sans-serif"
+const INK    = '#14130f'
+const SOFT   = '#5c574e'
+const MUTED  = '#8a8378'
+const ACCENT = '#e5302a'
+const LINE   = 'rgba(20,19,15,0.12)'
 
 /* ── Icons ──────────────────────────────────────────────────────────────── */
 const IconYoutube = (
@@ -163,11 +164,11 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 1100,
-        background: 'rgba(10,10,15,0.52)',
+        background: 'rgba(20,19,15,0.5)',
         backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: 24,
-        fontFamily: "'Barlow', system-ui, sans-serif",
+        fontFamily: SANS,
         animation: 'aem-fade 0.16s ease',
       }}>
       <style>{`
@@ -180,11 +181,11 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
         style={{
           position: 'relative',
           background: '#ffffff',
-          border: '1px solid rgba(201,160,48,0.2)',
-          borderRadius: 20,
-          boxShadow: '0 20px 50px rgba(0,0,0,0.22)',
-          padding: '30px 36px 28px',
-          maxWidth: 520, width: '100%',
+          border: `1px solid ${LINE}`,
+          borderRadius: 0,
+          boxShadow: '0 12px 32px rgba(20,19,15,0.14)',
+          padding: '32px 36px 28px',
+          maxWidth: 480, width: '100%',
           textAlign: 'center',
           animation: 'aem-pop 0.22s cubic-bezier(0.2, 0.7, 0.3, 1)',
         }}>
@@ -195,51 +196,49 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
           aria-label="Close"
           style={{
             position: 'absolute', top: 14, right: 14,
-            width: 32, height: 32, borderRadius: 10,
+            width: 30, height: 30, borderRadius: 0,
             border: 'none', background: 'transparent',
-            color: C.text3, cursor: 'pointer',
+            color: MUTED, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.15s, color 0.15s',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#14130f'; e.currentTarget.style.color = C.text1 }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text3 }}>
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = INK }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = MUTED }}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M3 3l8 8M11 3l-8 8"/>
           </svg>
         </button>
 
-        {/* Red gradient icon square, mirrors paywall */}
+        {/* Flat solid-red icon square, matches the pricing badges elsewhere on the page */}
         <div style={{
-          width: 50, height: 50, borderRadius: 14,
-          background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
-          margin: '0 auto 18px',
+          width: 48, height: 48, borderRadius: 0,
+          background: ACCENT,
+          margin: '0 auto 20px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(20,19,15,0.25)`,
         }}>
           {cfg.icon}
         </div>
 
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
+        <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 28, color: INK, letterSpacing: '-0.01em', lineHeight: 1.15, marginBottom: 12 }}>
           {cfg.title}
         </h2>
-        <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 22, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+        <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.65, marginBottom: 24, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
           {cfg.body}
         </p>
 
-        {/* Primary CTA, red gradient pill */}
+        {/* Primary CTA, flat solid red, matches the pricing CTAs on the page */}
         <a
           href={cfg.primary.href}
           target={cfg.primary.external ? '_blank' : undefined}
           rel={cfg.primary.external ? 'noopener noreferrer' : undefined}
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            width: '100%', maxWidth: 360,
-            background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
+            width: '100%', maxWidth: 340,
+            background: ACCENT,
             color: '#ffffff',
-            fontSize: 14, fontWeight: 700,
-            padding: '13px 24px', borderRadius: 999,
+            fontFamily: SANS, fontSize: 14, fontWeight: 600,
+            padding: '13px 24px', borderRadius: 0,
             textDecoration: 'none', letterSpacing: '-0.1px',
-            boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(20,19,15,0.22)`,
           }}>
           {cfg.primary.label}
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -249,10 +248,10 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
 
         {/* Secondary text link */}
         {cfg.secondary && (
-          <div style={{ marginTop: 14 }}>
+          <div style={{ marginTop: 16 }}>
             <a
               href={cfg.secondary.href}
-              style={{ fontSize: 12.5, fontWeight: 600, color: C.text3, textDecoration: 'none' }}>
+              style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 600, color: MUTED, textDecoration: 'none' }}>
               {cfg.secondary.label} →
             </a>
           </div>
