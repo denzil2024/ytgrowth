@@ -902,7 +902,7 @@ function Testimonials({ isMobile }) {
 const AUTH_ERROR_CODES = new Set([
   'no_channel', 'channel_taken', 'channel_locked', 'channel_limit',
   'no_code', 'session_expired', 'analysis_failed', 'quota_exceeded',
-  'payment_required',
+  'payment_required', 'insufficient_scope',
 ])
 
 export default function Landing() {

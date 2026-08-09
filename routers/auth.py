@@ -939,6 +939,13 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         err_str = str(e).lower()
         if "quotaexceeded" in err_str or ("quota" in err_str and "exceeded" in err_str):
             return RedirectResponse(f"{base}?error=quota_exceeded")
+        # Google returned a token missing the YouTube scope — happens when the
+        # consent screen shows per-scope checkboxes (e.g. right after a prior
+        # grant was revoked, such as by delete-account) and one gets
+        # unchecked. Distinct from analysis_failed: nothing here is an audit
+        # failure, sign-in itself didn't get the access it needs.
+        if "insufficientpermissions" in err_str or "insufficient authentication scopes" in err_str:
+            return RedirectResponse(f"{base}?error=insufficient_scope")
         return RedirectResponse(f"{base}?error=analysis_failed")
 
 

@@ -105,9 +105,16 @@ const ERRORS = {
   },
   analysis_failed: {
     icon: IconAlert,
-    title: 'Sign-in worked, audit failed',
-    body: "You're signed in, but our first AI audit hit a snag. Open the dashboard and try a re-audit, we won't charge a credit for the failed run.",
-    primary: { label: 'Open dashboard', href: '/dashboard' },
+    title: 'Something went wrong after sign-in',
+    body: "Google sign-in worked, but we hit an unexpected error setting up your channel. Nothing was charged. Try signing in again.",
+    primary: { label: 'Try again', href: '/auth/login' },
+    secondary: { label: 'Email support if this keeps happening', href: 'mailto:' + supportEmail()},
+  },
+  insufficient_scope: {
+    icon: IconYoutube,
+    title: "YouTube access wasn't granted",
+    body: "Google's sign-in screen needs every permission checked to work, and it looks like YouTube access got unchecked this time. Try again and leave all boxes checked.",
+    primary: { label: 'Try again', href: '/auth/login' },
     secondary: { label: 'Email support if this keeps happening', href: 'mailto:' + supportEmail()},
   },
   quota_exceeded: {
