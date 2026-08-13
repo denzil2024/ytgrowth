@@ -107,6 +107,34 @@ pillar candidates first, real Keyword Planner volume, SERP check per keyword,
 
 ---
 
+## NEXT SESSION: KEYWORD RESEARCH ROUND (2026-08-14)
+
+**Tomorrow is entirely keyword research. Do not start anything else first.**
+
+The queue below is empty after the gaming post, and an empty queue is what took
+publishing from 63 commits in May to 4 in August. Refilling it is the whole job.
+
+How it runs:
+1. User pulls the three seeds in "Keyword seeds to pull" below and drops the
+   full CSV exports into `keyword-exports/`. Seed 1 (`youtube sponsorship`)
+   first, it has the clearest sub-topic structure.
+2. Follow the `FOUNDATION.md` workflow exactly. Pillar confirmed first, then
+   mine spokes from inside that same export. Every candidate gets a live Google
+   SERP check. 3 confirmed is the floor for a sub-cluster to survive.
+3. Report per the FOUNDATION.md format: confirmed (volume, who ranks, which
+   signal passed), dropped (why), running counts.
+4. Write the survivors into the pipeline table below as named articles.
+
+Do NOT write any article during this round. Research and the plan only. The
+process rule below (present outline for approval before writing) has been
+broken twice already, both times by starting to write too early.
+
+Note on CSV encoding: Keyword Planner exports are UTF-16, tab-delimited, with
+two header lines before the real header. Read with
+`open(f, encoding='utf-16')`, skip 2 lines, then `csv.DictReader(delimiter='\t')`.
+
+---
+
 ## THE ARTICLE PIPELINE (check here first, every session)
 
 This is the single list. Everything below is an article in `/blog`, shipped through
@@ -117,6 +145,7 @@ an article whose differentiator is original data.
 
 | Date | Article | Type |
 |---|---|---|
+| 2026-08-13 | YouTube Gaming Video Ideas (`/blog/gaming-video-ideas`), 18 numbered concrete ideas + gaming upload data | Cluster spoke |
 | 2026-08-13 | Upgraded `/blog/best-time-to-post` with cadence + day-of-week data (studies #3+#4) | Upgrade |
 | 2026-08-13 | The Ideal YouTube Video Length in 2026 (`/blog/video-length-by-niche`), corrected same day (date-filter bug) | Data study #1 |
 | 2026-08-08 | YouTube Vlog Ideas | Cluster spoke |
@@ -126,8 +155,9 @@ an article whose differentiator is original data.
 
 | Order | Work | Type | Quota | Blocked on |
 |---|---|---|---|---|
-| 1 | Promotion pass on both studies | Outreach, not writing | 0 | Nothing. HIGHEST PRIORITY: two backlink assets exist and nobody has seen them. |
-| 2 | Title-pattern data study (study #2) | New post, needs a decision first | 0-2K units | Cannibalization check, see below |
+| 1 | **Keyword research round** | Research, no writing | 0 | User pulls the 3 seeds. THIS IS TOMORROW'S JOB. |
+| 2 | Title-pattern study, folded INTO `/blog/youtube-title` | Upgrade, not a new post | 0 | Nothing. Decided 2026-08-13: a separate post would split authority with the existing page, same as the best-time-to-post call. Uses `channel_videos.title`, already collected. |
+| 3 | Promotion pass on both studies | Outreach | 0 | User is sourcing leads independently and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
 
 **Why item 1 is an upgrade, not a new article.** `/blog/best-time-to-post` already
 exists and is a high-impression page. A separate "when creators really upload" post
