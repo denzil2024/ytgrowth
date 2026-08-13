@@ -2,6 +2,7 @@
 // and card excerpt. Keeps <title> <=60 and meta description <=155 for clean
 // SERP display without touching article copy. Consumed in BlogPost.jsx.
 export const BLOG_SEO = {
+  "video-length-by-niche": { title: "Ideal YouTube Video Length 2026: Real Data by Niche", description: "We measured 33,364 real uploads across 14 niches. Median length per niche, why published averages are inflated by livestreams, and the 8-minute ad line." },
   "youtube-demonetization": { title: "YouTube Demonetization 2026: Which Problem You Have & the Fix", description: "The five problems creators call \"demonetized\", how to tell which hit your channel, every appeal deadline, and what YouTube's July 2026 update changed." },
   "restart-youtube-channel": { title: "Delete Your YouTube Channel and Start Over? 2026 Guide", description: "Almost never delete: subscribers survive any rebrand, a new channel re-earns monetization from zero, and most dead channels have one fixable problem." },
   "too-late-to-start": { title: "Is It Too Late to Start a YouTube Channel? (2026 Answer)", description: "Not too late, but 90% of new channels go silent within six months. The real odds, what changed for and against you in 2026, and who should not start." },

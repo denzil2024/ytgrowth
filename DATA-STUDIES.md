@@ -30,15 +30,32 @@ Last updated: 2026-07-17
 
 | # | Study | Stats needed | Source | Est. quota |
 |---|---|---|---|---|
-| 1 | The ideal YouTube video length in 2026, by niche (analyzed ~100K top videos) | Durations + views of top videos per niche | Fresh pull: channel uploads via playlistItems + videos.list | ~5-10K units |
+| 1 | ~~The ideal YouTube video length in 2026, by niche~~ **PUBLISHED 2026-08-13** as `/blog/video-length-by-niche` | Durations of tracked uploads per niche | Existing `channel_videos` + `channel_metric_snapshots` (no fresh pull needed) | **0 units** |
 | 2 | What 10,000 winning YouTube titles have in common | Titles, lengths, patterns (numbers, brackets, year tags, questions) of top-ranking videos | youtube_search_cache (already stored) + cheap top-up | ~0-2K units |
 | 3 | When top creators really upload: best time to post, measured | publishedAt timestamps per niche and channel size | Fresh pull via uploads playlists | ~5K units |
 | 4 | How often successful channels upload vs stalled ones | Upload cadence + channel size/views | Fresh pull; plugs the known data gap in blog/best-time-to-post | ~5K units |
 | 5 | Shorts vs long-form mix by niche, from real channels | Upload duration classification per channel | Same pull as #1 (reuse the dataset) | shared |
 
-Priority order: #1 first (most broadly linkable, no fresh 2026 numbers exist),
-then #3/#4 (they upgrade best-time-to-post, our highest-impression page), then
-#2 (near-free). #5 falls out of #1's dataset.
+Priority order: ~~#1 first~~ (DONE 2026-08-13), then #3/#4 (they upgrade
+best-time-to-post, our highest-impression page), then #2 (near-free).
+#5 fell out of #1's dataset and shipped inside that article as its
+Shorts-adoption-by-niche section rather than as a separate piece.
+
+**Study #1 notes for whoever runs #3/#4** (the same dataset powers them):
+- The loggers already hold everything needed. #1 cost **zero** fresh quota, not
+  the 5-10K estimated, because `channel_videos` stores `published_at` and
+  `duration_seconds` at discovery time. #3 (best time to post) and #4 (upload
+  cadence) read the same `published_at` column, so they should also cost zero.
+- The finding worth reusing: **average duration is wildly skewed by livestream
+  VODs**. Gaming's mean is 3.00x its median, news 3.74x, while tech and travel
+  are ~1.05x. Always report medians, and check the mean/median ratio before
+  publishing any duration or cadence figure.
+- Category comes from `channel_metric_snapshots.category` (only populated for
+  TopChannelCache channels). About 3,098 videos landed `uncategorized` and were
+  excluded from the per-niche tables. 14 niches cleared a usable sample; the
+  thinnest were comedy (888) and education (948) long-form videos.
+- Publish honest N and date range in the article. #1 used 33,364 long-form
+  videos, 2026-07-19 to 2026-08-13.
 
 ## Studies that need the moat running first (cannot be backfilled)
 
@@ -73,9 +90,24 @@ then #3/#4 (they upgrade best-time-to-post, our highest-impression page), then
    videos = 1,000 units). Powers "how videos age" studies. Worst case for the
    whole run ~4,100 units/week.
 
-Status: ALL FOUR LOGGERS BUILT AND DEPLOYED 2026-07-17. First nightly snapshot
-expected the night of 2026-07-17; first weekly runs Sunday 2026-07-20 — next
-session must VERIFY rows are appearing in all four tables. Quota-extension form
+Status: ALL FOUR LOGGERS BUILT AND DEPLOYED 2026-07-17. **VERIFIED WORKING
+2026-08-13** (a month later, first actual check). Live row counts:
+
+| Table | Rows | First | Last |
+|---|---|---|---|
+| cache_hit_snapshots | 10,785 | 2026-07-17 | 2026-08-12 |
+| channel_metric_snapshots | 31,144 | 2026-07-19 | 2026-08-09 |
+| channel_videos | 48,672 | 2026-07-19 | 2026-08-09 |
+| video_metric_snapshots | 118,038 | 2026-07-19 | 2026-08-09 |
+
+All four are firing on their schedules (nightly for cache hits, Sundays for
+the weekly jobs). The moat is real and accumulating. Verify again periodically:
+there is no alerting on these jobs, and the scheduler wrappers swallow
+exceptions into a print statement, so a silent failure would look exactly like
+this table not advancing.
+
+Query to re-check (Railway Postgres console, `psql -c "..."`):
+`SELECT 'channel_videos', COUNT(*), MIN(discovered_at)::date, MAX(discovered_at)::date FROM channel_videos;` Quota-extension form
 for the search.list sub-limit (2,600/day) SUBMITTED to Google 2026-07-17;
 top_n 3→5, weekly top-channels, and the last 3 seed keywords are user-approved
 but GATED on that approval. Study #1 (video length by niche) is NOT gated:

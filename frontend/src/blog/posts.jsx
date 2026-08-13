@@ -91,6 +91,255 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'video-length-by-niche',
+    title: 'The Ideal YouTube Video Length in 2026: We Analyzed 33,364 Real Uploads by Niche',
+    excerpt: 'The average gaming upload runs 67.9 minutes. The typical one runs 22.6. We pulled real duration data on 33,364 long-form videos across 14 niches and found that most published length advice quotes an average quietly inflated by livestream VODs. Every niche\'s median and average side by side, which statistics mislead worst, and where the 8-minute mid-roll line falls for each.',
+    date: '2026-08-13',
+    category: CATEGORIES.analytics,
+    cover: '/blog/video-length-by-niche-cover.jpg',
+    coverAlt: 'A creator at a home editing desk viewed over the shoulder, a video editing timeline filling the monitor with clips of visibly different lengths laid end to end',
+    author: 'Denzil',
+    readTime: '11 min read',
+    faqs: [
+      { q: 'What is the ideal YouTube video length in 2026?', a: 'There is no single ideal length. Our data shows the typical (median) video for an established channel ranges from 3.7 minutes in music to 27 minutes in travel, a 7x spread. The right length depends entirely on the niche: information-dense categories like travel and gaming run long, and fast-consumption categories like music and news run short. Match your niche\'s median rather than a generic 8-to-12-minute rule.' },
+      { q: 'Why is the average video length so much higher than the median in some niches?', a: 'Because a small number of very long uploads pull the average (mean) upward while most videos stay short. Gaming\'s average is 67.9 minutes against a median of 22.6, and news runs 25.4 minutes average against a 6.8-minute median. Both niches lean heavily on livestreams, and a saved 3-to-6-hour stream VOD counts as one "video" in the uploads playlist, so a channel with even a few long streams sees its average balloon while a typical upload stays short.' },
+      { q: 'Should I trust average video length statistics?', a: 'Only if the source also shows the median. An average alone hides whether it represents most videos or is skewed by a handful of outliers. Whenever a niche produces long-format content (livestreams, video essays, in-depth reviews) alongside its regular uploads, the average and median can diverge sharply, and the median is the more honest number for planning a typical video.' },
+      { q: 'How long should a gaming video be?', a: 'The typical successful gaming upload in our tracked data runs 22.6 minutes, well above most niches, driven by Let\'s Plays and full-session content that rewards depth over brevity. That figure excludes Shorts. Gaming also had one of the lower Shorts shares in our data at 18.2% of uploads, suggesting the niche still leans long-form even as Shorts adoption rises elsewhere.' },
+      { q: 'How long should a finance or business YouTube video be?', a: 'Our data puts the finance niche median at 14.2 minutes, among the longer categories, consistent with topics (market analysis, strategy breakdowns) that need setup and explanation before the payoff. Finance also had one of the lower Shorts shares (21.9%) in our sample, in line with an audience that watches for depth over quick hits.' },
+      { q: 'Which YouTube niches post the most Shorts?', a: 'In our tracked data, vlogs (46.1% of uploads), sports (43.0%), and fitness (42.5%) had the highest Shorts share. Tech had the lowest at 9.4%, followed by news at 13.7%. The pattern lines up with format fit: quick highlights, routines, and clips translate naturally to Shorts, while reviews and explainers generally need the runway of a long-form video.' },
+      { q: 'How was this data collected?', a: 'From our own weekly channel-tracking infrastructure, not a survey or a manually sampled batch. Every week, we pull the latest uploads for a large set of tracked YouTube channels (creators connected through our product, plus the channels in our public leaderboards) via YouTube\'s own API, record each video\'s real duration, and classify it long-form or Shorts using YouTube\'s own 62-second Shorts threshold. The dataset behind this piece covers 33,364 long-form videos across 14 niches, collected between 2026-07-19 and 2026-08-13.' },
+      { q: 'Is this the ideal length for ranking, or just what channels are currently posting?', a: 'This measures what already-established channels are uploading right now, not a controlled test of what causes better ranking or retention. The tracked channels are ones with real traction (connected product users and public leaderboard channels), so the data reflects working patterns from channels that have already found an audience, which is a reasonable proxy for "what works" without being a causal proof of it.' },
+    ],
+    content: () => (
+      <>
+        <p>The average gaming upload in our tracked data runs <strong>67.9 minutes</strong>. The typical one runs <strong>22.6 minutes</strong>. Both numbers describe the same 4,906 videos, and only one of them resembles a video you would sit down and make.</p>
+
+        <p>That gap is the whole problem with published video-length advice. <strong>Almost every "ideal length" figure in circulation is an average</strong>, and an average quietly absorbs every 6-hour livestream VOD sitting in a channel's uploads feed. The number comes out inflated, nobody checks it against the median, and the advice built on top of it points creators at a runtime almost nobody in their niche is producing.</p>
+
+        <p>We have our own upload data, so we ran the real figures instead: <strong>33,364 long-form videos across 14 niches</strong>, pulled from channels we track weekly. Below is every niche's median and average side by side, which niches have the most misleading statistics, and where the 8-minute monetization line falls for each one.</p>
+
+        <h2>What We Measured</h2>
+
+        <p>Our infrastructure walks the uploads playlist of every tracked channel each week and records what it finds through YouTube's own API. Tracked channels are creators connected through our product plus the channels ranked in our public leaderboards, so <strong>every channel here has existing traction</strong>.</p>
+
+        <p>For each video we store:</p>
+
+        <ul>
+          <li><strong>Real duration in seconds</strong>, parsed from YouTube's own duration field rather than estimated from anything.</li>
+          <li><strong>Publish timestamp</strong>, which is what lets us keep the dataset current rather than mixing in years of stale uploads.</li>
+          <li><strong>A Shorts flag</strong>, set when duration falls at or under 62 seconds, matching YouTube's own threshold rather than a guess at what counts as short.</li>
+          <li><strong>Channel category</strong>, carried over from the leaderboard classification so videos group into niches consistently.</li>
+        </ul>
+
+        <p>Two limits worth stating outright. This is <strong>not a random sample of all of YouTube</strong>, it is a sample of channels that already work, which makes it a description of current practice rather than proof of what causes a video to perform. And it measures what these channels publish, not how each video performed, so nothing below should be read as "this length gets more views."</p>
+
+        <h2>Median Video Length by Niche</h2>
+
+        <p>Sorted shortest to longest by median. <strong>Shorts are excluded entirely</strong> from these figures, so every number describes long-form only.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Videos (N)</th>
+              <th>Median</th>
+              <th>Average</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Music</strong></td><td>1,121</td><td>3.7 min</td><td>4.8 min</td></tr>
+            <tr><td><strong>News</strong></td><td>5,098</td><td>6.8 min</td><td>25.4 min</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>4,249</td><td>7.3 min</td><td>10.4 min</td></tr>
+            <tr><td><strong>Comedy</strong></td><td>888</td><td>7.4 min</td><td>18.9 min</td></tr>
+            <tr><td><strong>Entertainment</strong></td><td>1,240</td><td>8.1 min</td><td>12.7 min</td></tr>
+            <tr><td><strong>Sports</strong></td><td>1,600</td><td>8.5 min</td><td>19.0 min</td></tr>
+            <tr><td><strong>Beauty</strong></td><td>2,336</td><td>9.3 min</td><td>17.2 min</td></tr>
+            <tr><td><strong>Tech</strong></td><td>1,244</td><td>9.9 min</td><td>10.4 min</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>2,619</td><td>11.4 min</td><td>15.7 min</td></tr>
+            <tr><td><strong>Education</strong></td><td>948</td><td>11.6 min</td><td>31.0 min</td></tr>
+            <tr><td><strong>Vlogs</strong></td><td>1,264</td><td>11.9 min</td><td>17.7 min</td></tr>
+            <tr><td><strong>Finance</strong></td><td>1,669</td><td>14.2 min</td><td>17.1 min</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>4,906</td><td>22.6 min</td><td>67.9 min</td></tr>
+            <tr><td><strong>Travel</strong></td><td>4,182</td><td>27.0 min</td><td>28.2 min</td></tr>
+          </tbody>
+        </table>
+
+        <p>The spread is the headline. <strong>Music's typical video runs under 4 minutes and travel's runs 27</strong>, a <strong>7x difference</strong> between the two ends of the table. Any guide handing both channels the same 8-to-12-minute target is wrong for at least one of them, and in this case for both.</p>
+
+        <p>The extremes are worth naming individually:</p>
+
+        <ul>
+          <li><strong>Travel (27.0 min) and gaming (22.6 min)</strong> sit far above everything else. Both formats need runway: a trip needs arrival, exploration, and payoff, and a play session needs enough time for something to develop.</li>
+          <li><strong>Music (3.7 min) sits alone at the bottom</strong>, which makes sense when the product is a track and the runtime is set by the song rather than by an editor.</li>
+          <li><strong>Ten of fourteen niches land between 6.8 and 14.2 minutes</strong>, so the conventional advice is not baseless, it is just far too blunt to apply to the four niches it misses badly.</li>
+        </ul>
+
+        <h2>Where the Average Falls Apart</h2>
+
+        <p>Dividing each niche's average by its median exposes exactly how much a published average can mislead. A ratio near <strong>1.0x</strong> means the average is trustworthy. Anything above <strong>2.0x</strong> means a handful of very long uploads are dragging the figure somewhere no typical video lives.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Average ÷ median</th>
+              <th>How much the average misleads</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>News</strong></td><td>3.74x</td><td>Severe</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>3.00x</td><td>Severe</td></tr>
+            <tr><td><strong>Education</strong></td><td>2.67x</td><td>Severe</td></tr>
+            <tr><td><strong>Comedy</strong></td><td>2.55x</td><td>Severe</td></tr>
+            <tr><td><strong>Sports</strong></td><td>2.24x</td><td>Severe</td></tr>
+            <tr><td><strong>Beauty</strong></td><td>1.85x</td><td>Moderate</td></tr>
+            <tr><td><strong>Entertainment</strong></td><td>1.57x</td><td>Moderate</td></tr>
+            <tr><td><strong>Vlogs</strong></td><td>1.49x</td><td>Moderate</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>1.42x</td><td>Moderate</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>1.38x</td><td>Moderate</td></tr>
+            <tr><td><strong>Music</strong></td><td>1.30x</td><td>Mild</td></tr>
+            <tr><td><strong>Finance</strong></td><td>1.20x</td><td>Mild</td></tr>
+            <tr><td><strong>Tech</strong></td><td>1.05x</td><td>Negligible</td></tr>
+            <tr><td><strong>Travel</strong></td><td>1.04x</td><td>Negligible</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>News is the worst offender at 3.74x.</strong> A saved livestream sits in the uploads playlist exactly like a regular video, and news channels stream heavily around elections, breaking events, and daily broadcasts. Publish the average and you tell a news creator to aim for 25 minutes when their typical upload is under 7.</p>
+
+        <p>The bottom of that table is just as useful. <strong>Tech and travel come in at 1.05x and 1.04x</strong>, meaning those two niches publish remarkably consistent runtimes and their averages can be trusted at face value. A tech channel really is making roughly 10-minute videos across the board.</p>
+
+        <p>The practical rule: <strong>treat any video-length statistic without a median attached as unusable in a niche that livestreams</strong>. Gaming, news, education, comedy, and sports all carry enough long-format uploads to bend the number well past anything worth planning around.</p>
+
+        <h2>The Eight-Minute Monetization Line</h2>
+
+        <p><strong>Videos need to pass 8 minutes to carry mid-roll ads</strong>, which makes that threshold the one length rule with money directly attached. Splitting the niches around it changes what the table means for revenue.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Niches</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Typical video clears 8 min</strong></td>
+              <td>Travel (27.0), Gaming (22.6), Finance (14.2), Vlogs (11.9), Education (11.6), Fitness (11.4), Tech (9.9), Beauty (9.3), Sports (8.5), Entertainment (8.1)</td>
+            </tr>
+            <tr>
+              <td><strong>Typical video falls short</strong></td>
+              <td>Comedy (7.4), Cooking (7.3), News (6.8), Music (3.7)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p><strong>Four of fourteen niches sit below the line</strong>, and three of them (comedy, cooking, news) land within about a minute of it. That proximity matters more than the gap itself, because a cooking channel at 7.3 minutes is close enough that a slightly fuller method section changes its monetization structure without padding anything.</p>
+
+        <p>Some caution belongs here though:</p>
+
+        <ul>
+          <li><strong>Stretching to clear 8 minutes only works when the content supports it.</strong> A padded video loses retention, and retention feeds distribution, so the ad slot can cost more than it earns.</li>
+          <li><strong>The niches furthest below the line should probably stay there.</strong> Music at 3.7 minutes has no honest route to 8, and forcing one would break the format.</li>
+          <li><strong>High-RPM niches gain the most from clearing it.</strong> An extra mid-roll in <a href="/youtube-earnings/finance">finance</a> is worth considerably more than the same slot in a low-rate category, which is likely part of why finance already sits at 14.2 minutes.</li>
+        </ul>
+
+        <h2>Shorts Adoption Splits the Same Way</h2>
+
+        <p>Shorts share of total uploads ranged from <strong>9.4% in tech to 46.1% in vlogs</strong>, another spread that generic advice flattens into a single recommendation.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Shorts share of uploads</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Vlogs</strong></td><td>46.1%</td></tr>
+            <tr><td><strong>Sports</strong></td><td>43.0%</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>42.5%</td></tr>
+            <tr><td><strong>Beauty</strong></td><td>40.6%</td></tr>
+            <tr><td><strong>Music</strong></td><td>34.9%</td></tr>
+            <tr><td><strong>Comedy</strong></td><td>28.8%</td></tr>
+            <tr><td><strong>Entertainment</strong></td><td>24.9%</td></tr>
+            <tr><td><strong>Education</strong></td><td>24.1%</td></tr>
+            <tr><td><strong>Finance</strong></td><td>21.9%</td></tr>
+            <tr><td><strong>Travel</strong></td><td>20.1%</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>18.9%</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>18.2%</td></tr>
+            <tr><td><strong>News</strong></td><td>13.7%</td></tr>
+            <tr><td><strong>Tech</strong></td><td>9.4%</td></tr>
+          </tbody>
+        </table>
+
+        <p>The ordering tracks how cleanly a format survives being cut to 60 seconds. <strong>Vlogs, sports, and fitness all lead</strong> because a highlight, a rep, or a moment from a day works standalone. <strong>Tech and news trail furthest behind</strong> because a review or a report loses its substance once the context is stripped out.</p>
+
+        <p><strong>Gaming at 18.2% is the surprise.</strong> Given how visible gaming clips are across short-form platforms, the tracked channels still overwhelmingly publish long-form, which suggests the clip economy around gaming lives more with clippers and fan accounts than with the primary channels themselves. Our <a href="/blog/shorts-vs-long-form">Shorts versus long-form breakdown</a> covers when adding Shorts helps a channel and when it does not.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="See how your own upload pattern compares"
+          sub="A full channel audit checks your posting cadence and format mix against real benchmarks for your niche instead of a generic rule."
+          button="Run a free audit →"
+        />
+
+        <h2>Why Niches Land Where They Do</h2>
+
+        <p><strong>Two forces explain most of the spread</strong>, and they pull in the same direction often enough that the outliers are the interesting part.</p>
+
+        <ul>
+          <li><strong>Information density.</strong> A travel video has to establish a place, a journey, and a payoff before it means anything, while a music upload's job is finished when the track ends. The runtime follows what the content genuinely needs.</li>
+          <li><strong>Monetization structure.</strong> Longer videos carry more ad slots, and niches with higher <a href="/youtube-earnings">RPM</a> have more reason to reach for that threshold when the material supports it. Finance sitting at 14.2 minutes fits this cleanly.</li>
+        </ul>
+
+        <p><strong>Neither force argues that longer is better</strong> inside a given niche. They set where the ceiling and the audience's patience sit for that category, which is a different question from whether your next video should be longer than your last.</p>
+
+        <h2>Finding Your Own Number</h2>
+
+        <p><strong>Your niche's median is a starting hypothesis</strong> rather than a target. The channels in this dataset arrived at their runtimes through their own testing, and yours will differ based on format and audience.</p>
+
+        <ul>
+          <li><strong>Start from your niche's median above</strong>, not the platform-wide 8-to-12-minute rule and not an average pulled from a listicle.</li>
+          <li><strong>Check your own retention graphs by length bracket.</strong> Group your last 20 videos into short, medium, and long, then compare average view duration across the three. Your audience answers this better than any benchmark.</li>
+          <li><strong>Let the topic set the runtime.</strong> A thin subject stretched to hit a number reads as padding, and viewers leave at exactly the point the padding starts.</li>
+          <li><strong>Reassess quarterly.</strong> These medians shift as formats evolve, and a figure from two years ago describes a different platform than the one you are publishing to now.</li>
+        </ul>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What is the ideal YouTube video length in 2026?</h3>
+        <p><strong>There is no single ideal length.</strong> Our data shows the typical (median) video for an established channel ranges from 3.7 minutes in music to 27 minutes in travel, a 7x spread. Information-dense categories like travel and gaming run long, and fast-consumption categories like music and news run short. Match your niche's median rather than a generic 8-to-12-minute rule.</p>
+
+        <h3>Why is the average video length so much higher than the median in some niches?</h3>
+        <p>Because <strong>a small number of very long uploads pull the average upward</strong> while most videos stay short. Gaming's average is 67.9 minutes against a median of 22.6, and news runs 25.4 minutes average against a 6.8-minute median. Both niches lean heavily on livestreams, and a saved 3-to-6-hour stream VOD counts as one video in the uploads playlist.</p>
+
+        <h3>Should I trust average video length statistics?</h3>
+        <p><strong>Only if the source also shows the median.</strong> An average alone hides whether it represents most videos or is skewed by a handful of outliers. In our data the gap ranged from 1.04x in travel to 3.74x in news, so the same statistic is reliable in one niche and badly misleading in another.</p>
+
+        <h3>How long should a gaming video be?</h3>
+        <p>The typical gaming upload in our tracked data runs <strong>22.6 minutes</strong>, well above most niches, driven by Let's Plays and full-session content that rewards depth. That figure excludes Shorts. Gaming also had one of the lower Shorts shares at 18.2% of uploads, so the niche still leans long-form even as Shorts adoption rises elsewhere.</p>
+
+        <h3>How long should a finance or business YouTube video be?</h3>
+        <p>Our data puts the finance median at <strong>14.2 minutes</strong>, among the longer categories, consistent with topics that need setup and explanation before the payoff. Finance also comfortably clears the 8-minute mid-roll threshold, which matters more in a high-RPM niche than almost anywhere else on the platform.</p>
+
+        <h3>Which YouTube niches post the most Shorts?</h3>
+        <p><strong>Vlogs (46.1% of uploads), sports (43.0%), and fitness (42.5%)</strong> had the highest Shorts share in our data. Tech had the lowest at 9.4%, followed by news at 13.7%. The pattern follows format fit: highlights, routines, and clips translate naturally to Shorts, while reviews and explainers need the runway of a long-form video.</p>
+
+        <h3>How was this data collected?</h3>
+        <p><strong>From our own weekly channel-tracking infrastructure</strong> rather than a survey or a manually sampled batch. Each week we pull the latest uploads for tracked channels through YouTube's API, record every video's real duration, and classify it using YouTube's own 62-second Shorts threshold. This piece covers 33,364 long-form videos across 14 niches, collected between 2026-07-19 and 2026-08-13.</p>
+
+        <h3>Does a longer video rank better on YouTube?</h3>
+        <p><strong>Not on length alone.</strong> What the algorithm responds to is watch time and retention, and a longer video only wins on those if it holds attention throughout. Our data measures what established channels publish rather than testing what causes better performance, so nothing here should be read as evidence that adding minutes improves ranking.</p>
+
+        <h2>The Mean Was Lying to You</h2>
+
+        <p>The figures circulating in most video-length advice are not wrong because anyone lied. They are wrong because averages absorb outliers silently, and <strong>checking them against a median takes a step almost nobody takes</strong>. Gaming's real typical video is a third of its published average, and news is closer to a quarter of its own.</p>
+
+        <p><strong>The fix is not a better guess at a universal number.</strong> It is asking which niche the figure describes and whether a median sits behind it, before letting any statistic decide how long your next video runs.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-vlog-ideas',
     title: 'YouTube Vlog Ideas: Every Format, From Phone-Only to Full Kit',
     excerpt: 'Most vlog idea lists never say which ideas need real gear and which work with the phone already in your pocket. That distinction decides whether you film today or wait. The full breakdown by effort level, the voiceover option for camera-shy creators, and an honest read on how often to post.',
@@ -4615,7 +4864,7 @@ export const posts = [
 
         <h3>Video Length and Mid-Roll Ad Placement</h3>
 
-        <p>Videos over eight minutes qualify for mid-roll ads. Mid-rolls add additional ad impressions within a single view, which increases revenue per view directly. <strong>The impact on your RPM is significant.</strong> A ten-minute video with two mid-rolls placed at natural breaks can generate two to three times the revenue of a five-minute video in the same niche with the same view count.</p>
+        <p>Videos over eight minutes qualify for mid-roll ads. Mid-rolls add additional ad impressions within a single view, which increases revenue per view directly. <strong>The impact on your RPM is significant.</strong> A ten-minute video with two mid-rolls placed at natural breaks can generate two to three times the revenue of a five-minute video in the same niche with the same view count. Whether your niche typically clears that threshold varies more than most creators expect: our <a href="/blog/video-length-by-niche">study of 33,364 uploads</a> found four of fourteen niches sit below eight minutes by default.</p>
 
         <p>Since May 2025 YouTube runs a hybrid model: it automatically adds mid-rolls at natural breakpoints on top of any you place by hand, and leaving both on is what maximizes revenue now. In YouTube's own testing, channels that kept automatic slots enabled alongside manual ones earned about 5 percent more than manual-only, and switching automatic off can now cost you revenue.</p>
 
@@ -12578,7 +12827,7 @@ Free studio checklist: https://yoursite.com/checklist
         <p><strong>Yes.</strong> YouTube uses a rolling 12-month window, so hours earned more than a year ago drop off the counter automatically. A channel that stalls after getting close to the threshold can lose ground without a single new upload.</p>
 
         <h3>What is the best video length for building watch hours efficiently?</h3>
-        <p>The 8 to 12 minute range, often called the evergreen sweet spot. It is long enough to accumulate meaningful watch time per view and qualify for mid-roll ads later, while staying short enough to protect retention. A 10-minute video watched to 70% delivers seven times the watch time of a 1-minute video watched in full.</p>
+        <p>The 8 to 12 minute range, often called the evergreen sweet spot. It is long enough to accumulate meaningful watch time per view and qualify for mid-roll ads later, while staying short enough to protect retention. A 10-minute video watched to 70% delivers seven times the watch time of a 1-minute video watched in full. That range holds for most niches, though our <a href="/blog/video-length-by-niche">measurement of 33,364 real uploads</a> found travel and gaming typically run well past it while music and news sit below.</p>
 
         <h3>Does live streaming help reach 4,000 hours faster?</h3>
         <p><strong>Yes</strong>, because every concurrent viewer contributes their own watch time simultaneously. Fifty viewers watching a two-hour stream generate 100 watch hours in a single session, a pace no standard upload can match one-to-one.</p>
