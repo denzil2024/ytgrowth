@@ -91,6 +91,198 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'gaming-video-ideas',
+    title: 'YouTube Gaming Video Ideas: 18 That Do Not Need a Big Channel',
+    excerpt: 'Gaming is the most crowded category on YouTube, so the idea has to work harder here than anywhere else. 18 video ideas you can film this week, each with a title to adapt and the reason it works for a channel with no audience yet, plus real upload data on what gaming channels genuinely publish.',
+    date: '2026-08-13',
+    category: CATEGORIES.strategy,
+    cover: '/blog/gaming-video-ideas-cover.jpg',
+    coverAlt: 'A gaming creator sitting back from a desk mid-thought, looking at a wall covered in coloured sticky notes beside a dual-monitor setup, headset and controller on the desk',
+    author: 'Denzil',
+    readTime: '11 min read',
+    faqs: [
+      { q: 'What kind of gaming videos get the most views?', a: 'Broad entertainment content (reactions, funny moments, big-game playthroughs) has the highest ceiling but the most competition, and it is largely won by established channels with production budgets. Search-driven content has a lower ceiling per video but is far more reachable for a new channel, because you compete on how well you answer a specific question rather than on personality and edit quality.' },
+      { q: 'How do I come up with gaming video ideas when everything is taken?', a: 'Stop starting from the game and start from the player\'s problem. Search the game name plus words like "how to", "best", "fix", "worth it", or "stuck" and read what comes back, including the questions with weak or outdated answers. Reddit and Steam discussions are full of specific frustrations with no video answering them, and that gap comes with search demand already attached.' },
+      { q: 'Should I focus on one game or cover many?', a: 'One game builds a returning audience faster, because viewers subscribe for a specific thing and YouTube learns exactly who to show you to. The risk is that your channel rises and falls with that game. The middle path is anchoring on one game while building a repeatable format that can survive a move, so the format keeps the audience when the game fades.' },
+      { q: 'Do I need expensive equipment for a gaming channel?', a: 'Not to start. Modern consoles and PCs capture footage natively, and a clear microphone matters far more than a camera or capture card, because gaming audiences listen more than they watch. Commentary quality, editing pace, and idea selection all outrank hardware. Upgrade when a specific limitation is visibly costing you.' },
+      { q: 'How long should gaming videos be?', a: 'Longer than most niches. Our data puts the typical gaming video at 24.3 minutes, second only to travel, so the general 8-to-12-minute advice does not apply here. Match the length to the format: search-driven guides should be as short as the answer allows, while challenge runs and commentary earn their runtime.' },
+      { q: 'Is gaming still a good niche to start in 2026?', a: 'Viable, but the hardest category to break into on general content, and the ad rate is among the lowest on the platform at roughly $2 to $6 RPM for a tier-1 audience. What makes it work is the size and engagement of the audience, plus sponsorship money in gaming (peripherals, energy drinks, game launches) that runs well above what the ad rate suggests.' },
+      { q: 'How often should a gaming channel upload?', a: 'Less often than the advice suggests. Established gaming channels in our data publish a median of 1.5 long-form videos a week, not daily. Consistency matters more than raw frequency, and a pace you can hold for months beats one that collapses after six weeks.' },
+      { q: 'What gaming content works best for a brand new channel?', a: 'Specific, searchable, and unglamorous. The definitive guide to a hard boss, a settings fix for a common hardware problem, or an honest is-it-worth-it on an older game will all outperform a general playthrough from a channel nobody knows. These bring in viewers who have a problem, and a viewer with a problem does not care about your subscriber count.' },
+    ],
+    content: () => (
+      <>
+        <p><strong>Gaming is the most crowded category on YouTube</strong>, which means the idea matters more here than in any other niche. A generic playthrough of a game a thousand channels are covering competes on production quality and personality alone, and a new channel loses that fight every time.</p>
+
+        <p><strong>What works instead is an angle the search results do not already have</strong>: a specific question about a specific game, a format the big channels are too large to bother with, or a take that only makes sense coming from someone at your size. Every idea below comes as a title you can adapt to whatever you play, with the reason it works underneath.</p>
+
+        <p>Before the list, it is worth knowing what gaming channels are genuinely doing, because most gaming advice describes a version of the niche that our own upload data does not support.</p>
+
+        <h2>What Gaming Channels Really Publish</h2>
+
+        <p>We track upload data across established YouTube channels. For gaming specifically, that covers <strong>4,399 long-form videos from 84 channels</strong>, all published since January 2025. The numbers contradict a few things gaming guides repeat as fact.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What we measured</th>
+              <th>Gaming</th>
+              <th>How that compares</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Typical video length (median)</strong></td><td>24.3 min</td><td>2nd longest of 14 niches</td></tr>
+            <tr><td><strong>Average video length (mean)</strong></td><td>73.0 min</td><td>3.0x its own median</td></tr>
+            <tr><td><strong>Typical upload cadence</strong></td><td>1.5 per week</td><td>Below the standard 1-2 advice</td></tr>
+            <tr><td><strong>Shorts share of uploads</strong></td><td>19.1%</td><td>11th of 14 niches</td></tr>
+            <tr><td><strong>Typical RPM (tier-1 audience)</strong></td><td>$2 to $6</td><td>Among the lowest on the platform</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Three things fall out of that table</strong>, and each one changes what ideas make sense.</p>
+
+        <p><strong>Gaming rewards length more than almost any niche.</strong> At a 24.3-minute median, only travel runs longer. The 8-to-12-minute rule handed out in general YouTube advice is simply wrong here, and formats that need room to develop (full sessions, challenge runs, deep guides) fit the category rather than fighting it. Note the gap between that median and the 73-minute average though: <a href="/blog/video-length-by-niche">a handful of multi-hour stream VODs inflate the mean</a>, so do not read 73 minutes as a target.</p>
+
+        <p><strong>Established gaming channels post less than you would guess.</strong> A median of 1.5 uploads a week is well under the daily pace gaming advice tends to assume. The mean sits at 3.1, pulled up by a few prolific channels, which is where that "post daily" impression comes from. Sustainable beats frequent, and long-session content does not come out daily.</p>
+
+        <p><strong>Shorts are underused in gaming relative to how visible gaming clips are.</strong> At 19.1% of uploads, gaming sits near the bottom of the table, which suggests the clip economy around gaming runs through clippers and fan accounts rather than the primary channels. That is either a gap worth filling or a signal the format does not convert here, and it is worth testing on your own channel rather than assuming.</p>
+
+        <h2>Why Most Gaming Video Ideas Fail</h2>
+
+        <p><strong>The obvious idea is already saturated.</strong> "[Popular game] gameplay" is covered by channels with a decade of head start and full-time editors, so competing on the same idea means competing on the one axis where you are weakest.</p>
+
+        <p><strong>Search-driven gaming content is the opening most new channels miss.</strong> Players search for specific problems (a boss they cannot beat, a build that stopped working, a setting that tanks their frame rate) and those searches are answered badly or not at all, because big channels chase broad entertainment views instead.</p>
+
+        <p><strong>Format beats game selection.</strong> A channel known for one repeatable format accumulates returning viewers, while a channel that jumps between whatever is trending has to re-earn its audience every upload. The six formats below are ordered by how reachable each one is for a channel with no audience yet.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Production effort</th>
+              <th>Why it works without an audience</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Search-driven</strong></td><td>Low</td><td>Competes on how well you answer, not on personality or edit quality</td></tr>
+            <tr><td><strong>Beginner-focused</strong></td><td>Low</td><td>New players arrive continuously, so it earns for years</td></tr>
+            <tr><td><strong>Ranking</strong></td><td>Low</td><td>Disagreement generates the comments that feed distribution</td></tr>
+            <tr><td><strong>Commentary</strong></td><td>Low, time-sensitive</td><td>Speed beats size when a story breaks</td></tr>
+            <tr><td><strong>Challenge run</strong></td><td>Medium</td><td>The restriction supplies the entertainment, so you do not have to</td></tr>
+            <tr><td><strong>Testing</strong></td><td>High</td><td>Produces something genuinely original in a category full of copies</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Search-Driven: Answer a Problem, Not a Vibe</h2>
+
+        <p><strong>The category almost every gaming idea list skips</strong>, and the most reachable starting point for a channel nobody knows yet. A viewer with a specific problem does not care how many subscribers you have, only whether the thumbnail says you solved the thing they are stuck on.</p>
+
+        <p><strong>These also age well.</strong> A guide to a hard boss in a popular game keeps pulling search traffic years after the launch coverage has stopped earning anything, because new players hit that same wall continuously.</p>
+
+        <ul>
+          <li><strong>1. "How to Beat [Hardest Boss] Without [Common Crutch]"</strong><br />The specific-boss guide. Pick the fight players genuinely get stuck on and make the definitive version. Search volume for a single hard fight can outlast a game's launch hype by years, and the searcher needs it solved right now rather than entertained.</li>
+          <li><strong>2. "Best [Game] Settings for [Specific GPU]" or "Fix [Game] Stuttering in 5 Minutes"</strong><br />Settings and performance fixes. Steady search demand, and almost no large gaming channel bothers making them because the view ceiling is too low to interest them.</li>
+          <li><strong>3. "Is [Game] Worth Buying in 2026?"</strong><br />Players search this before every purchase, especially for older games with a sale price and an uncertain player count. Answer honestly, including when the answer is no, and the video keeps earning as the game ages.</li>
+          <li><strong>4. "The Only [Class] Build That Still Works After Patch [X]"</strong><br />Metas shift with every patch and guides go stale fast. A dated, patch-specific build guide beats an evergreen one here, because the searcher is explicitly checking whether their information is still current.</li>
+        </ul>
+
+        <h2>Beginner-Focused: Serve the Player Just Starting Out</h2>
+
+        <p><strong>New players arrive at every popular game continuously</strong>, which makes beginner content some of the most durable material a gaming channel can publish. It also has a natural advantage: a beginner has no idea which channels are authoritative, so channel size influences the click far less than the title does.</p>
+
+        <ul>
+          <li><strong>5. "10 Things to Do in Your First Hour of [Game]"</strong><br />What a new player should do first, what to avoid, and the mistakes that cost time later. Pairs naturally with a game's sale periods, when a wave of new buyers arrives at once.</li>
+          <li><strong>6. "Everything [Game] Never Tells You"</strong><br />Games teach their basics badly. Collecting the unstated mechanics into one video answers a frustration players feel but rarely search for directly, so it spreads through recommendation more than search.</li>
+          <li><strong>7. "Which Edition of [Game] Is Worth Buying?"</strong><br />Editions, platforms, and bundles confuse buyers, and official store pages do not compare them honestly. A clear answer captures high-intent traffic at the exact moment someone is deciding to spend money.</li>
+        </ul>
+
+        <h2>Ranking: Formats That Generate Their Own Comments</h2>
+
+        <p>Repeatable, argument-generating, and cheap to produce. <strong>The disagreement is the point:</strong> a ranking video that everyone agrees with produces no comments, and comments are one of the signals that feeds distribution.</p>
+
+        <ul>
+          <li><strong>8. "Every [Series] Game Ranked Worst to Best"</strong><br />Works for games, weapons, levels, characters, or updates. The format survives moving between games, which makes it one of the safer things to build a channel identity on.</li>
+          <li><strong>9. "[Game] Tier List, But I Explain Every Pick"</strong><br />Tier lists are everywhere, so the differentiator is showing the reasoning rather than the placements. A tier list that explains why the consensus pick is wrong gets shared into arguments that are already happening without you.</li>
+        </ul>
+
+        <CtaCard
+          to="/tools/youtube-video-ideas-generator"
+          title="Generate more ideas around your own game or niche"
+          sub="Enter a topic and get proven idea formats built for creators starting from zero, free and with no signup."
+          button="Generate free ideas →"
+        />
+
+        <h2>Commentary: Trade Speed for an Edge</h2>
+
+        <p>Commentary rewards whoever covers a story first, <strong>one of the few advantages a small channel genuinely holds over a large one.</strong> A big channel has meetings and an editing queue. You can publish in four hours.</p>
+
+        <p><strong>The trade-off is that this content decays fast.</strong> A patch breakdown earns for a week, not a year, so it works best as a layer on top of evergreen formats rather than as the whole channel.</p>
+
+        <ul>
+          <li><strong>10. "What Went Wrong With [Game]"</strong><br />Post-mortems on an underperforming release pull viewers well beyond that game's own player base, because the story travels further than the gameplay ever did.</li>
+          <li><strong>11. "Everything New in [Game] Patch [X], Explained"</strong><br />Fast, clear coverage published while people are still searching for it. Timeliness is the entire advantage.</li>
+          <li><strong>12. "I Played [Game] Again 5 Years Later"</strong><br />Returning after a game's community, patches, or reputation have shifted gives a natural hook, and an audience that already searches for exactly this.</li>
+        </ul>
+
+        <h2>Challenge Runs: Turn Familiar Content Into Something With Stakes</h2>
+
+        <p>A challenge run makes a game every viewer already knows feel unpredictable again. Crucially, <strong>the restriction does the entertainment work</strong>, which means you do not need a big personality or comedic timing to carry the video. That makes it one of the better formats for creators who are competent at games but not natural performers.</p>
+
+        <p>This is also where gaming's long median video length earns its keep. A challenge run needs room for the tension to build, and the niche's audience is already conditioned to watch 20-plus minutes.</p>
+
+        <ul>
+          <li><strong>13. "Beating [Game] Without [Core Mechanic]"</strong><br />No healing, no upgrades, lowest possible level. The restriction turns familiar content into something with visible stakes and a clear fail state.</li>
+          <li><strong>14. "[Game] But Everything Is Randomized"</strong><br />Randomizing item or enemy placement makes a known game unpredictable and generates genuine reactions you could not script. Works especially well on games with a nostalgic audience who know the original layout by heart.</li>
+          <li><strong>15. "I Tried to Speedrun [Game] for 30 Days"</strong><br />Not a world-record attempt, but the process of learning: the first attempt, the wall, the breakthrough. The arc is the content, and it gives viewers an ongoing reason to come back.</li>
+        </ul>
+
+        <h2>Testing: Produce Something Genuinely Original</h2>
+
+        <p>The highest-effort category here, and <strong>the only one that reliably produces a video nobody else has.</strong> Almost all gaming content is a variation on something that already exists. A real test, with the method shown and the result honestly reported, is not.</p>
+
+        <p>These are also <strong>the videos most likely to get cited by other creators</strong> and linked from forums, which compounds long after the upload.</p>
+
+        <ul>
+          <li><strong>16. "Does [Popular Myth] Work? I Tested It"</strong><br />Every game has claims players repeat without evidence. Testing one properly, showing the method, produces genuinely original material in a category where almost nothing is.</li>
+          <li><strong>17. "[Game] on $500 PC vs $2000 PC"</strong><br />Running the same game across two setups, settings tiers, or platforms answers a purchase question a lot of players have, and pairs naturally with the settings-fix content above.</li>
+          <li><strong>18. "How Long Does [Game] Really Take to 100%?"</strong><br />Timing an actual completion against the advertised or crowd-sourced figure gives a concrete, citable number that other creators and forums link back to.</li>
+        </ul>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What kind of gaming videos get the most views?</h3>
+        <p>Broad entertainment content (reactions, funny moments, big-game playthroughs) has the highest ceiling but the most competition, and it is largely won by established channels with production budgets. <strong>Search-driven content has a lower ceiling per video but is far more reachable</strong> for a new channel, because you compete on how well you answer a specific question rather than on personality and edit quality.</p>
+
+        <h3>How do I come up with gaming video ideas when everything is taken?</h3>
+        <p><strong>Stop starting from the game and start from the player's problem.</strong> Search the game name plus words like "how to", "best", "fix", "worth it", or "stuck" and read what comes back, including the questions with weak or outdated answers. Reddit and Steam discussions are full of specific frustrations with no video answering them, and that gap comes with search demand already attached.</p>
+
+        <h3>Should I focus on one game or cover many?</h3>
+        <p><strong>One game builds a returning audience faster</strong>, because viewers subscribe for a specific thing and YouTube learns exactly who to show you to. The risk is that your channel rises and falls with that game. The middle path is anchoring on one game while building a repeatable format that can survive a move, so the format keeps the audience when the game fades.</p>
+
+        <h3>Do I need expensive equipment for a gaming channel?</h3>
+        <p>Not to start. Modern consoles and PCs capture footage natively, and <strong>a clear microphone matters far more than a camera or capture card</strong>, because gaming audiences listen more than they watch. Commentary quality, editing pace, and idea selection all outrank hardware. Upgrade when a specific limitation is visibly costing you.</p>
+
+        <h3>How long should gaming videos be?</h3>
+        <p>Longer than most niches. Our data puts the typical gaming video at <strong>24.3 minutes</strong>, second only to travel, so the general 8-to-12-minute advice does not apply here. Match the length to the format: search-driven guides should be as short as the answer allows, while challenge runs and commentary earn their runtime.</p>
+
+        <h3>Is gaming still a good niche to start in 2026?</h3>
+        <p><strong>Viable, but the hardest category to break into</strong> on general content, and the ad rate is among the lowest on the platform at roughly <a href="/youtube-earnings/gaming">$2 to $6 RPM</a> for a tier-1 audience. What makes it work is the size and engagement of the audience, plus sponsorship money in gaming (peripherals, energy drinks, game launches) that runs well above what the ad rate suggests.</p>
+
+        <h3>How often should a gaming channel upload?</h3>
+        <p>Less often than the advice suggests. Established gaming channels in our data publish a median of <strong>1.5 long-form videos a week</strong>, not daily. Consistency matters more than raw frequency, and a pace you can hold for months beats one that collapses after six weeks.</p>
+
+        <h3>What gaming content works best for a brand new channel?</h3>
+        <p><strong>Specific, searchable, and unglamorous.</strong> The definitive guide to a hard boss, a settings fix for a common hardware problem, or an honest is-it-worth-it on an older game will all outperform a general playthrough from a channel nobody knows. These bring in viewers who have a problem, and a viewer with a problem does not care about your subscriber count.</p>
+
+        <h2>The Idea Is Not the Bottleneck</h2>
+
+        <p><strong>Every format above can be filmed with a normal PC or console and zero subscribers</strong>, because none of them depend on production budget or an existing audience. What they depend on is picking the angle a bigger channel would not bother making.</p>
+
+        <p>Gaming has more of those angles sitting unclaimed than almost any other niche, precisely because <strong>the giants are all chasing the same broad plays</strong> while the data says they post long, post rarely, and ignore Shorts doing it.</p>
+      </>
+    ),
+  },
+  {
     slug: 'video-length-by-niche',
     title: 'The Ideal YouTube Video Length in 2026: We Analyzed 30,360 Real Uploads by Niche',
     excerpt: 'The average gaming upload runs 73 minutes. The typical one runs 24.3. We pulled real duration data on 30,360 long-form videos published since January 2025 across 14 niches, and found that most published length advice quotes an average quietly inflated by livestreams and lecture recordings. Every niche\'s median and average side by side, which statistics mislead worst, and where the 8-minute mid-roll line falls for each.',
@@ -897,7 +1089,7 @@ export const posts = [
 
         <h2>The Gaming Content-Type Menu</h2>
 
-        <p>Gaming splits into more distinct formats than almost any other niche. Picking one deliberately beats drifting between all of them:</p>
+        <p>Gaming splits into more distinct formats than almost any other niche. Picking one deliberately beats drifting between all of them, and the <a href="/blog/gaming-video-ideas">gaming video ideas guide</a> covers 18 of them grouped by exactly this logic:</p>
 
         <table>
           <thead>
@@ -10156,7 +10348,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>The best YouTube content ideas for beginners are the ones that get filmed today. A perfectly planned video that never gets made does not build a channel. Ten imperfect videos that go live do.</p>
 
-        <p>Every format in this guide works with zero subscribers because each one is built on search demand, low production barriers, and evergreen relevance. Pick one idea that fits <a href="/blog/youtube-niche">your niche</a>, research the specific angle with the most search potential, and film it before you have a reason not to. Once you have a few uploads, the <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> covers how to turn that same footage into a second discovery channel, the <a href="/blog/youtube-vlog-ideas">vlog ideas guide</a> covers the routine-driven format in full, and the <a href="/blog/youtube-challenge-ideas">challenge video guide</a> covers a format that works well once you are ready to film something bigger.</p>
+        <p>Every format in this guide works with zero subscribers because each one is built on search demand, low production barriers, and evergreen relevance. Pick one idea that fits <a href="/blog/youtube-niche">your niche</a>, research the specific angle with the most search potential, and film it before you have a reason not to. Once you have a few uploads, the <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> covers how to turn that same footage into a second discovery channel, the <a href="/blog/youtube-vlog-ideas">vlog ideas guide</a> covers the routine-driven format in full, the <a href="/blog/youtube-challenge-ideas">challenge video guide</a> covers a format that works well once you are ready to film something bigger, and the <a href="/blog/gaming-video-ideas">gaming video ideas guide</a> covers the format-first approach for the platform's most crowded category.</p>
 
         <p>The creators who grow consistently are not the ones who waited until everything was perfect. They are the ones who started, learned from the data their first ten videos produced, and adjusted faster than everyone else who was still planning.</p>
 
