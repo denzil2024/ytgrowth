@@ -5,6 +5,7 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="ezoic-site-verification" content="fiNxPfNUpf45xMcPfyxCVjXh8Cw9Nb" />
+    <meta name="p:domain_verify" content="e53cd2a96c0a69a11b01d7eae53727d6" />
 
     <!-- Ezoic is intentionally NOT here. It is injected into the built pages
          after prerender by scripts/inject-ezoic.js, so sa.min.js never runs
@@ -203,7 +204,7 @@
          still runs immediately so dataLayer is primed and the config commands
          are queued; they fire the moment the deferred library attaches. -->
     <script>
-      // Analytics suppression, shared by GA4 + Ads AND Ahrefs below. Two
+      // Analytics suppression, shared by GA4 + Ads AND Ahrefs below. Three
       // independent reasons NOT to record a visit:
       //   1. Non-production host. localhost, 127.0.0.1, LAN IPs and Railway
       //      preview domains all fire the PROD tags otherwise, so every
@@ -221,7 +222,21 @@
         if(p.has('ytg_notrack'))localStorage.setItem('ytg_notrack','1');
         if(p.has('ytg_track'))localStorage.removeItem('ytg_notrack');
         var optedOut=localStorage.getItem('ytg_notrack')==='1';
-        window.__ytgTrack=(isProd&&!optedOut);
+        //   3. Automation. GA4's built-in IAB bot filter misses headless
+        //      browsers, which DO execute JS and so did fire the tags. In the
+        //      2026-07-15 to 08-11 window they were ~half of all "Direct"
+        //      sessions: the three 92-120 user spike days averaged 8.8s
+        //      engagement against 33.0s on normal days, with a 15% scroll rate
+        //      site-wide. Those sessions are not people and must not be counted.
+        //      Only near-zero-false-positive signals are used here: the W3C
+        //      webdriver flag (Selenium/Puppeteer/Playwright all set it) and
+        //      explicit automation tokens in the UA string. Deliberately NOT
+        //      testing navigator.languages or window.chrome, which throw false
+        //      positives on real privacy browsers. Sophisticated bots that mask
+        //      webdriver still get through; this catches the common case.
+        var ua=(navigator.userAgent||'').toLowerCase();
+        var isBot=navigator.webdriver===true||/headless|phantomjs|puppeteer|playwright|selenium|crawler|spider|scraper|bot\//.test(ua);
+        window.__ytgTrack=(isProd&&!optedOut&&!isBot);
         if(!window.__ytgTrack){window['ga-disable-AW-10883831151']=true;window['ga-disable-G-MFMVT6Q5RB']=true;}
       }catch(e){window.__ytgTrack=false;}})();
       window.dataLayer = window.dataLayer || [];
