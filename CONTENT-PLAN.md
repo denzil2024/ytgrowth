@@ -105,10 +105,71 @@ pillar candidates first, real Keyword Planner volume, SERP check per keyword,
 - Do not write: "how much does YouTube pay in [country]", free-subscribers,
   grow-fast content. These are what pull the low-tier audience.
 
-Parked and ready: an 18-idea gaming video-ideas draft sits untracked at
-`frontend/src/data/youtubeVideoIdeas.js`. It was mistakenly built as a programmatic
-page when it is an article. It converts to a blog spoke under the existing
-`/blog/youtube-video-ideas` pillar (position 8.95) when this step begins.
+---
+
+## THE ARTICLE PIPELINE (check here first, every session)
+
+This is the single list. Everything below is an article in `/blog`, shipped through
+the standard publishing workflow. "Data study" is not a separate content type, it is
+an article whose differentiator is original data.
+
+### Shipped
+
+| Date | Article | Type |
+|---|---|---|
+| 2026-08-13 | The Ideal YouTube Video Length in 2026 (`/blog/video-length-by-niche`) | Data study #1 |
+| 2026-08-08 | YouTube Vlog Ideas | Cluster spoke |
+| 2026-07-28 | Shorts Ideas, Challenge Ideas, Start a Channel, Phone Channel, Brand Account, Gaming Channel | Cluster, 6 posts |
+
+### Queued, ready to run
+
+| Order | Work | Type | Quota | Blocked on |
+|---|---|---|---|---|
+| 1 | Upgrade `/blog/best-time-to-post` with real upload-timing and cadence data (studies #3 + #4 merged) | Upgrade, NOT a new post | 0 units | Nothing, data is already in `channel_videos.published_at` |
+| 2 | Title-pattern data study (study #2) | New post, needs a decision first | 0-2K units | Cannibalization check, see below |
+| 3 | Promotion pass on study #1 | Outreach, not writing | 0 | Nothing |
+
+**Why item 1 is an upgrade, not a new article.** `/blog/best-time-to-post` already
+exists and is a high-impression page. A separate "when creators really upload" post
+would compete with it for the same query. The data goes INTO that post.
+
+**Cannibalization warning on item 2.** `/blog/youtube-title` already owns the
+how-to intent for titles. A title data study has to target research intent
+(a study, a measurement) and not that how-to intent, or it splits the same
+authority two ways. Decide before writing. This is the exact trap that produced
+the three-way keyword-research split now sitting at position 51.
+
+### After that, the queue is EMPTY
+
+No further articles are planned. This is the real problem, and it is the same one
+that took publishing from 63 commits in May to 4 in August: both mapped clusters
+finished on 2026-08-08 with nothing queued behind them.
+
+Filling it needs a keyword research round (`FOUNDATION.md` workflow), which needs
+Keyword Planner exports from the user, so it cannot be done unattended.
+
+Proposed pillar seeds targeting tier-1 creator intent, NONE VALIDATED YET:
+
+- Sponsorship and brand deals: rates, pitching, media kits, contracts
+- Creator gear and setup, by budget tier
+- Agency and multi-channel management workflows
+- Tool comparisons beyond the four already live
+
+Each needs real volume plus a passed SERP check before it enters the queue above.
+
+### Parked
+
+An 18-idea gaming video-ideas draft sits untracked at
+`frontend/src/data/youtubeVideoIdeas.js`. Built as a programmatic page by mistake
+when it is an article. Converts to a blog spoke under the existing
+`/blog/youtube-video-ideas` pillar (position 8.95) whenever the queue needs filling.
+
+### Process rule, violated 2026-08-13, do not repeat
+
+Before writing ANY article: research the live top 10 for the target query, build a
+coverage matrix, and PRESENT THE OUTLINE FOR APPROVAL. Study #1 was written and
+shipped without this step, so the user first saw the article only after it existed.
+See `feedback_article_research_process`.
 
 ### Step 4 — Measure on tier-1, monthly
 
