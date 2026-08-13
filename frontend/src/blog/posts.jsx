@@ -3955,6 +3955,8 @@ export const posts = [
       { q: 'What is the best time to post if my channel is brand new?', a: 'Use the general windows in this guide, weekday afternoons and weekend mornings for videos, midday and evening for Shorts, because YouTube needs a few weeks of watch data before it can build your personal "When your viewers are on YouTube" heatmap. The moment that chart populates, switch to it. Your own audience data is always more accurate than any average.' },
       { q: 'What if my audience is spread across many timezones?', a: 'You cannot hit every timezone at once, so aim for the overlap. A window around 3 PM GMT reaches US mornings, European afternoons, and Asian evenings in one post. Otherwise, pick the single region that makes up the largest share of your views, post in their local time, and check whether the other regions still show up in your analytics.' },
       { q: 'How often should I post on YouTube?', a: 'One to two long-form videos a week and three to five Shorts is a realistic ceiling for most creators, but the number matters less than whether you can hold it without your quality dropping. A sustainable pace you keep for months beats an aggressive one you abandon after six weeks. See the full breakdown by content type and channel stage in the frequency section above.' },
+      { q: 'How often do established YouTube channels upload?', a: 'We measured 545 established channels across 14 niches over a four-week window. Nine of the fourteen have a median at or below 1.8 long-form uploads a week, which matches the standard one-to-two recommendation. The exceptions are news at 20.3 a week, entertainment at 7.6, and sports at 6.0, all of which operate on a different model. Gaming came in at 1.5, well below the daily cadence that gaming advice usually assumes.' },
+      { q: 'What day do most YouTubers upload?', a: 'Across 30,000 uploads published since January 2025, Saturday (17.8%) and Friday (17.1%) carried the most, and Monday the fewest at 12.0%. That runs slightly against the usual Wednesday-to-Friday recommendation. Worth noting it measures where creators put videos, not where views come from, so the quieter Monday-to-Wednesday stretch is arguably the more useful signal since a video faces less competition there.' },
       { q: 'Does posting daily on YouTube grow you faster?', a: 'Not automatically. Frequency only compounds growth when every extra video holds the same quality bar as the first, since more mediocre uploads dilute a channel rather than growing it. Daily posting works well for fast-turnaround formats like gaming or reaction, where the production time genuinely supports it. For a scripted or highly produced format, a slower schedule with a higher bar almost always outperforms a rushed daily one.' },
       { q: 'Will taking a break hurt my YouTube channel?', a: 'Not permanently, if the break stays under roughly six months. Expect a temporary dip in impressions since the algorithm has less recent activity to draw on, but it recovers once you resume a predictable schedule. The real risk is not the break itself, it is going quiet with no signal, so a community post letting viewers know you will be back keeps the algorithm and audience from writing the channel off.' },
       { q: 'Does posting time matter for YouTube Shorts?', a: 'Less than it does for long-form. Shorts surface through the Shorts feed over days rather than landing mostly on subscribers in the first hour, so the exact time matters less. Midday and evening windows still give the initial push a small boost, but for Shorts, daily consistency does more for you than perfect timing.' },
@@ -4119,6 +4121,73 @@ export const posts = [
           button="Run a free Channel Audit →"
         />
 
+        <h2>What Established Channels Upload, Measured</h2>
+
+        <p>Every cadence recommendation above, including ours, is advice. We also track real upload logs, so here is the measured version: <strong>545 established channels</strong> across 14 niches, counting only long-form uploads over a four-week window.</p>
+
+        <p>Read this as what working channels do, not as proof of what causes growth. These are channels with existing traction, so the numbers describe a pattern rather than a cause.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Channels</th>
+              <th>Median uploads/week</th>
+              <th>Average</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>News</strong></td><td>47</td><td>20.3</td><td>21.2</td></tr>
+            <tr><td><strong>Entertainment</strong></td><td>14</td><td>7.6</td><td>14.0</td></tr>
+            <tr><td><strong>Sports</strong></td><td>28</td><td>6.0</td><td>8.3</td></tr>
+            <tr><td><strong>Vlogs</strong></td><td>23</td><td>3.8</td><td>5.9</td></tr>
+            <tr><td><strong>Tech</strong></td><td>22</td><td>1.8</td><td>2.3</td></tr>
+            <tr><td><strong>Comedy</strong></td><td>13</td><td>1.8</td><td>3.4</td></tr>
+            <tr><td><strong>Finance</strong></td><td>29</td><td>1.8</td><td>2.9</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>84</td><td>1.5</td><td>3.1</td></tr>
+            <tr><td><strong>Education</strong></td><td>11</td><td>1.3</td><td>2.7</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>75</td><td>1.3</td><td>2.6</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>58</td><td>1.0</td><td>1.9</td></tr>
+            <tr><td><strong>Beauty</strong></td><td>49</td><td>1.0</td><td>1.2</td></tr>
+            <tr><td><strong>Travel</strong></td><td>81</td><td>0.8</td><td>1.4</td></tr>
+            <tr><td><strong>Music</strong></td><td>11</td><td>0.5</td><td>1.9</td></tr>
+          </tbody>
+        </table>
+
+        <p>Entertainment, comedy, education, and music each rest on fewer than 15 channels, so treat those four rows as directional rather than firm.</p>
+
+        <p><strong>The one-to-two-per-week default holds up well.</strong> Nine of the fourteen niches have a median at or below 1.8 uploads a week, which is roughly what the table above this one recommends and roughly what most creators can sustain.</p>
+
+        <p>Two corrections fall out of the data, though. <strong>News runs at 20.3 uploads a week</strong>, an entirely different operating model that no general cadence advice covers, and one that reflects newsroom staffing rather than a creator schedule. And <strong>gaming's median is 1.5</strong>, well under the "3 to 7, sometimes daily" our own table suggests. The gaming channels we track are established ones publishing long sessions, and long sessions do not come out daily.</p>
+
+        <p>Notice the gap between median and average in almost every row. Music's average is <strong>3.8 times its median</strong>, gaming's is 2.1 times. A few prolific channels inflate every average in this space, which is why cadence advice built on averages tends to overshoot what a normal channel can sustain. The same pattern shows up in video length, where we found <a href="/blog/video-length-by-niche">published averages inflated by up to 3.8x</a> against the typical upload.</p>
+
+        <h3>The Day Creators Publish Most</h3>
+
+        <p>Across 30,000 uploads published since January 2025, the distribution by day is flatter than most guides imply, but it does lean:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Share of uploads</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Saturday</strong></td><td>17.8%</td></tr>
+            <tr><td><strong>Friday</strong></td><td>17.1%</td></tr>
+            <tr><td><strong>Thursday</strong></td><td>14.9%</td></tr>
+            <tr><td><strong>Wednesday</strong></td><td>13.5%</td></tr>
+            <tr><td><strong>Sunday</strong></td><td>12.5%</td></tr>
+            <tr><td><strong>Tuesday</strong></td><td>12.2%</td></tr>
+            <tr><td><strong>Monday</strong></td><td>12.0%</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Friday and Saturday carry the most uploads</strong>, and Monday the fewest. That is worth holding next to the standard recommendation of Wednesday through Friday, because the two do not fully agree.</p>
+
+        <p>Be careful what you conclude from that. This measures where creators put their videos, not where views come from, and a heavier upload day means more competition for the same attention. If anything, the Monday-to-Wednesday stretch being quietest is the more interesting signal, since it is the window where a good video has the least company. The heatmap method below still beats every one of these averages.</p>
+
         <h2>How to Find Your Own Best Time (the Part That Works)</h2>
 
         <p>This is the section the other guides bury, and it is the only one that beats the averages. YouTube already knows when your specific audience is online, and it shows you, for free, inside the studio. Every generic chart above is a guess compared to this.</p>
@@ -4173,6 +4242,14 @@ export const posts = [
         <h3>How often should I post on YouTube?</h3>
 
         <p>One to two long-form videos a week and three to five Shorts is a realistic ceiling for most creators, but the number matters less than whether you can hold it without your quality dropping. A sustainable pace you keep for months beats an aggressive one you abandon after six weeks. See the full breakdown by content type and channel stage in the frequency section above.</p>
+
+        <h3>How often do established YouTube channels upload?</h3>
+
+        <p>We measured 545 established channels across 14 niches over a four-week window. <strong>Nine of the fourteen have a median at or below 1.8 long-form uploads a week</strong>, which matches the standard one-to-two recommendation. The exceptions are news at 20.3 a week, entertainment at 7.6, and sports at 6.0, all of which operate on a different model. Gaming came in at 1.5, well below the daily cadence that gaming advice usually assumes.</p>
+
+        <h3>What day do most YouTubers upload?</h3>
+
+        <p>Across 30,000 uploads published since January 2025, <strong>Saturday (17.8%) and Friday (17.1%) carried the most</strong>, and Monday the fewest at 12.0%. That runs slightly against the usual Wednesday-to-Friday recommendation. Worth noting it measures where creators put videos, not where views come from, so the quieter Monday-to-Wednesday stretch is arguably the more useful signal since a video faces less competition there.</p>
 
         <h3>Does posting daily on YouTube grow you faster?</h3>
 
