@@ -117,7 +117,8 @@ an article whose differentiator is original data.
 
 | Date | Article | Type |
 |---|---|---|
-| 2026-08-13 | The Ideal YouTube Video Length in 2026 (`/blog/video-length-by-niche`) | Data study #1 |
+| 2026-08-13 | Upgraded `/blog/best-time-to-post` with cadence + day-of-week data (studies #3+#4) | Upgrade |
+| 2026-08-13 | The Ideal YouTube Video Length in 2026 (`/blog/video-length-by-niche`), corrected same day (date-filter bug) | Data study #1 |
 | 2026-08-08 | YouTube Vlog Ideas | Cluster spoke |
 | 2026-07-28 | Shorts Ideas, Challenge Ideas, Start a Channel, Phone Channel, Brand Account, Gaming Channel | Cluster, 6 posts |
 
@@ -125,9 +126,8 @@ an article whose differentiator is original data.
 
 | Order | Work | Type | Quota | Blocked on |
 |---|---|---|---|---|
-| 1 | Upgrade `/blog/best-time-to-post` with real upload-timing and cadence data (studies #3 + #4 merged) | Upgrade, NOT a new post | 0 units | Nothing, data is already in `channel_videos.published_at` |
+| 1 | Promotion pass on both studies | Outreach, not writing | 0 | Nothing. HIGHEST PRIORITY: two backlink assets exist and nobody has seen them. |
 | 2 | Title-pattern data study (study #2) | New post, needs a decision first | 0-2K units | Cannibalization check, see below |
-| 3 | Promotion pass on study #1 | Outreach, not writing | 0 | Nothing |
 
 **Why item 1 is an upgrade, not a new article.** `/blog/best-time-to-post` already
 exists and is a high-impression page. A separate "when creators really upload" post
@@ -148,14 +148,40 @@ finished on 2026-08-08 with nothing queued behind them.
 Filling it needs a keyword research round (`FOUNDATION.md` workflow), which needs
 Keyword Planner exports from the user, so it cannot be done unattended.
 
-Proposed pillar seeds targeting tier-1 creator intent, NONE VALIDATED YET:
+### Keyword seeds to pull (user action, 2026-08-13)
 
-- Sponsorship and brand deals: rates, pitching, media kits, contracts
-- Creator gear and setup, by budget tier
-- Agency and multi-channel management workflows
-- Tool comparisons beyond the four already live
+Pull each of these in Google Keyword Planner ("Discover new keywords"), export
+the FULL results as CSV (not just top rows, the niche long tail is what gets
+mined), and drop into `keyword-exports/`. One seed at a time is fine.
 
-Each needs real volume plus a passed SERP check before it enters the queue above.
+**Seed 1: `youtube sponsorship`**
+Why: `/blog/youtube-sponsorships` exists but covers the topic in one post. The
+sub-topics look genuinely distinct (rates/how much to charge, media kits,
+pitching and outreach, contracts and deliverables, FTC disclosure), which is
+what the FOUNDATION.md structure test requires. Strong tier-1 fit: brand money
+concentrates in US/UK markets.
+
+**Seed 2: `youtube equipment`**
+Why: only `best-youtube-mic` is live. Camera, lighting, audio treatment,
+backgrounds, and capture are all uncovered and each is a real buying decision
+with its own search demand. Gear buyers skew tier-1 by definition, since the
+searcher has money to spend. Watch for affiliate-listicle SERPs on the head
+term; the sub-topics matter more than the pillar here.
+
+**Seed 3 (lower confidence): `youtube automation` or `youtube channel management`**
+Why: the agency and multi-channel angle has zero coverage and maps to the
+Agency plan. Flagged lower confidence because "automation" may return
+cash-cow/faceless intent already covered by two live posts, and
+"channel management" may be too thin. Pull it third, drop it fast if the
+export is shallow.
+
+**Explicitly NOT seeds** (already tested and dead, see FOUNDATION.md):
+tool comparisons, vidiq alternative, vidiq/tubebuddy pricing, channel audit
+tool, youtube subscribers, channel growth, live streaming, merch, playlists,
+end screens. Do not re-propose these.
+
+Each surviving keyword still needs a passed Google SERP check before it enters
+the queue above.
 
 ### Parked
 
