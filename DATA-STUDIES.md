@@ -47,15 +47,31 @@ Shorts-adoption-by-niche section rather than as a separate piece.
   `duration_seconds` at discovery time. #3 (best time to post) and #4 (upload
   cadence) read the same `published_at` column, so they should also cost zero.
 - The finding worth reusing: **average duration is wildly skewed by livestream
-  VODs**. Gaming's mean is 3.00x its median, news 3.74x, while tech and travel
-  are ~1.05x. Always report medians, and check the mean/median ratio before
+  VODs and lecture recordings**. Education's mean is 3.83x its median, news
+  3.75x, gaming 3.00x, while travel and tech are ~1.03x. Always report medians, and check the mean/median ratio before
   publishing any duration or cadence figure.
 - Category comes from `channel_metric_snapshots.category` (only populated for
   TopChannelCache channels). About 3,098 videos landed `uncategorized` and were
   excluded from the per-niche tables. 14 niches cleared a usable sample; the
-  thinnest were comedy (888) and education (948) long-form videos.
-- Publish honest N and date range in the article. #1 used 33,364 long-form
-  videos, 2026-07-19 to 2026-08-13.
+  thinnest were music (633) and education (670) long-form videos on the
+  2025+ cutoff.
+- Publish honest N and date range in the article. #1 uses 30,360 long-form
+  videos published since 2025-01-01.
+
+**CRITICAL METHODOLOGY RULE (learned the hard way 2026-08-13, after publishing):**
+`channel_videos.published_at` is NOT bounded by the collection window. Discovery
+pulls each channel's 50 newest uploads, so a slow channel drags history back
+years. The full table spans **2006-04-26 to 2026-08-09**. Distribution is
+78.6% in 2026, 12.2% in 2025, and ~5.9% before 2024.
+
+Study #1 shipped saying the data was "collected between 2026-07-19 and
+2026-08-13", which described `discovered_at`, not `published_at`, and implied
+the videos were recent. It was corrected the same day to a 2025-01-01 cutoff.
+Most medians moved under a minute, but education moved 11.6 -> 8.6 and became
+the WORST skew at 3.83x (it had been reported as 2.67x), and comedy crossed the
+8-minute line. **Always add `AND published_at >= '2025-01-01'` (or tighter) to
+every query behind a published figure.** This matters most for #3/#4, since
+day-of-week and hour-of-day upload norms have shifted enormously since 2006.
 
 ## Studies that need the moat running first (cannot be backfilled)
 
