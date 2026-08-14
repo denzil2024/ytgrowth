@@ -310,15 +310,65 @@ up after: that is what produced six review rounds on one article.
 - `readTime` roughly matches the word count.
 - Prerender route is automatic via `discoverBlogSlugs()`. Nothing to add.
 
+### KNOWN DRIFTS — check yourself against these before presenting
+
+Every one of these happened on 2026-08-14, on a single article, and each was
+caught by the user rather than by the model. They are listed with a tell you
+can measure, because "write well" is not checkable and a number is.
+
+**Writing drifts**
+
+| Drift | The tell | Do this instead |
+|---|---|---|
+| Copying the last article's shape | Your H2 list matches another post's with a niche word swapped. Compare them literally. | Structure comes from the coverage matrix. If two posts in a cluster share a skeleton, that has to be because their SERPs do. |
+| Content dumped into tables | Tables >4, or a table with more than ~8 rows carrying the article's actual substance. 42 ideas once shipped as six 4-column tables: no prose in the middle of the article and unreadable on mobile. | Ideas and lists use `<li><strong>N. "Title"</strong><br />two or three sentences</li>`. Tables are for comparison, not for content. |
+| Bolded clause opening every paragraph | Count `<p><strong>`. It hit 38 of 55. Target ~5. | Bold the few genuinely load-bearing claims. When most paragraphs open bold, none of them are emphasised. |
+| Judgement dressed as data | A ranking column (Highest/High/Medium) or a "score" sitting in the same visual format as a measured table. A reader cannot tell them apart. | Either measure it or do not present it as a measurement. Put craft guidance in that column instead, and state plainly which figures are measured. |
+| Hedging instead of cutting | Count hedges: "there is an argument that", "the practical answer is", "it is worth noting", "we cannot answer that". Target ~2 per post. | Where a claim cannot be backed, CUT it. Hedging is fluff and is not honesty. Put sourcing honesty in ONE disclosure. |
+| Hook-and-roadmap intro | Paragraph 1 is a rhetorical opener with no information, paragraph 2 restates it, paragraph 3 says what the article will do. | Reference post opens by naming all five problems, then states the consequence flat. Two paragraphs, then the first H2. |
+| AI-sounding headline | Abstract noun plus a vague verb: "42 Premises That Land Without Setup". | Say the article's actual argument the way a person would. |
+| One-substitute find-and-replace | You removed a crutch word by swapping every instance for the same replacement. That is a new crutch. | Vary the replacements and check the density of whatever you replaced it with. |
+| A repeated phrase doing all the connective work | Grep the draft for your own tics. "rather than" hit 23 in one post. | Vary the construction. Also check "which is", "because", "so". |
+| Caveating a figure that fails the data floor | Any sentence apologising for a sample size. One post caveated 13 channels twice. | Drop the figure. A caveat is not a substitute for having the data. |
+
+**Process drifts, which cost more than the writing ones**
+
+| Drift | Why it is expensive |
+|---|---|
+| Presenting partial work | The single biggest cost on 2026-08-14. Six review rounds on one article, each a full re-read. Run the WHOLE standard, verify, present once with the numbers. |
+| Fixing the surface complaint instead of the real one | "We write in different voices" was answered by auditing spelling, which was not what it meant. Ask what the complaint is actually about before doing the work. |
+| Proposing a fix that IS the problem | The first proposal for "there is no process" was to write the process rule into a fifth file. Adding a rule is the patching behaviour. Check whether your fix is another instance of the thing being complained about. |
+| Asking instead of deciding | Four consecutive turns ended in a question. Only two things block: outline approval, and the push go-ahead. |
+| Re-deriving what is written down | The voice reference, the data floor, and the queue are all in this file. Measuring them again from the posts is rework. |
+| Leaving the plan stale after shipping | Part 5 of this file described a state the repo had left, twenty minutes after being written. Stage 6 exists for this. |
+
+**Technical drifts**
+
+| Drift | Guard |
+|---|---|
+| Scripted edit to the `faqs` array breaks the file | An apostrophe inside a JS single-quoted string needs `\'`; the visible JSX copy does not. This has broken `posts.jsx` twice. Always lint immediately after a scripted edit. |
+| FAQ array and visible section drift apart | They must render identical words. Escaping may differ, text may not. Check after every FAQ edit. |
+| Editing generated files | `postsMeta.js` is generated. Fixing it without fixing `gen-blog-meta.js` gets silently reverted on the next run. Check whether a file has a generator before editing it. |
+| Trusting a green deploy | Railway reporting Active does not mean it serves the new build. Verify by grepping the live HTML for a specific new phrase. |
+
 ### Stage 4 — Verify before presenting, every time
 
 ```bash
 cd frontend
-npx eslint src/blog/posts.jsx            # must show no "Parsing error"
-node scripts/gen-blog-meta.js            # always, no asking
-npm run dev                              # then, in another shell:
+npx eslint src/blog/posts.jsx                      # must show no "Parsing error"
+node scripts/verify/check-drift.mjs <slug>         # the KNOWN DRIFTS above, measured
+node scripts/gen-blog-meta.js                      # always, no asking
+npm run dev                                        # then, in another shell:
 node scripts/verify/check-blog-paragraphs.mjs <slug> 5 <port>
 ```
+
+`check-drift.mjs` exits non-zero on failure and needs no dev server. It counts
+tables, bold-lead paragraphs, hedges, the "rather than" and "which is" tics,
+every banned word, British spellings, the CtaCard, and H2 overlap with every
+other post. Thresholds are calibrated so the reference post passes. **It is not
+optional and it is not a formality: run on the comedy post the first time, it
+immediately found three instances of the banned word "actually" that four
+manual review rounds had missed, on a page that was already live.**
 
 - [ ] Parses clean. A scripted edit to the `faqs` array has broken this file
       twice with an unescaped apostrophe. Always lint after one.
