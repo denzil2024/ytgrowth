@@ -166,7 +166,8 @@ to a named study or page, not indiscriminate crawling.
 
 1. State the quota math before running any fetch.
 2. Never fabricate or extrapolate a "we analyzed N" claim; N is what we
-   actually pulled (see the never-fabricate rule in SEO-OPTIMIZATION-CHECKLIST.md).
+   actually pulled (see the data floor in `CONTENT-PLAN.md` Part 1: 30 channels and 500 videos
+   minimum, and figures that fail it get dropped rather than caveated).
 3. Publish honest methodology + limitations in the article; that is what makes
    it citable by journalists and AI assistants.
 4. Aggregated data only, never individual user behavior.

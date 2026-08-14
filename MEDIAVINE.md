@@ -223,10 +223,11 @@ do well, so lean in. On every page:
 
 ### How each page gets fixed (one page at a time, no blind work)
 
-The full reusable checklist (research, content, schema, metadata, internal
-links, verification, deploy) now lives in `SEO-OPTIMIZATION-CHECKLIST.md` at
-the repo root. Use it for every weekly optimization pass. The summary below
-stays as the short version.
+The full reusable process (research, content, voice, schema, metadata,
+internal links, verification, deploy) lives in `CONTENT-PLAN.md` Part 3, the
+Runbook. It absorbed the old `SEO-OPTIMIZATION-CHECKLIST.md` on 2026-08-14.
+Use it for every optimization pass. The summary below stays as the short
+version.
 
 1. Audit against the live top-ranking pages FIRST; build a coverage matrix; present it.
    Check for intent/question gaps too (see the lens above), not just missing sections.

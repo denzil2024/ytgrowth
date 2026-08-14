@@ -7,14 +7,18 @@ next, and every mistake made across the two sessions so they are not repeated.
 
 ## Read these first, in this order
 
-1. `CONTENT-PLAN.md` — the content calendar and the locked step order. This is
-   the source of truth for what to work on.
-2. `SEO-OPTIMIZATION-CHECKLIST.md` — the 7-section, 43-check process for any
-   content pass. **It existed since 2026-07-13 and was not being used.** See
-   mistake 13 below.
-3. `FOUNDATION.md` — keyword workflow plus the dropped log. The dropped log is
+1. `CONTENT-PLAN.md` — **rewritten 2026-08-14.** Part 1 states what the site is
+   becoming and the one test every article must pass. That section did not
+   exist before, and its absence is why the blog drifted into templates. Start
+   there, not at the queue.
+2. `research/TEMPLATE.md` — the research file every article now requires.
+   No research file, no article.
+3. `SEO-OPTIMIZATION-CHECKLIST.md` is now a STUB. Its 43 checks were folded
+   into `CONTENT-PLAN.md` Part 3 on 2026-08-14, because a process split across
+   two files went unused for a month. See mistake 6 below.
+4. `FOUNDATION.md` — keyword workflow plus the dropped log. The dropped log is
    now longer than the confirmed list. Read it BEFORE proposing any keyword.
-4. `DATA-STUDIES.md` — moat logger status and the data-study backlog.
+5. `DATA-STUDIES.md` — moat logger status and the data-study backlog.
 
 ---
 
@@ -148,13 +152,37 @@ Listed so the next session starts from these rather than rediscovering them.
 
 ## What is next
 
-`CONTENT-PLAN.md` holds the six-item calendar. Item 1 should be **cooking
-video ideas** (not comedy, see mistake 10): 1,550/mo, 3,859 videos, 75
-channels, reuses the gaming template, zero quota.
+`CONTENT-PLAN.md` Part 4 holds the queue. Item 1 is **cooking video ideas**
+(not comedy, see mistake 10): 1,550/mo, 3,859 videos, 75 channels, zero quota.
+It is next because it clears the data floor, not because it is next in volume
+order. Do NOT reuse the gaming post's structure, which is what the earlier
+version of this line said and is the mistake described below.
 
-Before writing it: run `SEO-OPTIMIZATION-CHECKLIST.md` section 1, build the
-coverage matrix, compare section count against the strongest competitor,
-present the outline, and WAIT for approval.
+Before writing it: fill in `research/cooking-video-ideas.md` from
+`research/TEMPLATE.md`, present it with the outline, and WAIT for approval.
+
+### Added 2026-08-14: the underlying problem, above any single mistake
+
+The 22 mistakes below were each patched with a new rule, and the rules were
+spread across four markdown files, a 43-item checklist and roughly 60 memory
+entries. All of them describe what not to do. Nothing described what an article
+on this site IS, so at writing time the only available structure was the
+previous article's structure. That is the actual cause of the templating, and
+the reason the rules kept being skipped: skipping them left no artifact.
+
+Two changes address it, both landed 2026-08-14:
+
+- `CONTENT-PLAN.md` Part 1 now states the destination and the one test
+  (could a competitor without our database have written this?), plus a data
+  floor of 30 channels and 500 videos before a measured figure is publishable.
+- `research/<slug>.md` is now required before any article. A missing file is
+  visible in a way a missing habit is not.
+
+Evidence this was real: the gaming and comedy posts share a section-for-section
+skeleton with the niche word swapped, and the comedy draft was written with no
+research file, no coverage matrix and no outline, on a 13-channel sample that
+fails the data floor. It sits uncommitted and unresolved, see `CONTENT-PLAN.md`
+Part 5.
 
 Open items owned by the user:
 - Outreach leads (they are sourcing; see `OUTREACH.md`, one verified contact:

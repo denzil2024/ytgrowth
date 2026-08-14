@@ -93,7 +93,13 @@ export function getRelatedPosts(currentSlug, max = 3) {
 }
 
 export function formatPostDate(isoDate) {
-  const d = new Date(isoDate)
+  // "2026-08-14" parses as UTC midnight, which then renders as the previous day
+  // in any timezone behind UTC (every US zone). Build it in local time instead
+  // so the displayed date always matches the date written in the post.
+  const parts = String(isoDate).split('-').map(Number)
+  const d = parts.length === 3 && parts.every(Number.isFinite)
+    ? new Date(parts[0], parts[1] - 1, parts[2])
+    : new Date(isoDate)
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 `

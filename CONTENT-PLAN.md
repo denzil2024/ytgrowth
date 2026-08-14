@@ -2,29 +2,128 @@
 
 Site: ytgrowth.io · Niche: YouTube SEO/growth SaaS tools
 
-**Read this before starting any content or page work.** The order below is locked.
-Jumping between one-off articles and keyword patches is what produced the current
-state. Do not skip ahead.
+**This is the only content plan. Read it before any content work.**
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 ---
 
-## The one number that matters
+## PART 1 — WHAT WE ARE BUILDING
+
+This section did not exist before 2026-08-14, and its absence is why the blog
+drifted into templates. There was plenty written about what to target next and
+what not to do, and nothing about what the thing is supposed to become. When
+there is no destination, the only available structure at writing time is the
+previous article's structure. That is how we got two posts with the same
+skeleton and a different niche word swapped in.
+
+### The destination
+
+**The YouTube publisher that answers questions from measured data on real
+channels, when every competitor can only offer opinion.**
+
+We hold data nobody else in this SERP has: `channel_videos` (upload dates,
+lengths, titles, formats), `video_metric_snapshots` (performance over time),
+`ChannelRegistry` (channel size and niche), `youtube_search_cache` (what
+creators actually research), and `ai_output_cache`. vidIQ and TubeBuddy have
+more authority than us and always will. They do not publish measured answers
+to creator questions, they publish advice. That gap is the whole business case
+for this blog.
+
+Every article should read like it was written by someone who went and counted,
+because it was.
+
+### The one test
+
+**Could a competitor without our database have written this article?**
+
+If yes, do not write it. There are a hundred sites publishing the same advice
+with more authority, and [Part 2](#part-2--the-diagnosis-verified-2026-08-13)
+shows what happens when we compete with them on their terms: position 51 to 67,
+zero clicks, across every commercial cluster.
+
+This test replaces the template. It is not a style rule, it decides whether the
+article exists at all:
+
+- "18 comedy video ideas" fails. Anyone can list ideas.
+- "18 comedy video ideas, plus what 699 comedy uploads since Jan 2025 show
+  about length, cadence and format mix" passes, but only if the sample is real.
+- Comedy's cadence figure rests on **13 channels**, which is too thin to
+  publish. That is a fail, and the honest fix is dropping the figure, not
+  caveating it twice in the body.
+
+### The data floor
+
+A measured figure is publishable when it clears all four:
+
+| Rule | Threshold |
+|---|---|
+| Channels behind the figure | 30 minimum. Below that, do not publish it. |
+| Videos behind the figure | 500 minimum for a length/format claim. |
+| Date filter | `published_at >= '2025-01-01'`, always. `channel_videos` spans 2006-2026 and is NOT bounded by the collection window. |
+| Median alongside mean | Both, always. Study #1's niches skew up to 3.83x. |
+
+Never write "we analysed X channels" without running the count first. A
+fabricated proprietary-data claim is the one mistake that would cost more than
+it earns.
+
+### What this means for structure
+
+**Article structure comes out of the research file, never out of the last
+article.** Two posts in the same cluster should only share a shape if their
+SERPs genuinely share a shape. No fixed idea counts, no fixed FAQ counts, no
+reusable skeleton. The previous version of this file specified "18 numbered
+titles, 8 FAQs" as a template, which was wrong and is deleted.
+
+### Voice
+
+**The reference post is `/blog/youtube-demonetization`.** Named by the user
+2026-08-14. When the voice is in question, open that post and match it. Before
+this, "house voice" was asserted in four files and pinned to no example, which
+is why it drifted.
+
+What makes it the standard: **authoritative, and no fluff.** Concretely, from
+measuring it against a post that had drifted:
+
+- **The first sentence carries information, not a hook.** Demonetization opens
+  by naming all five problems, then states the consequence flat: "Each one
+  carries its own fix and its own deadline." No rhetorical opener, no scene
+  setting.
+- **No roadmap paragraph.** Never tell the reader what the article is about to
+  do. Two paragraphs of intro, then the first H2.
+- **Declarative.** State the claim. Do not hedge it, and do not soften it with
+  "the practical answer is", "there is an argument that", "it is worth noting".
+  Where a claim cannot be backed, cut it rather than hedging it. Honesty about
+  sourcing belongs in one clear disclosure, not sprinkled per sentence.
+- **Never restate.** If paragraph two makes the same point as paragraph one in
+  different words, delete one.
+
+Measurable targets, taken from the reference:
+
+| | Reference |
+|---|---|
+| Hedge phrases per post | ~2 |
+| Paragraphs opening with a bolded clause | ~5, never most of them |
+| Paragraph length | 3 to 4 rendered lines, 5 max, verified with `check-blog-paragraphs.mjs` |
+
+Also: US English, dollars, US reader assumed throughout. The remaining
+per-rule detail lives in `CLAUDE.md` and memory and is not restated here,
+because restating rules in a fifth file is the patching problem.
+
+---
+
+## PART 2 — THE DIAGNOSIS (verified 2026-08-13)
+
+### The one number that matters
 
 **Tier-1 (US/UK/CA/AU) active users: 196 over 28 days. Seven per day.**
 
-The product is $19 to $149/month behind a pay-before-signup wall. Traffic that cannot
-buy is close to worthless. Every decision in this file is judged against that seven,
-not against total sessions.
+The product is $19 to $149/month behind a pay-before-signup wall. Traffic that
+cannot buy is close to worthless. Every decision here is judged against that
+seven, not against total sessions. Total sessions look like 1,534. That number
+is misleading and should not be used.
 
-Total sessions look like 1,534. That number is misleading and should not be used.
-
----
-
-## The diagnosis (verified 2026-08-13 from `keyword-exports/`)
-
-**1. Most traffic is not real or not useful.**
+### 1. Most traffic is not real or not useful
 
 | Channel | Sessions (28d) | Reality |
 |---|---|---|
@@ -32,21 +131,22 @@ Total sessions look like 1,534. That number is misleading and should not be used
 | AI Assistant | 579 | Real, but skews low-tier. |
 | Organic Search | 232 | Only 15% of sessions. |
 
-Geography: **48.2% low-tier, 16.4% tier-1, 7% Western Europe.** Top low-tier sources
-are India (249), Vietnam (86), China (72), Pakistan (48), Bangladesh (39).
+Geography: **48.2% low-tier, 16.4% tier-1, 7% Western Europe.** Top low-tier
+sources are India (249), Vietnam (86), China (72), Pakistan (48),
+Bangladesh (39).
 
-**2. A large share of Direct is bot traffic.** The engagement signature proves it:
+### 2. A large share of Direct is bot traffic
 
 | | Users/day | Avg engagement |
 |---|---|---|
 | Spike days (Jul 26-31) | 92, 117, 120 | 8.8s |
 | Quiet days | 29-40 | 33.0s |
 
-Real traffic spikes do not collapse engagement 4x. Site-wide: 1.22 pages/session,
-15% scroll rate, 87% first-visit. The July 26-31 "spike" was bots, and benchmarking
-against it made a normal month look like a collapse.
+Real traffic spikes do not collapse engagement 4x. Site-wide: 1.22
+pages/session, 15% scroll rate, 87% first-visit. The July 26-31 spike was bots,
+and benchmarking against it made a normal month look like a collapse.
 
-**3. Every commercial article cluster is authority-gated and earns nothing.**
+### 3. Every commercial article cluster is authority-gated and earns nothing
 
 | Cluster | Queries | Impressions | Clicks | Position |
 |---|---|---|---|---|
@@ -57,363 +157,378 @@ against it made a normal month look like a collapse.
 | Analytics | 57 | 1,549 | 2 | 52.6 |
 | Brand (ytgrowth) | 4 | 188 | 42 | 2.5 |
 
-42 of 429 total clicks come from people already searching the brand name. Page-1
-competitors are vidIQ, TubeBuddy, Ahrefs, Semrush, Wix.
+42 of 429 total clicks come from people already searching the brand name.
+Page-1 competitors are vidIQ, TubeBuddy, Ahrefs, Semrush, Wix.
 
-**4. The tier-1 opportunity already exists and is gated on links, not content.**
-The US alone is 53,249 impressions (40% of all site impressions) at position 28.78,
-converting 58 clicks. The demand is there; the ranking is not. MEDIAVINE.md found
-this on 2026-07-10, did full on-page passes across every high-impression US page on
-07-11 and 07-13, and positions did not move. Its own conclusion, still correct:
-**the gate is authority (backlinks), not on-page work.** Do not redo on-page work
-on these pages expecting a different result.
+### 4. The tier-1 opportunity is gated on links, not content
 
-**5. Publishing stopped for a structural reason.** Commits touching posts.jsx: 63 in
-May, 27 in June, 14 in July, 4 in August. Both mapped clusters completed 2026-08-08
-and nothing was queued behind them. An empty plan file produces an empty schedule.
+The US alone is 53,249 impressions (40% of all site impressions) at position
+28.78, converting 58 clicks. The demand is there; the ranking is not.
+`MEDIAVINE.md` found this on 2026-07-10, did full on-page passes across every
+high-impression US page on 07-11 and 07-13, and positions did not move. Its own
+conclusion, still correct: **the gate is authority (backlinks), not on-page
+work.** Do not redo on-page work on these pages expecting a different result.
 
----
+### 5. Publishing stopped for a structural reason
 
-## The plan, in order
+Commits touching posts.jsx: 63 in May, 27 in June, 14 in July, 4 in August.
+Both mapped clusters completed 2026-08-08 and nothing was queued behind them.
+An empty plan file produces an empty schedule.
 
-### Step 1 — Bot hygiene [START HERE]
+### 6. The keyword-cluster model is close to exhausted
 
-Filter bots out of GA4 so decisions stop being made on fake numbers. Everything
-downstream depends on measuring honestly, and the July spike already caused one bad
-read of the situation.
+Three consecutive research rounds came back mostly dead:
 
-Success: reported sessions drop, average engagement time rises, tier-1 share rises.
-A lower session count here is the correct outcome, not a regression.
+| Round | Result |
+|---|---|
+| 2026-07-28 | Subscribers, channel growth, live streaming, merch, playlists, end screens and the entire commercial track, all dropped. |
+| 2026-08-13 | Video-ideas niches mostly too thin; only gaming clearly survived. |
+| 2026-08-14 | `youtube equipment` and `youtube automation` dropped; `youtube sponsorship` yields one post, not a cluster. |
 
-### Step 2 — Authority, not volume
+The dropped log in `FOUNDATION.md` is now longer than the confirmed list. The
+obvious creator-advice topics are either already covered by the 62 live posts,
+owned by DR-80+ incumbents, or polluted with watch intent.
 
-Original-data research articles built on proprietary cache and channel-registry data
-that nobody else can publish. This is the only lever that moves the 53K tier-1
-impressions off page 3, and it is already item 4 of the moat roadmap and
-`project_linkable_data_studies` in memory. Never started.
-
-The target is links and citations, not pageviews. Judge each study on referring
-domains earned, not on its own traffic.
-
-### Step 3 — Publishing resumes, tier-1 intent only
-
-Not before steps 1 and 2 are underway. Use the `FOUNDATION.md` workflow exactly:
-pillar candidates first, real Keyword Planner volume, SERP check per keyword,
-3-confirmed floor per sub-cluster.
-
-- Write: tool comparisons, sponsorship rates, gear, business and agency workflows.
-- Do not write: "how much does YouTube pay in [country]", free-subscribers,
-  grow-fast content. These are what pull the low-tier audience.
+**Do not pull a fourth seed.** That repeats the motion and returns the same
+result. This finding is what makes Part 1 necessary: the way forward is data we
+own, not keywords we find.
 
 ---
 
-## THE CONTENT CALENDAR (built 2026-08-14)
+## PART 3 — THE RUNBOOK
 
-Every confirmed article, in order. Nothing here is speculative: each line has
-real Keyword Planner volume and a passed SERP check, or is an upgrade to a page
-that already ranks. Work top to bottom. Add nothing that has not cleared
-`FOUNDATION.md`.
+**This is the only content process. `SEO-OPTIMIZATION-CHECKLIST.md` was folded
+into it on 2026-08-14 and is now a stub.** A process split across two files got
+skipped for a month.
 
-| # | Article | Slug | Volume | Type | Status |
-|---|---|---|---|---|---|
-| 1 | Comedy video ideas | `comedy-video-ideas` | 1,650/mo | Cluster spoke | Validated 08-13, ready |
-| 2 | Cooking video ideas | `cooking-video-ideas` | 1,550/mo | Cluster spoke | Validated 08-13, ready |
-| 3 | Tech video ideas | `tech-video-ideas` | 1,300/mo | Cluster spoke | Validated 08-13, ready |
-| 4 | Music video ideas | `music-video-ideas` | 950/mo | Cluster spoke | Validated 08-13, ready |
-| 5 | Title-length study | folds INTO `/blog/youtube-title` | n/a | Upgrade | Angle confirmed 08-14, needs 2 SQL pulls |
-| 6 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | New post | Weak confirm, see caveat |
+### Why this exists in this shape
 
-**Items 1-4 are the backbone.** They complete the Video Ideas cluster started
-2026-07-28 (pillar + shorts + challenge + vlog + gaming already live). Same
-proven template as `/blog/gaming-video-ideas`: 18 numbered concrete titles,
-a niche-data table from our own upload data, format-effort table, 8 FAQs.
-The per-niche data already exists in `channel_videos` at zero quota cost.
+The 2026-08-14 session cost far more than it should have. The causes, so the
+runbook can be judged against them:
 
-**Item 5** is the strongest differentiator on the list. Three published studies
+| What happened | Cost | Fixed by |
+|---|---|---|
+| One article reviewed in six separate rounds (tables, then sourcing, then voice, then headline, then cover, then a date bug) | 6x re-read and re-measure of the same file | Stage 3: run the WHOLE standard before showing anything |
+| Turns spent diagnosing contradictory plan files instead of working | 3 turns | One plan file, this one |
+| Re-derived what "house voice" means from scratch | 2 turns | Voice reference named in Part 1 |
+| Four consecutive replies ended in a question instead of an action | 4 turns | Stage 0 defaults |
+| No way to tell what was already done | rework | The research file doubles as the state file |
+
+**The single most expensive mistake is presenting partial work.** Every partial
+present costs a full review round. Do the complete pass, then present once.
+
+### Stage 0 — Session start (read exactly two files)
+
+1. This file.
+2. `research/<slug>.md` for the article in flight, if there is one. Its
+   `Status:` line says where things stand. If there is no article in flight,
+   the queue in Part 4 says what is next.
+
+Do not read `FOUNDATION.md`, `MEDIAVINE.md`, `DATA-STUDIES.md`, `HANDOVER.md`
+or the memory index unless this file sends you there for a specific reason.
+Grep-wandering across eleven markdown files at session start is a real and
+recurring cost.
+
+**Defaults, so no turn is spent asking:**
+
+- Next article is the top unstarted row of the queue in Part 4. Start it.
+- Never ask which of two approaches to take. Pick the one this file implies,
+  state the choice in one line, proceed.
+- Never ask for permission to run `gen-blog-meta.js`, a verification script, or
+  a screenshot. Just run them.
+- Only two things genuinely require asking: **approval of the research file and
+  outline** (Stage 2), and **the go-ahead to push** (Stage 5).
+
+### Stage 1 — Research
+
+Fill `research/<slug>.md` from `research/TEMPLATE.md`. **No research file, no
+article.** The research rule previously lived in four files and was skipped
+anyway, because skipping left no trace. A missing file leaves a trace.
+
+- Fetch the live top 10. Real URLs, opened this session, dated in the file.
+  Never cite a source that was not fetched: two domains were fabricated on
+  2026-07-28.
+- Build the coverage matrix. Cover the UNION of competitor sections, not the
+  intersection. Compare your section count against the strongest competitor.
+- Name the gap, and what we can answer from our data that they cannot.
+- Answer the one test from Part 1 in writing. If a competitor without our
+  database could write this, stop. A rejected research file is a success.
+- Run the data pull. Check every figure against the data floor in Part 1.
+  Figures that fail the floor get dropped, not caveated.
+
+### Stage 2 — Present and wait
+
+Present the research file and the outline. **Wait for approval.** This is one
+of only two blocking gates.
+
+### Stage 3 — Write the whole standard in one pass
+
+Write against every item below on the first draft. Do not write first and clean
+up after: that is what produced six review rounds on one article.
+
+**Substance**
+- Structure comes from the matrix, never from the previous article's shape.
+- No fixed idea counts, no fixed FAQ counts, no reused skeleton.
+- Every claim is either measured or plainly reasoned. Never dress judgement as
+  data: a ranking column in a table next to a measured table reads as measured.
+- Where a claim cannot be backed, cut it. Do not hedge it. Hedging is fluff and
+  is not the same thing as honesty. Put sourcing honesty in ONE disclosure.
+
+**Voice** (reference post: `/blog/youtube-demonetization`)
+- First sentence carries information, not a hook.
+- No roadmap paragraph. Two intro paragraphs, then the first H2.
+- Declarative. Target ~2 hedge phrases for the whole post.
+- Never restate a point in different words.
+- Paragraphs 3 to 4 rendered lines, 5 max.
+- Bold-lead paragraphs: about 5 per post, never most of them.
+- Banned: "actually" (check headings too), em-dashes, italics, the word "land"
+  in its figurative sense, generic "Final Thoughts" or "Conclusion" endings.
+- Grep existing intros before finalising a new one. No repeated opening move.
+- US English, dollars, US reader.
+
+**Ideas and lists**
+- List items use the house format: `<li><strong>N. "Title"</strong><br />two or
+  three sentences of real explanation.</li>`. Never a bare table cell. A
+  4-column table of 40 rows is unreadable on mobile and contains no writing.
+
+**Furniture**
+- `CtaCard` mid-article, never at the end.
+- Internal links both directions: link out to the pillar and siblings, and add
+  at least one inbound link from an existing relevant post.
+- Cover image needed: say so explicitly. Never generate one.
+
+**Metadata, all in the same pass**
+- `excerpt` in posts.jsx. Feeds the visible dek AND the JSON-LD description.
+- `seoMeta.js`: title <=60 chars, description <=155. Measure, do not eyeball.
+- `faqs` array mirrors the visible FAQ section word for word. Same count, same
+  order, same text. Read both blocks side by side. Escaping differs (JS string
+  needs `\'`, JSX text does not) but the rendered words must be identical.
+- `sitemap.xml` entry with today's `lastmod`.
+- `llms.txt` entry. Live acquisition channel, not an afterthought. Write it
+  from the page's own verified content, never from a hub or marketing blurb.
+- `updated` date bumped when revising an existing post.
+- `readTime` roughly matches the word count.
+- Prerender route is automatic via `discoverBlogSlugs()`. Nothing to add.
+
+### Stage 4 — Verify before presenting, every time
+
+```bash
+cd frontend
+npx eslint src/blog/posts.jsx            # must show no "Parsing error"
+node scripts/gen-blog-meta.js            # always, no asking
+npm run dev                              # then, in another shell:
+node scripts/verify/check-blog-paragraphs.mjs <slug> 5 <port>
+```
+
+- [ ] Parses clean. A scripted edit to the `faqs` array has broken this file
+      twice with an unescaped apostrophe. Always lint after one.
+- [ ] Zero paragraphs over 5 lines.
+- [ ] FAQ array count equals visible `<h3>` count, and the text matches.
+- [ ] Grep the post for: "actually" (case-insensitive), em-dashes, figurative
+      "land", British spellings.
+- [ ] Cover file exists, is a 1600x900 JPG around 100 to 150KB, and the page
+      loads it with no failed requests. Convert and delete any PNG source.
+- [ ] Screenshot desktop AND mobile, and actually read them. The 42-ideas-in-
+      tables problem was invisible in source and obvious in one screenshot.
+- [ ] Counts against the reference post: tables, bold-lead paragraphs, hedges.
+
+**Then present once, with the numbers.** Not a partial fix.
+
+### Stage 5 — Build and deploy (only on explicit go-ahead)
+
+- `BUILD_API_URL=https://ytgrowth.io npm run build`. Never the bare build, or
+  every `/youtube-stats/*` page ships an empty leaderboard.
+- Railway serves the committed `frontend/dist/`. Every `src` change needs a
+  rebuilt dist in the same commit. Never `git checkout -- dist/`.
+- Stage files by name. Never `git add -A`.
+- Verify live by checking for a specific new phrase, not just an HTTP 200.
+- Request indexing in Search Console.
+
+### Definition of done
+
+An article is done when Stage 4 passes with every box ticked, the research file
+`Status:` reads `approved`, and Stage 5 has been run and verified live. Not
+before. "The tables are fixed" is not done.
+
+### Publishing
+
+Every new route ships in ONE commit: source page, `prerender.js`
+`buildRoutes()`, sitemap entry, llms.txt entry, rebuilt dist, cover image.
+Missed three times. Slugs are 2 to 4 words.
+
+---
+
+## PART 4 — THE QUEUE
+
+One list. Work top to bottom. Nothing enters without real Keyword Planner
+volume, a passed SERP check, and a route through the one test.
+
+| # | Article | Slug | Volume | Status |
+|---|---|---|---|---|
+| 1 | Cooking video ideas | `cooking-video-ideas` | 1,550/mo | **NEXT.** 3,859 videos, 75 channels. Clears the data floor. Needs research file. |
+| 2 | Tech video ideas | `tech-video-ideas` | 1,300/mo | Validated 08-13. Verify channel count against the data floor first. |
+| 3 | Music video ideas | `music-video-ideas` | 950/mo | Validated 08-13. Verify channel count against the data floor first. |
+| 4 | Title-length study, folds INTO `/blog/youtube-title` | n/a | n/a | Angle confirmed 08-14. Needs 2 SQL pulls joining `video_metric_snapshots` to `channel_videos.title`. |
+| 5 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | Weak confirm. Only write with a differentiator, see below. |
+| 6 | Promotion pass on the published studies | n/a | n/a | User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
+
+**Item 1 is next, not comedy.** Comedy has higher volume (1,650/mo) but only 13
+channels of data, which fails the data floor in Part 1. A comedy draft exists
+uncommitted and is unresolved, see Part 5.
+
+**Item 4 is the strongest item on this list.** Three published studies
 contradict each other (AIR Media-Tech says 30-50 chars, 10xCreator says 70-100,
-ViewsKit says under 30). Nobody has reconciled them, and we can test the
-performance claim directly because `video_metric_snapshots` joins to
-`channel_videos.title`. Goes INTO the existing post, not a new one, since
-`/blog/youtube-title` already owns that intent.
+ViewsKit says under 30). Nobody has reconciled them and we can test the
+performance claim directly. It passes the one test outright. It goes INTO the
+existing post, since `/blog/youtube-title` already owns that intent and a
+separate page would split authority the same way the three-way keyword-research
+split did.
 
-**Item 6 caveat, decide before writing.** The SERP has real independents so it
-passes the diversity test, but OutlierKit ranks there on original sponsor data
-we do not have. Without a differentiator this is just another list of company
-names against vidIQ and Wikipedia. Only write it if we find an angle, otherwise
-drop it and stop at item 5.
+**Item 5 caveat.** The SERP has real independents so it passes the diversity
+test, but OutlierKit ranks there on original sponsor data we do not have.
+Without a differentiator it fails the one test and should be dropped.
 
 ### After item 6
 
-The calendar is empty again, and per the finding below, a fourth keyword seed is
-unlikely to refill it. The next content decision is strategic, not research.
+The queue is empty and a fourth keyword seed will not refill it (Part 2, item
+6). The next decision is strategic, and the three real levers are already
+known: original-data studies, programmatic expansion on the patterns that
+already rank (`/youtube-stats/*` and `/youtube-earnings/*` sit at position 7-12
+and are the best per-page performers), and authority/backlinks for the 53K
+tier-1 US impressions. All three are in Part 1's direction. None of them is a
+keyword round.
 
 ---
 
-## RESEARCH ROUND RESULT (2026-08-14): 0 CLUSTERS, AND THAT IS THE FINDING
+## PART 5 — OPEN AND UNRESOLVED
 
-All three seeds pulled and mined. Full reasoning in `FOUNDATION.md`'s dropped log.
+**The comedy draft.** 371 uncommitted lines in `posts.jsx`, plus seoMeta,
+postsMeta, llms.txt and sitemap entries already added, with no cover image and
+no mid-article CTA. It was written out of order, with no research file, on a
+sample that fails the data floor. Not deleted, not shipped. Decide before
+touching the queue: either cut it back to what the data supports and finish it
+properly, or park it and revert the four plumbing files so nothing half-published
+leaks.
 
-| Seed | Rows | >=500/mo | Verdict |
-|---|---|---|---|
-| `youtube sponsorship` | 126 | 11 | 1 post, not a cluster. Weak. |
-| `youtube equipment` | 597 | 38 | DROP: watch-intent pollution + one intent + manufacturer SERP |
-| `youtube automation` | 196 | 9 | DROP: cannibalises 2 live posts + developer-intent SERP |
-
-**The pattern matters more than the individual results.** This is the THIRD
-consecutive research round to come back mostly dead:
-- 2026-07-28: subscribers, channel growth, live streaming, merch, playlists,
-  end screens, and the entire commercial-keywords track, all dropped.
-- 2026-08-13: video-ideas niches mostly too thin; only gaming survived.
-- 2026-08-14: gear, automation dropped; sponsorship yields one post.
-
-The dropped log in `FOUNDATION.md` is now longer than the confirmed list. The
-honest read is that **the keyword-cluster model is close to exhausted for this
-site.** The obvious creator-advice topics are either already covered by the 62
-live posts, owned by DR-80+ incumbents, or polluted with watch intent.
-
-**Do not simply pull a fourth seed.** That repeats the same motion and probably
-returns the same result. The strategic question to settle with the user first is
-which lever replaces cluster-building:
-
-1. **Data studies.** Working. Zero keyword competition because the content does
-   not exist elsewhere, and it is the only thing that has produced genuinely
-   differentiated pages (see `DATA-STUDIES.md`). Constrained by what the moat
-   tables can answer.
-2. **Programmatic expansion** on the patterns that already rank (`/youtube-stats/*`,
-   `/youtube-earnings/*` sit at position 7-12 and are the best per-page performers).
-   Blocked on the thin-content problem that got 126 URLs cut in July.
-3. **Authority / backlinks** for the 53K tier-1 US impressions stuck at position
-   28.78. On-page work there is already proven dead.
-
-Note that all three of these are already the plan. The research round's real
-output is evidence that there is no fourth option hiding in keyword data.
+**The parked gaming ideas file.** `frontend/src/data/youtubeVideoIdeas.js`,
+still untracked, superseded by `/blog/gaming-video-ideas` shipping 2026-08-13.
+Delete it or ignore it; it is not a queue item.
 
 ---
 
-## COMPLETED: KEYWORD RESEARCH ROUND (2026-08-14)
-
-**Tomorrow is entirely keyword research. Do not start anything else first.**
-
-The queue below is empty after the gaming post, and an empty queue is what took
-publishing from 63 commits in May to 4 in August. Refilling it is the whole job.
-
-How it runs:
-1. User pulls the three seeds in "Keyword seeds to pull" below and drops the
-   full CSV exports into `keyword-exports/`. Seed 1 (`youtube sponsorship`)
-   first, it has the clearest sub-topic structure.
-2. Follow the `FOUNDATION.md` workflow exactly. Pillar confirmed first, then
-   mine spokes from inside that same export. Every candidate gets a live Google
-   SERP check. 3 confirmed is the floor for a sub-cluster to survive.
-3. Report per the FOUNDATION.md format: confirmed (volume, who ranks, which
-   signal passed), dropped (why), running counts.
-4. Write the survivors into the pipeline table below as named articles.
-
-Do NOT write any article during this round. Research and the plan only. The
-process rule below (present outline for approval before writing) has been
-broken twice already, both times by starting to write too early.
-
-Note on CSV encoding: Keyword Planner exports are UTF-16, tab-delimited, with
-two header lines before the real header. Read with
-`open(f, encoding='utf-16')`, skip 2 lines, then `csv.DictReader(delimiter='\t')`.
-
----
-
-## THE ARTICLE PIPELINE (check here first, every session)
-
-This is the single list. Everything below is an article in `/blog`, shipped through
-the standard publishing workflow. "Data study" is not a separate content type, it is
-an article whose differentiator is original data.
-
-### Shipped
+## Shipped
 
 | Date | Article | Type |
 |---|---|---|
-| 2026-08-13 | YouTube Gaming Video Ideas (`/blog/gaming-video-ideas`), 18 numbered concrete ideas + gaming upload data | Cluster spoke |
-| 2026-08-13 | Upgraded `/blog/best-time-to-post` with cadence + day-of-week data (studies #3+#4) | Upgrade |
-| 2026-08-13 | The Ideal YouTube Video Length in 2026 (`/blog/video-length-by-niche`), corrected same day (date-filter bug) | Data study #1 |
+| 2026-08-13 | Gaming Video Ideas (`/blog/gaming-video-ideas`) | Cluster spoke |
+| 2026-08-13 | `/blog/best-time-to-post` upgraded with cadence + day-of-week data | Upgrade |
+| 2026-08-13 | Ideal YouTube Video Length (`/blog/video-length-by-niche`), corrected same day for the date-filter bug | Data study #1 |
 | 2026-08-08 | YouTube Vlog Ideas | Cluster spoke |
 | 2026-07-28 | Shorts Ideas, Challenge Ideas, Start a Channel, Phone Channel, Brand Account, Gaming Channel | Cluster, 6 posts |
 
-### Queued, ready to run
+### Completed clusters (do not re-propose)
 
-| Order | Work | Type | Quota | Blocked on |
-|---|---|---|---|---|
-| 1 | **Keyword research round** | Research, no writing | 0 | User pulls the 3 seeds. THIS IS TOMORROW'S JOB. |
-| 2 | Title-pattern study, folded INTO `/blog/youtube-title` | Upgrade, not a new post | 0 | Nothing. Decided 2026-08-13: a separate post would split authority with the existing page, same as the best-time-to-post call. Uses `channel_videos.title`, already collected. |
-| 3 | Promotion pass on both studies | Outreach | 0 | User is sourcing leads independently and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
+**Video Ideas** (mapped 2026-07-28): pillar `youtube-video-ideas`,
+`youtube-shorts-ideas`, `youtube-challenge-ideas`, `youtube-vlog-ideas`,
+`gaming-video-ideas`.
 
-**Why item 1 is an upgrade, not a new article.** `/blog/best-time-to-post` already
-exists and is a high-impression page. A separate "when creators really upload" post
-would compete with it for the same query. The data goes INTO that post.
-
-**Cannibalization warning on item 2.** `/blog/youtube-title` already owns the
-how-to intent for titles. A title data study has to target research intent
-(a study, a measurement) and not that how-to intent, or it splits the same
-authority two ways. Decide before writing. This is the exact trap that produced
-the three-way keyword-research split now sitting at position 51.
-
-### After that, the queue is EMPTY
-
-No further articles are planned. This is the real problem, and it is the same one
-that took publishing from 63 commits in May to 4 in August: both mapped clusters
-finished on 2026-08-08 with nothing queued behind them.
-
-Filling it needs a keyword research round (`FOUNDATION.md` workflow), which needs
-Keyword Planner exports from the user, so it cannot be done unattended.
-
-### Keyword seeds to pull (user action, 2026-08-13)
-
-Pull each of these in Google Keyword Planner ("Discover new keywords"), export
-the FULL results as CSV (not just top rows, the niche long tail is what gets
-mined), and drop into `keyword-exports/`. One seed at a time is fine.
-
-**Seed 1: `youtube sponsorship`**
-Why: `/blog/youtube-sponsorships` exists but covers the topic in one post. The
-sub-topics look genuinely distinct (rates/how much to charge, media kits,
-pitching and outreach, contracts and deliverables, FTC disclosure), which is
-what the FOUNDATION.md structure test requires. Strong tier-1 fit: brand money
-concentrates in US/UK markets.
-
-**Seed 2: `youtube equipment`**
-Why: only `best-youtube-mic` is live. Camera, lighting, audio treatment,
-backgrounds, and capture are all uncovered and each is a real buying decision
-with its own search demand. Gear buyers skew tier-1 by definition, since the
-searcher has money to spend. Watch for affiliate-listicle SERPs on the head
-term; the sub-topics matter more than the pillar here.
-
-**Seed 3 (lower confidence): `youtube automation` or `youtube channel management`**
-Why: the agency and multi-channel angle has zero coverage and maps to the
-Agency plan. Flagged lower confidence because "automation" may return
-cash-cow/faceless intent already covered by two live posts, and
-"channel management" may be too thin. Pull it third, drop it fast if the
-export is shallow.
-
-**Explicitly NOT seeds** (already tested and dead, see FOUNDATION.md):
-tool comparisons, vidiq alternative, vidiq/tubebuddy pricing, channel audit
-tool, youtube subscribers, channel growth, live streaming, merch, playlists,
-end screens. Do not re-propose these.
-
-Each surviving keyword still needs a passed Google SERP check before it enters
-the queue above.
-
-### Parked
-
-An 18-idea gaming video-ideas draft sits untracked at
-`frontend/src/data/youtubeVideoIdeas.js`. Built as a programmatic page by mistake
-when it is an article. Converts to a blog spoke under the existing
-`/blog/youtube-video-ideas` pillar (position 8.95) whenever the queue needs filling.
-
-### Process rule, violated 2026-08-13, do not repeat
-
-Before writing ANY article: research the live top 10 for the target query, build a
-coverage matrix, and PRESENT THE OUTLINE FOR APPROVAL. Study #1 was written and
-shipped without this step, so the user first saw the article only after it existed.
-See `feedback_article_research_process`.
-
-### Step 4 — Measure on tier-1, monthly
-
-The metric is tier-1 active users per day and referring domains earned. Not total
-sessions, not GSC position (15% of traffic), not AI-assistant volume.
+**Starting a Channel** (mapped 2026-07-28): pillar `start-youtube-channel`,
+plus `youtube-channel-phone`, `youtube-brand-account`,
+`gaming-youtube-channel`.
 
 ---
 
 ## Deferred and rejected
 
 **Combo layer restore (14 niches x 4 tier-1 countries, ~112 pages). DEFERRED
-2026-08-13.** Components are 11-line redirect stubs; bodies are recoverable from git
-history near commit 56b574f74. The case for restoring was citable surface for AI
-assistants. That case is now against it: AI traffic skews low-tier, so this
-manufactures more of the traffic that cannot buy. Revisit only if tier-1 share rises
-enough that added AI reach is worth it.
+2026-08-13.** Components are 11-line redirect stubs; bodies are recoverable
+from git history near commit 56b574f74. The case for restoring was citable
+surface for AI assistants. That case is now against it: AI traffic skews
+low-tier, so this manufactures more traffic that cannot buy.
 
-Correcting a misleading comparison made during this analysis, so nobody rebuilds a
-plan on it: per page the combos were **worse** than the hubs, not better.
+Correcting a misleading comparison made during that analysis, so nobody
+rebuilds a plan on it: per page the combos were **worse** than the hubs.
 
 | | Pages | Clicks/page (3mo) | Impressions/page | Position |
 |---|---|---|---|---|
 | Combo (retired 07-09) | 176 | 0.57 | 77 | 8.6 |
 | Hub (kept) | 27 | 2.07 | 240 | 12.8 |
 
-Combos ranked higher on much smaller queries. Restoring all 126 recovers roughly
-1 click/day. The July session drop was never a combo-cut story.
+Restoring all 126 recovers roughly 1 click/day. The July session drop was never
+a combo-cut story.
 
-**Mediavine. ABANDONED 2026-08-13** (user started a separate niche site). The tier-1
-preference survives its cancellation for a different and more durable reason: the
-paywall. See "The one number that matters".
+**Mediavine. ABANDONED 2026-08-13** (user started a separate niche site). The
+tier-1 preference survives for a more durable reason: the paywall.
 
-**Commercial keyword track. DEAD 2026-07-28.** vidiq alternative, youtube channel
-audit tool, vidiq pricing all returned Keyword Planner's lowest volume bucket. The
-real commercial volume is already held by four live posts (vidiq-review,
+**Commercial keyword track. DEAD 2026-07-28.** vidiq alternative, youtube
+channel audit tool, vidiq pricing all returned Keyword Planner's lowest volume
+bucket. The real commercial volume is held by four live posts (vidiq-review,
 tubebuddy-vs-vidiq, seo-tools-for-youtube, youtube-keyword-research-tools). If
-commercial intent needs more coverage, it is a CRO pass on those four, not new pages.
+commercial intent needs more coverage, it is a CRO pass on those four, not new
+pages.
+
+**Dead seeds, do not re-propose:** tool comparisons, vidiq alternative,
+vidiq/tubebuddy pricing, channel audit tool, youtube subscribers, channel
+growth, live streaming, merch, playlists, end screens, youtube equipment,
+youtube automation.
 
 ---
 
 ## What NOT to do
 
-- Do not do more on-page work on the authority-gated pages expecting rank movement.
-  It was done in July across every high-impression US page and did not work.
-- Do not write articles targeting keyword research, YouTube SEO, competitor analysis,
-  analytics, or thumbnail head terms.
+- Do not write an article that fails the one test in Part 1.
+- Do not write an article without a research file.
+- Do not publish a figure that fails the data floor. Caveating a thin sample is
+  not a substitute for having the data.
+- Do not reuse a previous article's structure. Derive it from the matrix.
+- Do not do more on-page work on the authority-gated pages expecting rank
+  movement. It was done across every high-impression US page in July and did
+  not work.
+- Do not write articles targeting keyword research, YouTube SEO, competitor
+  analysis, analytics, or thumbnail head terms.
 - Do not build a page or page dimension named after a low-tier country.
-- Do not optimize for total sessions, AI-assistant volume, or Direct. Direct is not an
-  acquisition channel and nothing should be built to grow it.
-- Do not ship a programmatic page without page-specific substance. Thin content is
-  what got 126 URLs deleted on 2026-07-09.
-- Do not confuse an article at a programmatic URL for a programmatic page. A
-  programmatic page has a data spine that generates it. If a human writes the body for
-  every slug, it is an article and belongs in `/blog`.
-- Do not start a new initiative while steps above it are unstarted.
+- Do not optimize for total sessions, AI-assistant volume, or Direct.
+- Do not ship a programmatic page without page-specific substance. Thin content
+  is what got 126 URLs deleted on 2026-07-09.
+- Do not confuse an article at a programmatic URL for a programmatic page. If a
+  human writes the body for every slug, it is an article and belongs in `/blog`.
 
 ---
 
-## Honest limits
+## Measurement
 
-Authority takes months, not weeks, and `FOUNDATION.md` already established the
-commercial keyword volume in this niche is thin. If revenue is needed sooner than
-authority can deliver, that is a paid-acquisition or business-model question and
-belongs on a separate track. Content will not solve it on that timeline. Do not let
-this file imply otherwise.
+Monthly. The metric is tier-1 active users per day and referring domains
+earned. Not total sessions, not GSC position (15% of traffic), not
+AI-assistant volume.
 
 ---
 
 ## Keyword research on file
 
-`keyword-exports/Keyword Stats 2026-08-13 at 00_05_13.csv` (seed: "youtube video
-ideas", 2,232 rows, UTF-16 tab-delimited).
+`keyword-exports/Keyword Stats 2026-08-13 at 00_05_13.csv` (seed: "youtube
+video ideas", 2,232 rows, UTF-16 tab-delimited), plus three 2026-08-14 exports
+for the sponsorship, equipment and automation seeds.
 
-- Only 86 keywords clear 500/mo. The niche-modified long tail sits at 50/mo each.
-- Channel-name intent is the biggest cluster at 48,700/mo across 268 keywords, but
-  **91% is generic head terms** (44,500/mo) already targeted by
-  `/tools/youtube-channel-name-generator` at position 64.5. SERP is vidIQ,
-  Renderforest, Wix, Squarespace. Authority-gated. Niche-modified slice is 4,200/mo.
-- Video-ideas niches surviving an intent check: gaming (2,850/mo), comedy (1,650),
-  cooking (1,550), tech (1,300), music (950).
-- **vlogs (8,250/mo) excluded**: `/blog/youtube-vlog-ideas` shipped 2026-08-08 and a
-  second page would cannibalize it.
-- **diy/crafts (4,200/mo) excluded**: watch intent, not creator intent. Its 500/mo
-  terms are "youtube diy crafts", "diy five minute crafts", "you tube arts and
-  crafts". Same failure mode logged in FOUNDATION.md for playlist, merch, live stream.
+- Only 86 keywords clear 500/mo. The niche-modified long tail sits at 50/mo.
+- Channel-name intent is the biggest cluster at 48,700/mo across 268 keywords,
+  but **91% is generic head terms** (44,500/mo) already targeted by
+  `/tools/youtube-channel-name-generator` at position 64.5. Authority-gated.
+- Video-ideas niches surviving an intent check: gaming (2,850/mo), comedy
+  (1,650), cooking (1,550), tech (1,300), music (950).
+- **vlogs (8,250/mo) excluded**: `/blog/youtube-vlog-ideas` shipped 2026-08-08
+  and a second page would cannibalize it.
+- **diy/crafts (4,200/mo) excluded**: watch intent, not creator intent.
 
----
-
-## Completed clusters (do not re-propose)
-
-**Video Ideas** (mapped 2026-07-28): pillar `youtube-video-ideas` (pre-existing),
-`youtube-shorts-ideas` and `youtube-challenge-ideas` (07-28), `youtube-vlog-ideas`
-(08-08). "Video Ideas For Beginners" merged into the pillar, same intent.
-
-**Starting a Channel** (mapped 2026-07-28): pillar `start-youtube-channel`, plus
-`youtube-channel-phone`, `youtube-brand-account`, `gaming-youtube-channel`.
+CSV encoding note: Keyword Planner exports are UTF-16, tab-delimited, with two
+header lines before the real header. Read with `open(f, encoding='utf-16')`,
+skip 2 lines, then `csv.DictReader(delimiter='\t')`.
 
 ---
 
-## Rules
+## Honest limits
 
-- Titles = exact validated keyword phrase, not final headline copy.
-- Only confirmed entries belong here: real Keyword Planner volume plus a passed
-  Google SERP check.
-- 3 confirmed is the floor for a sub-cluster; 5 is a first-round target.
-- Every spoke links back to its pillar and sibling spokes.
-- Every new public route ships with its prerender route, sitemap entry, and llms.txt
-  entry in the same commit. This has been missed three times.
+Authority takes months, not weeks, and `FOUNDATION.md` established that the
+commercial keyword volume in this niche is thin. If revenue is needed sooner
+than authority can deliver, that is a paid-acquisition or business-model
+question on a separate track. Content will not solve it on that timeline. Do
+not let this file imply otherwise.

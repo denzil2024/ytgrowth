@@ -2,6 +2,35 @@
 
 Read these rules before any code change. They are not suggestions.
 
+## START HERE — which files to open, and no others
+
+This repo has eleven markdown docs. Opening the wrong ones, or all of them, is
+a recurring and expensive waste. Route by the task:
+
+| Task | Read | Do NOT open |
+|---|---|---|
+| **Any content or blog work** | `CONTENT-PLAN.md` (all of it), then `research/<slug>.md` if an article is in flight | Everything else, unless CONTENT-PLAN sends you there for a named reason |
+| **Keyword research round** | `CONTENT-PLAN.md` Part 2, then `FOUNDATION.md` for the workflow and the dropped log | |
+| **Anything touching YouTube API data** | The quota section below, in full | |
+| **Pricing or checkout** | `PRICING-OVERHAUL.md` | |
+| **Pinterest** | `PINTEREST.md` | |
+
+`SEO-OPTIMIZATION-CHECKLIST.md` is a stub. It was folded into
+`CONTENT-PLAN.md` Part 3 on 2026-08-14. `HANDOVER.md` is a historical mistake
+log, not instructions: read it only when asked why something is the way it is.
+
+**Three defaults that exist to stop wasted turns:**
+
+1. **Do not ask which path to take.** Pick the one the routed file implies,
+   say so in one line, and proceed. Content work has exactly two blocking
+   gates: approval of the research file and outline, and the go-ahead to push.
+2. **Do not present partial work.** Run the complete standard, verify it, then
+   present once with the numbers. Every partial present costs a full review
+   round, and one article cost six of them on 2026-08-14.
+3. **Do not re-derive what is already written down.** The voice reference, the
+   data floor, and the queue are all stated in `CONTENT-PLAN.md`. Measuring
+   them again from the posts is rework.
+
 ## Quota discipline (hard rule)
 
 This product runs on YouTube Data API v3 with **260,000 units per day** (quota increase granted by Google, confirmed by the user 2026-07-17; previously 10,000). CRITICAL NUANCE discovered 2026-07-17: the project also carries a separate **"Search Queries per day" sub-limit of 100 requests** that Google did NOT raise with the bump, so search.list is effectively capped at ~100 calls/day (the old 10K-units-worth) regardless of the 260K total. Batch endpoints (videos/channels/playlistItems.list) have the full 260K headroom. The user has been pointed at the self-serve quota edit for the search sub-limit; until it is raised, plan search.list work against a 100/day budget. Every search.list call costs **100 units**. Every videos.list / channels.list / playlistItems.list call costs 1 unit. Burning the daily quota locks out every user from login and every feature until midnight Pacific reset.

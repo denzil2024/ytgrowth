@@ -91,6 +91,322 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'comedy-video-ideas',
+    title: 'Comedy Video Ideas: 42 for People Who Are Not Naturally Funny',
+    excerpt: 'Comedy is one of the few YouTube niches where search demand barely exists, so the premise has to win the click before anyone has laughed. 42 ideas grouped by the six mechanisms behind every comedy premise, plus real upload data on what comedy channels publish and the copyright and prank-policy traps that end them.',
+    date: '2026-08-14',
+    category: CATEGORIES.strategy,
+    cover: '/blog/comedy-video-ideas-cover.jpg',
+    coverAlt: 'A creator sitting in a warmly lit home living room laughing at a flubbed take, with a phone on a tripod filming him and a ring light at the edge of the frame',
+    author: 'Denzil',
+    readTime: '15 min read',
+    faqs: [
+      { q: 'What kind of comedy videos get the most views on YouTube?', a: 'Skits and parodies have the higher ceiling, being rewatchable and shareable, and they are the slowest to get good at. Observational and Shorts-native formats go further per hour of work, because the premise reads from the thumbnail alone and the feed distributes them without an existing subscriber base.' },
+      { q: 'How long should a comedy video be?', a: 'Our upload data puts the typical comedy video at 9.0 minutes, seventh of the fourteen niches we track. That figure sits just above the 8-minute mid-roll threshold, which is worth knowing, but stretching a five-minute premise to nine minutes to reach it will cost you more in retention than the extra ad break returns. Let the joke set the runtime.' },
+      { q: 'Do I need a team to make comedy videos?', a: 'Not for most of the formats on this list. Observational comedy, commentary, and Shorts-native pieces are single-person formats by design. Skits and parodies are where a second person starts to matter, and that is the point where collaboration with another small channel makes more sense than hiring anyone, because you get performance help and audience access from the same arrangement.' },
+      { q: 'Can I get a copyright strike for a parody?', a: 'Yes. Parody can qualify as fair use in the United States, but fair use is a legal defense rather than an automatic permission, and it is decided case by case after a dispute has already started. The more common problem is Content ID, which is an automated matching system that does not assess fair use at all. Music is the usual trigger, so parodying a format while writing original audio is far safer than parodying a song.' },
+      { q: 'How often should a comedy channel upload?', a: 'One to two long-form videos a week. Scripted comedy takes longer to make well than most niches, so a pace you can hold for a year beats one that collapses after a month, and comedy channels that stall almost always did it by promising a schedule the format could not support.' },
+      { q: 'Are Shorts worth it for a comedy channel?', a: 'More than for most niches. Comedy channels in our data put 26.7% of their uploads into Shorts, well above gaming at 19.1%, and the format suits comedy structurally because a punchline does not need a runway. The risk is the same one every niche faces, which is that Shorts viewers convert to long-form subscribers at a lower rate, so treat it as reach rather than as a substitute for the main channel.' },
+      { q: 'How much do comedy channels earn from ads?', a: 'Less than most niches. Advertisers pay most where a viewer is close to a purchase, and a viewer watching a sketch is not. Sponsorship and merchandise outrun ad revenue on comedy channels earlier than on most other kinds of channel.' },
+      { q: 'How do I find comedy ideas when I am not naturally funny?', a: 'Stop trying to be funny and start being specific. The observational formats on this list work because the recognition does the laughing, so the job is noticing a behavior precisely rather than inventing a joke about it. Write down the moments that made you exhale through your nose during the week, and the ones you can describe in a single sentence are the videos.' },
+      { q: 'Do prank videos still work on YouTube in 2026?', a: 'Consensual and clearly harmless pranks work. Anything involving distress, deception of people who have not agreed to be filmed, or apparent danger sits directly against YouTube harmful and dangerous acts policy, and that policy carries strikes rather than demonetization. It is one of the few areas of comedy where a single upload can end a channel, so the format is a poor bet for anyone building something they want to keep.' },
+      { q: 'What comedy content works best for a brand new channel?', a: 'Short, self-contained, and instantly legible. A viewer scrolling past has no reason to trust you, so the premise has to be clear from the thumbnail and the first three seconds without any setup. Observational pieces and Shorts do this naturally, which is why they belong at the start of a channel and why elaborate multi-character skits belong later, once people already know who you are.' },
+    ],
+    content: () => (
+      <>
+        <p>Every comedy premise that works does it through one of six mechanisms: a shared experience, an inversion, a compression, a borrowed format, yourself as the target, or an imposed constraint. <strong>Each one gives a stranger a reason to understand the joke before you have told it</strong>, which is the only thing that matters in a niche with no search demand behind it.</p>
+
+        <p>In tech or fitness a video can succeed because somebody went looking for it. Every comedy view arrives instead through the home feed, the suggested column, or the Shorts scroll, so the premise and the thumbnail carry the whole load before anyone has laughed at anything. A premise that needs explaining has already lost. The 42 ideas below are grouped by mechanism for that reason, and each one names the format it suits and what makes it hard to execute.</p>
+
+        <h2>What Comedy Channels Really Publish</h2>
+
+        <p>We track upload data across established YouTube channels. Everything below comes from <strong>699 long-form comedy videos published since January 2025</strong>, measured directly rather than gathered from other people's articles.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What we measured</th>
+              <th>Comedy</th>
+              <th>How that compares</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Typical video length (median)</strong></td><td>9.0 min</td><td>7th of 14 niches</td></tr>
+            <tr><td><strong>Average video length (mean)</strong></td><td>19.5 min</td><td>2.17x its own median</td></tr>
+            <tr><td><strong>Shorts share of uploads</strong></td><td>26.7%</td><td>Well above gaming at 19.1%</td></tr>
+            <tr><td><strong>Mid-roll threshold</strong></td><td>Median clears 8 min</td><td>One of the niches that just crosses</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>The gap between the median and the mean is the first thing worth noticing.</strong> At 2.17x, comedy carries enough long-format uploads to badly distort its own average. Podcast episodes and compilation reels sit inside that number, so any advice built on a 19.5-minute average is describing a format most comedy channels do not publish.</p>
+
+        <p>Comedy leans on Shorts harder than most niches. At 26.7% of uploads it runs well ahead of gaming, which makes structural sense, because a punchline does not need a runway the way a tutorial or a review does. Whether that reach converts into long-form viewers is a separate question, and our <a href="/blog/shorts-vs-long-form">Shorts versus long-form breakdown</a> covers where it does and does not.</p>
+
+        <p>The 9.0-minute median sits just over the mid-roll line, which puts comedy in an awkward spot. Clearing 8 minutes unlocks mid-roll ads, and comedy is one of the few niches whose typical upload barely does. That creates a real temptation to pad, and padding a comedy video is the fastest way to lose the audience you spent the premise earning.</p>
+
+        <h2>Why Comedy Ideas Fail Differently From Other Niches</h2>
+
+        <p>In most niches a weak idea still gets a floor of traffic because somebody searched for the topic. Comedy has no floor. A video that nobody clicks gets shown to nobody else, and the whole thing ends within a day of publishing.</p>
+
+        <p>The second failure is the premise that needs explaining. If a viewer has to read a description or watch a setup to understand why something is funny, the video has already lost the scroll. The strongest comedy concepts are legible from the thumbnail, which is why so many of them are a familiar situation stated plainly.</p>
+
+        <p>The third is effort spent in the wrong place. New comedy channels routinely put a weekend into a multi-character sketch and none into the premise or the title, which is backwards, because the premise decides whether the sketch is ever seen.</p>
+
+        <p>Every idea further down names the format it suits best. Here is what each of those costs to make, so the recommendation means something concrete when you reach it.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Effort</th>
+              <th>What it needs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Short</strong></td><td>Lowest</td><td>A phone and one idea. No cast, often no dialogue.</td></tr>
+            <tr><td><strong>Commentary</strong></td><td>Low</td><td>A position worth hearing and a clear microphone.</td></tr>
+            <tr><td><strong>Bloopers</strong></td><td>Low</td><td>Footage you already shot, plus a frame to hang it on.</td></tr>
+            <tr><td><strong>Voiceover</strong></td><td>Low</td><td>Existing footage and a written narration pass.</td></tr>
+            <tr><td><strong>Collaboration</strong></td><td>Medium</td><td>A partner at a similar size and a format that sends both ways.</td></tr>
+            <tr><td><strong>Skit</strong></td><td>Highest</td><td>Writing, performance, and an edit tight enough to carry timing.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>The Six Mechanisms Behind Every Comedy Premise</h2>
+
+        <p>Every idea below is grouped by the mechanism that makes it legible rather than by the format it happens to be shot in. That is a deliberate departure from how comedy idea lists are normally organized, and it is the more useful cut, because a format tells you what to point a camera at while a mechanism tells you how to invent the next one yourself.</p>
+
+        <p>There are six of them. Once you know which mechanism works on your particular audience, you can generate premises indefinitely without waiting to feel funny, which is the part most creators find impossible to schedule.</p>
+
+        <p>The upload figures above are measured. The six mechanisms are not. No dataset classifies comedy videos this way, ours included, so these are a working framework drawn from what successful comedy premises have in common rather than a ranking anybody has tested.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Mechanism</th>
+              <th>What the viewer recognizes</th>
+              <th>The hard part</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Shared experience</strong></td><td>That has happened to me</td><td>Noticing precisely enough to be specific</td></tr>
+            <tr><td><strong>Inversion</strong></td><td>I have only seen this from the other side</td><td>Finding a viewpoint nobody films</td></tr>
+            <tr><td><strong>Compression</strong></td><td>The gap between the two is the joke</td><td>Cutting hard enough for the gap to show</td></tr>
+            <tr><td><strong>Borrowed format</strong></td><td>I know this genre, so I know what is coming</td><td>Hitting the genre's beats exactly</td></tr>
+            <tr><td><strong>Self as target</strong></td><td>Nobody is being laughed at except him</td><td>Being honest rather than falsely modest</td></tr>
+            <tr><td><strong>Imposed constraint</strong></td><td>The rule is doing the work</td><td>Picking a rule that can actually break</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Shared Experience: Start Here If You Are Starting Anywhere</h2>
+
+        <p>This is the cheapest mechanism to shoot and the one new channels skip most often, because it does not feel like enough work. The comedy comes from precision rather than invention, so the writing task is noticing a behavior exactly rather than building a joke on top of it.</p>
+
+        <p>The test is whether the title alone produces recognition. If a viewer has to watch thirty seconds to understand why the premise is funny, the mechanism has failed and no amount of performance will rescue it.</p>
+
+        <ul>
+          <li><strong>1. "Every Group Chat at 2am"</strong><br />The friend who replies to six messages at once, the one who only sends voice notes, the one reacting to something from four hours ago. Everyone has a group chat and everyone knows its cast, so the premise needs no setup whatsoever. Skit.</li>
+          <li><strong>2. "The Person Who Says They Are Five Minutes Away"</strong><br />A lie so universal that stating it is already most of the joke. The comedy lives in the specifics, the shoes not on and the car not started, and the viewer supplies the rest from memory. Short.</li>
+          <li><strong>3. "Every Group Project, Compressed"</strong><br />The one who did nothing and presented, the one who rewrote it all the night before. School and work both hand you this, which doubles the audience without changing a line of the premise. Skit.</li>
+          <li><strong>4. "The Unwritten Rules of the Office Kitchen"</strong><br />The passive-aggressive note on the fridge, the mug that visibly belongs to somebody. Office comedy travels well because the details are near identical across every workplace anyone has sat in. Skit.</li>
+          <li><strong>5. "Types of People in Every Checkout Line"</strong><br />The full cart in the express lane, the person who begins packing only after hearing the total. A ranked-types format gives viewers something to argue with in the comments, which is worth more than the laugh. Skit.</li>
+          <li><strong>6. "The Gym on January 2nd"</strong><br />A crowd that has completely vanished by February, and most people watching know they were part of it once. Seasonal premises republish themselves, so the video keeps earning every January. Skit.</li>
+          <li><strong>7. "Airport Behavior, Ranked"</strong><br />Standing the instant the seatbelt sign goes off, clapping on landing, the boarding-group scrum. Air travel is a shared ordeal, and ranking the offenders turns recognition into a debate. Commentary.</li>
+        </ul>
+
+        <h2>Inversion: Show the Side Nobody Films</h2>
+
+        <p>Inversion takes a situation the audience only knows from one angle and shoots it from the other. The recognition is already there, so you spend nothing establishing it, and the novelty comes free from the change of position rather than from anything you had to write.</p>
+
+        <p>It also solves the hardest problem in comedy, which is having a target. Pointing at a familiar viewpoint instead of at a group of people keeps the piece sharp without making anyone the butt of it.</p>
+
+        <ul>
+          <li><strong>8. "What Customer Service Sounds Like From the Other Side"</strong><br />Anyone who has worked a service job has the script memorized and has never once seen it played back at them. The recognition is total for that audience and quietly voyeuristic for everyone else. Skit.</li>
+          <li><strong>9. "A Nature Documentary About My Roommate"</strong><br />Domestic habits narrated as animal behavior, in the exact register of a wildlife documentary. The genre does all the structural work, so the writing is accurate observation with a straight delivery over the top. Voiceover.</li>
+          <li><strong>10. "Motivational Speaker, But About Doing Nothing"</strong><br />A format people are thoroughly exhausted by, played completely straight in service of the opposite message. The energy of the delivery running against the content of it is the whole joke. Skit.</li>
+          <li><strong>11. "Me Explaining My Job to My Parents"</strong><br />Anyone whose work did not exist thirty years ago knows this conversation and has lost it repeatedly. A two-hander if you have someone, a one-sided phone call if you do not. Skit.</li>
+          <li><strong>12. "The Villain's Side of Every Argument I Lost"</strong><br />The reply you thought of three hours later, delivered with the total confidence of having had it at the time. Casting yourself as the antagonist keeps it from reading as a grudge. Commentary.</li>
+          <li><strong>13. "Reviewing My Excuses as if They Were Films"</strong><br />Critic vocabulary aimed at something completely trivial, scored out of five stars and all. The mismatch between register and subject is reliable and costs nothing to produce. Commentary.</li>
+          <li><strong>14. "Teaching Someone Who Is Not Funny to Do My Job"</strong><br />Genuine confusion carries the comedy, so your partner does not have to perform or prepare anything. That makes it the easiest collaboration on this list to actually organize. Collaboration.</li>
+        </ul>
+
+        <h2>Compression: Let the Gap Do the Work</h2>
+
+        <p>Compression puts two states side by side and lets the distance between them be the joke. Its structural advantage is that the whole shape is visible in the thumbnail, so the payoff arrives before anyone has decided whether to keep watching.</p>
+
+        <p>It is also the mechanism that fits Shorts most naturally, which matters given that comedy channels put 26.7% of their uploads there. A contrast needs no setup, no cast, and frequently no dialogue at all.</p>
+
+        <ul>
+          <li><strong>15. "Me at 9am Versus Me at 9pm"</strong><br />The daily collapse in energy, shown rather than described. A split screen or a single hard cut carries it, no dialogue required, which is exactly why it works as a Short. Short.</li>
+          <li><strong>16. "Things I Say Versus Things I Mean"</strong><br />The gap between the polite sentence and the internal one. Endlessly extensible, so a single format turns into a recurring series the moment one of them connects. Short.</li>
+          <li><strong>17. "An Hour of Filming, Cut to Ninety Seconds"</strong><br />How much work vanishes in the edit, which viewers find genuinely interesting as well as funny. It uses footage you already shot and would otherwise have deleted. Bloopers.</li>
+          <li><strong>18. "How Long Things Take, Versus How Long We Claim"</strong><br />Every estimate anyone has ever given about a task they had not started. A list structure keeps the pace fast and lets you cut anything that is not working. Commentary.</li>
+          <li><strong>19. "Explaining My Week in Ten Seconds"</strong><br />A whole week reduced to the one thing that really happened in it. The constraint is the format, and the shorter the summary the funnier the omissions become. Short.</li>
+          <li><strong>20. "The Five Stages of Assembling Furniture"</strong><br />A stated number promises the viewer a guaranteed ending, which measurably helps retention. Pick a process everyone has suffered through and name the stages precisely. Skit.</li>
+          <li><strong>21. "My Whole Year of Uploads in Sixty Seconds"</strong><br />Visible change nobody noticed while it was happening, including you. It doubles as a channel-anniversary video and gives returning viewers a reason to send it to someone. Short.</li>
+        </ul>
+
+        <CtaCard
+          to="/tools/youtube-video-ideas-generator"
+          title="Turn a mechanism into premises for your own audience"
+          sub="Enter a topic and get idea formats built for creators starting from zero, free and with no signup."
+        />
+
+        <h2>Borrowed Format: Let a Genre Do Your Setup</h2>
+
+        <p>Borrowing a format hands you pacing, structure and audience expectation for free. Viewers know how a nature documentary or an infomercial behaves, so the moment your subject fails to match it, the mismatch produces the comedy without a single written line.</p>
+
+        <p>Stay on genre conventions rather than specific works. Copying how adverts sound carries no legal exposure at all, while copying a particular song puts you straight in front of Content ID, which the copyright section below covers properly.</p>
+
+        <ul>
+          <li><strong>22. "Every Perfume Ad Ever Made"</strong><br />Slow motion, a whispered voiceover, and no information of any kind. The genre is so rigid that simply hitting its beats accurately is the joke, with nothing added. Skit.</li>
+          <li><strong>23. "Local News, But It Is My Neighborhood"</strong><br />Grave broadcast delivery applied to something that does not matter at all. Local news has an instantly recognizable grammar and almost nobody parodies it. Skit.</li>
+          <li><strong>24. "Infomercial for Something Nobody Needs"</strong><br />A manufactured problem, an implausible solution, and escalating urgency throughout. The format hands you a three-act structure before you have written a single line. Skit.</li>
+          <li><strong>25. "Reality TV Confessional, About My Own Week"</strong><br />The talking-head cutaway everyone knows, aimed at events with no stakes at all. Cheap to shoot, and it can be dropped into other videos as a recurring device. Skit.</li>
+          <li><strong>26. "Sports Commentary Over Something Dull"</strong><br />High-stakes narration over low-stakes footage, the oldest version of this mechanism and still effective. Existing footage plus one written commentary pass. Voiceover.</li>
+          <li><strong>27. "Every Cooking Show Host, Ranked by Intensity"</strong><br />A spectrum viewers will argue about, built on personalities they already hold opinions about. Ranking formats generate comments even when the jokes are only average. Commentary.</li>
+          <li><strong>28. "If [Popular Show] Was Filmed in My House"</strong><br />Prestige production values against a real kitchen and no budget. The gap between what the genre promises and what you can afford is the entire premise. Skit.</li>
+        </ul>
+
+        <h2>Self as Target: The Safest Comedy You Can Make</h2>
+
+        <p>Pointing the joke at yourself removes every risk the other mechanisms carry and buys something a new channel badly needs, which is a reason for people to like the person on screen rather than only the premise. Nobody is offended, nothing is claimed, and no participant has to consent to anything.</p>
+
+        <p>Recognition brings a viewer in once. A person they enjoy is what brings them back, and self-directed comedy is the shortest route from the first to the second.</p>
+
+        <ul>
+          <li><strong>29. "Correcting My Own Video From Two Years Ago"</strong><br />Visible progress, admitted openly, which viewers find disarming rather than embarrassing. It also gives an older video a second life and a natural link back into it. Commentary.</li>
+          <li><strong>30. "Reading My Own Old Posts Out Loud"</strong><br />Everyone's archive is mortifying and almost nobody publishes theirs. Complete honesty is what makes it work, so pick the genuinely bad ones instead of the safe ones. Commentary.</li>
+          <li><strong>31. "Everything That Went Wrong Making This Channel"</strong><br />An origin story where the failures are the appeal rather than something to bury. It uses footage you already have and tells new viewers who you are in one video. Bloopers.</li>
+          <li><strong>32. "Trying to Say One Sentence Correctly"</strong><br />One repeated failure is funnier than a montage of different ones, because the audience starts anticipating it. A single take, no writing, no cast, no location. Bloopers.</li>
+          <li><strong>33. "How I Sound Ordering Food in Another Language"</strong><br />Anyone who has traveled and guessed at a menu recognizes this immediately. It is self-directed, so nobody's accent is being mocked except your own. Short.</li>
+          <li><strong>34. "Rating My Own Excuses Out of Ten"</strong><br />Scoring yourself honestly in public, with the scores getting harsher as it goes along. The format gives the piece a shape and a clear ending. Commentary.</li>
+          <li><strong>35. "Everything Wrong With How I Pack a Suitcase"</strong><br />A private ritual nobody has ever had to defend out loud. Domestic and highly specific, which is precisely where the recognition comes from. Skit.</li>
+        </ul>
+
+        <h2>Imposed Constraint: Make a Rule Do the Writing</h2>
+
+        <p>A constraint produces comedy from pressure rather than from a script, which is why it still works on days when nothing funny occurs to you. The rule is stated in the title, the audience watches to see whether it holds, and the failure is the payoff.</p>
+
+        <p>Most constraint formats also happen to be collaborations, and collaboration is the only thing on this list that grows an audience directly instead of waiting for the algorithm to decide. At a small size the right partner is another small channel, since audience overlap matters far more than follower count.</p>
+
+        <ul>
+          <li><strong>36. "One Sentence, Six Different Deliveries"</strong><br />Range demonstrated in under thirty seconds with no premise to establish first. It doubles as a showreel for anyone deciding whether to collaborate with you. Short.</li>
+          <li><strong>37. "Two Creators, One Prompt, No Rehearsal"</strong><br />Visible panic in real time, which is the point rather than a flaw in the execution. Neither of you writes anything, so the barrier to arranging it is close to zero. Collaboration.</li>
+          <li><strong>38. "Whoever Laughs First Loses"</strong><br />A rule that requires no writing from either side and produces its own ending. The oldest constraint format there is, and it still performs reliably. Collaboration.</li>
+          <li><strong>39. "Following the Worst Advice Online for a Week"</strong><br />A self-inflicted narrative with a guaranteed conclusion, which is what holds people to the end. Pick advice from your own niche so the video also says something real. Commentary.</li>
+          <li><strong>40. "I Let Another Creator Write My Script"</strong><br />Cross-promotion built into the premise instead of bolted onto the end. Both audiences have an actual reason to watch both halves rather than a request to. Collaboration.</li>
+          <li><strong>41. "Finishing Each Other's Abandoned Videos"</strong><br />Two archives of half-made failures, finally put to some use. Every creator has that folder, which makes the premise legible to other creators instantly. Collaboration.</li>
+          <li><strong>42. "Same Brief, Two Completely Different Videos"</strong><br />A split release where each half drives traffic into the other. The comparison is the format, so neither video has to win for it to work. Collaboration.</li>
+        </ul>
+
+        <p><strong>Notice how few of the 42 depend on being naturally funny.</strong> Almost all of them ask you to notice something precisely, invert a viewpoint, or hold a rule, and those are repeatable skills rather than talents. That is the whole argument of this piece, and the sections below cover the two ways comedy channels lose everything they build with them.</p>
+
+        <h2>The Parody Copyright Problem</h2>
+
+        <p>Fair use is a defense, not a permission. Parody can qualify as fair use in the United States, but that is something decided after a dispute has begun, and the burden of arguing it sits with you. Treating it as a license to use anything is how comedy channels lose videos they spent weeks on.</p>
+
+        <p>Content ID is the more immediate problem. It is an automated matching system, it does not evaluate fair use, and it will flag a recognisable track inside a parody within minutes of upload. The practical rule is to parody a format and write your own audio, since <a href="/blog/copyright-free-music">music is what triggers a claim</a> far more often than visuals.</p>
+
+        <p>A claim and a strike are different things, and knowing which one you have received determines whether disputing it is worth the risk:</p>
+
+        <ul>
+          <li><strong>Content ID claim.</strong> Automated. The video stays up, the revenue redirects to the rights holder, and your channel standing is untouched.</li>
+          <li><strong>Copyright strike.</strong> A formal legal complaint from a human. It expires after 90 days, and three live at once close the channel permanently.</li>
+          <li><strong>Disputing a claim</strong> is low risk and often works when the use is genuinely transformative. Disputing a strike escalates a legal matter, so it is a decision to make carefully rather than reflexively.</li>
+        </ul>
+
+        <h2>Prank Content and the Policy Line</h2>
+
+        <p><strong>Pranks are the one comedy format that can end a channel in a single upload.</strong> YouTube harmful and dangerous acts policy covers pranks that cause real distress, that make participants believe they are in physical danger, and that involve people who have not consented to being filmed. Those carry strikes rather than demonetization.</p>
+
+        <p>The line is consent and apparent danger rather than your intent. A prank you know to be harmless still breaches policy if the person on camera reasonably believes otherwise in the moment. In practice the policy separates them like this:</p>
+
+        <ul>
+          <li><strong>Generally fine.</strong> Everyone on camera is in on it, or the target is you, and the comedy comes from the setup.</li>
+          <li><strong>Risky.</strong> Filming strangers who have not agreed, even when nothing harmful happens.</li>
+          <li><strong>Strike territory.</strong> Anything that makes a participant believe they are in physical danger, or that causes genuine distress to a child.</li>
+        </ul>
+
+        <p>Given that comedy already sits at the low end of the platform for <a href="/blog/youtube-rpm">ad rates</a>, building on a format with termination risk attached is a poor trade. There is enough material in the 42 ideas above to never need it.</p>
+
+        <h2>Titles and Thumbnails When the Joke Is the Product</h2>
+
+        <p>A comedy title has a job no other niche's title has, which is to be funny without spending the joke. It needs to signal the premise and stop short of the payoff, because a title that delivers the punchline removes the reason to click.</p>
+
+        <p>Faces work harder here than anywhere else. An expression communicates a genre in a way that text cannot, and comedy is the one category where an exaggerated reaction shot reads as accurate rather than as clickbait. Our guide to <a href="/blog/youtube-thumbnail-ideas">thumbnail ideas that earn clicks</a> covers the composition side.</p>
+
+        <p>Keep the premise in the first four words of the title. Feed placements truncate aggressively on mobile, and a concept that only becomes clear at word nine has already failed for most of the people who saw it. The same discipline applies to <a href="/blog/youtube-title">writing titles generally</a>, but comedy punishes the failure faster.</p>
+
+        <h2>Shooting Comedy Without a Crew</h2>
+
+        <p>Audio outranks video in comedy by a wide margin, because timing is carried by sound and a muddy recording flattens every joke's delivery. A cheap dedicated microphone changes more than a camera upgrade does, and <a href="/blog/best-youtube-mic">the microphone comparison</a> covers what is worth spending.</p>
+
+        <p>Edit pace is the second lever and it is free. Comedy tolerates far tighter cutting than any other niche, so removing every breath and pause between lines will usually improve a sketch more than another take would. Cut until it feels slightly too fast, then stop.</p>
+
+        <p>Shoot in one location with one light source before adding anything. Consistency across uploads matters more than production value on any single one, and a recognisable setup becomes part of the channel's identity while you are still learning to write.</p>
+
+        <p><strong>In rough order of what improves a comedy video most per dollar spent:</strong></p>
+
+        <ul>
+          <li><strong>A dedicated microphone.</strong> Timing lives in the audio, and muddy sound flattens every delivery.</li>
+          <li><strong>Tighter editing.</strong> Free, and it does more than any hardware. Cut every pause until it feels marginally too fast.</li>
+          <li><strong>One consistent light.</strong> A window works. Consistency across uploads beats quality on any single one.</li>
+          <li><strong>A tripod.</strong> Handheld reads as unfinished in scripted comedy, though it suits bloopers fine.</li>
+          <li><strong>The camera.</strong> Last. A modern phone has not been the limiting factor on a comedy channel for years.</li>
+        </ul>
+
+        <h2>Which of These Clear the Mid-Roll Line</h2>
+
+        <p>Mid-roll ads require 8 minutes, and comedy's typical upload at 9.0 minutes only just makes it. That has a real consequence for format selection, since Shorts, observational lists, and quick commentary all naturally come in well under the threshold.</p>
+
+        <p>The answer is not to inflate them. Padding a four-minute premise to eight costs retention across the whole video, and retention drives distribution, which is worth more than one extra ad break. The formats that reach the line honestly are skits with multiple scenes, commentary pieces, and collaborations, and those are where longer runtimes belong.</p>
+
+        <p>A workable structure is to build the channel on short formats for reach and let a smaller number of longer pieces carry monetization. Our <a href="/blog/video-length-by-niche">length data across all fourteen niches</a> shows where each one falls against the same threshold.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What kind of comedy videos get the most views on YouTube?</h3>
+        <p>Skits and parodies have the higher ceiling, being rewatchable and shareable, and they are the slowest to get good at. Observational and Shorts-native formats go further per hour of work, because the premise reads from the thumbnail alone and the feed distributes them without an existing subscriber base.</p>
+
+        <h3>How long should a comedy video be?</h3>
+        <p>Our upload data puts <strong>the typical comedy video at 9.0 minutes</strong>, seventh of the fourteen niches we track. That figure sits just above the 8-minute mid-roll threshold, which is worth knowing, but stretching a five-minute premise to nine minutes to reach it will cost you more in retention than the extra ad break returns. Let the joke set the runtime.</p>
+
+        <h3>Do I need a team to make comedy videos?</h3>
+        <p>Not for most of the formats on this list. Observational comedy, commentary, and Shorts-native pieces are single-person formats by design. Skits and parodies are where a second person starts to matter, and that is the point where collaboration with another small channel makes more sense than hiring anyone, because you get performance help and audience access from the same arrangement.</p>
+
+        <h3>Can I get a copyright strike for a parody?</h3>
+        <p>Yes. Parody can qualify as fair use in the United States, but <strong>fair use is a legal defense rather than an automatic permission</strong>, and it is decided case by case after a dispute has already started. The more common problem is Content ID, which is an automated matching system that does not assess fair use at all. Music is the usual trigger, so parodying a format while writing original audio is far safer than parodying a song.</p>
+
+        <h3>How often should a comedy channel upload?</h3>
+        <p>One to two long-form videos a week. Scripted comedy takes longer to make well than most niches, so a pace you can hold for a year beats one that collapses after a month, and comedy channels that stall almost always did it by promising a schedule the format could not support.</p>
+
+        <h3>Are Shorts worth it for a comedy channel?</h3>
+        <p>More than for most niches. Comedy channels in our data put <strong>26.7% of their uploads into Shorts</strong>, well above gaming at 19.1%, and the format suits comedy structurally because a punchline does not need a runway. The risk is the same one every niche faces, which is that Shorts viewers convert to long-form subscribers at a lower rate, so treat it as reach rather than as a substitute for the main channel.</p>
+
+        <h3>How much do comedy channels earn from ads?</h3>
+        <p>Less than most niches. Advertisers pay most where a viewer is close to a purchase, and a viewer watching a sketch is not. Sponsorship and merchandise outrun ad revenue on comedy channels earlier than on most other kinds of channel.</p>
+
+        <h3>How do I find comedy ideas when I am not naturally funny?</h3>
+        <p>Stop trying to be funny and start being specific. The observational formats on this list work because the recognition does the laughing, so the job is noticing a behavior precisely rather than inventing a joke about it. Write down the moments that made you exhale through your nose during the week, and the ones you can describe in a single sentence are the videos.</p>
+
+        <h3>Do prank videos still work on YouTube in 2026?</h3>
+        <p>Consensual and clearly harmless pranks work. Anything involving distress, deception of people who have not agreed to be filmed, or apparent danger sits directly against YouTube harmful and dangerous acts policy, and that policy carries strikes rather than demonetization. It is one of the few areas of comedy where a single upload can end a channel, so the format is a poor bet for anyone building something they want to keep.</p>
+
+        <h3>What comedy content works best for a brand new channel?</h3>
+        <p>Short, self-contained, and instantly legible. A viewer scrolling past has no reason to trust you, so the premise has to be clear from the thumbnail and the first three seconds without any setup. Observational pieces and Shorts do this naturally, which is why they belong at the start of a channel and why elaborate multi-character skits belong later, once people already know who you are.</p>
+
+        <h2>Recognition Beats Invention</h2>
+
+        <p><strong>Every idea on this list works for the same reason</strong>, which is that the audience already knows the situation before you say a word about it. The group chat at 2am, the office kitchen, the furniture instructions, the perfume ad: none of those need explaining, and the comedy comes from how precisely you render something people have already lived.</p>
+
+        <p>That is a more reachable skill than being naturally funny, and it is the one that separates comedy channels that grow from ones that stall. Inventing a joke is hard and inconsistent, while noticing something accurately is a habit you can practise on a bus with no camera anywhere near you.</p>
+
+        <p>So start with shared experience and compression, which are the cheapest to shoot and the fastest to read. Publish enough of them to learn which recognitions connect with the audience you actually have, then spend the weekend on a skit once you know what it should be about. <strong>The premise does the work, and everything else is production.</strong></p>
+      </>
+    ),
+  },
+  {
     slug: 'gaming-video-ideas',
     title: 'YouTube Gaming Video Ideas: 18 That Do Not Need a Big Channel',
     excerpt: 'Gaming is the most crowded category on YouTube, so the idea has to work harder here than anywhere else. 18 video ideas you can film this week, each with a title to adapt and the reason it works for a channel with no audience yet, plus real upload data on what gaming channels genuinely publish.',
@@ -15501,6 +15817,12 @@ export function getRelatedPosts(currentSlug, max = 3) {
 }
 
 export function formatPostDate(isoDate) {
-  const d = new Date(isoDate)
+  // "2026-08-14" parses as UTC midnight, which then renders as the previous day
+  // in any timezone behind UTC (every US zone). Build it in local time instead
+  // so the displayed date always matches the date written in the post.
+  const parts = String(isoDate).split('-').map(Number)
+  const d = parts.length === 3 && parts.every(Number.isFinite)
+    ? new Date(parts[0], parts[1] - 1, parts[2])
+    : new Date(isoDate)
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }

@@ -2,6 +2,7 @@
 // and card excerpt. Keeps <title> <=60 and meta description <=155 for clean
 // SERP display without touching article copy. Consumed in BlogPost.jsx.
 export const BLOG_SEO = {
+  "comedy-video-ideas": { title: "42 Comedy Video Ideas for a Small Channel (2026)", description: "42 comedy video ideas grouped by the six mechanisms behind every comedy premise, with real upload data on what comedy channels publish." },
   "gaming-video-ideas": { title: "18 Gaming Video Ideas for a Small Channel (2026)", description: "18 gaming video ideas grouped by format, each with the reason it works for a channel nobody knows yet, from search-driven guides to beginner content." },
   "video-length-by-niche": { title: "Ideal YouTube Video Length 2026: Real Data by Niche", description: "We measured 30,360 uploads across 14 niches since Jan 2025. Median length per niche, why averages are inflated by livestreams, and the 8-min ad line." },
   "youtube-demonetization": { title: "YouTube Demonetization 2026: Which Problem You Have & the Fix", description: "The five problems creators call \"demonetized\", how to tell which hit your channel, every appeal deadline, and what YouTube's July 2026 update changed." },

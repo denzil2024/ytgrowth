@@ -13,6 +13,7 @@ export const CATEGORIES = {
 }
 
 export const postsMeta = [
+  { slug: 'comedy-video-ideas', title: 'Comedy Video Ideas: 42 for People Who Are Not Naturally Funny', excerpt: 'Comedy is one of the few YouTube niches where search demand barely exists, so the premise has to win the click before anyone has laughed. 42 ideas grouped by the six mechanisms behind every comedy premise, plus real upload data on what comedy channels publish and the copyright and prank-policy traps that end them.', date: '2026-08-14', category: CATEGORIES.strategy, cover: '/blog/comedy-video-ideas-cover.jpg', author: 'Denzil', readTime: '15 min read' },
   { slug: 'gaming-video-ideas', title: 'YouTube Gaming Video Ideas: 18 That Do Not Need a Big Channel', excerpt: 'Gaming is the most crowded category on YouTube, so the idea has to work harder here than anywhere else. 18 video ideas you can film this week, each with a title to adapt and the reason it works for a channel with no audience yet, plus real upload data on what gaming channels genuinely publish.', date: '2026-08-13', category: CATEGORIES.strategy, cover: '/blog/gaming-video-ideas-cover.jpg', author: 'Denzil', readTime: '11 min read' },
   { slug: 'video-length-by-niche', title: 'The Ideal YouTube Video Length in 2026: We Analyzed 30,360 Real Uploads by Niche', excerpt: 'The average gaming upload runs 73 minutes. The typical one runs 24.3. We pulled real duration data on 30,360 long-form videos published since January 2025 across 14 niches, and found that most published length advice quotes an average quietly inflated by livestreams and lecture recordings. Every niche\'s median and average side by side, which statistics mislead worst, and where the 8-minute mid-roll line falls for each.', date: '2026-08-13', category: CATEGORIES.analytics, cover: '/blog/video-length-by-niche-cover.jpg', author: 'Denzil', readTime: '11 min read' },
   { slug: 'youtube-vlog-ideas', title: 'YouTube Vlog Ideas: Every Format, From Phone-Only to Full Kit', excerpt: 'Most vlog idea lists never say which ideas need real gear and which work with the phone already in your pocket. That distinction decides whether you film today or wait. The full breakdown by effort level, the voiceover option for camera-shy creators, and an honest read on how often to post.', date: '2026-08-08', category: CATEGORIES.strategy, cover: '/blog/youtube-vlog-ideas-cover.jpg', author: 'Denzil', readTime: '14 min read' },
@@ -86,6 +87,12 @@ export function getRelatedPosts(currentSlug, max = 3) {
 }
 
 export function formatPostDate(isoDate) {
-  const d = new Date(isoDate)
+  // "2026-08-14" parses as UTC midnight, which then renders as the previous day
+  // in any timezone behind UTC (every US zone). Build it in local time instead
+  // so the displayed date always matches the date written in the post.
+  const parts = String(isoDate).split('-').map(Number)
+  const d = parts.length === 3 && parts.every(Number.isFinite)
+    ? new Date(parts[0], parts[1] - 1, parts[2])
+    : new Date(isoDate)
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 }
