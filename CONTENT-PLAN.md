@@ -107,6 +107,48 @@ pillar candidates first, real Keyword Planner volume, SERP check per keyword,
 
 ---
 
+## THE CONTENT CALENDAR (built 2026-08-14)
+
+Every confirmed article, in order. Nothing here is speculative: each line has
+real Keyword Planner volume and a passed SERP check, or is an upgrade to a page
+that already ranks. Work top to bottom. Add nothing that has not cleared
+`FOUNDATION.md`.
+
+| # | Article | Slug | Volume | Type | Status |
+|---|---|---|---|---|---|
+| 1 | Comedy video ideas | `comedy-video-ideas` | 1,650/mo | Cluster spoke | Validated 08-13, ready |
+| 2 | Cooking video ideas | `cooking-video-ideas` | 1,550/mo | Cluster spoke | Validated 08-13, ready |
+| 3 | Tech video ideas | `tech-video-ideas` | 1,300/mo | Cluster spoke | Validated 08-13, ready |
+| 4 | Music video ideas | `music-video-ideas` | 950/mo | Cluster spoke | Validated 08-13, ready |
+| 5 | Title-length study | folds INTO `/blog/youtube-title` | n/a | Upgrade | Angle confirmed 08-14, needs 2 SQL pulls |
+| 6 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | New post | Weak confirm, see caveat |
+
+**Items 1-4 are the backbone.** They complete the Video Ideas cluster started
+2026-07-28 (pillar + shorts + challenge + vlog + gaming already live). Same
+proven template as `/blog/gaming-video-ideas`: 18 numbered concrete titles,
+a niche-data table from our own upload data, format-effort table, 8 FAQs.
+The per-niche data already exists in `channel_videos` at zero quota cost.
+
+**Item 5** is the strongest differentiator on the list. Three published studies
+contradict each other (AIR Media-Tech says 30-50 chars, 10xCreator says 70-100,
+ViewsKit says under 30). Nobody has reconciled them, and we can test the
+performance claim directly because `video_metric_snapshots` joins to
+`channel_videos.title`. Goes INTO the existing post, not a new one, since
+`/blog/youtube-title` already owns that intent.
+
+**Item 6 caveat, decide before writing.** The SERP has real independents so it
+passes the diversity test, but OutlierKit ranks there on original sponsor data
+we do not have. Without a differentiator this is just another list of company
+names against vidIQ and Wikipedia. Only write it if we find an angle, otherwise
+drop it and stop at item 5.
+
+### After item 6
+
+The calendar is empty again, and per the finding below, a fourth keyword seed is
+unlikely to refill it. The next content decision is strategic, not research.
+
+---
+
 ## RESEARCH ROUND RESULT (2026-08-14): 0 CLUSTERS, AND THAT IS THE FINDING
 
 All three seeds pulled and mined. Full reasoning in `FOUNDATION.md`'s dropped log.
