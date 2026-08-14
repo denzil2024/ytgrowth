@@ -344,11 +344,31 @@ node scripts/verify/check-blog-paragraphs.mjs <slug> 5 <port>
 - Verify live by checking for a specific new phrase, not just an HTTP 200.
 - Request indexing in Search Console.
 
+### Stage 6 — Close the loop, in the same session
+
+**Non-negotiable, and the reason this exists: Part 5 of this file went stale
+twenty minutes after it was written, because a deploy happened and nothing
+updated the plan.** A plan that describes a state the repo has left is worse
+than no plan, and is exactly what produced the confusion this runbook was
+written to end.
+
+Immediately after a successful deploy, in the same session:
+
+- [ ] Move the article from the Part 4 queue into the Shipped table, with the
+      commit hash.
+- [ ] Update Part 5 if anything about it is still open, or delete its entry if
+      nothing is.
+- [ ] Set `Status:` in `research/<slug>.md` to `done`, tick the stage log, and
+      empty or update its Outstanding list.
+- [ ] Re-read Part 4's "Item 1 is next" line. If it names the article you just
+      shipped, fix it.
+
 ### Definition of done
 
-An article is done when Stage 4 passes with every box ticked, the research file
-`Status:` reads `approved`, and Stage 5 has been run and verified live. Not
-before. "The tables are fixed" is not done.
+An article is done when Stage 4 passes with every box ticked, Stage 5 is
+verified live by content, and Stage 6 has left this file matching reality. Not
+before. "The tables are fixed" is not done, and neither is "it is deployed"
+while the plan still says otherwise.
 
 ### Publishing
 
@@ -372,9 +392,10 @@ volume, a passed SERP check, and a route through the one test.
 | 5 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | Weak confirm. Only write with a differentiator, see below. |
 | 6 | Promotion pass on the published studies | n/a | n/a | User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
 
-**Item 1 is next, not comedy.** Comedy has higher volume (1,650/mo) but only 13
-channels of data, which fails the data floor in Part 1. A comedy draft exists
-uncommitted and is unresolved, see Part 5.
+**Item 1 is next.** Comedy shipped 2026-08-14 (commit `839a04d24`) but skipped
+Stages 1 and 2, see Part 5. Cooking is the first article to run the full
+runbook in order, and at 75 channels it clears the data floor that comedy
+failed at 13.
 
 **Item 4 is the strongest item on this list.** Three published studies
 contradict each other (AIR Media-Tech says 30-50 chars, 10xCreator says 70-100,
@@ -402,13 +423,15 @@ keyword round.
 
 ## PART 5 — OPEN AND UNRESOLVED
 
-**The comedy draft.** 371 uncommitted lines in `posts.jsx`, plus seoMeta,
-postsMeta, llms.txt and sitemap entries already added, with no cover image and
-no mid-article CTA. It was written out of order, with no research file, on a
-sample that fails the data floor. Not deleted, not shipped. Decide before
-touching the queue: either cut it back to what the data supports and finish it
-properly, or park it and revert the four plumbing files so nothing half-published
-leaks.
+**Comedy shipped without Stages 1 and 2.** Live at
+`/blog/comedy-video-ideas` since 2026-08-14, commit `839a04d24`. No SERP was
+fetched and no coverage matrix was built, so nothing confirms it covers what
+the ranking pages cover. Everything else was brought up to standard before it
+went out, and `research/comedy-video-ideas.md` records the real state.
+
+To close it: fetch the top 10, build the matrix, and add any section a ranking
+competitor has that we lack. The post is live, so this is an edit, not a
+rewrite. Do it before or after cooking, but do not leave it indefinitely.
 
 **The parked gaming ideas file.** `frontend/src/data/youtubeVideoIdeas.js`,
 still untracked, superseded by `/blog/gaming-video-ideas` shipping 2026-08-13.
@@ -420,6 +443,7 @@ Delete it or ignore it; it is not a queue item.
 
 | Date | Article | Type |
 |---|---|---|
+| 2026-08-14 | Comedy Video Ideas (`/blog/comedy-video-ideas`). Shipped without Stages 1 and 2, see Part 5 | Cluster spoke |
 | 2026-08-13 | Gaming Video Ideas (`/blog/gaming-video-ideas`) | Cluster spoke |
 | 2026-08-13 | `/blog/best-time-to-post` upgraded with cadence + day-of-week data | Upgrade |
 | 2026-08-13 | Ideal YouTube Video Length (`/blog/video-length-by-niche`), corrected same day for the date-filter bug | Data study #1 |

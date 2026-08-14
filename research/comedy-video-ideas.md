@@ -3,7 +3,7 @@
 Target query: `comedy video ideas`
 Volume: 1,650/mo (Keyword Planner export, 2026-08-13, seed "youtube video ideas")
 Researched: NOT DONE, see below
-Status: `written out of order, blocked on Stage 1`
+Status: `SHIPPED 2026-08-14 (commit 839a04d24), Stages 1 and 2 still owed`
 
 **Read this before touching the comedy post.** It was written on 2026-08-14
 before this process existed, in the wrong order, and this file records the real
@@ -14,7 +14,8 @@ state rather than pretending otherwise.
 ## 1. The live top 10
 
 **NOT DONE.** No SERP was fetched for this query. No URLs, no dates, nothing to
-record. This is the gap that has to be closed before the post can ship.
+record. The post shipped anyway on explicit instruction, so this is now an edit
+to a live page rather than a blocker.
 
 ## 2. Coverage matrix
 
@@ -74,7 +75,9 @@ Presented: no. The article was written before an outline was ever shown.
 - [ ] **Stage 2, presented and approved** — never happened
 - [x] Stage 3, written (retroactively brought up to standard, see below)
 - [x] Stage 4, verified
-- [ ] Stage 5, built and pushed — not done, nothing pushed
+- [x] Stage 5, built, pushed and verified live by content check
+- [ ] Stage 6, close the loop — CONTENT-PLAN updated 2026-08-14; Search Console
+      indexing still to request (needs the user's account)
 
 ### Brought up to standard on 2026-08-14 (retroactive Stage 3 and 4)
 
@@ -102,9 +105,8 @@ Presented: no. The article was written before an outline was ever shown.
 
 ### Outstanding
 
-- **Stage 1 and 2.** Fetch the top 10, build the coverage matrix, confirm the
-  framework closes a real gap, and present. If the matrix shows the article
-  misses sections competitors rank for, add them before shipping.
-- **Stage 5.** Build with `BUILD_API_URL` and push. Nothing is pushed.
-- Decide whether this ships at all, or is parked behind cooking (queue item 1),
-  which clears the data floor at 75 channels where comedy does not.
+- **Stage 1 and 2, still owed.** Fetch the top 10, build the coverage matrix,
+  and add any section a ranking competitor has that this post lacks. The page
+  is live, so this is an edit, not a rewrite. Do not leave it indefinitely.
+- **Search Console indexing.** Needs the user's account: URL Inspection on
+  `/blog/comedy-video-ideas`, then Request Indexing.

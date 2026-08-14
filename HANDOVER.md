@@ -181,8 +181,8 @@ Two changes address it, both landed 2026-08-14:
 Evidence this was real: the gaming and comedy posts share a section-for-section
 skeleton with the niche word swapped, and the comedy draft was written with no
 research file, no coverage matrix and no outline, on a 13-channel sample that
-fails the data floor. It sits uncommitted and unresolved, see `CONTENT-PLAN.md`
-Part 5.
+fails the data floor. It shipped 2026-08-14 anyway on explicit instruction
+(commit 839a04d24) with Stages 1 and 2 still owed, see `CONTENT-PLAN.md` Part 5.
 
 Open items owned by the user:
 - Outreach leads (they are sourcing; see `OUTREACH.md`, one verified contact:
