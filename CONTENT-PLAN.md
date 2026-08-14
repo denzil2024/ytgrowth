@@ -107,7 +107,48 @@ pillar candidates first, real Keyword Planner volume, SERP check per keyword,
 
 ---
 
-## NEXT SESSION: KEYWORD RESEARCH ROUND (2026-08-14)
+## RESEARCH ROUND RESULT (2026-08-14): 0 CLUSTERS, AND THAT IS THE FINDING
+
+All three seeds pulled and mined. Full reasoning in `FOUNDATION.md`'s dropped log.
+
+| Seed | Rows | >=500/mo | Verdict |
+|---|---|---|---|
+| `youtube sponsorship` | 126 | 11 | 1 post, not a cluster. Weak. |
+| `youtube equipment` | 597 | 38 | DROP: watch-intent pollution + one intent + manufacturer SERP |
+| `youtube automation` | 196 | 9 | DROP: cannibalises 2 live posts + developer-intent SERP |
+
+**The pattern matters more than the individual results.** This is the THIRD
+consecutive research round to come back mostly dead:
+- 2026-07-28: subscribers, channel growth, live streaming, merch, playlists,
+  end screens, and the entire commercial-keywords track, all dropped.
+- 2026-08-13: video-ideas niches mostly too thin; only gaming survived.
+- 2026-08-14: gear, automation dropped; sponsorship yields one post.
+
+The dropped log in `FOUNDATION.md` is now longer than the confirmed list. The
+honest read is that **the keyword-cluster model is close to exhausted for this
+site.** The obvious creator-advice topics are either already covered by the 62
+live posts, owned by DR-80+ incumbents, or polluted with watch intent.
+
+**Do not simply pull a fourth seed.** That repeats the same motion and probably
+returns the same result. The strategic question to settle with the user first is
+which lever replaces cluster-building:
+
+1. **Data studies.** Working. Zero keyword competition because the content does
+   not exist elsewhere, and it is the only thing that has produced genuinely
+   differentiated pages (see `DATA-STUDIES.md`). Constrained by what the moat
+   tables can answer.
+2. **Programmatic expansion** on the patterns that already rank (`/youtube-stats/*`,
+   `/youtube-earnings/*` sit at position 7-12 and are the best per-page performers).
+   Blocked on the thin-content problem that got 126 URLs cut in July.
+3. **Authority / backlinks** for the 53K tier-1 US impressions stuck at position
+   28.78. On-page work there is already proven dead.
+
+Note that all three of these are already the plan. The research round's real
+output is evidence that there is no fourth option hiding in keyword data.
+
+---
+
+## COMPLETED: KEYWORD RESEARCH ROUND (2026-08-14)
 
 **Tomorrow is entirely keyword research. Do not start anything else first.**
 

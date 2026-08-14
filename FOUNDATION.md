@@ -217,6 +217,39 @@ volume but wrong searcher in both cases.
   coverage above, they're real, just not winnable as blog-post clusters on this evidence. Do
   not re-propose "youtube live stream" or "youtube merch" as pillar seeds.
 
+Gear / equipment — dropped 2026-08-14 (`keyword-exports/Keyword Stats 2026-08-14
+at 05_32_26.csv`, 597 rows, 38 clear 500/mo). Two independent failures. (1) Watch-intent
+pollution: "c&c equipment youtube" (5,000/mo), "diggers on youtube", "machinery pete you
+tube", "keith rucker vintage machinery", "tractor john deere youtube", people looking for
+videos ABOUT equipment, not creators buying it. Same failure as playlist / merch / live
+stream. (2) After stripping that, all 88 remaining keywords are ONE intent (what camera
+should a beginner buy), 20,500/mo of synonym phrasings. The predicted sub-topics do not
+exist at volume: lighting tops out at 50/mo (1,000/mo across 20 keywords), audio/mic
+50/mo, tripod 150/mo total, backgrounds ZERO keywords. SERP for the camera term is owned
+by manufacturers and gear publications (OBSBOT, DJI, UniquePhoto, DigitalCameraWorld),
+a hardware-review vertical where we have no first-hand product testing and cannot
+credibly compete. Do not re-propose equipment, cameras, lighting, or gear.
+
+YouTube automation — dropped 2026-08-14 (`keyword-exports/Keyword Stats 2026-08-14 at
+05_32_44.csv`, 196 rows, 9 clear 500/mo). The head term (5,000/mo) means the cash-cow /
+faceless business model, already owned by two live posts (cash-cow-youtube-channels,
+faceless-youtube-channel-ideas), so it cannibalises. The one distinct angle, workflow
+tooling ("youtube automation tools", "n8n youtube", "automatic youtube upload", ~1,500/mo),
+has a SERP owned by automation SaaS vendors (Make.com, n8n.io) and serves a developer /
+ops intent, not a creator-growth intent. Wrong audience for the product. Do not
+re-propose automation or workflow tooling.
+
+Sponsorship — NOT a cluster, 2026-08-14 (`keyword-exports/Keyword Stats 2026-08-14 at
+05_31_38.csv`, 126 rows, 11 clear 500/mo). Seven of the eleven are synonym phrasings of
+the existing /blog/youtube-sponsorships post ("sponsor youtube video", "sponsor for
+youtube channel", "sponsoring video youtube"). "sponsor block youtube" is the SponsorBlock
+extension, viewer intent. ONE distinct angle survives: sponsor-company lists ("youtube
+sponsor companies" + "youtube sponsorship companies" + "common youtube sponsors",
+5,500/mo). SERP has real independents (OutlierKit, sponsorship.so, SponsorTrace) alongside
+vidIQ and Wikipedia, so it passes the diversity test, but OutlierKit ranks on original
+sponsor data we do not have. Viable as ONE post, not a cluster, and only worth writing if
+we can find a genuine differentiator beyond another list of company names.
+
 YouTube Studio features → End screens — dropped 2026-07-28
 (`keyword-exports/Keyword Stats 2026-07-26 at 17_23_16.csv`, 227 keywords). Only 21 keywords
 clear 500/mo and all 21 are near-duplicate phrasings of one concept (end screen / yt end screen
