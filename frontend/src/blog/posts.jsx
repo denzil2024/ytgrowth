@@ -91,6 +91,224 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'cooking-video-ideas',
+    title: 'Cooking Video Ideas: What to Film When Recipes Run Out',
+    excerpt: 'Recipes are the easy part of a cooking channel; running out of ones worth filming is what stalls it. 34 ideas grouped into six formats that outlast any single recipe, measured against 3,859 cooking uploads since January 2026 for what gets filmed, how long it runs, and where a Shorts strategy fits.',
+    date: '2026-08-15',
+    category: CATEGORIES.strategy,
+    cover: '/blog/cooking-video-ideas-cover.jpg',
+    coverAlt: 'A plated pasta dish on a wooden kitchen counter being filmed by a camera on a tripod, a pot steaming on the stove behind it and jars of spices on a shelf in the background',
+    author: 'Denzil',
+    readTime: '14 min read',
+    faqs: [
+      { q: 'What cooking videos get the most views on YouTube?', a: 'Comparison and testing formats travel furthest, because the format itself is the hook: viewers click to see who wins before they care what is being cooked. Template videos, one base turned into several meals, come a close second, since the promise of getting more from less is a stronger pull than a single recipe.' },
+      { q: 'How long should a cooking video be?', a: 'Our upload data puts the typical cooking video at 6.9 minutes, among the shortest of the fourteen niches we track. A recipe has a natural runtime set by the steps it needs, and padding it to chase the 8-minute mid-roll line costs more in drop-off than the extra ad break returns.' },
+      { q: 'Do I need expensive equipment to start a cooking channel?', a: 'No. A phone on a small tripod pointed down at a cutting board covers most of the formats on this list. The one purchase worth making early is a lav or shotgun mic, since a pan sizzling under muffled audio reads as amateur faster than any camera limitation does.' },
+      { q: 'How often should a cooking channel upload?', a: 'One to two long-form videos a week is standard, and testing or comparison formats can sit on the slower end of that since they take longer to plan and shoot properly. Shorts fill the gap between long-form uploads without needing a new recipe every time.' },
+      { q: 'Are Shorts worth it for a cooking channel?', a: 'Yes, and cooking channels already lean on them: 18.8% of tracked uploads are Shorts, close to the sitewide norm. A single technique, one ingredient swap, or the plating moment from a longer video all cut down cleanly, so Shorts do not have to mean a second production.' },
+      { q: 'What is the biggest mistake new cooking channels make?', a: 'Filming a recipe with no format around it. A recipe on its own competes with every other recipe for the same dish, most of them from channels with more authority. A format, a comparison, a constraint, a template, gives a reason to click that has nothing to do with how well-known the creator is yet.' },
+      { q: 'Do I need to be an experienced cook to start a cooking channel?', a: 'Some of the strongest early videos come from learning on camera instead of performing expertise. The Fix My Broken Recipe and skill-clinic formats on this list work precisely because the presenter is figuring something out, and viewers trust a real learning curve more than a polished one.' },
+      { q: 'What food safety mistakes show up most on cooking channels?', a: 'Cross-contamination from a cutting board used for raw meat and then produce, and leaving prepared food out at room temperature for filming retakes. Neither shows up in the final cut, which is exactly why they spread: nobody edits out a mistake they never see themselves making.' },
+      { q: 'Should cooking video titles include exact measurements?', a: 'Only when the number is the reason to click, like a $10 grocery challenge or a 3-ingredient claim. Most searches for a dish do not include a measurement, so leading with the dish and the format beats leading with a quantity nobody typed into the search bar.' },
+    ],
+    content: () => (
+      <>
+        <p>A recipe is not a format. It is one dish, filmed once, and the moment it is uploaded it stops being an idea and starts being inventory. <strong>Cooking channels stall the same way most niches do: not from running out of dishes to cook, but from running out of reasons for someone to click on the next one.</strong></p>
+
+        <p>The 34 ideas below are grouped into six formats rather than one long list of dishes, because a format keeps generating videos long after any single recipe has been filmed, reviewed, and forgotten. Each one names what it takes to shoot and where it tends to fall short.</p>
+
+        <h2>What Cooking Channels Really Publish</h2>
+
+        <p>We track upload data across established YouTube channels. Everything below comes from <strong>3,859 long-form cooking videos published since January 2026</strong>, across 59 tracked cooking channels, measured directly, not gathered from other people's articles.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What we measured</th>
+              <th>Cooking</th>
+              <th>How that compares</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Typical video length (median)</strong></td><td>6.9 min</td><td>Among the shortest of 14 niches</td></tr>
+            <tr><td><strong>Average video length (mean)</strong></td><td>10.4 min</td><td>1.51x its own median</td></tr>
+            <tr><td><strong>Shorts share of uploads</strong></td><td>18.8%</td><td>Close to the sitewide norm</td></tr>
+            <tr><td><strong>Mid-roll threshold</strong></td><td>Median falls short of 8 min</td><td>Most cooking uploads do not clear it</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>The 1.51x gap between median and mean is the mildest skew of any niche we track</strong>, which says something specific: cooking channels are not carrying many long-format outliers dragging the average up. A 6.9-minute video is close to what a typical upload looks like, not a number flattened by a handful of hour-long specials.</p>
+
+        <p>That median falls short of the 8-minute mid-roll line, and the honest response is not to pad toward it. A recipe has a natural runtime set by the steps it needs. Stretching a 5-minute technique to 8 minutes for a second ad break costs more in retention than the ad break returns, and retention is what gets the next upload recommended.</p>
+
+        <h2>Why a Format Outlasts a Recipe</h2>
+
+        <p>Every recipe competes on the same axis: how well-known is the dish, and how much authority does the channel have making it. A new channel loses that competition by default, because a hundred established channels have already filmed the same dish with more subscribers behind them.</p>
+
+        <p>A format changes the axis. A comparison, a constraint, a template, gives a viewer a reason to click that has nothing to do with the channel's size. The strongest source page in this SERP proves the point by publishing only eight ideas, each one a nameable format, not a dish, against pages that publish over a hundred single-recipe suggestions and read as padded because most of the length is not doing any work.</p>
+
+        <p>The six formats below are organized around that difference. Each one is a repeatable shape you can point at a new dish indefinitely, not a single video you make once and then need a new idea for.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>What decides the video</th>
+              <th>Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Constraint</strong></td><td>A limit set before filming: budget, pantry, time, or cleanup</td><td>Planning fast, zero-decision videos</td></tr>
+            <tr><td><strong>Comparison and testing</strong></td><td>Which method, brand, or claim wins</td><td>Reach beyond the channel's own audience</td></tr>
+            <tr><td><strong>Skill clinic</strong></td><td>One technique, taught properly, independent of any dish</td><td>Building trust as a source, not just a recipe</td></tr>
+            <tr><td><strong>Template and multiplier</strong></td><td>One base structure, several end results</td><td>Viewers who want less deciding, not more recipes</td></tr>
+            <tr><td><strong>Culture, season, and diet</strong></td><td>A specific region, holiday, or dietary need</td><td>Durable, unglamorous search volume</td></tr>
+            <tr><td><strong>Family, waste, and minimal effort</strong></td><td>Reducing effort: time, cleanup, waste, or picky eaters</td><td>The largest shared audience across formats</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Constraint: Let a Limit Do the Planning</h2>
+
+        <p>A stated limit, a budget, a pantry, a time cap, removes the hardest part of planning a video, which is deciding what to make. The constraint decides for you, and the tension of whether it holds is most of the watch-time draw.</p>
+
+        <ul>
+          <li><strong>1. "The $10 Grocery Basket Challenge"</strong><br />A fixed budget, a full receipt on screen, and a real meal at the end. The number does the marketing for you before anyone has watched a second of footage.</li>
+          <li><strong>2. "Whatever Is in the Fridge Right Now"</strong><br />No shopping trip, just what already exists. The least planning of anything on this list and one of the most relatable premises, since everyone has stared into a fridge with no plan.</li>
+          <li><strong>3. "One Pan, Start to Finish"</strong><br />The cleanup constraint, not the cost constraint. Viewers searching for easier weeknight cooking respond to seeing the mess stay small as much as they respond to the food.</li>
+          <li><strong>4. "Five Ingredients, No Substitutions"</strong><br />A hard ingredient cap forces genuine creativity instead of a recipe with the seasonings trimmed out for the title.</li>
+          <li><strong>5. "Cook for a Week on One Grocery Trip"</strong><br />A meal-prep constraint stretched across several videos or a single longer one. Answers a real planning question rather than a single dinner question.</li>
+          <li><strong>6. "Beat the Delivery App Price"</strong><br />Cook the same dish a delivery app just quoted a price for, and show whether homemade comes out cheaper. The comparison is built into the premise.</li>
+        </ul>
+
+        <h2>Comparison and Testing: Let the Format Be the Hook</h2>
+
+        <p>Nobody has to care about the dish to click on a comparison. The draw is finding out which method, which brand, or which claim wins, and the dish is just the arena the comparison happens in.</p>
+
+        <ul>
+          <li><strong>7. "Three Ways to Cook the Same Cut, Ranked"</strong><br />Same protein, three methods, one honest ranking at the end. Viewers arrive with an opinion already and stay to see if it holds up.</li>
+          <li><strong>8. "Store-Bought Versus From Scratch"</strong><br />A direct taste test against the jarred or boxed version of the same thing. The premise argues with itself, which is most of why people watch.</li>
+          <li><strong>9. "Testing the Viral Recipe Everyone Is Making"</strong><br />Borrowed attention from whatever is already trending, with your own honest verdict attached instead of a repost.</li>
+          <li><strong>10. "$10 Ingredient Versus $100 Ingredient"</strong><br />A price-tier showdown on the same dish. The gap in price does the curiosity work before the tasting even starts.</li>
+          <li><strong>11. "Every Kitchen Gadget for One Task, Ranked"</strong><br />Test every tool that claims to do one job and rank them honestly. Doubles as practical buying advice, which pulls in search traffic a straight recipe never sees.</li>
+        </ul>
+
+        <CtaCard
+          to="/tools/youtube-video-ideas-generator"
+          title="Turn a format into ideas for your own kitchen"
+          sub="Enter your niche and get idea formats built for creators starting from zero, free and with no signup."
+        />
+
+        <h2>Skill Clinics: Teach the Thing, Not Just the Dish</h2>
+
+        <p>A skill clinic isolates one technique and teaches it properly, independent of any single recipe. It builds a different kind of trust than a recipe does, because it makes the channel the place to learn the skill instead of just a place to copy one result.</p>
+
+        <ul>
+          <li><strong>12. "Every Knife Cut Worth Learning"</strong><br />Dice, julienne, chiffonade, taught once and referenced from every future video instead of re-explained each time.</li>
+          <li><strong>13. "How to Tell When It Is Done"</strong><br />Doneness by sight, sound, and touch, no timer required. Answers the question that ruins more home-cooked meals than any recipe error does.</li>
+          <li><strong>14. "Fix My Broken Recipe"</strong><br />Take a dish that went wrong, on camera, and diagnose it in real time. The presenter figuring something out live builds more trust than a polished result does.</li>
+          <li><strong>15. "The One Sauce That Fixes Everything"</strong><br />A single foundational technique, like a pan sauce or a vinaigrette, taught once as a transferable skill rather than tied to one dish.</li>
+          <li><strong>16. "Reading a Recipe Before You Shop"</strong><br />How to spot a bad recipe from the ingredient list alone. A genuinely useful skill nobody teaches, aimed at total beginners.</li>
+          <li><strong>17. "The Mistake Everyone Makes With [Ingredient]"</strong><br />One common ingredient, one specific and correctable error. Searchable, specific, and endlessly repeatable across different ingredients.</li>
+        </ul>
+
+        <h2>Template and Multiplier: One Base, Several Meals</h2>
+
+        <p>A template video teaches a structure once and then shows it producing several different results. The promise of getting five meals from one afternoon of cooking is a stronger pull than the promise of a single dinner, and it is the format most directly aimed at a viewer who is tired of deciding what to eat every night.</p>
+
+        <ul>
+          <li><strong>18. "One Sauce, Three Completely Different Meals"</strong><br />A base sauce built once, then paired with three proteins or vegetables to show the range without repeating the technique.</li>
+          <li><strong>19. "One Marinade, Four Proteins"</strong><br />Same flavor base, different meat or plant protein each time. Teaches the underlying ratio rather than a single recipe.</li>
+          <li><strong>20. "The Grain Bowl Formula"</strong><br />A base, a protein, a vegetable, and a sauce, taught as a mix-and-match system a viewer can run indefinitely without a new video.</li>
+          <li><strong>21. "Sunday Prep, Five Weeknight Dinners"</strong><br />One structured prep session that pays off across an entire week, aimed squarely at the meal-planning search intent.</li>
+          <li><strong>22. "Turn Last Night's Leftovers Into a New Dish"</strong><br />A transformation template instead of a from-scratch one. Doubles as a waste-reduction angle without needing to say so directly.</li>
+        </ul>
+
+        <h2>Culture, Season, and Diet: Where the Real Search Volume Sits</h2>
+
+        <p>Regional cuisine, holiday cooking, and dietary constraints are the most heavily covered ground in this niche, and also the ground with the most durable search volume, because a searcher looking for a specific cuisine or a specific dietary need is not shopping around for the most creative format. They want the thing that matches their constraint.</p>
+
+        <ul>
+          <li><strong>23. "The Dish That Defines [Region]"</strong><br />One genuinely representative dish per region, researched properly instead of borrowed from another channel's list.</li>
+          <li><strong>24. "The Holiday Dish Nobody Gets Right"</strong><br />A seasonal dish paired with the specific mistake that ruins it most often. More useful than a generic "holiday recipes" roundup.</li>
+          <li><strong>25. "One Recipe, Three Diets"</strong><br />The same dish adapted for a standard, a vegetarian, and a gluten-free version side by side, so one video serves three separate searches.</li>
+          <li><strong>26. "What [Cuisine] Eats at Home, Not the Restaurant Version"</strong><br />Home cooking versus the restaurant version of a cuisine's food, which is a genuinely underused angle most channels skip in favor of the showier restaurant dishes.</li>
+          <li><strong>27. "The High-Protein Version of a Comfort Classic"</strong><br />A specific, searchable dietary angle applied to a dish people already crave rather than a generic "healthy eating" premise.</li>
+          <li><strong>28. "Cooking Through a Grandparent's Recipe Card"</strong><br />A real, specific family recipe, translated and tested on camera. Personal in a way a generic regional roundup cannot be.</li>
+        </ul>
+
+        <h2>Family, Waste, and Minimal Effort</h2>
+
+        <p>These three angles keep showing up separately across competitor coverage, but they share the same underlying viewer: someone optimizing for less effort, whether that effort is time, cleanup, food waste, or getting a picky eater to finish a plate.</p>
+
+        <ul>
+          <li><strong>29. "Get a Picky Eater to Eat Vegetables, On Camera"</strong><br />A real, unscripted attempt rather than a tips list. The uncertainty of whether it works is most of the draw.</li>
+          <li><strong>30. "Zero-Waste: Use the Whole Vegetable"</strong><br />Stems, peels, and scraps turned into a second dish. A genuinely useful angle almost nobody in this SERP covers with any specificity.</li>
+          <li><strong>31. "The Air Fryer Versus the Oven"</strong><br />An equipment comparison rather than a straight air fryer recipe list, testing the actual claim instead of assuming it.</li>
+          <li><strong>32. "Lunches That Survive Until Noon"</strong><br />Packed-lunch cooking, judged specifically on whether it still tastes good hours later, which most lunch content ignores entirely.</li>
+          <li><strong>33. "The 10-Minute Version of a Slow Recipe"</strong><br />A legitimately slow dish, shortcut honestly, with the trade-offs stated rather than hidden.</li>
+          <li><strong>34. "Freezer Meals That Do Not Taste Reheated"</strong><br />Solves the actual complaint people have about freezer cooking instead of just listing freezer-friendly dishes.</li>
+        </ul>
+
+        <h2>The Food Safety Mistakes That Cost Channels Trust</h2>
+
+        <p>None of the ranking pages for this query cover food safety at all, which is a real gap given how visible a mistake looks once a viewer catches it. The two that show up most in cooking video comments are cross-contamination and time-in-the-danger-zone.</p>
+
+        <p><strong>Cross-contamination</strong> happens when a cutting board used for raw meat gets reused for produce without being washed, usually because it happens between takes and never makes the final edit. It is invisible on camera and it is the fastest way to lose a viewer who happens to know food safety, because they will say so in the comments and it will stick to every future video.</p>
+
+        <p><strong>Time in the danger zone</strong> is food left at room temperature during retakes, styling, or multiple camera setups. A dish that looks fine on screen can have sat out for the better part of an hour by the time filming wraps. Neither of these needs a dedicated video. They need a second cutting board and a clock running during the shoot, and mentioning the practice once, on camera, doubles as a trust signal that costs nothing to include.</p>
+
+        <h2>Titles That Get Cooking Videos Clicked</h2>
+
+        <p>A cooking title has to lead with the dish or the format, because that is what a viewer searched for. Most searches do not include a measurement or a quantity, so a title built around a number only works when the number is the reason to click, a $10 budget or a 3-ingredient claim, not a default habit applied to every title.</p>
+
+        <p>The format-driven titles on this list already do the differentiating work a straight recipe title cannot: "Store-Bought Versus From Scratch" promises a verdict, while "Homemade Pasta Sauce Recipe" promises nothing a hundred other channels have not already promised. Our <a href="/blog/youtube-title">guide to writing titles generally</a> covers the mechanics; the format is what gives a cooking title something worth leading with.</p>
+
+        <h2>What Belongs at 8 Minutes, and What Should Stay Short</h2>
+
+        <p>At a 6.9-minute median, most cooking uploads fall short of the 8-minute mid-roll threshold, and that is fine. The formats naturally suited to a longer runtime are the ones with more than one distinct segment: comparisons with several methods to show, templates with multiple end results, skill clinics covering more than one technique.</p>
+
+        <p>Single-constraint videos and quick fixes are supposed to be short. Padding them past what the format needs costs more in retention than the second ad break returns.</p>
+
+        <p>Our <a href="/blog/video-length-by-niche">length data across all fourteen niches</a> shows where cooking sits against every other niche we track, and cooking is one of the shorter ones by design, not by accident.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What cooking videos get the most views on YouTube?</h3>
+        <p>Comparison and testing formats travel furthest, because the format itself is the hook: viewers click to see who wins before they care what is being cooked. Template videos, one base turned into several meals, come a close second, since the promise of getting more from less is a stronger pull than a single recipe.</p>
+
+        <h3>How long should a cooking video be?</h3>
+        <p>Our upload data puts the typical cooking video at <strong>6.9 minutes</strong>, among the shortest of the fourteen niches we track. A recipe has a natural runtime set by the steps it needs, and padding it to chase the 8-minute mid-roll line costs more in drop-off than the extra ad break returns.</p>
+
+        <h3>Do I need expensive equipment to start a cooking channel?</h3>
+        <p>No. A phone on a small tripod pointed down at a cutting board covers most of the formats on this list. The one purchase worth making early is a lav or shotgun mic, since a pan sizzling under muffled audio reads as amateur faster than any camera limitation does.</p>
+
+        <h3>How often should a cooking channel upload?</h3>
+        <p>One to two long-form videos a week is standard, and testing or comparison formats can sit on the slower end of that since they take longer to plan and shoot properly. Shorts fill the gap between long-form uploads without needing a new recipe every time.</p>
+
+        <h3>Are Shorts worth it for a cooking channel?</h3>
+        <p>Yes, and cooking channels already lean on them: <strong>18.8% of tracked uploads are Shorts</strong>, close to the sitewide norm. A single technique, one ingredient swap, or the plating moment from a longer video all cut down cleanly, so Shorts do not have to mean a second production.</p>
+
+        <h3>What is the biggest mistake new cooking channels make?</h3>
+        <p><strong>Filming a recipe with no format around it.</strong> A recipe on its own competes with every other recipe for the same dish, most of them from channels with more authority. A format, a comparison, a constraint, a template, gives a reason to click that has nothing to do with how well-known the creator is yet.</p>
+
+        <h3>Do I need to be an experienced cook to start a cooking channel?</h3>
+        <p>Some of the strongest early videos come from learning on camera instead of performing expertise. The Fix My Broken Recipe and skill-clinic formats on this list work precisely because the presenter is figuring something out, and viewers trust a real learning curve more than a polished one.</p>
+
+        <h3>What food safety mistakes show up most on cooking channels?</h3>
+        <p>Cross-contamination from a cutting board used for raw meat and then produce, and leaving prepared food out at room temperature for filming retakes. Neither shows up in the final cut, which is exactly why they spread: nobody edits out a mistake they never see themselves making.</p>
+
+        <h3>Should cooking video titles include exact measurements?</h3>
+        <p>Only when the number is the reason to click, like a $10 grocery challenge or a 3-ingredient claim. Most searches for a dish do not include a measurement, so leading with the dish and the format beats leading with a quantity nobody typed into the search bar.</p>
+
+        <h2>A Recipe Is Inventory, a Format Is a Business</h2>
+
+        <p>Every idea on this list solves the same underlying problem, which is that a channel built one dish at a time runs out of dishes worth filming long before it runs out of viewers worth keeping. A format does not run out, because it is not tied to any single ingredient or cuisine. It is a shape you can point at whatever is in the kitchen this week.</p>
+
+        <p>Start with whichever format matches what you already have on hand: a constraint if you are working with a tight budget, a skill clinic if you already know something worth teaching, a comparison if you have strong opinions about how a dish should be made. <strong>The dish changes every time. The format is what a viewer comes back for.</strong></p>
+      </>
+    ),
+  },
+  {
     slug: 'comedy-video-ideas',
     title: 'Comedy Video Ideas: 42 for People Who Are Not Naturally Funny',
     excerpt: 'Comedy is one of the few YouTube niches where search demand barely exists, so the premise has to win the click before anyone has laughed. 42 ideas grouped by the six mechanisms behind every comedy premise, plus real upload data on what comedy channels publish and the copyright and prank-policy traps that end them.',
@@ -120,7 +338,7 @@ export const posts = [
 
         <h2>What Comedy Channels Really Publish</h2>
 
-        <p>We track upload data across established YouTube channels. Everything below comes from <strong>699 long-form comedy videos published since January 2025</strong>, measured directly rather than gathered from other people's articles.</p>
+        <p>We track upload data across established YouTube channels. Everything below comes from <strong>699 long-form comedy videos published since January 2026</strong>, measured directly rather than gathered from other people's articles.</p>
 
         <table>
           <thead>
@@ -436,7 +654,7 @@ export const posts = [
 
         <h2>What Gaming Channels Really Publish</h2>
 
-        <p>We track upload data across established YouTube channels. For gaming specifically, that covers <strong>4,399 long-form videos from 84 channels</strong>, all published since January 2025. The numbers contradict a few things gaming guides repeat as fact.</p>
+        <p>We track upload data across established YouTube channels. For gaming specifically, that covers <strong>4,399 long-form videos from 84 channels</strong>, all published since January 2026. The numbers contradict a few things gaming guides repeat as fact.</p>
 
         <table>
           <thead>
@@ -601,7 +819,7 @@ export const posts = [
   {
     slug: 'video-length-by-niche',
     title: 'The Ideal YouTube Video Length in 2026: We Analyzed 30,360 Real Uploads by Niche',
-    excerpt: 'The average gaming upload runs 73 minutes. The typical one runs 24.3. We pulled real duration data on 30,360 long-form videos published since January 2025 across 14 niches, and found that most published length advice quotes an average quietly inflated by livestreams and lecture recordings. Every niche\'s median and average side by side, which statistics mislead worst, and where the 8-minute mid-roll line falls for each.',
+    excerpt: 'The average gaming upload runs 73 minutes. The typical one runs 24.3. We pulled real duration data on 30,360 long-form videos published since January 2026 across 14 niches, and found that most published length advice quotes an average quietly inflated by livestreams and lecture recordings. Every niche\'s median and average side by side, which statistics mislead worst, and where the 8-minute mid-roll line falls for each.',
     date: '2026-08-13',
     category: CATEGORIES.analytics,
     cover: '/blog/video-length-by-niche-cover.jpg',
@@ -615,7 +833,7 @@ export const posts = [
       { q: 'How long should a gaming video be?', a: 'The typical successful gaming upload in our tracked data runs 24.3 minutes, well above most niches, driven by Let\'s Plays and full-session content that rewards depth over brevity. That figure excludes Shorts. Gaming also had one of the lower Shorts shares in our data at 19.1% of uploads, suggesting the niche still leans long-form even as Shorts adoption rises elsewhere.' },
       { q: 'How long should a finance or business YouTube video be?', a: 'Our data puts the finance niche median at 14.6 minutes, among the longer categories, consistent with topics (market analysis, strategy breakdowns) that need setup and explanation before the payoff. Finance also had one of the lower Shorts shares (23.6%) in our sample, in line with an audience that watches for depth over quick hits.' },
       { q: 'Which YouTube niches post the most Shorts?', a: 'In our tracked data, vlogs (46.1% of uploads), fitness (43.1%), and sports (42.8%) had the highest Shorts share. Tech had the lowest at 9.7%, followed by news at 13.8%. The pattern lines up with format fit: quick highlights, routines, and clips translate naturally to Shorts, while reviews and explainers generally need the runway of a long-form video.' },
-      { q: 'How was this data collected?', a: 'From our own weekly channel-tracking infrastructure, not a survey or a manually sampled batch. Every week, we pull the latest uploads for a large set of tracked YouTube channels (creators connected through our product, plus the channels in our public leaderboards) via YouTube\'s own API, record each video\'s real duration, and classify it long-form or Shorts using YouTube\'s own 62-second Shorts threshold. The dataset behind this piece covers 30,360 long-form videos across 14 niches, all published since January 2025 and collected during July and August 2026.' },
+      { q: 'How was this data collected?', a: 'From our own weekly channel-tracking infrastructure, not a survey or a manually sampled batch. Every week, we pull the latest uploads for a large set of tracked YouTube channels (creators connected through our product, plus the channels in our public leaderboards) via YouTube\'s own API, record each video\'s real duration, and classify it long-form or Shorts using YouTube\'s own 62-second Shorts threshold. The dataset behind this piece covers 30,360 long-form videos across 14 niches, all published since January 2026 and collected during that same window.' },
       { q: 'Is this the ideal length for ranking, or just what channels are currently posting?', a: 'This measures what already-established channels are uploading right now, not a controlled test of what causes better ranking or retention. The tracked channels are ones with real traction (connected product users and public leaderboard channels), so the data reflects working patterns from channels that have already found an audience, which is a reasonable proxy for "what works" without being a causal proof of it.' },
     ],
     content: () => (
@@ -624,7 +842,7 @@ export const posts = [
 
         <p>That gap is the whole problem with published video-length advice. <strong>Almost every "ideal length" figure in circulation is an average</strong>, and an average quietly absorbs every multi-hour livestream VOD sitting in a channel's uploads feed. The number comes out inflated, nobody checks it against the median, and the advice built on top of it points creators at a runtime almost nobody in their niche is producing.</p>
 
-        <p>We have our own upload data, so we ran the real figures instead: <strong>30,360 long-form videos across 14 niches</strong>, every one published since January 2025, pulled from channels we track weekly. Below is every niche's median and average side by side, which niches have the most misleading statistics, and where the 8-minute monetization line falls for each one.</p>
+        <p>We have our own upload data, so we ran the real figures instead: <strong>30,360 long-form videos across 14 niches</strong>, every one published since January 2026, pulled from channels we track weekly. Below is every niche's median and average side by side, which niches have the most misleading statistics, and where the 8-minute monetization line falls for each one.</p>
 
         <h2>What We Measured</h2>
 
@@ -634,14 +852,14 @@ export const posts = [
 
         <ul>
           <li><strong>Real duration in seconds</strong>, parsed from YouTube's own duration field rather than estimated from anything.</li>
-          <li><strong>Publish timestamp</strong>, which is what lets us restrict this analysis to videos published since January 2025 rather than mixing in a decade of stale uploads.</li>
+          <li><strong>Publish timestamp</strong>, which is what lets us restrict this analysis to videos published since January 2026 rather than mixing in a decade of stale uploads.</li>
           <li><strong>A Shorts flag</strong>, set when duration falls at or under 62 seconds, matching YouTube's own threshold rather than a guess at what counts as short.</li>
           <li><strong>Channel category</strong>, carried over from the leaderboard classification so videos group into niches consistently.</li>
         </ul>
 
         <p>Three limits worth stating outright. This is <strong>not a random sample of all of YouTube</strong>, it is a sample of channels that already work, which makes it a description of current practice rather than proof of what causes a video to perform. It also measures what these channels publish, not how each video performed, so nothing below should be read as "this length gets more views."</p>
 
-        <p>The <strong>date cutoff matters</strong> too. Our collection pulls each channel's 50 newest uploads, which for slower channels reaches back years, so everything here is filtered to January 2025 onward to keep the picture current.</p>
+        <p>The <strong>date cutoff matters</strong> too. Our collection pulls each channel's 50 newest uploads, which for slower channels reaches back years, so everything here is filtered to January 2026 onward to keep the picture current.</p>
 
         <h2>Median Video Length by Niche</h2>
 
@@ -837,7 +1055,7 @@ export const posts = [
 
         <h3>How was this data collected?</h3>
         <p><strong>From our own weekly channel-tracking infrastructure</strong> rather than a survey or a manually sampled batch. Each week we pull the latest uploads for tracked channels through YouTube's API, record every video's real duration, and classify it using YouTube's own 62-second Shorts threshold.</p>
-        <p>This piece covers 30,360 long-form videos across 14 niches, all published since January 2025 and collected during July and August 2026.</p>
+        <p>This piece covers 30,360 long-form videos across 14 niches, all published since January 2026.</p>
 
         <h3>Does a longer video rank better on YouTube?</h3>
         <p><strong>Not on length alone.</strong> What the algorithm responds to is watch time and retention, and a longer video only wins on those if it holds attention throughout. Our data measures what established channels publish rather than testing what causes better performance, so nothing here should be read as evidence that adding minutes improves ranking.</p>
@@ -4464,7 +4682,7 @@ export const posts = [
       { q: 'What if my audience is spread across many timezones?', a: 'You cannot hit every timezone at once, so aim for the overlap. A window around 3 PM GMT reaches US mornings, European afternoons, and Asian evenings in one post. Otherwise, pick the single region that makes up the largest share of your views, post in their local time, and check whether the other regions still show up in your analytics.' },
       { q: 'How often should I post on YouTube?', a: 'One to two long-form videos a week and three to five Shorts is a realistic ceiling for most creators, but the number matters less than whether you can hold it without your quality dropping. A sustainable pace you keep for months beats an aggressive one you abandon after six weeks. See the full breakdown by content type and channel stage in the frequency section above.' },
       { q: 'How often do established YouTube channels upload?', a: 'We measured 545 established channels across 14 niches over a four-week window. Nine of the fourteen have a median at or below 1.8 long-form uploads a week, which matches the standard one-to-two recommendation. The exceptions are news at 20.3 a week, entertainment at 7.6, and sports at 6.0, all of which operate on a different model. Gaming came in at 1.5, well below the daily cadence that gaming advice usually assumes.' },
-      { q: 'What day do most YouTubers upload?', a: 'Across 30,000 uploads published since January 2025, Saturday (17.8%) and Friday (17.1%) carried the most, and Monday the fewest at 12.0%. That runs slightly against the usual Wednesday-to-Friday recommendation. Worth noting it measures where creators put videos, not where views come from, so the quieter Monday-to-Wednesday stretch is arguably the more useful signal since a video faces less competition there.' },
+      { q: 'What day do most YouTubers upload?', a: 'Across 30,000 uploads published since January 2026, Saturday (17.8%) and Friday (17.1%) carried the most, and Monday the fewest at 12.0%. That runs slightly against the usual Wednesday-to-Friday recommendation. Worth noting it measures where creators put videos, not where views come from, so the quieter Monday-to-Wednesday stretch is arguably the more useful signal since a video faces less competition there.' },
       { q: 'Does posting daily on YouTube grow you faster?', a: 'Not automatically. Frequency only compounds growth when every extra video holds the same quality bar as the first, since more mediocre uploads dilute a channel rather than growing it. Daily posting works well for fast-turnaround formats like gaming or reaction, where the production time genuinely supports it. For a scripted or highly produced format, a slower schedule with a higher bar almost always outperforms a rushed daily one.' },
       { q: 'Will taking a break hurt my YouTube channel?', a: 'Not permanently, if the break stays under roughly six months. Expect a temporary dip in impressions since the algorithm has less recent activity to draw on, but it recovers once you resume a predictable schedule. The real risk is not the break itself, it is going quiet with no signal, so a community post letting viewers know you will be back keeps the algorithm and audience from writing the channel off.' },
       { q: 'Does posting time matter for YouTube Shorts?', a: 'Less than it does for long-form. Shorts surface through the Shorts feed over days rather than landing mostly on subscribers in the first hour, so the exact time matters less. Midday and evening windows still give the initial push a small boost, but for Shorts, daily consistency does more for you than perfect timing.' },
@@ -4672,7 +4890,7 @@ export const posts = [
 
         <h3>The Day Creators Publish Most</h3>
 
-        <p>Across 30,000 uploads published since January 2025, the distribution by day is flatter than most guides imply, but it does lean:</p>
+        <p>Across 30,000 uploads published since January 2026, the distribution by day is flatter than most guides imply, but it does lean:</p>
 
         <table>
           <thead>
@@ -4757,7 +4975,7 @@ export const posts = [
 
         <h3>What day do most YouTubers upload?</h3>
 
-        <p>Across 30,000 uploads published since January 2025, <strong>Saturday (17.8%) and Friday (17.1%) carried the most</strong>, and Monday the fewest at 12.0%. That runs slightly against the usual Wednesday-to-Friday recommendation. Worth noting it measures where creators put videos, not where views come from, so the quieter Monday-to-Wednesday stretch is arguably the more useful signal since a video faces less competition there.</p>
+        <p>Across 30,000 uploads published since January 2026, <strong>Saturday (17.8%) and Friday (17.1%) carried the most</strong>, and Monday the fewest at 12.0%. That runs slightly against the usual Wednesday-to-Friday recommendation. Worth noting it measures where creators put videos, not where views come from, so the quieter Monday-to-Wednesday stretch is arguably the more useful signal since a video faces less competition there.</p>
 
         <h3>Does posting daily on YouTube grow you faster?</h3>
 

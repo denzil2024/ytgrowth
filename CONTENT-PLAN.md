@@ -435,7 +435,7 @@ volume, a passed SERP check, and a route through the one test.
 
 | # | Article | Slug | Volume | Status |
 |---|---|---|---|---|
-| 1 | Cooking video ideas | `cooking-video-ideas` | 1,550/mo | **NEXT.** 3,859 videos, 75 channels. Clears the data floor. Needs research file. |
+| 1 | Cooking video ideas | `cooking-video-ideas` | 1,550/mo | **NEXT.** 3,859 videos, 59 channels (verified 08-15). Clears the data floor. Research file done, awaiting outline approval. |
 | 2 | Tech video ideas | `tech-video-ideas` | 1,300/mo | Validated 08-13. Verify channel count against the data floor first. |
 | 3 | Music video ideas | `music-video-ideas` | 950/mo | Validated 08-13. Verify channel count against the data floor first. |
 | 4 | Title-length study, folds INTO `/blog/youtube-title` | n/a | n/a | Angle confirmed 08-14. Needs 2 SQL pulls joining `video_metric_snapshots` to `channel_videos.title`. |
@@ -444,7 +444,7 @@ volume, a passed SERP check, and a route through the one test.
 
 **Item 1 is next.** Comedy shipped 2026-08-14 (commit `839a04d24`) but skipped
 Stages 1 and 2, see Part 5. Cooking is the first article to run the full
-runbook in order, and at 75 channels it clears the data floor that comedy
+runbook in order, and at 59 channels (verified 08-15) it clears the data floor that comedy
 failed at 13.
 
 **Item 4 is the strongest item on this list.** Three published studies

@@ -61,8 +61,12 @@ for (const [label, value, ok, target] of results) {
 }
 
 // Skeleton overlap: does this post's H2 list echo another post's?
+// Boilerplate every post is expected to carry (FAQ, etc.) is excluded, or
+// every post would trivially "overlap" with every other post.
+const BOILERPLATE_H2 = new Set(['frequently asked questions'])
 const h2s = (s) => (s.match(/<h2>([^<]*)<\/h2>/g) || [])
   .map((h) => h.replace(/<[^>]*>/g, '').toLowerCase())
+  .filter((h) => !BOILERPLATE_H2.has(h))
 const mine = h2s(body)
 const others = [...src.matchAll(/    slug: '([^']+)'/g)].map((m) => m[1]).filter((s) => s !== slug)
 let worst = { slug: null, shared: 0 }
