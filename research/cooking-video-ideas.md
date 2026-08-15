@@ -3,7 +3,7 @@
 Target query: `cooking video ideas`
 Volume: 1,550/mo (Keyword Planner export, 2026-08-13, seed "youtube video ideas")
 Researched: 2026-08-14
-Status: `written, verified, awaiting build/push go-ahead`
+Status: `DONE — shipped 2026-08-15, commit b61406dbc`
 
 ## 1. The live top 10
 
@@ -125,8 +125,10 @@ Outcome: approved 2026-08-15 ("go")
       tics within range, 1 shared H2 with nearest sibling after excluding
       boilerplate), all 33 paragraphs <=5 lines, FAQ array mirrors visible
       section 9-for-9, desktop/mobile screenshots read, no failed requests
-- [ ] Stage 5, build and push — awaiting explicit go-ahead
-- [ ] Stage 6, close the loop
+- [x] Stage 5, built with `BUILD_API_URL`, pushed as `b61406dbc`, verified live
+      by content check
+- [x] Stage 6, close the loop — CONTENT-PLAN.md queue and Shipped table
+      updated 2026-08-15
 
 ### Corrections made during Stage 1 by re-checking, not trusting carried numbers
 
@@ -139,9 +141,31 @@ Outcome: approved 2026-08-15 ("go")
   "Frequently Asked Questions" (boilerplate every post carries). Fixed the
   checker rather than working around it.
 
+### Corrections made after "done", before push
+
+- Idea count stated as 36 in title/excerpt/seoMeta/llms.txt; the article only
+  lists 34. Fixed everywhere.
+- FAQ answers and two data-section paragraphs had zero inline bold, an
+  inconsistency against sibling posts. Added sparingly to 5 spots.
+- Only 1 table (comedy has 3, gaming has 2). Added a second: six formats at a
+  glance, matching the sibling pattern of a scannable summary table.
+- **Date-window label changed from "January 2025" to "January 2026" per
+  explicit user instruction**, overriding a flagged concern. The underlying
+  counts (3,859 videos, 59 channels, etc.) were measured with a 2025-01-01
+  floor and were NOT recomputed for 2026-01-01, because the only recount
+  attempted (9,482 videos) was discovered to be wrong, see below. Only the
+  stated label changed, not the number behind it.
+- **Found a real join bug while re-verifying data.** Joining `channel_videos`
+  straight to `top_channel_cache` on `channel_id` fans out one row per region
+  a channel is discovered under (global/US/GB/CA/AU/IN), inflating
+  `COUNT(*)`. Correct pattern uses `channel_id IN (SELECT DISTINCT channel_id
+  FROM top_channel_cache WHERE category = ...)`. `COUNT(DISTINCT channel_id)`
+  is unaffected by the bug. **Not yet checked: whether `/blog/video-length-
+  by-niche`'s published 30,360 figure used the buggy join pattern.** Worth a
+  dedicated pass before trusting that study's totals further.
+
 ### Outstanding
 
-- **Cover image.** Needs a real photograph, 1600x900, house pattern (creator
-  mid-task, candid, warm light). Not generated.
-- **Build, push, verify live, Search Console indexing.** All pending explicit
-  go-ahead per Stage 5.
+- Cover image: done, 1600x900 JPG.
+- Search Console indexing: needs the user's account, not done.
+- Audit `/blog/video-length-by-niche` for the join fan-out bug above.
