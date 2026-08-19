@@ -435,17 +435,20 @@ volume, a passed SERP check, and a route through the one test.
 
 | # | Article | Slug | Volume | Status |
 |---|---|---|---|---|
-| 1 | Tech video ideas | `tech-video-ideas` | 1,300/mo (unverified, see below) | **NEXT — outline awaiting approval.** Data floor initially failed (17 channels), fixed 08-19 via expanded discovery: now 127 channels / 5,876 videos. See `research/tech-video-ideas.md`. |
-| 2 | Music video ideas | `music-video-ideas` | 950/mo | Data floor also fixed 08-19: 181 channels / 6,801 videos, clears easily. Research file not yet built — do after tech. |
+| 1 | ~~Tech video ideas~~ | `tech-video-ideas` | 1,300/mo (unverified, see below) | **SHIPPED 08-19, commit `fdaae2220`.** Data floor initially failed (17 channels), fixed via expanded discovery: 127 channels / 5,876 videos. |
+| 2 | Music video ideas | `music-video-ideas` | 950/mo | **NEXT.** Data floor fixed 08-19: 181 channels / 6,801 videos, clears easily. Research file not yet built. |
 | 3 | Title-length study, folds INTO `/blog/youtube-title` | n/a | n/a | Angle confirmed 08-14. Needs 2 SQL pulls joining `video_metric_snapshots` to `channel_videos.title`. |
 | 4 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | Weak confirm. Only write with a differentiator, see below. |
 | 5 | Promotion pass on the published studies | n/a | n/a | User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
 
-**Item 1 is next.** Cooking shipped 2026-08-15 (commit `b61406dbc`), the first
-article to run the full runbook (Stages 1 through 6) in order: research file,
-fetched top 3, coverage matrix, approval, drift-checked draft, verified
-metadata and cover, build, push. Comedy shipped 2026-08-14 (commit `839a04d24`)
-but skipped Stages 1 and 2, still owed, see Part 5.
+**Item 2 (music) is next.** Tech shipped 2026-08-19 (commit `fdaae2220`).
+Its data floor failed on the first pass (17 channels), fixed live by running
+broader discovery queries instead of waiting on the weekly sweep, see
+`scripts/expand_category_discovery.py` and `research/tech-video-ideas.md`
+Section 5. Cooking shipped 2026-08-15 (commit `b61406dbc`), the first article
+to run the full runbook (Stages 1 through 6) in order. Comedy shipped
+2026-08-14 (commit `839a04d24`) but skipped Stages 1 and 2, still owed, see
+Part 5.
 
 **Item 4 is the strongest item on this list.** Three published studies
 contradict each other (AIR Media-Tech says 30-50 chars, 10xCreator says 70-100,
@@ -493,6 +496,7 @@ Delete it or ignore it; it is not a queue item.
 
 | Date | Article | Type |
 |---|---|---|
+| 2026-08-19 | Tech Video Ideas (`/blog/tech-video-ideas`), commit `fdaae2220`. Data floor fixed live via `scripts/expand_category_discovery.py` (17 to 127 channels); full voice pass against the demonetization reference after the first draft ran too close to cooking's phrasing | Cluster spoke |
 | 2026-08-15 | Cooking Video Ideas (`/blog/cooking-video-ideas`), commit `b61406dbc`. First article through the full 6-stage runbook | Cluster spoke |
 | 2026-08-14 | Comedy Video Ideas (`/blog/comedy-video-ideas`). Shipped without Stages 1 and 2, see Part 5 | Cluster spoke |
 | 2026-08-13 | Gaming Video Ideas (`/blog/gaming-video-ideas`) | Cluster spoke |
