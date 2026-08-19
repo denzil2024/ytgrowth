@@ -490,6 +490,33 @@ rewrite. Do it before or after cooking, but do not leave it indefinitely.
 still untracked, superseded by `/blog/gaming-video-ideas` shipping 2026-08-13.
 Delete it or ignore it; it is not a queue item.
 
+**Video Ideas pillar/spoke system needs a full overhaul. DECIDED 2026-08-19,
+work starts next session, not today.** Checked how the sister project
+(`niche_website`, SavvyHomie, at `C:\Users\HP\OneDrive\Desktop\niche_website`)
+handles this, since it runs the same pillar/spoke model across many more
+clusters. Its pattern: every pillar ends with a dedicated, explicitly labeled
+`## More [Cluster] Guides` section, one bullet per spoke, each with a real
+one-line differentiator, kept in sync as spokes ship. Spokes do not mirror
+that section; they carry one inline sentence near the intro linking back to
+the pillar and the closest sibling or two.
+
+Our pillar (`/blog/youtube-video-ideas`) has none of that. Its spoke links are
+two scattered sentences wedged into unrelated body paragraphs (one old, one
+added today for tech/cooking/comedy), not a dedicated section, and the pillar
+itself reads thinner than the spokes it is supposed to anchor: no measured
+data section, no comparable depth to what cooking/comedy/tech now carry.
+Calling this "total chaos" is fair.
+
+**Order matters, do not skip ahead:**
+1. Rewrite the pillar itself first, to a depth on par with the spokes it
+   anchors, before touching any linking. A weak pillar undermines the whole
+   cluster regardless of how clean the links to it are.
+2. Only after that, do the internal-linking pass properly and systematically
+   across the full cluster (pillar to every spoke, spoke back to pillar and
+   siblings), modeled on the SavvyHomie pattern above.
+
+Not started. No files touched yet for this item.
+
 ---
 
 ## Shipped
