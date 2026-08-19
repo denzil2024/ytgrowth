@@ -11072,7 +11072,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>Transformation content has one of the highest watch time rates of any video ideas for YouTube beginners format because the structure creates a built-in reason to keep watching. The viewer clicks to see the result and stays through the entire video to get there.</p>
 
-        <p>The format works across more niches than most beginners realise. Fitness transformations are the most obvious application but the same principle applies to room makeovers, website redesigns, recipe improvements, budget overhauls, writing edits, photo retouching, and channel growth journeys. Any before state that can be visibly or measurably improved is a transformation video waiting to be made.</p>
+        <p>The format works across more niches than most beginners realize. Fitness transformations are the most obvious application but the same principle applies to room makeovers, website redesigns, recipe improvements, budget overhauls, writing edits, photo retouching, and channel growth journeys. Any before state that can be visibly or measurably improved is a transformation video waiting to be made.</p>
 
         <img src="/blog/youtube-video-ideas-before-and-after.webp" alt="A before and after transformation video with the process shown in between" />
 
@@ -11127,7 +11127,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>Every format in this guide works with zero subscribers because each one is built on search demand, low production barriers, and evergreen relevance. Pick one idea that fits <a href="/blog/youtube-niche">your niche</a>, research the specific angle with the most search potential, and film it before you have a reason not to. Once you have a few uploads, the <a href="/blog/youtube-shorts-ideas">Shorts ideas guide</a> covers how to turn that same footage into a second discovery channel, the <a href="/blog/youtube-vlog-ideas">vlog ideas guide</a> covers the routine-driven format in full, the <a href="/blog/youtube-challenge-ideas">challenge video guide</a> covers a format that works well once you are ready to film something bigger, and the <a href="/blog/gaming-video-ideas">gaming video ideas guide</a> covers the format-first approach for the platform's most crowded category.</p>
 
-        <p>If your channel leans toward reviews and gear instead, the <a href="/blog/tech-video-ideas">tech video ideas guide</a> runs the same format-first logic against product cycles instead of games.</p>
+        <p>If your channel leans toward reviews and gear instead, the <a href="/blog/tech-video-ideas">tech video ideas guide</a> runs the same format-first logic against product cycles instead of games. The <a href="/blog/cooking-video-ideas">cooking video ideas guide</a> and the <a href="/blog/comedy-video-ideas">comedy video ideas guide</a> apply the same approach to recipes and sketches.</p>
 
         <p>The creators who grow consistently are not the ones who waited until everything was perfect. They are the ones who started, learned from the data their first ten videos produced, and adjusted faster than everyone else who was still planning.</p>
 
