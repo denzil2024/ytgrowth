@@ -18,12 +18,26 @@
  * the build (or this script) never duplicates the tags.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs'
-import { globSync } from 'node:fs'
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const DIST = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'dist')
+
+// Plain recursive walk instead of fs.globSync, which needs Node 22+
+// (or a 20.19+ backport) and throws an import error on older 20.x.
+function findIndexHtmlFiles(dir) {
+  const out = []
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) {
+      out.push(...findIndexHtmlFiles(full))
+    } else if (entry.isFile() && entry.name === 'index.html') {
+      out.push(full)
+    }
+  }
+  return out
+}
 
 // Serialized form Puppeteer emits (no self-closing slash). Stable anchor.
 const ANCHOR = '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
@@ -52,7 +66,7 @@ if (!process.env.EZOIC_ENABLED) {
   process.exit(0)
 }
 
-const files = globSync('**/index.html', { cwd: DIST }).map((f) => join(DIST, f))
+const files = findIndexHtmlFiles(DIST)
 
 let injected = 0
 let skipped = 0

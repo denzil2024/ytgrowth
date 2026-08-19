@@ -3,7 +3,7 @@
 Target query: `tech video ideas for youtube`
 Volume: 50/mo per `keyword-exports/Keyword Stats 2026-08-13 at 00_05_13.csv` — CONTENT-PLAN.md's queue carried 1,300/mo, unverified against the actual export. Every tech-ideas variant in that file caps at 50/mo. Not re-checked against a direct Keyword Planner search (only the discovery-mode export), so this is a flag, not the kill reason.
 Researched: 2026-08-19
-Status: `researching — data floor now passes, outline pending approval`
+Status: `DONE — shipped 2026-08-19`
 
 ## 1. The live top 10
 
@@ -106,23 +106,61 @@ generated.
 ## 7. Approval
 
 Presented: 2026-08-19
-Outcome: pending
+Outcome: approved
 
 ---
 
 ## 8. Stage log
 
 - [x] Stage 1, research file complete
-- [ ] Stage 2, presented and approved — pending
-- [ ] Stage 3 — not reached
-- [ ] Stage 4 — not reached
-- [ ] Stage 5 — not reached
+- [x] Stage 2, presented and approved
+- [x] Stage 3, full draft written in one pass (33 ideas, six named formats:
+      The Verdict, First Contact, Tested Not Assumed, Explain It From Zero,
+      My Actual Setup, The News Nobody Explained Right; plus the privacy and
+      security gap section)
+- [x] Stage 4, verified: `check-drift.mjs` passed clean (0 banned words, 1
+      shared H2 with cooking, well under the fail threshold), FAQ array
+      matches the visible section word for word (8/8), idea count consistent
+      across title/excerpt/seoMeta/llms.txt (33), `npm run build` vite+prerender
+      succeeded and the new route was confirmed prerendered with real content,
+      paragraph checker passed (38/38 paragraphs <=5 lines), screenshots read.
+- [x] Stage 5, built with `BUILD_API_URL=https://ytgrowth.io`, 115 routes
+      prerendered clean, committed and pushed.
+- [x] Stage 6, close the loop — CONTENT-PLAN.md queue and Shipped table
+      updated 2026-08-19.
 
-### Outstanding
+### Corrections made after "verified", before push
 
-- Awaiting outline approval (Stage 2 gate).
+- A real cover photo was sourced (creator unboxing headphones at a desk,
+  camera and monitor visible) and converted to 1600x900 JPG.
+- `frontend/scripts/inject-ezoic.js` used `node:fs`'s `globSync`, Node 22+
+  only, which crashed `npm run build` on this machine's Node 20.17.0 after
+  vite build and prerender both completed successfully. Fixed with a plain
+  recursive directory walk, no version dependency, unrelated to this
+  article but blocking every future `npm run build` until fixed.
+- Full second-pass proofread against the `/blog/youtube-demonetization`
+  voice reference, user-directed, after the first draft read as too close
+  to cooking's phrasing and too soft ("builds trust", "beats X every time"
+  style unsupported claims) to match "authority, no fluff." Rewrote the
+  intro, cut a real restatement bug (the same "4-minute video padded to
+  8 minutes" argument was made twice, once mid-article and again near the
+  length table), and replaced several vague claims with the actual
+  mechanism behind them. `check-drift.mjs` and the paragraph checker both
+  re-verified clean after each round.
 - The 1,300/mo volume CONTENT-PLAN.md originally carried for this slug does
   not match the keyword export in this repo (every tech-ideas variant caps at
   50/mo there). Not blocking — worth a direct Keyword Planner re-check before
   relying on that number elsewhere, but the article's case rests on the one
   test passing, not on volume alone.
+- Cross-post data discrepancy, not fixed here (out of scope for Stage 3/4 on
+  this article): the already-live `/blog/video-length-by-niche` post reports
+  tech at a 9.9-minute median / 10.4-minute mean / 9.7% Shorts share (1,198
+  videos, "since January 2026", drawn from all tracked tech channels). This
+  article's approved research figures are 6.2-minute median / 10.3-minute
+  mean / 22.6% Shorts share (5,876 videos, `published_at >= 2025-01-01`,
+  drawn specifically from `top_channel_cache` category='tech' channels after
+  the 08-19 discovery expansion). Different sample population and different
+  date filter explain the gap, but a reader who opens both posts will see two
+  different tech-length numbers with no cross-reference explaining why. This
+  article does not link to `video-length-by-niche` for that reason. Worth a
+  decision on whether to reconcile or annotate the older post.
