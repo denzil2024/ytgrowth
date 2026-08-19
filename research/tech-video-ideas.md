@@ -3,7 +3,7 @@
 Target query: `tech video ideas for youtube`
 Volume: 50/mo per `keyword-exports/Keyword Stats 2026-08-13 at 00_05_13.csv` — CONTENT-PLAN.md's queue carried 1,300/mo, unverified against the actual export. Every tech-ideas variant in that file caps at 50/mo. Not re-checked against a direct Keyword Planner search (only the discovery-mode export), so this is a flag, not the kill reason.
 Researched: 2026-08-19
-Status: `REJECTED — data floor fail`
+Status: `researching — data floor now passes, outline pending approval`
 
 ## 1. The live top 10
 
@@ -32,10 +32,10 @@ question is whether we can fill it.
 
 > Could a competitor without our database have written this article?
 
-**Fails the data pull (Section 5). Without the measured table, this is
-identical to the four pages above — a generic ideas list any competitor
-already publishes. YES, a competitor could write it, because right now so
-could we, minus the one thing that would have made it different.**
+The idea list itself: no, same shape as every competitor reviewed (Packapop,
+jaisonchristopher, armchairarcade — all pure opinion, no data, and largely
+interchangeable with each other). The measured table is the differentiator.
+**Passes, now that Section 5 clears the floor.**
 
 ## 5. The data pull
 
@@ -48,55 +48,81 @@ WHERE cv.channel_id IN (
 AND cv.published_at >= '2025-01-01';
 ```
 
-Run 2026-08-19 via Railway Postgres console.
+First run 2026-08-19 via Railway Postgres console: **17 channels, failed the
+floor.** Root cause: `top_channel_cache`'s single discovery query ("tech
+reviews") only ever surfaced 17 distinct channels total — not a backfill gap,
+a discovery gap (cooking cleared the floor at 59 channels under the same
+mechanism, so this was category-specific).
+
+Fixed 2026-08-19 via `scripts/expand_category_discovery.py`: ran 6 broader
+search terms ("tech reviews", "tech youtuber", "gadget review channel",
+"smartphone review channel", "tech unboxing channel", "consumer tech
+channel"), found 281 unique candidate channels, 129 qualified (>=5,000 subs,
+>=15 videos), persisted 10 new `top_channel_cache` rows (most of the 129 were
+already present as candidates from other categories/regions) and 5,715 new
+`channel_videos` rows. Re-ran the floor query after:
 
 | Check | Value | Floor | Pass? |
 |---|---|---|---|
-| Channels behind the figure | **17** | 30 | **NO** |
-| Videos behind the figure | 1,010 | 500 | yes |
-| Date filter applied | yes | required | yes |
-| Median AND mean reported | 9.5 / 9.98 min, 7.0% Shorts (computed, unpublishable) | required | n/a — figure dropped |
+| Channels behind the figure | **127** | 30 | **yes** |
+| Videos behind the figure | 5,876 | 500 | yes |
+| Date filter applied | yes (`published_at >= '2025-01-01'`) | required | yes |
+| Median AND mean reported | 6.2 min / 10.3 min (1.66x skew) | required | yes |
 
-Figures to publish: none.
+Figures to publish: median length 6.2 min, mean 10.3 min, 1.66x skew, 22.6%
+Shorts share. 127 channels, 5,876 videos.
 
-Figures dropped for failing the floor: median length 9.5 min, mean 9.98 min,
-Shorts share 7.0%. All computed from only 17 channels — 13 short of the floor.
-Per Part 1's rule, this is a drop, not a caveat.
-
-Root cause worth flagging, not fixing here: `top_channel_cache` discovers up
-to 50 channels x 6 regions for the `tech` category (query: "tech reviews"),
-but `channel_videos` only has video-level data for 17 distinct channels in
-that set. The discovery layer and the video-collection layer are out of sync
-for this category specifically — cooking cleared the floor at 59 channels, so
-this isn't a database-wide gap, it's specific to how few discovered `tech`
-channels have ever had their videos backfilled.
+Figures dropped for failing the floor: none — the fixed dataset clears every
+check.
 
 ## 6. Outline
 
-Not built. Rejected before outline stage.
+Working title: TBD, will not be a template count — driven by the matrix in
+Section 2.
+Slug: `tech-video-ideas`
+Angle: measured upload data (length, format, Shorts share across 127 real
+tech channels) plus a curated idea list, same recipe as cooking/gaming/comedy.
+
+- H2: What Tech Channels Really Publish — the measured table (median 6.2 min,
+  mean 10.3 min, 22.6% Shorts share, 127 channels/5,876 videos), the section
+  no competitor has
+- H2: idea sections grouped by mechanism, covering the UNION of Section 2:
+  product reviews/comparisons, unboxings, how-to/tutorials, tech news,
+  app reviews, setups/workspace, explainers (AI/blockchain/etc.), tips/hacks,
+  predictions — exact grouping and count TBD once ideas are drafted
+- H2: a tech-specific gap competitors miss — candidate: privacy/security
+  walkthroughs (none of the four reviewed touch it directly as its own
+  section) or a "channel setup mistakes" angle, confirm during drafting
+- FAQ, count driven by genuinely distinct questions
+- Creative closing H2, not "Final Thoughts"
+
+Internal links out: `/blog/youtube-video-ideas` (pillar), `/blog/gaming-video-ideas`,
+`/blog/comedy-video-ideas`, `/blog/cooking-video-ideas` (siblings).
+Mid-article CTA: video ideas generator tool, same as siblings.
+Cover image needed: yes, photographic, house pattern (creator mid-task, warm
+light, candid) — ask for a real photo, matching cooking's approach, not
+generated.
 
 ## 7. Approval
 
 Presented: 2026-08-19
-Outcome: n/a — self-rejected at Stage 1 per the one test, no draft written.
+Outcome: pending
 
 ---
 
 ## 8. Stage log
 
-- [x] Stage 1, research file complete — rejected
-- [ ] Stage 2 — not reached
+- [x] Stage 1, research file complete
+- [ ] Stage 2, presented and approved — pending
 - [ ] Stage 3 — not reached
 - [ ] Stage 4 — not reached
 - [ ] Stage 5 — not reached
 
 ### Outstanding
 
-- Queue item 1 status needs updating in CONTENT-PLAN.md Part 4.
-- If `tech` category's channel_videos backfill gap is ever closed (more of
-  the discovered 50x6 channels get video-level collection), this can be
-  re-run without redoing the SERP/matrix work above.
-- The 1,300/mo volume CONTENT-PLAN.md carried for this slug does not match
-  the keyword export in this repo (50/mo). Not the reason this was rejected
-  (data floor was), but worth a direct Keyword Planner re-check before trusting
-  that number for any other decision.
+- Awaiting outline approval (Stage 2 gate).
+- The 1,300/mo volume CONTENT-PLAN.md originally carried for this slug does
+  not match the keyword export in this repo (every tech-ideas variant caps at
+  50/mo there). Not blocking — worth a direct Keyword Planner re-check before
+  relying on that number elsewhere, but the article's case rests on the one
+  test passing, not on volume alone.

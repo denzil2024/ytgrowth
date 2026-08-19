@@ -435,8 +435,8 @@ volume, a passed SERP check, and a route through the one test.
 
 | # | Article | Slug | Volume | Status |
 |---|---|---|---|---|
-| 1 | Tech video ideas | `tech-video-ideas` | 1,300/mo (unverified, see below) | **REJECTED 08-19.** Only 17 channels have `channel_videos` rows for `category='tech'`, fails the 30-channel floor. See `research/tech-video-ideas.md`. |
-| 2 | Music video ideas | `music-video-ideas` | 950/mo | **NEXT.** Validated 08-13. Verify channel count against the data floor first. |
+| 1 | Tech video ideas | `tech-video-ideas` | 1,300/mo (unverified, see below) | **NEXT — outline awaiting approval.** Data floor initially failed (17 channels), fixed 08-19 via expanded discovery: now 127 channels / 5,876 videos. See `research/tech-video-ideas.md`. |
+| 2 | Music video ideas | `music-video-ideas` | 950/mo | Data floor also fixed 08-19: 181 channels / 6,801 videos, clears easily. Research file not yet built — do after tech. |
 | 3 | Title-length study, folds INTO `/blog/youtube-title` | n/a | n/a | Angle confirmed 08-14. Needs 2 SQL pulls joining `video_metric_snapshots` to `channel_videos.title`. |
 | 4 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | Weak confirm. Only write with a differentiator, see below. |
 | 5 | Promotion pass on the published studies | n/a | n/a | User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
