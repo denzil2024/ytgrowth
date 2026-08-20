@@ -490,6 +490,18 @@ rewrite. Do it before or after cooking, but do not leave it indefinitely.
 still untracked, superseded by `/blog/gaming-video-ideas` shipping 2026-08-13.
 Delete it or ignore it; it is not a queue item.
 
+**Three more spokes predate the current standard, flagged by the user
+2026-08-20.** `/blog/youtube-vlog-ideas` (shipped 2026-08-08),
+`/blog/youtube-shorts-ideas`, and `/blog/youtube-challenge-ideas` (both
+2026-07-28) all predate the numbered-idea-plus-measured-upload-data format
+every post from cooking (2026-08-15) onward uses. Confirmed: none of the
+three has a single numbered idea in the current `N. "Title"` pattern, and
+none carries a real cross-referenced upload-data table in the current style
+(vlog has 5 tables, shorts and challenge have 1 each, but none in the
+current measured-data shape). Revisit after today's article. Do not start
+without a research file per the standard process; these are candidate
+rewrites, not confirmed yet.
+
 **Video Ideas pillar/spoke system needs a full overhaul. DECIDED 2026-08-19,
 work starts next session, not today.** Checked how the sister project
 (`niche_website`, SavvyHomie, at `C:\Users\HP\OneDrive\Desktop\niche_website`)
