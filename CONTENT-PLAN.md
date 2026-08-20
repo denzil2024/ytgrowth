@@ -517,14 +517,29 @@ Calling this "total chaos" is fair.
    FAQ section corrected mid-build after the first draft was written from
    reasoning, not real search data, then pulled for real via the Serper
    People Also Ask API, see `research/youtube-video-ideas.md`.
-2. Internal-linking pass across the full cluster (pillar to every spoke,
-   spoke back to pillar and siblings), modeled on the SavvyHomie pattern
-   above, is still outstanding. The pillar now has a `## Which Niche Guide
-   to Read Next` section linking out to all 7 spokes, but the reverse
-   direction (each spoke linking back with a real differentiator, not just
-   a pillar link) has not been audited systematically yet.
+2. ~~Internal-linking pass across the full cluster.~~ **DONE 2026-08-20.**
+   Audited all 4 shipped spokes: tech already linked to the pillar and
+   every sibling (written that way this session). Gaming, cooking, and
+   comedy had zero links to the pillar or to any sibling spoke, confirmed
+   by grepping every `href="/blog/..."` in each. Added one inline sentence
+   to each, near its own "why format beats a single idea" section, in that
+   article's own voice, not copy-pasted between them. The pillar's `##
+   Which Niche Guide to Read Next` section already covered the pillar to
+   spoke direction.
 
-Not started. No files touched yet for this item.
+Both steps of the overhaul are complete. Music, once it ships, still needs
+this same treatment.
+
+**Found in passing, not fixed, logged for later:**
+- `gaming-video-ideas` has 18 bold-lead paragraphs against a target of 8.
+  It shipped 2026-08-13, before the drift checker existed, so it was never
+  checked. Out of scope for a linking fix; needs its own pass.
+- `comedy-video-ideas`'s data section still cites 699 videos / 17 channels
+  from its original, thin pull. The same category now has 155 channels and
+  6,750 videos after the 2026-08-20 expanded-discovery run (median 1.6 min,
+  not 9.0; Shorts share 34.4%, not 26.7%). This is the same gap Part 5
+  already flags under "Comedy shipped without Stages 1 and 2" — now with a
+  concrete fix available, not just a diagnosis.
 
 ---
 

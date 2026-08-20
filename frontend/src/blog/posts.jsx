@@ -390,7 +390,7 @@ export const posts = [
 
         <p>A format changes the axis. A comparison, a constraint, a template, gives a viewer a reason to click that has nothing to do with the channel's size. The strongest source page in this SERP proves the point by publishing only eight ideas, each one a nameable format, not a dish, against pages that publish over a hundred single-recipe suggestions and read as padded because most of the length is not doing any work.</p>
 
-        <p>The six formats below are organized around that difference. Each one is a repeatable shape you can point at a new dish indefinitely, not a single video you make once and then need a new idea for.</p>
+        <p>The six formats below are organized around that difference. Each one is a repeatable shape you can point at a new dish indefinitely, not a single video you make once and then need a new idea for. The <a href="/blog/youtube-video-ideas">full video ideas guide</a> covers the same format-first logic across every niche, and the same six-format-not-one-recipe thinking drives the guides for <a href="/blog/gaming-video-ideas">gaming</a>, <a href="/blog/tech-video-ideas">tech</a>, and <a href="/blog/comedy-video-ideas">comedy</a>.</p>
 
         <table>
           <thead>
@@ -637,6 +637,8 @@ export const posts = [
 
         <p>Every idea below is grouped by the mechanism that makes it legible, not by the format it happens to be shot in. That is a deliberate departure from how comedy idea lists are normally organized, and it is the more useful cut, because a format tells you what to point a camera at while a mechanism tells you how to invent the next one yourself.</p>
 
+        <p>The <a href="/blog/youtube-video-ideas">full video ideas guide</a> covers this same mechanism-over-format thinking across every niche, and the <a href="/blog/gaming-video-ideas">gaming</a>, <a href="/blog/tech-video-ideas">tech</a>, and <a href="/blog/cooking-video-ideas">cooking</a> guides apply it with a different payoff than a laugh.</p>
+
         <p>There are six of them. Once you know which mechanism works on your particular audience, you can generate premises indefinitely without waiting to feel funny, and that is the part most creators find impossible to schedule.</p>
 
         <p>The upload figures above are measured. The six mechanisms are not. No dataset classifies comedy videos this way, ours included, so these are a working framework drawn from what successful comedy premises have in common rather than a ranking anybody has tested.</p>
@@ -874,7 +876,7 @@ export const posts = [
     date: '2026-08-13',
     category: CATEGORIES.strategy,
     cover: '/blog/gaming-video-ideas-cover.jpg',
-    coverAlt: 'A gaming creator sitting back from a desk mid-thought, looking at a wall covered in coloured sticky notes beside a dual-monitor setup, headset and controller on the desk',
+    coverAlt: 'A gaming creator sitting back from a desk mid-thought, looking at a wall covered in colored sticky notes beside a dual-monitor setup, headset and controller on the desk',
     author: 'Denzil',
     readTime: '11 min read',
     faqs: [
@@ -930,7 +932,7 @@ export const posts = [
 
         <p><strong>Search-driven gaming content is the opening most new channels miss.</strong> Players search for specific problems (a boss they cannot beat, a build that stopped working, a setting that tanks their frame rate) and those searches are answered badly or not at all, because big channels chase broad entertainment views instead.</p>
 
-        <p><strong>Format beats game selection.</strong> A channel known for one repeatable format accumulates returning viewers, while a channel that jumps between whatever is trending has to re-earn its audience every upload. The six formats below are ordered by how reachable each one is for a channel with no audience yet.</p>
+        <p><strong>Format beats game selection.</strong> A channel known for one repeatable format accumulates returning viewers, while a channel that jumps between whatever is trending has to re-earn its audience every upload. The six formats below are ordered by how reachable each one is for a channel with no audience yet. The <a href="/blog/youtube-video-ideas">full video ideas guide</a> covers this same format-over-topic logic for every niche, and the <a href="/blog/tech-video-ideas">tech</a>, <a href="/blog/cooking-video-ideas">cooking</a>, and <a href="/blog/comedy-video-ideas">comedy</a> guides apply it outside gaming.</p>
 
         <table>
           <thead>
