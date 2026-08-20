@@ -130,6 +130,7 @@ These are durable preferences that apply across every session. They survive Clau
 ## Deployment workflow
 
 - **Every code change = commit + push to origin.** Railway auto-deploys on push. Never stop at a local commit.
+- **Exception: research-only or doc-only commits should be committed but not pushed standalone.** Railway rebuilds and restarts the container on every push to `main` regardless of what changed, so a `research/*.md` or `CONTENT-PLAN.md`-only commit still burns a full deploy cycle for zero user-facing benefit. Commit right away (protects the work), then hold the push until it can bundle with the next commit that actually ships something. A one-time fix exists but is not set up: Railway's per-service Watch Paths setting can exclude these paths from triggering a deploy at all.
 - **Stage specific files by name** (`git add path/to/file`) rather than `git add -A` or `git add .`. The repo has untracked artifacts (pycache, build dist) that should not be bundled.
 - **Pre-commit hooks must pass.** If a hook fails, fix the underlying issue. Never use `--no-verify` unless the user explicitly asks.
 
@@ -166,6 +167,18 @@ Before writing any new article, run an explicit coverage check against the top-r
 ## Blog post conclusions
 
 Never end a post with a generic "Final Thoughts" or "Conclusion" heading. The final H2 must be a creative, content-specific line tied to the article's thesis (example: the Chrome-extensions post closes with "Six Tools Beat Twenty"). Generic headings read like a beginner template and waste the most memorable slot in the piece. Still end with a real conclusion, not a sales pitch (the CTA card belongs mid-article). Sweep older posts' generic conclusion headings whenever you touch them.
+
+In a pillar/spoke cluster (the video-ideas family: gaming, tech, cooking, comedy, music, pillar), a spoke's link back to its pillar goes in the **intro**, not the closing paragraph. The closing section is for the article's own final thought only, no navigational links. Corrected 2026-08-20 after the pillar link kept landing in the conclusion by default; retrofitted across all five shipped spokes in one pass.
+
+## Blog voice: no filler intensifiers, no reused sentence scaffolding
+
+Beyond the hedge-phrase limits in CONTENT-PLAN.md's Voice section, actively avoid "actually", "really", "genuinely", and "truly" as intensifiers. These are not all on `check-drift.mjs`'s automated banned list (only "actually" is), but they get flagged by hand every time and tend to replace each other in a whack-a-mole pattern when one gets trimmed. Cut the word or replace with a concrete specific, don't swap in a sibling intensifier from this list.
+
+Every article opens by leading with a real number from the actual data, not a thesis-first or scene-setting paragraph. When writing a new entry in an existing cluster, actively grep sibling articles for the specific sentences being drafted (opening line, data-table intro line, closing line) before presenting a draft. The drift checker only catches exact shared H2 text, not shared body-paragraph phrasing, so this needs a manual check. This happened three times in one session (2026-08-19/20) before being fully caught: tech's opening mirrored cooking's template, the pillar's and music's openings were both "This guide sorts N ideas into M formats..." verbatim except numbers, and music's data-table intro line matched tech's word for word.
+
+## Blog FAQ sourcing
+
+Every FAQ section (the `faqs` array plus its matching visible `<h3>` section) must be built from real Google "People Also Ask" results pulled via the Serper API before writing, never guessed from reasoning about what seems like a plausible question. Pull PAA for the target query plus 2-4 close variants (`https://google.serper.dev/search`, POST, header `X-API-KEY` from the local `.env`'s `SERPER_KEY`, body `{q, num: 10}`, response field `peopleAlsoAsk[].question`). Existing code pattern: `get_serper_keywords()` in `app/keywords.py`. Not every PAA result is on-topic (an unrelated monetization-questions cluster kept surfacing for content-idea queries); filter for relevance rather than forcing every result in. Editorial questions filling a genuine gap PAA didn't surface are fine as long as they're the minority and not misrepresented as PAA-sourced. Log which questions are real vs. editorial in the article's `research/<slug>.md` file.
 
 
 ---
