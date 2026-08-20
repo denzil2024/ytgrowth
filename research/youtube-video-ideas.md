@@ -3,7 +3,32 @@
 Target query: `youtube video ideas`
 Volume: not re-pulled this session, pillar since 2026-05-17, ranking already established.
 Researched: 2026-08-19
-Status: `researching — data complete (14/14 niches), outline drafted, awaiting approval`
+Status: `DONE — shipped 2026-08-20, awaiting push`
+
+## FAQ sourcing correction (2026-08-20)
+
+The first draft's FAQ section was written from reasoning, not from real search
+data, then presented as-is without flagging that. Caught when the user asked
+directly whether the questions came from actual Google "People Also Ask"
+results. They did not. Corrected by pulling real PAA data via the Serper API
+(same pattern as `app/keywords.py`'s `get_serper_keywords`) for `youtube
+video ideas`, `youtube video ideas for beginners`, `youtube content ideas`,
+`youtube video ideas generator`, and two more variants.
+
+Real, on-topic PAA questions found: "What should my first video on YouTube
+be?", "How to generate YouTube video ideas?", "What content works best on
+YouTube?" / "Which topic is best for YouTube content?". A separate cluster
+of PAA results (views needed to earn $2,000/$10,000/$1,000,000 a month,
+getting 100 subs in a day) came up repeatedly but is off-topic for this
+article, a monetization/growth-hacking intent Google loosely associates via
+keyword overlap with "beginners"/"subscribers," not genuinely about video
+ideas. Left those out rather than forcing them in to inflate the "real data"
+count. The FAQ section was rebuilt: 3 of 8 questions now trace directly to
+real PAA phrasing, the remaining 5 are editorial choices covering gaps PAA
+did not surface (equipment, posting cadence, Shorts strategy, niche-guide
+differentiation), which is a normal and honest way to build an FAQ section,
+the concern was only ever about not claiming invented questions were
+data-sourced.
 
 This is a rewrite of the existing pillar, not a new post. Current version
 (live since 2026-05-17) predates the data-driven approach and the voice

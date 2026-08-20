@@ -508,12 +508,21 @@ data section, no comparable depth to what cooking/comedy/tech now carry.
 Calling this "total chaos" is fair.
 
 **Order matters, do not skip ahead:**
-1. Rewrite the pillar itself first, to a depth on par with the spokes it
-   anchors, before touching any linking. A weak pillar undermines the whole
-   cluster regardless of how clean the links to it are.
-2. Only after that, do the internal-linking pass properly and systematically
-   across the full cluster (pillar to every spoke, spoke back to pillar and
-   siblings), modeled on the SavvyHomie pattern above.
+1. ~~Rewrite the pillar itself first, to a depth on par with the spokes it
+   anchors, before touching any linking.~~ **DONE 2026-08-20.** Pillar
+   rewritten from 10 generic ideas with zero data to 111 ideas across 15
+   formats, backed by a real cross-niche upload-data table (14 tracked
+   niches, 83,423 videos, data floor expanded live via
+   `scripts/expand_category_discovery.py` for the 5 niches that were short).
+   FAQ section corrected mid-build after the first draft was written from
+   reasoning, not real search data, then pulled for real via the Serper
+   People Also Ask API, see `research/youtube-video-ideas.md`.
+2. Internal-linking pass across the full cluster (pillar to every spoke,
+   spoke back to pillar and siblings), modeled on the SavvyHomie pattern
+   above, is still outstanding. The pillar now has a `## Which Niche Guide
+   to Read Next` section linking out to all 7 spokes, but the reverse
+   direction (each spoke linking back with a real differentiator, not just
+   a pillar link) has not been audited systematically yet.
 
 Not started. No files touched yet for this item.
 
