@@ -1,8 +1,12 @@
 """One-off: broaden channel discovery for specific categories that don't
 clear CONTENT-PLAN.md's 30-channel data floor under the single CATEGORY_QUERIES
-term in app/top_channels.py. Confirmed 2026-08-19: 'tech' search ("tech
-reviews") only ever surfaces 17 distinct channels total (not a backfill gap,
-a discovery gap); 'music' ("music videos artist") surfaces 28.
+term in app/top_channels.py. Confirmed 2026-08-19: 'tech' (17 channels) and
+'music' (28) both failed under their single discovery term; fixed the same
+day. A full sweep of all 14 tracked categories the same day found 5 more
+failing: education (12), vlogs (24), comedy (17), sports (19), entertainment
+(12), for the youtube-video-ideas pillar rewrite, which needs a real
+cross-niche table across every tracked category, not just the ones that
+happened to clear the floor already.
 
 Runs several additional, more varied search terms per category (channel
 discovery, not the scheduled job's single term), pulls each qualifying
@@ -12,12 +16,13 @@ the underlying gap for future use, not just this one article pull.
 
 Cost: 100 units per extra search query x ~6 queries x N categories, plus
 ~1 unit per channel (playlistItems) and ~1 unit per 50 videos (videos.list).
-Two categories (tech, music) x 6 queries = 12 search.list calls, well under
-the 100/day search sub-limit. Total ballpark: ~1,300-1,500 units.
+Five categories x 6 queries = 30 more search.list calls (on top of the 12
+already spent today on tech/music), still comfortably under the 100/day
+search sub-limit. Total ballpark: ~3,000-4,000 units for all five.
 
 Run on Railway (app service console, has YOUTUBE_API_KEY + DATABASE_URL):
 
-    python scripts/expand_category_discovery.py tech music
+    python scripts/expand_category_discovery.py education vlogs comedy sports entertainment
 """
 
 import datetime
@@ -35,6 +40,26 @@ EXTRA_QUERIES = {
     "music": [
         "music videos artist", "official music channel", "music youtuber",
         "music review channel", "band official channel", "singer official channel",
+    ],
+    "education": [
+        "science education explained", "educational youtube channel", "explainer channel",
+        "how things work channel", "online course channel", "study education channel",
+    ],
+    "vlogs": [
+        "daily vlog", "vlogger channel", "day in the life vlog",
+        "lifestyle vlog channel", "family vlog channel", "vlog channel",
+    ],
+    "comedy": [
+        "comedy sketches", "comedy youtuber", "sketch comedy channel",
+        "stand up comedy channel", "funny videos channel", "parody channel",
+    ],
+    "sports": [
+        "sports highlights", "sports commentary channel", "sports analysis channel",
+        "sports youtuber", "athlete channel", "sports news channel",
+    ],
+    "entertainment": [
+        "entertainment shows", "entertainment news channel", "pop culture channel",
+        "celebrity news channel", "reaction entertainment channel", "entertainment commentary",
     ],
 }
 
