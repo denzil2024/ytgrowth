@@ -3,6 +3,7 @@
 // SERP display without touching article copy. Consumed in BlogPost.jsx.
 export const BLOG_SEO = {
   "tech-video-ideas": { title: "33 Tech Video Ideas for a Small Channel (2026)", description: "33 tech video ideas grouped into six formats that outlast any product cycle, measured against 5,876 real uploads for length, cadence, and Shorts share." },
+  "music-video-ideas": { title: "43 Music Video Ideas: Promote the Song or Build the Channel", description: "43 music video ideas split into formats that promote the song and formats that build the channel, measured against 6,801 real uploads for length and Shorts share." },
   "cooking-video-ideas": { title: "34 Cooking Video Ideas for a Small Channel (2026)", description: "34 cooking video ideas grouped into six repeatable formats, measured against 3,859 real uploads for length, cadence, and Shorts share." },
   "comedy-video-ideas": { title: "42 Comedy Video Ideas for a Small Channel (2026)", description: "42 comedy video ideas grouped by the six mechanisms behind every comedy premise, with real upload data on what comedy channels publish." },
   "gaming-video-ideas": { title: "18 Gaming Video Ideas for a Small Channel (2026)", description: "18 gaming video ideas grouped by format, each with the reason it works for a channel nobody knows yet, from search-driven guides to beginner content." },
