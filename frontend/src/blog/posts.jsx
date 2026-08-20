@@ -116,7 +116,7 @@ export const posts = [
 
         <p>The 33 ideas below sort into six formats built around a different premise: none of them depend on being first to a launch. A myth put to the test, a real setup, a concept explained from zero, none of it loses value if it publishes on day nine instead of day one.</p>
 
-        <h2>What Tech Channels Really Publish</h2>
+        <h2>What Tech Channels Publish</h2>
 
         <p>Everything in the table below is pulled straight from <strong>5,876 long-form tech videos published since January 2025</strong>, across 127 channels in our own tracked database, not summarized from someone else's article.</p>
 
@@ -136,7 +136,7 @@ export const posts = [
           </tbody>
         </table>
 
-        <p><strong>The 1.66x gap between median and mean says something specific about this niche.</strong> Enough long-format content, hour-plus teardown videos, full buying guides, deep dive explainers, sits inside the sample to pull the average well above what a typical upload looks like. A 6.2-minute video is closer to what most tech channels really publish than the 10.3-minute average suggests.</p>
+        <p><strong>The 1.66x gap between median and mean says something specific about this niche.</strong> Enough long-format content, hour-plus teardown videos, full buying guides, deep dive explainers, sits inside the sample to pull the average well above what a typical upload looks like. A 6.2-minute video is closer to what most tech channels publish than the 10.3-minute average suggests.</p>
 
         <p>6.2 minutes sits well under the 8-minute mark where a second ad break kicks in, and that is not a gap to close. A verdict or a first-look runs as long as there is something new to show, then it stops. Padding a 4-minute unboxing to 8 minutes for one more ad break only pays off if viewers stay through the stretch, and a stretched video is exactly where they stop staying.</p>
 
@@ -158,10 +158,10 @@ export const posts = [
           </thead>
           <tbody>
             <tr><td><strong>The Verdict</strong></td><td>Whether the product or app is worth the money</td><td>Purchase-intent search traffic</td></tr>
-            <tr><td><strong>First Contact</strong></td><td>What using it for the first time really feels like</td><td>Launch-week and early-access reach</td></tr>
+            <tr><td><strong>First Contact</strong></td><td>What using it for the first time feels like</td><td>Launch-week and early-access reach</td></tr>
             <tr><td><strong>Tested, Not Assumed</strong></td><td>Whether a popular claim or setting holds up when checked</td><td>Building trust as a source, not just a reviewer</td></tr>
             <tr><td><strong>Explain It From Zero</strong></td><td>Making one confusing concept make sense to a beginner</td><td>Search volume that outlives any device</td></tr>
-            <tr><td><strong>My Actual Setup</strong></td><td>What is really on the desk, and why</td><td>Viewers deciding what to buy next, not what to buy now</td></tr>
+            <tr><td><strong>My Actual Setup</strong></td><td>What is on the desk, and why</td><td>Viewers deciding what to buy next, not what to buy now</td></tr>
             <tr><td><strong>The News Nobody Explained Right</strong></td><td>What an announcement changes for the person watching</td><td>Riding a launch news cycle without repeating the press release</td></tr>
           </tbody>
         </table>
@@ -183,7 +183,7 @@ export const posts = [
 
         <h2>First Contact: The Honest Unboxing</h2>
 
-        <p><strong>An unboxing only has one shot at being interesting: the moment before anyone, including the person filming, knows what is really inside.</strong></p>
+        <p><strong>An unboxing only has one shot at being interesting: the moment before anyone, including the person filming, knows what is inside.</strong></p>
 
         <p>The strongest unboxings treat the box as the first data point, not filler before the real content starts. What a company chooses to include, and what it leaves out, tells a viewer something a spec sheet cannot.</p>
 
@@ -225,7 +225,7 @@ export const posts = [
         <ul>
           <li><strong>18. "What Happens, Step by Step, When You Ask AI a Question"</strong><br />A plain-language walkthrough of how a model responds, aimed at someone who has used the tools but never seen behind them.</li>
           <li><strong>19. "The One Privacy Setting Worth Understanding First"</strong><br />Instead of a general list, pick the single setting that matters most and explain the reasoning behind it properly.</li>
-          <li><strong>20. "What Your Phone Is Really Tracking, and How"</strong><br />Explain the real tracking mechanisms in plain language, no fear-mongering, just the technical picture.</li>
+          <li><strong>20. "What Your Phone Is Tracking, and How"</strong><br />Explain the real tracking mechanisms in plain language, no fear-mongering, just the technical picture.</li>
           <li><strong>21. "Why This Keeps Breaking, Explained"</strong><br />Pick a common frustration, Wi-Fi dropping, autocorrect getting worse, sync failing silently, and explain the real cause instead of offering another workaround.</li>
           <li><strong>22. "The Buzzword Everyone Uses and Nobody Defines"</strong><br />Take one overused term, edge computing, zero-knowledge, quantum-anything, and explain it properly in under five minutes.</li>
           <li><strong>23. "How This Free App Makes Its Money"</strong><br />Explain the real business model behind a popular free tool or platform, a genuinely underused angle most channels skip in favor of covering the features instead.</li>
@@ -238,7 +238,7 @@ export const posts = [
         <p>The format also ages slower than a review does, because a desk setup changes gradually while a product line turns over every year.</p>
 
         <ul>
-          <li><strong>24. "What Is Really on the Desk, and Why"</strong><br />A walkthrough of a real setup with a stated reason for each piece, not a gear list read off a spec sheet.</li>
+          <li><strong>24. "What Is on the Desk, and Why"</strong><br />A walkthrough of a real setup with a stated reason for each piece, not a gear list read off a spec sheet.</li>
           <li><strong>25. "The Budget Setup Versus the Expensive One"</strong><br />The identical task, two budget tiers of desk gear, tested honestly about what the price difference buys.</li>
           <li><strong>26. "What I Replaced After a Year of Using This Setup"</strong><br />Revisit an old setup video and name what got swapped out and why, instead of pretending the original setup was perfect all along.</li>
           <li><strong>27. "Building a Setup for Under Three Hundred Dollars"</strong><br />A real budget constraint, filmed with receipts, aimed at a viewer who assumes a decent setup costs far more than it does.</li>
@@ -360,7 +360,7 @@ export const posts = [
 
         <p>The 34 ideas below are grouped into six formats rather than one long list of dishes, because a format keeps generating videos long after any single recipe has been filmed, reviewed, and forgotten. Each one names what it takes to shoot and where it tends to fall short.</p>
 
-        <h2>What Cooking Channels Really Publish</h2>
+        <h2>What Cooking Channels Publish</h2>
 
         <p>We track upload data across established YouTube channels. Everything below comes from <strong>3,859 long-form cooking videos published since January 2026</strong>, across 59 tracked cooking channels, measured directly, not gathered from other people's articles.</p>
 
@@ -579,7 +579,7 @@ export const posts = [
 
         <p>In tech or fitness a video can succeed because somebody went looking for it. Every comedy view arrives instead through the home feed, the suggested column, or the Shorts scroll, so the premise and the thumbnail carry the whole load before anyone has laughed at anything. A premise that needs explaining has already lost. The 42 ideas below are grouped by mechanism for that reason, and each one names the format it suits and what makes it hard to execute.</p>
 
-        <h2>What Comedy Channels Really Publish</h2>
+        <h2>What Comedy Channels Publish</h2>
 
         <p>We track upload data across established YouTube channels. Everything below comes from <strong>699 long-form comedy videos published since January 2026</strong>, measured directly rather than gathered from other people's articles.</p>
 
@@ -704,7 +704,7 @@ export const posts = [
           <li><strong>16. "Things I Say Versus Things I Mean"</strong><br />The gap between the polite sentence and the internal one. Endlessly extensible, so a single format turns into a recurring series the moment one of them connects. Short.</li>
           <li><strong>17. "An Hour of Filming, Cut to Ninety Seconds"</strong><br />How much work vanishes in the edit, which viewers find genuinely interesting as well as funny. It uses footage you already shot and would otherwise have deleted. Bloopers.</li>
           <li><strong>18. "How Long Things Take, Versus How Long We Claim"</strong><br />Every estimate anyone has ever given about a task they had not started. A list structure keeps the pace fast and lets you cut anything that is not working. Commentary.</li>
-          <li><strong>19. "Explaining My Week in Ten Seconds"</strong><br />A whole week reduced to the one thing that really happened in it. The constraint is the format, and the shorter the summary the funnier the omissions become. Short.</li>
+          <li><strong>19. "Explaining My Week in Ten Seconds"</strong><br />A whole week reduced to the one thing that happened in it. The constraint is the format, and the shorter the summary the funnier the omissions become. Short.</li>
           <li><strong>20. "The Five Stages of Assembling Furniture"</strong><br />A stated number promises the viewer a guaranteed ending, which measurably helps retention. Pick a process everyone has suffered through and name the stages precisely. Skit.</li>
           <li><strong>21. "My Whole Year of Uploads in Sixty Seconds"</strong><br />Visible change nobody noticed while it was happening, including you. It doubles as a channel-anniversary video and gives returning viewers a reason to send it to someone. Short.</li>
         </ul>
@@ -897,7 +897,7 @@ export const posts = [
 
         <p>Before the list, it is worth knowing what gaming channels are genuinely doing, because most gaming advice describes a version of the niche that our own upload data does not support.</p>
 
-        <h2>What Gaming Channels Really Publish</h2>
+        <h2>What Gaming Channels Publish</h2>
 
         <p>We track upload data across established YouTube channels. For gaming specifically, that covers <strong>4,399 long-form videos from 84 channels</strong>, all published since January 2026. The numbers contradict a few things gaming guides repeat as fact.</p>
 
@@ -1024,7 +1024,7 @@ export const posts = [
         <ul>
           <li><strong>16. "Does [Popular Myth] Work? I Tested It"</strong><br />Every game has claims players repeat without evidence. Testing one properly, showing the method, produces genuinely original material in a category where almost nothing is.</li>
           <li><strong>17. "[Game] on $500 PC vs $2000 PC"</strong><br />Running the same game across two setups, settings tiers, or platforms answers a purchase question a lot of players have, and pairs naturally with the settings-fix content above.</li>
-          <li><strong>18. "How Long Does [Game] Really Take to 100%?"</strong><br />Timing an actual completion against the advertised or crowd-sourced figure gives a concrete, citable number that other creators and forums link back to.</li>
+          <li><strong>18. "How Long Does [Game] Take to 100%?"</strong><br />Timing an actual completion against the advertised or crowd-sourced figure gives a concrete, citable number that other creators and forums link back to.</li>
         </ul>
 
         <h2>Frequently Asked Questions</h2>
@@ -10920,8 +10920,9 @@ Free studio checklist: https://yoursite.com/checklist
     title: 'YouTube Video Ideas: 111 Ideas in 15 Formats, Measured Against 83,423 Uploads Across 14 Niches',
     excerpt: 'Most video ideas lists dump every niche into one scrolling wall with no way to tell which ten ideas apply to your channel. This one sorts by format first, backed by real upload data across 14 niches, so the reader can find their format and the length, cadence, and Shorts mix that already works for it.',
     date: '2026-08-20',
-    category: CATEGORIES.subscribers,
-    cover: '/blog/youtube-video-ideas-cover.webp',
+    category: CATEGORIES.strategy,
+    cover: '/blog/youtube-video-ideas-cover.jpg',
+    coverAlt: 'A creator at a desk warmly lit, writing on a spread of handwritten idea notes covering the table, a camera on a tripod and a phone set up for filming beside an open notebook of sketched concepts',
     author: 'Denzil',
     readTime: '29 min read',
     faqs: [
@@ -10940,7 +10941,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>Most competing lists mix niches into one undifferentiated scroll: a review idea next to a prank idea next to a gift guide, with no way to isolate the ideas that apply to one specific channel. Sorting by format instead of niche fixes that. Pick a format, then check the table below for how it runs in the niche that channel is in.</p>
 
-        <h2>What YouTube Channels Really Publish, Across 14 Niches</h2>
+        <h2>What YouTube Channels Publish, Across 14 Niches</h2>
 
         <p>Every number below comes from channels we track directly, filtered to uploads published since January 2025. Sorted by median length, longest to shortest.</p>
 
@@ -11082,7 +11083,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>34. "Everything That Went Wrong Making the Last Video"</strong><br />A behind-the-scenes video built entirely around mistakes and fixes, more engaging than a clean process walkthrough.</li>
           <li><strong>35. "My First Attempt at [Skill], on Camera, Unedited"</strong><br />Documenting a genuine first attempt at something the channel is still learning, honest in a way a polished tutorial cannot be.</li>
           <li><strong>36. "What My Workspace Looks Like Before It Gets Cleaned Up for Camera"</strong><br />A real, unstaged workspace tour, contrasted implicitly against the curated version most creators show.</li>
-          <li><strong>37. "How Long This Really Takes, Timed From Start to Finish"</strong><br />A behind-the-scenes video built around a real, measured time cost, more concrete than a vague "it takes a while."</li>
+          <li><strong>37. "How Long This Takes, Timed From Start to Finish"</strong><br />A behind-the-scenes video built around a real, measured time cost, more concrete than a vague "it takes a while."</li>
           <li><strong>38. "The Decision I Almost Made Differently"</strong><br />A process video centered on one real decision point and the reasoning behind it, rather than a full walkthrough.</li>
           <li><strong>39. "A Compilation of Behind-the-Scenes Clips I Never Posted"</strong><br />Raw clips saved but never published, compiled into their own video once enough accumulate.</li>
         </ul>
