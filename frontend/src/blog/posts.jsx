@@ -8480,7 +8480,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>Holds combined with other patterns too.</strong> Titles with a number, titles without, question-framed or not, all four cross-tab curves stay flat.</li>
           <li><strong>The closest real competing study agrees with us more than it disagrees.</strong> Subsub.io (120,703 videos) matches our numbers on questions. Its own "shorter wins" headline rests on a top-performer average nearly identical to our overall population median. That is what a null result looks like, not a real effect.</li>
           <li><strong>One pattern shows a real, if small, effect.</strong> Titles with a year tag ("2026," etc.) perform 9.5% better than titles without one. Every other pattern tested, numbers, brackets, colons, all-caps, emoji, makes no measurable difference.</li>
-          <li><strong>One of the four widely-cited length studies doesn't check out.</strong> The "3M-video, 90-100 characters" claim traces to a domain that does not resolve.</li>
+          <li><strong>One of the four widely-cited length studies doesn't check out.</strong> The "3M-video, 90-100 characters" claim traces to a website that does not exist.</li>
         </ul>
 
         <h2>Four Studies, Four Different Numbers</h2>
@@ -8505,7 +8505,7 @@ Free studio checklist: https://yoursite.com/checklist
           </tbody>
         </table>
 
-        <p>10xcreator.dev ranks first for "best youtube title length," citing a 3-million-video study and a 90 to 100 character recommendation. We tried to check that study. The website does not exist. We tried more than once. It never loads.</p>
+        <p>10xcreator.dev ranks first for "best youtube title length," citing a 3-million-video study and a 90 to 100 character recommendation. We tried to check that study more than once. The website does not exist. It never loads.</p>
 
         <p>The same unlinked "3 million video" figure appears on two different ytzolo.com pages with two different numbers: a 10-14% lift on one page, "more than 2x" on the other. Nobody citing this claim read the same study. There is no study to read.</p>
 
