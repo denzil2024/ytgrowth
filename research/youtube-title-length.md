@@ -18,50 +18,73 @@ common."
 
 ---
 
-## 1. The live top 10
+## 1. The live top 10 (and then some — first pass was thin, caught and redone)
 
-Every row opened this session via WebSearch/WebFetch. Two failed to fetch
-(noted, not dropped).
+First pass through this section only opened 8 URLs and fully read 4 of them,
+short of TEMPLATE.md's own "every row opened this session" bar. Redone below
+with 13 URLs opened, 9 fully read. All via WebSearch/WebFetch this session.
 
 | # | URL | Domain | Fetched | Format | Notes |
 |---|---|---|---|---|---|
-| 1 | viewskit.com/blog/youtube-title-length-curve | viewskit.com | 2026-08-21 | Data study | Real, verified. 61,838 long-form videos, YouTube Data API, Apr 2006-May 2026. Claims monotonic decline, under-30 chars ~2x median views of 80-100 chars, min cell n=1,500/bracket. Has a "niche overrides" section and an 8-niche chart. |
-| 2 | briggsby.com/reverse-engineering-youtube-search | briggsby.com | 2026-08-21 | Data study | Real, verified. 3.8M data points, 100K videos, 75K channels, top-20 search rankings. Top-20 average title = 47-48 chars; 20-40 chars is their "sweet spot"; title length listed as one of five negatively-correlated ranking factors. |
-| 3 | air.io/en/.../research-across-11-niches | air.io | 2026-08-21 | Data study | Real, verified live (AIR Media-Tech, 36-min read, dated 2026-06-12). Full body too long to extract via fetch; per search snippet, claims niche-dependent optimum, some niches favor under-30 chars over 30-50. |
-| 4 | 10xcreator.dev/blog/best-youtube-title-length | 10xcreator.dev | 2026-08-21 | **Could not verify** | Domain does not resolve (DNS failure) on two attempts, both with and without `www`. Ranks #1 for "best youtube title length" per search snippet, which claims a 3M+-video study and 90-100 chars outperforming by 2x+. Cannot confirm this site is live or that the claim is real. Treated as unverifiable, not cited as fact in the article; its existence in search results (pointing at a dead or unreachable domain) becomes part of the SERP-quality finding itself. |
-| 5 | tuberanker.com/blog/how-long-should-a-youtube-title-be | tuberanker.com | 2026-08-21 | Blocked (403) | Could not fetch. Ranks for "best youtube title length." Not characterized further. |
-| 6 | topictree.com/blog/how-long-should-my-youtube-title-be... | topictree.com | 2026-08-21 | Generic guide | Real, verified. No original data. "40-60 chars" claim unattributed. Promotional, pushes their own analytics tool. |
-| 7 | wildandfreetools.com/blog/youtube-title-length-seo-optimal-characters | wildandfreetools.com | 2026-08-21 | Generic guide | Real, verified. No original data. "45-60 chars is the SEO sweet spot" claimed from "video audits," no sample size, no methodology. Promotional. |
-| 8 | researchgate.net/.../Effect_of_Title_Length_and_Word_Count... | researchgate.net | 2026-08-21 | Blocked (403) | Academic paper, real (confirmed via search snippet), narrow scope: Microsoft Excel tutorial videos on YouTube only. Claims a bell-shaped relationship (both mean and median views peak at a specific length). Full text not accessible; treated as a data point, not a primary source, given the narrow niche. |
+| 1 | subsub.io/blog/youtube-title-formulas-that-work | subsub.io | 2026-08-21 | Data study | **Real, verified, closest peer to our planned article.** 120,703 videos from the 1,000 most-viewed English-language channels in 2025 (46,161 long, 70,191 Shorts, 4,351 streams), published 2026-02-20. Metric: views-to-subscribers ratio (channel-size normalization, same spirit as our channel-median approach, different specific metric). Covers length, questions, numbers, brackets, emojis, capital letters, format-by-format (long/Shorts/streams). This is almost certainly the uncredited source behind our own `/blog/youtube-title`'s "median title length of top-performing videos is eight words, 45-55 chars" claim, exact match. |
+| 2 | viewskit.com/blog/youtube-title-length-curve | viewskit.com | 2026-08-21 | Data study | Real, verified. 61,838 long-form videos, YouTube Data API, Apr 2006-May 2026. Claims monotonic decline, under-30 chars ~2x median views of 80-100 chars, min cell n=1,500/bracket. Has a "niche overrides" section and an 8-niche chart. |
+| 3 | briggsby.com/reverse-engineering-youtube-search | briggsby.com | 2026-08-21 | Data study | Real, verified. 3.8M data points, 100K videos, 75K channels, top-20 search rankings. Top-20 average title = 47-48 chars; 20-40 chars is their "sweet spot"; title length listed as one of five negatively-correlated ranking factors. |
+| 4 | air.io/en/.../research-across-11-niches | air.io | 2026-08-21 | Data study | Real, verified live (AIR Media-Tech, 36-min read, dated 2026-06-12). Full body too long to extract via fetch; per search snippet, claims niche-dependent optimum, some niches favor under-30 chars over 30-50. |
+| 5 | researchgate.net/.../Effect_of_Title_Length_and_Word_Count... | researchgate.net | 2026-08-21 | Blocked (403) | Academic paper, real (confirmed via search snippet), narrow scope: Microsoft Excel tutorial videos on YouTube only. Claims a bell-shaped relationship. Full text not accessible; treated as a minor data point, not primary. |
+| 6 | 10xcreator.dev/blog/best-youtube-title-length | 10xcreator.dev | 2026-08-21 | **Could not verify** | Domain does not resolve (DNS failure), tried with and without `www`. Ranks #1 for "best youtube title length" per search snippet: claims a 3M+-video study, 90-100 chars outperforming by 2x+. See rows 7-8, this exact "3M video study, 90-100 chars, 2x" claim also appears, unsourced, on two different ytzolo.com pages, suggesting it's circulating uncredited across content-farm sites rather than tracing to one real study anyone can check. |
+| 7 | ytzolo.com/blog/youtube-title-best-practices-length-2026 | ytzolo.com | 2026-08-21 | Generic guide (unsourced stat) | Real, verified. Repeats "3 million video study," 70-100 chars outperforms by 10-14%, zero source link, zero methodology, zero date. Heavy self-promotion of ytZolo's own tool. |
+| 8 | ytzolo.com/blog/youtube-video-title-length-best-practices-2026 | ytzolo.com | 2026-08-21 | Generic guide (unsourced stat), near-duplicate of row 7 | Real, verified. Same site, same claimed "3M video study," different number this time (2x instead of 10-14%, 65-80 chars instead of 70-100). Two pages on the same domain citing the same unlinked study with different figures is itself a finding: this stat is not stable even within one site repeating it. |
+| 9 | topictree.com/blog/how-long-should-my-youtube-title-be... | topictree.com | 2026-08-21 | Generic guide | Real, verified. No original data. "40-60 chars" claim unattributed. Promotional, pushes their own analytics tool. |
+| 10 | wildandfreetools.com/blog/youtube-title-length-seo-optimal-characters | wildandfreetools.com | 2026-08-21 | Generic guide | Real, verified. No original data. "45-60 chars" claimed from "video audits," no sample size, no methodology. Promotional. |
+| 11 | humbleandbrag.com/blog/youtube-title-best-practices | humbleandbrag.com | 2026-08-21 | Generic guide, sourced correctly | Real, verified. The one generic guide that actually cites and links its source (Subsub.io's study) instead of asserting the stat as its own. Also cites Nielsen Norman Group (numeral eye-tracking) and CareerFoundry (CTR testing), both real third parties, worth a mention as the one competitor doing citation properly. |
+| 12 | influencermarketinghub.com/youtube-character-limits/ | influencermarketinghub.com | 2026-08-21 | Generic guide | Real, verified. No original data. "70 chars optimal" (different from everyone else's number), no source. |
+| 13 | uppbeat.io/blog/youtube-growth/youtube-video-titles | uppbeat.io | 2026-08-21 | Generic guide | Real, verified. No original data. "50-60 chars max," no source. |
+| — | tuberanker.com/blog/how-long-should-a-youtube-title-be | tuberanker.com | 2026-08-21 | Blocked (403) | Could not fetch. Ranks for "best youtube title length." Not characterized further. |
 
 **SERP character:** the bare head term `youtube title length` is owned almost
 entirely by character-counter utility tools (capitalizemytitle.com,
 charactercounter.com, getrecut.com, post-bridge.com, videotok.app), not
-content. The actual competing claims only surface on more specific queries
+content. The actual competing claims surface on more specific queries
 (`best youtube title length`, `does youtube title length affect views`).
-This is winnable: no incumbent here has anything close to our sample size
-(28,947 videos / 707 channels) or our methodology (channel-normalized
-velocity, decile curves, cross-tabs), and one of the four most-cited claims
-traces to a domain that does not currently resolve.
+Winnable: no incumbent here has anything close to our sample size (28,947
+videos / 707 channels) or our methodology (channel-normalized velocity,
+decile curves, cross-tabs against other patterns), one of the most-cited
+claims traces to a domain that doesn't resolve, and that same unsourced
+number is being repeated with different figures across duplicate pages on
+at least one content farm.
+
+**The Subsub.io comparison, specifically** (Section 3 covers this as part of
+the gap, but the raw numbers, for the outline):
+
+| Angle | Subsub.io (120,703 videos, views/subs ratio) | Ours (28,947 videos, channel-normalized velocity) |
+|---|---|---|
+| Length headline | "Shorter wins (almost always)"; top performers average 65-70 chars, ~10-11 words | No relationship; pooled r=0.0046. Our OVERALL median is 66 chars, 11.0 words, nearly identical to Subsub's claimed "top performer" average, which undercuts "shorter wins" as a real effect rather than just describing the population average |
+| Questions | Only 6-8% of top titles, largely ineffective | Agree: 5.5% prevalence, r=-0.0087 (negligible/slightly negative) |
+| Numbers | "Still powerful," 32-40% of top performers | Barely: 40.1% prevalence but r=0.0214 (negligible), 1.3% median difference |
+| Brackets | "Slightly outperform average" | Essentially zero: r=0.0024 |
+| Emojis | Huge effect, but specifically in Shorts (57% top vs 17% low); "counterproductive for long-form" | Matches on long-form: r=0.0134 (negligible) on our Shorts-excluded sample, consistent with their own claim that emoji effects are a Shorts phenomenon |
+| Capital letters | Nuanced: 1-3 strategic caps words beats all-caps screaming | Cruder measurement (binary has/doesn't), r=0.0005, can't distinguish strategic vs excessive with our current method, a real limitation to disclose |
 
 ---
 
 ## 2. Coverage matrix
 
-| Section/angle | ViewsKit | Briggsby | AIR Media-Tech | 10xCreator* | Generic guides | Ours? |
-|---|---|---|---|---|---|---|
-| Stated sample size / methodology | yes | yes | yes | claimed, unverified | no | yes (28,947 videos, 707 channels, full method) |
-| Single headline length recommendation | yes (<30) | yes (20-40) | no (niche-dependent) | claimed (90-100) | yes (40-60, unsourced) | no — headline is "it doesn't predict performance" |
-| Curve shape shown (not just a bucket average) | yes (their claim: monotonic) | partial | no | no | no | yes (10 deciles, auto shape check) |
-| Per-niche breakdown | yes (chart) | no | yes (11 niches) | no | no | yes (15 niches, correlation per niche) |
-| Cross-tab against other title patterns (numbers, questions, etc) | no | no | no | no | no | yes (2 cross-tabs on shared bins) |
-| Other title patterns beyond length (numbers, brackets, year, colon, caps, emoji, question) | no | no | no | no | no | yes (8 binary patterns) |
-| Honest methodology/limitations section | yes | partial | unknown | unknown | no | yes |
-| Practical "what to do instead" | yes (their generator) | yes (takeaways) | yes | yes | yes | yes (tie to what the huge unexplained variance implies) |
+| Section/angle | Subsub.io | ViewsKit | Briggsby | AIR Media-Tech | 10xCreator* | Generic guides | Ours? |
+|---|---|---|---|---|---|---|---|
+| Stated sample size / methodology | yes (120,703) | yes (61,838) | yes (100K) | yes | claimed, unverified | no | yes (28,947 videos, 707 channels, full method) |
+| Single headline length recommendation | yes ("shorter wins") | yes (<30) | yes (20-40) | no (niche-dependent) | claimed (90-100) | yes (40-60, unsourced) | no — headline is "it doesn't predict performance" |
+| Curve shape shown (not just a bucket average) | partial | yes (claim: monotonic) | partial | no | no | no | yes (10 deciles, auto shape check) |
+| Per-niche breakdown | no (format-level: long/Shorts/streams, not niche) | yes (chart) | no | yes (11 niches) | no | no | yes (15 niches, correlation per niche) |
+| Cross-tab against other title patterns | no (reports patterns separately, not cross-tabbed against length) | no | no | no | no | no | yes (2 cross-tabs on shared bins) |
+| Other title patterns beyond length (numbers, brackets, year, colon, caps, emoji, question) | yes (numbers, questions, brackets, emoji, caps — closest competitor on this axis) | no | no | no | no | no | yes (8 binary patterns, directly comparable to Subsub's 5) |
+| Honest methodology/limitations section | yes | yes | partial | unknown | unknown | no | yes |
+| Practical "what to do instead" | yes (their analytics tool) | yes (their generator) | yes (takeaways) | yes | yes | yes | yes (tie to what the huge unexplained variance implies) |
 
-Section count: strongest competitor (ViewsKit) has ~9 sections. Ours: 8-9
-planned (see outline below), covering the union plus two angles (cross-tabs,
-non-length patterns) none of them touch at all.
+Section count: strongest competitor on breadth (Subsub.io) covers 5 of our
+8 pattern angles plus length; strongest on length-specific depth (ViewsKit)
+has ~9 sections. Ours: 8-9 planned (see outline below), covering the union
+of both plus what neither does: cross-tabs, a stated correlation
+coefficient (not just a bucket claim), and a 15-niche breakdown.
 
 ---
 
@@ -71,12 +94,18 @@ non-length patterns) none of them touch at all.
 length-vs-performance curve at fine resolution, none cross-tab length
 against any other title pattern, and none report a correlation coefficient
 alongside their bucket claims, so a reader has no way to judge whether the
-claimed effect is strong or noise. ViewsKit and Briggsby both claim "shorter
-wins" but disagree on the cutoff by 2x (under-30 vs 20-40); AIR Media-Tech
-says it depends on niche; the unverifiable 10xCreator claim says the
-opposite direction entirely; the academic paper claims a bell curve. None of
-them reconcile this against each other, and none of the zero-data generic
-guides even try, they just repeat "40-60" as folklore.
+claimed effect is strong or noise. Even Subsub.io, the closest peer and the
+most rigorous of the group, reports its "shorter wins" headline from a
+top-performer average that turns out to be nearly identical to what our
+data shows as the OVERALL population median, that's consistent with no
+real length effect, just not framed that way. ViewsKit and Briggsby both
+claim "shorter wins" but disagree on the cutoff by 2x (under-30 vs 20-40);
+AIR Media-Tech says it depends on niche; the unverifiable 10xCreator claim
+says the opposite direction entirely, and gets repeated with two different
+numbers across duplicate ytzolo.com pages that never link back to a source;
+the academic paper claims a bell curve. None of them reconcile this against
+each other, and none of the zero-data generic guides even try, they just
+repeat "40-60" as folklore.
 
 **What we can answer that they structurally cannot:** whether the
 length-performance relationship survives being checked against 15 niches,
@@ -162,11 +191,13 @@ disagree on the ideal YouTube title length; we tested it against 28,947
 tracked videos with a proper correlation and curve, and the honest answer
 is that length does not meaningfully predict performance at all.
 
-- H2: What Four Studies Say About Title Length (and Why They Disagree)
-  - the four contradicting claims side by side (ViewsKit, Briggsby, AIR
-    Media-Tech, the unverifiable 10xCreator claim), the academic paper as a
-    fifth, narrower data point, the swarm of zero-data guides repeating
-    "40-60" as folklore
+- H2: What the Existing Studies Say About Title Length (and Why They Disagree)
+  - Subsub.io, ViewsKit, Briggsby, AIR Media-Tech side by side, the
+    unverifiable 10xCreator claim (and its uncredited echo across two
+    duplicate ytzolo.com pages with two different numbers), the academic
+    paper as a narrower fifth data point, the swarm of zero-data guides
+    repeating "40-60" as folklore, humbleandbrag as the one competitor that
+    actually cited its source correctly
 - H2: What We Measured, and Why It's Different
   - methodology: velocity normalized by channel, 28,947 videos / 707
     channels, the honest "this is performance, not CTR" limitation (no
@@ -181,6 +212,13 @@ is that length does not meaningfully predict performance at all.
 - H2: Does Length Matter More With a Number or a Question in the Title?
   - both cross-tabs, still flat, closes the "maybe it's conditional" gap
     none of the four studies even tested
+- H2: Checking Our Numbers Against the Closest Real Study
+  - direct Subsub.io comparison table (from Section 1 above): agree on
+    questions, diverge on numbers/brackets, their emoji effect is
+    Shorts-specific and consistent with our long-form-only null, and their
+    own reported "top performer" length average is nearly identical to our
+    overall population median, undercutting "shorter wins" as a real effect
+    rather than a description of the average
 - H2: The One Pattern That Might Actually Matter
   - year tags, honestly framed as a weak signal, the only one worth a
     second look
