@@ -8474,7 +8474,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>No relationship, full stop.</strong> Across 28,947 videos, the shortest titles and the longest titles perform within 3 percentage points of each other. Statistically, that is zero (r = 0.0046).</li>
           <li><strong>Holds in every niche.</strong> All 15 tracked niches came back negligible, tech and vlogs the closest to an effect and still too small to count. No niche where length matters.</li>
           <li><strong>Holds combined with other patterns too.</strong> Titles with a number, titles without, question-framed or not, all four cross-tab curves stay flat.</li>
-          <li><strong>The closest real competing study agrees with us more than it disagrees.</strong> Subsub.io (120,703 videos) matches our numbers on questions. Its own "shorter wins" headline rests on a top-performer average nearly identical to our overall population median, which is what a null result looks like, not a real effect.</li>
+          <li><strong>The closest real competing study agrees with us more than it disagrees.</strong> Subsub.io (120,703 videos) matches our numbers on questions. Its own "shorter wins" headline rests on a top-performer average nearly identical to our overall population median. That is what a null result looks like, not a real effect.</li>
           <li><strong>One pattern shows a real, if small, effect.</strong> Titles with a year tag ("2026," etc.) perform 9.5% better than titles without one. Every other pattern tested, numbers, brackets, colons, all-caps, emoji, makes no measurable difference.</li>
           <li><strong>One of the four widely-cited length studies doesn't check out.</strong> The "3M-video, 90-100 characters" claim traces to a domain that does not resolve.</li>
         </ul>
@@ -8501,7 +8501,7 @@ Free studio checklist: https://yoursite.com/checklist
           </tbody>
         </table>
 
-        <p>10xcreator.dev ranks first for "best youtube title length," citing a 3-million-video study and a 90 to 100 character recommendation. We tried to check that study. The website does not exist. It will not load, on repeated attempts, at all.</p>
+        <p>10xcreator.dev ranks first for "best youtube title length," citing a 3-million-video study and a 90 to 100 character recommendation. We tried to check that study. The website does not exist. We tried more than once. It never loads.</p>
 
         <p>The same unlinked "3 million video" figure appears on two different ytzolo.com pages with two different numbers: a 10-14% lift on one page, "more than 2x" on the other. Nobody citing this claim read the same study. There is no study to read.</p>
 
@@ -8515,7 +8515,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>Humbleandbrag:</strong> the one exception. It cites Subsub.io’s study directly instead of asserting the number as its own.</li>
         </ul>
 
-        <p><strong>Key takeaway:</strong> four real studies give four different numbers, a fifth widely-cited claim traces to a domain that does not resolve, and a swarm of zero-data guides fill the rest of the search results with unsourced ranges.</p>
+        <p><strong>Key takeaway:</strong> four real studies give four different numbers, a fifth widely-cited claim traces to a website that does not exist, and several more zero-data guides fill the rest of the search results with unsourced ranges.</p>
 
         <h2>How We Measured It</h2>
 
@@ -8523,9 +8523,9 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>For each video, we calculated velocity: views divided by days live. We then divided that by the video’s own channel median velocity. A video at 1.0x performs exactly as its channel typically does. A video at 2.0x performs twice as well as that channel’s norm.</p>
 
-        <p>Raw view counts mostly measure channel size, not title length. A length bucket with a couple of large channels in it looks like a length effect if you don’t normalize. Every video needs to be compared only against its own channel’s baseline. Our <a href="/blog/video-length-by-niche">video length study</a> used the same logic to catch a mean-versus-median gap hiding inside raw duration averages.</p>
+        <p>Raw view counts mostly measure channel size, not title length. A length bucket with a couple of large channels in it looks like a length effect if you don’t normalize. Every video needs to be compared only against its own channel’s baseline. Our <a href="/blog/video-length-by-niche">video length study</a> used the same logic to find a mean-versus-median gap inside raw duration averages.</p>
 
-        <p>Limitation: this measures performance, not click-through rate. CTR requires impression data only a channel owner can see. We don’t have that for these 707 channels. Neither does anyone else’s study of other people’s videos. What we can measure: whether a video does better or worse than its channel usually does. A real outcome. Not identical to CTR.</p>
+        <p>Limitation: this measures performance, not click-through rate. CTR requires impression data only a channel owner can see. We don’t have that for these 707 channels, and neither does anyone else’s study of other people’s videos. What we can measure is whether a video does better or worse than its channel usually does, a real outcome, just not identical to CTR.</p>
 
         <h2>Title Length Shows No Correlation With Performance</h2>
 
@@ -8565,7 +8565,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>Skewed slightly toward longer titles:</strong> vlogs, music, comedy, fitness, cooking, finance, beauty</li>
         </ul>
 
-        <p>"Skewed slightly" is generous. None of these 14 niches showed an effect strong enough to call real. Tech leaned shortest, vlogs leaned longest, and both leans were too small to build a strategy on.</p>
+        <p>"Skewed slightly" is generous. None of these 14 niches showed an effect strong enough to call real. Tech leaned shortest. Vlogs leaned longest. Neither lean was big enough to matter.</p>
 
         <p><strong>Key takeaway: no niche, out of 15 tested, shows a real length effect.</strong> Not even the two closest to one.</p>
 
@@ -8580,7 +8580,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>We tested whether length matters in combination with two other patterns: numbers and question framing.</p>
 
-        <p>Titles with a number, and titles without, sorted into the same 10 length groups separately. Both come back the same: no group performs meaningfully better or worse than any other.</p>
+        <p>We split titles with a number, and titles without, into the same 10 length groups, separately for each. Both come back the same: no group performs meaningfully better or worse than any other.</p>
 
         <p>Question-framed titles versus statements: same result. Only 1,606 titles in the dataset are question-framed, so that curve is noisier. Still no consistent length pattern inside it. Length does not start mattering once a number or a question enters the title. It stays flat.</p>
 
@@ -8596,7 +8596,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>Numbers.</strong> Subsub.io: "still powerful," 32-40% of top performers. Us: barely moves the needle.</li>
           <li><strong>Brackets.</strong> Subsub.io: slightly outperform average. Us: no measurable effect.</li>
           <li><strong>Emoji.</strong> Subsub.io: large effect, but specific to Shorts. Us: no effect on long-form, Shorts excluded entirely.</li>
-          <li><strong>Capital letters.</strong> Subsub.io: strategic emphasis beats all-caps screaming. Us: no effect, though our measure is cruder, has one or doesn’t.</li>
+          <li><strong>Capital letters.</strong> Subsub.io: strategic emphasis beats all-caps screaming. Us: no effect, on a cruder measure, present or absent.</li>
         </ul>
 
         <p>Subsub.io’s own reported "top performer" average is 65 to 70 characters. Our overall population median, every video we tracked, not just the top slice, is 66 characters. Nearly identical. If shorter titles genuinely outperformed longer ones, the top performers’ average length would sit meaningfully below the population average. It doesn’t. Not in their dataset, not in ours. That is what a null result looks like even when a study headlines "shorter wins."</p>
@@ -8660,7 +8660,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>Write the Title for the Idea, Not the Counter</h2>
 
-        <p>Twenty-eight thousand videos. Title length explains close to none of what separates a video that outperforms its channel’s own norm from one that doesn’t. Individual videos range from <strong>roughly half</strong> a channel’s typical performance to <strong>more than double</strong> it. Almost all of that spread comes from somewhere character count cannot reach.</p>
+        <p>Twenty-eight thousand videos. Title length explains close to none of what separates a video that outperforms its channel’s own norm from one that doesn’t. Individual videos range from <strong>roughly half</strong> a channel’s typical performance to <strong>more than double</strong> it, and almost none of that difference comes from title length.</p>
 
         <p>What to do with that:</p>
 
@@ -8668,7 +8668,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li>Use a character counter to avoid mobile truncation, not to hit a target number.</li>
           <li>Write the title the idea needs. 24 characters, publish at 24. 95 characters, publish at 95.</li>
           <li>Use a year tag when it fits naturally. It is the only pattern in this study with a lift worth naming.</li>
-          <li>Put the time you were going to spend counting characters into the thumbnail and the first seconds instead. That is where the real variance lives.</li>
+          <li>Put the time you were going to spend counting characters into the thumbnail and the first seconds instead. That is where the real difference in performance comes from.</li>
         </ul>
 
         <p>Four studies argued about which length wins. They were arguing about noise. Our own <a href="/blog/youtube-title">title formula guide</a> is being corrected to point here instead of the unsourced "eight words" figure it previously carried.</p>
