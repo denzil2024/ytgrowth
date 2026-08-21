@@ -563,11 +563,11 @@ export const posts = [
     readTime: '15 min read',
     faqs: [
       { q: 'What kind of comedy videos get the most views on YouTube?', a: 'Skits and parodies have the higher ceiling, being rewatchable and shareable, and they are the slowest to get good at. Observational and Shorts-native formats go further per hour of work, because the premise reads from the thumbnail alone and the feed distributes them without an existing subscriber base.' },
-      { q: 'How long should a comedy video be?', a: 'Our upload data puts the typical comedy video at 9.0 minutes, seventh of the fourteen niches we track. That figure sits just above the 8-minute mid-roll threshold, which is worth knowing, but stretching a five-minute premise to nine minutes to reach it will cost you more in retention than the extra ad break returns. Let the joke set the runtime.' },
+      { q: 'How long should a comedy video be?', a: 'Our upload data puts the typical comedy video at 1.9 minutes, the third shortest of the fourteen niches we track and well under the 8-minute mid-roll threshold. Do not pad a short premise to chase that ad break: comedy earns more from Shorts reach than from a longer runtime, and the mean only clears 8 minutes because a smaller set of podcasts and compilation reels sit on top of a much larger base of short uploads. Let the joke set the length.' },
       { q: 'Do I need a team to make comedy videos?', a: 'Not for most of the formats on this list. Observational comedy, commentary, and Shorts-native pieces are single-person formats by design. Skits and parodies are where a second person starts to matter, and that is the point where collaboration with another small channel makes more sense than hiring anyone, because you get performance help and audience access from the same arrangement.' },
       { q: 'Can I get a copyright strike for a parody?', a: 'Yes. Parody can qualify as fair use in the United States, but fair use is a legal defense, never an automatic permission, and it is decided case by case after a dispute has already started. The more common problem is Content ID, which is an automated matching system that does not assess fair use at all. Music is the usual trigger, so parodying a format while writing original audio is far safer than parodying a song.' },
       { q: 'How often should a comedy channel upload?', a: 'One to two long-form videos a week. Scripted comedy takes longer to make well than most niches, so a pace you can hold for a year beats one that collapses after a month, and comedy channels that stall almost always did it by promising a schedule the format could not support.' },
-      { q: 'Are Shorts worth it for a comedy channel?', a: 'More than for most niches. Comedy channels in our data put 26.7% of their uploads into Shorts, well above gaming at 19.1%, and the format suits comedy structurally because a punchline does not need a runway. The risk is the same one every niche faces, which is that Shorts viewers convert to long-form subscribers at a lower rate, so treat it as reach rather than as a substitute for the main channel.' },
+      { q: 'Are Shorts worth it for a comedy channel?', a: 'More than for most niches. Comedy channels in our data put 31.7% of their uploads into Shorts, well above gaming at 19.1%, and the format suits comedy structurally because a punchline does not need a runway. The risk is the same one every niche faces, which is that Shorts viewers convert to long-form subscribers at a lower rate, so treat it as reach rather than as a substitute for the main channel.' },
       { q: 'How much do comedy channels earn from ads?', a: 'Less than most niches. Advertisers pay most where a viewer is close to a purchase, and a viewer watching a sketch is not. Sponsorship and merchandise outrun ad revenue on comedy channels earlier than on most other kinds of channel.' },
       { q: 'How do I find comedy ideas when I am not naturally funny?', a: 'Stop trying to be funny and start being specific. The observational formats on this list work because the recognition does the laughing, so the job is noticing a behavior precisely instead of inventing a joke about it. Write down the moments that made you exhale through your nose during the week, and the ones you can describe in a single sentence are the videos.' },
       { q: 'Do prank videos still work on YouTube in 2026?', a: 'Consensual and clearly harmless pranks work. Anything involving distress, deception of people who have not agreed to be filmed, or apparent danger sits directly against YouTube harmful and dangerous acts policy, and that policy carries strikes where most problems carry only demonetization. It is one of the few areas of comedy where a single upload can end a channel, so the format is a poor bet for anyone building something they want to keep.' },
@@ -581,7 +581,7 @@ export const posts = [
 
         <h2>What Comedy Channels Publish</h2>
 
-        <p>We track upload data across established YouTube channels. Everything below comes from <strong>699 long-form comedy videos published since January 2026</strong>, measured directly rather than gathered from other people's articles.</p>
+        <p>We track upload data across established YouTube channels. Everything below comes from <strong>8,351 comedy videos across 155 channels, published since January 2026</strong>, measured directly rather than gathered from other people's articles.</p>
 
         <table>
           <thead>
@@ -592,18 +592,18 @@ export const posts = [
             </tr>
           </thead>
           <tbody>
-            <tr><td><strong>Typical video length (median)</strong></td><td>9.0 min</td><td>7th of 14 niches</td></tr>
-            <tr><td><strong>Average video length (mean)</strong></td><td>19.5 min</td><td>2.17x its own median</td></tr>
-            <tr><td><strong>Shorts share of uploads</strong></td><td>26.7%</td><td>Well above gaming at 19.1%</td></tr>
-            <tr><td><strong>Mid-roll threshold</strong></td><td>Median clears 8 min</td><td>One of the niches that just crosses</td></tr>
+            <tr><td><strong>Typical video length (median)</strong></td><td>1.9 min</td><td>3rd shortest of 14 niches</td></tr>
+            <tr><td><strong>Average video length (mean)</strong></td><td>11.9 min</td><td>6.2x its own median</td></tr>
+            <tr><td><strong>Shorts share of uploads</strong></td><td>31.7%</td><td>Well above gaming at 19.1%</td></tr>
+            <tr><td><strong>Mid-roll threshold</strong></td><td>Median falls far short of 8 min</td><td>A Shorts-first niche, not a mid-roll one</td></tr>
           </tbody>
         </table>
 
-        <p><strong>The gap between the median and the mean is the first thing worth noticing.</strong> At 2.17x, comedy carries enough long-format uploads to badly distort its own average. Podcast episodes and compilation reels sit inside that number, so any advice built on a 19.5-minute average is describing a format most comedy channels do not publish.</p>
+        <p><strong>The gap between the median and the mean is the first thing worth noticing.</strong> At 6.2x, comedy's average is pulled far above its typical upload by a smaller set of podcast episodes and compilation reels sitting on top of a much larger base of short videos. Any advice built on an 11.9-minute average is describing a format most comedy channels do not publish.</p>
 
-        <p>Comedy leans on Shorts harder than most niches. At 26.7% of uploads it runs well ahead of gaming, which makes structural sense, because a punchline does not need a runway the way a tutorial or a review does. Whether that reach converts into long-form viewers is a separate question, and our <a href="/blog/shorts-vs-long-form">Shorts versus long-form breakdown</a> covers where it does and does not.</p>
+        <p>Comedy leans on Shorts more than most niches. At 31.7% of uploads it runs well ahead of gaming, which makes structural sense, because a punchline does not need a runway the way a tutorial or a review does. Whether that reach converts into long-form viewers is a separate question, and our <a href="/blog/shorts-vs-long-form">Shorts versus long-form breakdown</a> covers where it does and does not.</p>
 
-        <p>The 9.0-minute median sits just over the mid-roll line, which puts comedy in an awkward spot. Clearing 8 minutes unlocks mid-roll ads, and comedy is one of the few niches whose typical upload barely does. That creates a real temptation to pad, and padding a comedy video is the fastest way to lose the audience you spent the premise earning.</p>
+        <p>The 1.9-minute median sits nowhere near the mid-roll line. Clearing 8 minutes unlocks mid-roll ads, and comedy's typical upload is not built to get there: the category is dominated by Shorts and other short-form uploads, with a smaller set of longer pieces pulling the mean up separately. Padding a short premise to chase that ad break costs more in retention than the extra break returns.</p>
 
         <h2>Why Comedy Ideas Fail Differently From Other Niches</h2>
 
@@ -697,7 +697,7 @@ export const posts = [
 
         <p>Compression puts two states side by side and lets the distance between them be the joke. Its structural advantage is that the whole shape is visible in the thumbnail, so the payoff arrives before anyone has decided whether to keep watching.</p>
 
-        <p>It is also the mechanism that fits Shorts most naturally, which matters given that comedy channels put 26.7% of their uploads there. A contrast needs no setup, no cast, and frequently no dialogue at all.</p>
+        <p>It is also the mechanism that fits Shorts most naturally, which matters given that comedy channels put 31.7% of their uploads there. A contrast needs no setup, no cast, and frequently no dialogue at all.</p>
 
         <ul>
           <li><strong>15. "Me at 9am Versus Me at 9pm"</strong><br />The daily collapse in energy, shown instead of described. A split screen or a single hard cut carries it, no dialogue required, and that is exactly why it works as a Short. Short.</li>
@@ -821,7 +821,7 @@ export const posts = [
 
         <h2>Which of These Clear the Mid-Roll Line</h2>
 
-        <p>Mid-roll ads require 8 minutes, and comedy's typical upload at 9.0 minutes only just makes it. That has a real consequence for format selection, since Shorts, observational lists, and quick commentary all naturally come in well under the threshold.</p>
+        <p>Mid-roll ads require 8 minutes, and comedy's typical upload is nowhere close: the median sits at 1.9 minutes, pulled down by how much of the category is Shorts. That has a real consequence for format selection, since Shorts, observational lists, and quick commentary are not the exception that misses the threshold, they are what most of the category publishes.</p>
 
         <p>The answer is not to inflate them. Padding a four-minute premise to eight costs retention across the whole video, and retention drives distribution, and that is worth more than one extra ad break. The formats that reach the line honestly are skits with multiple scenes, commentary pieces, and collaborations, and those are where longer runtimes belong.</p>
 
@@ -833,7 +833,7 @@ export const posts = [
         <p>Skits and parodies have the higher ceiling, being rewatchable and shareable, and they are the slowest to get good at. Observational and Shorts-native formats go further per hour of work, because the premise reads from the thumbnail alone and the feed distributes them without an existing subscriber base.</p>
 
         <h3>How long should a comedy video be?</h3>
-        <p>Our upload data puts <strong>the typical comedy video at 9.0 minutes</strong>, seventh of the fourteen niches we track. That figure sits just above the 8-minute mid-roll threshold, which is worth knowing, but stretching a five-minute premise to nine minutes to reach it will cost you more in retention than the extra ad break returns. Let the joke set the runtime.</p>
+        <p>Our upload data puts <strong>the typical comedy video at 1.9 minutes</strong>, the third shortest of the fourteen niches we track and well under the 8-minute mid-roll threshold. Do not pad a short premise to chase that ad break: comedy earns more from Shorts reach than from a longer runtime, and the mean only clears 8 minutes because a smaller set of podcasts and compilation reels sit on top of a much larger base of short uploads. Let the joke set the length.</p>
 
         <h3>Do I need a team to make comedy videos?</h3>
         <p>Not for most of the formats on this list. Observational comedy, commentary, and Shorts-native pieces are single-person formats by design. Skits and parodies are where a second person starts to matter, and that is the point where collaboration with another small channel makes more sense than hiring anyone, because you get performance help and audience access from the same arrangement.</p>
@@ -845,7 +845,7 @@ export const posts = [
         <p>One to two long-form videos a week. Scripted comedy takes longer to make well than most niches, so a pace you can hold for a year beats one that collapses after a month, and comedy channels that stall almost always did it by promising a schedule the format could not support.</p>
 
         <h3>Are Shorts worth it for a comedy channel?</h3>
-        <p>More than for most niches. Comedy channels in our data put <strong>26.7% of their uploads into Shorts</strong>, well above gaming at 19.1%, and the format suits comedy structurally because a punchline does not need a runway. The risk is the same one every niche faces, which is that Shorts viewers convert to long-form subscribers at a lower rate, so treat it as reach rather than as a substitute for the main channel.</p>
+        <p>More than for most niches. Comedy channels in our data put <strong>31.7% of their uploads into Shorts</strong>, well above gaming at 19.1%, and the format suits comedy structurally because a punchline does not need a runway. The risk is the same one every niche faces, which is that Shorts viewers convert to long-form subscribers at a lower rate, so treat it as reach rather than as a substitute for the main channel.</p>
 
         <h3>How much do comedy channels earn from ads?</h3>
         <p>Less than most niches. Advertisers pay most where a viewer is close to a purchase, and a viewer watching a sketch is not. Sponsorship and merchandise outrun ad revenue on comedy channels earlier than on most other kinds of channel.</p>
@@ -893,7 +893,7 @@ export const posts = [
       <>
         <p><strong>Gaming is the most crowded category on YouTube</strong>, which means the idea matters more here than in any other niche. A generic playthrough of a game a thousand channels are covering competes on production quality and personality alone, and a new channel loses that fight every time.</p>
 
-        <p><strong>What works instead is an angle the search results do not already have</strong>: a specific question about a specific game, a format the big channels are too large to bother with, or a take that only makes sense coming from someone at your size. Every idea below comes as a title you can adapt to whatever you play, with the reason it works underneath.</p>
+        <p>What works instead is an angle the search results do not already have: a specific question about a specific game, a format the big channels are too large to bother with, or a take that only makes sense coming from someone at your size. Every idea below comes as a title you can adapt to whatever you play, with the reason it works underneath.</p>
 
         <p>Before the list, it is worth knowing what gaming channels are genuinely doing, because most gaming advice describes a version of the niche that our own upload data does not support.</p>
 
@@ -918,7 +918,7 @@ export const posts = [
           </tbody>
         </table>
 
-        <p><strong>Three things fall out of that table</strong>, and each one changes what ideas make sense.</p>
+        <p>Three things fall out of that table, and each one changes what ideas make sense.</p>
 
         <p><strong>Gaming rewards length more than almost any niche.</strong> At a 24.3-minute median, only travel runs longer. The 8-to-12-minute rule handed out in general YouTube advice is simply wrong here, and formats that need room to develop (full sessions, challenge runs, deep guides) fit the category rather than fighting it. Note the gap between that median and the 73-minute average though: <a href="/blog/video-length-by-niche">a handful of multi-hour stream VODs inflate the mean</a>, so do not read 73 minutes as a target.</p>
 
@@ -928,7 +928,7 @@ export const posts = [
 
         <h2>Why Most Gaming Video Ideas Fail</h2>
 
-        <p><strong>The obvious idea is already saturated.</strong> "[Popular game] gameplay" is covered by channels with a decade of head start and full-time editors, so competing on the same idea means competing on the one axis where you are weakest.</p>
+        <p>The obvious idea is already saturated. "[Popular game] gameplay" is covered by channels with a decade of head start and full-time editors, so competing on the same idea means competing on the one axis where you are weakest.</p>
 
         <p><strong>Search-driven gaming content is the opening most new channels miss.</strong> Players search for specific problems (a boss they cannot beat, a build that stopped working, a setting that tanks their frame rate) and those searches are answered badly or not at all, because big channels chase broad entertainment views instead.</p>
 
@@ -954,9 +954,9 @@ export const posts = [
 
         <h2>Search-Driven: Answer a Problem, Not a Vibe</h2>
 
-        <p><strong>The category almost every gaming idea list skips</strong>, and the most reachable starting point for a channel nobody knows yet. A viewer with a specific problem does not care how many subscribers you have, only whether the thumbnail says you solved the thing they are stuck on.</p>
+        <p>The category almost every gaming idea list skips, and the most reachable starting point for a channel nobody knows yet. A viewer with a specific problem does not care how many subscribers you have, only whether the thumbnail says you solved the thing they are stuck on.</p>
 
-        <p><strong>These also age well.</strong> A guide to a hard boss in a popular game keeps pulling search traffic years after the launch coverage has stopped earning anything, because new players hit that same wall continuously.</p>
+        <p>These also age well. A guide to a hard boss in a popular game keeps pulling search traffic years after the launch coverage has stopped earning anything, because new players hit that same wall continuously.</p>
 
         <ul>
           <li><strong>1. "How to Beat [Hardest Boss] Without [Common Crutch]"</strong><br />The specific-boss guide. Pick the fight players genuinely get stuck on and make the definitive version. Search volume for a single hard fight can outlast a game's launch hype by years, and the searcher needs it solved right now rather than entertained.</li>
@@ -967,7 +967,7 @@ export const posts = [
 
         <h2>Beginner-Focused: Serve the Player Just Starting Out</h2>
 
-        <p><strong>New players arrive at every popular game continuously</strong>, which makes beginner content some of the most durable material a gaming channel can publish. It also has a natural advantage: a beginner has no idea which channels are authoritative, so channel size influences the click far less than the title does.</p>
+        <p>New players arrive at every popular game continuously, which makes beginner content some of the most durable material a gaming channel can publish. It also has a natural advantage: a beginner has no idea which channels are authoritative, so channel size influences the click far less than the title does.</p>
 
         <ul>
           <li><strong>5. "10 Things to Do in Your First Hour of [Game]"</strong><br />What a new player should do first, what to avoid, and the mistakes that cost time later. Pairs naturally with a game's sale periods, when a wave of new buyers arrives at once.</li>
@@ -995,7 +995,7 @@ export const posts = [
 
         <p>Commentary rewards whoever covers a story first, <strong>one of the few advantages a small channel genuinely holds over a large one.</strong> A big channel has meetings and an editing queue. You can publish in four hours.</p>
 
-        <p><strong>The trade-off is that this content decays fast.</strong> A patch breakdown earns for a week, not a year, so it works best as a layer on top of evergreen formats rather than as the whole channel.</p>
+        <p>The trade-off is that this content decays fast. A patch breakdown earns for a week, not a year, so it works best as a layer on top of evergreen formats rather than as the whole channel.</p>
 
         <ul>
           <li><strong>10. "What Went Wrong With [Game]"</strong><br />Post-mortems on an underperforming release pull viewers well beyond that game's own player base, because the story travels further than the gameplay ever did.</li>
@@ -1033,10 +1033,10 @@ export const posts = [
         <p>Broad entertainment content (reactions, funny moments, big-game playthroughs) has the highest ceiling but the most competition, and it is largely won by established channels with production budgets. <strong>Search-driven content has a lower ceiling per video but is far more reachable</strong> for a new channel, because you compete on how well you answer a specific question rather than on personality and edit quality.</p>
 
         <h3>How do I come up with gaming video ideas when everything is taken?</h3>
-        <p><strong>Stop starting from the game and start from the player's problem.</strong> Search the game name plus words like "how to", "best", "fix", "worth it", or "stuck" and read what comes back, including the questions with weak or outdated answers. Reddit and Steam discussions are full of specific frustrations with no video answering them, and that gap comes with search demand already attached.</p>
+        <p>Stop starting from the game and start from the player's problem. Search the game name plus words like "how to", "best", "fix", "worth it", or "stuck" and read what comes back, including the questions with weak or outdated answers. Reddit and Steam discussions are full of specific frustrations with no video answering them, and that gap comes with search demand already attached.</p>
 
         <h3>Should I focus on one game or cover many?</h3>
-        <p><strong>One game builds a returning audience faster</strong>, because viewers subscribe for a specific thing and YouTube learns exactly who to show you to. The risk is that your channel rises and falls with that game. The middle path is anchoring on one game while building a repeatable format that can survive a move, so the format keeps the audience when the game fades.</p>
+        <p>One game builds a returning audience faster, because viewers subscribe for a specific thing and YouTube learns exactly who to show you to. The risk is that your channel rises and falls with that game. The middle path is anchoring on one game while building a repeatable format that can survive a move, so the format keeps the audience when the game fades.</p>
 
         <h3>Do I need expensive equipment for a gaming channel?</h3>
         <p>Not to start. Modern consoles and PCs capture footage natively, and <strong>a clear microphone matters far more than a camera or capture card</strong>, because gaming audiences listen more than they watch. Commentary quality, editing pace, and idea selection all outrank hardware. Upgrade when a specific limitation is visibly costing you.</p>
@@ -1045,13 +1045,13 @@ export const posts = [
         <p>Longer than most niches. Our data puts the typical gaming video at <strong>24.3 minutes</strong>, second only to travel, so the general 8-to-12-minute advice does not apply here. Match the length to the format: search-driven guides should be as short as the answer allows, while challenge runs and commentary earn their runtime.</p>
 
         <h3>Is gaming still a good niche to start in 2026?</h3>
-        <p><strong>Viable, but the hardest category to break into</strong> on general content, and the ad rate is among the lowest on the platform at roughly <a href="/youtube-earnings/gaming">$2 to $6 RPM</a> for a tier-1 audience. What makes it work is the size and engagement of the audience, plus sponsorship money in gaming (peripherals, energy drinks, game launches) that runs well above what the ad rate suggests.</p>
+        <p>Viable, but the hardest category to break into on general content, and the ad rate is among the lowest on the platform at roughly <a href="/youtube-earnings/gaming">$2 to $6 RPM</a> for a tier-1 audience. What makes it work is the size and engagement of the audience, plus sponsorship money in gaming (peripherals, energy drinks, game launches) that runs well above what the ad rate suggests.</p>
 
         <h3>How often should a gaming channel upload?</h3>
         <p>Less often than the advice suggests. Established gaming channels in our data publish a median of <strong>1.5 long-form videos a week</strong>, not daily. Consistency matters more than raw frequency, and a pace you can hold for months beats one that collapses after six weeks.</p>
 
         <h3>What gaming content works best for a brand new channel?</h3>
-        <p><strong>Specific, searchable, and unglamorous.</strong> The definitive guide to a hard boss, a settings fix for a common hardware problem, or an honest is-it-worth-it on an older game will all outperform a general playthrough from a channel nobody knows. These bring in viewers who have a problem, and a viewer with a problem does not care about your subscriber count.</p>
+        <p>Specific, searchable, and unglamorous. The definitive guide to a hard boss, a settings fix for a common hardware problem, or an honest is-it-worth-it on an older game will all outperform a general playthrough from a channel nobody knows. These bring in viewers who have a problem, and a viewer with a problem does not care about your subscriber count.</p>
 
         <h2>The Idea Is Not the Bottleneck</h2>
 
@@ -10968,7 +10968,7 @@ Free studio checklist: https://yoursite.com/checklist
             <tr><td><strong>Sports</strong></td><td>2.9 min</td><td>19.9 min</td><td>31.0%</td><td>141 channels, 8,513 videos</td></tr>
             <tr><td><strong>Music</strong></td><td>2.8 min</td><td>8.3 min</td><td>37.0%</td><td>181 channels, 6,801 videos</td></tr>
             <tr><td><strong>Fitness</strong></td><td>2.1 min</td><td>8.8 min</td><td>42.4%</td><td>65 channels, 4,236 videos</td></tr>
-            <tr><td><strong>Comedy</strong></td><td>1.6 min</td><td>11.7 min</td><td>34.4%</td><td>155 channels, 6,750 videos</td></tr>
+            <tr><td><strong>Comedy</strong></td><td>1.9 min</td><td>11.9 min</td><td>31.7%</td><td>155 channels, 8,351 videos</td></tr>
             <tr><td><strong>Beauty</strong></td><td>1.3 min</td><td>7.5 min</td><td>44.5%</td><td>46 channels, 2,618 videos</td></tr>
           </tbody>
         </table>

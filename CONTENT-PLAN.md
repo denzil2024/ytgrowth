@@ -546,16 +546,28 @@ Calling this "total chaos" is fair.
 Both steps of the overhaul are complete. Music, once it ships, still needs
 this same treatment.
 
-**Found in passing, not fixed, logged for later:**
-- `gaming-video-ideas` has 18 bold-lead paragraphs against a target of 8.
-  It shipped 2026-08-13, before the drift checker existed, so it was never
-  checked. Out of scope for a linking fix; needs its own pass.
-- `comedy-video-ideas`'s data section still cites 699 videos / 17 channels
-  from its original, thin pull. The same category now has 155 channels and
-  6,750 videos after the 2026-08-20 expanded-discovery run (median 1.6 min,
-  not 9.0; Shorts share 34.4%, not 26.7%). This is the same gap Part 5
-  already flags under "Comedy shipped without Stages 1 and 2" — now with a
-  concrete fix available, not just a diagnosis.
+**Found in passing, now fixed (2026-08-21):**
+- `gaming-video-ideas` had 18 bold-lead paragraphs against a target of 8
+  (shipped 2026-08-13, before the drift checker existed, so it was never
+  checked). Unbolded 11 non-load-bearing lead clauses, kept the 2 thesis
+  statements, the 3 measured-data claims, the opening, and the closing
+  payoff. Now 7, drift check passes.
+- `comedy-video-ideas`'s data section cited 699 videos / 17 channels from
+  its original, thin pull. Re-queried live via `scripts/query_comedy_refresh.py`
+  (run on the Railway app-service console): comedy is now 155 channels,
+  8,351 videos, median 1.9 min (not 9.0), mean 11.9 min, 31.7% Shorts share
+  (not 26.7%). The median dropped enough to flip the mid-roll framing
+  entirely: the old text said comedy's typical upload "just clears" the
+  8-minute mid-roll line; the real figure falls nowhere close, so comedy
+  reads as a Shorts-first niche, not a borderline-mid-roll one. Rewrote the
+  data table, the two body paragraphs built on the old framing, the "Which
+  of These Clear the Mid-Roll Line" section's opening claim, both FAQ
+  entries citing length/Shorts share (array and visible HTML both), and the
+  Compression section's Shorts-share callout. Also synced the pillar's
+  comedy row (`youtube-video-ideas`) to the same fresh numbers, since it
+  carried the old rough estimate (1.6 min / 34.4% / 6,750 videos) the
+  2026-08-20 note had logged before the real query was run. Both drift
+  checks and paragraph-length checks pass.
 
 ---
 
