@@ -437,7 +437,7 @@ volume, a passed SERP check, and a route through the one test.
 |---|---|---|---|---|
 | 1 | ~~Tech video ideas~~ | `tech-video-ideas` | 1,300/mo (unverified, see below) | **SHIPPED 08-19, commit `fdaae2220`.** Data floor initially failed (17 channels), fixed via expanded discovery: 127 channels / 5,876 videos. |
 | 2 | ~~Music video ideas~~ | `music-video-ideas` | 950/mo (unverified, see below) | **SHIPPED 08-20, commit `a60c79781`.** 43 ideas, 7 formats, split explicitly between promoting the song and building the channel. 181 channels / 6,801 videos. |
-| 3 | ~~Title-length study~~ | `youtube-title-length` | n/a | **SHIPPED 08-21, commit `fb03fdda9`.** Promoted from a fold-in stat to a standalone article, 28,947 videos / 707 channels, r = 0.0046 (no relationship). Also corrected `/blog/youtube-title`'s unsourced "eight words" claim to cite this instead. |
+| 3 | ~~Title-length study~~ | `youtube-title-length` | n/a | **SHIPPED 08-21, commit `e4c95478b`.** Promoted from a fold-in stat to a standalone article, 28,947 videos / 707 channels, r = 0.0046 (no relationship). Also corrected `/blog/youtube-title`'s unsourced "eight words" claim to cite this instead. First push (`fb03fdda9`) went out without approval and got substantially reworked in 12 follow-up commits: voice tightened to be more Backlinko-authoritative across several passes, all bold-lead paragraphs replaced with inline-number bolding, "decile" and raw r-values purged in favor of plain percentages, headings rebuilt as declarative findings with Key Takeaway callouts per section, and a real cover photo + in-article chart added properly (see Part 5 note below on the cover-process correction). |
 | 4 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | Weak confirm. Only write with a differentiator, see below. **NEXT.** |
 | 5 | Promotion pass on the published studies | n/a | n/a | User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
 
@@ -589,7 +589,7 @@ this same treatment.
 
 | Date | Article | Type |
 |---|---|---|
-| 2026-08-21 | YouTube Title Length (`/blog/youtube-title-length`), commit `fb03fdda9`. 28,947 videos / 707 channels, r = 0.0046 between title length and performance, negligible in every niche and every cross-tab; also corrected `/blog/youtube-title`'s unsourced "eight words" claim to cite this instead | Data study #2 |
+| 2026-08-21 | YouTube Title Length (`/blog/youtube-title-length`), commit `e4c95478b`. 28,947 videos / 707 channels, r = 0.0046 between title length and performance, negligible in every niche and every cross-tab; also corrected `/blog/youtube-title`'s unsourced "eight words" claim to cite this instead | Data study #2 |
 | 2026-08-20 | Music Video Ideas (`/blog/music-video-ideas`), commit `a60c79781`. 43 ideas split explicitly between promoting the song and building the channel; FAQ pulled from real Google PAA data before writing | Cluster spoke |
 | 2026-08-19 | Tech Video Ideas (`/blog/tech-video-ideas`), commit `fdaae2220`. Data floor fixed live via `scripts/expand_category_discovery.py` (17 to 127 channels); full voice pass against the demonetization reference after the first draft ran too close to cooking's phrasing | Cluster spoke |
 | 2026-08-15 | Cooking Video Ideas (`/blog/cooking-video-ideas`), commit `b61406dbc`. First article through the full 6-stage runbook | Cluster spoke |
