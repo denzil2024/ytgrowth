@@ -31,15 +31,31 @@ Last updated: 2026-07-17
 | # | Study | Stats needed | Source | Est. quota |
 |---|---|---|---|---|
 | 1 | ~~The ideal YouTube video length in 2026, by niche~~ **PUBLISHED 2026-08-13** as `/blog/video-length-by-niche` | Durations of tracked uploads per niche | Existing `channel_videos` + `channel_metric_snapshots` (no fresh pull needed) | **0 units** |
-| 2 | What 10,000 winning YouTube titles have in common | Titles, lengths, patterns (numbers, brackets, year tags, questions) of top-ranking videos | youtube_search_cache (already stored) + cheap top-up | ~0-2K units |
+| 2 | ~~What winning YouTube titles have in common~~ **PUBLISHED 2026-08-21** as `/blog/youtube-title-length` | Titles, lengths, patterns (numbers, brackets, year tags, questions) vs. performance | `channel_videos` + `video_metric_snapshots` (no fresh pull needed) | **0 units** |
 | 3 | When top creators really upload: best time to post, measured | publishedAt timestamps per niche and channel size | Fresh pull via uploads playlists | ~5K units |
 | 4 | How often successful channels upload vs stalled ones | Upload cadence + channel size/views | Fresh pull; plugs the known data gap in blog/best-time-to-post | ~5K units |
 | 5 | Shorts vs long-form mix by niche, from real channels | Upload duration classification per channel | Same pull as #1 (reuse the dataset) | shared |
 
-Priority order: ~~#1 first~~ (DONE 2026-08-13), then #3/#4 (they upgrade
-best-time-to-post, our highest-impression page), then #2 (near-free).
-#5 fell out of #1's dataset and shipped inside that article as its
-Shorts-adoption-by-niche section rather than as a separate piece.
+Priority order: ~~#1 first~~ (DONE 2026-08-13), ~~#2~~ (DONE 2026-08-21,
+turned out to be zero-quota like #1 since `channel_videos.title` and
+`video_metric_snapshots` already covered it, no `youtube_search_cache`
+top-up needed), then #3/#4 next (they upgrade best-time-to-post, our
+highest-impression page). #5 fell out of #1's dataset and shipped inside
+that article as its Shorts-adoption-by-niche section rather than as a
+separate piece.
+
+**Study #2 notes:** scoped originally as a length-only stat destined to
+fold into `/blog/youtube-title`; promoted to its own article after
+feedback that it needed real depth ("a real study with loads of insights
+that people can link to without me even reaching out," then "I hope I'm
+now going to read a Backlinko or Ahrefs level article"). Ended up measuring
+9 angles (length in chars and words, plus 8 binary title patterns) with a
+Spearman correlation as the headline stat (not bucket averages), decile
+curves instead of coarse buckets, and cross-tabs checking whether the
+length effect changes conditional on other patterns. Finding: title length
+explains approximately none of the variance in performance (r = 0.0046
+pooled, negligible in all 15 niches). See `research/youtube-title-length.md`
+for the full competitor audit and methodology writeup.
 
 **Study #1 notes for whoever runs #3/#4** (the same dataset powers them):
 - The loggers already hold everything needed. #1 cost **zero** fresh quota, not
@@ -56,7 +72,7 @@ Shorts-adoption-by-niche section rather than as a separate piece.
   thinnest were music (633) and education (670) long-form videos on the
   2025+ cutoff.
 - Publish honest N and date range in the article. #1 uses 30,360 long-form
-  videos published since 2025-01-01.
+  videos published since 2026-01-01.
 
 **CRITICAL METHODOLOGY RULE (learned the hard way 2026-08-13, after publishing):**
 `channel_videos.published_at` is NOT bounded by the collection window. Discovery

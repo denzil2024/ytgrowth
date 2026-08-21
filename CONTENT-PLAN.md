@@ -437,34 +437,48 @@ volume, a passed SERP check, and a route through the one test.
 |---|---|---|---|---|
 | 1 | ~~Tech video ideas~~ | `tech-video-ideas` | 1,300/mo (unverified, see below) | **SHIPPED 08-19, commit `fdaae2220`.** Data floor initially failed (17 channels), fixed via expanded discovery: 127 channels / 5,876 videos. |
 | 2 | ~~Music video ideas~~ | `music-video-ideas` | 950/mo (unverified, see below) | **SHIPPED 08-20, commit `a60c79781`.** 43 ideas, 7 formats, split explicitly between promoting the song and building the channel. 181 channels / 6,801 videos. |
-| 3 | Title-length study, folds INTO `/blog/youtube-title` | n/a | n/a | **NEXT.** Angle confirmed 08-14. Needs 2 SQL pulls joining `video_metric_snapshots` to `channel_videos.title`. |
-| 4 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | Weak confirm. Only write with a differentiator, see below. |
+| 3 | ~~Title-length study~~ | `youtube-title-length` | n/a | **SHIPPED 08-21, commit `fb03fdda9`.** Promoted from a fold-in stat to a standalone article, 28,947 videos / 707 channels, r = 0.0046 (no relationship). Also corrected `/blog/youtube-title`'s unsourced "eight words" claim to cite this instead. |
+| 4 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | Weak confirm. Only write with a differentiator, see below. **NEXT.** |
 | 5 | Promotion pass on the published studies | n/a | n/a | User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
 
-**Item 3 (title-length study) is next.** Music shipped 2026-08-20 (commit
-`a60c79781`), the fifth video-ideas spoke and the first FAQ built from real
-Google People Also Ask data pulled before writing, not guessed and
-corrected after. Its data floor cleared on the first pass (181 channels),
-no expanded discovery needed. Tech shipped 2026-08-19 (commit `fdaae2220`);
-its data floor failed on the first pass (17 channels), fixed live by
-running broader discovery queries instead of waiting on the weekly sweep,
+**Item 4 (sponsor companies) is next.** Title-length study shipped
+2026-08-21 (commit `fb03fdda9`): started as a one-stat fold-in per this
+plan, but user feedback ("I need a real study with loads of insights that
+people can link to without me even reaching out") promoted it to a
+standalone article per DATA-STUDIES.md study #2. Competitor research was
+redone once after being flagged as thin (8 URLs opened, 4 fully read on
+the first pass; 13 opened, 9 fully read on the second). Found title length
+has no measurable relationship with performance (r = 0.0046 pooled,
+negligible in all 15 niches), and that one of the four competing studies'
+"3M-video" claim traces to an unreachable domain, echoed uncredited across
+duplicate pages on another site with two different numbers. Music shipped
+2026-08-20 (commit `a60c79781`), the fifth video-ideas spoke and the first
+FAQ built from real Google People Also Ask data pulled before writing, not
+guessed and corrected after. Its data floor cleared on the first pass (181
+channels), no expanded discovery needed. Tech shipped 2026-08-19 (commit
+`fdaae2220`); its data floor failed on the first pass (17 channels), fixed
+live by running broader discovery queries instead of waiting on the weekly
+sweep,
 see `scripts/expand_category_discovery.py` and
 `research/tech-video-ideas.md` Section 5. Cooking shipped 2026-08-15
 (commit `b61406dbc`), the first article to run the full runbook (Stages 1
 through 6) in order. Comedy shipped 2026-08-14 (commit `839a04d24`) but
 skipped Stages 1 and 2, still owed, see Part 5.
 
-**Item 4 is the strongest item on this list.** Three published studies
-contradict each other (AIR Media-Tech says 30-50 chars, 10xCreator says 70-100,
-ViewsKit says under 30). Nobody has reconciled them and we can test the
-performance claim directly. It passes the one test outright. It goes INTO the
-existing post, since `/blog/youtube-title` already owns that intent and a
-separate page would split authority the same way the three-way keyword-research
-split did.
+**Item 3 shipped as its own article, not a fold-in.** The original plan
+here was to fold a single length stat into `/blog/youtube-title`, reasoning
+that a separate page would split authority the way the three-way
+keyword-research split did. User feedback overrode that: the finding
+turned out to be genuinely novel (no relationship at all, against four
+contradicting published studies) and worth a dedicated page per
+DATA-STUDIES.md study #2, with `/blog/youtube-title` now linking to it
+instead of asserting its own unsourced number. See the queue table above
+and `research/youtube-title-length.md` for the full writeup.
 
-**Item 5 caveat.** The SERP has real independents so it passes the diversity
-test, but OutlierKit ranks there on original sponsor data we do not have.
-Without a differentiator it fails the one test and should be dropped.
+**Item 4 caveat.** The SERP has real independents so it passes the
+diversity test, but OutlierKit ranks there on original sponsor data we do
+not have. Without a differentiator it fails the one test and should be
+dropped.
 
 ### After item 6
 
@@ -575,6 +589,7 @@ this same treatment.
 
 | Date | Article | Type |
 |---|---|---|
+| 2026-08-21 | YouTube Title Length (`/blog/youtube-title-length`), commit `fb03fdda9`. 28,947 videos / 707 channels, r = 0.0046 between title length and performance, negligible in every niche and every cross-tab; also corrected `/blog/youtube-title`'s unsourced "eight words" claim to cite this instead | Data study #2 |
 | 2026-08-20 | Music Video Ideas (`/blog/music-video-ideas`), commit `a60c79781`. 43 ideas split explicitly between promoting the song and building the channel; FAQ pulled from real Google PAA data before writing | Cluster spoke |
 | 2026-08-19 | Tech Video Ideas (`/blog/tech-video-ideas`), commit `fdaae2220`. Data floor fixed live via `scripts/expand_category_discovery.py` (17 to 127 channels); full voice pass against the demonetization reference after the first draft ran too close to cooking's phrasing | Cluster spoke |
 | 2026-08-15 | Cooking Video Ideas (`/blog/cooking-video-ideas`), commit `b61406dbc`. First article through the full 6-stage runbook | Cluster spoke |
