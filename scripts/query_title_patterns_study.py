@@ -2,33 +2,44 @@
 titles have in common" study (DATA-STUDIES.md study #2, promoted from a
 fold-in stat to its own article 2026-08-21: "I don't need patches in the
 study, I need a real study with loads of insights that people can link to
-without me even reaching out"). Zero fresh API quota, everything below comes
-from channel_videos + video_metric_snapshots, already collected by the
-weekly moat loggers (DATA-STUDIES.md moat items #3c/#3d).
+without me even reaching out ... I hope I'm now going to read a Backlinko or
+Ahrefs level article"). Zero fresh API quota: everything below comes from
+channel_videos + video_metric_snapshots, already collected by the weekly
+moat loggers (DATA-STUDIES.md moat items #3c/#3d).
 
-Every angle uses the same two-step normalization, methodology explained in
-full in the module docstring history (see git log on this file):
+Two normalization steps under every angle (git log on this file has the full
+reasoning from earlier passes):
 
-1. VELOCITY = latest views / days live at the point of the latest snapshot.
-   Raw views alone confound channel size and video age; velocity controls
-   for age.
+1. VELOCITY = latest views / days live as of that snapshot. Controls for
+   video age (a 170-day-old video and a 5-day-old video are not comparable
+   on raw views).
 2. MULTIPLIER = a video's velocity / its own channel's median velocity in
-   this sample. Controls for channel size (same pattern app/outliers.py
-   uses for its outlier multiplier).
+   this sample. Controls for channel size (same normalization pattern
+   app/outliers.py uses for its outlier multiplier).
 
-Angles measured, each reported as a correlation or a with/without split
-against the multiplier, not just a bucket average:
+What makes this a Backlinko/Ahrefs-depth pass instead of a bucket-average
+one, per direct feedback that means/medians alone read as amateur:
 
-- Title length in characters (continuous, Spearman r, + per-niche check)
-- Title length in words (continuous, Spearman r)
-- Contains a number (point-biserial via rank correlation)
-- Starts with a number
-- Question-framed (starts with a question word, or ends with "?")
-- Contains brackets/parentheses
-- Contains a year tag (20XX)
-- Contains a colon (X: Y structure)
-- Contains an all-caps emphasis word (3+ letters)
-- Contains an emoji
+- DECILES, not 5 coarse buckets: title length split into 10 equal-count
+  bins shows the actual shape of the curve (monotonic? a peak in the
+  middle? flat then a cliff?), not just "shorter/longer wins."
+- A curve-shape description is generated automatically from the decile
+  medians (monotonic increasing/decreasing vs. a peak/trough at a specific
+  decile), so the finding is about the SHAPE, the way ViewsKit's "monotonic,
+  no second peak" claim is a shape claim, not just a direction claim.
+- CROSS-TABS: the same fixed length-decile edges are applied separately to
+  videos with vs. without a number in the title, and with vs. without
+  question framing, so we can see whether the length effect holds, reverses,
+  or disappears once another pattern is present. That is a genuinely new
+  finding a single-variable study cannot produce.
+- Per-niche correlation as a Simpson's-paradox check: a pooled relationship
+  can appear only because certain niches both write long titles and perform
+  well for unrelated reasons.
+- Binary title patterns (numbers, questions, brackets, year tags, colons,
+  all-caps words, emoji) each get prevalence, a median split, and their own
+  correlation, not just a length view.
+- N is reported first and prominently, Backlinko-style ("we analyzed N
+  videos across M channels"), not buried at the bottom.
 
 Excludes Shorts (is_short) since this is a long-form/search framing
 question; Shorts titles behave differently and would need their own study.
@@ -73,14 +84,6 @@ WHERE cv.published_at >= '2025-01-01'
 GROUP BY cv.video_id, cv.channel_id, cv.title, cv.published_at, tc.category
 """
 
-LENGTH_BUCKETS = [
-    (0, 30, "<30"),
-    (30, 50, "30-50"),
-    (50, 70, "50-70"),
-    (70, 100, "70-100"),
-    (100, 10**9, "100+"),
-]
-
 QUESTION_STARTS = ("how ", "what ", "why ", "is ", "are ", "can ", "should ",
                     "does ", "do ", "will ", "which ", "who ", "when ", "where ")
 YEAR_RE = re.compile(r"\b20[0-3]\d\b")
@@ -107,18 +110,23 @@ def title_features(title):
     }
 
 
-def bucket_for(n):
-    for lo, hi, label in LENGTH_BUCKETS:
-        if lo <= n < hi:
-            return label
-    return LENGTH_BUCKETS[-1][2]
-
-
 def iqr(vals):
     if len(vals) < 4:
         return (min(vals), max(vals))
     q1, _, q3 = statistics.quantiles(vals, n=4)
     return (q1, q3)
+
+
+def percentiles(vals, ps=(10, 25, 50, 75, 90)):
+    if not vals:
+        return {p: None for p in ps}
+    s = sorted(vals)
+    n = len(s)
+    out = {}
+    for p in ps:
+        idx = min(n - 1, max(0, round(p / 100 * (n - 1))))
+        out[p] = s[idx]
+    return out
 
 
 def rank(values):
@@ -171,13 +179,62 @@ def describe_r(r, pos_label, neg_label):
     return f"{strength}, {direction}"
 
 
+def equal_count_bins(vids, key_fn, n_bins=10):
+    """Split vids into n_bins equal-count groups by key_fn, sorted ascending.
+    Returns list of (bin_index, lo_val, hi_val, [vids])."""
+    sorted_vids = sorted(vids, key=key_fn)
+    n = len(sorted_vids)
+    bins = []
+    for i in range(n_bins):
+        lo_idx = (i * n) // n_bins
+        hi_idx = ((i + 1) * n) // n_bins
+        chunk = sorted_vids[lo_idx:hi_idx]
+        if not chunk:
+            continue
+        bins.append((i + 1, key_fn(chunk[0]), key_fn(chunk[-1]), chunk))
+    return bins
+
+
+def fixed_edge_bins(vids, key_fn, edges):
+    """Bucket vids into bins defined by [(lo, hi), ...] edges (inclusive lo,
+    exclusive hi except the last). Returns list of (lo, hi, [vids])."""
+    bins = [[] for _ in edges]
+    for v in vids:
+        k = key_fn(v)
+        for i, (lo, hi) in enumerate(edges):
+            if lo <= k < hi or (i == len(edges) - 1 and k >= lo):
+                bins[i].append(v)
+                break
+    return [(edges[i][0], edges[i][1], bins[i]) for i in range(len(edges))]
+
+
+def describe_curve(medians):
+    """Heuristic shape description from a list of per-bin medians, in bin
+    order. Not a statistical test, just a pointer for the human writing the
+    article to verify against the actual printed numbers."""
+    valid = [(i, m) for i, m in enumerate(medians) if m is not None]
+    if len(valid) < 3:
+        return "not enough populated bins to describe a shape"
+    diffs = [valid[i + 1][1] - valid[i][1] for i in range(len(valid) - 1)]
+    ups = sum(1 for d in diffs if d > 0)
+    downs = sum(1 for d in diffs if d < 0)
+    peak_i, peak_v = max(valid, key=lambda t: t[1])
+    trough_i, trough_v = min(valid, key=lambda t: t[1])
+    if downs == 0:
+        return f"monotonically increasing (every bin), peak at bin {peak_i + 1}"
+    if ups == 0:
+        return f"monotonically decreasing (every bin), trough at bin {trough_i + 1}"
+    if valid[0][0] < peak_i < valid[-1][0]:
+        return f"peaks at bin {peak_i + 1} of {len(valid)} (not monotonic: a middle range outperforms both extremes)"
+    return (f"mixed, {ups} increases / {downs} decreases across bins, "
+            f"peak at bin {peak_i + 1}, trough at bin {trough_i + 1} (no clean monotonic pattern)")
+
+
 db = SessionLocal()
 try:
     rows = db.execute(text(QUERY)).fetchall()
 finally:
     db.close()
-
-print(f"Raw rows pulled: {len(rows)}")
 
 video_features = {}
 video_category = {}
@@ -195,8 +252,6 @@ for r in rows:
     video_category[r.video_id] = r.category or "uncategorized"
     by_channel_velocity[r.channel_id].append(velocity)
 
-print(f"Skipped (published same day as latest snapshot): {skipped_no_age}")
-
 channel_median_velocity = {cid: statistics.median(v) for cid, v in by_channel_velocity.items()}
 
 video_multiplier = {}
@@ -205,25 +260,48 @@ for vid, (cid, velocity) in video_velocity_raw.items():
     if med:
         video_multiplier[vid] = velocity / med
 
-print(f"Total channels: {len(by_channel_velocity)}")
-print(f"Videos with a valid multiplier: {len(video_multiplier)}")
-
 vids = list(video_multiplier.keys())
 ys_all = [video_multiplier[v] for v in vids]
 
-print("\n" + "=" * 70)
-print("1. TITLE LENGTH IN CHARACTERS")
-print("=" * 70)
-xs = [video_features[v]["len_chars"] for v in vids]
-r_pooled = spearman(xs, ys_all)
-print(f"POOLED Spearman r: {r_pooled:.4f}  n={len(xs)}")
+print("=" * 74)
+print(f"STUDY N: {len(vids)} videos across {len(by_channel_velocity)} channels")
+print(f"(raw rows pulled: {len(rows)}, skipped same-day-as-snapshot: {skipped_no_age})")
+print("=" * 74)
+
+all_lens = [video_features[v]["len_chars"] for v in vids]
+p = percentiles(all_lens)
+print(f"\nTitle length spread (chars): p10={p[10]} p25={p[25]} median={p[50]} p75={p[75]} p90={p[90]}")
+print(f"Mean: {statistics.mean(all_lens):.1f} chars")
+
+print("\n" + "=" * 74)
+print("1. TITLE LENGTH DECILES (equal-count bins, the actual curve)")
+print("=" * 74)
+decile_bins = equal_count_bins(vids, lambda v: video_features[v]["len_chars"], n_bins=10)
+decile_medians = []
+print(f"{'decile':<7} {'chars':<12} {'videos':>7} {'chans':>6} {'median_x':>9} {'mean_x':>8} {'p25_x':>8} {'p75_x':>8}")
+for idx, lo, hi, chunk in decile_bins:
+    mults = [video_multiplier[v] for v in chunk]
+    chans = {video_velocity_raw[v][0] for v in chunk}
+    med = statistics.median(mults)
+    decile_medians.append(med)
+    mean = statistics.mean(mults)
+    q1, q3 = iqr(mults)
+    print(f"D{idx:<6} {f'{lo}-{hi}':<12} {len(chunk):>7} {len(chans):>6} {med:>9.3f} {mean:>8.3f} {q1:>8.3f} {q3:>8.3f}")
+
+print(f"\nCurve shape: {describe_curve(decile_medians)}")
+
+r_pooled = spearman(all_lens, ys_all)
+print(f"\nPOOLED Spearman r (length vs. multiplier): {r_pooled:.4f}  n={len(all_lens)}")
 print(f"  {describe_r(r_pooled, 'positive (longer titles perform better)', 'negative (shorter titles perform better)')}")
 
+print("\n" + "=" * 74)
+print("2. TITLE LENGTH x NICHE (Simpson's-paradox check)")
+print("=" * 74)
 by_cat = defaultdict(list)
 for v in vids:
     by_cat[video_category[v]].append(v)
 
-print(f"\n{'category':<15} {'n':>6} {'spearman_r':>11}   strength/direction")
+print(f"{'category':<15} {'n':>6} {'spearman_r':>11}   strength/direction")
 for cat, cvids in sorted(by_cat.items(), key=lambda kv: -len(kv[1])):
     if len(cvids) < 30:
         print(f"{cat:<15} {len(cvids):>6} {'--':>11}   below 30-video floor, skipped")
@@ -233,39 +311,57 @@ for cat, cvids in sorted(by_cat.items(), key=lambda kv: -len(kv[1])):
     r = spearman(cxs, cys)
     print(f"{cat:<15} {len(cvids):>6} {r:>11.4f}   {describe_r(r, 'longer wins', 'shorter wins')}")
 
-bucketed = defaultdict(list)
-channels_in_bucket = defaultdict(set)
-for v in vids:
-    label = bucket_for(video_features[v]["len_chars"])
-    bucketed[label].append(video_multiplier[v])
-    channels_in_bucket[label].add(video_velocity_raw[v][0])
+# Fixed edges from the pooled deciles, reused for both cross-tabs below so
+# the two curves are directly comparable on the same x-axis.
+edges = []
+for i, (idx, lo, hi, chunk) in enumerate(decile_bins):
+    next_lo = decile_bins[i + 1][1] if i + 1 < len(decile_bins) else hi + 1
+    edges.append((lo, next_lo))
 
-print(f"\n{'bucket':<8} {'videos':>7} {'chans':>6} {'median_x':>9} {'mean_x':>8} {'p25_x':>8} {'p75_x':>8}")
-for lo, hi, label in LENGTH_BUCKETS:
-    mults = bucketed.get(label, [])
-    if not mults:
-        print(f"{label:<8} {'0':>7} {'0':>6} {'--':>9} {'--':>8} {'--':>8} {'--':>8}")
-        continue
-    med = statistics.median(mults)
-    mean = statistics.mean(mults)
-    q1, q3 = iqr(mults)
-    print(f"{label:<8} {len(mults):>7} {len(channels_in_bucket[label]):>6} {med:>9.3f} {mean:>8.3f} {q1:>8.3f} {q3:>8.3f}")
+print("\n" + "=" * 74)
+print("3. LENGTH x NUMBER-IN-TITLE cross-tab (same length bins both rows)")
+print("=" * 74)
+for flag_val, label in [(True, "HAS a number"), (False, "NO number")]:
+    subset = [v for v in vids if video_features[v]["has_number"] == flag_val]
+    bins = fixed_edge_bins(subset, lambda v: video_features[v]["len_chars"], edges)
+    meds = []
+    for lo, hi, chunk in bins:
+        if len(chunk) < 20:
+            meds.append(None)
+            continue
+        meds.append(statistics.median(video_multiplier[v] for v in chunk))
+    print(f"\n{label} (n={len(subset)}):")
+    print("  " + "  ".join(f"{m:.2f}" if m is not None else "  --" for m in meds) + "   (one value per length decile, low-n bins as --)")
+    print(f"  shape: {describe_curve(meds)}")
 
-all_lens = [video_features[v]["len_chars"] for v in vids]
-print(f"\nOverall length: median {statistics.median(all_lens):.1f} chars, mean {statistics.mean(all_lens):.1f} chars")
+print("\n" + "=" * 74)
+print("4. LENGTH x QUESTION-FRAMING cross-tab (same length bins both rows)")
+print("=" * 74)
+for flag_val, label in [(True, "IS a question"), (False, "NOT a question")]:
+    subset = [v for v in vids if video_features[v]["is_question"] == flag_val]
+    bins = fixed_edge_bins(subset, lambda v: video_features[v]["len_chars"], edges)
+    meds = []
+    for lo, hi, chunk in bins:
+        if len(chunk) < 20:
+            meds.append(None)
+            continue
+        meds.append(statistics.median(video_multiplier[v] for v in chunk))
+    print(f"\n{label} (n={len(subset)}):")
+    print("  " + "  ".join(f"{m:.2f}" if m is not None else "  --" for m in meds) + "   (one value per length decile, low-n bins as --)")
+    print(f"  shape: {describe_curve(meds)}")
 
-print("\n" + "=" * 70)
-print("2. TITLE LENGTH IN WORDS")
-print("=" * 70)
+print("\n" + "=" * 74)
+print("5. TITLE LENGTH IN WORDS")
+print("=" * 74)
 wxs = [video_features[v]["len_words"] for v in vids]
 r_words = spearman(wxs, ys_all)
 print(f"POOLED Spearman r: {r_words:.4f}  n={len(wxs)}")
 print(f"  {describe_r(r_words, 'positive (more words performs better)', 'negative (fewer words performs better)')}")
 print(f"Overall word count: median {statistics.median(wxs):.1f} words, mean {statistics.mean(wxs):.1f} words")
 
-print("\n" + "=" * 70)
-print("3. BINARY TITLE PATTERNS (with vs. without)")
-print("=" * 70)
+print("\n" + "=" * 74)
+print("6. BINARY TITLE PATTERNS (with vs. without)")
+print("=" * 74)
 BINARY_FEATURES = [
     ("has_number", "contains a number"),
     ("starts_with_number", "starts with a number"),
