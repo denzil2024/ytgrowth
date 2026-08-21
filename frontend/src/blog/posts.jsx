@@ -8451,31 +8451,31 @@ Free studio checklist: https://yoursite.com/checklist
     author: 'Denzil',
     readTime: '13 min read',
     faqs: [
-      { q: 'What is the optimal length for a YouTube title?', a: 'There isn’t one. Across 28,947 videos in our tracked dataset, the correlation between title length and performance is r = 0.0046. Statistically negligible. Every length decile, short to long, sits within about 2% of a channel’s typical performance. Pick the length the idea needs. Not a target character count.' },
+      { q: 'What is the optimal length for a YouTube title?', a: 'There isn’t one. Across 28,947 videos in our tracked dataset, the shortest titles and the longest titles perform within a couple of percentage points of each other. Statistically, that is no relationship (r = 0.0046). Pick the length the idea needs. Not a target character count.' },
       { q: 'How long can a YouTube title be before it gets cut off?', a: 'YouTube allows 100 characters. Search results and suggested feeds truncate around 60 to 70 characters, depending on device. Past that, you risk losing the ending. That is a display constraint, not a performance one. Titles past 70 characters perform the same as titles under 35 in our data.' },
-      { q: 'What should I avoid in YouTube titles?', a: 'Avoid over-optimizing for length. It is not the lever it is treated as. Two patterns showed a slight negative direction, both weak: a colon in the title (r = -0.012), question-framed titles (r = -0.009). Neither is strong enough to call a rule. Neither helped either.' },
+      { q: 'What should I avoid in YouTube titles?', a: 'Avoid over-optimizing for length. It is not the lever it is treated as. A colon in the title and question-framed titles both trended slightly worse in our data, but too weakly to call either one a rule. Neither helped either.' },
       { q: 'How do I know if my YouTube title is good?', a: 'Not by its length. Title length, word count, brackets, capital letters, emoji: all negligible in our data. A good title is judged by whether it sets up what the video delivers. No character count measures that.' },
-      { q: 'How many words should my YouTube title be?', a: 'The median title in our dataset runs 11 words. Word count correlates about as weakly as character count (r = 0.0050). A commonly cited figure elsewhere is eight words, from a 2026 Subsub.io study of 120,703 videos. Our own measurement doesn’t find word count moving performance either.' },
+      { q: 'How many words should my YouTube title be?', a: 'The median title in our dataset runs 11 words, and word count moves performance about as little as character count does, next to nothing. A commonly cited figure elsewhere is eight words, from a 2026 Subsub.io study of 120,703 videos. Our own measurement doesn’t find word count moving performance either.' },
       { q: 'What is the YouTube 7 second rule?', a: 'A retention idea, not a title-length one. A video needs to hook the viewer within its first seven seconds or lose them to the next recommendation. Real problem, separate from what a title does. A title’s job is to earn the click. The first seven seconds decide whether that click was worth it. No title length fixes a weak opening.' },
-      { q: 'Does putting a number or a year in my title help?', a: 'Marginally, mostly for year tags. A number in the title: a 1.3% median lift (r = 0.0214), negligible. A year tag like 2026: the strongest single signal in the study, a 9.5% median lift, still a weak correlation (r = 0.024) but the only one worth a second look.' },
+      { q: 'Does putting a number or a year in my title help?', a: 'Marginally, mostly for year tags. A number in the title moves performance about 1.3%, close to nothing. A year tag like 2026 is the strongest single signal in the study: titles with one perform 9.5% better than titles without. Still a small effect, but the only one worth a second look.' },
       { q: 'What should I optimize instead of title length?', a: 'Whatever explains the huge variance we found. Individual videos ranged from roughly half a channel’s typical performance to more than double it. Title length accounts for almost none of that spread. That points to topic selection, thumbnail, and the video’s first seconds. Not the character count.' },
     ],
     content: () => (
       <>
         <p>Four published studies on YouTube title length agree on nothing. ViewsKit says under 30 characters earns roughly twice the views of 80 to 100. Briggsby says 20 to 40 characters is the sweet spot. AIR Media-Tech says it depends on the niche. Subsub.io says top performers average 65 to 70 characters.</p>
 
-        <p>The goal of this study: find out which of those numbers, if any, holds up against real tracked data. We measured it ourselves. <strong>28,947</strong> tracked videos. <strong>707</strong> channels. Title length checked against a channel-and-age-normalized performance metric. Checked by decile. Checked by niche. Cross-tabbed against eight other title patterns.</p>
+        <p>The goal of this study: find out which of those numbers, if any, holds up against real tracked data. We measured it ourselves. <strong>28,947</strong> tracked videos. <strong>707</strong> channels. Title length checked against a channel-and-age-normalized performance metric. Checked by length group. Checked by niche. Cross-tabbed against eight other title patterns.</p>
 
         <p>The result is a correlation coefficient, a number from -1 to 1 that measures how tightly two things move together. 0 means no relationship at all. 1 means a perfect one. Our number: <strong>r = 0.0046</strong>. Essentially zero. Title length does not predict performance. Not weakly, not conditionally, not in any niche large enough to test.</p>
 
         <h2>Key Findings</h2>
 
         <ul>
-          <li><strong>No relationship, full stop.</strong> Pooled correlation r = 0.0046 across 28,947 videos. Every length decile sits within 3 percentage points of every other one (0.981x to 1.010x).</li>
-          <li><strong>Holds in every niche.</strong> All 15 tracked niches came back negligible, from -0.084 (tech) to +0.065 (vlogs). No niche where length matters.</li>
+          <li><strong>No relationship, full stop.</strong> Across 28,947 videos, the shortest titles and the longest titles perform within 3 percentage points of each other. Statistically, that is zero (r = 0.0046).</li>
+          <li><strong>Holds in every niche.</strong> All 15 tracked niches came back negligible, tech and vlogs the closest to an effect and still too small to count. No niche where length matters.</li>
           <li><strong>Holds combined with other patterns too.</strong> Titles with a number, titles without, question-framed or not, all four cross-tab curves stay flat.</li>
           <li><strong>The closest real competing study agrees with us more than it disagrees.</strong> Subsub.io (120,703 videos) matches our numbers on questions. Its own "shorter wins" headline rests on a top-performer average nearly identical to our overall population median, which is what a null result looks like, not a real effect.</li>
-          <li><strong>One pattern shows a real, if weak, signal.</strong> A year tag in the title: +9.5% median lift (r = 0.024, weak but real). Every other pattern tested, numbers, brackets, colons, all-caps, emoji, is noise.</li>
+          <li><strong>One pattern shows a real, if small, effect.</strong> Titles with a year tag ("2026," etc.) perform 9.5% better than titles without one. Every other pattern tested, numbers, brackets, colons, all-caps, emoji, makes no measurable difference.</li>
           <li><strong>One of the four widely-cited length studies doesn't check out.</strong> The "3M-video, 90-100 characters" claim traces to a domain that does not resolve.</li>
         </ul>
 
@@ -8497,11 +8497,11 @@ Free studio checklist: https://yoursite.com/checklist
             <tr><td><strong>Briggsby</strong></td><td>100,000 videos, 75,000 channels</td><td>20-40 chars is the sweet spot</td></tr>
             <tr><td><strong>AIR Media-Tech</strong></td><td>11 niches</td><td>No single number, depends on the niche</td></tr>
             <tr><td><strong>"3M-video study"</strong> (cited by 10xcreator.dev, echoed by ytzolo.com)</td><td>Claimed, unverified</td><td>90-100 chars outperforms by 2x+</td></tr>
-            <tr><td><strong>Our data</strong></td><td>28,947 videos, 707 channels</td><td>No relationship, r = 0.0046</td></tr>
+            <tr><td><strong>Our data</strong></td><td>28,947 videos, 707 channels</td><td>No length effect, tested directly</td></tr>
           </tbody>
         </table>
 
-        <p>10xcreator.dev ranks first for "best youtube title length," citing a 3-million-video study and a 90 to 100 character recommendation. The domain does not resolve. Not with www, not without it, not on repeated attempts.</p>
+        <p>10xcreator.dev ranks first for "best youtube title length," citing a 3-million-video study and a 90 to 100 character recommendation. We tried to check that study. The website does not exist. It will not load, on repeated attempts, at all.</p>
 
         <p>The same unlinked "3 million video" figure appears on two different ytzolo.com pages with two different numbers: a 10-14% lift on one page, "more than 2x" on the other. Nobody citing this claim read the same study. There is no study to read.</p>
 
@@ -8529,48 +8529,45 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>Title Length Shows No Correlation With Performance</h2>
 
-        <p>Split into ten equal-count deciles by character length, against the channel-normalized performance multiplier:</p>
+        <p>We sorted all 28,947 titles by length, shortest to longest, and split them into 10 equal-size groups. Here is how each group performed against its own channel’s normal:</p>
 
         <table>
           <thead>
             <tr>
-              <th>Decile</th>
-              <th>Length range</th>
-              <th>Median multiplier</th>
+              <th>Title length</th>
+              <th>Performance vs. that channel’s normal</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>1</td><td>1-35 chars</td><td>0.981x</td></tr>
-            <tr><td>2</td><td>35-43 chars</td><td>1.000x</td></tr>
-            <tr><td>3</td><td>43-51 chars</td><td>1.000x</td></tr>
-            <tr><td>4</td><td>51-59 chars</td><td>1.000x</td></tr>
-            <tr><td>5</td><td>59-66 chars</td><td>0.995x</td></tr>
-            <tr><td>6</td><td>66-74 chars</td><td>1.000x</td></tr>
-            <tr><td>7</td><td>74-83 chars</td><td>1.000x</td></tr>
-            <tr><td>8</td><td>83-91 chars</td><td>1.000x</td></tr>
-            <tr><td>9</td><td>91-97 chars</td><td>1.010x</td></tr>
-            <tr><td>10</td><td>97-100 chars</td><td>1.000x</td></tr>
+            <tr><td>1-35 characters</td><td>-2%</td></tr>
+            <tr><td>35-43 characters</td><td>same</td></tr>
+            <tr><td>43-51 characters</td><td>same</td></tr>
+            <tr><td>51-59 characters</td><td>same</td></tr>
+            <tr><td>59-66 characters</td><td>-1%</td></tr>
+            <tr><td>66-74 characters</td><td>same</td></tr>
+            <tr><td>74-83 characters</td><td>same</td></tr>
+            <tr><td>83-91 characters</td><td>same</td></tr>
+            <tr><td>91-97 characters</td><td>+1%</td></tr>
+            <tr><td>97-100 characters</td><td>same</td></tr>
           </tbody>
         </table>
 
-        <p>The lowest decile, 1 to 35 characters, sits at <strong>0.981x</strong>. The highest single point, 91 to 97 characters, sits at <strong>1.010x</strong>. Every other decile falls between 0.995x and 1.000x. Under 3 percentage points, shortest title to longest.</p>
+        <p>The worst-performing group, 1 to 35 characters, is 2% below normal. The best, 91 to 97 characters, is 1% above. Everything else is a rounding error. That is the entire spread, shortest title in the dataset to longest.</p>
 
-        <p>Squared, that correlation is an r² of roughly 0.00002. Title length accounts for about <strong>0.002%</strong> of the variance in performance. Not a weak effect. No effect.</p>
-
-        <p><strong>Key takeaway:</strong> r = 0.0046 across 28,947 videos. Title length and performance are uncorrelated.</p>
+        <p><strong>Key takeaway: the shortest titles and the longest titles perform almost identically.</strong> The gap between the worst-performing length group and the best is 3 percentage points, out of 28,947 videos.</p>
 
         <h2>The Non-Effect Holds in Every Niche We Tested</h2>
 
-        <p>AIR Media-Tech says it depends on the niche. We checked. All 15 niches with enough tracked volume to clear a 30-video floor:</p>
+        <p>AIR Media-Tech says it depends on the niche. We checked every niche with enough tracked volume to test properly:</p>
 
         <ul>
-          <li><strong>Negative direction:</strong> tech (<strong>-0.084</strong>), education (-0.068), entertainment (-0.059), sports (-0.005), travel (-0.003), gaming (-0.003), news (-0.004)</li>
-          <li><strong>Positive direction:</strong> vlogs (<strong>+0.065</strong>), music (+0.061), comedy (+0.056), fitness (+0.037), cooking (+0.037), finance (+0.013), beauty (+0.008)</li>
+          <li><strong>Skewed slightly toward shorter titles:</strong> tech, education, entertainment, sports, travel, gaming, news</li>
+          <li><strong>Skewed slightly toward longer titles:</strong> vlogs, music, comedy, fitness, cooking, finance, beauty</li>
         </ul>
 
-        <p>Every niche came back negligible. None crossed the 0.10 threshold that counts as a weak relationship. 14 named niches, zero exceptions.</p>
+        <p>"Skewed slightly" is generous. None of these 14 niches showed an effect strong enough to call real. Tech leaned shortest, vlogs leaned longest, and both leans were too small to build a strategy on.</p>
 
-        <p><strong>Key takeaway:</strong> no niche, out of 15 tested, shows a real length effect. Tech’s -0.084 is the strongest correlation in either direction. Still negligible.</p>
+        <p><strong>Key takeaway: no niche, out of 15 tested, shows a real length effect.</strong> Not even the two closest to one.</p>
 
         <CtaCard
           to="/features/seo-studio"
@@ -8583,7 +8580,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>We tested whether length matters in combination with two other patterns: numbers and question framing.</p>
 
-        <p>Titles with a number, and titles without, run through the same length deciles separately. Both curves hover near 1.00x. No trend in either one.</p>
+        <p>Titles with a number, and titles without, sorted into the same 10 length groups separately. Both come back the same: no group performs meaningfully better or worse than any other.</p>
 
         <p>Question-framed titles versus statements: same result. Only 1,606 titles in the dataset are question-framed, so that curve is noisier. Still no consistent length pattern inside it. Length does not start mattering once a number or a question enters the title. It stays flat.</p>
 
@@ -8594,12 +8591,12 @@ Free studio checklist: https://yoursite.com/checklist
         <p>Subsub.io has real methodology, a real sample, and measures several of the same patterns. Compared against our numbers:</p>
 
         <ul>
-          <li><strong>Length.</strong> Subsub.io: "shorter wins," top performers average 65-70 characters. Us: no relationship (r = 0.0046, essentially zero).</li>
-          <li><strong>Questions.</strong> Subsub.io: 6-8% of top titles, largely ineffective. Us: agree, negligible effect (r = -0.009).</li>
-          <li><strong>Numbers.</strong> Subsub.io: "still powerful," 32-40% of top performers. Us: barely, a weak effect at best (r = 0.021).</li>
-          <li><strong>Brackets.</strong> Subsub.io: slightly outperform average. Us: essentially zero (r = 0.002).</li>
-          <li><strong>Emoji.</strong> Subsub.io: large effect, but specific to Shorts. Us: negligible on long-form (r = 0.013), Shorts excluded entirely.</li>
-          <li><strong>Capital letters.</strong> Subsub.io: strategic emphasis beats all-caps screaming. Us: essentially zero with a cruder measure, has one or doesn’t (r = 0.0005).</li>
+          <li><strong>Length.</strong> Subsub.io: "shorter wins," top performers average 65-70 characters. Us: no relationship at all.</li>
+          <li><strong>Questions.</strong> Subsub.io: 6-8% of top titles, largely ineffective. Us: agree, no real effect.</li>
+          <li><strong>Numbers.</strong> Subsub.io: "still powerful," 32-40% of top performers. Us: barely moves the needle.</li>
+          <li><strong>Brackets.</strong> Subsub.io: slightly outperform average. Us: no measurable effect.</li>
+          <li><strong>Emoji.</strong> Subsub.io: large effect, but specific to Shorts. Us: no effect on long-form, Shorts excluded entirely.</li>
+          <li><strong>Capital letters.</strong> Subsub.io: strategic emphasis beats all-caps screaming. Us: no effect, though our measure is cruder, has one or doesn’t.</li>
         </ul>
 
         <p>Subsub.io’s own reported "top performer" average is 65 to 70 characters. Our overall population median, every video we tracked, not just the top slice, is 66 characters. Nearly identical. If shorter titles genuinely outperformed longer ones, the top performers’ average length would sit meaningfully below the population average. It doesn’t. Not in their dataset, not in ours. That is what a null result looks like even when a study headlines "shorter wins."</p>
@@ -8631,32 +8628,32 @@ Free studio checklist: https://yoursite.com/checklist
           </tbody>
         </table>
 
-        <p>Only one clears even a modest bar. A year tag in the title correlates at <strong>r = 0.024</strong>, still technically weak, but the median lift is <strong>9.5%</strong>, the largest of anything in this table by a wide margin. Everything else, numbers, brackets, colons, all-caps words, emoji, sits at a correlation under 0.02, indistinguishable from noise.</p>
+        <p>Only one pattern clears even a modest bar. Titles with a year tag perform <strong>9.5% better</strong> than titles without one, the largest gap of anything in this table by a wide margin. Everything else, numbers, brackets, colons, all-caps words, emoji, is indistinguishable from noise.</p>
 
         <p><strong>Key takeaway:</strong> a year tag is the only title pattern tested with a lift worth naming. Everything else is noise.</p>
 
         <h2>Frequently Asked Questions</h2>
 
         <h3>What is the optimal length for a YouTube title?</h3>
-        <p>There isn’t one. Across 28,947 videos in our tracked dataset, the correlation between title length and performance is <strong>r = 0.0046</strong>. Statistically negligible. Every length decile, short to long, sits within about 2% of a channel’s typical performance. Pick the length the idea needs. Not a target character count.</p>
+        <p>There isn’t one. Across 28,947 videos in our tracked dataset, <strong>the shortest titles and the longest titles perform within a couple of percentage points of each other</strong>. Statistically, that is no relationship (r = 0.0046). Pick the length the idea needs. Not a target character count.</p>
 
         <h3>How long can a YouTube title be before it gets cut off?</h3>
         <p>YouTube allows <strong>100 characters</strong>. Search results and suggested feeds truncate around 60 to 70 characters, depending on device. Past that, you risk losing the ending. That is a display constraint, not a performance one. Titles past 70 characters perform the same as titles under 35 in our data.</p>
 
         <h3>What should I avoid in YouTube titles?</h3>
-        <p>Avoid over-optimizing for length. It is not the lever it is treated as. Two patterns showed a slight negative direction, both weak: a colon in the title (<strong>r = -0.012</strong>), question-framed titles (r = -0.009). Neither is strong enough to call a rule. Neither helped either.</p>
+        <p>Avoid over-optimizing for length. It is not the lever it is treated as. <strong>A colon in the title and question-framed titles both trended slightly worse</strong> in our data, but too weakly to call either one a rule. Neither helped either.</p>
 
         <h3>How do I know if my YouTube title is good?</h3>
         <p>Not by its length. Title length, word count, brackets, capital letters, emoji: all negligible in our data. A good title is judged by whether it sets up what the video delivers. No character count measures that.</p>
 
         <h3>How many words should my YouTube title be?</h3>
-        <p>The median title in our dataset runs <strong>11 words</strong>. Word count correlates about as weakly as character count (r = 0.0050). A commonly cited figure elsewhere is eight words, from a 2026 Subsub.io study of 120,703 videos. Our own measurement doesn’t find word count moving performance either.</p>
+        <p>The median title in our dataset runs <strong>11 words</strong>, and word count moves performance about as little as character count does, next to nothing. A commonly cited figure elsewhere is eight words, from a 2026 Subsub.io study of 120,703 videos. Our own measurement doesn’t find word count moving performance either.</p>
 
         <h3>What is the YouTube 7 second rule?</h3>
         <p>A retention idea, not a title-length one. A video needs to hook the viewer within its first seven seconds or lose them to the next recommendation. Real problem, separate from what a title does. A title’s job is to earn the click. The first seven seconds decide whether that click was worth it. No title length fixes a weak opening.</p>
 
         <h3>Does putting a number or a year in my title help?</h3>
-        <p>Marginally, mostly for year tags. A number in the title: a 1.3% median lift (r = 0.0214), negligible. A year tag like 2026: the strongest single signal in the study, a <strong>9.5% median lift</strong>, still a weak correlation (r = 0.024) but the only one worth a second look.</p>
+        <p>Marginally, mostly for year tags. A number in the title moves performance about 1.3%, close to nothing. A year tag like 2026 is the strongest single signal in the study: titles with one perform <strong>9.5% better</strong> than titles without. Still a small effect, but the only one worth a second look.</p>
 
         <h3>What should I optimize instead of title length?</h3>
         <p>Whatever explains the huge variance we found. Individual videos ranged from roughly half a channel’s typical performance to more than double it. Title length accounts for almost none of that spread. That points to topic selection, thumbnail, and the video’s first seconds. Not the character count.</p>
