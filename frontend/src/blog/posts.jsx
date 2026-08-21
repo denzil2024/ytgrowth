@@ -8468,6 +8468,17 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>We measured it instead: <strong>28,947</strong> tracked videos, <strong>707</strong> channels, title length checked against a channel-and-age-normalized performance metric, decile by decile, niche by niche, cross-tabbed against eight other title patterns. The correlation is <strong>r = 0.0046</strong>. Title length does not predict performance. Not weakly, not conditionally, not in any niche large enough to test.</p>
 
+        <h2>Key Findings</h2>
+
+        <ul>
+          <li><strong>No relationship, full stop.</strong> Pooled correlation r = 0.0046 across 28,947 videos. Every length decile sits within 3 percentage points of every other one (0.981x to 1.010x).</li>
+          <li><strong>Holds in every niche.</strong> All 15 tracked niches came back negligible, from -0.084 (tech) to +0.065 (vlogs). No niche where length matters.</li>
+          <li><strong>Holds combined with other patterns too.</strong> Titles with a number, titles without, question-framed or not, all four cross-tab curves stay flat.</li>
+          <li><strong>The closest real competing study agrees with us more than it disagrees.</strong> Subsub.io (120,703 videos) matches our numbers on questions. Its own "shorter wins" headline rests on a top-performer average nearly identical to our overall population median, which is what a null result looks like, not a real effect.</li>
+          <li><strong>One pattern shows a real, if weak, signal.</strong> A year tag in the title: +9.5% median lift, r = 0.024. Every other pattern tested, numbers, brackets, colons, all-caps, emoji, is noise.</li>
+          <li><strong>One of the four widely-cited length studies doesn't check out.</strong> The "3M-video, 90-100 characters" claim traces to a domain that does not resolve.</li>
+        </ul>
+
         <h2>Four Studies, Four Different Numbers</h2>
 
         <p>Every study below is real, sourced, and reachable. We opened and read each one this month. None agree on a number, and one of the most-cited claims in this space traces to a website that does not load.</p>
