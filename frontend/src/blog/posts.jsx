@@ -8462,11 +8462,11 @@ Free studio checklist: https://yoursite.com/checklist
     ],
     content: () => (
       <>
-        <p>Four published studies on YouTube title length agree on nothing. ViewsKit says under 30 characters earns roughly twice the views of 80 to 100. Briggsby says 20 to 40 characters is the sweet spot. AIR Media-Tech says it depends on the niche. Subsub.io says top performers average 65 to 70 characters.</p>
+        <p>Four studies. Four different answers. ViewsKit says keep it under 30 characters. Briggsby says 20 to 40. AIR Media-Tech says it depends on the niche. Subsub.io says the winners average 65 to 70. Somebody here is wrong. Maybe everybody is.</p>
 
-        <p>The goal of this study: find out which of those numbers, if any, holds up against real tracked data. We measured it ourselves. <strong>28,947</strong> tracked videos. <strong>707</strong> channels. Title length checked against a channel-and-age-normalized performance metric. Checked by length group. Checked by niche. Cross-tabbed against eight other title patterns.</p>
+        <p>We stopped picking a side and tested it. <strong>28,947</strong> videos. <strong>707</strong> channels. Every title measured against how well it performed compared to that channel’s own normal, length group by length group, niche by niche, cross-tabbed against eight other patterns creators obsess over.</p>
 
-        <p>The result is a correlation coefficient, a number from -1 to 1 that measures how tightly two things move together. 0 means no relationship at all. 1 means a perfect one. Our number: <strong>r = 0.0046</strong>. Essentially zero. Title length does not predict performance. Not weakly, not conditionally, not in any niche large enough to test.</p>
+        <p>None of the four numbers holds up. Title length does not predict performance. Not a little. Not conditionally. Not in a single niche large enough to test. The statistical version of that finding: a correlation of <strong>r = 0.0046</strong>, on a scale where 0 is no relationship and 1 is a perfect one. As close to zero as real-world data gets.</p>
 
         <h2>Key Findings</h2>
 
