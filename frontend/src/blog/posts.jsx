@@ -8462,11 +8462,15 @@ Free studio checklist: https://yoursite.com/checklist
     ],
     content: () => (
       <>
-        <p>Four studies. Four different answers. ViewsKit says keep it under 30 characters. Briggsby says 20 to 40. AIR Media-Tech says it depends on the niche. Subsub.io says the winners average 65 to 70. Somebody here is wrong. Maybe everybody is.</p>
+        <p>We wanted to know whether YouTube title length affects performance at all. Four published studies say it does, and each gives a different answer. ViewsKit says titles under 30 characters earn roughly twice the views of titles between 80 and 100. Briggsby puts the sweet spot at 20 to 40 characters. AIR Media-Tech says the answer depends on the niche. Subsub.io finds that top performers average 65 to 70 characters.</p>
 
-        <p>We stopped picking a side and tested it. <strong>28,947</strong> videos. <strong>707</strong> channels. Every title measured against how well it performed compared to that channel’s own normal, length group by length group, niche by niche, cross-tabbed against eight other patterns creators obsess over.</p>
+        <p>They cannot all be right.</p>
 
-        <p>None of the four numbers holds up. Title length does not predict performance. Not a little. Not conditionally. Not in a single niche large enough to test. The statistical version of that finding: a correlation of <strong>r = 0.0046</strong>, on a scale where 0 is no relationship and 1 is a perfect one. As close to zero as real-world data gets.</p>
+        <p>So we tested it ourselves: <strong>28,947 videos across 707 channels</strong>, title length compared against a channel-and-age-normalized performance metric. We split the results into length groups, tested them across niches, and cross-tabbed title length against eight other title patterns.</p>
+
+        <p>The answer is remarkably clear: <strong>there is no relationship</strong>. We measured a correlation of r = 0.0046 between title length and performance, on a scale where 0 means no relationship and 1 means a perfect one. In other words, title length has essentially no predictive power.</p>
+
+        <p>It doesn’t matter whether a title is short, medium, or long. Title length does not predict performance, not weakly, not conditionally, and not in any niche large enough to test.</p>
 
         <h2>Key Findings</h2>
 
