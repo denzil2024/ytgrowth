@@ -9,7 +9,7 @@ Volume: not yet pulled from Keyword Planner this session, existing
 CONTENT-PLAN.md Part 4 item 3 note treats this as passing the one test
 regardless of volume, same as tech/music precedent.
 Researched: 2026-08-21
-Status: `researching — data pulled, coverage matrix done, outline drafted, awaiting approval`
+Status: `done — written, verified, built, awaiting the next batched push`
 
 Origin: promoted from a one-stat fold-in (CONTENT-PLAN.md Part 4 item 3) to a
 standalone article after direct feedback that a length-only stat was thin;
@@ -253,21 +253,21 @@ Notes: —
 ## 8. Stage log
 
 - [x] Stage 1, research file complete
-- [ ] Stage 2, presented and approved
-- [ ] Stage 3, written against the full standard in one pass
-- [ ] Stage 4, verified: parses clean, paragraphs <=5 lines, FAQ array mirrors
-      visible, banned words zero, cover 1600x900 JPG loading, desktop and
-      mobile screenshots read, counts compared to the reference post
-- [ ] Stage 5, built with `BUILD_API_URL`, pushed, verified live, indexing
-      requested
+- [x] Stage 2, presented and approved (user: "yes")
+- [x] Stage 3, written against the full standard in one pass
+- [x] Stage 4, verified: drift check passes (3 tables/23 rows, 5 bold-lead,
+      0 hedges, 0 banned words), all 33 paragraphs <=5 lines, FAQ array
+      mirrors visible section exactly (8/8, scripted diff), cover and inline
+      decile chart both built per the dataviz skill (line-vs-baseline form,
+      site's own Fraunces/Barlow/warm-paper/red-accent palette, 1600x900 and
+      1400x640 JPG), desktop and mobile screenshots read clean
+- [x] Stage 5, built (`npm run build`, 117 routes verified, exit 0), holding
+      push per the 2026-08-21 batching rule until everything ships together
 
-Outstanding for this article:
+Follow-through done in this pass:
+- `/blog/youtube-title`'s unsourced "eight words, 45-55 chars" claim (Rule 2
+  + FAQ, no faqs array on that older post so only the two inline `<p>`s
+  needed fixing) now links to this study instead of asserting the number.
+- Sitemap, llms.txt, seoMeta.js, postsMeta.js all updated in the same pass.
 
-- Awaiting outline approval before writing full draft
-- Need a real chart (decile curve) built per the dataviz skill for the cover
-  and/or an in-article visual, not just an HTML table
-- `/blog/youtube-title`'s existing unsourced "median title length of
-  top-performing videos is eight words" claim (Rule 2 + FAQ) should be
-  revisited once this ships, our word-count figure (median 11.0 words) does
-  not match that unsourced claim and the two pages will contradict each
-  other if left as is
+Outstanding: none. Ready to push as part of the next batch.
