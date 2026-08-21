@@ -8535,6 +8535,10 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>We sorted all 28,947 titles by length, shortest to longest, and split them into 10 equal-size groups. Here is how each group performed against its own channel’s normal:</p>
 
+        <img src="/blog/youtube-title-length-chart.jpg" alt="Line chart showing performance versus each channel's normal across ten title-length groups, flat between -2% and +1% across the entire range from shortest to longest titles" />
+
+        <p>The line barely moves. The same numbers, in full:</p>
+
         <table>
           <thead>
             <tr>
@@ -8662,7 +8666,7 @@ Free studio checklist: https://yoursite.com/checklist
         <h3>What should I optimize instead of title length?</h3>
         <p>Whatever explains the huge variance we found. Individual videos ranged from roughly half a channel’s typical performance to more than double it. Title length accounts for almost none of that spread. That points to topic selection, thumbnail, and the video’s first seconds. Not the character count.</p>
 
-        <h2>Write the Title for the Idea, Not the Counter</h2>
+        <h2>Stop Optimizing Title Length</h2>
 
         <p>Twenty-eight thousand videos. Title length explains close to none of what separates a video that outperforms its channel’s own norm from one that doesn’t. Individual videos range from <strong>roughly half</strong> a channel’s typical performance to <strong>more than double</strong> it, and almost none of that difference comes from title length.</p>
 
