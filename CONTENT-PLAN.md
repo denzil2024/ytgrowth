@@ -22,9 +22,10 @@ Last updated: 2026-08-22
 6. Do Shorts grow faster than long-form, or just get posted more? — 0 quota, shares #5's data pull, do back to back
 7. Engagement rate by niche: which categories get the most likes/comments per view — 0 quota, pending a likeCount-coverage check first (see `scripts/check_moat_logger_status.py`)
 8. M1/M2/M3 moat studies (fastest-rising topics, channel growth rates, seasonality) — status unconfirmed since 2026-08-13, run `scripts/check_moat_logger_status.py` on Railway console before assuming still blocked, five-plus weeks of runway have accumulated since
-9. **We Analyzed [N] YouTube Uploads to See Whether Creators Are Uploading More Shorts Over Time, By Niche** — 0 quota, `channel_videos.is_short` by month since Jan 2025. Goal agreed 2026-08-22: not a snapshot percentage, whether the month-by-month Shorts ratio is actually rising per niche or has already leveled off.
+9. **We Analyzed [N] YouTube Uploads to See Whether Creators Are Uploading More Shorts Over Time**, By Niche — 0 quota, `channel_videos.is_short` by month since Jan 2025. Goal agreed 2026-08-22: not a snapshot percentage, whether the month-by-month Shorts ratio is actually rising per niche or has already leveled off.
+10. **What Posting Time Does to YouTube Performance, Measured Across [N] Videos** — 0 quota, `channel_videos.published_at` (hour/weekday) against `video_metric_snapshots` views, channel-normalized, same method as study #2. Goal agreed 2026-08-22: find out whether posting time has any real relationship to performance, or whether it's an unproven assumption like title length turned out to be.
 
-**Candidates, not confirmed, sitting in `DATA-STUDIES.md` pending discussion:** upload-timing correlation, CTR measured from real channels, retention measured from real channels, micro-channels-vs-search-demand. None of these get a slot above until the title and the reason are agreed, not just the query.
+**Candidates, not confirmed, sitting in `DATA-STUDIES.md` pending discussion:** CTR measured from real channels, retention measured from real channels, micro-channels-vs-search-demand. None of these get a slot above until the title and the reason are agreed, not just the query.
 
 ## Video Ideas cluster (pillar `youtube-video-ideas`, mapped 2026-07-28)
 
