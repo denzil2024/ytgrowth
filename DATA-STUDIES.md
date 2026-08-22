@@ -106,7 +106,7 @@ Two more angles inside the same zero-quota tables, on top of #3/#4/#6/#7/#8 abov
 
 | # | Study | Stats needed | Source | Est. quota |
 |---|---|---|---|---|
-| 9 | Shorts adoption over time: how fast is the shift actually happening, by niche | `is_short` ratio grouped by month of `published_at`, Jan 2025 to now | `channel_videos` (no fresh pull) | **0 units** |
+| 9 | ~~CONFIRMED 2026-08-22, title agreed~~ **"We Analyzed [N] YouTube Uploads to See Whether Creators Are Uploading More Shorts Over Time, By Niche."** Goal: not a snapshot percentage, whether the month-by-month Shorts ratio is rising per niche or has leveled off. | `is_short` ratio grouped by month of `published_at`, Jan 2025 to now | `channel_videos` (no fresh pull) | **0 units** |
 | 10 | Does upload timing predict a video's own channel-relative performance (not just when top creators post, whether posting time correlates with outperforming) | `published_at` hour/weekday vs. views normalized to channel median, same method as study #2's title-length correlation | `channel_videos` + `video_metric_snapshots` | **0 units** |
 
 ## Own-user Analytics data: CTR and retention, a source no prior study used
