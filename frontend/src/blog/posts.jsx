@@ -8694,7 +8694,7 @@ Free studio checklist: https://yoursite.com/checklist
     date: '2026-08-22',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-data-studies-cover.jpg',
-    coverAlt: 'A creator at a home desk reviewing a spreadsheet of channel data across two monitors, real numbers and charts visible on screen',
+    coverAlt: 'A creator standing before a wall covered in printed pages of channel analytics, charts, tables, and sticky notes pinned up side by side, viewed from behind',
     author: 'Denzil',
     readTime: '4 min read',
     content: () => (
