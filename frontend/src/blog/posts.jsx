@@ -4734,7 +4734,7 @@ export const posts = [
     author: 'Denzil',
     readTime: '10 min read',
     faqs: [
-      { q: 'Can you make money on YouTube without running ads?', a: 'Yes. Memberships, Super Thanks, affiliate links, brand deals, merch, digital products, and paid live events all pay independently of AdSense, and several of them (affiliate links, brand deals) do not require YouTube Partner Program acceptance at all. Ad revenue is the easiest to turn on, not the only, and often not the largest, income line once a channel diversifies.' },
+      { q: 'Can you make money on YouTube without running ads?', a: 'Yes. Memberships, Super Thanks, affiliate links, brand deals, merch, digital products, and paid live events all pay independently of AdSense, and several of them (affiliate links, brand deals) do not require YouTube Partner Program acceptance at all. Ad revenue is the easiest income line to turn on, but it is often not the largest once a channel diversifies.' },
       { q: 'How do you monetize a YouTube channel beyond AdSense?', a: 'Start with whichever method matches what you already have. An engaged niche audience points to memberships or Super Thanks, a product-review format points to affiliate links, and a channel brands already watch points to sponsorships. Most creators run two or three of these at once, since each pays from a different part of the audience.' },
       { q: 'Do people pay for YouTube memberships?', a: 'Yes, though the conversion rate is small. Typically 0.5% to 3% of subscribers become paying members. A channel with 500,000 subscribers might see 2,500 to 15,000 members. It works because a member is choosing to pay monthly to support a specific creator, not reacting to an ad, so the revenue is more predictable than AdSense even at a lower volume.' },
       { q: 'Can you make $10,000 a month with affiliate marketing on YouTube?', a: 'For a small number of creators in high-commission niches (software, finance tools, high-ticket gear), yes, but it is not typical and not fast. Realistic affiliate income scales with audience size and with how directly the content leads to a purchase decision. A product-review channel converts far better than a vlog with a link buried in the description.' },
@@ -4743,7 +4743,7 @@ export const posts = [
       <>
         <p>A YouTube channel can get paid <strong>eight ways</strong> beyond ad revenue: memberships, Super Thanks, affiliate links, brand deals, merch, digital products, content licensing, and paid live events. Each pays under a different set of rules, and each fits a different stage of a channel's growth.</p>
 
-        <p>Memberships and Super Thanks both pay creators <strong>70%</strong> after YouTube's cut. That figure comes directly from YouTube's own Help pages, not a vendor's estimate. Most guides to this topic state a payout number with no source at all. This one sources every figure the same way, and ranks each method by what it pays, not by what the guide is selling.</p>
+        <p>Memberships and Super Thanks both pay creators <strong>70%</strong> after YouTube's cut. That figure comes directly from YouTube's own Help pages, not a vendor's estimate, and most guides to this topic state a payout number with no source at all. This one sources every figure the same way, and ranks each method by what it pays, not by what the guide is selling.</p>
 
         <h2>What Pays, Ranked by Real Numbers</h2>
 
@@ -4770,27 +4770,27 @@ export const posts = [
 
         <h2>The Two That Pay Through YouTube Itself</h2>
 
-        <p>Memberships and Super Thanks both route through YouTube's own checkout, which is why both carry the same <strong>30% cut</strong> and the same eligibility bar, standard YouTube Partner Program acceptance.</p>
+        <p>Memberships and Super Thanks both route through YouTube's own checkout, which is why both share the same eligibility bar, standard YouTube Partner Program acceptance.</p>
 
         <h3>Channel Memberships</h3>
 
-        <p>Viewers pay a monthly fee for member-only perks, badges, emoji, members-only posts and streams. Creator keeps <strong>70%</strong>. It is the closest thing to predictable, recurring revenue on the platform, since a member who joins tends to stay for months, not one video. Typical conversion runs <strong>0.5% to 3%</strong> of subscribers.</p>
+        <p>Viewers pay a monthly fee for member-only perks, badges, emoji, members-only posts and streams, and creators keep <strong>70%</strong> of it. This is the closest thing to predictable, recurring revenue on the platform, since a member who joins tends to stay for months, not one video, though typical conversion runs just <strong>0.5% to 3%</strong> of subscribers.</p>
 
         <h3>Super Thanks</h3>
 
-        <p>A one-time tip a viewer can leave on any regular video, not just live streams. Creator keeps roughly <strong>70%</strong> after YouTube's cut and payment processing fees. Lower ceiling than memberships since it is a one-off, not recurring, but it works on any upload with no separate setup per video.</p>
+        <p>A one-time tip a viewer can leave on any regular video, not just live streams. Creators keep roughly <strong>70%</strong> after YouTube's cut and payment processing fees. It has a lower ceiling than memberships, since it is a one-off, not recurring, but it works on any upload with no separate setup required.</p>
 
         <h2>The Six That Pay Outside YouTube's Cut</h2>
 
-        <p>None of these six route through YouTube's checkout, so YouTube takes no percentage of any of them. What each pays instead depends on the deal, the product, or the audience, not a fixed platform rate.</p>
+        <p>What each of these six pays depends on the deal, the product, or the audience, not a fixed platform rate.</p>
 
         <h3>Affiliate Marketing</h3>
 
-        <p>Links in the description that pay a commission when a viewer buys through them. No subscriber minimum for most programs (Amazon Associates and most niche programs), though YouTube's own Shopping affiliate program requires YPP acceptance, a US base, and <strong>20,000 subscribers</strong>. Format matters more than audience size, a product review converts far better than a link buried in an unrelated video.</p>
+        <p>Links in the description that pay a commission when a viewer buys through them. No subscriber minimum for most programs (Amazon Associates and most niche programs), though YouTube's own Shopping affiliate program requires YPP acceptance, a US base, and <strong>20,000 subscribers</strong>. Format matters more than audience size. A product review converts far better than a link buried in an unrelated video.</p>
 
         <h3>Brand Deals and Sponsorships</h3>
 
-        <p>A company pays directly for a mention, integration, or dedicated video. No subscriber minimum, and small channels with an engaged, specific audience regularly land deals that pure-reach channels miss, brands buy trust with a specific audience, not raw view count. Pricing, finding brands, and pitching are covered in full in our <a href="/blog/youtube-sponsorships">YouTube sponsorships guide</a>.</p>
+        <p>A company pays directly for a mention, integration, or dedicated video. No subscriber minimum, and small channels with an engaged audience regularly land deals that pure-reach channels miss. Brands buy trust with a specific audience, not raw view count. Pricing, finding brands, and pitching are covered in full in our <a href="/blog/youtube-sponsorships">YouTube sponsorships guide</a>.</p>
 
         <CtaCard
           to="/features/channel-audit"
@@ -4837,7 +4837,7 @@ export const posts = [
 
         <h3>Can you make money on YouTube without running ads?</h3>
 
-        <p><strong>Yes.</strong> Memberships, Super Thanks, affiliate links, brand deals, merch, digital products, and paid live events all pay independently of AdSense, and several of them (affiliate links, brand deals) do not require YouTube Partner Program acceptance at all. Ad revenue is the easiest to turn on, not the only, and often not the largest, income line once a channel diversifies.</p>
+        <p><strong>Yes.</strong> Memberships, Super Thanks, affiliate links, brand deals, merch, digital products, and paid live events all pay independently of AdSense, and several of them (affiliate links, brand deals) do not require YouTube Partner Program acceptance at all. Ad revenue is the easiest income line to turn on, but it is often not the largest once a channel diversifies.</p>
 
         <h3>How do you monetize a YouTube channel beyond AdSense?</h3>
 
@@ -4855,7 +4855,7 @@ export const posts = [
 
         <p>Trying to run all eight methods at 500 subscribers spreads effort across income lines too thin for any of them to matter. <strong>Pick the two that fit the channel's current size and format</strong>, then add the next one once the first is paying, not before.</p>
 
-        <p>The two methods that route through YouTube itself, memberships and Super Thanks, will always cap at 70%. The six that do not have no fixed ceiling, only the size of the deal, the audience, or the product behind them. That is the real reason to diversify past ads, not because ads are unreliable, but because everything past ads can pay more than a fixed platform rate ever will.</p>
+        <p>Memberships and Super Thanks will always cap at 70%, since both route through YouTube itself. The other six have no fixed ceiling at all, only the size of the deal, the audience, or the product behind them. That is the real reason to diversify past ads, not because ads are unreliable, but because everything past ads can pay more than a fixed platform rate ever will.</p>
       </>
     ),
   },
