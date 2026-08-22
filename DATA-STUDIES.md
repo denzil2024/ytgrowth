@@ -1,5 +1,9 @@
 # Data Studies — Working Doc
 
+**Looking for what's next / ship order? That's `ROADMAP.md`, not this file.**
+This doc is methodology, quota math, and moat-logger status for each study,
+read it for the "how," not the "what's next."
+
 Living doc. The plan for original-data research articles ("we analyzed X") built
 from our own API pulls and moat data. These are the backlink + AI-citation
 assets that unlock authority-gated head terms (see project_linkable_data_studies

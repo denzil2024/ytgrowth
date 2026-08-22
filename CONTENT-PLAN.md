@@ -4,6 +4,10 @@ Site: ytgrowth.io · Niche: YouTube SEO/growth SaaS tools
 
 **This is the only content plan. Read it before any content work.**
 
+**Looking for what's next / ship order? That's `ROADMAP.md`, not this file.**
+This doc is the reasoning, the standards, and the history, read it for the
+"why," not the "what's next."
+
 Last updated: 2026-08-22
 
 ---
