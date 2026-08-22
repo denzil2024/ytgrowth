@@ -193,6 +193,33 @@ by DR-80+ incumbents, or polluted with watch intent.
 result. This finding is what makes "What we are building" above necessary: the
 way forward is data we own, not keywords we find.
 
+### 7. The 2026-08-16 impressions cliff is the delayed tail of the 07-09 page cuts, not a new incident
+
+`gsc-exports/Chart.csv` shows daily impressions falling from ~2,000/day to
+~70/day, and average position from ~20 to ~55, in one day (08-16), sustained
+through the end of that export (08-20). Checked and ruled out: no page-cutting
+or robots/sitemap commit landed that week (git log 08-13 to 08-17 is publish
+commits only); the live site serves gaming-video-ideas with full prerendered
+content, no noindex, robots.txt matches the repo.
+
+The actual cause is `1c494b37d`/`56b574f74` (2026-07-09, retiring ~302 thin
+programmatic pages, see the history log's Combo layer entry): Google took
+about five weeks to finish purging that batch from its index, which is
+ordinary lag for a redirect-based removal with no explicit Search Console
+removal request. The math confirms it rather than just the dates: the retired
+pages averaged position 8.6, so losing them both crashes impressions AND
+drags the average position *up* (worse), landing exactly in the 51-67 range
+item 3 above already documented for the authority-gated commercial clusters
+that are what's left. Nothing broken, nothing to fix, this was the expected
+outcome of a deliberate cut finally landing in the data five weeks later.
+
+**Consequence for reading new content's performance:** every spoke and study
+shipped 08-13 through 08-21 (gaming, comedy, cooking, tech, music,
+video-length-by-niche, title-length) shipped into or right before this
+cliff, so a "zero impressions" read on any of them right now is confounded,
+not a verdict. Do not judge them before a GSC export dated 2026-09-05 or
+later, once the site has had real runway past the cliff.
+
 ---
 
 ## How this site differs from SavvyHomie
