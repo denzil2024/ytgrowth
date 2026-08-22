@@ -140,7 +140,7 @@ measured CTR/retention are almost never shared publicly by anyone.
 
 | # | Study | Mechanism | Status |
 |---|---|---|---|
-| 13 | How micro-channels (sub-10k subs) out-grow bigger ones by hitting search demand nobody else is covering | Identify disproportionate-view micro-channels via `channel_metric_snapshots`, cross-reference their upload topics (`channel_videos.title`) against `youtube_search_cache` demand that top channels in the same niche are NOT covering | Real angle, proposed by the user 2026-08-22. Needs a research file before starting, this is design work (a gap-detection method), not a ready query. |
+| 13 | ~~CONFIRMED 2026-08-22, title agreed~~ **"We Analyzed [N] Small YouTube Channels to Find Topics Still Worth Covering in Your Niche."** Goal: help a small or new creator find real topics with actual search demand that big channels in their niche aren't covering, proven by small channels already winning there, not theorized. | Identify disproportionate-view micro-channels via `channel_metric_snapshots`, cross-reference their upload topics (`channel_videos.title`) against `youtube_search_cache` demand that top channels in the same niche are NOT covering | Proposed by the user 2026-08-22. Needs a research file before starting, this is design work (a gap-detection method), not a ready query. |
 
 ## Studies that need the moat running first (cannot be backfilled)
 

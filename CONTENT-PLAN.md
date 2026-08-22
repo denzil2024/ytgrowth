@@ -26,8 +26,9 @@ Last updated: 2026-08-22
 10. **What Posting Time Does to YouTube Performance, Measured Across [N] Videos** — 0 quota, `channel_videos.published_at` (hour/weekday) against `video_metric_snapshots` views, channel-normalized, same method as study #2. Goal agreed 2026-08-22: find out whether posting time has any real relationship to performance, or whether it's an unproven assumption like title length turned out to be.
 11. **What a Good CTR Looks Like By Niche, Based on a [N]-Channel Study** — own-user data (`weekly_reports.report_data`, real Analytics via each connected creator's own OAuth grant, never competitor data). Goal agreed 2026-08-22: give creators a benchmark broken down by niche so they can tell whether their own CTR is good or bad. Volume AND category-join coverage both unconfirmed, run `scripts/check_weekly_report_coverage.py` first, if the per-niche join rate is too low the goal reverts to an overall benchmark and the title needs revisiting.
 12. **We Analyzed [N] Channels to Show What Good Audience Retention Looks Like, By Niche** — same source and same gate as #11 (`weekly_reports.report_data` + `channel_metric_snapshots.category`), run `scripts/check_weekly_report_coverage.py` first.
+13. **We Analyzed [N] Small YouTube Channels to Find Topics Still Worth Covering in Your Niche** — compound study, `channel_metric_snapshots` + `channel_videos` + `youtube_search_cache`. Goal agreed 2026-08-22: help a small/new creator find real topics with actual search demand that bigger channels aren't covering, proven by small channels already winning there. Needs a research file before starting, this is design work (a gap-detection method), not a ready query.
 
-**Candidates, not confirmed, sitting in `DATA-STUDIES.md` pending discussion:** micro-channels-vs-search-demand. Doesn't get a slot above until the title and the reason are agreed, not just the query.
+All candidates from the 2026-08-22 session are now confirmed and titled. No more unconfirmed items pending.
 
 ## Video Ideas cluster (pillar `youtube-video-ideas`, mapped 2026-07-28)
 
