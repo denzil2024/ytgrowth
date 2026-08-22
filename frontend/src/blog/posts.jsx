@@ -4730,7 +4730,7 @@ export const posts = [
     date: '2026-08-22',
     category: CATEGORIES.monetization,
     cover: '/blog/youtube-monetization-beyond-ads-cover.jpg',
-    coverAlt: 'A creator at a desk reviewing a simple spreadsheet of income sources, phone propped up beside a small stack of merch boxes',
+    coverAlt: 'A creator at a kitchen table labeling a shipping box of folded merch, phone on a tripod recording the process, a ring light and stacked packages in frame',
     author: 'Denzil',
     readTime: '10 min read',
     faqs: [
