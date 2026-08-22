@@ -430,70 +430,35 @@ Missed three times. Slugs are 2 to 4 words.
 
 ## PART 4 — THE QUEUE
 
-**This is the one list. It covers every lane (data studies, cluster cleanup,
-programmatic pages, sponsor/promotion items) in actual run order, so "what's
-next" is always answered by reading this section, not by asking.** Update it
-every time something ships or the order changes — that is what keeps this a
-live plan instead of a snapshot. Nothing new enters the numbered run order
-without either real Keyword Planner volume + a passed SERP check + the one
-test (keyword articles), or a data floor that clears Part 1's four rules
-(data studies).
+**The run order lives in `ROADMAP.md`, not here.** One table, top to
+bottom, covering every lane (data studies, cluster cleanup, programmatic
+pages, sponsor/promotion items). Read that file for "what's next." Update
+it, not this section, every time something ships or the order changes.
 
-### Run order (work top to bottom)
+Nothing new enters that run order without either real Keyword Planner
+volume + a passed SERP check + the one test (keyword articles), or a data
+floor that clears Part 1's four rules (data studies).
 
-| # | Item | Type | Status |
-|---|---|---|---|
-| 1 | ~~Tech video ideas~~ | Cluster spoke | **SHIPPED 08-19**, commit `fdaae2220`. |
-| 2 | ~~Music video ideas~~ | Cluster spoke | **SHIPPED 08-20**, commit `a60c79781`. |
-| 3 | ~~Video length by niche~~ | Data study #1 | **SHIPPED 08-13** as `/blog/video-length-by-niche`. |
-| 4 | ~~Title length / what winning titles have in common~~ | Data study #2 | **SHIPPED 08-21**, commit `e4c95478b`, as `/blog/youtube-title-length`. |
-| 5 | Best time to post, measured | Data study #3 | **NEXT.** ~0 quota (reuses `channel_videos.published_at`, same table #1/#2 already read). Upgrades `/blog/best-time-to-post`, the highest-impression page on the site. |
-| 6 | Upload cadence: successful channels vs. stalled ones | Data study #4 | Shares #5's data pull, do back to back. Plugs the known data gap in `best-time-to-post`. |
-| 7 | Comedy spoke: retroactive Stage 1/2 (SERP fetch + coverage matrix) | Cluster cleanup | Owed since 08-14, see Part 5. Edit, not a rewrite, the post is already live. |
-| 8 | Vlog ideas rewrite | Cluster spoke rewrite | Candidate, not confirmed. Needs its own research file (Stage 1) before starting, see Part 5. |
-| 9 | Shorts ideas rewrite | Cluster spoke rewrite | Candidate, not confirmed. Same as above. |
-| 10 | Challenge ideas rewrite | Cluster spoke rewrite | Candidate, not confirmed. Same as above. |
-| 11 | M1/M2/M3 moat studies (fastest-rising topics, channel growth rates, seasonality) | Data studies | Gated on the moat loggers having enough runway. Loggers went live 2026-07-17; check row counts and date spread before scheduling, see DATA-STUDIES.md. |
+**Supporting detail that stays in this file, since it's reasoning and
+history rather than order:**
 
-**Dropped, not queued:**
-- **Companies that sponsor YouTubers** (`youtube-sponsor-companies`, 5,500/mo). SERP passes the diversity test, but OutlierKit ranks there on original sponsor data we don't have. No differentiator, fails the one test. Drop unless a real differentiator turns up.
-- **Promotion pass on the published studies.** User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`.
-
-### Why data studies lead the run order, not keyword articles
-
-Part 2 item 6 shows three straight keyword rounds mostly dying (2026-07-28,
-08-13, 08-14). `Do not pull a fourth seed` still stands. Studies #3/#4 are
-next because they're the same class of thing that already worked twice
-(#1, #2): a competitor without our database cannot write them, they cost
-close to zero quota (the moat loggers already hold the data), and #3
-specifically upgrades the site's best-performing page instead of adding a
-new one. Items 8-10 are cleanup on an existing cluster, not new keyword
-research, they exist because three spokes predate the current format
-standard (Part 5), not because a keyword round found them.
-
-### Lane status: programmatic pages (`/youtube-stats/*`, `/youtube-earnings/*`)
-
-**Checked 2026-08-22: this lane is built out, not a source of new work.**
-`/youtube-stats/*`: 14/14 categories live, plus 4/4 tier-1 countries
-(US/UK/Canada/Australia). `/youtube-earnings/*`: 14/14 niches live. The one
-further combination anyone might reach for, niche x country earnings pages
-(e.g. "finance YouTuber earnings in Canada"), was already built, shipped,
-and then retired 2026-07-09 as a templated Mediavine thin-content
-liability, see `MEDIAVINE.md`. A `/youtube-stats/country/:slug/:category`
-route exists in `App.jsx` but has no prerendered pages and no queue entry;
-treat it as unbuilt scaffolding, not a live opportunity, and apply the same
-thin-content scrutiny the earnings-combo retirement already established
-before ever populating it.
-
-### After item 11
-
-The run order above is what's known and scoped today. Once it's worked
-through, the next decision is strategic, not a keyword round: Part 2 item 6
-already showed the keyword-cluster model is close to exhausted, and the
-programmatic-pages lane is built out (above). The remaining real lever is
-authority/backlinks for the 53K tier-1 US impressions sitting unconverted
-(Part 1's direction). That is not an article-writing task and doesn't
-belong as a numbered run-order item until it has its own scoped plan.
+- Part 2 item 6 (three dead keyword rounds) is why data studies lead the
+  run order over new keyword articles: a competitor without our database
+  can't write them, they cost close to zero quota, and the next two
+  specifically upgrade the site's best-performing page instead of adding a
+  new one.
+- **Programmatic pages lane status, checked 2026-08-22: built out, not a
+  source of new work.** `/youtube-stats/*` is 14/14 categories live plus
+  4/4 tier-1 countries (US/UK/Canada/Australia). `/youtube-earnings/*` is
+  14/14 niches live. The one further combination anyone might reach for,
+  niche x country earnings pages, was already built, shipped, and retired
+  2026-07-09 as a templated Mediavine thin-content liability (see
+  `MEDIAVINE.md`). A `/youtube-stats/country/:slug/:category` route exists
+  in `App.jsx` but has no prerendered pages and no queue entry, treat it as
+  unbuilt scaffolding and apply the same thin-content scrutiny before ever
+  populating it.
+- Sponsor-companies and the promotion pass are logged as dropped/parked in
+  `ROADMAP.md` directly, not duplicated here.
 
 ---
 

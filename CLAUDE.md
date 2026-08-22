@@ -4,11 +4,12 @@ Read these rules before any code change. They are not suggestions.
 
 ## START HERE — which files to open, and no others
 
-This repo has eleven markdown docs. Opening the wrong ones, or all of them, is
+This repo has twelve markdown docs. Opening the wrong ones, or all of them, is
 a recurring and expensive waste. Route by the task:
 
 | Task | Read | Do NOT open |
 |---|---|---|
+| **"What's next?" / roadmap / what should we write** | `ROADMAP.md` ONLY. One table, top to bottom. Answer from it directly, do not re-derive from CONTENT-PLAN.md. | `CONTENT-PLAN.md`, unless ROADMAP.md's own links send you there for the why behind an item |
 | **Any content or blog work** | `CONTENT-PLAN.md` (all of it), then `research/<slug>.md` if an article is in flight | Everything else, unless CONTENT-PLAN sends you there for a named reason |
 | **Keyword research round** | `CONTENT-PLAN.md` Part 2, then `FOUNDATION.md` for the workflow and the dropped log | |
 | **Anything touching YouTube API data** | The quota section below, in full | |
