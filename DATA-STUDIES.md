@@ -126,7 +126,7 @@ never per-user, no channel identified individually).
 
 | # | Study | Stats needed | Source | Status |
 |---|---|---|---|---|
-| 11 | What CTR do real YouTube channels actually get, measured (not estimated) | `avgCtr` across all `WeeklyReport` rows, aggregated and anonymized | `weekly_reports.report_data` (JSON) | Volume unconfirmed, run `scripts/check_weekly_report_coverage.py` first |
+| 11 | ~~CONFIRMED 2026-08-22, title agreed~~ **"What a Good CTR Looks Like By Niche, Based on a [N]-Channel Study."** Goal: give creators a benchmark broken down by niche so they can tell whether their own CTR is good or bad, not just a topic label. | `avgCtr` across all `WeeklyReport` rows, aggregated and anonymized, joined to category | `weekly_reports.report_data` (JSON) + `channel_metric_snapshots.category` | Volume AND category-join coverage both unconfirmed, run `scripts/check_weekly_report_coverage.py` first — if category join is under 50%, this becomes an overall benchmark, not by-niche, and the title needs revisiting |
 | 12 | What retention rate is actually normal, measured across real channels | `avgRetention`, same table | `weekly_reports.report_data` (JSON) | Same, run the same script |
 
 **Do not queue either as a confirmed article until the coverage check runs.**
