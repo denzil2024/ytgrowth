@@ -79,6 +79,17 @@ Last updated: 2026-08-22
 26. ~~YouTube Brand Account~~ — published
 27. ~~Gaming YouTube Channel~~ — published
 
+## Monetization Beyond Ads cluster (mapped 2026-08-22, sourced from real Reddit/PAA demand, not Keyword Planner)
+
+Method: real question mining (Reddit threads + Google PAA via Serper), same method that produced the Demonetization/Policy cluster (see `FOUNDATION.md` history log). Every topic below passed a real SERP diversity check (no wall-to-wall Backlinko/HubSpot/vidIQ-blog/TubeBuddy-blog) and a real-questions check before being confirmed.
+
+28. **Making Money on YouTube Beyond Ads** — pillar, new page. Real evidence: r/NewTubers "Do you make money without ads?", r/PartneredYoutube "How do I monetize my channel beyond Adsense." Needs a research file before writing.
+29. **Are YouTube Channel Memberships Worth It?** — spoke. Real evidence: r/PartneredYoutube "Yay or Nay?", plus 4 real PAA questions (cost, how it works, do people actually pay).
+30. **YouTube Super Thanks Explained: How Much You Actually Keep** — spoke. Real evidence: 4 real PAA questions (what it is, how much is one, YouTube's cut, what happens when you press it).
+31. **Do You Need a Big Following for YouTube Affiliate Marketing?** — spoke. Real evidence: real PAA "Can I start affiliate marketing with 0 followers?"
+32. `youtube-sponsorships` — existing post, not new writing, gets linked in as a spoke (brand deals territory already covered here, confirmed no overlap risk).
+33. Merch shelf — candidate, NOT confirmed. Weakest evidence found (0 PAA across 2 query variants, 1 Reddit thread title only). Needs more real evidence before it counts as a spoke.
+
 ## Dropped, not queued
 
 - **Sponsor-companies article** (`youtube-sponsor-companies`, 5,500/mo) — SERP passes the diversity test, but OutlierKit ranks there on original sponsor data we don't have. No differentiator, fails the one test.
