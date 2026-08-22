@@ -4,7 +4,7 @@ Site: ytgrowth.io · Niche: YouTube SEO/growth SaaS tools
 
 **This is the only content plan. Read it before any content work.**
 
-Last updated: 2026-08-14
+Last updated: 2026-08-22
 
 ---
 
@@ -430,65 +430,70 @@ Missed three times. Slugs are 2 to 4 words.
 
 ## PART 4 — THE QUEUE
 
-One list. Work top to bottom. Nothing enters without real Keyword Planner
-volume, a passed SERP check, and a route through the one test.
+**This is the one list. It covers every lane (data studies, cluster cleanup,
+programmatic pages, sponsor/promotion items) in actual run order, so "what's
+next" is always answered by reading this section, not by asking.** Update it
+every time something ships or the order changes — that is what keeps this a
+live plan instead of a snapshot. Nothing new enters the numbered run order
+without either real Keyword Planner volume + a passed SERP check + the one
+test (keyword articles), or a data floor that clears Part 1's four rules
+(data studies).
 
-| # | Article | Slug | Volume | Status |
-|---|---|---|---|---|
-| 1 | ~~Tech video ideas~~ | `tech-video-ideas` | 1,300/mo (unverified, see below) | **SHIPPED 08-19, commit `fdaae2220`.** Data floor initially failed (17 channels), fixed via expanded discovery: 127 channels / 5,876 videos. |
-| 2 | ~~Music video ideas~~ | `music-video-ideas` | 950/mo (unverified, see below) | **SHIPPED 08-20, commit `a60c79781`.** 43 ideas, 7 formats, split explicitly between promoting the song and building the channel. 181 channels / 6,801 videos. |
-| 3 | ~~Title-length study~~ | `youtube-title-length` | n/a | **SHIPPED 08-21, commit `e4c95478b`.** Promoted from a fold-in stat to a standalone article, 28,947 videos / 707 channels, r = 0.0046 (no relationship). Also corrected `/blog/youtube-title`'s unsourced "eight words" claim to cite this instead. First push (`fb03fdda9`) went out without approval and got substantially reworked in 12 follow-up commits: voice tightened to be more Backlinko-authoritative across several passes, all bold-lead paragraphs replaced with inline-number bolding, "decile" and raw r-values purged in favor of plain percentages, headings rebuilt as declarative findings with Key Takeaway callouts per section, and a real cover photo + in-article chart added properly (see Part 5 note below on the cover-process correction). |
-| 4 | Companies that sponsor YouTubers | `youtube-sponsor-companies` | 5,500/mo | Weak confirm. Only write with a differentiator, see below. **NEXT.** |
-| 5 | Promotion pass on the published studies | n/a | n/a | User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`. |
+### Run order (work top to bottom)
 
-**Item 4 (sponsor companies) is next.** Title-length study shipped
-2026-08-21 (commit `fb03fdda9`): started as a one-stat fold-in per this
-plan, but user feedback ("I need a real study with loads of insights that
-people can link to without me even reaching out") promoted it to a
-standalone article per DATA-STUDIES.md study #2. Competitor research was
-redone once after being flagged as thin (8 URLs opened, 4 fully read on
-the first pass; 13 opened, 9 fully read on the second). Found title length
-has no measurable relationship with performance (r = 0.0046 pooled,
-negligible in all 15 niches), and that one of the four competing studies'
-"3M-video" claim traces to an unreachable domain, echoed uncredited across
-duplicate pages on another site with two different numbers. Music shipped
-2026-08-20 (commit `a60c79781`), the fifth video-ideas spoke and the first
-FAQ built from real Google People Also Ask data pulled before writing, not
-guessed and corrected after. Its data floor cleared on the first pass (181
-channels), no expanded discovery needed. Tech shipped 2026-08-19 (commit
-`fdaae2220`); its data floor failed on the first pass (17 channels), fixed
-live by running broader discovery queries instead of waiting on the weekly
-sweep,
-see `scripts/expand_category_discovery.py` and
-`research/tech-video-ideas.md` Section 5. Cooking shipped 2026-08-15
-(commit `b61406dbc`), the first article to run the full runbook (Stages 1
-through 6) in order. Comedy shipped 2026-08-14 (commit `839a04d24`) but
-skipped Stages 1 and 2, still owed, see Part 5.
+| # | Item | Type | Status |
+|---|---|---|---|
+| 1 | ~~Tech video ideas~~ | Cluster spoke | **SHIPPED 08-19**, commit `fdaae2220`. |
+| 2 | ~~Music video ideas~~ | Cluster spoke | **SHIPPED 08-20**, commit `a60c79781`. |
+| 3 | ~~Video length by niche~~ | Data study #1 | **SHIPPED 08-13** as `/blog/video-length-by-niche`. |
+| 4 | ~~Title length / what winning titles have in common~~ | Data study #2 | **SHIPPED 08-21**, commit `e4c95478b`, as `/blog/youtube-title-length`. |
+| 5 | Best time to post, measured | Data study #3 | **NEXT.** ~0 quota (reuses `channel_videos.published_at`, same table #1/#2 already read). Upgrades `/blog/best-time-to-post`, the highest-impression page on the site. |
+| 6 | Upload cadence: successful channels vs. stalled ones | Data study #4 | Shares #5's data pull, do back to back. Plugs the known data gap in `best-time-to-post`. |
+| 7 | Comedy spoke: retroactive Stage 1/2 (SERP fetch + coverage matrix) | Cluster cleanup | Owed since 08-14, see Part 5. Edit, not a rewrite, the post is already live. |
+| 8 | Vlog ideas rewrite | Cluster spoke rewrite | Candidate, not confirmed. Needs its own research file (Stage 1) before starting, see Part 5. |
+| 9 | Shorts ideas rewrite | Cluster spoke rewrite | Candidate, not confirmed. Same as above. |
+| 10 | Challenge ideas rewrite | Cluster spoke rewrite | Candidate, not confirmed. Same as above. |
+| 11 | M1/M2/M3 moat studies (fastest-rising topics, channel growth rates, seasonality) | Data studies | Gated on the moat loggers having enough runway. Loggers went live 2026-07-17; check row counts and date spread before scheduling, see DATA-STUDIES.md. |
 
-**Item 3 shipped as its own article, not a fold-in.** The original plan
-here was to fold a single length stat into `/blog/youtube-title`, reasoning
-that a separate page would split authority the way the three-way
-keyword-research split did. User feedback overrode that: the finding
-turned out to be genuinely novel (no relationship at all, against four
-contradicting published studies) and worth a dedicated page per
-DATA-STUDIES.md study #2, with `/blog/youtube-title` now linking to it
-instead of asserting its own unsourced number. See the queue table above
-and `research/youtube-title-length.md` for the full writeup.
+**Dropped, not queued:**
+- **Companies that sponsor YouTubers** (`youtube-sponsor-companies`, 5,500/mo). SERP passes the diversity test, but OutlierKit ranks there on original sponsor data we don't have. No differentiator, fails the one test. Drop unless a real differentiator turns up.
+- **Promotion pass on the published studies.** User is sourcing leads and will bring them. Do not pursue unprompted. See `OUTREACH.md`.
 
-**Item 4 caveat.** The SERP has real independents so it passes the
-diversity test, but OutlierKit ranks there on original sponsor data we do
-not have. Without a differentiator it fails the one test and should be
-dropped.
+### Why data studies lead the run order, not keyword articles
 
-### After item 6
+Part 2 item 6 shows three straight keyword rounds mostly dying (2026-07-28,
+08-13, 08-14). `Do not pull a fourth seed` still stands. Studies #3/#4 are
+next because they're the same class of thing that already worked twice
+(#1, #2): a competitor without our database cannot write them, they cost
+close to zero quota (the moat loggers already hold the data), and #3
+specifically upgrades the site's best-performing page instead of adding a
+new one. Items 8-10 are cleanup on an existing cluster, not new keyword
+research, they exist because three spokes predate the current format
+standard (Part 5), not because a keyword round found them.
 
-The queue is empty and a fourth keyword seed will not refill it (Part 2, item
-6). The next decision is strategic, and the three real levers are already
-known: original-data studies, programmatic expansion on the patterns that
-already rank (`/youtube-stats/*` and `/youtube-earnings/*` sit at position 7-12
-and are the best per-page performers), and authority/backlinks for the 53K
-tier-1 US impressions. All three are in Part 1's direction. None of them is a
-keyword round.
+### Lane status: programmatic pages (`/youtube-stats/*`, `/youtube-earnings/*`)
+
+**Checked 2026-08-22: this lane is built out, not a source of new work.**
+`/youtube-stats/*`: 14/14 categories live, plus 4/4 tier-1 countries
+(US/UK/Canada/Australia). `/youtube-earnings/*`: 14/14 niches live. The one
+further combination anyone might reach for, niche x country earnings pages
+(e.g. "finance YouTuber earnings in Canada"), was already built, shipped,
+and then retired 2026-07-09 as a templated Mediavine thin-content
+liability, see `MEDIAVINE.md`. A `/youtube-stats/country/:slug/:category`
+route exists in `App.jsx` but has no prerendered pages and no queue entry;
+treat it as unbuilt scaffolding, not a live opportunity, and apply the same
+thin-content scrutiny the earnings-combo retirement already established
+before ever populating it.
+
+### After item 11
+
+The run order above is what's known and scoped today. Once it's worked
+through, the next decision is strategic, not a keyword round: Part 2 item 6
+already showed the keyword-cluster model is close to exhausted, and the
+programmatic-pages lane is built out (above). The remaining real lever is
+authority/backlinks for the 53K tier-1 US impressions sitting unconverted
+(Part 1's direction). That is not an article-writing task and doesn't
+belong as a numbered run-order item until it has its own scoped plan.
 
 ---
 
