@@ -10,7 +10,7 @@ assets that unlock authority-gated head terms (see project_linkable_data_studies
 and MEDIAVINE.md's ranking-reality section). Read this before starting any study,
 and add new ideas to the backlog section as they come up.
 
-Last updated: 2026-07-17
+Last updated: 2026-08-22
 
 ## Context
 
@@ -36,9 +36,12 @@ Last updated: 2026-07-17
 |---|---|---|---|---|
 | 1 | ~~The ideal YouTube video length in 2026, by niche~~ **PUBLISHED 2026-08-13** as `/blog/video-length-by-niche` | Durations of tracked uploads per niche | Existing `channel_videos` + `channel_metric_snapshots` (no fresh pull needed) | **0 units** |
 | 2 | ~~What winning YouTube titles have in common~~ **PUBLISHED 2026-08-21** as `/blog/youtube-title-length` | Titles, lengths, patterns (numbers, brackets, year tags, questions) vs. performance | `channel_videos` + `video_metric_snapshots` (no fresh pull needed) | **0 units** |
-| 3 | When top creators really upload: best time to post, measured | publishedAt timestamps per niche and channel size | Fresh pull via uploads playlists | ~5K units |
-| 4 | How often successful channels upload vs stalled ones | Upload cadence + channel size/views | Fresh pull; plugs the known data gap in blog/best-time-to-post | ~5K units |
+| 3 | When top creators really upload: best time to post, measured | publishedAt timestamps per niche and channel size | Existing `channel_videos.published_at` (no fresh pull needed, corrected 2026-08-22, matches the #1 notes below) | **0 units** |
+| 4 | How often successful channels upload vs stalled ones | Upload cadence + channel size/views | Same table as #3 | **0 units** |
 | 5 | Shorts vs long-form mix by niche, from real channels | Upload duration classification per channel | Same pull as #1 (reuse the dataset) | shared |
+| 6 | How fast views actually come in: the first 30 days of a YouTube video | Weekly view counts per video from upload | Existing `video_metric_snapshots` (weekly snapshots for videos <180 days old, this is a real per-video growth curve, no fresh pull) | **0 units** |
+| 7 | Do Shorts actually grow faster than long-form, or just get posted more? | Weekly views by `is_short` flag, first 30 days | `channel_videos.is_short` + `video_metric_snapshots` | **0 units** |
+| 8 | Engagement rate by niche: which categories get the most likes/comments per view | likes, comments, views per video, grouped by category | `video_metric_snapshots` + `channel_metric_snapshots.category`. Caveat: verify likeCount is populated at reasonable coverage before committing, YouTube lets creators hide public like counts | **0 units**, pending the coverage check |
 
 Priority order: ~~#1 first~~ (DONE 2026-08-13), ~~#2~~ (DONE 2026-08-21,
 turned out to be zero-quota like #1 since `channel_videos.title` and
@@ -46,7 +49,11 @@ turned out to be zero-quota like #1 since `channel_videos.title` and
 top-up needed), then #3/#4 next (they upgrade best-time-to-post, our
 highest-impression page). #5 fell out of #1's dataset and shipped inside
 that article as its Shorts-adoption-by-niche section rather than as a
-separate piece.
+separate piece. #6/#7/#8 added 2026-08-22: distinct from #1/#2/#5 because
+they use `video_metric_snapshots`' weekly time series (a real growth curve
+per video) rather than a single upload-time snapshot, an angle that was
+never mined despite the data existing since 2026-07-19. Sequence them after
+#3/#4, #7 shares its data pull with #6 so do those two together.
 
 **Study #2 notes:** scoped originally as a length-only stat destined to
 fold into `/blog/youtube-title`; promoted to its own article after

@@ -18,27 +18,30 @@ Last updated: 2026-08-22
 2. ~~Title length / what winning titles have in common~~ — published 2026-08-21 as `/blog/youtube-title-length`, commit `e4c95478b`
 3. Best time to post, measured — **NEXT.** ~0 quota, upgrades `/blog/best-time-to-post`, the highest-impression page on the site
 4. Upload cadence: successful channels vs. stalled ones — shares #3's data pull, do back to back
-5. M1/M2/M3 moat studies (fastest-rising topics, channel growth rates, seasonality) — gated on the data loggers having enough runway, see `DATA-STUDIES.md`
+5. How fast views actually come in: the first 30 days of a YouTube video — 0 quota, `video_metric_snapshots`' weekly time series, never mined before 2026-08-22
+6. Do Shorts actually grow faster than long-form, or just get posted more? — 0 quota, shares #5's data pull, do back to back
+7. Engagement rate by niche: which categories get the most likes/comments per view — 0 quota, pending a likeCount-coverage check first (see `scripts/check_moat_logger_status.py`)
+8. M1/M2/M3 moat studies (fastest-rising topics, channel growth rates, seasonality) — status unconfirmed since 2026-08-13, run `scripts/check_moat_logger_status.py` on Railway console before assuming still blocked, five-plus weeks of runway have accumulated since
 
 ## Video Ideas cluster (pillar `youtube-video-ideas`, mapped 2026-07-28)
 
-6. ~~Pillar~~ — published, rewritten to full depth 2026-08-20 (111 ideas, 15 formats, 83,423 videos)
-7. ~~Gaming Video Ideas~~ — published 2026-08-13
-8. ~~Cooking Video Ideas~~ — published 2026-08-15
-9. ~~Comedy Video Ideas~~ — published 2026-08-14 (Stage 1/2 retroactive SERP check still owed, see below)
-10. ~~Tech Video Ideas~~ — published 2026-08-19
-11. ~~Music Video Ideas~~ — published 2026-08-20
-12. Comedy spoke: retroactive SERP check + coverage matrix — owed since 2026-08-14, edit not a rewrite
-13. Vlog ideas rewrite — candidate, needs its own research file first
-14. Shorts ideas rewrite — candidate, needs its own research file first
-15. Challenge ideas rewrite — candidate, needs its own research file first
+9. ~~Pillar~~ — published, rewritten to full depth 2026-08-20 (111 ideas, 15 formats, 83,423 videos)
+10. ~~Gaming Video Ideas~~ — published 2026-08-13
+11. ~~Cooking Video Ideas~~ — published 2026-08-15
+12. ~~Comedy Video Ideas~~ — published 2026-08-14 (Stage 1/2 retroactive SERP check still owed, see below)
+13. ~~Tech Video Ideas~~ — published 2026-08-19
+14. ~~Music Video Ideas~~ — published 2026-08-20
+15. Comedy spoke: retroactive SERP check + coverage matrix — owed since 2026-08-14, edit not a rewrite
+16. Vlog ideas rewrite — candidate, needs its own research file first
+17. Shorts ideas rewrite — candidate, needs its own research file first
+18. Challenge ideas rewrite — candidate, needs its own research file first
 
 ## Starting a Channel cluster (pillar `start-youtube-channel`, mapped 2026-07-28)
 
-16. ~~Pillar~~ — published
-17. ~~YouTube Channel on Phone~~ — published
-18. ~~YouTube Brand Account~~ — published
-19. ~~Gaming YouTube Channel~~ — published
+19. ~~Pillar~~ — published
+20. ~~YouTube Channel on Phone~~ — published
+21. ~~YouTube Brand Account~~ — published
+22. ~~Gaming YouTube Channel~~ — published
 
 ## Dropped, not queued
 
