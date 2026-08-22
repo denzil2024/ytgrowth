@@ -10,7 +10,7 @@ assets that unlock authority-gated head terms (see project_linkable_data_studies
 and MEDIAVINE.md's ranking-reality section). Read this before starting any study,
 and add new ideas to the backlog section as they come up.
 
-Last updated: 2026-08-22
+Last updated: 2026-08-22 (added 5 more studies + 2 status-check scripts)
 
 ## Context
 
@@ -99,6 +99,48 @@ the WORST skew at 3.83x (it had been reported as 2.67x), and comedy crossed the
 8-minute line. **Always add `AND published_at >= '2025-01-01'` (or tighter) to
 every query behind a published figure.** This matters most for #3/#4, since
 day-of-week and hour-of-day upload norms have shifted enormously since 2006.
+
+## More studies we can run NOW, found 2026-08-22 mining the schema properly
+
+Two more angles inside the same zero-quota tables, on top of #3/#4/#6/#7/#8 above:
+
+| # | Study | Stats needed | Source | Est. quota |
+|---|---|---|---|---|
+| 9 | Shorts adoption over time: how fast is the shift actually happening, by niche | `is_short` ratio grouped by month of `published_at`, Jan 2025 to now | `channel_videos` (no fresh pull) | **0 units** |
+| 10 | Does upload timing predict a video's own channel-relative performance (not just when top creators post, whether posting time correlates with outperforming) | `published_at` hour/weekday vs. views normalized to channel median, same method as study #2's title-length correlation | `channel_videos` + `video_metric_snapshots` | **0 units** |
+
+## Own-user Analytics data: CTR and retention, a source no prior study used
+
+Found 2026-08-22: `app/weekly_report.py`'s `_assemble_report` persists real
+`avgCtr` and `avgRetention` (pulled from each connected channel's own
+authorized YouTube Analytics via OAuth, not modeled or estimated) into
+`WeeklyReport.report_data` every week, and has been doing so since the
+weekly-report feature shipped. Nobody mined this for a public study before
+now. This is NOT available for arbitrary/competitor channels, retention and
+CTR are private per-channel data that only the channel owner's own app
+grant can see, so this only ever covers our own connected users, same as
+vidIQ/TubeBuddy face for their own users. That is a real, honest, aggregate,
+anonymized proprietary dataset, not competitor data, and the two studies
+below should be scoped and framed that way (real N of connected channels,
+never per-user, no channel identified individually).
+
+| # | Study | Stats needed | Source | Status |
+|---|---|---|---|---|
+| 11 | What CTR do real YouTube channels actually get, measured (not estimated) | `avgCtr` across all `WeeklyReport` rows, aggregated and anonymized | `weekly_reports.report_data` (JSON) | Volume unconfirmed, run `scripts/check_weekly_report_coverage.py` first |
+| 12 | What retention rate is actually normal, measured across real channels | `avgRetention`, same table | `weekly_reports.report_data` (JSON) | Same, run the same script |
+
+**Do not queue either as a confirmed article until the coverage check runs.**
+If the real N is too thin (a handful of channels, a few weeks), these fail
+the data floor exactly like any other figure would and should wait, not get
+published on a small sample. If it clears 30+ channels, this is a real,
+differentiated study nothing else on the internet can publish, actual
+measured CTR/retention are almost never shared publicly by anyone.
+
+## Compound study: needs real design work, not just a query
+
+| # | Study | Mechanism | Status |
+|---|---|---|---|
+| 13 | How micro-channels (sub-10k subs) out-grow bigger ones by hitting search demand nobody else is covering | Identify disproportionate-view micro-channels via `channel_metric_snapshots`, cross-reference their upload topics (`channel_videos.title`) against `youtube_search_cache` demand that top channels in the same niche are NOT covering | Real angle, proposed by the user 2026-08-22. Needs a research file before starting, this is design work (a gap-detection method), not a ready query. |
 
 ## Studies that need the moat running first (cannot be backfilled)
 
