@@ -2782,6 +2782,16 @@ export const posts = [
         <p>Nearly every demonetization arrives with its reason already written down somewhere, in an icon, a Restrictions entry, or a policy citation sitting in your inbox. The panic move is appealing everything at once while fixing nothing, and the move that works is the one this whole guide is built around: <strong>read the notice, name the specific problem, and run that problem's fix</strong> inside its deadline.</p>
 
         <p>Stated honestly, the 2026 context favors you if you make real videos. The enforcement wave, the July wording, the AI-persona ban, all of it works to remove channels whose content never required any particular human to exist in the first place. If yours genuinely does require you, demonetization becomes a process problem with a documented exit rather than <strong>a verdict on your channel's worth</strong>, and the creators who treat it that way are the ones who end up coming back.</p>
+
+        <h2>More Policy Guides</h2>
+
+        <p>Demonetization is one piece of a bigger policy picture. These cover the rest of it, from the specific AI enforcement wave to the mechanics of getting paid.</p>
+
+        <ul>
+          <li><a href="/blog/youtube-ai-policy">YouTube AI Policy Guide</a>, the actual inauthentic-content policy behind the 2026 termination wave, and the made-up "30% commentary" thresholds you can stop worrying about.</li>
+          <li><a href="/blog/google-adsense-youtube">Google AdSense for YouTube</a>, setup, linking, tax steps, multiple channels, the under-18 rules, and the mistakes that get accounts suspended.</li>
+          <li><a href="/blog/youtube-partner-program">YouTube Partner Program Guide</a>, the two-tier structure most monetization guides skip, and a faster path to your first payout.</li>
+        </ul>
       </>
     ),
   },
@@ -10783,7 +10793,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>Practically, this means the adult's name and tax details are what AdSense has on file, and every payment lands in their bank account rather than yours. How that money then reaches you is a conversation to have with them directly, since YouTube and AdSense play no part in that handoff. The moment you turn 18, you are not stuck: you can either take over your own previously-disapproved AdSense account or open a new one, and reactivating an old account just requires contacting AdSense support to verify your identity and age.</p>
 
-        <h2>The Ad Formats Actually Running on Your Videos</h2>
+        <h2>The Ad Formats Running on Your Videos</h2>
 
         <p>AdSense does not pick the ad format, YouTube does, based on the toggles you leave on in Studio and the length of your video. Knowing what each format looks like tells you why a viewer saw what they saw, and why two videos with the same view count can pay differently.</p>
 
@@ -10849,6 +10859,8 @@ Free studio checklist: https://yoursite.com/checklist
         <p>Almost every permanent loss traces back to invalid traffic. The cheap shortcut that promised growth is the thing that ends the income.</p>
 
         <blockquote><strong>Pro Tip:</strong> If you ever bought views or used a "free subscribers" service before monetizing, stop entirely and let the channel run clean for months before applying. Review looks at history, not just the last week.</blockquote>
+
+        <p>An AdSense suspension is one specific way monetization breaks. If you are trying to work out which of the several different things people call "demonetized" hit you, our <a href="/blog/youtube-demonetization">demonetization diagnosis guide</a> walks through all five and their fixes.</p>
 
         <h2>AdSense Is the Floor, Not the Ceiling</h2>
 
