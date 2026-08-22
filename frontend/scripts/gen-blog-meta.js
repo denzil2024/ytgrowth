@@ -27,9 +27,16 @@ const OUT = resolve(__dirname, '..', 'src', 'blog', 'postsMeta.js')
 const STRING_FIELDS = ['slug', 'title', 'excerpt', 'date', 'cover', 'author', 'readTime', 'updated']
 
 function field(metaText, key) {
-  // Single-quoted JS string value on its own line: key: '...(escaped)...'
-  const m = new RegExp(`(?:^|\\n)\\s*${key}:\\s*'((?:[^'\\\\]|\\\\.)*)'`).exec(metaText)
-  return m ? m[1] : null
+  // JS string value on its own line, single- or double-quoted:
+  // key: '...(escaped)...'  or  key: "...(escaped)..."
+  const re = new RegExp(`(?:^|\\n)\\s*${key}:\\s*(?:'((?:[^'\\\\]|\\\\.)*)'|"((?:[^"\\\\]|\\\\.)*)")`)
+  const m = re.exec(metaText)
+  if (!m) return null
+  // Decode to the actual string value: unescape \\ and the quote char that
+  // delimited this particular match, leaving other backslash sequences as-is.
+  const quote = m[1] !== undefined ? "'" : '"'
+  const raw = m[1] !== undefined ? m[1] : m[2]
+  return raw.replace(new RegExp(`\\\\([\\\\${quote}])`, 'g'), '$1')
 }
 
 async function main() {
@@ -64,13 +71,14 @@ async function main() {
     metas.push(rec)
   }
 
-  // Emit. String values are re-wrapped in single quotes using their captured
-  // raw form (already escaped for a single-quoted JS context).
+  // Emit. String values are decoded actual values (see field()); re-escape
+  // for the single-quoted JS context they're wrapped in here.
+  const escapeSingleQuoted = (s) => s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
   const order = ['slug', 'title', 'excerpt', 'date', 'category', 'cover', 'author', 'readTime', 'updated']
   const lines = metas.map((m) => {
     const parts = order
       .filter((k) => m[k] !== undefined)
-      .map((k) => (k === 'category' ? `category: ${m.category}` : `${k}: '${m[k]}'`))
+      .map((k) => (k === 'category' ? `category: ${m.category}` : `${k}: '${escapeSingleQuoted(m[k])}'`))
     return `  { ${parts.join(', ')} },`
   })
 
