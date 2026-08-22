@@ -1310,6 +1310,8 @@ export const posts = [
         <p>The figures circulating in most video-length advice are not wrong because anyone lied. They are wrong because averages absorb outliers silently, and <strong>checking them against a median takes a step almost nobody takes</strong>. Education's real typical video is a quarter of its published average, and news is close to the same ratio.</p>
 
         <p><strong>The fix is not a better guess at a universal number.</strong> It is asking which niche the figure describes and whether a median sits behind it, before letting any statistic decide how long your next video runs.</p>
+
+        <p>This is one of several studies we run from the same tracked-channel data. See <a href="/blog/youtube-data-studies">every YouTube data study we've published</a> for the rest.</p>
       </>
     ),
   },
@@ -8680,6 +8682,79 @@ Free studio checklist: https://yoursite.com/checklist
         </ul>
 
         <p>Four studies argued about which length wins. They were arguing about noise. Our own <a href="/blog/youtube-title">title formula guide</a> is being corrected to point here instead of the unsourced "eight words" figure it previously carried.</p>
+
+        <p>This is one of several studies we run from the same tracked-channel data. See <a href="/blog/youtube-data-studies">every YouTube data study we've published</a> for the rest.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-data-studies',
+    title: "YouTube Data Studies: Every Study We've Published So Far",
+    excerpt: "Every original YouTube data study we've published, all measured from our own tracked-channel data, not a survey or a guess. What's live, what's queued next, and how the data behind each one is collected.",
+    date: '2026-08-22',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-data-studies-cover.jpg',
+    coverAlt: 'A creator at a home desk reviewing a spreadsheet of channel data across two monitors, real numbers and charts visible on screen',
+    author: 'Denzil',
+    readTime: '4 min read',
+    content: () => (
+      <>
+        <p>We have published two original YouTube data studies so far, both measured from our own tracked-channel data instead of a survey or a guess: how long the typical upload runs by niche, and whether title length changes how a video performs. <strong>Five more are already queued.</strong></p>
+
+        <p>Every study on this page follows the same rule before it gets written: if a competitor without our database could publish the same article, we do not write it. Below is what has shipped, what is measured next, and how the underlying data gets collected.</p>
+
+        <h2>Published</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Study</th>
+              <th>Sample</th>
+              <th>Headline finding</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="/blog/video-length-by-niche">The Ideal YouTube Video Length in 2026</a></td>
+              <td>30,360 videos, 14 niches</td>
+              <td>Typical length ranges <strong>3.6 to 27.7 minutes</strong> by niche. Published averages are inflated up to <strong>3.83x</strong> by outlier uploads.</td>
+            </tr>
+            <tr>
+              <td><a href="/blog/youtube-title-length">YouTube Title Length Doesn't Predict Performance</a></td>
+              <td>28,947 videos, 707 channels</td>
+              <td>Correlation of <strong>0.0046</strong> between title length and performance, negligible in every niche tested.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Coming Next</h2>
+
+        <p>Five more studies are queued from the same dataset, none published yet:</p>
+
+        <ul>
+          <li><strong>When Top Creators Really Upload: Best Time to Post, Measured.</strong> Real publish timestamps by niche and channel size, replacing guesswork with a measured answer.</li>
+          <li><strong>How Often Successful Channels Upload vs. Stalled Ones.</strong> Upload cadence against channel size and growth.</li>
+          <li><strong>How Fast Views Come In: The First 30 Days of a YouTube Video.</strong> A real per-video growth curve from weekly view snapshots, not a single upload-day count.</li>
+          <li><strong>Do Shorts Grow Faster Than Long-Form, or Just Get Posted More?</strong> Early-view velocity by format, not adoption share.</li>
+          <li><strong>Engagement Rate by Niche: Which Categories Get the Most Likes and Comments Per View.</strong> Likes and comments measured against views, by category.</li>
+        </ul>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="We measure your channel the same way"
+          sub="Channel Audit runs the same kind of real data check on your own channel: length, cadence, and format mix against what is working in your niche right now. Free to try."
+          button="Run a Channel Audit →"
+        />
+
+        <h2>How We Collect This</h2>
+
+        <p>Every study on this page comes from the same weekly channel-tracking infrastructure, not a one-off pull built for a single article. Each week, we walk the uploads playlist of every tracked channel through YouTube's own API, record real duration and publish timestamps, and snapshot view, like, and comment counts for videos still in their first 180 days.</p>
+
+        <p>That data accumulates whether or not an article is being written from it. <strong>A study either clears a real data floor, 30 channels and 500 videos minimum, or it does not get published</strong>, and every figure here states its real sample size rather than a rounded estimate.</p>
+
+        <h2>Five More Studies Are Already Queued</h2>
+
+        <p>This page gets longer as each one ships, not rewritten. Check back, or follow any individual study, they link back here and to each other as the list grows.</p>
       </>
     ),
   },
