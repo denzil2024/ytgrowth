@@ -25,8 +25,9 @@ Last updated: 2026-08-22
 9. **We Analyzed [N] YouTube Uploads to See Whether Creators Are Uploading More Shorts Over Time**, By Niche — 0 quota, `channel_videos.is_short` by month since Jan 2025. Goal agreed 2026-08-22: not a snapshot percentage, whether the month-by-month Shorts ratio is actually rising per niche or has already leveled off.
 10. **What Posting Time Does to YouTube Performance, Measured Across [N] Videos** — 0 quota, `channel_videos.published_at` (hour/weekday) against `video_metric_snapshots` views, channel-normalized, same method as study #2. Goal agreed 2026-08-22: find out whether posting time has any real relationship to performance, or whether it's an unproven assumption like title length turned out to be.
 11. **What a Good CTR Looks Like By Niche, Based on a [N]-Channel Study** — own-user data (`weekly_reports.report_data`, real Analytics via each connected creator's own OAuth grant, never competitor data). Goal agreed 2026-08-22: give creators a benchmark broken down by niche so they can tell whether their own CTR is good or bad. Volume AND category-join coverage both unconfirmed, run `scripts/check_weekly_report_coverage.py` first, if the per-niche join rate is too low the goal reverts to an overall benchmark and the title needs revisiting.
+12. **We Analyzed [N] Channels to Show What Good Audience Retention Looks Like, By Niche** — same source and same gate as #11 (`weekly_reports.report_data` + `channel_metric_snapshots.category`), run `scripts/check_weekly_report_coverage.py` first.
 
-**Candidates, not confirmed, sitting in `DATA-STUDIES.md` pending discussion:** retention measured from real channels, micro-channels-vs-search-demand. None of these get a slot above until the title and the reason are agreed, not just the query.
+**Candidates, not confirmed, sitting in `DATA-STUDIES.md` pending discussion:** micro-channels-vs-search-demand. Doesn't get a slot above until the title and the reason are agreed, not just the query.
 
 ## Video Ideas cluster (pillar `youtube-video-ideas`, mapped 2026-07-28)
 
