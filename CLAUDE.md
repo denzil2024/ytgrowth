@@ -4,14 +4,19 @@ Read these rules before any code change. They are not suggestions.
 
 ## START HERE — which files to open, and no others
 
-This repo has twelve markdown docs. Opening the wrong ones, or all of them, is
-a recurring and expensive waste. Route by the task:
+This repo has eleven markdown docs. Opening the wrong ones, or all of them, is
+a recurring and expensive waste. Route by the task. `CONTENT-PLAN.md` and
+`FOUNDATION.md` split the same way as the sister `niche_website` project:
+`CONTENT-PLAN.md` is ONLY the numbered run-order list (what ships, in what
+order, done items struck through), `FOUNDATION.md` is everything else
+(process, voice, diagnosis, history, dropped log). Never write list content
+into `FOUNDATION.md` or process/history content into `CONTENT-PLAN.md`.
 
 | Task | Read | Do NOT open |
 |---|---|---|
-| **"What's next?" / roadmap / what should we write** | `ROADMAP.md` ONLY. One table, top to bottom. Answer from it directly, do not re-derive from CONTENT-PLAN.md. | `CONTENT-PLAN.md`, unless ROADMAP.md's own links send you there for the why behind an item |
-| **Any content or blog work** | `CONTENT-PLAN.md` (all of it), then `research/<slug>.md` if an article is in flight | Everything else, unless CONTENT-PLAN sends you there for a named reason |
-| **Keyword research round** | `CONTENT-PLAN.md` Part 2, then `FOUNDATION.md` for the workflow and the dropped log | |
+| **"What's next?" / roadmap / what should we write** | `CONTENT-PLAN.md` ONLY. It's a numbered list, top to bottom, nothing else on the page. Answer from it directly. | `FOUNDATION.md`, unless CONTENT-PLAN's own links send you there for the why behind an item |
+| **Any content or blog work** | `CONTENT-PLAN.md` for what's next, `FOUNDATION.md` for the process/voice/standards, then `research/<slug>.md` if an article is in flight | Everything else, unless sent there for a named reason |
+| **Keyword research round** | `FOUNDATION.md` for the workflow and the dropped log | |
 | **Anything touching YouTube API data** | The quota section below, in full | |
 | **Pricing or checkout** | `PRICING-OVERHAUL.md` | |
 | **Pinterest** | `PINTEREST.md` | |
