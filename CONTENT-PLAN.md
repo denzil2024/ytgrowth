@@ -21,32 +21,29 @@ Last updated: 2026-08-22
 5. How fast views come in: the first 30 days of a YouTube video — 0 quota, `video_metric_snapshots`' weekly time series, never mined before 2026-08-22
 6. Do Shorts grow faster than long-form, or just get posted more? — 0 quota, shares #5's data pull, do back to back
 7. Engagement rate by niche: which categories get the most likes/comments per view — 0 quota, pending a likeCount-coverage check first (see `scripts/check_moat_logger_status.py`)
-8. Shorts adoption over time: how fast is the shift actually happening, by niche — 0 quota, `channel_videos.is_short` by month since Jan 2025, see `DATA-STUDIES.md`
-9. Does upload timing predict a video's own channel-relative performance — 0 quota, same channel-normalized method as study #2
-10. What CTR do real YouTube channels actually get, measured — own connected-user data (`weekly_reports.report_data`, real Analytics via each user's own OAuth grant, never competitor data), volume unconfirmed, run `scripts/check_weekly_report_coverage.py` first
-11. What retention rate is actually normal, measured across real channels — same source and same gate as #10
-12. How micro-channels (sub-10k subs) out-grow bigger ones by hitting search demand nobody else covers — compound study (`channel_metric_snapshots` + `channel_videos` + `youtube_search_cache`), needs a research file, this is design work not a ready query
-13. M1/M2/M3 moat studies (fastest-rising topics, channel growth rates, seasonality) — status unconfirmed since 2026-08-13, run `scripts/check_moat_logger_status.py` on Railway console before assuming still blocked, five-plus weeks of runway have accumulated since
+8. M1/M2/M3 moat studies (fastest-rising topics, channel growth rates, seasonality) — status unconfirmed since 2026-08-13, run `scripts/check_moat_logger_status.py` on Railway console before assuming still blocked, five-plus weeks of runway have accumulated since
+
+**Candidates, not confirmed, sitting in `DATA-STUDIES.md` pending discussion:** Shorts adoption over time, upload-timing correlation, CTR measured from real channels, retention measured from real channels, micro-channels-vs-search-demand. None of these get a slot above until the title and the reason are agreed, not just the query.
 
 ## Video Ideas cluster (pillar `youtube-video-ideas`, mapped 2026-07-28)
 
-14. ~~Pillar~~ — published, rewritten to full depth 2026-08-20 (111 ideas, 15 formats, 83,423 videos)
-15. ~~Gaming Video Ideas~~ — published 2026-08-13
-16. ~~Cooking Video Ideas~~ — published 2026-08-15
-17. ~~Comedy Video Ideas~~ — published 2026-08-14 (Stage 1/2 retroactive SERP check still owed, see below)
-18. ~~Tech Video Ideas~~ — published 2026-08-19
-19. ~~Music Video Ideas~~ — published 2026-08-20
-20. Comedy spoke: retroactive SERP check + coverage matrix — owed since 2026-08-14, edit not a rewrite
-21. Vlog ideas rewrite — candidate, needs its own research file first
-22. Shorts ideas rewrite — candidate, needs its own research file first
-23. Challenge ideas rewrite — candidate, needs its own research file first
+9. ~~Pillar~~ — published, rewritten to full depth 2026-08-20 (111 ideas, 15 formats, 83,423 videos)
+10. ~~Gaming Video Ideas~~ — published 2026-08-13
+11. ~~Cooking Video Ideas~~ — published 2026-08-15
+12. ~~Comedy Video Ideas~~ — published 2026-08-14 (Stage 1/2 retroactive SERP check still owed, see below)
+13. ~~Tech Video Ideas~~ — published 2026-08-19
+14. ~~Music Video Ideas~~ — published 2026-08-20
+15. Comedy spoke: retroactive SERP check + coverage matrix — owed since 2026-08-14, edit not a rewrite
+16. Vlog ideas rewrite — candidate, needs its own research file first
+17. Shorts ideas rewrite — candidate, needs its own research file first
+18. Challenge ideas rewrite — candidate, needs its own research file first
 
 ## Starting a Channel cluster (pillar `start-youtube-channel`, mapped 2026-07-28)
 
-24. ~~Pillar~~ — published
-25. ~~YouTube Channel on Phone~~ — published
-26. ~~YouTube Brand Account~~ — published
-27. ~~Gaming YouTube Channel~~ — published
+19. ~~Pillar~~ — published
+20. ~~YouTube Channel on Phone~~ — published
+21. ~~YouTube Brand Account~~ — published
+22. ~~Gaming YouTube Channel~~ — published
 
 ## Dropped, not queued
 
