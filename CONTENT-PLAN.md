@@ -14,41 +14,70 @@ Last updated: 2026-08-22
 
 ## Data studies (the primary lever, see FOUNDATION.md → What we are building)
 
+**Shipped:**
+
 1. ~~Video length by niche~~ — published 2026-08-13 as `/blog/video-length-by-niche`
 2. ~~Title length / what winning titles have in common~~ — published 2026-08-21 as `/blog/youtube-title-length`, commit `e4c95478b`
-3. Best time to post, measured — **NEXT.** ~0 quota, upgrades `/blog/best-time-to-post`, the highest-impression page on the site
-4. Upload cadence: successful channels vs. stalled ones — shares #3's data pull, do back to back
-5. How fast views come in: the first 30 days of a YouTube video — 0 quota, `video_metric_snapshots`' weekly time series, never mined before 2026-08-22
-6. Do Shorts grow faster than long-form, or just get posted more? — 0 quota, shares #5's data pull, do back to back
-7. Engagement rate by niche: which categories get the most likes/comments per view — 0 quota, pending a likeCount-coverage check first (see `scripts/check_moat_logger_status.py`)
-8. M1/M2/M3 moat studies (fastest-rising topics, channel growth rates, seasonality) — status unconfirmed since 2026-08-13, run `scripts/check_moat_logger_status.py` on Railway console before assuming still blocked, five-plus weeks of runway have accumulated since
-9. **We Analyzed [N] YouTube Uploads to See Whether Creators Are Uploading More Shorts Over Time**, By Niche — 0 quota, `channel_videos.is_short` by month since Jan 2025. Goal agreed 2026-08-22: not a snapshot percentage, whether the month-by-month Shorts ratio is actually rising per niche or has already leveled off.
-10. **What Posting Time Does to YouTube Performance, Measured Across [N] Videos** — 0 quota, `channel_videos.published_at` (hour/weekday) against `video_metric_snapshots` views, channel-normalized, same method as study #2. Goal agreed 2026-08-22: find out whether posting time has any real relationship to performance, or whether it's an unproven assumption like title length turned out to be.
-11. **What a Good CTR Looks Like By Niche, Based on a [N]-Channel Study** — own-user data (`weekly_reports.report_data`, real Analytics via each connected creator's own OAuth grant, never competitor data). Goal agreed 2026-08-22: give creators a benchmark broken down by niche so they can tell whether their own CTR is good or bad. Volume AND category-join coverage both unconfirmed, run `scripts/check_weekly_report_coverage.py` first, if the per-niche join rate is too low the goal reverts to an overall benchmark and the title needs revisiting.
-12. **We Analyzed [N] Channels to Show What Good Audience Retention Looks Like, By Niche** — same source and same gate as #11 (`weekly_reports.report_data` + `channel_metric_snapshots.category`), run `scripts/check_weekly_report_coverage.py` first.
-13. **We Analyzed [N] Small YouTube Channels to Find Topics Still Worth Covering in Your Niche** — compound study, `channel_metric_snapshots` + `channel_videos` + `youtube_search_cache`. Goal agreed 2026-08-22: help a small/new creator find real topics with actual search demand that bigger channels aren't covering, proven by small channels already winning there. Needs a research file before starting, this is design work (a gap-detection method), not a ready query.
 
-All candidates from the 2026-08-22 session are now confirmed and titled. No more unconfirmed items pending.
+**Ready now, no blockers:**
+
+3. **Best time to post, measured** — **NEXT**
+   Source: `channel_videos.published_at`, 0 quota. Upgrades `/blog/best-time-to-post`, the site's highest-impression page.
+4. **Upload cadence: successful channels vs. stalled ones**
+   Source: same pull as #3, do back to back.
+5. **How fast views come in: the first 30 days of a YouTube video**
+   Source: `video_metric_snapshots`' weekly time series, 0 quota, never mined before 2026-08-22.
+6. **Do Shorts grow faster than long-form, or just get posted more?**
+   Source: shares #5's data pull, do back to back.
+7. **Engagement rate by niche: which categories get the most likes/comments per view**
+   Source: 0 quota, pending a likeCount-coverage check first.
+8. **We Analyzed [N] YouTube Uploads to See Whether Creators Are Uploading More Shorts Over Time, By Niche**
+   Source: `channel_videos.is_short` by month since Jan 2025, 0 quota.
+   Goal: not a snapshot percentage, whether the month-by-month Shorts ratio is rising per niche or has leveled off.
+9. **What Posting Time Does to YouTube Performance, Measured Across [N] Videos**
+   Source: `channel_videos.published_at` (hour/weekday) vs. `video_metric_snapshots` views, channel-normalized, same method as #2.
+   Goal: find out whether posting time has any real relationship to performance, or is unproven like title length turned out to be.
+
+**Blocked on `scripts/check_weekly_report_coverage.py` (volume + category-join coverage):**
+
+10. **What a Good CTR Looks Like By Niche, Based on a [N]-Channel Study**
+    Source: `weekly_reports.report_data`, real Analytics via each connected creator's own OAuth grant, never competitor data.
+    Goal: give creators a benchmark broken down by niche so they can tell whether their own CTR is good or bad.
+    Note: if the per-niche join rate is too low, this reverts to an overall benchmark and the title needs revisiting.
+11. **We Analyzed [N] Channels to Show What Good Audience Retention Looks Like, By Niche**
+    Source: same as #10, `weekly_reports.report_data` + `channel_metric_snapshots.category`.
+    Goal: same shape as #10, for audience retention instead of CTR.
+
+**Blocked on `scripts/check_moat_logger_status.py` (logger runway):**
+
+12. **M1/M2/M3 moat studies** (fastest-rising topics, channel growth rates, seasonality)
+    Status unconfirmed since 2026-08-13. Five-plus weeks of runway have accumulated since, check before assuming still blocked.
+
+**Needs a research file before it can start (design work, not a ready query):**
+
+13. **We Analyzed [N] Small YouTube Channels to Find Topics Still Worth Covering in Your Niche**
+    Source: compound study, `channel_metric_snapshots` + `channel_videos` + `youtube_search_cache`.
+    Goal: help a small or new creator find real topics with actual search demand that bigger channels aren't covering, proven by small channels already winning there.
 
 ## Video Ideas cluster (pillar `youtube-video-ideas`, mapped 2026-07-28)
 
-9. ~~Pillar~~ — published, rewritten to full depth 2026-08-20 (111 ideas, 15 formats, 83,423 videos)
-10. ~~Gaming Video Ideas~~ — published 2026-08-13
-11. ~~Cooking Video Ideas~~ — published 2026-08-15
-12. ~~Comedy Video Ideas~~ — published 2026-08-14 (Stage 1/2 retroactive SERP check still owed, see below)
-13. ~~Tech Video Ideas~~ — published 2026-08-19
-14. ~~Music Video Ideas~~ — published 2026-08-20
-15. Comedy spoke: retroactive SERP check + coverage matrix — owed since 2026-08-14, edit not a rewrite
-16. Vlog ideas rewrite — candidate, needs its own research file first
-17. Shorts ideas rewrite — candidate, needs its own research file first
-18. Challenge ideas rewrite — candidate, needs its own research file first
+14. ~~Pillar~~ — published, rewritten to full depth 2026-08-20 (111 ideas, 15 formats, 83,423 videos)
+15. ~~Gaming Video Ideas~~ — published 2026-08-13
+16. ~~Cooking Video Ideas~~ — published 2026-08-15
+17. ~~Comedy Video Ideas~~ — published 2026-08-14 (Stage 1/2 retroactive SERP check still owed, see below)
+18. ~~Tech Video Ideas~~ — published 2026-08-19
+19. ~~Music Video Ideas~~ — published 2026-08-20
+20. Comedy spoke: retroactive SERP check + coverage matrix — owed since 2026-08-14, edit not a rewrite
+21. Vlog ideas rewrite — candidate, needs its own research file first
+22. Shorts ideas rewrite — candidate, needs its own research file first
+23. Challenge ideas rewrite — candidate, needs its own research file first
 
 ## Starting a Channel cluster (pillar `start-youtube-channel`, mapped 2026-07-28)
 
-19. ~~Pillar~~ — published
-20. ~~YouTube Channel on Phone~~ — published
-21. ~~YouTube Brand Account~~ — published
-22. ~~Gaming YouTube Channel~~ — published
+24. ~~Pillar~~ — published
+25. ~~YouTube Channel on Phone~~ — published
+26. ~~YouTube Brand Account~~ — published
+27. ~~Gaming YouTube Channel~~ — published
 
 ## Dropped, not queued
 
