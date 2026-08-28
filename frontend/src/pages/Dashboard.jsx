@@ -634,13 +634,18 @@ export default function Dashboard() {
               bold lead-in) so it reads as an official disclaimer in a static
               screenshot, not as ambient body copy. */}
           <div style={{
-            margin: '0 22px 16px', padding: '10px 12px',
-            background: 'rgba(201,160,48,0.10)', border: '1px solid rgba(201,160,48,0.35)',
-            borderRadius: 6, display: 'flex', alignItems: 'flex-start', gap: 8,
+            margin: '0 22px 16px', padding: '12px 14px',
+            background: 'rgba(201,160,48,0.12)', border: '1.5px solid rgba(201,160,48,0.45)',
+            borderRadius: 6,
           }}>
-            <Info size={15} strokeWidth={2} style={{ color: '#a67c1e', flexShrink: 0, marginTop: 1 }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5 }}>
+              <Info size={16} strokeWidth={2.25} style={{ color: '#a67c1e', flexShrink: 0 }} />
+              <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#a67c1e' }}>
+                Disclaimer
+              </span>
+            </div>
             <p style={{ fontSize: 12.5, lineHeight: 1.5, color: SHELL.text1, fontWeight: 600 }}>
-              Disclaimer: Scores and grades in {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} are our own analysis, not YouTube metrics.
+              Scores and grades in {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} are our own analysis, not YouTube metrics.
             </p>
           </div>
         </div>
