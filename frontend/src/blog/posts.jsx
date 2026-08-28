@@ -8943,14 +8943,9 @@ Free studio checklist: https://yoursite.com/checklist
               <td>Correlation of <strong>0.0046</strong> between title length and performance, negligible in every niche tested.</td>
             </tr>
             <tr>
-              <td><a href="/blog/best-time-to-post">Best Time to Post, by Niche</a></td>
-              <td>35,466 videos, 974 channels</td>
-              <td>Pooled hour/weekday effect is nearly flat (<strong>0.167 spread</strong>), but per niche it is real, up to <strong>4.8x</strong> between a niche's best and worst hour.</td>
-            </tr>
-            <tr>
-              <td><a href="/blog/best-time-to-post">Upload Cadence vs. Growth</a></td>
-              <td>747 channels</td>
-              <td>No pooled relationship between upload frequency and growth. Per niche it flips: cooking, education, fitness, and music favor uploading more, gaming and tech do not.</td>
+              <td><a href="/blog/best-time-to-post">Best Time to Post, by Niche and by Cadence</a></td>
+              <td>35,466 videos / 974 channels (timing), 747 channels (cadence)</td>
+              <td>Pooled timing effect is nearly flat (<strong>0.167 spread</strong>) but real per niche, up to <strong>4.8x</strong>. Upload cadence has no pooled link to growth, and flips by niche too, cooking and education reward posting more, gaming and tech do not.</td>
             </tr>
           </tbody>
         </table>
