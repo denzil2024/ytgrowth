@@ -12,8 +12,14 @@ Growth signal, self-normalized per channel (no cross-channel size bias):
    by published_at (median split by index, not by date, so uneven upload
    spacing doesn't skew the split).
 3. GROWTH RATIO = median(late-half velocity) / median(early-half velocity).
-   >= 1.15 => "growing". <= 1.0 => "stalled". Between => "flat", reported
-   but excluded from the two-group comparison.
+   Bucketed by TERCILE across all qualifying channels (top third of ratios
+   = "growing", bottom third = "stalled", middle third = "flat"), not a
+   fixed cutoff. A fixed 1.15x cutoff put 84% of channels in "growing"
+   (median ratio across the sample was ~2.0x, most tracked channels' later
+   videos outperform their earliest ones just from normal audience
+   accumulation), which wasn't a real growing-vs-stalled split. Terciles
+   guarantee a real, even comparison group regardless of where the
+   population's ratios happen to sit.
 4. CADENCE = videos per week across the channel's full tracked span
    (first published_at to last published_at in the sample).
 
@@ -62,8 +68,6 @@ GROUP BY cv.video_id, cv.channel_id, cv.published_at, tc.category
 """
 
 CADENCE_FLOOR = 10
-GROWING_THRESHOLD = 1.15
-STALLED_THRESHOLD = 1.00
 
 db = SessionLocal()
 try:
@@ -117,27 +121,27 @@ for channel_id, vids in by_channel.items():
 
     category = max({v["category"] for v in vids_sorted}, key=lambda c: sum(1 for v in vids_sorted if v["category"] == c))
 
-    if ratio >= GROWING_THRESHOLD:
-        bucket = "growing"
-    elif ratio <= STALLED_THRESHOLD:
-        bucket = "stalled"
-    else:
-        bucket = "flat"
-
     results.append({
         "channel_id": channel_id,
         "n_videos": len(vids_sorted),
         "ratio": ratio,
         "cadence_per_week": cadence_per_week,
-        "bucket": bucket,
+        "bucket": None,  # assigned below, by tercile across the whole sample
         "category": category,
     })
 
 print(f"\nChannels below {CADENCE_FLOOR}-video floor, excluded: {below_floor}")
 print(f"Channels in this study: {len(results)}")
 
+# Tercile bucketing: sort by ratio, bottom third = stalled, top third = growing.
+results.sort(key=lambda r: r["ratio"])
+n = len(results)
+t1, t2 = n // 3, (2 * n) // 3
+for i, r in enumerate(results):
+    r["bucket"] = "stalled" if i < t1 else ("growing" if i >= t2 else "flat")
+
 print("\n" + "=" * 74)
-print("1. CADENCE BY GROWTH BUCKET (pooled, all niches)")
+print("1. CADENCE BY GROWTH BUCKET (pooled, all niches, tercile split)")
 print("=" * 74)
 by_bucket = defaultdict(list)
 for r in results:
@@ -180,10 +184,10 @@ for cat, crows in sorted(by_cat.items(), key=lambda kv: -len(kv[1])):
           f"stalled {s_med:.2f}/wk (n={len(cat_stalled)}), ratio {g_med / s_med if s_med else float('inf'):.2f}x")
 
 print("\n" + "=" * 74)
-print("3. DISTRIBUTION CHECK (growth ratio itself, sanity check on the thresholds)")
+print("3. DISTRIBUTION CHECK (growth ratio itself, sanity check on the tercile cuts)")
 print("=" * 74)
 ratios = [r["ratio"] for r in results]
 print(f"ratio median: {statistics.median(ratios):.3f}, mean: {statistics.mean(ratios):.3f}")
-print(f"growing (>= {GROWING_THRESHOLD}): {sum(1 for r in ratios if r >= GROWING_THRESHOLD)}")
-print(f"flat: {sum(1 for r in ratios if STALLED_THRESHOLD < r < GROWING_THRESHOLD)}")
-print(f"stalled (<= {STALLED_THRESHOLD}): {sum(1 for r in ratios if r <= STALLED_THRESHOLD)}")
+print(f"stalled cutoff (ratio <= {ratios[t1 - 1]:.3f}): {t1} channels")
+print(f"flat band ({ratios[t1]:.3f} to {ratios[t2 - 1]:.3f}): {t2 - t1} channels")
+print(f"growing cutoff (ratio >= {ratios[t2]:.3f}): {n - t2} channels")
