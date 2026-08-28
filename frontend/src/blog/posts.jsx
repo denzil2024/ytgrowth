@@ -5085,7 +5085,9 @@ export const posts = [
     ],
     content: () => (
       <>
-        <p>There is a best time to post on YouTube, and there is a best time for <strong>your</strong> channel, and they are not the same thing. Every chart you have seen, including the ones in this guide, is a population average pulled from millions of channels. That average is a genuinely useful starting point when you have no data of your own, but the moment your channel has a few weeks of history, your own audience will tell you something more precise than any generic table ever could.</p>
+        <p><strong>Quick answer: post Thursday through Sunday, afternoon to evening.</strong> That is the safest default if you want one line and nothing else.</p>
+
+        <p>But there is a best time to post on YouTube, and there is a best time for <strong>your</strong> channel, and they are not the same thing. Every chart you have seen, including the ones in this guide, is a population average pulled from millions of channels. That average is a genuinely useful starting point when you have no data of your own, but the moment your channel has a few weeks of history, your own audience will tell you something more precise than any generic table ever could.</p>
 
         <p>So here is the honest short version. For most channels, long-form videos do best on <strong>weekday afternoons (around 12 PM to 4 PM) and weekend mornings (around 9 AM to 11 AM)</strong>, with Thursday through Sunday outperforming the start of the week.</p>
 
