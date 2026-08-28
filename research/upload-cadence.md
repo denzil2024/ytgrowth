@@ -3,7 +3,7 @@
 Target query: `how often should you upload to youtube` / `how often should you post on youtube`
 Volume: no dedicated page yet, upgrades `/blog/best-time-to-post`'s existing "How Often Should You Post on YouTube?" section (currently generic, unsourced advice) plus its "What Established Channels Upload, Measured" section (real cadence-by-niche, but not split by growing vs stalled)
 Researched: 2026-08-28
-Status: awaiting approval
+Status: done, awaiting push go-ahead
 
 This is CONTENT-PLAN.md data study #4, the direct companion to #3 (best-time-to-post), same source table (`channel_videos.published_at`), same 974 channels / 35,466 videos, zero fresh quota.
 

@@ -5064,7 +5064,7 @@ export const posts = [
     title: 'The Best Time to Post on YouTube in 2026 (and Why Your Own Data Beats Any Chart)',
     excerpt: 'The best times to post videos and Shorts, real per-niche numbers from 35,466 tracked videos, why every generic guide gives you a different answer, plus how to read your own YouTube Analytics to find the time that beats every chart, including this one.',
     date: '2026-06-14',
-    updated: '2026-08-26',
+    updated: '2026-08-28',
     category: CATEGORIES.growth,
     cover: '/blog/best-time-to-post-cover.jpg',
     coverAlt: 'A creator glancing at the clock on his phone in a golden-hour living room, tripod and camera set up nearby, hand resting on a closed laptop',
@@ -5083,6 +5083,7 @@ export const posts = [
       { q: "Should I use YouTube's scheduler?", a: 'Yes. The scheduler lets you publish into your audience\'s active window even when you are not at your desk, which is the whole point of timing. <strong>Finish and upload the video early, set the publish time to land just ahead of your peak, and let YouTube release it automatically.</strong> It is free and built into the studio.' },
       { q: 'Is there really a universal best time to post on YouTube?', a: 'No. Pooled across 35,466 tracked videos and every niche, the best hour beats the worst by only 0.167 on our median multiplier, an 11% swing, and the best weekday beats the worst by just 0.039, close to flat. <strong>A single universal window barely exists.</strong> What does exist is a strong per-niche effect that gets averaged away the moment you blend niches together, which is why generic guides all disagree with each other.' },
       { q: "What's the best time to post for my niche?", a: 'Check the per-niche table above, measured in UTC from real tracked uploads, not a guess. <strong>Finance (1 AM), cooking (4 AM), sports (10 PM), and entertainment (6 AM) show the strongest swings between their best and worst hour, over 1.5x.</strong> Gaming, music, and fitness move less but still favor a specific window. Convert the UTC hour to your audience\'s timezone before applying it.' },
+      { q: 'Does uploading more often help you grow?', a: 'Not universally. Pooled across 747 tracked channels, there is no relationship, the fastest-growing third uploads 2.45 videos a week, the stalled third uploads 2.57. <strong>Split by niche, it depends on what you make: cooking, education, fitness, and music show growing channels uploading more, gaming and tech show the opposite.</strong> Correlation, not proof of causation.' },
     ],
     content: () => (
       <>
@@ -5238,11 +5239,32 @@ export const posts = [
 
         <p>The safe default is <strong>one to two long-form videos a week and three to five Shorts</strong>, and most creators never need to go further. That range is not a magic formula. It is simply the ceiling most people can hit without their quality dropping, and quality is what decides whether more uploads help a channel or quietly drag it down.</p>
 
-        <p>Frequency research online contradicts itself, and neither side is wrong, they are testing different things. One widely cited analysis found channels posting twice a week grow subscribers roughly three times faster than channels posting once, driven by simple compounding: twice the uploads means twice the chances to convert a viewer into a subscriber.</p>
+        <p>We checked whether uploading more correlates with growth, using the same 747 tracked channels behind the tables on this page. For each channel, we split its upload history in half and compared how much its later videos outperform its earliest ones, a self-normalized growth signal, then split all 747 channels into thirds by that growth rate and compared each third's upload cadence.</p>
 
-        <p>A separate creator experiment found close to the opposite: tripling weekly output for a month produced no measurable lift in views at all. <strong>The reconciliation is straightforward.</strong> The growth math only holds if every extra video clears the same bar as the first.</p>
+        <p><strong>Pooled across every niche, there is no relationship.</strong> The fastest-growing third of channels uploads 2.45 videos a week (median), the stalled third uploads 2.57, statistically the same number.</p>
 
-        <p>Add volume by rushing the script, the edit, and the thumbnail, and the extra uploads dilute a channel instead of compounding it. Frequency is a multiplier on quality, never a replacement for it.</p>
+        <p>Split by niche, the pattern does not just weaken, it flips depending on the niche. In cooking, education, fitness, and music, the growing third uploads meaningfully more than the stalled third. In gaming and tech, it runs the other way, the stalled third uploads more, not less.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Growing third (median/wk)</th>
+              <th>Stalled third (median/wk)</th>
+              <th>Ratio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Education</strong></td><td>5.70</td><td>2.43</td><td>2.35x</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>2.56</td><td>1.18</td><td>2.17x</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>1.69</td><td>1.05</td><td>1.60x</td></tr>
+            <tr><td><strong>Music</strong></td><td>2.55</td><td>1.75</td><td>1.46x</td></tr>
+            <tr><td><strong>Tech</strong></td><td>2.24</td><td>2.65</td><td>0.84x</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>1.98</td><td>2.75</td><td>0.72x</td></tr>
+          </tbody>
+        </table>
+
+        <p>Read this as correlation, not proof. A channel could upload more as a result of growing, more resources, more motivation, more editors, rather than growing as a result of uploading more. <strong>What the data rules out is the universal version of the advice.</strong> "Post more and you will grow" is not true across the board, it depends heavily on what you make, and for gaming and tech specifically, the pattern in our tracked channels runs the opposite way.</p>
 
         <table>
           <thead>
@@ -5430,6 +5452,10 @@ export const posts = [
         <h3>What's the best time to post for my niche?</h3>
 
         <p>Check the per-niche table above, measured in UTC from real tracked uploads, not a guess. <strong>Finance (1 AM), cooking (4 AM), sports (10 PM), and entertainment (6 AM) show the strongest swings between their best and worst hour, over 1.5x.</strong> Gaming, music, and fitness move less but still favor a specific window. Convert the UTC hour to your audience's timezone before applying it.</p>
+
+        <h3>Does uploading more often help you grow?</h3>
+
+        <p>Not universally. Pooled across 747 tracked channels, there is no relationship, the fastest-growing third uploads 2.45 videos a week, the stalled third uploads 2.57. <strong>Split by niche, it depends on what you make: cooking, education, fitness, and music show growing channels uploading more, gaming and tech show the opposite.</strong> Correlation, not proof of causation.</p>
 
         <h2>Post for Your Audience, Not the Average</h2>
 

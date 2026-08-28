@@ -22,8 +22,7 @@ Last updated: 2026-08-22
 **Ready now, no blockers:**
 
 3. ~~Best time to post, measured~~ — upgraded 2026-08-26, real per-niche table + mechanism section replaces guessed advice on `/blog/best-time-to-post`
-4. **Upload cadence: successful channels vs. stalled ones**
-   Source: same pull as #3, do back to back.
+4. ~~Upload cadence: successful channels vs. stalled ones~~ — upgraded 2026-08-28, real growing-vs-stalled cadence data (pooled + per-niche) added to `/blog/best-time-to-post`
 5. **How fast views come in: the first 30 days of a YouTube video**
    Source: `video_metric_snapshots`' weekly time series, 0 quota, never mined before 2026-08-22.
 6. **Do Shorts grow faster than long-form, or just get posted more?**
