@@ -8947,6 +8947,11 @@ Free studio checklist: https://yoursite.com/checklist
               <td>35,466 videos / 974 channels (timing), 747 channels (cadence)</td>
               <td>Pooled timing effect is nearly flat (<strong>0.167 spread</strong>) but real per niche, up to <strong>4.8x</strong>. Upload cadence has no pooled link to growth, and flips by niche too, cooking and education reward posting more, gaming and tech do not.</td>
             </tr>
+            <tr>
+              <td><a href="/blog/youtube-view-growth-curve">How Long Do YouTube Views Take? 18,423-Video Study</a></td>
+              <td>18,423 videos, 837 channels</td>
+              <td><strong>94.5%</strong> of a video's day-30 views arrive by day 7. Front-loading varies by niche (news 98.9%, fitness/beauty 82%) and Shorts front-load slightly faster than long-form.</td>
+            </tr>
           </tbody>
         </table>
 
@@ -8955,8 +8960,6 @@ Free studio checklist: https://yoursite.com/checklist
         <p>More studies are queued from the same dataset, none published yet:</p>
 
         <ul>
-          <li><strong>How Fast Views Come In: The First 30 Days of a YouTube Video.</strong> A real per-video growth curve from weekly view snapshots, not a single upload-day count.</li>
-          <li><strong>Do Shorts Grow Faster Than Long-Form, or Just Get Posted More?</strong> Early-view velocity by format, not adoption share.</li>
           <li><strong>Engagement Rate by Niche: Which Categories Get the Most Likes and Comments Per View.</strong> Likes and comments measured against views, by category.</li>
         </ul>
 
@@ -8976,6 +8979,152 @@ Free studio checklist: https://yoursite.com/checklist
         <h2>More Studies Are Already Queued</h2>
 
         <p>This page gets longer as each one ships, not rewritten. Check back, or follow any individual study, they link back here and to each other as the list grows.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-view-growth-curve',
+    title: 'How Long Does It Take for a YouTube Video to Get Views? A Study of 18,423 Tracked Videos',
+    excerpt: "Every generic guide describes a video's view timeline from memory, a boost, a dip, a slow climb over months. We measured it directly across 18,423 tracked videos. 94.5% of a video's 30-day view total arrives within the first week.",
+    date: '2026-08-28',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-view-growth-curve-cover.jpg',
+    coverAlt: 'A creator reviewing a YouTube Studio analytics graph on a laptop, tracking a video\'s view count climb over its first days',
+    author: 'Denzil',
+    readTime: '9 min read',
+    faqs: [
+      { q: 'How long does it take for a YouTube video to get views?', a: 'Faster than the typical guide suggests. Across 18,423 tracked videos, <strong>94.5% of a video\'s day-30 view total had already arrived by day 7</strong>, and 97.6% by day 14. The common advice that a video needs "3 to 6 months to reach its full potential" does not hold up against measured data, nearly all of what a video earns in its first month, it earns in the first week.' },
+      { q: 'Is 2000 views in 1 day good?', a: 'There is no universal number, it depends entirely on your channel\'s own baseline, a video that would be huge for a 500-subscriber channel is unremarkable for one with a million. What our data can tell you is the shape to expect, <strong>whatever a video is going to earn in its first 30 days, about 94.5% of that arrives in the first week.</strong> If day 1 looks strong relative to your own past videos, the rest of the week usually confirms it rather than reversing it.' },
+      { q: 'How long does it take to get 1000 views on YouTube?', a: 'This depends on channel size and niche far more than on time elapsed, there is no fixed number of days. What is measurable is the pattern once a video starts moving: <strong>94.5% of its eventual 30-day total shows up in the first week</strong>, so if a video is going to reach 1,000 views within a month, the bulk of that climb happens in the first several days, not gradually over the following weeks.' },
+      { q: 'How long does it take for YouTube Shorts to get views?', a: 'Slightly faster than long-form. Shorts hit <strong>95.0% of their day-30 view total by day 7</strong>, versus 94.1% for long-form, and the gap holds through day 14 (98.2% vs. 97.3%). Both formats front-load hard, Shorts just a touch more, likely because the Shorts feed starts serving a video to new viewers almost immediately rather than waiting on subscriber engagement signals first.' },
+    ],
+    content: () => (
+      <>
+        <p>We pulled <strong>18,423 tracked videos across 837 channels</strong>, each with a real day-30 view observation, and measured what share of that total had already arrived by day 7 and day 14. <strong>94.5% of a video's day-30 views were already in by day 7. 97.6% by day 14.</strong></p>
+
+        <p>Every guide we checked describes the shape of a video's view timeline from memory, a boost in the first 24 hours, a dip, then a slow climb over weeks or months. <strong>None of them show the actual numbers behind that shape.</strong> One competitor guide claims a video needs "3 to 6 months to reach its full potential," sourced from personal experience, not measurement. <strong>Measured directly, that is not what happens for the typical video.</strong></p>
+
+        <h2>The Real 30-Day Growth Curve</h2>
+
+        <p>For every tracked video with a snapshot near day 30, we found the nearest snapshot to day 7 and day 14 and expressed each as a share of that video's day-30 total. <strong>Median, not mean</strong>, so a handful of videos that kept climbing hard past day 14 do not drag the whole curve.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Share of day-30 views already in (median)</th>
+              <th>Videos measured</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Day 7</strong></td><td>94.5%</td><td>10,899</td></tr>
+            <tr><td><strong>Day 14</strong></td><td>97.6%</td><td>13,498</td></tr>
+            <tr><td><strong>Day 30</strong></td><td>100% (reference point)</td><td>18,423</td></tr>
+          </tbody>
+        </table>
+
+        <p>The gap between day 14 and day 30 is small, <strong>just 2.4 percentage points</strong>. <strong>A video's fate inside its first month is decided almost entirely inside the first two weeks</strong>, and the majority of that inside the first week alone. The long, slow climb some guides describe over months is real for a minority of videos, mostly the evergreen, search-driven ones covered below, but it is not the typical pattern.</p>
+
+        <h2>Does the Curve Differ by Niche</h2>
+
+        <p>Pooled across every niche, front-loading is strong. Split by niche, the strength of that front-load varies a lot, and it splits cleanly along one line: <strong>news-cycle content front-loads hardest, evergreen and search-driven content holds back the largest share for later.</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Day-7 share (median)</th>
+              <th>Videos measured</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>News</strong></td><td>98.9%</td><td>2,291</td></tr>
+            <tr><td><strong>Sports</strong></td><td>96.9%</td><td>969</td></tr>
+            <tr><td><strong>Vlogs</strong></td><td>95.8%</td><td>572</td></tr>
+            <tr><td><strong>Entertainment</strong></td><td>94.7%</td><td>593</td></tr>
+            <tr><td><strong>Finance</strong></td><td>92.7%</td><td>355</td></tr>
+            <tr><td><strong>Comedy</strong></td><td>88.0%</td><td>110</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>87.6%</td><td>522</td></tr>
+            <tr><td><strong>Travel</strong></td><td>87.6%</td><td>458</td></tr>
+            <tr><td><strong>Education</strong></td><td>85.6%</td><td>129</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>85.3%</td><td>681</td></tr>
+            <tr><td><strong>Tech</strong></td><td>83.9%</td><td>137</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>82.0%</td><td>761</td></tr>
+            <tr><td><strong>Beauty</strong></td><td>81.9%</td><td>330</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>News holds almost nothing back, 98.9% of its day-30 views are already there by day 7</strong>, which tracks, a news video's relevance has a short shelf life, so whatever attention it gets, it gets fast. Fitness and beauty sit at the other end, holding back roughly <strong>18% of their day-30 total for after day 7, more than three times the 5.5% held back pooled.</strong> These are search-driven, evergreen categories, "how to" and tutorial content that keeps earning views from search long after the upload-day push fades.</p>
+
+        <p>Comedy and education rest on fewer than 150 videos each, treat those two rows as directional. Music was below the 30-video floor entirely and is not reported.</p>
+
+        <h2>Shorts vs. Long-Form: Which Front-Loads Faster</h2>
+
+        <p><strong>Shorts front-load slightly harder than long-form, and the gap holds at both checkpoints.</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Day-7 share</th>
+              <th>Day-14 share</th>
+              <th>Videos measured</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Shorts</strong></td><td>95.0%</td><td>98.2%</td><td>6,161</td></tr>
+            <tr><td><strong>Long-form</strong></td><td>94.1%</td><td>97.3%</td><td>12,262</td></tr>
+          </tbody>
+        </table>
+
+        <p>The gap is real but small, under a point at each checkpoint. It does not contradict what <a href="/blog/best-time-to-post">our posting-time study</a> found about Shorts distribution working differently from long-form. <strong>That was about how a Short gets discovered</strong> (the Shorts feed over days, rather than mostly a subscriber push in the first hour), <strong>not about the pace of view accumulation.</strong></p>
+
+        <p>A format can be discovered gradually through a feed and still front-load its total views fast, because that feed distribution starts almost immediately rather than building slowly.</p>
+
+        <h2>What This Means for When You Should Judge a Video</h2>
+
+        <p>Across the majority of niches, <strong>day 7 is already a reliable read.</strong> If a video is underperforming your own channel's normal by day 7, waiting another three weeks rarely rescues it, 94.5% of whatever it was going to earn by day 30 is already visible. Put that effort into the next video instead of waiting on one that has already shown its hand.</p>
+
+        <p>The exception is search-driven, evergreen niches: fitness, beauty, tech, gaming, education. These hold back a meaningfully larger share for later, so a slow week-one start there is a weaker signal. <strong>Give a tutorial or how-to video closer to 14 days before writing it off</strong>, the data backs a longer runway specifically for that kind of content, not as a general rule.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="See how your last video's curve compares"
+          sub="A free Channel Audit reads your own upload history and tells you which videos are still climbing and which have already peaked, so you know where to spend your next hour of effort."
+          button="Run a free Channel Audit →"
+        />
+
+        <h2>How We Tracked This</h2>
+
+        <p>Every video under 180 days old gets a views/likes/comments snapshot weekly, live since 2026-07-19. For each video we took the snapshot nearest day 7, day 14, and day 30 (within a 3-day tolerance of the target), and expressed the day-7 and day-14 counts as a share of the day-30 count.</p>
+
+        <p>Videos without a real snapshot near day 30 were excluded rather than estimated. <strong>18,423 videos across 837 channels</strong> cleared that bar. Category comes from <a href="/blog/youtube-data-studies">the same tracked-channel dataset</a> behind our other studies, and the same 30-video floor applies before any niche gets its own row.</p>
+
+        <blockquote><strong>Quick update:</strong> YouTube changed how it counts a view on August 24, 2026, now counting as soon as playback starts rather than requiring a watch-duration threshold. Each historical snapshot reflects whichever rule was live on that date, so only the small slice of this cohort whose day-30 checkpoint fell in the days right around the change could see a marginal boost from the newer, looser counting bar. The bulk of the sample was snapshotted well before the change and is unaffected.</blockquote>
+
+        <p>This measures each video against its own trajectory, not against other channels, so a small channel's video and a large channel's video count equally. <strong>It is a pace measurement, not a size measurement.</strong></p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How long does it take for a YouTube video to get views?</h3>
+
+        <p>Faster than the typical guide suggests. Across 18,423 tracked videos, <strong>94.5% of a video's day-30 view total had already arrived by day 7</strong>, and 97.6% by day 14. The common advice that a video needs "3 to 6 months to reach its full potential" does not hold up against measured data, nearly all of what a video earns in its first month, it earns in the first week.</p>
+
+        <h3>Is 2000 views in 1 day good?</h3>
+
+        <p>There is no universal number, it depends entirely on your channel's own baseline, a video that would be huge for a 500-subscriber channel is unremarkable for one with a million. What our data can tell you is the shape to expect, <strong>whatever a video is going to earn in its first 30 days, about 94.5% of that arrives in the first week.</strong> If day 1 looks strong relative to your own past videos, the rest of the week usually confirms it rather than reversing it.</p>
+
+        <h3>How long does it take to get 1000 views on YouTube?</h3>
+
+        <p>This depends on channel size and niche far more than on time elapsed, there is no fixed number of days. What is measurable is the pattern once a video starts moving: <strong>94.5% of its eventual 30-day total shows up in the first week</strong>, so if a video is going to reach 1,000 views within a month, the bulk of that climb happens in the first several days, not gradually over the following weeks.</p>
+
+        <h3>How long does it take for YouTube Shorts to get views?</h3>
+
+        <p>Slightly faster than long-form. Shorts hit <strong>95.0% of their day-30 view total by day 7</strong>, versus 94.1% for long-form, and the gap holds through day 14 (98.2% vs. 97.3%). Both formats front-load hard, Shorts just a touch more, likely because the Shorts feed starts serving a video to new viewers almost immediately rather than waiting on subscriber engagement signals first.</p>
+
+        <h2>Your First Week of Views Is the Real Signal</h2>
+
+        <p>Most creators give a video weeks or months before judging it. The data does not support waiting that long for typical content. A video's first week carries almost the entire signal for where its first month ends up. Watch that week closely, act on what it tells you, and reserve patience for the formats that have earned it, fitness, beauty, tech, gaming, and education, where a real second wind arrives after day 7.</p>
       </>
     ),
   },
