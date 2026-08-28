@@ -32,9 +32,7 @@ Last updated: 2026-08-22
 8. **We Analyzed [N] YouTube Uploads to See Whether Creators Are Uploading More Shorts Over Time, By Niche**
    Source: `channel_videos.is_short` by month since Jan 2025, 0 quota.
    Goal: not a snapshot percentage, whether the month-by-month Shorts ratio is rising per niche or has leveled off.
-9. **What Posting Time Does to YouTube Performance, Measured Across [N] Videos**
-   Source: `channel_videos.published_at` (hour/weekday) vs. `video_metric_snapshots` views, channel-normalized, same method as #2.
-   Goal: find out whether posting time has any real relationship to performance, or is unproven like title length turned out to be.
+9. ~~What Posting Time Does to YouTube Performance~~ — superseded by #3's 2026-08-26 upgrade, same method, same question, already answered (pooled effect nearly flat, real per niche).
 
 **Blocked on `scripts/check_weekly_report_coverage.py` (volume + category-join coverage):**
 
