@@ -5067,6 +5067,7 @@ export const posts = [
     updated: '2026-08-26',
     category: CATEGORIES.growth,
     cover: '/blog/best-time-to-post-cover.jpg',
+    coverAlt: 'A creator glancing at the clock on his phone in a golden-hour living room, tripod and camera set up nearby, hand resting on a closed laptop',
     author: 'Denzil',
     readTime: '14 min read',
     faqs: [
