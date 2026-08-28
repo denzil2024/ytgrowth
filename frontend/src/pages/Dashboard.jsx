@@ -3,6 +3,7 @@ import {
   Gift,
   LogOut,
   Activity,
+  Info,
 } from 'lucide-react'
 import Competitors from './Competitors'
 import Settings from './Settings'
@@ -629,10 +630,19 @@ export default function Dashboard() {
               score/grade in the app is our own analysis, not a YouTube metric.
               Placed under the logo, unconditionally rendered (not gated behind
               channel data loading), so it is visible on every authenticated
-              screen from first paint. */}
-          <p style={{ margin: '0 22px 16px', fontSize: 11.5, lineHeight: 1.45, color: SHELL.text2, fontWeight: 500 }}>
-            Scores and grades in {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} are our own analysis, not YouTube metrics.
-          </p>
+              screen from first paint. Styled as a bordered notice box (icon +
+              bold lead-in) so it reads as an official disclaimer in a static
+              screenshot, not as ambient body copy. */}
+          <div style={{
+            margin: '0 22px 16px', padding: '10px 12px',
+            background: 'rgba(201,160,48,0.10)', border: '1px solid rgba(201,160,48,0.35)',
+            borderRadius: 6, display: 'flex', alignItems: 'flex-start', gap: 8,
+          }}>
+            <Info size={15} strokeWidth={2} style={{ color: '#a67c1e', flexShrink: 0, marginTop: 1 }} />
+            <p style={{ fontSize: 12.5, lineHeight: 1.5, color: SHELL.text1, fontWeight: 600 }}>
+              Disclaimer: Scores and grades in {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} are our own analysis, not YouTube metrics.
+            </p>
+          </div>
         </div>
 
         {/* Channel profile block */}
