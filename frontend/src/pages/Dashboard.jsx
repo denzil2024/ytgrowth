@@ -618,12 +618,22 @@ export default function Dashboard() {
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${SHELL.hair}` }}>
-          <Logo size={24} />
-          {(() => { const pb = planBadge(billingPlan); return (
-            <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 600, color: pb.color, background: pb.bg, border: `1px solid ${pb.bdr}`, padding: '2px 8px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>{pb.label}</span>
-          ) })()}
-        </a>
+        <div style={{ flexShrink: 0, borderBottom: `1px solid ${SHELL.hair}` }}>
+          <a href="/" style={{ padding: '22px 22px 10px', display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <Logo size={24} />
+            {(() => { const pb = planBadge(billingPlan); return (
+              <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 600, color: pb.color, background: pb.bg, border: `1px solid ${pb.bdr}`, padding: '2px 8px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>{pb.label}</span>
+            ) })()}
+          </a>
+          {/* YouTube API policy III.E.4h: account-wide disclaimer that every
+              score/grade in the app is our own analysis, not a YouTube metric.
+              Placed under the logo, unconditionally rendered (not gated behind
+              channel data loading), so it is visible on every authenticated
+              screen from first paint. */}
+          <p style={{ margin: '0 22px 16px', fontSize: 11.5, lineHeight: 1.45, color: SHELL.text2, fontWeight: 500 }}>
+            Scores and grades in {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} are our own analysis, not YouTube metrics.
+          </p>
+        </div>
 
         {/* Channel profile block */}
         {data && (
@@ -800,12 +810,6 @@ export default function Dashboard() {
                 <LogOut size={13} strokeWidth={1.75} />
               </a>
             </div>
-            {/* YouTube API policy III.E.4h: all YTGrowth scores are our own
-                analysis, not YouTube metrics. Persistent so it shows on every
-                screen. */}
-            <p style={{ margin: '12px 4px 0', fontSize: 10, lineHeight: 1.5, color: SHELL.text2, opacity: 0.7 }}>
-              Scores and grades in {isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} are our own analysis, not YouTube metrics.
-            </p>
           </div>
         )}
       </aside>
