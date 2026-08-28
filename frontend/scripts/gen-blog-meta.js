@@ -40,7 +40,11 @@ function field(metaText, key) {
 }
 
 async function main() {
-  const src = await readFile(SRC, 'utf-8')
+  // Normalize line endings: git's autocrlf can leave posts.jsx as CRLF in the
+  // working tree (happens on every commit per the repo's warnings), but every
+  // regex below assumes bare \n. Without this, block-splitting silently finds
+  // zero posts on a CRLF checkout.
+  const src = (await readFile(SRC, 'utf-8')).replace(/\r\n/g, '\n')
 
   // CATEGORIES block, copied verbatim so category references resolve.
   const catMatch = /export const CATEGORIES = \{[\s\S]*?\n\}/.exec(src)
