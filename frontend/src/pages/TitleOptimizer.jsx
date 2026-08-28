@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import EstimateTag from '../components/EstimateTag'
 
 const STORAGE_KEY = 'titleOptimizer_v1'
 
@@ -382,6 +383,7 @@ export default function TitleOptimizer() {
                       ))}
                     </div>
                   )}
+                  <div style={{ marginTop: 8 }}><EstimateTag color={C.text3} /></div>
                 </div>
               </div>
             </div>
@@ -405,6 +407,7 @@ export default function TitleOptimizer() {
                     Competition = how many top videos already target it &nbsp;·&nbsp;
                     Score = opportunity (high volume + low competition)
                   </p>
+                  <div style={{ marginTop: 6 }}><EstimateTag color={C.text3} /></div>
                 </div>
               </div>
 
@@ -522,9 +525,10 @@ export default function TitleOptimizer() {
           {result.suggestions?.length > 0 && (
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '22px 24px', marginBottom: 16, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>AI-Suggested Titles</p>
-              <p style={{ fontSize: 12, color: C.text3, marginBottom: 16 }}>
+              <p style={{ fontSize: 12, color: C.text3, marginBottom: 8 }}>
                 3 psychological hooks, each built from the gap in your competitor landscape. Click to copy.
               </p>
+              <div style={{ marginBottom: 16 }}><EstimateTag color={C.text3} /></div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {result.suggestions.map((s, i) => {
                   const hookMeta = {
@@ -589,6 +593,7 @@ export default function TitleOptimizer() {
                   : ''}{' '}
                 Score uses the same 8 criteria as your title.
               </p>
+              <div style={{ marginBottom: 12 }}><EstimateTag color={C.text3} /></div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {result.top_videos.map((v, i) => {
                   const sc = v.seo_score

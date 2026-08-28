@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
+import EstimateTag from '../components/EstimateTag'
 
 // ─── persistence ──────────────────────────────────────────────────────────────
 const LS_KEY = 'ytgrowth_tracked_competitors'
@@ -860,6 +861,9 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
           ))}
         </div>
       )}
+      {hasKpi && cs != null && (
+        <div style={{ marginTop: -12 }}><EstimateTag color={D.text3} /></div>
+      )}
 
       {/* ─── 2. Top videos to study ─────────────────────────────────────────
            Up-to-5 thumbnail grid, click to YouTube. The "why it worked"
@@ -1195,6 +1199,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                     letterSpacing: '0.03em', textTransform: 'uppercase' }}>
                     Avg title length
                   </p>
+                  <div style={{ marginTop: 4 }}><EstimateTag color={D.text3} /></div>
                   {capDelta !== 0 && (
                     <p style={{ fontSize: 11, fontWeight: 600, color: deltaCol, marginTop: 3 }}>
                       {overCap ? '▲' : '▼'} {Math.abs(capDelta)} {overCap ? 'over' : 'under'} YT cap

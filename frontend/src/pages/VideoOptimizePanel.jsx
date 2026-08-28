@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import EstimateTag from '../components/EstimateTag'
 
 const API = ''
 
@@ -601,6 +602,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                   <span style={{ fontSize: 14, fontWeight: 600, color: titleResult.score >= 75 ? C.green : titleResult.score >= 50 ? C.amber : C.red }}>
                     {titleResult.score >= 75 ? 'Strong' : titleResult.score >= 50 ? 'Needs work' : 'Weak'}
                   </span>
+                  <EstimateTag color={C.text3} />
                   {titleResult.primary_phrase && (
                     <span style={{ fontSize: 12, color: C.blue, background: C.blueBg, padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: `1px solid ${C.blueBdr}` }}>
                       {titleResult.primary_phrase}
@@ -757,6 +759,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                   <div style={{ marginBottom: 10 }}>
                     <ScoreBar score={a.description.score} label="Quality score" />
                   </div>
+                  <div style={{ marginBottom: 8 }}><EstimateTag color={C.text3} /></div>
                   <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{a.description.verdict}</p>
                 </div>
 
@@ -834,6 +837,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                   <div style={{ marginBottom: 10 }}>
                     <ScoreBar score={a.thumbnail.score} label="Visual score" />
                   </div>
+                  <div style={{ marginBottom: 8 }}><EstimateTag color={C.text3} /></div>
                   <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{a.thumbnail.verdict}</p>
                 </div>
 

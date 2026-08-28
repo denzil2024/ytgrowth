@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { isChannelBrain } from '../brandHost'
 import { useCheckoutAction } from '../checkout'
 import UpsellGate from '../components/UpsellGate'
+import EstimateTag from '../components/EstimateTag'
 
 // Editorial app fonts, page-scoped. Cormorant = display H1 + big numbers,
 // Barlow = body/UI, Barlow Condensed = labels/buttons. Mirrors SeoOptimizer.
@@ -203,6 +204,7 @@ function ReportBody({ rd, isLatest }) {
         <MetricCard label="Avg Retention"  value={retVal}   metric={m.avgRetention} unit="%" valueColor={retColor} />
         <MetricCard label="Channel Score"  value={scoreVal} metric={m.channelScore} isScore valueColor={scoreColor} />
       </div>
+      <div style={{ marginTop: -10, marginBottom: hasBody ? 18 : 0 }}><EstimateTag color={C.text3} /></div>
 
       {/* Weekly summary, normal body weight (no bold walls of text) */}
       {rd.weeklySummary && (
@@ -412,6 +414,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           <MetricCard label="Avg Retention"  value={retVal}   valueColor={retColor} />
           <MetricCard label="Channel Score"  value={scoreVal} valueColor={scoreColor} />
         </div>
+        <div style={{ marginTop: -22, marginBottom: 22 }}><EstimateTag color={C.text3} /></div>
 
         {/* Gate with inline blurred preview (mock report tease), handled
             by UpsellGate's previewContent prop. Same visual as before,

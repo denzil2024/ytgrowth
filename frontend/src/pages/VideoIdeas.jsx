@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { isChannelBrain, supportEmail } from '../brandHost'
 import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import EstimateTag from '../components/EstimateTag'
 
 // Editorial app fonts, page-scoped. Cormorant Garamond = display H1 + big
 // numbers, Barlow = body/UI, Barlow Condensed = labels/buttons. Mirrors
@@ -429,6 +430,10 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
           />
         </div>
+
+        {!done && (
+          <div style={{ marginTop: -6, marginBottom: 10 }}><EstimateTag color={C.text3} /></div>
+        )}
 
         {/* ── Title (single bold line). 17/700 to anchor the card as the
             hero element, slightly larger than Feed cards (which are 15-16)
@@ -863,6 +868,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           </p>
           <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f1f1f6', border: `1px solid ${C.border}`, borderRadius: 0, padding: '2px 8px' }}>10 ranked</span>
         </div>
+        <div style={{ marginBottom: 10 }}><EstimateTag color={C.text3} /></div>
         {[
           ['My First 10K Subs · The 3 Things That Worked',           92],
           ['I Posted Daily for 30 Days, Honest Results',                      87],
