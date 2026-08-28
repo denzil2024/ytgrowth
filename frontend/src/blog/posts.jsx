@@ -8909,6 +8909,7 @@ Free studio checklist: https://yoursite.com/checklist
     title: "YouTube Data Studies: Every Study We've Published So Far",
     excerpt: "Every original YouTube data study we've published, all measured from our own tracked-channel data, not a survey or a guess. What's live, what's queued next, and how the data behind each one is collected.",
     date: '2026-08-22',
+    updated: '2026-08-28',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-data-studies-cover.jpg',
     coverAlt: 'A creator standing before a wall covered in printed pages of channel analytics, charts, tables, and sticky notes pinned up side by side, viewed from behind',
@@ -8916,9 +8917,9 @@ Free studio checklist: https://yoursite.com/checklist
     readTime: '4 min read',
     content: () => (
       <>
-        <p>We have published two original YouTube data studies so far, both measured from our own tracked-channel data instead of a survey or a guess: how long the typical upload runs by niche, and whether title length changes how a video performs. <strong>Five more are already queued.</strong></p>
+        <p>This page tracks every original YouTube data study we publish, all measured from our own tracked-channel data instead of a survey or a guess. The table below is the current list. It grows as each study ships, so treat it as the live source rather than a fixed count.</p>
 
-        <p>Every study on this page follows the same rule before it gets written: if a competitor without our database could publish the same article, we do not write it. Below is what has shipped, what is measured next, and how the underlying data gets collected.</p>
+        <p>Every study here follows the same rule before it gets written: if a competitor without our database could publish the same article, we do not write it. Below is what has shipped, what is measured next, and how the underlying data gets collected.</p>
 
         <h2>Published</h2>
 
@@ -8941,16 +8942,24 @@ Free studio checklist: https://yoursite.com/checklist
               <td>28,947 videos, 707 channels</td>
               <td>Correlation of <strong>0.0046</strong> between title length and performance, negligible in every niche tested.</td>
             </tr>
+            <tr>
+              <td><a href="/blog/best-time-to-post">Best Time to Post, by Niche</a></td>
+              <td>35,466 videos, 974 channels</td>
+              <td>Pooled hour/weekday effect is nearly flat (<strong>0.167 spread</strong>), but per niche it is real, up to <strong>4.8x</strong> between a niche's best and worst hour.</td>
+            </tr>
+            <tr>
+              <td><a href="/blog/best-time-to-post">Upload Cadence vs. Growth</a></td>
+              <td>747 channels</td>
+              <td>No pooled relationship between upload frequency and growth. Per niche it flips: cooking, education, fitness, and music favor uploading more, gaming and tech do not.</td>
+            </tr>
           </tbody>
         </table>
 
         <h2>Coming Next</h2>
 
-        <p>Five more studies are queued from the same dataset, none published yet:</p>
+        <p>More studies are queued from the same dataset, none published yet:</p>
 
         <ul>
-          <li><strong>When Top Creators Really Upload: Best Time to Post, Measured.</strong> Real publish timestamps by niche and channel size, replacing guesswork with a measured answer.</li>
-          <li><strong>How Often Successful Channels Upload vs. Stalled Ones.</strong> Upload cadence against channel size and growth.</li>
           <li><strong>How Fast Views Come In: The First 30 Days of a YouTube Video.</strong> A real per-video growth curve from weekly view snapshots, not a single upload-day count.</li>
           <li><strong>Do Shorts Grow Faster Than Long-Form, or Just Get Posted More?</strong> Early-view velocity by format, not adoption share.</li>
           <li><strong>Engagement Rate by Niche: Which Categories Get the Most Likes and Comments Per View.</strong> Likes and comments measured against views, by category.</li>
@@ -8969,7 +8978,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>That data accumulates whether or not an article is being written from it. <strong>A study either clears a real data floor, 30 channels and 500 videos minimum, or it does not get published</strong>, and every figure here states its real sample size rather than a rounded estimate.</p>
 
-        <h2>Five More Studies Are Already Queued</h2>
+        <h2>More Studies Are Already Queued</h2>
 
         <p>This page gets longer as each one ships, not rewritten. Check back, or follow any individual study, they link back here and to each other as the list grows.</p>
       </>
