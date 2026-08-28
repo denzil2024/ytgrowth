@@ -8989,7 +8989,7 @@ Free studio checklist: https://yoursite.com/checklist
     date: '2026-08-28',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-view-growth-curve-cover.jpg',
-    coverAlt: 'A creator reviewing a YouTube Studio analytics graph on a laptop, tracking a video\'s view count climb over its first days',
+    coverAlt: 'A creator on his couch in the morning, coffee in one hand and phone in the other, checking his video\'s view count',
     author: 'Denzil',
     readTime: '9 min read',
     faqs: [
