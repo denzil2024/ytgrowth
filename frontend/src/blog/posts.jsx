@@ -5062,9 +5062,9 @@ export const posts = [
   {
     slug: 'best-time-to-post',
     title: 'The Best Time to Post on YouTube in 2026 (and Why Your Own Data Beats Any Chart)',
-    excerpt: 'The best times to post videos and Shorts, how often to upload by content type and channel stage, plus the one thing every other guide buries: how to read your own YouTube Analytics to find the time that beats every generic chart.',
+    excerpt: 'The best times to post videos and Shorts, real per-niche numbers from 35,466 tracked videos, why every generic guide gives you a different answer, plus how to read your own YouTube Analytics to find the time that beats every chart, including this one.',
     date: '2026-06-14',
-    updated: '2026-07-13',
+    updated: '2026-08-26',
     category: CATEGORIES.growth,
     cover: '/blog/best-time-to-post-cover.jpg',
     author: 'Denzil',
@@ -5080,6 +5080,8 @@ export const posts = [
       { q: 'Will taking a break hurt my YouTube channel?', a: 'Not permanently, if the break stays under roughly six months. Expect a temporary dip in impressions since the algorithm has less recent activity to draw on, but it recovers once you resume a predictable schedule. The real risk is not the break itself, it is going quiet with no signal, so a community post letting viewers know you will be back keeps the algorithm and audience from writing the channel off.' },
       { q: 'Does posting time matter for YouTube Shorts?', a: 'Less than it does for long-form. Shorts surface through the Shorts feed over days rather than landing mostly on subscribers in the first hour, so the exact time matters less. Midday and evening windows still give the initial push a small boost, but for Shorts, daily consistency does more for you than perfect timing.' },
       { q: "Should I use YouTube's scheduler?", a: 'Yes. The scheduler lets you publish into your audience\'s active window even when you are not at your desk, which is the whole point of timing. Finish and upload the video early, set the publish time to land just ahead of your peak, and let YouTube release it automatically. It is free and built into the studio.' },
+      { q: 'Is there really a universal best time to post on YouTube?', a: 'No. Pooled across 35,466 tracked videos and every niche, the best hour beats the worst by only 0.167 on our median multiplier, an 11% swing, and the best weekday beats the worst by just 0.039, close to flat. A single universal window barely exists. What does exist is a strong per-niche effect that gets averaged away the moment you blend niches together, which is why generic guides all disagree with each other.' },
+      { q: "What's the best time to post for my niche?", a: 'Check the per-niche table above, measured in UTC from real tracked uploads, not a guess. Finance (1 AM), cooking (4 AM), sports (10 PM), and entertainment (6 AM) show the strongest swings between their best and worst hour, over 1.5x. Gaming, music, and fitness move less but still favor a specific window. Convert the UTC hour to your audience\'s timezone before applying it.' },
     ],
     content: () => (
       <>
@@ -5161,19 +5163,51 @@ export const posts = [
 
         <p>Live content is the exception that proves the rule: a premiere or stream needs people present in the moment, so evenings and weekend afternoons, when your audience is free to show up live, beat the weekday-afternoon window that works for on-demand videos. Community posts, which live in the subscriptions feed, do best first thing in the morning and again in the evening, the two times people check their feeds.</p>
 
-        <h2>The Best Times by Niche</h2>
+        <h2>The Best Times by Niche, Measured</h2>
 
-        <p>Your niche shifts the window more than the day of the week does, because it changes who your audience is and when their day has a gap in it. Use these as adjustments on top of the tables above.</p>
+        <p>We pulled <strong>35,466 tracked videos across 974 channels</strong> and measured each video's views-per-day against that same channel's own median, so a small channel and a large channel count equally. Then we grouped by publish hour, in UTC, within each niche.</p>
 
-        <ul>
-          <li><strong>Education and tutorials.</strong> Weekday mornings and lunchtime, when students and professionals are studying or taking a break to learn something. Sunday evening also performs as people prepare for the week.</li>
-          <li><strong>Gaming.</strong> Evenings and weekends, with Friday and Saturday nights the strongest, matching when players have time to watch and play.</li>
-          <li><strong>Music.</strong> Friday is new-music day across the industry, paired with evening release windows when people are out or unwinding.</li>
-          <li><strong>Fitness and wellness.</strong> Early mornings (5 AM to 8 AM) catch the workout crowd, with a second window in the early evening.</li>
-          <li><strong>Podcasts.</strong> Early weekday mornings line up with the commute, when long-form audio gets pressed play and left running.</li>
-          <li><strong>Kids and family.</strong> Weekend mornings and the after-school window (3 PM to 6 PM) on weekdays.</li>
-          <li><strong>Business and B2B.</strong> Weekday business hours, Tuesday through Thursday, when the audience is at a desk and in a work mindset.</li>
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Best hour (UTC)</th>
+              <th>Median multiplier</th>
+              <th>Videos measured</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Finance</strong></td><td>1 AM</td><td>x3.267</td><td>1,229</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>4 AM</td><td>x2.713</td><td>2,353</td></tr>
+            <tr><td><strong>Sports</strong></td><td>10 PM</td><td>x1.994</td><td>1,395</td></tr>
+            <tr><td><strong>Entertainment</strong></td><td>6 AM</td><td>x1.955</td><td>1,243</td></tr>
+            <tr><td><strong>Education</strong></td><td>7 PM</td><td>x1.787</td><td>1,601</td></tr>
+            <tr><td><strong>Tech</strong></td><td>12 AM</td><td>x1.457</td><td>3,682</td></tr>
+            <tr><td><strong>Travel</strong></td><td>8 AM</td><td>x1.444</td><td>2,283</td></tr>
+            <tr><td><strong>News</strong></td><td>2 AM</td><td>x1.429</td><td>5,291</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>10 AM</td><td>x1.294</td><td>1,903</td></tr>
+            <tr><td><strong>Music</strong></td><td>2 AM</td><td>x1.285</td><td>2,864</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>8 PM</td><td>x1.164</td><td>2,922</td></tr>
+          </tbody>
+        </table>
+
+        <p>The multiplier is how much better a video does at that hour than the same channel's typical video, so gaming's x1.164 means an 8 PM upload runs 16% above that channel's own normal, not 16% above another channel's. Finance, cooking, sports, and entertainment show the strongest swings, north of 1.5x between best and worst hour. Gaming, music, and fitness are steadier, the hour still matters, just less.</p>
+
+        <p>Three niches with thinner samples, <strong>vlogs, beauty, and comedy</strong>, clear the study's 500-video floor but not by much, and their per-hour buckets run smaller. Treat their numbers as a starting point rather than a settled answer until more data accumulates.</p>
+
+        <p>All hours are UTC, the timestamp YouTube's own API reports, not a guessed local time. Convert to your audience's timezone before applying a number from this table.</p>
+
+        <h2>Why Every Guide Gives You a Different Answer</h2>
+
+        <p>Read three "best time to post" guides and you will get three different windows. That is not noise, and it is not one guide being wrong. It is what happens when you average across niches.</p>
+
+        <p>Pooled across every niche in our dataset, hour of day barely moves anything: the best hour beats the worst by a multiplier of 0.167, an 11% swing at most. Weekday moves even less, a 0.039 spread between the best and worst day, close to flat. If that were the whole story, timing would be close to irrelevant.</p>
+
+        <p>But inside a single niche, the swing is real. Finance alone has a 2.585 spread between its best and worst hour, cooking 2.226, entertainment 1.547. Blend finance, cooking, and eleven other niches into one "best time to post" number, and those large, opposite-shaped effects cancel out into the near-nothing you see in the pooled figure.</p>
+
+        <p>Every generic guide that reports one universal window is averaging across niches whose actual best hours do not agree with each other, then presenting the flattened result as if it applies to everyone.</p>
+
+        <p>The practical takeaway: a single universal best time to post barely exists. A best time to post for your specific niche does, and it can be a large effect. Use the table above, not the pooled average, unless your content genuinely straddles multiple niches. This is the same tracked-channel dataset behind <a href="/blog/youtube-title-length">our title-length study</a>, where a different variable, title length, turned out to have almost no effect at all once measured directly.</p>
 
         <h2>The Best Times by Region</h2>
 
@@ -5385,6 +5419,14 @@ export const posts = [
         <h3>Should I use YouTube's scheduler?</h3>
 
         <p>Yes. The scheduler lets you publish into your audience's active window even when you are not at your desk, which is the whole point of timing. Finish and upload the video early, set the publish time to land just ahead of your peak, and let YouTube release it automatically. It is free and built into the studio.</p>
+
+        <h3>Is there really a universal best time to post on YouTube?</h3>
+
+        <p>No. Pooled across 35,466 tracked videos and every niche, the best hour beats the worst by only 0.167 on our median multiplier, an 11% swing, and the best weekday beats the worst by just 0.039, close to flat. A single universal window barely exists. What does exist is a strong per-niche effect that gets averaged away the moment you blend niches together, which is why generic guides all disagree with each other.</p>
+
+        <h3>What's the best time to post for my niche?</h3>
+
+        <p>Check the per-niche table above, measured in UTC from real tracked uploads, not a guess. Finance (1 AM), cooking (4 AM), sports (10 PM), and entertainment (6 AM) show the strongest swings between their best and worst hour, over 1.5x. Gaming, music, and fitness move less but still favor a specific window. Convert the UTC hour to your audience's timezone before applying it.</p>
 
         <h2>Post for Your Audience, Not the Average</h2>
 

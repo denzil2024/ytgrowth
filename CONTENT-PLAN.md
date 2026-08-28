@@ -21,8 +21,7 @@ Last updated: 2026-08-22
 
 **Ready now, no blockers:**
 
-3. **Best time to post, measured** — **NEXT**
-   Source: `channel_videos.published_at`, 0 quota. Upgrades `/blog/best-time-to-post`, the site's highest-impression page.
+3. ~~Best time to post, measured~~ — upgraded 2026-08-26, real per-niche table + mechanism section replaces guessed advice on `/blog/best-time-to-post`
 4. **Upload cadence: successful channels vs. stalled ones**
    Source: same pull as #3, do back to back.
 5. **How fast views come in: the first 30 days of a YouTube video**
