@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
+import EstimateTag from '../../components/EstimateTag'
 
 /* ─── Free SEO tool: YouTube Channel Stats Checker ────────────────────────
    /tools/youtube-channel-stats-checker. Targets "youtube channel stats",
@@ -197,10 +198,13 @@ function Eyebrow({ children, center }) {
 }
 
 /* ── Stat tile ─────────────────────────────────────────────────────────── */
-function StatTile({ label, value, sub }) {
+function StatTile({ label, value, sub, estimated }) {
   return (
     <div style={{ background: 'var(--yte-surface)', padding: '22px 24px' }}>
-      <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--yte-muted)', marginBottom: 14 }}>{label}</p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+        <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--yte-muted)' }}>{label}</p>
+        {estimated && <EstimateTag color="var(--yte-muted)" />}
+      </div>
       <p style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 400, letterSpacing: '-0.6px', color: 'var(--yte-ink)', lineHeight: 1 }}>{value}</p>
       {sub && <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', fontWeight: 400, marginTop: 10, lineHeight: 1.5 }}>{sub}</p>}
     </div>
@@ -409,11 +413,13 @@ export default function YoutubeChannelStatsChecker() {
                 label="Videos"
                 value={fmtNum(ch.video_count)}
                 sub={uploadsPerMonth != null ? `~${uploadsPerMonth} uploads / month recently` : 'Total uploads'}
+                estimated={uploadsPerMonth != null}
               />
               <StatTile
                 label="Avg views / video"
                 value={fmtNum(avgViews)}
                 sub={lastUploadAt ? `Last upload ${fmtPublished(lastUploadAt)}` : null}
+                estimated
               />
             </div>
 
