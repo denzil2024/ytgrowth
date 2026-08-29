@@ -3227,6 +3227,7 @@ export const posts = [
       { q: 'Is it better to post Shorts or long-form on YouTube?', a: '<strong>Depends on your niche, not on the format itself.</strong> An 18,000-channel study found mixing both helped fitness, business, education, and food channels grow 31 to 41 percent faster, while gaming and large entertainment channels did far better staying long-form-only. Check the niche breakdown above before assuming either format is the universal answer.' },
       { q: 'Can I get monetized on YouTube with just Shorts?', a: '<strong>Yes</strong>, Shorts have their own eligibility route separate from the standard path. Shorts watch time does not count toward the 4,000 public watch hours long-form monetization requires, but 10 million valid public Shorts views in 90 days qualifies for the full Partner Program, or 3 million for the lower fan-funding tier.' },
       { q: 'How much does YouTube pay per 1,000 views on Shorts?', a: '<strong>Roughly $0.03 to $0.10 per 1,000 views</strong> through the revenue-pool model, a gap of 30 to 100 times below long-form ad rates. A Short\'s financial job is almost never its own revenue, it is feeding watch time toward the long-form videos that pay, covered in full in the Shorts pay breakdown and RPM guide linked above.' },
+      { q: 'What are the downsides of YouTube Shorts?', a: '<strong>Three real ones, none of them algorithmic.</strong> Audience composition: a viral off-niche Short imports subscribers who never watch your long-form videos. Opportunity cost: the hours spent scripting and editing Shorts are hours not spent on long-form quality. And the pay gap: Shorts earn 30 to 100 times less per 1,000 views than long-form ads, so a channel that shifts too much output to Shorts can grow its numbers while shrinking its revenue.' },
     ],
     content: () => (
       <>
@@ -3403,6 +3404,10 @@ export const posts = [
         <h3>How much does YouTube pay per 1,000 views on Shorts?</h3>
 
         <p><strong>Roughly $0.03 to $0.10 per 1,000 views</strong> through the revenue-pool model, a gap of 30 to 100 times below long-form ad rates. A Short's financial job is almost never its own revenue, it is feeding watch time toward the long-form videos that pay, covered in full in the Shorts pay breakdown and RPM guide linked above.</p>
+
+        <h3>What are the downsides of YouTube Shorts?</h3>
+
+        <p><strong>Three real ones, none of them algorithmic.</strong> Audience composition: a viral off-niche Short imports subscribers who never watch your long-form videos. Opportunity cost: the hours spent scripting and editing Shorts are hours not spent on long-form quality. And the pay gap: Shorts earn 30 to 100 times less per 1,000 views than long-form ads, so a channel that shifts too much output to Shorts can grow its numbers while shrinking its revenue.</p>
 
         <h2>Whether Shorts Help You Comes Down to Audience Overlap</h2>
 
