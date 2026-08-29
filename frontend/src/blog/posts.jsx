@@ -1087,7 +1087,7 @@ export const posts = [
 
         <p>That gap is the whole problem with published video-length advice. <strong>Almost every "ideal length" figure in circulation is an average</strong>, and an average quietly absorbs every multi-hour livestream VOD sitting in a channel's uploads feed. The number comes out inflated, nobody checks it against the median, and the advice built on top of it points creators at a runtime almost nobody in their niche is producing.</p>
 
-        <p>We have our own upload data, so we ran the real figures instead: <strong>30,360 long-form videos across 14 niches</strong>, every one published since January 2026, pulled from channels we track weekly. Below is every niche's median and average side by side, which niches have the most misleading statistics, and where the 8-minute monetization line falls for each one.</p>
+        <p>We have our own upload data, part of <a href="/blog/youtube-data-studies">our data studies</a>, so we ran the real figures instead: <strong>30,360 long-form videos across 14 niches</strong>, every one published since January 2026, pulled from channels we track weekly. Below is every niche's median and average side by side, which niches have the most misleading statistics, and where the 8-minute monetization line falls for each one.</p>
 
         <h2>What We Measured</h2>
 
@@ -1310,8 +1310,6 @@ export const posts = [
         <p>The figures circulating in most video-length advice are not wrong because anyone lied. They are wrong because averages absorb outliers silently, and <strong>checking them against a median takes a step almost nobody takes</strong>. Education's real typical video is a quarter of its published average, and news is close to the same ratio.</p>
 
         <p><strong>The fix is not a better guess at a universal number.</strong> It is asking which niche the figure describes and whether a median sits behind it, before letting any statistic decide how long your next video runs.</p>
-
-        <p>This is one of several studies we run from the same tracked-channel data. See <a href="/blog/youtube-data-studies">every YouTube data study we've published</a> for the rest.</p>
       </>
     ),
   },
@@ -3233,7 +3231,7 @@ export const posts = [
       <>
         <p>YouTube says Shorts cannot hurt your long-form videos. A peer-reviewed analysis of 250 large channels measured <strong>real long-form view declines</strong> after those channels started posting Shorts. And an 18,000-channel dataset found the true answer flips completely depending on your niche. <strong>All three of those things are true at the same time</strong>, which is why every article that picks just one leaves creators more confused than before.</p>
 
-        <p>This guide reconciles them. What YouTube's own documentation and executives say, what the independent data measured, why both sides are right, and the specific signals in your own analytics that tell you which side of the data your channel sits on. By the end, the "should I post Shorts?" question has an answer you can defend with evidence, not a vibe.</p>
+        <p>This guide reconciles them. What YouTube's own documentation and executives say, what the independent data measured, what <a href="/blog/youtube-data-studies">our own data studies</a> add on top, why both sides are right, and the specific signals in your own analytics that tell you which side of the data your channel sits on. By the end, the "should I post Shorts?" question has an answer you can defend with evidence, not a vibe.</p>
 
         <h2>What YouTube Officially Says</h2>
 
@@ -5092,7 +5090,7 @@ export const posts = [
       <>
         <p><strong>Quick answer: post Thursday through Sunday, afternoon to evening.</strong> That is the safest default if you want one line and nothing else.</p>
 
-        <p>But there is a best time to post on YouTube, and there is a best time for <strong>your</strong> channel, and they are not the same thing. Every chart you have seen, including the ones in this guide, is a population average pulled from millions of channels. That average is a genuinely useful starting point when you have no data of your own, but the moment your channel has a few weeks of history, your own audience will tell you something more precise than any generic table ever could.</p>
+        <p>But there is a best time to post on YouTube, and there is a best time for <strong>your</strong> channel, and they are not the same thing. Every chart you have seen, including the ones in this guide, part of <a href="/blog/youtube-data-studies">our data studies</a>, is a population average pulled from millions of channels. That average is a genuinely useful starting point when you have no data of your own, but the moment your channel has a few weeks of history, your own audience will tell you something more precise than any generic table ever could.</p>
 
         <p>So here is the honest short version. For most channels, long-form videos do best on <strong>weekday afternoons (around 12 PM to 4 PM) and weekend mornings (around 9 AM to 11 AM)</strong>, with Thursday through Sunday outperforming the start of the week.</p>
 
@@ -8688,7 +8686,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>They cannot all be right.</p>
 
-        <p>So we tested it ourselves: <strong>28,947 videos across 707 channels</strong>, title length compared against a channel-and-age-normalized performance metric. We split the results into length groups, tested them across niches, and cross-tabbed title length against eight other title patterns.</p>
+        <p>So we tested it ourselves, part of <a href="/blog/youtube-data-studies">our data studies</a>: <strong>28,947 videos across 707 channels</strong>, title length compared against a channel-and-age-normalized performance metric. We split the results into length groups, tested them across niches, and cross-tabbed title length against eight other title patterns.</p>
 
         <p>The answer is remarkably clear: <strong>there is no relationship</strong>. We measured a correlation of r = 0.0046 between title length and performance, on a scale where 0 means no relationship and 1 means a perfect one. In other words, title length has essentially no predictive power.</p>
 
@@ -8902,8 +8900,6 @@ Free studio checklist: https://yoursite.com/checklist
         </ul>
 
         <p>Four studies argued about which length wins. They were arguing about noise. Our own <a href="/blog/youtube-title">title formula guide</a> is being corrected to point here instead of the unsourced "eight words" figure it previously carried.</p>
-
-        <p>This is one of several studies we run from the same tracked-channel data. See <a href="/blog/youtube-data-studies">every YouTube data study we've published</a> for the rest.</p>
       </>
     ),
   },
@@ -8912,7 +8908,7 @@ Free studio checklist: https://yoursite.com/checklist
     title: "YouTube Data Studies: Every Study We've Published So Far",
     excerpt: "Every original YouTube data study we've published, all measured from our own tracked-channel data, not a survey or a guess. What's live, what's queued next, and how the data behind each one is collected.",
     date: '2026-08-22',
-    updated: '2026-08-28',
+    updated: '2026-08-29',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-data-studies-cover.jpg',
     coverAlt: 'A creator standing before a wall covered in printed pages of channel analytics, charts, tables, and sticky notes pinned up side by side, viewed from behind',
@@ -8955,21 +8951,22 @@ Free studio checklist: https://yoursite.com/checklist
               <td>18,423 videos, 837 channels</td>
               <td><strong>94.5%</strong> of a video's day-30 views arrive by day 7. Front-loading varies by niche (news 98.9%, fitness/beauty 82%) and Shorts front-load slightly faster than long-form.</td>
             </tr>
+            <tr>
+              <td><a href="/blog/youtube-engagement-rate">What Is a Good YouTube Engagement Rate? 49,802-Video Study</a></td>
+              <td>49,802 videos, 3 dimensions (niche, format, subscriber tier)</td>
+              <td>Long-form engagement rate ranges <strong>2.03x</strong> by niche. Long-form beats Shorts in every niche measured, by <strong>1.4x</strong>, the reverse of a competitor claim. Subscriber count matters less than niche.</td>
+            </tr>
           </tbody>
         </table>
 
         <h2>Coming Next</h2>
 
-        <p>More studies are queued from the same dataset, none published yet:</p>
-
-        <ul>
-          <li><strong>Engagement Rate by Niche: Which Categories Get the Most Likes and Comments Per View.</strong> Likes and comments measured against views, by category.</li>
-        </ul>
+        <p>More studies are planned from the same dataset. None have a confirmed title yet, check back on this page for what ships next.</p>
 
         <CtaCard
           to="/features/channel-audit"
           title="We measure your channel the same way"
-          sub="Channel Audit runs the same kind of real data check on your own channel: length, cadence, and format mix against what is working in your niche right now. Free to try."
+          sub="Channel Audit runs the same kind of real data check on your own channel: length, cadence, and format mix against what is working in your niche right now."
           button="Run a Channel Audit →"
         />
 
@@ -8988,27 +8985,29 @@ Free studio checklist: https://yoursite.com/checklist
   {
     slug: 'youtube-engagement-rate',
     title: 'What Is a Good YouTube Engagement Rate? Our Findings from a 49,802-Video Study',
-    excerpt: 'Engagement rate calculators give one universal benchmark. We measured (likes + comments) / views across 49,802 tracked videos and found a real 1.73x gap between the highest and lowest niche, gaming rewards engagement most, news the least.',
+    excerpt: 'Engagement rate benchmarks usually give one number. We measured (likes + comments) / views across 49,802 tracked videos, split by niche, by format, and by subscriber count, and found long-form beats Shorts in every niche, the opposite of what a widely cited competitor study claims.',
     date: '2026-08-29',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-engagement-rate-cover.jpg',
-    coverAlt: 'A creator checking likes and comments on a video in YouTube Studio on a tablet',
+    coverAlt: 'A creator smiling and replying to a comment on a tablet while sitting on a sunny balcony',
     author: 'Denzil',
-    readTime: '8 min read',
+    readTime: '10 min read',
     faqs: [
-      { q: 'What is a good engagement rate on YouTube?', a: 'It depends on your niche, not a universal number. Across <strong>49,802 tracked videos, the median engagement rate ((likes + comments) / views) ranges from 2.185% in news to 3.773% in gaming</strong>, a real 1.73x gap. Compare your own rate to your niche\'s median above, not to a single site-wide benchmark.' },
+      { q: 'What is a good engagement rate on YouTube?', a: 'It depends on your niche and format, not a universal number. Across <strong>49,802 tracked videos, long-form median engagement rate ((likes + comments) / views) ranges from 2.290% in news to 4.659% in beauty</strong>, a real 2.03x gap. Compare your own rate to your niche and format\'s median above, not to a single site-wide benchmark.' },
       { q: 'How is YouTube engagement rate calculated?', a: 'The standard formula is <strong>(likes + comments) / views</strong>, expressed as a percentage. Some calculators add shares, which YouTube does not expose publicly, so this study uses only likes and comments, the two metrics every tracked video has.' },
-      { q: 'What is a good like-to-view ratio on YouTube?', a: 'Likes alone (without comments) run lower than the combined engagement rate. Across the same tracked dataset, gaming and education videos see the most likes relative to views, news the fewest, following the same niche pattern as overall engagement rate. There is no fixed "good" ratio independent of niche.' },
+      { q: 'How much engagement rate is good on YouTube Shorts?', a: 'Lower than long-form in every niche we measured. <strong>Gaming Shorts lead at 3.613% median</strong>, with cooking lowest at 1.674%. Across every niche with enough data for both formats, long-form outperformed Shorts by a median of 1.4x, the reverse of a competitor claim that Shorts run 1.4x higher.' },
+      { q: 'Does engagement rate vary by subscriber count?', a: 'Yes, but less than niche does. Long-form median engagement rate runs from <strong>3.289% at the 10K-100K tier down to 2.359% at 5M+ subscribers</strong>, a real but gradual decline. Niche alone produces a bigger swing (2.03x) than subscriber tier does.' },
+      { q: 'What is a good like-to-view ratio on YouTube?', a: 'This study measures combined engagement rate, (likes + comments) / views, rather than likes in isolation. Comments make up a small share of total interactions in every niche, so <strong>the same niche and format tables above are a reliable stand-in for a pure like-to-view reading</strong>. There is no fixed ratio that counts as "good" independent of niche and format, the 2.03x niche gap and the 1.4x format gap both apply.' },
     ],
     content: () => (
       <>
-        <p>We pulled <strong>49,802 tracked videos with a real like count</strong> and measured engagement rate, (likes + comments) / views, per niche. <strong>The median ranges from 2.185% in news to 3.773% in gaming, a real 1.73x gap.</strong> There is no single "good" engagement rate that applies everywhere.</p>
+        <p>We pulled <strong>49,802 tracked videos with a real like count</strong> from <a href="/blog/youtube-data-studies">the same tracked-channel dataset behind our other studies</a>, and measured engagement rate, (likes + comments) / views, split three ways: by niche, by format, and by subscriber count. <strong>Long-form median engagement rate ranges from 2.290% in news to 4.659% in beauty, a real 2.03x gap.</strong> There is no single "good" engagement rate that applies everywhere.</p>
 
-        <p>Every engagement-rate calculator we checked gives one universal benchmark, or splits by subscriber count, never by niche. One competitor's own guide states outright that "no single average applies to every niche," then hands out a subscriber-tier benchmark anyway. Measured directly, niche explains more of the gap than channel size does.</p>
+        <p>One competitor study claims Shorts run 1.4x higher engagement than long-form. Measured directly across our own tracked channels, <strong>long-form beat Shorts in every niche with enough data for both, by almost exactly the same 1.4x, in the opposite direction.</strong></p>
 
-        <h2>Engagement Rate by Niche, Measured</h2>
+        <h2>Engagement Rate by Niche, Long-Form</h2>
 
-        <p>For each video, we used its latest snapshot with a real like count and computed (likes + comments) / views. Median, not mean, since a handful of viral videos in every niche pull the average up.</p>
+        <p>For each video, we used its latest snapshot with a real like count and computed (likes + comments) / views, long-form and Shorts kept separate. <strong>YouTube counts a Shorts view the moment playback starts, with no watch-time floor, since March 31, 2025</strong>, so pooling the two formats mixes two different definitions of a view into one number. Median, not mean, since a handful of viral videos in every niche pull the average up.</p>
 
         <table>
           <thead>
@@ -9020,28 +9019,70 @@ Free studio checklist: https://yoursite.com/checklist
             </tr>
           </thead>
           <tbody>
-            <tr><td><strong>Gaming</strong></td><td>3.773%</td><td>4.273%</td><td>3,703</td></tr>
-            <tr><td><strong>Education</strong></td><td>3.454%</td><td>4.215%</td><td>2,162</td></tr>
-            <tr><td><strong>Beauty</strong></td><td>3.429%</td><td>3.988%</td><td>1,863</td></tr>
-            <tr><td><strong>Finance</strong></td><td>3.257%</td><td>3.650%</td><td>1,677</td></tr>
-            <tr><td><strong>Travel</strong></td><td>3.076%</td><td>3.391%</td><td>3,124</td></tr>
-            <tr><td><strong>Tech</strong></td><td>2.864%</td><td>3.123%</td><td>4,745</td></tr>
-            <tr><td><strong>Music</strong></td><td>2.859%</td><td>3.626%</td><td>4,498</td></tr>
-            <tr><td><strong>Fitness</strong></td><td>2.651%</td><td>3.188%</td><td>3,518</td></tr>
-            <tr><td><strong>Cooking</strong></td><td>2.253%</td><td>2.462%</td><td>2,966</td></tr>
-            <tr><td><strong>News</strong></td><td>2.185%</td><td>3.201%</td><td>5,767</td></tr>
+            <tr><td><strong>Beauty</strong></td><td>4.659%</td><td>5.254%</td><td>974</td></tr>
+            <tr><td><strong>Education</strong></td><td>4.037%</td><td>4.694%</td><td>1,562</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>3.809%</td><td>4.217%</td><td>2,912</td></tr>
+            <tr><td><strong>Finance</strong></td><td>3.646%</td><td>4.051%</td><td>1,225</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>3.348%</td><td>4.018%</td><td>1,870</td></tr>
+            <tr><td><strong>Travel</strong></td><td>3.248%</td><td>3.614%</td><td>2,285</td></tr>
+            <tr><td><strong>Tech</strong></td><td>3.031%</td><td>3.304%</td><td>3,623</td></tr>
+            <tr><td><strong>Music</strong></td><td>2.887%</td><td>3.658%</td><td>2,823</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>2.467%</td><td>2.646%</td><td>2,315</td></tr>
+            <tr><td><strong>News</strong></td><td>2.290%</td><td>3.380%</td><td>5,049</td></tr>
           </tbody>
         </table>
 
-        <p>Four niches didn't clear this study's floor of 500 videos and 30 channels, sports, vlogs, entertainment, and comedy, and are left out rather than reported on a thin sample. "Uncategorized" channels are excluded too, they aren't a real niche.</p>
+        <p>Four niches didn't clear this study's floor of 500 videos and 30 channels for long-form, sports, vlogs, entertainment, and comedy, and are left out rather than reported from a thin sample. "Uncategorized" channels are excluded too, they aren't a real niche.</p>
 
-        <p><strong>News shows the widest gap between median and mean</strong> (2.185% vs 3.201%, a 1.47x spread), the largest of any niche in the table, meaning a small number of viral news videos are pulling its average up far more than its typical video would suggest. Cooking is the most consistent (2.253% vs 2.462%), its median and mean sit close together, so the benchmark is a fair description of a typical video, not just its outliers.</p>
+        <h2>Shorts Run Lower Than Long-Form in Every Niche</h2>
 
-        <h2>Why the Gap Exists</h2>
+        <p>Split by format, the direction is consistent across every niche with enough data for both. Long-form's median engagement rate beat Shorts.</p>
 
-        <p>Gaming and education both reward a specific kind of engagement: gaming audiences argue and react in comments, and education audiences ask follow-up questions. Both behaviors show up directly in the comment count half of the formula. News sits at the other end for the opposite reason, a news video is consumed for information, not conversation, so a large audience does not translate into a large comment count.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Shorts median</th>
+              <th>Long-form median</th>
+              <th>Long-form advantage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Beauty</strong></td><td>2.364%</td><td>4.659%</td><td>1.97x</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>2.006%</td><td>3.348%</td><td>1.67x</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>1.674%</td><td>2.467%</td><td>1.47x</td></tr>
+            <tr><td><strong>Tech</strong></td><td>2.268%</td><td>3.031%</td><td>1.34x</td></tr>
+            <tr><td><strong>Travel</strong></td><td>2.508%</td><td>3.248%</td><td>1.29x</td></tr>
+            <tr><td><strong>Music</strong></td><td>2.785%</td><td>2.887%</td><td>1.04x</td></tr>
+            <tr><td><strong>Gaming</strong></td><td>3.613%</td><td>3.809%</td><td>1.05x</td></tr>
+          </tbody>
+        </table>
 
-        <p>This is not a quality signal. A low engagement rate in news does not mean news channels make worse videos, it means the format itself does not invite the same reaction. <strong>Compare your engagement rate to your own niche's median, never to gaming's or education's, unless you make that kind of content.</strong></p>
+        <p><strong>Gaming Shorts are the standout exception at 3.613% median, well ahead of every other niche's Shorts number</strong> (next highest is music at 2.785%), and close enough to gaming's own long-form rate that format barely matters there. Beauty shows the widest gap, its Shorts audience engages at less than half the rate of its long-form audience.</p>
+
+        <p>The likely explanation for the overall pattern is how a Shorts view gets counted. A view registers on playback start, so a large share of Shorts "views" are people who scrolled past in under a second, never long enough to consider liking or commenting. <strong>A long-form view has already cleared a higher bar of intent before the like button is even a decision.</strong></p>
+
+        <h2>Subscriber Count Matters Less Than Niche</h2>
+
+        <p>Long-form engagement rate declines gradually as subscriber count grows, but the swing is smaller than the niche gap above.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Subscriber tier</th>
+              <th>Median engagement rate</th>
+              <th>Channels</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>10K to 100K</strong></td><td>3.289%</td><td>148</td></tr>
+            <tr><td><strong>100K to 1M</strong></td><td>3.106%</td><td>334</td></tr>
+            <tr><td><strong>1M to 5M</strong></td><td>2.866%</td><td>272</td></tr>
+            <tr><td><strong>5M+</strong></td><td>2.359%</td><td>129</td></tr>
+          </tbody>
+        </table>
+
+        <p>The under-10K tier is left out of this table on purpose. It cleared the video floor but rested on only 65 channels, and its mean ran to 10.206% against a 3.030% median, a single-outlier-sized gap far wider than any other tier, not a reliable number. <strong>The size of the effect is what matters. Engagement rate drops about 28% from the smallest reliable tier to 5M+, versus a 2.03x swing across niches.</strong> Niche is the bigger lever.</p>
 
         <CtaCard
           to="/features/channel-audit"
@@ -9052,27 +9093,59 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>How to Read Your Own Number</h2>
 
-        <p>Find your niche in the table above and compare your own engagement rate to its median, not the site-wide average and not another niche's number. If you sit well below your niche's median, the two behaviors known to move the metric are asking a direct question in the video (comments) and giving viewers a clear reason to react (likes), rather than assuming the algorithm is suppressing you.</p>
+        <ul>
+          <li><strong>Compare against the right median, not a general average.</strong> Find your niche and format in the tables above and check your own rate against that specific number, not a site-wide figure and not another niche's.</li>
+          <li><strong>If you sit well below it, look at behavior, not the algorithm.</strong> The two levers known to move this metric are asking a direct question (drives comments) and giving viewers a clear reason to react (drives likes), rather than assuming you are being suppressed.</li>
+          <li><strong>Judge a trend, not a single video.</strong> Track your last 10 to 20 uploads. A single viral outlier or an unusually quiet upload will not move a real trend, and the under-10K subscriber tier above shows exactly how much one outlier can distort a single reading.</li>
+          <li><strong>Views, not subscribers, is the right denominator.</strong> A subscriber may never see a given upload, and a non-subscriber can discover one through search or suggested. Dividing by subscribers answers a different question, how loyal is my existing audience, not how engaging was this specific video to whoever watched it.</li>
+        </ul>
 
-        <p>Track the trend over your last 10 to 20 uploads rather than judging any single video. A single viral outlier or an unusually quiet upload will not move a real trend, and this study's own median-vs-mean gap in news is a direct example of how much a handful of outliers can distort a single-video read.</p>
+        <h2>What Moves Engagement Rate</h2>
+
+        <p>Two behaviors are behind almost every real difference this study found. <strong>Comments respond to a direct question or an unresolved disagreement</strong>, which is why gaming and education, both comment-heavy formats by nature, sit near the top of the long-form table.</p>
+
+        <p><strong>Likes respond to a clear, low-effort reason to react</strong>, a strong opinion stated plainly, a moment worth agreeing with, a result worth reacting to. Videos that stay neutral throughout give a viewer nothing to press a button about, regardless of niche.</p>
+
+        <blockquote><strong>Pro tip:</strong> end the video with an actual question, not a generic "let me know below." A specific, answerable question is the closest thing to a controllable lever this study found, it directly targets the comment half of the formula, the half most tied to gaming and education's lead in the table above.</blockquote>
+
+        <p><strong>What does not move it: posting more Shorts to chase a higher rate.</strong> This study's own data shows the opposite, Shorts run behind long-form in every niche measured. Shorts is a discovery and reach tool. Long-form is what builds engagement.</p>
+
+        <h2>Reading Mistakes to Avoid</h2>
+
+        <ul>
+          <li><strong>Comparing your rate to another niche's number.</strong> A 2.5% rate is a strong result in news and a weak one in beauty, the number means nothing without its niche attached.</li>
+          <li><strong>Comparing a Short's rate to a long-form video's rate.</strong> The two formats count views differently since March 2025, and this study shows they land in different ranges even within the same niche.</li>
+          <li><strong>Trusting the mean over the median on a small sample.</strong> The under-10K subscriber tier above is the clearest example in this dataset, one viral video was enough to more than triple the average.</li>
+          <li><strong>Judging one video instead of a trend.</strong> A single upload can miss its niche's typical rate by a wide margin without anything being wrong with the channel.</li>
+        </ul>
+
+        <p>This metric matters to more than the creator checking their own number. <strong>Brands increasingly check engagement rate before paying for a <a href="/blog/youtube-sponsorships">sponsorship</a></strong>, since a channel with inflated subscribers and a low engagement rate is a weaker buy than the raw subscriber count suggests.</p>
 
         <h2>Frequently Asked Questions</h2>
 
         <h3>What is a good engagement rate on YouTube?</h3>
 
-        <p>It depends on your niche, not a universal number. Across <strong>49,802 tracked videos, the median engagement rate ((likes + comments) / views) ranges from 2.185% in news to 3.773% in gaming</strong>, a real 1.73x gap. Compare your own rate to your niche's median above, not to a single site-wide benchmark.</p>
+        <p>It depends on your niche and format, not a universal number. Across <strong>49,802 tracked videos, long-form median engagement rate ((likes + comments) / views) ranges from 2.290% in news to 4.659% in beauty</strong>, a real 2.03x gap. Compare your own rate to your niche and format's median above, not to a single site-wide benchmark.</p>
 
         <h3>How is YouTube engagement rate calculated?</h3>
 
         <p>The standard formula is <strong>(likes + comments) / views</strong>, expressed as a percentage. Some calculators add shares, which YouTube does not expose publicly, so this study uses only likes and comments, the two metrics every tracked video has.</p>
 
+        <h3>How much engagement rate is good on YouTube Shorts?</h3>
+
+        <p>Lower than long-form in every niche we measured. <strong>Gaming Shorts lead at 3.613% median</strong>, with cooking lowest at 1.674%. Across every niche with enough data for both formats, long-form outperformed Shorts by a median of 1.4x, the reverse of a competitor claim that Shorts run 1.4x higher.</p>
+
+        <h3>Does engagement rate vary by subscriber count?</h3>
+
+        <p>Yes, but less than niche does. Long-form median engagement rate runs from <strong>3.289% at the 10K-100K tier down to 2.359% at 5M+ subscribers</strong>, a real but gradual decline. Niche alone produces a bigger swing (2.03x) than subscriber tier does.</p>
+
         <h3>What is a good like-to-view ratio on YouTube?</h3>
 
-        <p>Likes alone (without comments) run lower than the combined engagement rate. Across the same tracked dataset, gaming and education videos see the most likes relative to views, news the fewest, following the same niche pattern as overall engagement rate. There is no fixed "good" ratio independent of niche.</p>
+        <p>This study measures combined engagement rate, (likes + comments) / views, rather than likes in isolation. Comments make up a small share of total interactions in every niche, so <strong>the same niche and format tables above are a reliable stand-in for a pure like-to-view reading</strong>. There is no fixed ratio that counts as "good" independent of niche and format, the 2.03x niche gap and the 1.4x format gap both apply.</p>
 
-        <h2>Your Own Niche Sets Your Real Benchmark</h2>
+        <h2>Niche Explains More Than Format or Size</h2>
 
-        <p>Engagement rate calculators that hand out one benchmark for every channel are measuring the wrong thing. The real question was never "is 3% good," it was always "is 3% good for what you make." Gaming and news sit 1.73x apart for reasons that have nothing to do with video quality and everything to do with what the format invites viewers to do. Judge your number against your own niche, and judge your own trend over many uploads, not one.</p>
+        <p>Every calculator that hands out one universal engagement-rate benchmark is measuring the wrong thing, and the ones that split by format alone are still missing the bigger lever. <strong>Niche produced a 2.03x swing in this data, format produced a 1.4x swing, and subscriber count produced a 28% swing</strong> between the tiers with enough data to trust. Judge your number against your own niche and format first, and use your own trend over many uploads, not a single video or a borrowed industry average.</p>
       </>
     ),
   },
@@ -9094,7 +9167,7 @@ Free studio checklist: https://yoursite.com/checklist
     ],
     content: () => (
       <>
-        <p>We pulled <strong>18,423 tracked videos across 837 channels</strong>, each with a real day-30 view observation, and measured what share of that total had already arrived by day 7 and day 14. <strong>94.5% of a video's day-30 views were already in by day 7. 97.6% by day 14.</strong></p>
+        <p>We pulled <strong>18,423 tracked videos across 837 channels</strong> from <a href="/blog/youtube-data-studies">our data studies</a>, each with a real day-30 view observation, and measured what share of that total had already arrived by day 7 and day 14. <strong>94.5% of a video's day-30 views were already in by day 7. 97.6% by day 14.</strong></p>
 
         <p>Every guide we checked describes the shape of a video's view timeline from memory, a boost in the first 24 hours, a dip, then a slow climb over weeks or months. <strong>None of them show the actual numbers behind that shape.</strong> One competitor guide claims a video needs "3 to 6 months to reach its full potential," sourced from personal experience, not measurement. <strong>Measured directly, that is not what happens for the typical video.</strong></p>
 
@@ -9192,7 +9265,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>Every video under 180 days old gets a views/likes/comments snapshot weekly, live since 2026-07-19. For each video we took the snapshot nearest day 7, day 14, and day 30 (within a 3-day tolerance of the target), and expressed the day-7 and day-14 counts as a share of the day-30 count.</p>
 
-        <p>Videos without a real snapshot near day 30 were excluded rather than estimated. <strong>18,423 videos across 837 channels</strong> cleared that bar. Category comes from <a href="/blog/youtube-data-studies">the same tracked-channel dataset</a> behind our other studies, and the same 30-video floor applies before any niche gets its own row.</p>
+        <p>Videos without a real snapshot near day 30 were excluded rather than estimated. <strong>18,423 videos across 837 channels</strong> cleared that bar. Category comes from the same tracked-channel dataset behind our other studies, and the same 30-video floor applies before any niche gets its own row.</p>
 
         <blockquote><strong>Quick update:</strong> YouTube changed how it counts a view on August 24, 2026, now counting as soon as playback starts rather than requiring a watch-duration threshold. Each historical snapshot reflects whichever rule was live on that date, so only the small slice of this cohort whose day-30 checkpoint fell in the days right around the change could see a marginal boost from the newer, looser counting bar. The bulk of the sample was snapshotted well before the change and is unaffected.</blockquote>
 
