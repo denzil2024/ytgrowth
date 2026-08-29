@@ -3223,16 +3223,10 @@ export const posts = [
     author: 'Denzil',
     readTime: '14 min read',
     faqs: [
-      { q: 'Do YouTube Shorts hurt long-form video performance?', a: 'Not algorithmically. YouTube evaluates each video individually, and its own documentation states that experimenting with formats will not inherently harm a channel. What can hurt is audience composition: Shorts that attract viewers with no interest in your long-form content add subscribers who never watch, and time spent producing Shorts is time not spent on long-form quality.' },
-      { q: 'Do Shorts subscribers watch long-form videos?', a: 'A minority do, and the overlap depends almost entirely on topic alignment. A viewer who subscribed off a viral, off-niche Short subscribed to that moment, not your channel. When your Shorts cover the same subjects as your long-form videos, YouTube\'s recommendation system can surface your long-form content to those viewers, a connection it has supported since 2022.' },
-      { q: 'Should I put Shorts on a separate channel?', a: 'YouTube\'s Director of Discovery Todd Beaupré gave the cleanest rule: same audience, same channel; different audience, different channel. If your Shorts serve the same viewers as your long-form videos, splitting them onto a second channel disconnects the cross-format recommendations that make Shorts useful. Separate channels only make sense when the audiences differ.' },
-      { q: 'How many Shorts should I post per week?', a: 'The largest public dataset on this question, an 18,000-channel study, found the best results when Shorts made up roughly 25 to 40 percent of uploads. That works out to one or two Shorts per week alongside regular long-form. Performance degraded when Shorts passed about 55 percent of output. Treat that as a starting range, not a law, and let your niche data override it.' },
-      { q: 'Do Shorts views count toward YouTube monetization?', a: 'Not toward the watch-hours path. Shorts watch time does not count toward the 4,000 public watch hours requirement. Shorts have their own eligibility route instead: 10 million valid public Shorts views in 90 days for the full Partner Program, or 3 million for the lower fan-funding tier. The two paths are separate, and mixing formats means you are progressing on both.' },
-      { q: 'Why did my Shorts views suddenly jump in 2025?', a: 'On March 31, 2025, YouTube changed how it counts Shorts views: a view now registers the moment a Short plays, instead of after a minimum watch time. Raw view counts typically run 20 to 30 percent higher under the new counting. The old, stricter metric still exists as "engaged views", and that is what monetization and Partner Program eligibility use.' },
-      { q: 'Can Shorts grow a new channel faster than long-form?', a: 'Usually yes, on the subscriber number. The Shorts feed does not depend on subscriber-based distribution, so a brand-new channel can reach a large audience immediately, while long-form channels typically build for months first. The catch is what those fast subscribers are worth: growth built only on Shorts produces an audience that is hard to convert to watch time and revenue later.' },
-      { q: 'What happens if I stop posting Shorts?', a: 'Nothing punitive. YouTube\'s growth team has directly debunked the "penalty box" myth: the algorithm does not punish channels for breaks or format changes, and each new video is evaluated on its own potential. If your Shorts experiment did not serve your channel, you can stop without damaging your long-form distribution.' },
-      { q: 'Which niches benefit most from mixing Shorts and long-form?', a: 'In the 18,000-channel data, fitness, business, education, and food channels that mixed formats grew 31 to 41 percent faster than long-form-only peers. Gaming and large entertainment channels showed the opposite pattern, with long-form-only channels far ahead. Niches where a quick tip naturally advertises a deeper video benefit most; niches where Shorts viewers just want clips benefit least.' },
-      { q: 'Is Shorts share still growing, or has it plateaued?', a: 'Depends on your niche. Tracking 103,130 uploads since January 2025, <strong>Shorts share is still rising in 9 of 13 measurable niches</strong>: gaming, fitness, entertainment, sports, comedy, music, vlogs, finance, and travel. It has already leveled off in tech, education, cooking, and beauty. If you are in one of the plateaued niches, chasing a higher Shorts ratio is not riding a wave, the ceiling for your audience is already close to where it is now.' },
+      { q: 'Do YouTube Shorts help your channel?', a: 'Not automatically, and not algorithmically hurt it either. YouTube evaluates each video individually, and its own documentation states that experimenting with formats will not inherently harm a channel. <strong>What decides the outcome is audience composition</strong>: Shorts that attract viewers with no interest in your long-form content add subscribers who never watch, while Shorts that share a topic with your long-form videos feed real viewers into them.' },
+      { q: 'Is it better to post Shorts or long-form on YouTube?', a: '<strong>Depends on your niche, not on the format itself.</strong> An 18,000-channel study found mixing both helped fitness, business, education, and food channels grow 31 to 41 percent faster, while gaming and large entertainment channels did far better staying long-form-only. Check the niche breakdown above before assuming either format is the universal answer.' },
+      { q: 'Can I get monetized on YouTube with just Shorts?', a: '<strong>Yes</strong>, Shorts have their own eligibility route separate from the standard path. Shorts watch time does not count toward the 4,000 public watch hours long-form monetization requires, but 10 million valid public Shorts views in 90 days qualifies for the full Partner Program, or 3 million for the lower fan-funding tier.' },
+      { q: 'How much does YouTube pay per 1,000 views on Shorts?', a: '<strong>Roughly $0.03 to $0.10 per 1,000 views</strong> through the revenue-pool model, a gap of 30 to 100 times below long-form ad rates. A Short\'s financial job is almost never its own revenue, it is feeding watch time toward the long-form videos that pay, covered in full in the Shorts pay breakdown and RPM guide linked above.' },
     ],
     content: () => (
       <>
@@ -3409,45 +3403,21 @@ export const posts = [
 
         <h2>Frequently Asked Questions</h2>
 
-        <h3>Do YouTube Shorts hurt long-form video performance?</h3>
+        <h3>Do YouTube Shorts help your channel?</h3>
 
-        <p><strong>Not algorithmically.</strong> YouTube evaluates each video individually, and its own documentation states that experimenting with formats will not inherently harm a channel. What can hurt is audience composition: Shorts that attract viewers with no interest in your long-form content add subscribers who never watch, and time spent producing Shorts is time not spent on long-form quality.</p>
+        <p>Not automatically, and not algorithmically hurt it either. YouTube evaluates each video individually, and its own documentation states that experimenting with formats will not inherently harm a channel. <strong>What decides the outcome is audience composition</strong>: Shorts that attract viewers with no interest in your long-form content add subscribers who never watch, while Shorts that share a topic with your long-form videos feed real viewers into them.</p>
 
-        <h3>Do Shorts subscribers watch long-form videos?</h3>
+        <h3>Is it better to post Shorts or long-form on YouTube?</h3>
 
-        <p><strong>A minority do</strong>, and the overlap depends almost entirely on topic alignment. A viewer who subscribed off a viral, off-niche Short subscribed to that moment, not your channel. When your Shorts cover the same subjects as your long-form videos, YouTube's recommendation system can surface your long-form content to those viewers, a connection it has supported since 2022.</p>
+        <p><strong>Depends on your niche, not on the format itself.</strong> An 18,000-channel study found mixing both helped fitness, business, education, and food channels grow 31 to 41 percent faster, while gaming and large entertainment channels did far better staying long-form-only. Check the niche breakdown above before assuming either format is the universal answer.</p>
 
-        <h3>Should I put Shorts on a separate channel?</h3>
+        <h3>Can I get monetized on YouTube with just Shorts?</h3>
 
-        <p>YouTube's Director of Discovery Todd Beaupré gave the cleanest rule: <strong>same audience, same channel; different audience, different channel</strong>. If your Shorts serve the same viewers as your long-form videos, splitting them onto a second channel disconnects the cross-format recommendations that make Shorts useful. Separate channels only make sense when the audiences differ.</p>
+        <p><strong>Yes</strong>, Shorts have their own eligibility route separate from the standard path. Shorts watch time does not count toward the 4,000 public watch hours long-form monetization requires, but 10 million valid public Shorts views in 90 days qualifies for the full Partner Program, or 3 million for the lower fan-funding tier.</p>
 
-        <h3>How many Shorts should I post per week?</h3>
+        <h3>How much does YouTube pay per 1,000 views on Shorts?</h3>
 
-        <p>The largest public dataset on this question, an 18,000-channel study, found the best results when Shorts made up roughly <strong>25 to 40 percent of uploads</strong>. That works out to one or two Shorts per week alongside regular long-form. Performance degraded when Shorts passed about 55 percent of output. Treat that as a starting range, not a law, and let your niche data override it.</p>
-
-        <h3>Do Shorts views count toward YouTube monetization?</h3>
-
-        <p><strong>Not toward the watch-hours path.</strong> Shorts watch time does not count toward the 4,000 public watch hours requirement. Shorts have their own eligibility route instead: 10 million valid public Shorts views in 90 days for the full Partner Program, or 3 million for the lower fan-funding tier. The two paths are separate, and mixing formats means you are progressing on both.</p>
-
-        <h3>Why did my Shorts views suddenly jump in 2025?</h3>
-
-        <p>On <strong>March 31, 2025</strong>, YouTube changed how it counts Shorts views: a view now registers the moment a Short plays, instead of after a minimum watch time. Raw view counts typically run 20 to 30 percent higher under the new counting. The old, stricter metric still exists as "engaged views", and that is what monetization and Partner Program eligibility use.</p>
-
-        <h3>Can Shorts grow a new channel faster than long-form?</h3>
-
-        <p><strong>Usually yes, on the subscriber number.</strong> The Shorts feed does not depend on subscriber-based distribution, so a brand-new channel can reach a large audience immediately, while long-form channels typically build for months first. The catch is what those fast subscribers are worth: growth built only on Shorts produces an audience that is hard to convert to watch time and revenue later.</p>
-
-        <h3>What happens if I stop posting Shorts?</h3>
-
-        <p><strong>Nothing punitive.</strong> YouTube's growth team has directly debunked the "penalty box" myth: the algorithm does not punish channels for breaks or format changes, and each new video is evaluated on its own potential. If your Shorts experiment did not serve your channel, you can stop without damaging your long-form distribution.</p>
-
-        <h3>Which niches benefit most from mixing Shorts and long-form?</h3>
-
-        <p>In the 18,000-channel data, <strong>fitness, business, education, and food</strong> channels that mixed formats grew 31 to 41 percent faster than long-form-only peers. Gaming and large entertainment channels showed the opposite pattern, with long-form-only channels far ahead. Niches where a quick tip naturally advertises a deeper video benefit most; niches where Shorts viewers just want clips benefit least.</p>
-
-        <h3>Is Shorts share still growing, or has it plateaued?</h3>
-
-        <p>Depends on your niche. Tracking 103,130 uploads since January 2025, <strong>Shorts share is still rising in 9 of 13 measurable niches</strong>: gaming, fitness, entertainment, sports, comedy, music, vlogs, finance, and travel. It has already leveled off in tech, education, cooking, and beauty. If you are in one of the plateaued niches, chasing a higher Shorts ratio is not riding a wave, the ceiling for your audience is already close to where it is now.</p>
+        <p><strong>Roughly $0.03 to $0.10 per 1,000 views</strong> through the revenue-pool model, a gap of 30 to 100 times below long-form ad rates. A Short's financial job is almost never its own revenue, it is feeding watch time toward the long-form videos that pay, covered in full in the Shorts pay breakdown and RPM guide linked above.</p>
 
         <h2>Different Feeds, Same Channel</h2>
 
