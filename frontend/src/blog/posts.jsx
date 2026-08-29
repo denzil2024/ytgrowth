@@ -3404,7 +3404,7 @@ export const posts = [
 
         <p><strong>Roughly $0.03 to $0.10 per 1,000 views</strong> through the revenue-pool model, a gap of 30 to 100 times below long-form ad rates. A Short's financial job is almost never its own revenue, it is feeding watch time toward the long-form videos that pay, covered in full in the Shorts pay breakdown and RPM guide linked above.</p>
 
-        <h2>The Real Question Is Audience, Not Format</h2>
+        <h2>Audience Overlap Decides Whether Shorts Help You</h2>
 
         <p>The Shorts question stays scary only as long as it stays vague. Made specific, it dissolves into parts with known answers. The algorithm holds no grudge. The real risks are audience mismatch and your own production hours. Your niche largely predicts whether mixing pays, and <strong>your own Analytics can tell you which case yours is</strong> within an afternoon of honest reading.</p>
 
