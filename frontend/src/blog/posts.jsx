@@ -8986,6 +8986,97 @@ Free studio checklist: https://yoursite.com/checklist
     ),
   },
   {
+    slug: 'youtube-engagement-rate',
+    title: 'What Is a Good YouTube Engagement Rate? Our Findings from a 49,802-Video Study',
+    excerpt: 'Engagement rate calculators give one universal benchmark. We measured (likes + comments) / views across 49,802 tracked videos and found a real 1.73x gap between the highest and lowest niche, gaming rewards engagement most, news the least.',
+    date: '2026-08-29',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-engagement-rate-cover.jpg',
+    coverAlt: 'A creator checking likes and comments on a video in YouTube Studio on a tablet',
+    author: 'Denzil',
+    readTime: '8 min read',
+    faqs: [
+      { q: 'What is a good engagement rate on YouTube?', a: 'It depends on your niche, not a universal number. Across <strong>49,802 tracked videos, the median engagement rate ((likes + comments) / views) ranges from 2.185% in news to 3.773% in gaming</strong>, a real 1.73x gap. Compare your own rate to your niche\'s median above, not to a single site-wide benchmark.' },
+      { q: 'How is YouTube engagement rate calculated?', a: 'The standard formula is <strong>(likes + comments) / views</strong>, expressed as a percentage. Some calculators add shares, which YouTube does not expose publicly, so this study uses only likes and comments, the two metrics every tracked video has.' },
+      { q: 'What is a good like-to-view ratio on YouTube?', a: 'Likes alone (without comments) run lower than the combined engagement rate. Across the same tracked dataset, gaming and education videos see the most likes relative to views, news the fewest, following the same niche pattern as overall engagement rate. There is no fixed "good" ratio independent of niche.' },
+    ],
+    content: () => (
+      <>
+        <p>We pulled <strong>49,802 tracked videos with a real like count</strong> and measured engagement rate, (likes + comments) / views, per niche. <strong>The median ranges from 2.185% in news to 3.773% in gaming, a real 1.73x gap.</strong> There is no single "good" engagement rate that applies everywhere.</p>
+
+        <p>Every engagement-rate calculator we checked gives one universal benchmark, or splits by subscriber count, never by niche. One competitor's own guide states outright that "no single average applies to every niche," then hands out a subscriber-tier benchmark anyway. Measured directly, niche explains more of the gap than channel size does.</p>
+
+        <h2>Engagement Rate by Niche, Measured</h2>
+
+        <p>For each video, we used its latest snapshot with a real like count and computed (likes + comments) / views. Median, not mean, since a handful of viral videos in every niche pull the average up.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Median engagement rate</th>
+              <th>Mean</th>
+              <th>Videos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Gaming</strong></td><td>3.773%</td><td>4.273%</td><td>3,703</td></tr>
+            <tr><td><strong>Education</strong></td><td>3.454%</td><td>4.215%</td><td>2,162</td></tr>
+            <tr><td><strong>Beauty</strong></td><td>3.429%</td><td>3.988%</td><td>1,863</td></tr>
+            <tr><td><strong>Finance</strong></td><td>3.257%</td><td>3.650%</td><td>1,677</td></tr>
+            <tr><td><strong>Travel</strong></td><td>3.076%</td><td>3.391%</td><td>3,124</td></tr>
+            <tr><td><strong>Tech</strong></td><td>2.864%</td><td>3.123%</td><td>4,745</td></tr>
+            <tr><td><strong>Music</strong></td><td>2.859%</td><td>3.626%</td><td>4,498</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>2.651%</td><td>3.188%</td><td>3,518</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>2.253%</td><td>2.462%</td><td>2,966</td></tr>
+            <tr><td><strong>News</strong></td><td>2.185%</td><td>3.201%</td><td>5,767</td></tr>
+          </tbody>
+        </table>
+
+        <p>Four niches didn't clear this study's floor of 500 videos and 30 channels, sports, vlogs, entertainment, and comedy, and are left out rather than reported on a thin sample. "Uncategorized" channels are excluded too, they aren't a real niche.</p>
+
+        <p><strong>News shows the widest gap between median and mean</strong> (2.185% vs 3.201%, a 1.47x spread), the largest of any niche in the table, meaning a small number of viral news videos are pulling its average up far more than its typical video would suggest. Cooking is the most consistent (2.253% vs 2.462%), its median and mean sit close together, so the benchmark is a fair description of a typical video, not just its outliers.</p>
+
+        <h2>Why the Gap Exists</h2>
+
+        <p>Gaming and education both reward a specific kind of engagement: gaming audiences argue and react in comments, and education audiences ask follow-up questions. Both behaviors show up directly in the comment count half of the formula. News sits at the other end for the opposite reason, a news video is consumed for information, not conversation, so a large audience does not translate into a large comment count.</p>
+
+        <p>This is not a quality signal. A low engagement rate in news does not mean news channels make worse videos, it means the format itself does not invite the same reaction. <strong>Compare your engagement rate to your own niche's median, never to gaming's or education's, unless you make that kind of content.</strong></p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="See how your engagement rate compares to channels like yours"
+          sub="A Channel Audit reads your own upload history and benchmarks your real numbers against your niche, not a generic site-wide average."
+          button="Run a Channel Audit →"
+        />
+
+        <h2>How to Read Your Own Number</h2>
+
+        <p>Find your niche in the table above and compare your own engagement rate to its median, not the site-wide average and not another niche's number. If you sit well below your niche's median, the two behaviors known to move the metric are asking a direct question in the video (comments) and giving viewers a clear reason to react (likes), rather than assuming the algorithm is suppressing you.</p>
+
+        <p>Track the trend over your last 10 to 20 uploads rather than judging any single video. A single viral outlier or an unusually quiet upload will not move a real trend, and this study's own median-vs-mean gap in news is a direct example of how much a handful of outliers can distort a single-video read.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What is a good engagement rate on YouTube?</h3>
+
+        <p>It depends on your niche, not a universal number. Across <strong>49,802 tracked videos, the median engagement rate ((likes + comments) / views) ranges from 2.185% in news to 3.773% in gaming</strong>, a real 1.73x gap. Compare your own rate to your niche's median above, not to a single site-wide benchmark.</p>
+
+        <h3>How is YouTube engagement rate calculated?</h3>
+
+        <p>The standard formula is <strong>(likes + comments) / views</strong>, expressed as a percentage. Some calculators add shares, which YouTube does not expose publicly, so this study uses only likes and comments, the two metrics every tracked video has.</p>
+
+        <h3>What is a good like-to-view ratio on YouTube?</h3>
+
+        <p>Likes alone (without comments) run lower than the combined engagement rate. Across the same tracked dataset, gaming and education videos see the most likes relative to views, news the fewest, following the same niche pattern as overall engagement rate. There is no fixed "good" ratio independent of niche.</p>
+
+        <h2>Your Own Niche Sets Your Real Benchmark</h2>
+
+        <p>Engagement rate calculators that hand out one benchmark for every channel are measuring the wrong thing. The real question was never "is 3% good," it was always "is 3% good for what you make." Gaming and news sit 1.73x apart for reasons that have nothing to do with video quality and everything to do with what the format invites viewers to do. Judge your number against your own niche, and judge your own trend over many uploads, not one.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-view-growth-curve',
     title: 'How Long Does It Take for a YouTube Video to Get Views? A Study of 18,423 Tracked Videos',
     excerpt: "Every generic guide describes a video's view timeline from memory, a boost, a dip, a slow climb over months. We measured it directly across 18,423 tracked videos. 94.5% of a video's 30-day view total arrives within the first week.",
