@@ -3244,7 +3244,7 @@ export const posts = [
 
         <p>Read the documentation closely, though, and YouTube concedes the crack in its own reassurance. Any perceived effect from a new format "is typically due to <strong>how viewers react to the new content</strong>, rather than a direct algorithmic penalty", and cross-format engagement, it admits, is not common viewer behavior. Keep that sentence in mind. It is doing a lot of quiet work, and the rest of this guide is about what lives inside it.</p>
 
-        <h2>The Data That Keeps the Fear Alive</h2>
+        <h2>The Study Behind the "Shorts Killed My Channel" Fear</h2>
 
         <p>If the algorithm holds no grudge, why does every creator forum overflow with "Shorts killed my channel" threads? Because something real is happening, and one of the few rigorous attempts to measure it found it. A <a href="https://arxiv.org/html/2402.18208v1" target="_blank" rel="noopener">2024 academic study</a> analyzed <strong>250 creators with over 100,000 subscribers</strong>, comparing their long-form performance before and after each channel's first Short.</p>
 
@@ -3291,26 +3291,11 @@ export const posts = [
 
         <p>The largest public dataset on the mixing question is an <a href="https://air.io/en/audience-growth/do-youtube-shorts-help-your-long-form-videos-grow-data-from-18000-channels" target="_blank" rel="noopener">18,000-channel study</a> tracking English-language channels from March 2025 to March 2026 across 11 niches, comparing median subscriber growth for channels mixing Shorts against long-form-only peers. Its verdict is the most useful sentence in this debate, <strong>whether Shorts help is mostly a property of your niche, not of Shorts</strong>.</p>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Effect of mixing</th>
-              <th>Niche</th>
-              <th>Gap vs long-form-only</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Helps</strong></td><td>Fitness</td><td>+41% subscriber growth</td></tr>
-            <tr><td><strong>Helps</strong></td><td>Business</td><td>+39%</td></tr>
-            <tr><td><strong>Helps</strong></td><td>Education</td><td>+37%</td></tr>
-            <tr><td><strong>Helps</strong></td><td>Food and cooking</td><td>+31%</td></tr>
-            <tr><td><strong>Neutral</strong></td><td>Travel, DIY</td><td>Under 1% difference</td></tr>
-            <tr><td><strong>Hurts</strong></td><td>Science and tech</td><td>-16%</td></tr>
-            <tr><td><strong>Hurts</strong></td><td>Beauty</td><td>-45 to -52%</td></tr>
-            <tr><td><strong>Hurts</strong></td><td>Gaming</td><td>-85%</td></tr>
-            <tr><td><strong>Hurts</strong></td><td>Entertainment at scale (10M+ views)</td><td>-90%</td></tr>
-          </tbody>
-        </table>
+        <ul>
+          <li><strong>Helps:</strong> fitness (+41% subscriber growth), business (+39%), education (+37%), food and cooking (+31%).</li>
+          <li><strong>Neutral:</strong> travel, DIY, under 1% difference either way.</li>
+          <li><strong>Hurts:</strong> science and tech (-16%), beauty (-45 to -52%), gaming (-85%), entertainment at scale, 10M+ views (-90%).</li>
+        </ul>
 
         <p>The pattern is not random. The niches where mixing wins are the ones where <strong>a quick tip is a natural advertisement for a deeper version</strong>: a 30-second form fix sells the 12-minute routine, a one-minute tax insight sells the full breakdown. The niches where mixing loses are the ones where the Shorts audience wants clips as the end product. A gaming Shorts viewer wanted the highlight, not a 25-minute playthrough, and the data says those audiences barely touch.</p>
 
@@ -3320,7 +3305,7 @@ export const posts = [
           to="/features/outliers"
           title="Find what is breaking out in your niche before you commit hours to it"
           sub="Outliers surfaces the videos and Shorts overperforming their channel's normal reach in your niche, so you can test topics with a Short before spending a week on the long-form version."
-          button="Try Outliers free →"
+          button="Try Outliers →"
         />
 
         <h2>Same Channel or a Separate Shorts Channel?</h2>
@@ -3419,7 +3404,7 @@ export const posts = [
 
         <p><strong>Roughly $0.03 to $0.10 per 1,000 views</strong> through the revenue-pool model, a gap of 30 to 100 times below long-form ad rates. A Short's financial job is almost never its own revenue, it is feeding watch time toward the long-form videos that pay, covered in full in the Shorts pay breakdown and RPM guide linked above.</p>
 
-        <h2>Different Feeds, Same Channel</h2>
+        <h2>The Real Question Is Audience, Not Format</h2>
 
         <p>The Shorts question stays scary only as long as it stays vague. Made specific, it dissolves into parts with known answers. The algorithm holds no grudge. The real risks are audience mismatch and your own production hours. Your niche largely predicts whether mixing pays, and <strong>your own Analytics can tell you which case yours is</strong> within an afternoon of honest reading.</p>
 
