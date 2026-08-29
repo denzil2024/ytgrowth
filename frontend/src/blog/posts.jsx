@@ -3225,7 +3225,7 @@ export const posts = [
     faqs: [
       { q: 'Do YouTube Shorts hurt long-form video performance?', a: 'Not algorithmically. YouTube evaluates each video individually, and its own documentation states that experimenting with formats will not inherently harm a channel. What can hurt is audience composition: Shorts that attract viewers with no interest in your long-form content add subscribers who never watch, and time spent producing Shorts is time not spent on long-form quality.' },
       { q: 'Do Shorts subscribers watch long-form videos?', a: 'A minority do, and the overlap depends almost entirely on topic alignment. A viewer who subscribed off a viral, off-niche Short subscribed to that moment, not your channel. When your Shorts cover the same subjects as your long-form videos, YouTube\'s recommendation system can surface your long-form content to those viewers, a connection it has supported since 2022.' },
-      { q: 'Should I put Shorts on a separate channel?', a: 'YouTube\'s Director of Discovery Todd Beaupré gave the cleanest rule: same audience, same channel; different audience, different channel. If your Shorts serve the same viewers as your long-form videos, splitting them onto a second channel disconnects the cross-format recommendations that make Shorts useful. Separate channels only make sense when the audiences genuinely differ.' },
+      { q: 'Should I put Shorts on a separate channel?', a: 'YouTube\'s Director of Discovery Todd Beaupré gave the cleanest rule: same audience, same channel; different audience, different channel. If your Shorts serve the same viewers as your long-form videos, splitting them onto a second channel disconnects the cross-format recommendations that make Shorts useful. Separate channels only make sense when the audiences differ.' },
       { q: 'How many Shorts should I post per week?', a: 'The largest public dataset on this question, an 18,000-channel study, found the best results when Shorts made up roughly 25 to 40 percent of uploads. That works out to one or two Shorts per week alongside regular long-form. Performance degraded when Shorts passed about 55 percent of output. Treat that as a starting range, not a law, and let your niche data override it.' },
       { q: 'Do Shorts views count toward YouTube monetization?', a: 'Not toward the watch-hours path. Shorts watch time does not count toward the 4,000 public watch hours requirement. Shorts have their own eligibility route instead: 10 million valid public Shorts views in 90 days for the full Partner Program, or 3 million for the lower fan-funding tier. The two paths are separate, and mixing formats means you are progressing on both.' },
       { q: 'Why did my Shorts views suddenly jump in 2025?', a: 'On March 31, 2025, YouTube changed how it counts Shorts views: a view now registers the moment a Short plays, instead of after a minimum watch time. Raw view counts typically run 20 to 30 percent higher under the new counting. The old, stricter metric still exists as "engaged views", and that is what monetization and Partner Program eligibility use.' },
@@ -3246,7 +3246,7 @@ export const posts = [
 
         <p>The people who run the system say the same thing in plainer language. Rene Ritchie, YouTube's creator liaison: <strong>"We don't look at channel or creator for those sorts of things. We look at video and topic."</strong> Todd Beaupré, who leads YouTube's growth and discovery team, put it in terms of second chances: "If your last video wasn't so great and your next video is great, we want to realize the potential of each video." A flopped Short does not follow your next upload around.</p>
 
-        <p>There is a genuinely useful mechanism buried in the official position, announced by Beaupré back in 2022: <strong>recommendations consider a channel's recent long-form videos when serving viewers who watch that channel in the Shorts feed</strong>. Your Shorts audience is a doorway the algorithm itself tries to walk viewers through. That connection is also the strongest argument against splitting formats onto separate channels, covered further down.</p>
+        <p>There is a useful mechanism buried in the official position, announced by Beaupré back in 2022: <strong>recommendations consider a channel's recent long-form videos when serving viewers who watch that channel in the Shorts feed</strong>. Your Shorts audience is a doorway the algorithm itself tries to walk viewers through. That connection is also the strongest argument against splitting formats onto separate channels, covered further down.</p>
 
         <p>Read the documentation closely, though, and YouTube concedes the crack in its own reassurance. Any perceived effect from a new format "is typically due to <strong>how viewers react to the new content</strong>, rather than a direct algorithmic penalty", and cross-format engagement, it admits, is not common viewer behavior. Keep that sentence in mind. It is doing a lot of quiet work, and the rest of this guide is about what lives inside it.</p>
 
@@ -3268,7 +3268,7 @@ export const posts = [
 
         <p><strong>Second: opportunity cost.</strong> Production estimates from creator-tool studies put a decent Short at <strong>30 minutes to 2 hours</strong> and a solo long-form video at <strong>4 to 8 hours</strong>. A weekly Shorts habit funded by time carved out of long-form scripting and editing shows up as a quality dip in the videos that pay your bills, and no algorithm needed to be involved.</p>
 
-        <p><strong>Third: the platform-level attention shift.</strong> The Shorts feed competes with long-form for the same daily minutes across all of YouTube. That is the effect the 250-channel study most plausibly measured, it hit the biggest entertainment channels hardest, and it happens whether or not you personally post Shorts. Sitting out does not exempt you; it just means other channels' Shorts absorb the minutes.</p>
+        <p>Third, the platform-level attention shift. <strong>The Shorts feed competes with long-form for the same daily minutes across all of YouTube.</strong> That is the effect the 250-channel study most plausibly measured, it hit the biggest entertainment channels hardest, and it happens whether or not you personally post Shorts. Sitting out does not exempt you; it just means other channels' Shorts absorb the minutes.</p>
 
         <p>What is NOT a real mechanism: the penalty box. Beaupré's team has debunked it directly, there is no averaging of channel performance and no punishment for experiments or breaks. If your last three Shorts flopped, <strong>your next long-form video starts from zero prejudice</strong>.</p>
 
@@ -3291,11 +3291,11 @@ export const posts = [
           <li><strong>Your own output mix.</strong> Count hours, not uploads. If long-form scripting or editing time fell to fund Shorts, the opportunity-cost mechanism is active regardless of what any chart says.</li>
         </ul>
 
-        <p>One calibration warning before you read any Shorts chart: on <strong>March 31, 2025, YouTube changed what counts as a Shorts view</strong>. A view now registers the moment a Short plays, where it previously required a minimum watch time, and raw counts run roughly 20 to 30 percent higher under the new method. The old, stricter metric survives as <strong>engaged views</strong>, and that is the number monetization uses. Judge your Shorts by engaged views, or a mediocre Short will look like a hit.</p>
+        <p>One calibration warning before you read any Shorts chart. <strong>On March 31, 2025, YouTube changed what counts as a Shorts view.</strong> A view now registers the moment a Short plays, where it previously required a minimum watch time, and raw counts run roughly 20 to 30 percent higher under the new method. The old, stricter metric survives as <strong>engaged views</strong>, and that is the number monetization uses. Judge your Shorts by engaged views, or a mediocre Short will look like a hit.</p>
 
         <h2>The Answer by Niche</h2>
 
-        <p>The largest public dataset on the mixing question is an <a href="https://air.io/en/audience-growth/do-youtube-shorts-help-your-long-form-videos-grow-data-from-18000-channels" target="_blank" rel="noopener">18,000-channel study</a> tracking English-language channels from March 2025 to March 2026 across 11 niches, comparing median subscriber growth for channels mixing Shorts against long-form-only peers. Its verdict is the most useful sentence in this debate: <strong>whether Shorts help is mostly a property of your niche, not of Shorts</strong>.</p>
+        <p>The largest public dataset on the mixing question is an <a href="https://air.io/en/audience-growth/do-youtube-shorts-help-your-long-form-videos-grow-data-from-18000-channels" target="_blank" rel="noopener">18,000-channel study</a> tracking English-language channels from March 2025 to March 2026 across 11 niches, comparing median subscriber growth for channels mixing Shorts against long-form-only peers. Its verdict is the most useful sentence in this debate, <strong>whether Shorts help is mostly a property of your niche, not of Shorts</strong>.</p>
 
         <table>
           <thead>
@@ -3335,7 +3335,7 @@ export const posts = [
 
         <p><strong>Stay on one channel</strong> when your Shorts and long-form serve the same viewers. The cross-format recommendation mechanism only operates within a channel: YouTube cannot walk a Shorts viewer to your long-form video if it lives somewhere else. Splitting same-audience formats does not protect anything. It disconnects the exact pipe that makes Shorts strategically worth posting.</p>
 
-        <p><strong>Split channels</strong> when the audiences genuinely differ: a different language, a different niche, or a clips operation cutting down a podcast for a highlights audience that will never watch full episodes. That last one is the classic legitimate split, and it is about serving two real audiences separately, not quarantining a format. If you cannot name who the second channel serves that the first does not, you do not need the second channel.</p>
+        <p>Split channels when the audiences differ, a different language, a different niche, or a clips operation cutting down a podcast for a highlights audience that will never watch full episodes. <strong>That last one is the classic legitimate split</strong>, and it is about serving two real audiences separately, not quarantining a format. If you cannot name who the second channel serves that the first does not, you do not need the second channel.</p>
 
         <h2>The Shorts-to-Long-Form Funnel</h2>
 
@@ -3351,7 +3351,7 @@ export const posts = [
 
         <p>The standard direction is long-form to Shorts: cut the single strongest 30 to 60 seconds out of an existing video, reframe it vertically so faces and text survive the crop, and let it advertise the original. The mistake is treating this as a volume game and clipping every video into a dozen fragments.</p>
 
-        <p><strong>One genuinely self-contained moment outperforms ten context-free clips</strong>, and a channel drowning its uploads feed in near-identical fragments reads as exactly <a href="/blog/youtube-ai-policy">the mass-produced pattern</a> YouTube has spent 2026 filtering out.</p>
+        <p>A single self-contained moment outperforms ten context-free clips, and a channel drowning its uploads feed in near-identical fragments reads as exactly <a href="/blog/youtube-ai-policy">the mass-produced pattern</a> <strong>YouTube has spent 2026 filtering out</strong>.</p>
 
         <p>The underused direction is the reverse: <strong>Shorts as cheap validation for long-form bets</strong>. A Short costs a fraction of a long-form video, which makes it <strong>the cheapest test YouTube offers</strong>. Post the 45-second version of an idea; if it clearly overperforms your Shorts baseline (on engaged views, not raw views), the demand for the full version is proven before you spend the 4 to 8 hours making it. Your best-performing Shorts are a commissioning meeting your audience already voted in.</p>
 
@@ -3419,7 +3419,7 @@ export const posts = [
 
         <h3>Should I put Shorts on a separate channel?</h3>
 
-        <p>YouTube's Director of Discovery Todd Beaupré gave the cleanest rule: <strong>same audience, same channel; different audience, different channel</strong>. If your Shorts serve the same viewers as your long-form videos, splitting them onto a second channel disconnects the cross-format recommendations that make Shorts useful. Separate channels only make sense when the audiences genuinely differ.</p>
+        <p>YouTube's Director of Discovery Todd Beaupré gave the cleanest rule: <strong>same audience, same channel; different audience, different channel</strong>. If your Shorts serve the same viewers as your long-form videos, splitting them onto a second channel disconnects the cross-format recommendations that make Shorts useful. Separate channels only make sense when the audiences differ.</p>
 
         <h3>How many Shorts should I post per week?</h3>
 
@@ -3453,7 +3453,7 @@ export const posts = [
 
         <p>The Shorts question stays scary only as long as it stays vague. Made specific, it dissolves into parts with known answers. The algorithm holds no grudge. The real risks are audience mismatch and your own production hours. Your niche largely predicts whether mixing pays, and <strong>your own Analytics can tell you which case yours is</strong> within an afternoon of honest reading.</p>
 
-        <p>So the answer to "do Shorts hurt your channel" is the answer to a better question: do your Shorts serve the same audience your long-form serves? If yes, they are the cheapest top of your funnel and the cheapest test lab YouTube offers, all on one channel where the algorithm can connect them. If no, the problem was never the format. <strong>It was making content for an audience you did not want.</strong></p>
+        <p>So the answer to "do Shorts hurt your channel" is the answer to a better question. Do your Shorts serve the same audience your long-form serves? If yes, they are the cheapest top of your funnel and the cheapest test lab YouTube offers, all on one channel where the algorithm can connect them. If no, the problem was never the format. <strong>It was making content for an audience you did not want.</strong></p>
       </>
     ),
   },
