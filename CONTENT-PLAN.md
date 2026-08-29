@@ -19,8 +19,8 @@ Last updated: 2026-08-28
 2. ~~Title length~~ — published 2026-08-21
 3. ~~Best time to post, measured~~ — upgraded 2026-08-26 into `/blog/best-time-to-post`
 4. ~~Upload cadence: growing vs. stalled channels~~ — upgraded 2026-08-28 into `/blog/best-time-to-post`
-5. View growth curve: how fast views come in, first 30 days — in progress, see `research/view-growth-curve.md`
-6. Shorts vs. long-form: which front-loads views faster — combined with #5, same research file
+5. ~~View growth curve: how fast views come in, first 30 days~~ — published 2026-08-28 as `/blog/youtube-view-growth-curve`
+6. ~~Shorts vs. long-form: which front-loads views faster~~ — combined into #5's article
 7. Engagement rate by niche — blocked, needs likeCount coverage check
 8. Shorts share over time, by niche, month-by-month trend not a snapshot
 9. ~~Posting time vs. performance~~ — superseded by #3
