@@ -3232,6 +3232,7 @@ export const posts = [
       { q: 'Can Shorts grow a new channel faster than long-form?', a: 'Usually yes, on the subscriber number. The Shorts feed does not depend on subscriber-based distribution, so a brand-new channel can reach a large audience immediately, while long-form channels typically build for months first. The catch is what those fast subscribers are worth: growth built only on Shorts produces an audience that is hard to convert to watch time and revenue later.' },
       { q: 'What happens if I stop posting Shorts?', a: 'Nothing punitive. YouTube\'s growth team has directly debunked the "penalty box" myth: the algorithm does not punish channels for breaks or format changes, and each new video is evaluated on its own potential. If your Shorts experiment did not serve your channel, you can stop without damaging your long-form distribution.' },
       { q: 'Which niches benefit most from mixing Shorts and long-form?', a: 'In the 18,000-channel data, fitness, business, education, and food channels that mixed formats grew 31 to 41 percent faster than long-form-only peers. Gaming and large entertainment channels showed the opposite pattern, with long-form-only channels far ahead. Niches where a quick tip naturally advertises a deeper video benefit most; niches where Shorts viewers just want clips benefit least.' },
+      { q: 'Is Shorts share still growing, or has it plateaued?', a: 'Depends on your niche. Tracking 103,130 uploads since January 2025, <strong>Shorts share is still rising in 9 of 13 measurable niches</strong>: gaming, fitness, entertainment, sports, comedy, music, vlogs, finance, and travel. It has already leveled off in tech, education, cooking, and beauty. If you are in one of the plateaued niches, chasing a higher Shorts ratio is not riding a wave, the ceiling for your audience is already close to where it is now.' },
     ],
     content: () => (
       <>
@@ -3360,6 +3361,44 @@ export const posts = [
 
         <p>Cadence changes should be gradual for the same reason the pivot finding exists: audiences and the recommendation system both track what your channel reliably delivers, and a hard flip breaks that expectation in both directions at once. Add one weekly Short to a long-form channel and <strong>hold it for six to eight weeks before judging</strong>, using the diagnostic signals above rather than the raw view counts. The <a href="/blog/best-time-to-post">posting frequency guide</a> covers the parallel question of how often to upload at all.</p>
 
+        <h2>Is Shorts Share Still Rising, or Has It Plateaued</h2>
+
+        <p>The mix numbers above are a snapshot. We pulled <strong>103,130 tracked uploads since January 2025</strong> and measured the month-by-month Shorts share per niche, to see whether that snapshot is still moving. <strong>In 9 of 13 measurable niches, Shorts share is still rising, not flat.</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Earliest reliable months</th>
+              <th>May-Jul 2026</th>
+              <th>Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Gaming</strong></td><td>5.1%</td><td>20.7%</td><td>Rising</td></tr>
+            <tr><td><strong>Fitness</strong></td><td>24.1%</td><td>45.2%</td><td>Rising</td></tr>
+            <tr><td><strong>Entertainment</strong></td><td>7.7%</td><td>27.4%</td><td>Rising</td></tr>
+            <tr><td><strong>Sports</strong></td><td>6.2%</td><td>29.7%</td><td>Rising</td></tr>
+            <tr><td><strong>Comedy</strong></td><td>29.2%</td><td>36.6%</td><td>Rising</td></tr>
+            <tr><td><strong>Music</strong></td><td>33.6%</td><td>41.2%</td><td>Rising</td></tr>
+            <tr><td><strong>Vlogs</strong></td><td>23.3%</td><td>30.7%</td><td>Rising</td></tr>
+            <tr><td><strong>Finance</strong></td><td>20.5%</td><td>25.6%</td><td>Rising</td></tr>
+            <tr><td><strong>Travel</strong></td><td>22.1%</td><td>26.4%</td><td>Rising</td></tr>
+            <tr><td><strong>Tech</strong></td><td>21.6%</td><td>22.0%</td><td>Plateaued</td></tr>
+            <tr><td><strong>Education</strong></td><td>25.1%</td><td>22.3%</td><td>Plateaued</td></tr>
+            <tr><td><strong>Cooking</strong></td><td>22.6%</td><td>19.7%</td><td>Plateaued</td></tr>
+            <tr><td><strong>Beauty</strong></td><td>54.9%</td><td>50.0%</td><td>Plateaued</td></tr>
+          </tbody>
+        </table>
+
+        <p>The "May-Jul 2026" column deliberately excludes August, the month is still in progress as of this data pull and a partial month skews the average. Include it and a couple of niches look like they are still climbing when the full-month data says they have already leveled off, beauty is the clearest case of that.</p>
+
+        <p>Gaming's jump is the largest in relative terms, but its early months are thin (several fell below the 30-video monthly floor and are not counted), so treat the direction as real and the exact multiple as rough. <strong>Fitness is the more reliable story</strong>, dense monthly coverage throughout, climbing from 24% to 45% with no gaps.</p>
+
+        <p>News is not in the table at all, real coverage only starts April 2026 and it opened at 57.1% before dropping toward 12-16% by August, an early spike, not a trend, too little history to trust yet.</p>
+
+        <p>The practical read: if you are in one of the four plateaued niches, the current mix is close to the ceiling for your audience, chasing a higher Shorts share is unlikely to be riding anything. In the other nine, the ratio is still moving, worth rechecking your own upload split against the current trend rather than a number that was accurate a year ago.</p>
+
         <h2>What Each Format Pays</h2>
 
         <p>Money is where the two formats stop being comparable at all. Shorts pay roughly <strong>$0.03 to $0.10 per 1,000 views</strong> through the revenue-pool model, while long-form ads pay dollars per thousand, a gap of 30 to 100 times covered in full in the <a href="/blog/youtube-shorts-pay">Shorts pay breakdown</a> and the <a href="/blog/youtube-rpm">RPM guide</a>. A Short's financial job is almost never its own revenue. It is feeding watch time toward the formats that pay.</p>
@@ -3405,6 +3444,10 @@ export const posts = [
         <h3>Which niches benefit most from mixing Shorts and long-form?</h3>
 
         <p>In the 18,000-channel data, <strong>fitness, business, education, and food</strong> channels that mixed formats grew 31 to 41 percent faster than long-form-only peers. Gaming and large entertainment channels showed the opposite pattern, with long-form-only channels far ahead. Niches where a quick tip naturally advertises a deeper video benefit most; niches where Shorts viewers just want clips benefit least.</p>
+
+        <h3>Is Shorts share still growing, or has it plateaued?</h3>
+
+        <p>Depends on your niche. Tracking 103,130 uploads since January 2025, <strong>Shorts share is still rising in 9 of 13 measurable niches</strong>: gaming, fitness, entertainment, sports, comedy, music, vlogs, finance, and travel. It has already leveled off in tech, education, cooking, and beauty. If you are in one of the plateaued niches, chasing a higher Shorts ratio is not riding a wave, the ceiling for your audience is already close to where it is now.</p>
 
         <h2>Different Feeds, Same Channel</h2>
 
