@@ -22,7 +22,7 @@ Last updated: 2026-08-28
 5. ~~View growth curve: how fast views come in, first 30 days~~ — published 2026-08-28 as `/blog/youtube-view-growth-curve`
 6. ~~Shorts vs. long-form: which front-loads views faster~~ — combined into #5's article
 7. Engagement rate by niche — blocked, needs likeCount coverage check
-8. Shorts share over time, by niche, month-by-month trend not a snapshot
+8. ~~Shorts share over time, by niche~~ — published 2026-08-28 into `/blog/shorts-vs-long-form`
 9. ~~Posting time vs. performance~~ — superseded by #3
 10. CTR benchmark by niche — blocked on `scripts/check_weekly_report_coverage.py`
 11. Retention benchmark by niche — blocked on `scripts/check_weekly_report_coverage.py`
