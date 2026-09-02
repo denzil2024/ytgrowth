@@ -4744,7 +4744,7 @@ export const posts = [
       <>
         <p>A YouTube channel can get paid <strong>eight ways</strong> beyond ad revenue: memberships, Super Thanks, affiliate links, brand deals, merch, digital products, content licensing, and paid live events. Each pays under a different set of rules, and each fits a different stage of a channel's growth.</p>
 
-        <p>Memberships and Super Thanks both pay creators <strong>70%</strong> after YouTube's cut. That figure comes directly from YouTube's own Help pages, not a vendor's estimate, and most guides to this topic state a payout number with no source at all. This one sources every figure the same way, and ranks each method by what it pays, not by what the guide is selling. (See our <a href="/blog/youtube-channel-memberships">membership payout math</a> for the full breakdown by channel size.)</p>
+        <p>Memberships and Super Thanks both pay creators <strong>70%</strong> after YouTube's cut. That figure comes directly from YouTube's own Help pages, not a vendor's estimate, and most guides to this topic state a payout number with no source at all. This one sources every figure the same way, and ranks each method by what it pays, not by what the guide is selling.</p>
 
         <h2>What Pays, Ranked by Real Numbers</h2>
 
@@ -4857,6 +4857,15 @@ export const posts = [
         <p>Trying to run all eight methods at 500 subscribers spreads effort across income lines too thin for any of them to matter. <strong>Pick the two that fit the channel's current size and format</strong>, then add the next one once the first is paying, not before.</p>
 
         <p>Memberships and Super Thanks will always cap at 70%, since both route through YouTube itself. The other six have no fixed ceiling at all, only the size of the deal, the audience, or the product behind them. That is the real reason to diversify past ads, not because ads are unreliable, but because everything past ads can pay more than a fixed platform rate ever will.</p>
+
+        <h2>Which Method to Read Next</h2>
+
+        <p>Each method above has its own deeper guide once it fits a channel's current size and format:</p>
+
+        <ul>
+          <li><a href="/blog/youtube-channel-memberships">Are YouTube Channel Memberships Worth It?</a>, the full payout math by channel size and conversion rate, not just the 70% split.</li>
+          <li><a href="/blog/youtube-sponsorships">How to Get Sponsorships on YouTube</a>, what to charge, how to build a media kit, and the pitch that gets a reply even on a small channel.</li>
+        </ul>
       </>
     ),
   },
