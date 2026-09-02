@@ -4858,7 +4858,7 @@ export const posts = [
 
         <p>Memberships and Super Thanks will always cap at 70%, since both route through YouTube itself. The other six have no fixed ceiling at all, only the size of the deal, the audience, or the product behind them. That is the real reason to diversify past ads, not because ads are unreliable, but because everything past ads can pay more than a fixed platform rate ever will.</p>
 
-        <h2>Which Monetization Method to Read Next</h2>
+        <h2>Which Monetization Guide to Read Next</h2>
 
         <p>Each method above has its own deeper guide once it fits a channel's current size and format:</p>
 
