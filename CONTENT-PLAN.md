@@ -26,7 +26,7 @@ Last updated: 2026-08-28
 9. ~~Posting time vs. performance~~ — superseded by #3
 10. CTR benchmark by niche — blocked on `scripts/check_weekly_report_coverage.py`
 11. Retention benchmark by niche — blocked on `scripts/check_weekly_report_coverage.py`
-12. M1/M2/M3 moat studies — blocked on logger runway, recheck `scripts/check_moat_logger_status.py`
+12. M1/M2/M3 moat studies — blocked. M1: contaminated by the nightly niche-warmer's own seed list, not a runway issue, see `research/fastest-rising-topics.md`. M2: only 7 snapshot dates, too thin. M3: needs 6+ months, have 1.5.
 13. Topics small channels still win on — needs a research file first
 
 ## Video Ideas cluster (pillar `youtube-video-ideas`)
