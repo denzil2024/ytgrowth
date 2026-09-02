@@ -53,7 +53,7 @@ Last updated: 2026-08-28
 
 28. ~~Making Money on YouTube Beyond Ads~~ — pillar, published as `/blog/youtube-monetization-beyond-ads`
 29. ~~Are YouTube Channel Memberships Worth It?~~ — published 2026-09-02 as `/blog/youtube-channel-memberships`
-30. YouTube Super Thanks Explained — spoke
+30. ~~YouTube Super Thanks Explained~~ — published 2026-09-02 as `/blog/youtube-super-thanks`
 31. Do You Need a Big Following for Affiliate Marketing? — spoke
 32. `youtube-sponsorships` — existing post, link in as a spoke
 33. Merch shelf — not confirmed, weak evidence so far
