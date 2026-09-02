@@ -4775,7 +4775,7 @@ export const posts = [
 
         <h3>Channel Memberships</h3>
 
-        <p>Viewers pay a monthly fee for member-only perks, badges, emoji, members-only posts and streams, and creators keep <strong>70%</strong> of it. This is the closest thing to predictable, recurring revenue on the platform, since a member who joins tends to stay for months, not one video, though typical conversion runs just <strong>0.5% to 3%</strong> of subscribers.</p>
+        <p>Viewers pay a monthly fee for member-only perks, badges, emoji, members-only posts and streams, and creators keep <strong>70%</strong> of it. This is the closest thing to predictable, recurring revenue on the platform, since a member who joins tends to stay for months, not one video, though typical conversion runs just <strong>0.5% to 3%</strong> of subscribers. See the full <a href="/blog/youtube-channel-memberships">membership payout math</a> for the real numbers at different channel sizes.</p>
 
         <h3>Super Thanks</h3>
 
@@ -4796,7 +4796,7 @@ export const posts = [
         <CtaCard
           to="/features/channel-audit"
           title="Know what your channel can support"
-          sub="Channel Audit shows your real upload data, audience size, and engagement pattern side by side, the numbers that decide which of these methods is realistic right now. Free to try."
+          sub="Channel Audit shows your real upload data, audience size, and engagement pattern side by side, the numbers that decide which of these methods is realistic right now."
           button="Run a Channel Audit →"
         />
 
@@ -4857,6 +4857,188 @@ export const posts = [
         <p>Trying to run all eight methods at 500 subscribers spreads effort across income lines too thin for any of them to matter. <strong>Pick the two that fit the channel's current size and format</strong>, then add the next one once the first is paying, not before.</p>
 
         <p>Memberships and Super Thanks will always cap at 70%, since both route through YouTube itself. The other six have no fixed ceiling at all, only the size of the deal, the audience, or the product behind them. That is the real reason to diversify past ads, not because ads are unreliable, but because everything past ads can pay more than a fixed platform rate ever will.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-channel-memberships',
+    title: 'Are YouTube Channel Memberships Worth It? A Payout Math Breakdown',
+    excerpt: 'YouTube takes 30% of channel membership revenue, and typical conversion runs 0.5% to 3% of subscribers. Here is the real payout math at three channel sizes, so "worth it" is a number, not a guess.',
+    date: '2026-09-01',
+    category: CATEGORIES.monetization,
+    cover: '/blog/youtube-channel-memberships-cover.jpg',
+    coverAlt: 'A creator looking over his shoulder at a laptop showing YouTube Studio channel membership analytics, with a rising members graph and pricing tier visible on screen, in a home studio with plants and camera gear in the background',
+    author: 'Denzil',
+    readTime: '11 min read',
+    faqs: [
+      { q: 'What are the different YouTube membership tiers?', a: 'YouTube allows up to <strong>six membership levels</strong>, priced from <strong>$0.99 up to $499.99 a month</strong> across 20 fixed price points. Each higher tier includes every perk from the tiers below it, so a creator running three tiers (a common setup) might price them around $4.99, $9.99, and $24.99, with badges and emoji at the entry level and early access or shout-outs at the top.' },
+      { q: 'How much do YouTube memberships cost?', a: 'The creator sets the price, not YouTube, from <strong>$0.99 up to $499.99 a month</strong> per tier. Most channels that run memberships price their entry tier between <strong>$2.99 and $4.99</strong>, since that range converts best without undervaluing the perks.' },
+      { q: 'How much money do YouTubers make from memberships?', a: 'It depends on subscriber count and conversion rate, not a fixed number. A channel with 50,000 subscribers converting 1% at a $4.99 tier nets roughly <strong>$1,750 a month</strong> after YouTube\'s 30% cut. The same conversion rate at 500,000 subscribers nets roughly <strong>$17,500 a month</strong>.' },
+      { q: 'Do people actually pay for YouTube memberships?', a: 'Yes, but not many, relative to total subscribers. Typical conversion runs <strong>0.5% to 3% of subscribers</strong>. It works because a member is opting into monthly recurring support for a specific creator, not clicking an ad, so the revenue behaves more like a subscription business than ad income, even though the volume is small.' },
+    ],
+    content: () => (
+      <>
+        <p>YouTube keeps <strong>30%</strong> of every dollar a channel membership earns, and the typical creator converts <strong>0.5% to 3% of subscribers</strong> into paying members. Multiply those two numbers against a real subscriber count and "worth it" stops being a feeling and becomes an amount you can compare against the setup effort.</p>
+
+        <p>This is that math, plus what memberships get a viewer, part of our <a href="/blog/youtube-monetization-beyond-ads">monetization beyond ads guide</a>.</p>
+
+        <h2>What a Channel Membership Is</h2>
+
+        <p>A viewer pays a <strong>recurring monthly fee, set by the creator</strong>, for perks tied to the channel. It routes entirely through YouTube's own billing, the same way <a href="/blog/youtube-monetization-beyond-ads">Super Thanks</a> does, which is why both share one eligibility bar instead of a separate application.</p>
+
+        <p>The perk catalog breaks into three groups:</p>
+
+        <ul>
+          <li><strong>Recognition:</strong> a channel badge next to the member's name in comments and live chat (<strong>up to 9 custom badge tiers</strong>), custom emoji for comments, posts, and live chats, and a spot on the member recognition shelf</li>
+          <li><strong>Members-only content:</strong> early access to public videos (typically <strong>3 to 7 days ahead</strong>), members-only videos, live streams, and Shorts, plus behind-the-scenes or blooper content</li>
+          <li><strong>Direct interaction:</strong> members-only Community posts, members-only live chat during streams, priority replies to comments, and a milestone shout-out</li>
+        </ul>
+
+        <h2>Eligibility</h2>
+
+        <p>Membership eligibility is the standard YouTube Partner Program bar, nothing higher: <strong>1,000 subscribers</strong> and either <strong>4,000 public watch hours in the last 12 months</strong> or <strong>10 million Shorts views in the last 90 days</strong>, plus being <strong>at least 18</strong>, not marked "made for kids," and based in a supported country.</p>
+
+        <p>Older guides to this feature cite an 8,000-hour or 20-million-Shorts-view bar. That was a real past threshold; YouTube has since <strong>lowered it to match standard Partner Program acceptance</strong>.</p>
+
+        <blockquote><strong>Pro Tip:</strong> if a channel already qualifies for the YouTube Partner Program, it already qualifies for memberships. There is no separate climb, so there is no reason to wait once ad monetization is approved.</blockquote>
+
+        <h2>The Payout Split By Tier</h2>
+
+        <p>Creators keep <strong>70%</strong> of every membership payment; YouTube keeps 30%. YouTube offers <strong>20 fixed price points from $0.99 up to $499.99</strong> a month, and a creator can run up to <strong>six tiers</strong> at once, with every higher tier carrying every perk from the tiers beneath it.</p>
+
+        <p>YouTube's own creator guidance recommends starting with <strong>2 to 3 tiers</strong>, not the full six, and pricing the entry tier above the lowest available point rather than underpricing it. A common three-tier setup and what it pays out:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tier price</th>
+              <th>Creator keeps (70%)</th>
+              <th>Typical perks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>$4.99</td><td>$3.49</td><td>Badge, custom emoji, members-only posts</td></tr>
+            <tr><td>$9.99</td><td>$6.99</td><td>All of the above, plus members-only live chat perks</td></tr>
+            <tr><td>$24.99</td><td>$17.49</td><td>All of the above, plus early access or direct shout-outs</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Payout Math at Three Channel Sizes</h2>
+
+        <p>Subscriber count alone doesn't answer whether memberships pay off, <strong>conversion rate does</strong>. Applying the real 0.5% to 3% range to a $4.99 entry tier at three channel sizes:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Subscribers</th>
+              <th>At 0.5% conversion</th>
+              <th>At 1% conversion</th>
+              <th>At 3% conversion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10,000</td><td>$175/mo</td><td>$349/mo</td><td>$1,047/mo</td></tr>
+            <tr><td>50,000</td><td>$873/mo</td><td>$1,745/mo</td><td>$5,235/mo</td></tr>
+            <tr><td>500,000</td><td>$8,725/mo</td><td>$17,450/mo</td><td>$52,350/mo</td></tr>
+          </tbody>
+        </table>
+
+        <p>A 10,000-subscriber channel at the low end of typical conversion clears roughly <strong>$175 a month</strong>, not nothing, but not enough to justify heavy perk overhead either. The same channel at the high end of typical conversion clears <strong>six times that</strong>.</p>
+
+        <p>The spread between 0.5% and 3% matters more than the subscriber count does. Conversion is the variable a creator can influence through perk quality and promotion, not the one fixed by channel size.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Know your real audience size before pricing tiers"
+          sub="Channel Audit shows subscriber count, upload consistency, and engagement pattern side by side, the inputs that decide whether a membership tier is worth setting up right now."
+          button="Run a Channel Audit →"
+        />
+
+        <h2>What It Looks Like at Real Channels</h2>
+
+        <p>Reported figures from creators who run memberships alongside other income lines show how much of total revenue memberships carry at different sizes:</p>
+
+        <ul>
+          <li><strong>130,000 subscribers</strong> (business channel): memberships at roughly <strong>26% of total YouTube revenue</strong></li>
+          <li><strong>489,000 subscribers</strong> (political commentary): memberships and Super Thanks combined at roughly <strong>50%</strong></li>
+          <li><strong>859,000 subscribers</strong> (history channel): memberships at roughly <strong>10%</strong></li>
+          <li><strong>928,000 subscribers</strong> (news channel): memberships at roughly <strong>30%</strong></li>
+        </ul>
+
+        <p>The spread between 10% and 50% at similar subscriber counts is a <strong>conversion-and-format story, not a size story</strong>. Niches with a strong sense of ongoing community (commentary, news, business) convert members at a higher rate than niches built on one-off entertainment value.</p>
+
+        <h2>Memberships vs. Patreon or Ko-fi</h2>
+
+        <p>The trade-off is cut versus friction. YouTube keeps 30% against Patreon or Ko-fi's typical <strong>5% to 12%</strong>, a real gap at any volume. What YouTube buys back for that extra cut is friction: a viewer already watching becomes a member in <strong>two clicks</strong>, no new account, no redirect off-platform.</p>
+
+        <p>Patreon and Ko-fi ask a viewer to leave YouTube entirely to pay, which loses a real share of would-be members at the moment of conversion.</p>
+
+        <p>Neither is strictly better: a highly engaged, platform-loyal audience tends to convert more members on YouTube itself despite the worse cut, while a channel building an audience independent of YouTube's algorithm has a real reason to accept the friction and keep more per member.</p>
+
+        <h2>Common Mistakes That Keep It From Paying Off</h2>
+
+        <p>Membership revenue underperforms for a <strong>few repeatable reasons</strong>, not bad luck.</p>
+
+        <ul>
+          <li><strong>Entry tier priced too high.</strong> Most channels convert better nearer $2.99 to $4.99 than $9.99 at the entry tier, since a high entry price suppresses conversion more than it raises per-member revenue.</li>
+          <li><strong>Promoted once, then forgotten.</strong> New subscribers who never saw the launch announcement have no reason to know memberships exist.</li>
+          <li><strong>Too much content gated.</strong> Locking regular uploads behind the members-only badge shrinks the free audience that would otherwise convert later.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> memberships work best layered on top of a strong free upload schedule, not carved out of it. Gating too much regular content to push members-only signups usually costs more free-audience growth than it gains in members.</blockquote>
+
+        <h2>What Drives Membership Conversion</h2>
+
+        <p>YouTube's own creator data ties specific actions to specific conversion gains:</p>
+
+        <ul>
+          <li>Creators who mention memberships directly in their videos see roughly <strong>3x more members</strong> on average than creators who don't</li>
+          <li>Creators publishing two or more members-only videos per month see roughly <strong>15x more new members</strong> than infrequent posters</li>
+          <li>Members who watch members-only content within their first month cancel at a rate over <strong>20% lower</strong> than members who don't</li>
+          <li>Roughly <strong>20% of new members</strong> join specifically because they saw a members-only content promotion, not because they found the membership tab on their own</li>
+        </ul>
+
+        <p>The pattern across all four numbers is the same: memberships convert on <strong>repeated, visible promotion and fast delivery of exclusive content</strong>, not on setting the feature up once and waiting.</p>
+
+        <h2>Charging an Audience Feels Uncomfortable to Most Creators</h2>
+
+        <p>Setup and payout math aren't the only barrier. Creator discussion threads on the topic consistently surface a psychological one: asking an audience to pay monthly, directly, for access feels different from running ads.</p>
+
+        <p>Some creators describe it as the <strong>same discomfort they associate with Twitch's subscription model</strong>, not a YouTube-specific concern. That hesitation is real, and it's the actual reason some eligible channels never turn memberships on, not a lack of audience size or eligibility.</p>
+
+        <p>The math above is the antidote to that hesitation, not a dismissal of it. A member is <strong>opting in, not being asked for a favor</strong>.</p>
+
+        <p>YouTube's own numbers on cancellation and promotion show memberships behave like a normal subscription product once framed that way: some members will churn, most who see the members-only content in month one stay, and the number that grows it is visible, repeated mention, not a single ask.</p>
+
+        <h2>Currency and Payout Friction</h2>
+
+        <p>International members add a smaller, real cost: currency conversion typically loses <strong>2% to 5%</strong> on top of YouTube's cut, and payout thresholds add their own transfer fees.</p>
+
+        <p>It rarely changes the worth-it math at meaningful scale, but it explains why a channel's actual bank deposit lands lower than the simple 70% figure suggests.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What are the different YouTube membership tiers?</h3>
+
+        <p>YouTube allows up to <strong>six membership levels</strong>, priced from <strong>$0.99 up to $499.99 a month</strong> across 20 fixed price points. Each higher tier includes every perk from the tiers below it, so a creator running three tiers (a common setup) might price them around $4.99, $9.99, and $24.99, with badges and emoji at the entry level and early access or shout-outs at the top.</p>
+
+        <h3>How much do YouTube memberships cost?</h3>
+
+        <p>The creator sets the price, not YouTube, from <strong>$0.99 up to $499.99 a month</strong> per tier. Most channels that run memberships price their entry tier between <strong>$2.99 and $4.99</strong>, since that range converts best without undervaluing the perks.</p>
+
+        <h3>How much money do YouTubers make from memberships?</h3>
+
+        <p>It depends on subscriber count and conversion rate, not a fixed number. A channel with 50,000 subscribers converting 1% at a $4.99 tier nets roughly <strong>$1,750 a month</strong> after YouTube's 30% cut. The same conversion rate at 500,000 subscribers nets roughly <strong>$17,500 a month</strong>.</p>
+
+        <h3>Do people actually pay for YouTube memberships?</h3>
+
+        <p>Yes, but not many, relative to total subscribers. Typical conversion runs <strong>0.5% to 3% of subscribers</strong>. It works because a member is opting into monthly recurring support for a specific creator, not clicking an ad, so the revenue behaves more like a subscription business than ad income, even though the volume is small.</p>
+
+        <h2>Turn It On Once the Math Clears Setup Cost</h2>
+
+        <p>Memberships are worth setting up <strong>the moment a channel clears YPP eligibility</strong>, since there is no separate cost to enabling the feature and no downside to a $0-revenue month while it sits idle.</p>
+
+        <p>Whether it's worth the ongoing effort of running exclusive perks depends on the conversion math above at a channel's real subscriber count. <strong>Below a few thousand dollars a month</strong>, most creators are better served growing the audience that will eventually convert, rather than perfecting perks for a small existing base.</p>
       </>
     ),
   },

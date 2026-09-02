@@ -27,7 +27,7 @@ Last updated: 2026-08-28
 10. CTR benchmark by niche — blocked on `scripts/check_weekly_report_coverage.py`
 11. Retention benchmark by niche — blocked on `scripts/check_weekly_report_coverage.py`
 12. M1/M2/M3 moat studies — blocked. M1: contaminated by the nightly niche-warmer's own seed list, not a runway issue, see `research/fastest-rising-topics.md`. M2: only 7 snapshot dates, too thin. M3: needs 6+ months, have 1.5.
-13. Topics small channels still win on — needs a research file first
+13. Topics small channels still win on — killed. `channel_tracked` has near-zero small-channel (<50K subs) coverage in every named niche (gaming, cooking, fitness, etc. all show 0 small channels with tracked videos), only "uncategorized" has any (109), which isn't a real niche signal. No small-vs-large comparison is possible with current tracking data. See `scripts/check_micro_channel_feasibility.py`.
 
 ## Video Ideas cluster (pillar `youtube-video-ideas`)
 
