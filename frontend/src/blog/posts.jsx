@@ -5066,7 +5066,7 @@ export const posts = [
       { q: 'Do YouTubers get all the money from Super Thanks?', a: 'No. YouTube keeps <strong>30% of every Super Thanks</strong>, leaving the creator roughly 70%. If the viewer paid through the YouTube app on an iPhone or iPad, a second fee applies: Apple\'s standard <strong>30% in-app purchase commission</strong> on the amount YouTube passes through, which can drop the creator\'s real take closer to <strong>50% of what the viewer paid</strong>.' },
       { q: 'What percentage of Super Thanks does YouTube take?', a: 'YouTube states creators receive <strong>"70% of Super Thanks revenue recognised by Google"</strong> after tax and fee deductions. That 70% is the accurate figure for a payment made directly through YouTube on the web or Android. It is not the full picture for a payment made through the iOS app, where Apple\'s own fee applies before YouTube\'s share is calculated.' },
       { q: 'How much is 1 Super Thanks on YouTube?', a: 'A viewer chooses from YouTube\'s official price tiers: <strong>$2, $5, $10, or $50</strong> (or the local currency equivalent). Creators have also reported receiving larger custom-style amounts, including a real <strong>$199 Super Thanks</strong>, though $2 to $50 is the standard published range.' },
-      { q: 'What happens when you press Super Thanks on YouTube?', a: 'The viewer picks a price tier and pays once (not a subscription). YouTube shows a one-time animated GIF over the video visible only to the buyer, and posts a distinct, colorful, highlighted comment in the comments section that the creator can reply to directly.' },
+      { q: 'What happens when you press Super Thanks on YouTube?', a: 'The viewer picks a price tier and pays <strong>once, not a recurring subscription</strong>. YouTube shows a one-time animated GIF over the video visible only to the buyer, and posts a distinct, colorful, highlighted comment in the comments section that the creator can reply to directly.' },
     ],
     content: () => (
       <>
@@ -5165,7 +5165,9 @@ export const posts = [
           </tbody>
         </table>
 
-        <p>The spread within each tier is wide, and niche explains most of it. Channels built around <strong>personal finance, education, and tight-knit communities</strong> report higher Super Thanks income than entertainment-first channels of a similar size, the same loyalty-driven pattern that shows up in <a href="/blog/youtube-channel-memberships">membership conversion</a>.</p>
+        <p>A channel under 10,000 subscribers typically earns <strong>$30 to $120 a month</strong> from Super Thanks; a channel over 1,000,000 subscribers typically earns <strong>$5,000 to $25,000 a month</strong>.</p>
+
+        <p>The spread within each tier is wide, and niche explains most of it: channels built around <strong>personal finance, education, and tight-knit communities</strong> report higher Super Thanks income than entertainment-first channels of a similar size, the same loyalty-driven pattern that shows up in <a href="/blog/youtube-channel-memberships">membership conversion</a>.</p>
 
         <h2>Super Thanks Works on Evergreen Video</h2>
 
@@ -5217,7 +5219,7 @@ export const posts = [
 
         <h2>Super Thanks Is Taxed Like Ad Revenue</h2>
 
-        <p>Google withholds US tax on YouTube earnings from Super Thanks the same way it does for ad views, YouTube Premium, and memberships, it is not treated as a separate, untaxed gift. Every YouTube Partner Program creator, regardless of where they live, must submit tax information to Google.</p>
+        <p><strong>Super Thanks is not a tax-free gift.</strong> Google withholds US tax on it the same way it does for ad views, YouTube Premium, and memberships. Every YouTube Partner Program creator, regardless of where they live, must submit tax information to Google.</p>
 
         <p>Missing the <strong>December 10 tax-info deadline</strong> risks Google withholding up to <strong>24% of total worldwide earnings</strong>, not just US-sourced income. US creators typically receive a 1099-MISC by early March for the prior year.</p>
 
@@ -5237,7 +5239,7 @@ export const posts = [
 
         <h3>What happens when you press Super Thanks on YouTube?</h3>
 
-        <p>The viewer picks a price tier and pays once (not a subscription). YouTube shows a one-time animated GIF over the video visible only to the buyer, and posts a distinct, colorful, highlighted comment in the comments section that the creator can reply to directly.</p>
+        <p>The viewer picks a price tier and pays <strong>once, not a recurring subscription</strong>. YouTube shows a one-time animated GIF over the video visible only to the buyer, and posts a distinct, colorful, highlighted comment in the comments section that the creator can reply to directly.</p>
 
         <h2>The Real Number Is Closer to 50% on iOS</h2>
 
