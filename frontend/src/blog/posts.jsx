@@ -4744,7 +4744,7 @@ export const posts = [
       <>
         <p>A YouTube channel can get paid <strong>eight ways</strong> beyond ad revenue: memberships, Super Thanks, affiliate links, brand deals, merch, digital products, content licensing, and paid live events. Each pays under a different set of rules, and each fits a different stage of a channel's growth.</p>
 
-        <p>Memberships and Super Thanks both pay creators <strong>70%</strong> after YouTube's cut. That figure comes directly from YouTube's own Help pages, not a vendor's estimate, and most guides to this topic state a payout number with no source at all. This one sources every figure the same way, and ranks each method by what it pays, not by what the guide is selling.</p>
+        <p>Memberships and Super Thanks both pay creators <strong>70%</strong> after YouTube's cut. That figure comes directly from YouTube's own Help pages, not a vendor's estimate, and most guides to this topic state a payout number with no source at all. This one sources every figure the same way, and ranks each method by what it pays, not by what the guide is selling. (See our <a href="/blog/youtube-channel-memberships">membership payout math</a> for the full breakdown by channel size.)</p>
 
         <h2>What Pays, Ranked by Real Numbers</h2>
 
@@ -4775,7 +4775,7 @@ export const posts = [
 
         <h3>Channel Memberships</h3>
 
-        <p>Viewers pay a monthly fee for member-only perks, badges, emoji, members-only posts and streams, and creators keep <strong>70%</strong> of it. This is the closest thing to predictable, recurring revenue on the platform, since a member who joins tends to stay for months, not one video, though typical conversion runs just <strong>0.5% to 3%</strong> of subscribers. See the full <a href="/blog/youtube-channel-memberships">membership payout math</a> for the real numbers at different channel sizes.</p>
+        <p>Viewers pay a monthly fee for member-only perks, badges, emoji, members-only posts and streams, and creators keep <strong>70%</strong> of it. This is the closest thing to predictable, recurring revenue on the platform, since a member who joins tends to stay for months, not one video, though typical conversion runs just <strong>0.5% to 3%</strong> of subscribers.</p>
 
         <h3>Super Thanks</h3>
 
