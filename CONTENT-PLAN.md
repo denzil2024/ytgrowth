@@ -52,7 +52,7 @@ Last updated: 2026-08-28
 ## Monetization Beyond Ads cluster (sourced from real Reddit/PAA demand)
 
 28. ~~Making Money on YouTube Beyond Ads~~ — pillar, published as `/blog/youtube-monetization-beyond-ads`
-29. Are YouTube Channel Memberships Worth It? — spoke
+29. ~~Are YouTube Channel Memberships Worth It?~~ — published 2026-09-02 as `/blog/youtube-channel-memberships`
 30. YouTube Super Thanks Explained — spoke
 31. Do You Need a Big Following for Affiliate Marketing? — spoke
 32. `youtube-sponsorships` — existing post, link in as a spoke

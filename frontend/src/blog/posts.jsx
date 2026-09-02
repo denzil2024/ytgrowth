@@ -4771,7 +4771,7 @@ export const posts = [
 
         <h2>The Two That Pay Through YouTube Itself</h2>
 
-        <p>Memberships and Super Thanks both route through YouTube's own checkout, which is why both share the same eligibility bar, standard YouTube Partner Program acceptance.</p>
+        <p>Memberships and Super Thanks both route through YouTube's own checkout, and both unlock at the same <strong>lower, early-access eligibility tier</strong>: 500 subscribers plus lighter watch-time requirements, not the full 1,000-subscriber bar needed for ad revenue.</p>
 
         <h3>Channel Memberships</h3>
 
@@ -4779,7 +4779,7 @@ export const posts = [
 
         <h3>Super Thanks</h3>
 
-        <p>A one-time tip a viewer can leave on any regular video, not just live streams. Creators keep roughly <strong>70%</strong> after YouTube's cut and payment processing fees. It has a lower ceiling than memberships, since it is a one-off, not recurring, but it works on any upload with no separate setup required.</p>
+        <p>A one-time tip a viewer can leave on any regular video, not just live streams. Creators keep roughly <strong>70%</strong> after YouTube's cut, though a viewer paying through the iOS app triggers a second Apple fee on top. It has a lower ceiling than memberships, since it is a one-off, not recurring, but it works on any upload with no separate setup required. See the full <a href="/blog/youtube-super-thanks">Super Thanks payout math</a> for the real net after every fee.</p>
 
         <h2>The Six That Pay Outside YouTube's Cut</h2>
 
@@ -4827,8 +4827,8 @@ export const posts = [
             </tr>
           </thead>
           <tbody>
-            <tr><td>Under 1,000 subscribers</td><td>Affiliate links, product-review brand deals (no minimum)</td><td>Memberships, Super Thanks, Merch (all need YPP or 1,000 subs)</td></tr>
-            <tr><td>1,000 to 10,000</td><td>Memberships or Super Thanks (whichever fits your format), continue affiliate</td><td>Coaching, paid events (audience too small to fill one)</td></tr>
+            <tr><td>Under 500 subscribers</td><td>Affiliate links, product-review brand deals (no minimum)</td><td>Memberships, Super Thanks (need 500 subs), Merch (needs 1,000)</td></tr>
+            <tr><td>500 to 10,000</td><td>Memberships or Super Thanks (whichever fits your format, both unlock at 500 subs), continue affiliate</td><td>Coaching, paid events (audience too small to fill one)</td></tr>
             <tr><td>10,000 to 100,000</td><td>Brand deals at real rates, merch if identity is strong, digital products</td><td>Content licensing (still opportunistic, not a strategy)</td></tr>
             <tr><td>100,000+</td><td>All of the above simultaneously, plus paid events and coaching become viable</td><td>Nothing, this is the diversification stage</td></tr>
           </tbody>
@@ -4864,6 +4864,7 @@ export const posts = [
 
         <ul>
           <li><a href="/blog/youtube-channel-memberships">Are YouTube Channel Memberships Worth It?</a>, the full payout math by channel size and conversion rate, not just the 70% split.</li>
+          <li><a href="/blog/youtube-super-thanks">YouTube Super Thanks Payout Math</a>, the real net after YouTube's cut, including the extra fee on iOS that most guides skip.</li>
           <li><a href="/blog/youtube-sponsorships">How to Get Sponsorships on YouTube</a>, what to charge, how to build a media kit, and the pitch that gets a reply even on a small channel.</li>
         </ul>
       </>
@@ -4905,11 +4906,11 @@ export const posts = [
 
         <h2>Eligibility</h2>
 
-        <p>Membership eligibility is the standard YouTube Partner Program bar, nothing higher: <strong>1,000 subscribers</strong> and either <strong>4,000 public watch hours in the last 12 months</strong> or <strong>10 million Shorts views in the last 90 days</strong>, plus being <strong>at least 18</strong>, not marked "made for kids," and based in a supported country.</p>
+        <p>Memberships unlock at YouTube's <strong>lower, early-access YPP tier</strong>: 500 subscribers, plus either 3,000 public watch hours on long-form video in the past 365 days or 3 million Shorts views in the past 90 days, plus 3 public uploads. That's below the standard 1,000-subscriber tier, and it's the same lower tier that unlocks Super Thanks.</p>
 
-        <p>Older guides to this feature cite an 8,000-hour or 20-million-Shorts-view bar. That was a real past threshold; YouTube has since <strong>lowered it to match standard Partner Program acceptance</strong>.</p>
+        <p>The higher, standard tier (1,000 subscribers, 4,000 watch hours or 10 million Shorts views) is only required for <strong>ad revenue sharing</strong>, not for memberships. Older guides to this feature cite an even higher 8,000-hour or 20-million-Shorts-view bar; that was a real past threshold before YouTube's eligibility expansion, not the current one.</p>
 
-        <blockquote><strong>Pro Tip:</strong> if a channel already qualifies for the YouTube Partner Program, it already qualifies for memberships. There is no separate climb, so there is no reason to wait once ad monetization is approved.</blockquote>
+        <blockquote><strong>Pro Tip:</strong> a channel doesn't need to wait for the 1,000-subscriber ad-revenue tier to turn memberships on. Clearing 500 subscribers and the lighter watch-time requirement is enough.</blockquote>
 
         <h2>The Payout Split By Tier</h2>
 
@@ -5045,9 +5046,204 @@ export const posts = [
 
         <h2>Turn It On Once the Math Clears Setup Cost</h2>
 
-        <p>Memberships are worth setting up <strong>the moment a channel clears YPP eligibility</strong>, since there is no separate cost to enabling the feature and no downside to a $0-revenue month while it sits idle.</p>
+        <p>Memberships are worth setting up <strong>the moment a channel clears the 500-subscriber fan-funding tier</strong>, since there is no separate cost to enabling the feature and no downside to a $0-revenue month while it sits idle.</p>
 
         <p>Whether it's worth the ongoing effort of running exclusive perks depends on the conversion math above at a channel's real subscriber count. <strong>Below a few thousand dollars a month</strong>, most creators are better served growing the audience that will eventually convert, rather than perfecting perks for a small existing base.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-super-thanks',
+    title: 'YouTube Super Thanks Payout Math, Including the Apple Fee Nobody Mentions',
+    excerpt: 'A $199 Super Thanks paid out $98, less than half. The gap is Apple\'s own 30% in-app purchase fee, charged on top of YouTube\'s cut when a viewer pays on iOS, verified against Apple\'s own developer terms.',
+    date: '2026-09-02',
+    category: CATEGORIES.monetization,
+    cover: '/blog/youtube-super-thanks-cover.jpg',
+    coverAlt: 'A creator holding a phone showing a new $5 Super Thanks notification and comment, with a laptop open to YouTube Studio channel dashboard on the desk beside her, home studio with camera gear and plants in the background',
+    author: 'Denzil',
+    readTime: '9 min read',
+    faqs: [
+      { q: 'Do YouTubers get all the money from Super Thanks?', a: 'No. YouTube keeps <strong>30% of every Super Thanks</strong>, leaving the creator roughly 70%. If the viewer paid through the YouTube app on an iPhone or iPad, a second fee applies: Apple\'s standard <strong>30% in-app purchase commission</strong> on the amount YouTube passes through, which can drop the creator\'s real take closer to <strong>50% of what the viewer paid</strong>.' },
+      { q: 'What percentage of Super Thanks does YouTube take?', a: 'YouTube states creators receive <strong>"70% of Super Thanks revenue recognised by Google"</strong> after tax and fee deductions. That 70% is the accurate figure for a payment made directly through YouTube on the web or Android. It is not the full picture for a payment made through the iOS app, where Apple\'s own fee applies before YouTube\'s share is calculated.' },
+      { q: 'How much is 1 Super Thanks on YouTube?', a: 'A viewer chooses from YouTube\'s official price tiers: <strong>$2, $5, $10, or $50</strong> (or the local currency equivalent). Creators have also reported receiving larger custom-style amounts, including a real <strong>$199 Super Thanks</strong>, though $2 to $50 is the standard published range.' },
+      { q: 'What happens when you press Super Thanks on YouTube?', a: 'The viewer picks a price tier and pays once (not a subscription). YouTube shows a one-time animated GIF over the video visible only to the buyer, and posts a distinct, colorful, highlighted comment in the comments section that the creator can reply to directly.' },
+    ],
+    content: () => (
+      <>
+        <p>A creator on Reddit reported a <strong>$199 Super Thanks</strong> that paid out <strong>$98</strong>, less than half. The advertised split is 70/30 in the creator's favor. The gap is a second fee almost no guide to this feature mentions: Apple's own <strong>30% in-app purchase commission</strong>, charged on top of YouTube's cut when a viewer pays through the iOS app.</p>
+
+        <p>This is the full payout math, source-verified against Apple's own developer terms, plus how Super Thanks compares to <a href="/blog/youtube-channel-memberships">channel memberships</a> and when each applies.</p>
+
+        <h2>What Super Thanks Is</h2>
+
+        <p>A viewer pays a <strong>one-time fee</strong> on any regular video or Short to show appreciation, not a recurring charge like a membership. YouTube shows a one-time animated GIF over the video, visible only to the buyer, and posts their comment as a distinct, highlighted color in the comments section that the creator can reply to directly.</p>
+
+        <p>The feature launched in <strong>beta in July 2021</strong> under the working name "Viewer applause," then rolled out fully to eligible creators across 68 locations in <strong>April 2022</strong> under its current name.</p>
+
+        <h2>Eligibility</h2>
+
+        <p>Super Thanks unlocks at YouTube's <strong>lower, early-access YPP tier</strong>: 500 subscribers, plus either 3,000 public watch hours on long-form video in the past 365 days or 3 million Shorts views in the past 90 days, plus 3 public uploads. That's a real, separate bar below the standard 1,000-subscriber tier, and it's the same tier that unlocks channel memberships.</p>
+
+        <p>The higher, standard tier (1,000 subscribers, 4,000 watch hours or 10 million Shorts views) is only required for <strong>ad revenue sharing</strong>, not fan funding. A channel can turn on Super Thanks well before it qualifies for ads.</p>
+
+        <blockquote><strong>Pro Tip:</strong> a channel that hasn't hit the 1,000-subscriber ad-revenue bar yet can still turn on Super Thanks and memberships once it clears 500 subscribers and the lighter watch-time requirement. Don't wait for full YPP acceptance to enable fan funding.</blockquote>
+
+        <h2>Why the Button Doesn't Always Show</h2>
+
+        <p>A recurring creator complaint: Super Thanks is enabled, but the button doesn't appear on the video, or it's buried under the <strong>three-dot overflow menu</strong> instead of shown directly. The cause is almost always the specific video, not the channel-level setting.</p>
+
+        <p>Four conditions disqualify a single video even on a fully eligible channel: <strong>disabled comments</strong>, an <strong>active copyright claim</strong>, <strong>age-restricted</strong> status, or the video is a <strong>live stream or Premiere still broadcasting</strong>. Fixing the video, not re-enabling the feature, is the correct troubleshooting step.</p>
+
+        <h2>The Real Split: YouTube's Cut, Plus a Second Cut on iOS</h2>
+
+        <p>YouTube's own language is precise for a reason: creators receive <strong>"70% of Super Thanks revenue recognised by Google."</strong> That 70% is accurate for a payment made directly through YouTube on the web or an Android device.</p>
+
+        <p>It is not the full picture when a viewer pays through the <strong>YouTube app on an iPhone or iPad</strong>. Apple's own developer terms set a standard <strong>30% commission on in-app purchases</strong>, applied to digital goods bought inside an iOS app. A Super Thanks bought that way pays both platforms: YouTube's 30%, then Apple's 30% on what's left.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Payment platform</th>
+              <th>YouTube's cut</th>
+              <th>Apple's cut</th>
+              <th>Creator keeps</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Web or Android</td><td>30%</td><td>None</td><td><strong>~70%</strong></td></tr>
+            <tr><td>iOS app</td><td>30%</td><td>30% of the remainder</td><td><strong>~49%</strong></td></tr>
+          </tbody>
+        </table>
+
+        <p>A real creator report on Reddit matches this almost exactly: a <strong>$199 Super Thanks netted $98</strong>. Running the same math (30% off, then 30% off the remainder) on $199 gives $97.51, a near-exact match to the reported payout.</p>
+
+        <h2>Price Tiers and What They Net</h2>
+
+        <p>YouTube's official price range is <strong>$2 to $50</strong> (or the local currency equivalent), though creators have reported receiving larger custom-style amounts, including the real $199 example above. Applying both scenarios to the standard tiers:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Viewer pays</th>
+              <th>Creator nets (web/Android)</th>
+              <th>Creator nets (iOS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>$2</td><td>$1.40</td><td>$0.98</td></tr>
+            <tr><td>$5</td><td>$3.50</td><td>$2.45</td></tr>
+            <tr><td>$10</td><td>$7.00</td><td>$4.90</td></tr>
+            <tr><td>$50</td><td>$35.00</td><td>$24.50</td></tr>
+          </tbody>
+        </table>
+
+        <p>A viewer's spending is capped at roughly <strong>$500 a day and $2,000 a week</strong>, shared across every Supers product combined (Super Chat, Super Stickers, Super Thanks, and Gifts), not $2,000 on Super Thanks alone.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="See how much of your revenue already comes from fan funding"
+          sub="Channel Audit breaks down real upload data and audience engagement, the signals that predict whether a channel's audience is the type that tips."
+          button="Run a Channel Audit →"
+        />
+
+        <h2>What Real Channels Earn From It</h2>
+
+        <p>Super Thanks income scales with audience size and niche, not view count alone. Reported monthly ranges by subscriber tier:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Subscribers</th>
+              <th>Typical monthly Super Thanks income</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Under 10,000</td><td>$30 to $120</td></tr>
+            <tr><td>10,000 to 100,000</td><td>$80 to $800</td></tr>
+            <tr><td>100,000 to 1,000,000</td><td>$500 to $4,000</td></tr>
+            <tr><td>1,000,000+</td><td>$5,000 to $25,000</td></tr>
+          </tbody>
+        </table>
+
+        <p>The spread within each tier is wide, and niche explains most of it. Channels built around <strong>personal finance, education, and tight-knit communities</strong> report higher Super Thanks income than entertainment-first channels of a similar size, the same loyalty-driven pattern that shows up in <a href="/blog/youtube-channel-memberships">membership conversion</a>.</p>
+
+        <h2>Super Thanks Works on Evergreen Video</h2>
+
+        <p>YouTube's own creator documentation positions Super Thanks specifically for <strong>"evergreen videos with ongoing traffic,"</strong> a real structural difference from its sibling Supers products. Super Chat and Super Stickers only activate during a <strong>live stream or Premiere</strong>. Super Thanks activates on any regular upload or Short, indefinitely, for as long as the video keeps getting views.</p>
+
+        <p>A channel that never streams live has <strong>zero access</strong> to Super Chat or Super Stickers. Super Thanks is the only Supers product available to it.</p>
+
+        <h2>Super Thanks vs. Super Chat and Super Stickers</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Super Thanks</th>
+              <th>Super Chat / Super Stickers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Works on</td><td>Any regular video or Short</td><td>Live streams and Premieres only</td></tr>
+            <tr><td>Payment type</td><td>One-time</td><td>One-time, per chat message</td></tr>
+            <tr><td>YouTube's cut</td><td>30%</td><td>30%</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Super Thanks vs. Channel Memberships</h2>
+
+        <p>Super Thanks is a <strong>one-time tip</strong>; a <a href="/blog/youtube-channel-memberships">membership</a> is a <strong>recurring monthly payment</strong> for ongoing perks. Both share the same 70/30 base split, so the choice isn't about which pays better per transaction, it's about which fits how the audience already interacts with the channel.</p>
+
+        <p>Super Thanks fits a channel with <strong>occasional standout videos</strong>: a viewer tips on the video that earned it, with no ongoing commitment. Memberships fit a channel a viewer <strong>watches consistently</strong>, since recurring perks reward exactly that kind of repeat viewer. Running both isn't redundant, each captures a different kind of support.</p>
+
+        <h2>What Increases Super Thanks</h2>
+
+        <p>YouTube's own creator guidance lists specific tactics, not general advice:</p>
+
+        <ul>
+          <li><strong>Promote the feature directly.</strong> Most viewers who would tip never see the button unless the creator tells them it exists and where to find it.</li>
+          <li><strong>Reply to every Super Thanks comment.</strong> A text reply, a Shorts reply, or an in-video shout-out turns a one-time tip into a <strong>visible interaction</strong> that other viewers see and copy.</li>
+          <li><strong>State exactly what the money funds.</strong> Naming a concrete use (editing help, equipment, more content) gives viewers a reason to tip beyond generic appreciation.</li>
+          <li><strong>Set a visible goal with a number attached.</strong> A specific target with shared progress outperforms an open-ended ask.</li>
+          <li><strong>Show the funded result.</strong> A quick "this was made possible by Super Thanks" once the funded thing ships closes the loop and prompts the next tip.</li>
+          <li><strong>Track it in Studio's Revenue tab.</strong> Which videos or series generate the most Super Thanks is a real signal for what to make more of, not a vanity metric.</li>
+        </ul>
+
+        <h2>How Super Thanks Gets Paid Out</h2>
+
+        <p>Super Thanks revenue is not paid separately. It's combined into the <strong>same monthly AdSense payment</strong> as ad revenue, memberships, and every other Supers product, and it's subject to the standard <strong>$100 minimum payout threshold</strong>. A channel earning $40 a month from Super Thanks with no other AdSense income won't see a payout until the combined balance clears $100.</p>
+
+        <p>A disputed or refunded Super Thanks also claws back the creator's share. Viewers have up to <strong>120 days</strong> to dispute an unauthorized charge, and a successful dispute reverses the payout on YouTube's end, not just the platform fee.</p>
+
+        <h2>Super Thanks Is Taxed Like Ad Revenue</h2>
+
+        <p>Google withholds US tax on YouTube earnings from Super Thanks the same way it does for ad views, YouTube Premium, and memberships, it is not treated as a separate, untaxed gift. Every YouTube Partner Program creator, regardless of where they live, must submit tax information to Google.</p>
+
+        <p>Missing the <strong>December 10 tax-info deadline</strong> risks Google withholding up to <strong>24% of total worldwide earnings</strong>, not just US-sourced income. US creators typically receive a 1099-MISC by early March for the prior year.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Do YouTubers get all the money from Super Thanks?</h3>
+
+        <p>No. YouTube keeps <strong>30% of every Super Thanks</strong>, leaving the creator roughly 70%. If the viewer paid through the YouTube app on an iPhone or iPad, a second fee applies: Apple's standard <strong>30% in-app purchase commission</strong> on the amount YouTube passes through, which can drop the creator's real take closer to <strong>50% of what the viewer paid</strong>.</p>
+
+        <h3>What percentage of Super Thanks does YouTube take?</h3>
+
+        <p>YouTube states creators receive <strong>"70% of Super Thanks revenue recognised by Google"</strong> after tax and fee deductions. That 70% is the accurate figure for a payment made directly through YouTube on the web or Android. It is not the full picture for a payment made through the iOS app, where Apple's own fee applies before YouTube's share is calculated.</p>
+
+        <h3>How much is 1 Super Thanks on YouTube?</h3>
+
+        <p>A viewer chooses from YouTube's official price tiers: <strong>$2, $5, $10, or $50</strong> (or the local currency equivalent). Creators have also reported receiving larger custom-style amounts, including a real <strong>$199 Super Thanks</strong>, though $2 to $50 is the standard published range.</p>
+
+        <h3>What happens when you press Super Thanks on YouTube?</h3>
+
+        <p>The viewer picks a price tier and pays once (not a subscription). YouTube shows a one-time animated GIF over the video visible only to the buyer, and posts a distinct, colorful, highlighted comment in the comments section that the creator can reply to directly.</p>
+
+        <h2>The Real Number Is Closer to 50% on iOS</h2>
+
+        <p>Super Thanks is worth enabling at every channel size. There's no cost to turning it on and no downside to a $0 month while it sits idle. <strong>The number to plan around isn't the advertised 70%.</strong></p>
+
+        <p>For any channel whose audience skews toward watching on iPhone or iPad, <strong>the realistic net is closer to half</strong>, and that's the figure worth knowing before crediting Super Thanks with more revenue than it delivers.</p>
       </>
     ),
   },
