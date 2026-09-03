@@ -375,6 +375,39 @@ Already clean, skip: youtube-super-thanks, youtube-channel-memberships,
 video-length-by-niche, shorts-vs-long-form, youtube-view-growth-curve,
 youtube-engagement-rate, music-video-ideas.
 
+## The 73 existing articles: what happens to them
+
+Nothing is deleted and nothing is rewritten. Decided 2026-09-03.
+
+- **No deletions.** The 07-09 cut removed thin programmatic pages and still
+  cost five weeks of impressions when the purge landed. The articles are
+  not thin, they rank for the site's only real clicks, and cutting any of
+  them would repeat that cliff for no gain.
+- **No rewrites, retitles, or "relaunches."** On-page passes across the
+  high-impression pages were done in July and moved nothing
+  (`FOUNDATION.md` → "What NOT to do"). The authority-gated commercial
+  posts (keyword tools, analytics tools, SEO tools, competitor analysis,
+  vidIQ, TubeBuddy) stay live as they are; they are gated on links, not
+  copy.
+- **Winners get linked into, not touched.** Each new entry links to the
+  existing posts on the same problem, and the existing post gets one
+  inbound link to the new sibling in the same commit (Stage 3 inbound
+  links). Pairs to wire as entries ship: `youtube-ctr` ↔ #22,
+  `youtube-channel-not-growing` ↔ #20/#21, `youtube-watch-hours` ↔ #14,
+  `youtube-analytics` ↔ #1/#3/#36-42, `youtube-algorithm` ↔ #11,
+  `shorts-vs-long-form` ↔ #47-49, `restart-youtube-channel` ↔ #20,
+  `youtube-demonetization` ↔ #33, monetization pillar "Read Next" ↔ #4/#5/#34,
+  `youtube-view-growth-curve` ↔ #12/#45.
+- **The only edit allowed on an old post** is the AI-citation sweep below:
+  one post per pass, after a new entry ships, bold pass + false-"free"
+  check + American spelling + a real PAA-sourced FAQ array. Adding the
+  inbound link above is the other exception. Nothing else.
+- **Judgment waits for data.** Every post shipped 08-13 to 08-21 is
+  unjudgeable before a Search Console export dated 2026-09-05 or later.
+  Any post that later shows position 8-20 with 500+ impressions and no
+  clicks gets a title/meta review at that point, proposed to the user
+  first, never done on sight.
+
 ## Shipped (from the previous plan, kept for the record)
 
 - Video Ideas cluster: ~~pillar~~ (rewritten 2026-08-20), ~~gaming~~
