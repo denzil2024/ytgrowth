@@ -524,6 +524,66 @@ KPI: tier-1 visitors, calculator use.
     top3: reddit, reddit, support.google · CLEAN vs `/blog/youtube-cpm` ·
     fold in "reddit youtube january revenue drop", 8 of 10 forums
 
+## The internal link map
+
+Every entry gets its links from this section plus its own scope note. Nothing
+is left to the writer's judgment on the day, which is how orphan articles and
+ad-hoc patching happened before.
+
+**Three links minimum, per article, in this order of priority:**
+
+1. **The feature page named on the entry.** Mandatory, in the CtaCard. Never
+   a different feature.
+2. **The anchor post for its topic** (table below). This is the established
+   live post that owns the broad topic; the new article links up to it in the
+   body, and the anchor gets one inbound link back to the new article in the
+   same commit.
+3. **A sibling** only where the entry's scope note names one ("pairs with
+   #N", "write #N first"), or where the block is a genuine cluster (11, 6,
+   10). Do not force a sibling link inside a shared-state block such as 7.
+
+### Anchor posts by topic
+
+The anchor is the live post a reader of this topic would want next. Chosen by
+what the post's own headings cover, not by keyword overlap.
+
+| Entries | Topic | Anchor post | Also link when relevant |
+|---|---|---|---|
+| 1, 3, 36-38, 41, 42, 74, 89 | Analytics, metrics, traffic sources | `/blog/youtube-analytics` | `/blog/youtube-channel-audit` |
+| 2, 6, 12, 29 | Outliers, VPH, viral multiples | `/blog/youtube-view-growth-curve` | `/blog/youtube-trends` |
+| 4, 5, 31-33, 93, 94 | Money, payouts, AdSense | `/blog/google-adsense-youtube` | `/blog/youtube-rpm` |
+| 7, 61, 85-88 | Competitors, niche, positioning | `/blog/youtube-competitor-analysis` | `/blog/youtube-niche` |
+| 8, 9-11, 13, 16-18, 70-73 | Reach and view drops | `/blog/youtube-channel-not-growing` | `/blog/youtube-algorithm` |
+| 14, 39, 40, 43, 75-77 | Watch time and retention | `/blog/youtube-watch-hours` | `/blog/youtube-ctr` |
+| 15, 20, 21, 51, 68 | Subscribers and plateaus | `/blog/youtube-channel-not-growing` | `/blog/free-subs-on-youtube` |
+| 22-25, 44, 64, 78 | Thumbnails and CTR | `/blog/youtube-ctr` | `/blog/youtube-thumbnail-ideas` |
+| 26-28, 56-58, 92 | Search, titles, metadata | `/blog/what-is-youtube-seo` | `/blog/youtube-seo-best-practices` |
+| 30, 91 | Evergreen, trends, promotion | `/blog/youtube-trends` | `/blog/more-views-on-youtube` |
+| 34 | Affiliate | `/blog/youtube-monetization-beyond-ads` | `/blog/youtube-sponsorships` |
+| 45-49 | Zero views, Shorts troubleshooting | `/blog/shorts-vs-long-form` | `/blog/youtube-shorts-algorithm` |
+| 50, 62, 63, 65-67, 81-84 | Starting out, format decisions | `/blog/start-youtube-channel` | `/blog/too-late-to-start` |
+| 69 | Upload cadence and burnout | `/blog/best-time-to-post` | `/blog/youtube-channel-not-growing` |
+| 52-55 | Policy, strikes, enforcement | `/blog/youtube-demonetization` | `/blog/youtube-ai-policy` |
+| 59, 60, 90 | Community, comments, notifications | `/blog/grow-youtube-channel` | `/blog/youtube-algorithm` |
+| 79, 80 | AI content | `/blog/youtube-ai-policy` | `/blog/faceless-youtube-channel-ideas` |
+| 19, 35 | Growth-rate data studies | `/blog/youtube-engagement-rate` | `/blog/video-length-by-niche` |
+
+### Rules for the anchor link
+
+- **The inbound link ships in the same commit.** Adding the new article
+  without editing its anchor leaves the new page orphaned. Both edits, one
+  commit, per the runbook's Stage 3.
+- **One inbound link per anchor per new article**, placed in the section that
+  is actually about the sub-topic. Never a link dump at the bottom.
+- **A data study links out to every diagnostic entry that cites its numbers**,
+  and each of those entries cites the study. That pairing is listed on the
+  study's own entry.
+- **If an anchor already links to three or more block articles**, stop adding
+  and link the new article to the closest sibling instead. An anchor with
+  fifteen outbound links to its own cluster reads as a link farm.
+- **Never link to an entry that has not shipped.** Check the strike-through
+  first; a link to an unwritten article is a 404.
+
 ## Keyword Planner sanity pass (user step, one export)
 
 The July winners (`youtube-ai-policy`, `shorts-vs-long-form`,
