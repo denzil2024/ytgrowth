@@ -3,7 +3,7 @@
 Plan entry: `#1` · Feature: Channel Audit / Weekly Report · Anchor post: `/blog/youtube-analytics`
 Target query: `youtube traffic sources explained` (+ `direct or unknown traffic source`, `youtube browse features meaning`, `youtube suggested videos traffic source`, `how to increase browse features youtube`, `youtube traffic source types`)
 Researched: 2026-09-04
-Status: verified, ready to push (awaiting go-ahead)
+Status: done, live
 
 Volume not required (site standard). Confirmation is GSC position 8.4-10.9
 across 4 real query variants with real impressions and no dedicated page
@@ -235,15 +235,14 @@ Notes: approved as-is, no changes requested
       prerendered (up from 123), title tag and FAQPage schema confirmed
       present in the built HTML, cover path confirmed correct in the
       prerendered output
-- [ ] Stage 5b, push and go live — BLOCKED on explicit user go-ahead only.
-      Nothing else remains.
+- [x] Stage 5b, pushed as commit `480e8eab7`, deploy confirmed live by
+      polling ytgrowth.io/blog/youtube-traffic-sources until it returned 200,
+      then checking the real served HTML: title tag, FAQPage schema, cover
+      image path, and the 10-12% CTR figure all present. sitemap.xml and
+      llms.txt on production both confirmed to include the new entry.
 
-Outstanding for this article:
+Outstanding for this article: none. Done.
 
-- Not pushed. `frontend/dist/` output is generated but untracked; per the
-  session's own prior incident (new articles 404'd because dist/ was never
-  committed), this must be staged in the same commit as the source changes,
-  not assumed.
 - blogpros.com never loaded (timed out twice) during research; not a
   blocker, its content on "direct or unknown" is covered more deeply by the
   two Reddit threads that did load.

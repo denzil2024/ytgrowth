@@ -116,9 +116,10 @@ A dedicated page is the cheapest win on the list.
 Funnel: existing creators reading their own Studio. CTA: Channel Audit /
 Weekly Report ("the specific issue, with a real number from your data").
 
-1. YouTube traffic sources explained (+ direct or unknown traffic source,
+~~1. YouTube traffic sources explained (+ direct or unknown traffic source,
    + reach tab) · Channel Audit · GSC pos 8.4-10.9 on 4 variants ·
-   top3: humbleandbrag, support.google, databox · Reddit #4
+   top3: humbleandbrag, support.google, databox · Reddit #4~~ — published
+   2026-09-04 as `/blog/youtube-traffic-sources`, commit `480e8eab7`
 2. VPH on YouTube, views per hour meaning · Outliers · GSC pos 6.5-8.0 on
    3 variants ("vph in youtube meaning", "what does vph mean on youtube") ·
    top3: support.vidiq, reddit, alanspicer
