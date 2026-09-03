@@ -1,0 +1,57 @@
+# Research round 2026-09-03b: expansion pass beyond the first 51 entries
+# Seeds: (a) GSC gaps at position 5-40 with no page, (b) Reddit mining per feature,
+# (c) PAA follow-through from round A.
+
+# --- GSC gap: trending-topic discovery (Trends feature) ---
+how to find trending topics for youtube
+how to find what is trending on youtube right now
+youtube trending tab how it works
+how to know if a topic is saturated on youtube
+
+# --- GSC gap: Studio mechanics people cannot find ---
+create default descriptions and tags on youtube
+youtube upload defaults settings
+how to schedule youtube videos
+youtube video chapters not working
+youtube subtitles hurt or help views
+youtube playlist order affect views
+youtube end screen best practices
+youtube pinned comment strategy
+youtube community post reach
+how to change youtube channel name without losing subscribers
+youtube handle vs channel name
+youtube channel keywords where to add
+
+# --- Reddit mining: publishing decisions creators agonize over ---
+reddit youtube should i delete a bad video
+reddit youtube unlisted vs private old videos
+reddit how often should i upload youtube
+reddit youtube niche too broad
+reddit youtube changing niche mid channel
+reddit youtube burnout upload schedule
+reddit youtube first 100 subscribers how long
+reddit youtube is my thumbnail bad
+reddit youtube should i use my real name
+reddit youtube copyright claim what happens
+
+# --- Reddit mining: money questions past the basics ---
+reddit youtube first payment how long
+reddit youtube taxes as a creator
+reddit is youtube worth it financially small channel
+reddit youtube sponsorship how much to charge
+
+# --- Diagnostic gaps not in the current plan ---
+youtube video removed by youtube what to do
+youtube copyright claim vs strike difference
+youtube channel strike appeal
+why did my youtube video get age restricted
+youtube limited ads yellow icon
+youtube video processing stuck
+youtube deleted my comment
+youtube analytics realtime not matching
+why are my youtube views from wrong country
+youtube audience is not my target
+youtube video ranking dropped
+youtube old videos stopped getting views
+youtube channel views down but subscribers up
+should i delete old youtube videos that get no views

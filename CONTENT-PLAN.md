@@ -16,6 +16,12 @@ Rebuilt 2026-09-03 from one research round (94 Serper SERP + PAA pulls, the
 archived in git history (`43d5b9562`). What shipped before the rebuild is in
 `FOUNDATION.md`'s history log; what was killed is at the bottom of this file.
 
+Expanded 2026-09-03b with Blocks 7 to 10 (entries 52-74): a second round of
+45 pulls seeded from the Search Console gap list, Reddit thread mining per
+feature, and PAA follow-through. 39 passed the SERP check, 6 were dropped
+for cannibalizing live posts. Evidence in
+`research/rounds/2026-09-03b-queries-summary.txt`.
+
 Last updated: 2026-09-03
 
 **Guardrails for whoever is working this list** (the full set is in
@@ -49,7 +55,7 @@ Last updated: 2026-09-03
   `DATA-STUDIES.md`. They ship with the outreach step, not just a publish.
 
 Cadence target: 3 articles per week, one of them a data study every other
-week. At that pace this list is ~17 weeks of work (through mid-January
+week. At that pace this list is ~25 weeks of work (through late February
 2027). Strike items as they ship, same session. Do not add an entry that
 skipped the standard.
 
@@ -265,7 +271,109 @@ visitors, tool use.
     each channel's 50 newest uploads, not full history), source honestly
 51. How long it takes to get 1,000 subscribers · Channel Audit ·
     top3: reddit, scalelab, quora · PAA x4 · uses study #35's figure once
-    it clears the floor, otherwise public sources with one disclosure
+    it clears the floor, otherwise public sources with one disclosure ·
+    scope: "should I delete old videos with no views" belongs to #62, do
+    not absorb it here
+
+## Block 7 · Policy and enforcement panic (existing channels, high urgency)
+
+Added 2026-09-03b. A creator whose video was removed, restricted or claimed is
+in the most urgent state on the site, and every SERP here is forum-led because
+Google's own help pages answer the policy but not the panic.
+
+Funnel: problem-aware, any size, often monetized. CTA: Channel Audit. KPI:
+tier-1 visitors reaching `/features/channel-audit`.
+
+52. YouTube removed my video, what to do · Channel Audit ·
+    top3: support.google, reddit, quora · scope: the removal-and-appeal path
+    only; `/blog/youtube-demonetization` owns strikes and the yellow icon
+53. Why did my YouTube video get age restricted · Channel Audit ·
+    top3: reddit, reddit, facebook · CLEAN: zero mentions in
+    `/blog/youtube-demonetization`
+54. YouTube video processing stuck · Channel Audit ·
+    top3: reddit, support.google, yttalk
+55. YouTube deleted my comment · Channel Audit ·
+    top3: reddit, quora, support.google
+
+## Block 8 · Studio mechanics nobody documents well
+
+Added 2026-09-03b. Small, concrete "how does this actually work" questions
+where the SERP is Reddit plus a scattering of small sites. Each one maps to a
+setting a creator can change today.
+
+Funnel: problem-aware, any size. CTA: SEO Studio for 56-58, Channel Audit for
+59-61. KPI: tier-1 visitors reaching the named feature page.
+
+56. Where to add YouTube channel keywords · SEO Studio ·
+    top3: youtube, reddit, bu.edu · CLEAN: zero mentions in
+    `/blog/youtube-channel-optimization`
+57. Do YouTube subtitles help views · SEO Studio ·
+    top3: reddit, amberscript, broadstream · CLEAN: zero mentions in
+    `/blog/youtube-seo-best-practices`
+58. YouTube video chapters not working · SEO Studio ·
+    top3: reddit, support.google, tubealfred · scope: the troubleshooting
+    case only; `/blog/youtube-description-template` owns how to write them
+59. YouTube pinned comment strategy · Channel Audit ·
+    top3: reddit, reddit, support.google · CLEAN: zero mentions in
+    `/blog/more-views-on-youtube`
+60. YouTube community post reach · Channel Audit ·
+    top3: support.google, reddit, navigatevideo · CLEAN: zero mentions in
+    `/blog/grow-youtube-channel`
+61. How to know if a topic is saturated on YouTube · Competitor Analysis ·
+    top3: reddit, reddit, linkedin · `/blog/youtube-niche` mentions
+    saturation twice and owns no heading on it
+
+## Block 9 · Decisions creators agonize over (Reddit-native)
+
+Added 2026-09-03b. Sourced by mining Reddit thread titles per feature, the
+method that produced the July winners. Every SERP here is 8-10 Reddit results,
+which means no publisher has written the definitive answer.
+
+Funnel: pre-monetization to early-monetized. CTA: Channel Audit, free tools
+for 64 and 66. KPI: tier-1 visitors.
+
+62. Should I delete a bad YouTube video · Channel Audit ·
+    top3: reddit x3, 9 of 10 results are forums · pairs with #51's
+    "should I delete old videos with no views", write 62 first
+63. Unlisted vs private for old YouTube videos · Channel Audit ·
+    top3: reddit x3, 6 of 10 forums
+64. How to tell if your YouTube thumbnail is bad · Thumbnail IQ (via
+    `/tools/youtube-thumbnail-tester`) · top3: reddit x3, 9 of 10 forums ·
+    CLEAN: zero overlap with `/blog/youtube-thumbnail-ideas`
+65. Is my YouTube niche too broad · Competitor Analysis ·
+    top3: reddit x3, 9 of 10 forums · `/blog/youtube-niche` owns no
+    heading on breadth
+66. Changing YouTube niche mid-channel · Channel Audit ·
+    top3: reddit x3 · one mention in `/blog/youtube-niche`, no heading
+67. Should I use my real name on YouTube · free tools, then Starter pack ·
+    top3: reddit x3, 8 of 10 forums
+68. How long to get your first 100 YouTube subscribers · Channel Audit ·
+    top3: reddit x3, 9 of 10 forums · CLEAN vs `/blog/free-subs-on-youtube`
+69. YouTube upload schedule and burnout · Channel Audit ·
+    top3: reddit x3, 7 of 10 forums · scope: sustainability, not cadence
+    optimization, which `/blog/best-time-to-post` owns with 19 mentions
+    and its own heading
+
+## Block 10 · Wrong-audience and decay diagnostics
+
+Added 2026-09-03b. The queries a creator types when the numbers are fine but
+wrong, or were fine and stopped. Distinct from Block 2, which is a sudden drop.
+
+Funnel: problem-aware, existing channel. CTA: Channel Audit for 70-72,
+Competitor Analysis for 73. KPI: tier-1 visitors reaching the feature page.
+
+70. Why are my YouTube views from the wrong country · Channel Audit ·
+    top3: reddit, quora, vpntous · zero big-authority domains in the top 10
+71. My YouTube audience is not my target audience · Channel Audit ·
+    top3: reddit, strikesocial, support.google
+72. YouTube old videos stopped getting views · Channel Audit ·
+    top3: reddit, quora, tunepocket · scope: decay on an established
+    channel; #9 is a sudden sitewide drop
+73. YouTube views down but subscribers up · Channel Audit ·
+    top3: support.google, quora, reddit
+74. YouTube realtime analytics not matching · Weekly Report ·
+    top3: reddit, support.google, quora · pairs with #3 (how often
+    analytics updates), write #3 first and confirm it did not absorb this
 
 ## Keyword Planner sanity pass (user step, one export)
 
@@ -352,6 +460,39 @@ in the top 3, or wrong searcher):
 - YouTube shadowban checker as a free tool: real detection needs a
   search.list call per check (100 units) and cannot be cached across users.
   Not viable. #18 is the article; no tool.
+
+Dropped in the 2026-09-03b expansion round. Six failed the SERP top-3 check
+(two or more big-authority domains in the top 3):
+
+- "how to find what is trending on youtube right now": youtube.com,
+  trends.google.com and support.google all in the top 3
+- "youtube trending tab how it works": support.google + youtube.com
+- "youtube upload defaults settings": youtube.com + tubebuddy
+- "how to change youtube channel name without losing subscribers":
+  youtube.com + support.google, 5 of 10 big
+- "youtube handle vs channel name": support.google + vidiq
+- "youtube channel strike appeal": support.google twice in the top 3
+
+Six more passed the SERP check but were dropped for cannibalizing a live post
+that already owns the topic with its own headings, checked against
+`posts.jsx` rather than assumed:
+
+- "how to find trending topics for youtube": `/blog/youtube-trends` has 18
+  headings on trend discovery, including "The 7 Best Free Ways to Find
+  Trending YouTube Topics" and "How Do I Find Trending Topics for My
+  Specific Niche?"
+- "how often should i upload to youtube" and "how to schedule youtube
+  videos": `/blog/best-time-to-post` owns "How Often Should You Post on
+  YouTube?" and "Should I use YouTube's scheduler?"
+- "what happens with a youtube copyright claim": `/blog/copyright-free-music`
+  owns "What is the difference between a copyright claim and a copyright
+  strike?"
+- "youtube copyright claim vs strike" and "youtube limited ads yellow icon":
+  `/blog/youtube-demonetization` owns "Problem 1: Limited Ads on One Video
+  (the Yellow Icon)" and "Problem 2: Copyright Claims and Strikes (Two Very
+  Different Things)"
+- "how much to charge for a youtube sponsorship": `/blog/youtube-sponsorships`
+  owns "How Much Sponsors Pay and How to Set Your Rate"
 
 Carried-over items killed on the new standard:
 
