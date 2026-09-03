@@ -60,6 +60,25 @@ Last updated: 2026-09-03
 - **DATA STUDY** entries use our own tables, zero quota, and follow
   `DATA-STUDIES.md`. They ship with the outreach step, not just a publish.
 
+**What a block is, and how its articles link.** A block is a group of readers
+in the same state, not a pillar/spoke cluster. There is no hub page and no
+hierarchy; the old cluster model was retired 2026-09-03. Linking follows the
+reader, not the block boundary:
+
+- **Link to a sibling only when the same reader plausibly has both
+  questions.** Some blocks are genuine clusters (Block 11's three retention
+  entries are one problem at different points in a video; Blocks 6 and 10 are
+  each one symptom seen from different angles). Link those freely.
+- **Some blocks are a shared state, not a shared topic.** Block 7's four
+  entries (video removed, age restricted, processing stuck, deleted comment)
+  are unrelated emergencies. Do not cross-link them just because they sit in
+  the same block. A forced link is worse than none.
+- **The scope notes on entries are the real link map.** Where an entry says
+  "pairs with #N" or "write #N first", those two link to each other. Where it
+  says a live post owns a topic, link out to that post instead.
+- **Every article links to its feature** (mandatory, above) and to any live
+  post named in its scope note. Sibling links are on top of that, not instead.
+
 Cadence: **1 to 2 articles per day**, with a data study roughly every two
 weeks. At that pace this list is 7 to 13 weeks of work. Strike items as they
 ship, same session. Do not add an entry that skipped the standard.

@@ -1146,6 +1146,10 @@ that timeline. Do not let this file imply otherwise.
 - Every entry names a product feature, a funnel stage and a KPI column.
 - The plan holds 30+ unshipped entries at all times; below that, run a
   research round before writing the next article.
-- Every spoke links back to its pillar and its sibling spokes; every block
-  article links to its block siblings and to the study that supplies its
-  numbers.
+- Every spoke in the three legacy pillar clusters (video ideas, starting a
+  channel, monetization beyond ads) links back to its pillar and its sibling
+  spokes. Blocks are not clusters and have no pillar: a block article links
+  to a block sibling only when the same reader plausibly has both questions,
+  to any live post named in its scope note, and to the study that supplies
+  its numbers. See `CONTENT-PLAN.md` → "What a block is, and how its
+  articles link". Do not force a link just because two entries share a block.
