@@ -1,10 +1,15 @@
 # YTGrowth — Content Strategy Foundation
 
-Process, rules, and history for the keyword-cluster content plan. Read this once; check
-`CONTENT-PLAN.md` for the actual cluster map day to day.
+Process, rules, diagnosis and history for the content plan. Read this once; check
+`CONTENT-PLAN.md` for the run order day to day.
 
-Same method as the SavvyHomie project (`niche_website/FOUNDATION.md` + `CONTENT-PLAN.md`),
-adapted for this niche.
+Same file split as the SavvyHomie project (`niche_website/FOUNDATION.md` +
+`CONTENT-PLAN.md`). The method is not the same: SavvyHomie validates keywords
+by Keyword Planner volume and organic difficulty; this site, since the
+2026-09-03 rebuild, validates diagnostic questions by SERP composition, a
+real demand signal, and a product feature (see "Confirmation standard" and
+"The SaaS layer" below). The keyword-cluster seed workflow it started with
+was retired the same day, after three rounds produced no proven winner.
 
 ---
 
@@ -51,6 +56,25 @@ article exists at all:
 - Comedy's cadence figure rests on **13 channels**, which is too thin to
   publish. That is a fail, and the honest fix is dropping the figure, not
   caveating it twice in the body.
+
+### The second test (diagnostic posts, added 2026-09-03)
+
+The one test governs data studies. It does not govern the posts that
+actually won in the first four months (`too-late-to-start`,
+`restart-youtube-channel`, `youtube-channel-not-growing`,
+`youtube-demonetization`, `youtube-ai-policy`, `youtube-watch-hours`,
+`youtube-ctr`, `shorts-vs-long-form`), none of which needed the database.
+They pass a different test:
+
+**Is this a question a creator types when something on their channel is
+confusing or going wrong, is the top 3 led by Reddit, Quora or a help
+thread rather than vidIQ, TubeBuddy or Google, and does the answer send the
+reader to a named product feature?**
+
+All three, or it is not written. The site has two content jobs with two
+tests and two KPIs (see "The SaaS layer" below). A post that passes neither
+test (a listicle, a tool comparison, a head-term guide) is not written,
+whatever its volume.
 
 ### The data floor
 
@@ -109,6 +133,86 @@ Measurable targets, taken from the reference:
 Also: US English, dollars, US reader assumed throughout. The remaining
 per-rule detail lives in `CLAUDE.md` and memory and is not restated here,
 because restating rules in a fifth file is the patching problem.
+
+---
+
+## The SaaS layer (added 2026-09-03)
+
+Until this section existed the plan was a traffic plan for a publisher.
+The product is a $5-to-$149 SaaS behind a pay-before-signup wall, and none
+of the plan's inputs or outputs mentioned it. This section is what makes it
+a SaaS content plan. Every entry in `CONTENT-PLAN.md` carries the four
+fields below or it does not go in.
+
+### 1. Feature map
+
+Every article names the feature it sells and links to it from its CtaCard.
+The feature is chosen by what the reader would do next, not by what we want
+to push.
+
+| Reader's situation | Feature | Page |
+|---|---|---|
+| A number on their channel dropped, stalled, or looks wrong | Channel Audit | `/features/channel-audit` |
+| Wants their own metrics explained weekly, with a verdict | Weekly Report | (in-app, sold via Channel Audit page) |
+| CTR, thumbnail, or "did my edit hurt the video" | Thumbnail IQ | `/features/thumbnail-iq` |
+| Title, description, search visibility, ranking speed | SEO Studio | `/features/seo-studio` |
+| Wants to see another channel's numbers | Competitor Analysis, entered through `/tools/youtube-channel-stats-checker` | `/features/competitor-analysis` |
+| One video blew up, "what is viral", VPH, outlier scores | Outliers | `/features/outliers` |
+| Money questions (views to $X, RPM, payouts) | Earnings calculators, then Channel Audit | `/tools/youtube-money-calculator` and siblings |
+| Brand-new channel, zero views | Free tools, then the $5 Starter pack | `/tools` |
+
+An article whose reader has nowhere to go in this table is not written.
+"Keyword Research" is deliberately absent as a destination: its head terms
+are authority-gated (157 "free youtube keyword research tool" variants,
+12,552 impressions, 0 clicks, positions 45-64) and the feature is reached
+through SEO Studio articles instead.
+
+### 2. Funnel stage, and the CTA that fits it
+
+| Stage | Who | CTA | Wrong CTA |
+|---|---|---|---|
+| Problem-aware, existing channel (Blocks 2-3 in the plan) | Monetized or near-monetized, already reads Studio | Channel Audit / Thumbnail IQ / SEO Studio, $5 Starter pack as the first purchase | "Start free" (there is no free tier), a subscription pitch in the intro |
+| Monetized (Block 4) | Already pays for tools | Calculator, then Channel Audit | Beginner framing |
+| Awareness / benchmark (Block 5) | Any size, wants a number | Weekly Report ("your number every Monday") | Hard sell; these earn citations, not checkouts |
+| Pre-monetization (Block 6) | Zero-view channels | Free tools, Starter pack | Growth/Agency plan pitch |
+| Data study (any block) | Journalists, tool blogs, AI assistants | Link to the diagnostic posts that use the finding; the study itself sells nothing | A CtaCard mid-study |
+
+### 3. Two content jobs, two KPIs
+
+| Job | What it earns | KPI | Never judged by |
+|---|---|---|---|
+| Diagnostic posts (Blocks 1-6) | Tier-1 visitors with a problem the product solves | Tier-1 users/day and tier-1 sessions that reach a `/features/*` page, `/tools/*` page, or checkout | Referring domains |
+| Data studies | Links and citations, which lift every other page | Referring domains and AI-assistant referrals per study | Tier-1 visitors |
+
+Mixing the two is how the previous plan judged a data study by clicks and a
+listicle by nothing. The monthly measurement below reports both columns
+separately.
+
+### 4. Distribution is part of shipping a data study
+
+The diagnosis (item 4) says the site is gated on links, not content. A data
+study that is published and not sent anywhere earns nothing. Each study's
+research file carries an outreach list built before the study is written:
+the sites that ranked in its SERP and cited a weaker number, the newsletters
+and tool blogs that covered the previous study, and the Reddit threads where
+the question was asked. The study is "done" when the list has been sent,
+same session as the publish. The user sends; the research file holds the
+list and the one-paragraph pitch.
+
+### 5. Free tools are content
+
+`/tools/youtube-channel-stats-checker` earned 15 clicks in the 08-25
+export, more than 70 of the 73 articles. Tools survive zero-click SERPs and
+AI answers because an assistant cannot run them. Two rules:
+
+- When a confirmed query's SERP is tool-shaped (checker, generator,
+  calculator), the answer is a tool page with the article underneath it,
+  not an article. Quota math first: a tool that needs search.list per use
+  (100 units, uncacheable across users) is not built. The shadowban checker
+  failed on exactly this.
+- Diagnostic articles link to the matching free tool before the paid
+  feature where one exists (stats checker before Competitor Analysis,
+  thumbnail tester before Thumbnail IQ, calculators before Channel Audit).
 
 ---
 
@@ -220,6 +324,33 @@ cliff, so a "zero impressions" read on any of them right now is confounded,
 not a verdict. Do not judge them before a GSC export dated 2026-09-05 or
 later, once the site has had real runway past the cliff.
 
+### 8. What won, and where it came from (verified 2026-09-02 against the 08-25 export and git)
+
+Pages with real clicks at position under ~15 share one shape: a specific,
+answerable question a creator types when something is confusing or going
+wrong. `too-late-to-start` (pos 7.4), `restart-youtube-channel` (8.1),
+`youtube-demonetization` (10.4), `youtube-watch-hours` (10.2),
+`youtube-ctr` (10.7), `shorts-vs-long-form` (9.7), `shorts-tagging` (10.1),
+`youtube-channel-audit` (12.8), `youtube-channel-not-growing` (14.5). The
+losers are the other shape: broad advice, tool comparisons, listicles
+(63 hand-written articles averaged 2.2 clicks per page; 1 of 73,
+`youtube-trends`, carried 22% of all clicks).
+
+Where the winners came from is on record, not guessed: Reddit-style
+question mining plus PAA clustering (the July 2026 conversational-query
+queue, MEDIAVINE.md 2026-07-13 to 07-16, shipped with no Keyword Planner
+volume and no GSC export), GSC-verified content gaps (demonetization), and
+deep real-SERP research on a factual topic (watch-hours, ctr). The later
+Keyword Planner cluster process (video-ideas, Aug) has no proven winner in
+the data yet. The confirmation standard below is built from the method that
+worked, and the Keyword Planner seed workflow is retired.
+
+The plan itself was also part of the problem: it never held more than about
+six items ahead, three files tracked the same studies under different
+numbers, and one confirmed zero-quota study (posting time vs. performance)
+was marked "superseded" by mistake. Rebuilt 2026-09-03 with 51 confirmed
+entries, one number sequence, and the SaaS layer above.
+
 ---
 
 ## How this site differs from SavvyHomie
@@ -235,19 +366,36 @@ ranking and being cited well, not the goal to chase directly.
 
 ---
 
-## Confirmation signals
+## Confirmation standard (replaced 2026-09-03)
 
-1. Google SERP test, the primary one. Is there at least one smaller or independent site (a solo
-   creator's blog, a smaller SaaS competitor, a niche YouTube-tips site) in the top 3, not
-   entirely Backlinko, HubSpot, vidIQ's own blog, or TubeBuddy's own blog? If the whole top 3 is
-   huge authority, it's hard. A keyword must pass this to confirm, the signal below is extra
-   credit, never a substitute. Also watch for tool-intent SERPs (name generators, intro makers,
-   trend trackers) — those fail an article regardless of who ranks, see the dropped log below.
-2. AI-answer-engine signal, secondary and a bonus. A candidate that's a clear, specific,
-   answerable question gets noted as a bonus. Never confirms a keyword that fails the SERP test.
+An entry goes into `CONTENT-PLAN.md` when it passes all four. Record the
+evidence on the entry.
 
-Volume source: real Google Keyword Planner exports only, never invented or estimated. Drop
-CSVs into `keyword-exports/`, say "uploaded" when done.
+1. **SERP top-3 check.** Pull the live top 10 (Serper, `gl: us`). At most
+   one big-authority domain in the top 3 (youtube.com, support.google,
+   vidIQ, TubeBuddy, Backlinko, HubSpot, Hootsuite, Semrush, Ahrefs,
+   Wikipedia, Shopify, Canva and the like), and at least one Reddit, Quora,
+   help-forum or small-site result. Two big domains in the top 3 is a fail.
+   Tool-shaped SERPs (checker, generator, calculator) fail an article and
+   go to the free-tools rule in "The SaaS layer".
+2. **A real demand signal.** One of: a Reddit thread on page 1 for the
+   query; the query or a variant in Google's People Also Ask; the query in
+   our Search Console export with impressions and no dedicated page. A
+   query with none of the three is a guess.
+3. **The shape.** A creator's question about their own channel (something
+   dropped, stalled, is missing, or needs a benchmark), or a data-study
+   question our tables can answer. Head terms, listicles, "best tools", and
+   viewer-intent queries fail here whatever the SERP looks like.
+4. **A product feature.** The reader has a next step in the feature map
+   table. No feature, no entry.
+
+Keyword Planner is a sanity pass, not a gate: once per research round the
+user pastes the confirmed phrases into Keyword Planner and drops one export
+into `keyword-exports/` ("uploaded"). Lowest-bucket entries with no Search
+Console evidence move to the bottom of their block. Nothing is removed on
+volume alone, because the July winners never had a volume figure.
+
+AI-answer-engine fit stays a bonus, never a confirmation.
 
 ---
 
@@ -264,30 +412,55 @@ by format, or by distinct product feature. Seeds that fail are the generic advic
 
 ---
 
-## Workflow
+## Research round (replaced 2026-09-03; the Keyword Planner seed workflow is retired)
 
-1. Pick one cluster or gap at a time, never map everything at once.
-2. Pillar first, always. Propose 2-3 broad head-term pillar candidates (never long-tail question
-   phrases, a narrow seed returns a shallow export with nothing to mine), never a single
-   guessed pillar.
-3. Pull the pillar candidates through Google Keyword Planner, drop CSVs into `keyword-exports/`.
-4. Confirm the pillar: strongest real volume, on-topic, doesn't duplicate an existing live
-   post's angle, passes the Google SERP test.
-5. Only after the pillar is confirmed, mine spoke candidates from inside that same Keyword
-   Planner export. Extract every keyword at 500+/mo that's on-topic, isn't a near-duplicate of
-   an existing live post or another confirmed keyword, isn't off-format.
-6. Every surviving spoke candidate gets the Google SERP check, that decides confirm or drop.
-7. 3 confirmed is the floor for a sub-cluster to stay in the plan, below that, drop it, don't
-   leave a stub. 5 is a first-round target, not a hard cap.
-8. Pillar gets written first even if it's the hardest term in the cluster.
-9. Report back every time: confirmed (volume, who ranks, which signal passed), dropped (why),
-   running sub-cluster count, running cluster total. Track pillar separate from spoke count.
+A research round refills `CONTENT-PLAN.md`. It runs when the plan holds
+fewer than 30 unshipped entries, never article by article. The 2026-09-03
+round is the reference: 94 queries, 51 confirmed, in one session.
+
+1. **Seed from three sources, in this order.** (a) The latest Search
+   Console query export: every query at position 5-40 with impressions and
+   no page whose title answers it. (b) Reddit mining via Serper: queries of
+   the form "reddit youtube <symptom>" for each feature in the feature map
+   (views dropped, impressions, CTR, search, shorts, monetization review),
+   collecting thread titles, which are the creators' own phrasing.
+   (c) PAA follow-through: every People Also Ask question returned in (a)
+   and (b) becomes a candidate, and the related-searches list shows which
+   variants to fold in.
+2. **One Serper pull per candidate** (`scripts/serper-batch.mjs`:
+   top 10 + PAA + related searches, saved raw). Grade each against the
+   confirmation standard. Fold near-duplicates into one entry with `(+ x)`.
+3. **Cannibalization check against live titles**, not slugs. Grep
+   `posts.jsx` titles and H2s for the intent. A query the live post's
+   subtitle already answers is dropped (this round: "how to increase rpm",
+   "how does youtube decide who to show your video to").
+4. **Assign feature, block and KPI** from the SaaS layer. Order the plan:
+   Search Console gaps first, then the paying segment's diagnostics, then
+   monetization, then benchmarks, then zero-view beginners last. Interleave
+   one data study per six diagnostic posts.
+5. **Log every failure in the dropped log** with the top-3 domains, so it is
+   not re-proposed.
+6. **Hand the user the Keyword Planner sanity pass** (one export).
+7. Report once: confirmed count per block, dropped count with reasons,
+   weeks of runway at 3 per week.
+
+Pillar/spoke clusters are not the unit any more; the block is. The three
+pillar clusters that exist (video ideas, starting a channel, monetization
+beyond ads) keep their linking rules, and the monetization pillar keeps
+taking spokes from Block 4.
 
 ---
 
-## Existing coverage (around 50 posts live, see `frontend/src/blog/posts.jsx`)
+## Existing coverage (73 posts live as of 2026-09-02, see `frontend/src/blog/posts.jsx`)
 
 Check before proposing anything, to avoid cannibalizing a post that's already live.
+The list below is the 2026-07 snapshot; for the current set grep `slug:` in
+`posts.jsx` and check live titles, not slugs (see the research round, step 3).
+Added since this list: video-length-by-niche, youtube-title-length,
+youtube-view-growth-curve, youtube-engagement-rate, youtube-data-studies,
+youtube-monetization-beyond-ads, youtube-channel-memberships,
+youtube-super-thanks, the five video-ideas spokes, start-youtube-channel and
+its three spokes, youtube-challenge-ideas, youtube-shorts-ideas.
 
 Demonetization / policy: youtube-demonetization, youtube-ai-policy, google-adsense-youtube,
 youtube-partner-program
@@ -530,10 +703,17 @@ anyway, because skipping left no trace. A missing file leaves a trace.
 - Build the coverage matrix. Cover the UNION of competitor sections, not the
   intersection. Compare your section count against the strongest competitor.
 - Name the gap, and what we can answer from our data that they cannot.
-- Answer the one test in writing. If a competitor without our database could
-  write this, stop. A rejected research file is a success.
+- Answer the applicable test in writing: the one test for a data study, the
+  second test for a diagnostic post. A rejected research file is a success.
+- Copy the entry's feature, funnel stage and CTA from `CONTENT-PLAN.md` into
+  the research file, and name the free tool that links before the feature,
+  if one exists.
+- Pull the PAA for the query plus 2-4 variants (Serper) and log which FAQ
+  questions are PAA-sourced vs. editorial.
 - Run the data pull. Check every figure against the data floor above. Figures
   that fail the floor get dropped, not caveated.
+- For a data study: build the outreach list (SaaS layer, item 4) now, before
+  writing, so the study is written toward the people who will link it.
 
 ### Stage 2 — Present and wait
 
@@ -685,8 +865,11 @@ Immediately after a successful deploy, in the same session:
       out if nothing is.
 - [ ] Set `Status:` in `research/<slug>.md` to `done`, tick the stage log, and
       empty or update its Outstanding list.
-- [ ] Re-read `CONTENT-PLAN.md`'s "NEXT" marker. If it names the article you
-      just shipped, move it.
+- [ ] Confirm the next unstruck entry in `CONTENT-PLAN.md` is still the right
+      next one (a gated data study whose floor check has not run gets skipped,
+      not started).
+- [ ] For a data study: confirm the outreach list in its research file has
+      been handed over, same session.
 
 ### Definition of done
 
@@ -864,6 +1047,11 @@ youtube automation.
   not work.
 - Do not write articles targeting keyword research, YouTube SEO, competitor
   analysis, analytics, or thumbnail head terms.
+- Do not write an article that names no product feature, or a listicle, a
+  tool comparison, or an "ideas" post: the 08-25 export shows that shape
+  averaging 2.2 clicks per page over four months.
+- Do not refill the plan one article at a time. A research round refills it
+  to 30+ entries or it has not run.
 - Do not build a page or page dimension named after a low-tier country.
 - Do not optimize for total sessions, AI-assistant volume, or Direct.
 - Do not ship a programmatic page without page-specific substance. Thin content
@@ -875,9 +1063,21 @@ youtube automation.
 
 ## Measurement
 
-Monthly. The metric is tier-1 active users per day and referring domains
-earned. Not total sessions, not GSC position (15% of traffic), not
-AI-assistant volume.
+Monthly, from a fresh Search Console export (Queries + Pages) and GA4
+filtered to US/UK/CA/AU. Two columns, never merged:
+
+| Column | Metric | Source |
+|---|---|---|
+| Diagnostic posts | Tier-1 active users/day, and tier-1 sessions that reach a `/features/*` page, a `/tools/*` page, or checkout, per landing post | GA4 landing-page report, tier-1 filter |
+| Data studies | Referring domains earned per study, AI-assistant referrals per study | Search Console links report, GA4 referrer domains |
+
+Also tracked per month: the Search Console gap list (queries at position
+5-40 with no dedicated page), which seeds the next research round. Not
+tracked as goals: total sessions, average position, AI-assistant volume,
+Direct.
+
+First judgment on the 2026-09-03 plan: the export dated 2026-10-05 or
+later, after Block 1 has had a month of runway.
 
 ---
 
@@ -915,9 +1115,13 @@ that timeline. Do not let this file imply otherwise.
 
 ## Rules
 
-- Titles = exact validated keyword phrase, not final headline copy.
-- Only confirmed entries (real Keyword Planner volume plus a passed Google SERP check) belong
-  in `CONTENT-PLAN.md`. Unconfirmed candidates live in conversation, or in the parked tracks
-  section above, until confirmed.
-- 3 confirmed spokes is the floor to keep a sub-cluster, 5 is a first-round target, not a cap.
-- Every spoke links back to its pillar and its sibling spokes.
+- Titles = exact validated query phrase, not final headline copy.
+- Only entries that passed the four-part confirmation standard belong in
+  `CONTENT-PLAN.md`, with the evidence written on the entry. Unconfirmed
+  candidates live in conversation, or in the parked tracks section above.
+- Every entry names a product feature, a funnel stage and a KPI column.
+- The plan holds 30+ unshipped entries at all times; below that, run a
+  research round before writing the next article.
+- Every spoke links back to its pillar and its sibling spokes; every block
+  article links to its block siblings and to the study that supplies its
+  numbers.

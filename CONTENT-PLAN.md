@@ -1,180 +1,438 @@
 # YTGrowth — Content Plan
 
-Site: ytgrowth.io · Niche: YouTube SEO/growth SaaS tools
+Site: ytgrowth.io · Niche: YouTube SEO/growth SaaS ($5 Starter pack, Growth
+$49/mo, Agency $149/mo, pay-before-signup)
 
-Only entries that have gone through the process in `FOUNDATION.md` belong in
-this file: for a keyword article, real Keyword Planner volume plus a passed
-SERP check plus the one test; for a data study, a data floor that clears
-FOUNDATION.md's four rules. No guessed titles, no guessed figures. This file
-is the order things ship in, titles only. Full methodology, source tables,
-and blocked-on reasons for each data study live in `DATA-STUDIES.md`. Voice,
-process, and diagnosis live in `FOUNDATION.md`. Read this file for what's
-next, follow a link only if you need the why.
+This file is the run order, top to bottom, titles only. Every entry below
+passed the confirmation standard in `FOUNDATION.md` → "Confirmation
+standard" (SERP top-3 check, a real demand signal, the diagnostic-question
+shape, a named product feature). The process, voice, diagnosis, dropped log
+and runbook live in `FOUNDATION.md`. Data-study methodology and quota math
+live in `DATA-STUDIES.md`. Read this file for what's next, follow a link
+only if you need the why.
 
-Last updated: 2026-08-28
+Rebuilt 2026-09-03 from one research round (94 Serper SERP + PAA pulls, the
+2026-08-25 Search Console export, Reddit thread mining). Previous plan
+archived in git history (`43d5b9562`); the parts that survived are at the
+bottom under "Shipped" and "Dropped this round".
 
-## Data studies (the primary lever, see FOUNDATION.md → What we are building)
+Last updated: 2026-09-03
 
-1. ~~Video length by niche~~ — published 2026-08-13
-2. ~~Title length~~ — published 2026-08-21
-3. ~~Best time to post, measured~~ — upgraded 2026-08-26 into `/blog/best-time-to-post`
-4. ~~Upload cadence: growing vs. stalled channels~~ — upgraded 2026-08-28 into `/blog/best-time-to-post`
-5. ~~View growth curve: how fast views come in, first 30 days~~ — published 2026-08-28 as `/blog/youtube-view-growth-curve`
-6. ~~Shorts vs. long-form: which front-loads views faster~~ — combined into #5's article
-7. ~~Engagement rate by niche~~ — published 2026-08-29 as `/blog/youtube-engagement-rate`
-8. ~~Shorts share over time, by niche~~ — published 2026-08-28 into `/blog/shorts-vs-long-form`
-9. Posting time vs. performance, correlation-based (DATA-STUDIES.md study #10) — NOT superseded by #3, wrongly marked done. `best-time-to-post` measures WHEN top creators post (frequency by hour/day); this study asks whether posting time actually CORRELATES with performance, same Spearman-correlation method that made the title-length study real ("title length explains ~0% of variance" was the finding there). Confirmed, titled, zero quota, `channel_videos` + `video_metric_snapshots`, ready to research and write, nothing blocking it.
-10. CTR benchmark by niche — killed. `scripts/check_weekly_report_coverage.py` run 2026-08-29: 0/17 `weekly_reports` rows have real CTR/retention populated, only 4 distinct channels total. Far below any usable floor. Revisit only if `_assemble_report` coverage grows substantially.
-11. Retention benchmark by niche — killed, same reason as #10 (same source table, same run).
-12. M1/M2/M3 moat studies — blocked. M1: contaminated by the nightly niche-warmer's own seed list, not a runway issue, see `research/fastest-rising-topics.md`. M2: only 7 snapshot dates, too thin. M3: needs 6+ months, have 1.5.
-13. Topics small channels still win on — killed. `channel_tracked` has near-zero small-channel (<50K subs) coverage in every named niche (gaming, cooking, fitness, etc. all show 0 small channels with tracked videos), only "uncategorized" has any (109), which isn't a real niche signal. No small-vs-large comparison is possible with current tracking data. See `scripts/check_micro_channel_feasibility.py`.
+## How to read an entry
 
-## Video Ideas cluster (pillar `youtube-video-ideas`)
+`N. Title phrase · feature · evidence`
 
-14. ~~Pillar~~ — published, rewritten to full depth 2026-08-20
-15. ~~Gaming~~ — published 2026-08-13
-16. ~~Cooking~~ — published 2026-08-15
-17. ~~Comedy~~ — published 2026-08-14 (retroactive SERP check still owed)
-18. ~~Tech~~ — published 2026-08-19
-19. ~~Music~~ — published 2026-08-20
-20. Comedy spoke: retroactive SERP check + coverage matrix — owed
-21. Vlog ideas rewrite — needs a research file
-22. Shorts ideas rewrite — needs a research file
-23. Challenge ideas rewrite — needs a research file
+- **Title phrase** is the validated query, not final headline copy.
+- **Feature** is the product feature the article sells and links to (its
+  `/features/*` page or `/tools/*` page). Mandatory. No feature, no entry.
+- **Evidence** is what confirmed it: the real top-3 domains on 2026-09-03
+  (`top3:`), Search Console position with no dedicated page (`GSC:`), and
+  the Reddit/PAA signal. `(+ x)` means query x is folded in as a section,
+  not its own page.
+- **DATA STUDY** entries use our own tables, zero quota, and follow
+  `DATA-STUDIES.md`. They ship with the outreach step, not just a publish.
 
-## Starting a Channel cluster (pillar `start-youtube-channel`)
+Cadence target: 3 articles per week, one of them a data study every other
+week. At that pace this list is ~17 weeks of work (through mid-January
+2027). Strike items as they ship, same session. Do not add an entry that
+skipped the standard.
 
-24. ~~Pillar~~ — published
-25. ~~YouTube Channel on Phone~~ — published
-26. ~~YouTube Brand Account~~ — published
-27. ~~Gaming YouTube Channel~~ — published
+## Block 1 · Already earning impressions with no page (write first)
 
-## Monetization Beyond Ads cluster (sourced from real Reddit/PAA demand)
+Search Console shows these queries ranking on pages that don't answer them.
+A dedicated page is the cheapest win on the list.
 
-28. ~~Making Money on YouTube Beyond Ads~~ — pillar, published as `/blog/youtube-monetization-beyond-ads`
-29. ~~Are YouTube Channel Memberships Worth It?~~ — published 2026-09-02 as `/blog/youtube-channel-memberships`
-30. ~~YouTube Super Thanks Explained~~ — published 2026-09-02 as `/blog/youtube-super-thanks`
-31. Do You Need a Big Following for Affiliate Marketing? — spoke
-32. `youtube-sponsorships` — existing post, link in as a spoke
-33. Merch shelf — not confirmed, weak evidence so far
+Funnel: existing creators reading their own Studio. CTA: Channel Audit /
+Weekly Report ("the specific issue, with a real number from your data").
 
-## AI-citation fitness sweep (older posts, fix one at a time)
+1. YouTube traffic sources explained (+ direct or unknown traffic source,
+   + reach tab) · Channel Audit · GSC pos 8.4-10.9 on 4 variants ·
+   top3: humbleandbrag, support.google, databox · Reddit #4
+2. VPH on YouTube, views per hour meaning · Outliers · GSC pos 6.5-8.0 on
+   3 variants ("vph in youtube meaning", "what does vph mean on youtube") ·
+   top3: support.vidiq, reddit, alanspicer
+3. How often YouTube Analytics updates (+ subscriber count not updating,
+   + watch hours not updating) · Weekly Report · GSC pos 12.5 ·
+   top3: reddit, qqtube, webapps.stackexchange
+4. Multiple YouTube channels on one AdSense account · Monetization pillar
+   spoke · GSC pos 11.3 ("youtube multiple channels one adsense account
+   policy 2026") and 26.9 ("2 youtube channel 1 adsense") ·
+   top3: reddit, support.google, quora
+5. YouTube monetization under 18 · Monetization pillar spoke · GSC pos
+   10.7 · top3: reddit, quora, support.google
+6. What an outlier video is on YouTube (+ outlier score, + free outlier
+   finder) · Outliers · GSC: "youtube outlier finder" 1 click at pos 35,
+   "youtube outliers" pos 33, "youtube outliers finder" pos 34 ·
+   top3: viewstats.zendesk, reddit, outlierkit
+7. How to see YouTube Analytics for other channels · Competitor Analysis
+   (via `/tools/youtube-channel-stats-checker`, the site's best-converting
+   tool page: 15 clicks) · GSC pos 54-56 on 3 variants, currently landing
+   on the analytics mega-guide · top3: clipchamp, reddit, reddit
+8. How to get more impressions on YouTube · Channel Audit · GSC pos 36.5 ·
+   top3: reddit, reddit, quora · PAA: "Why are my YouTube impressions low?"
 
-Audited 2026-09-02 after the youtube-super-thanks pass surfaced that recent
-articles (data studies, monetization spokes) are bolded and FAQ-schema'd for
-AI citation, but the site's 73 older posts mostly are not. Two real gaps per
-post, checked independently:
+## Block 2 · "Something dropped" (existing channels, the paying segment)
 
-1. **Bold coverage** — % of `<p>` paragraphs with zero `<strong>` tags. Low
-   bold means a citation engine has nothing to extract a clean quotable claim
-   from. Target: match the recent articles' ~85-95% bolded rate, not 100%
-   (lead-ins to lists/tables are fine unbolded).
-2. **FAQ schema** — whether the post has a real `faqs` array at all (feeds
-   FAQPage JSON-LD). A post with zero FAQs has zero FAQ-citation surface,
-   independent of its bold coverage.
+The shape that won in the first four months: a creator's numbers moved and
+they want to know why. Every SERP here is led by Reddit, Quora or a Google
+help thread, none by vidIQ or TubeBuddy.
 
-Fix one post per pass: bold pass (real claims only, no mechanical
-bold-everything), false-"free"-claim check, British-spelling normalize to
-American English (site standard), and if FAQ:NO, a real Serper-PAA-sourced
-FAQ array added (not guessed, per FOUNDATION.md's FAQ sourcing rule). Verify
-with `check-drift.mjs` + `check-blog-paragraphs.mjs` before moving to the next.
+Funnel: problem-aware, monetized or near-monetized channel. CTA: Channel
+Audit ($5 Starter pack is the natural first purchase). KPI: tier-1 visitors
+reaching `/features/channel-audit` or checkout.
+
+9. Why did my YouTube views drop suddenly · Channel Audit ·
+   top3: reddit, subscribr, youtube · Reddit #1 (r/NewTubers), 11 related
+   "reddit" variants
+10. YouTube impressions dropped suddenly · Channel Audit ·
+    top3: reddit, blackhatworld, facebook · PAA x4
+11. YouTube stopped recommending my videos (+ suggested traffic dropped) ·
+    Channel Audit · top3: reddit, support.google, quora · PAA x4
+12. **DATA STUDY** How many views counts as viral on YouTube, measured as
+    multiples of the channel's own median (+ is 2,000 views in a day good,
+    first-week views by channel size) · Outliers · top3: reddit,
+    learningrevolution, bluehost · PAA "Is 30k views viral?", "Is 2 million
+    views viral?" · source: `video_metric_snapshots` + `channel_videos`,
+    zero quota, see `DATA-STUDIES.md` #14
+13. YouTube views dropped after monetization · Channel Audit ·
+    top3: reddit, facebook, support.google · PAA x4
+14. YouTube watch hours dropping (+ what happens if you miss 4,000 hours
+    in a year) · Channel Audit · top3: reddit, support.google, quora ·
+    PAA x4 · distinct from `/blog/youtube-watch-hours` (how to reach 4,000)
+15. Why am I losing subscribers on YouTube · Channel Audit ·
+    top3: reddit, facebook, yourdigitalresource · PAA x4
+16. The "performing worse than usual" notification in YouTube Studio ·
+    Channel Audit · top3: reddit, facebook, support.google
+17. Why YouTube is showing my video to the wrong audience · Channel Audit /
+    SEO Studio · top3: reddit, facebook, blackhatworld · PAA x4
+18. Is my YouTube channel shadowbanned (what a real reach drop looks like
+    vs. a ban) · Channel Audit · top3: reddit, tubepilot, support.google ·
+    PAA x4 · SERP also carries "checker" tools, see the free-tools note in
+    `FOUNDATION.md`
+19. **DATA STUDY** Average views per video by subscriber count (+ what
+    share of subscribers watch a new upload) · Channel Audit ·
+    top3: modash, reddit, sanishtech · source: `channel_metric_snapshots`
+    + `video_metric_snapshots`, zero quota, see `DATA-STUDIES.md` #15
+20. YouTube channel plateaued after 1,000 subscribers · Channel Audit ·
+    top3: reddit, quora, support.google · "reddit youtube channel plateau"
+    returns 9 threads · scope: growth that stopped, not growth that never
+    started (that is `/blog/youtube-channel-not-growing`)
+21. YouTube subscribers not increasing while views are fine · Channel
+    Audit · top3: reddit, quora, support.google · PAA x4 · scope: the
+    viewer-to-subscriber step only, check it does not restate the 10
+    reasons in `/blog/youtube-channel-not-growing` before outlining
+
+## Block 3 · Click-through, titles, search (Thumbnail IQ / SEO Studio)
+
+Funnel: problem-aware, existing channel. CTA: Thumbnail IQ for 22-25,
+SEO Studio for 24 and 27-28, Outliers for 29-30. KPI: tier-1 visitors
+reaching the named feature page.
+
+22. Why is my YouTube CTR so low (+ what CTR is normal for a new channel)
+    · Thumbnail IQ · top3: reddit, quora, facebook · 10 Reddit threads on
+    "thumbnail feedback low ctr", incl. the contrarian "Low CTR? It's
+    probably not your thumbnail" thread, which is the angle: CTR by traffic
+    source. Distinct from `/blog/youtube-ctr` (benchmarks)
+23. Does changing a thumbnail after upload hurt views · Thumbnail IQ ·
+    top3: reddit, youtube, quora
+24. Does changing a YouTube title after upload affect views · SEO Studio
+    (title rewrite is the feature) · top3: reddit, quora, tuberanker ·
+    PAA x4
+25. YouTube "Test & compare" thumbnails not showing · Thumbnail IQ (via
+    `/tools/youtube-thumbnail-tester`) · top3: support.google, reddit,
+    testmythumbnails · PAA x4
+26. **DATA STUDY** Posting time vs. performance, correlation-based (was
+    #9 in the old plan, `DATA-STUDIES.md` #10) · Weekly Report ·
+    confirmed 2026-08-22, zero quota, nothing blocking it · distinct from
+    `/blog/best-time-to-post` (when top creators post) because this asks
+    whether posting time correlates with views at all, same Spearman method
+    as the title-length study
+27. YouTube video not showing up in search · SEO Studio ·
+    top3: reddit, support.google, quora · PAA x4
+28. How long it takes a YouTube video to rank in search · SEO Studio /
+    Keyword Research · top3: reddit, quora, blackhatworld
+29. One video blew up and the rest get no views · Outliers ·
+    top3: reddit, youtube, quora · Reddit #1 "One video blew up and then
+    nothing"
+30. Evergreen vs. trending content on YouTube (+ which one the view-growth
+    curve favors) · Outliers / Trends · top3: reddit, tubebuddy, bird ·
+    PAA x4 · reuse `/blog/youtube-view-growth-curve` data
+
+## Block 4 · Monetization diagnostics (pillar `youtube-monetization-beyond-ads` continues)
+
+Funnel: monetized creators, the segment that already pays for tools. CTA:
+earnings calculators (`/tools/youtube-money-calculator` and siblings), then
+Channel Audit. KPI: tier-1 visitors, calculator use, checkout.
+
+31. How many views you need to make $1,000, $2,000, $3,000 and $10,000 a
+    month on YouTube (by niche RPM) · money calculators ·
+    top3: reddit, milx, quora · this PAA appeared on 30+ of the 94 queries
+    pulled this round, the single most repeated question in the data ·
+    distinct from `/blog/youtube-1-million-views` (the inverse question)
+32. YouTube monetization review taking long · Channel Audit ·
+    top3: reddit, vidiq, facebook · "reddit" variant returns 9 threads
+33. YouTube reused-content rejection and the appeal · Channel Audit ·
+    top3: reddit, support.google, facebook · PAA x4 · check
+    `/blog/youtube-demonetization`'s reused-content section first; if it
+    is already deep, scope this to the YPP application appeal
+34. Do you need a big following for affiliate marketing on YouTube ·
+    Monetization pillar spoke (carried from old plan #31) ·
+    top3: reddit, reddit, quora · PAA x4
+35. **DATA STUDY** How fast YouTube channels grow, by size tier (+ how
+    long it takes to reach 1,000 subscribers) · Channel Audit ·
+    top3: reddit, socialstatus, berryviral · PAA x4 · GATED: needs
+    `channel_metric_snapshots` to hold 8+ weekly dates and 30+ channels per
+    tier; run the count first, see `DATA-STUDIES.md` #16. If it fails the
+    floor, skip to 36 and re-check monthly.
+
+## Block 5 · Benchmarks and definitions (awareness, AI-citation surface)
+
+Definition questions where the SERP is Reddit-led and the answer needs a
+number. Each maps to a metric the Weekly Report or Channel Audit shows the
+user for their own channel.
+
+Funnel: awareness. CTA: Weekly Report ("your number, every Monday"). KPI:
+tier-1 visitors, AI-assistant referrals.
+
+36. YouTube impressions explained: impressions vs. views, how many is good,
+    views per 1,000 impressions · Weekly Report · top3: reddit,
+    support.google, reddit · three query variants, each Reddit-led
+37. Browse features vs. suggested videos (+ how to get more browse
+    traffic) · Channel Audit · top3: reddit, tubeanalytics, yttalk ·
+    GSC related-searches on the traffic-sources cluster
+38. Returning viewers vs. new viewers (+ casual and regular viewers) ·
+    Weekly Report · top3: support.google, reddit, reddit · PAA x4
+39. What a good average view duration is on YouTube · Channel Audit ·
+    top3: reddit, reddit, quora · PAA x4 · no own data (AVD is private),
+    source public benchmarks and say so in one disclosure
+40. Is 30% audience retention good (retention benchmarks) · Channel Audit
+    · top3: reddit, reddit, blackhatworld · PAA x4 · same disclosure as 39
+41. Unique viewers vs. views on YouTube · Weekly Report ·
+    top3: reddit, reddit, quora · PAA x4
+42. Engaged views vs. views on YouTube · Weekly Report ·
+    top3: reddit, reddit, support.google · PAA x4
+43. Does rewatching a video count as watch time · Channel Audit ·
+    top3: quora, reddit, veefly
+44. What a good end-screen click rate is · Channel Audit ·
+    top3: reddit, tella, medium · PAA x4
+
+## Block 6 · New creators, zero views (top of funnel, write last)
+
+Largest demand on the list, weakest fit for a $49/mo product. Written last,
+and each one links to the free tools and the $5 Starter pack rather than a
+subscription. Every SERP here is Reddit #1.
+
+Funnel: pre-monetization. CTA: free tools, then Starter pack. KPI: tier-1
+visitors, tool use.
+
+45. YouTube video getting 0 views after 24 hours (+ "0 view jail") ·
+    Channel Audit · top3: reddit, quora, medium · PAA x4 · cites
+    `/blog/youtube-view-growth-curve` for what a normal first week looks
+    like; scope is "something is wrong", not "how long is normal"
+46. YouTube video stuck at 0 impressions · Channel Audit ·
+    top3: reddit, support.google, quora · PAA x4
+47. YouTube Shorts getting 0 views · Channel Audit ·
+    top3: reddit, support.google, quora · PAA x4
+48. YouTube Shorts views stopped suddenly (+ why Shorts stop getting views
+    after an hour, + views freeze) · Channel Audit ·
+    top3: reddit, youtube, subscribr · PAA x4
+49. YouTube Shorts not showing in the Shorts feed · Channel Audit ·
+    top3: reddit, support.google, smashballoon · PAA x4
+50. How many videos before a YouTube channel takes off · Channel Audit ·
+    top3: reddit, quora, facebook · PAA x4 · no own data on this (we hold
+    each channel's 50 newest uploads, not full history), source honestly
+51. How long it takes to get 1,000 subscribers · Channel Audit ·
+    top3: reddit, scalelab, quora · PAA x4 · uses study #35's figure once
+    it clears the floor, otherwise public sources with one disclosure
+
+## Keyword Planner sanity pass (user step, one export)
+
+The July winners (`youtube-ai-policy`, `shorts-vs-long-form`,
+`too-late-to-start`, `restart-youtube-channel`) were sourced from Reddit
+and PAA clustering, not Keyword Planner volume (MEDIAVINE.md 2026-07-13 to
+07-16). Volume is a sanity check here, not the gate. Once: paste all 51
+title phrases into Keyword Planner, one export into `keyword-exports/`, say
+"uploaded". Entries in the lowest bucket AND with no Search Console
+evidence move to the bottom of their block. Nothing gets removed on volume
+alone.
+
+## Data studies status (methodology in `DATA-STUDIES.md`)
+
+- ~~Video length by niche~~ published 2026-08-13
+- ~~Title length~~ published 2026-08-21
+- ~~Best time to post, measured~~ upgraded 2026-08-26 into `/blog/best-time-to-post`
+- ~~Upload cadence~~ upgraded 2026-08-28 into `/blog/best-time-to-post`
+- ~~View growth curve, first 30 days~~ published 2026-08-28
+- ~~Shorts vs. long-form front-loading~~ combined into the growth-curve article
+- ~~Engagement rate by niche~~ published 2026-08-29
+- ~~Shorts share over time~~ published 2026-08-28 into `/blog/shorts-vs-long-form`
+- Posting time vs. performance (correlation) → run-order #26
+- Viral multiples of channel median → run-order #12
+- Views per video by subscriber tier → run-order #19
+- Growth rate by size tier → run-order #35, gated on snapshot depth
+- CTR benchmark by niche, retention benchmark by niche: killed 2026-08-29,
+  0/17 `weekly_reports` rows populated, 4 channels
+- M1/M2/M3 moat studies: blocked (M1 warmer-contaminated, M2 feeds #35's
+  gate, M3 needs 6+ months)
+- Topics small channels still win on: killed, no small-channel coverage in
+  any named niche (`scripts/check_micro_channel_feasibility.py`)
+
+## AI-citation fitness sweep (older posts, one per pass, secondary track)
+
+Audited 2026-09-02. Two gaps per post, checked independently: bold
+coverage (% of `<p>` with zero `<strong>`; target the recent articles'
+~85-95%) and whether a real `faqs` array exists (feeds FAQPage JSON-LD).
+Fix one post per pass, after each new article ships, never instead of one:
+bold pass (real claims only), false-"free"-claim check, British-spelling
+normalize to American, and if FAQ:NO, a real Serper-PAA-sourced FAQ array.
+Verify with `check-drift.mjs` + `check-blog-paragraphs.mjs`.
 
 Ordered worst-first by bold %. ~~Struck~~ once done.
 
-- ~~video-tagging~~ — done 2026-09-02 (bold 0%→93%, free-claim fixed, British
-  spellings fixed; still needs a real FAQ array, not yet done)
-- youtube-competitor-analysis — 100% unbolded, no FAQ
-- youtube-thumbnail-size — 100% unbolded, no FAQ
-- youtube-as-a-business — 100% unbolded, no FAQ
-- youtube-channel-optimization — 100% unbolded, no FAQ
-- free-subs-on-youtube — 100% unbolded, no FAQ
-- youtube-niche — 97% unbolded, no FAQ
-- vidiq-review — 97% unbolded, has FAQ
-- youtube-tag-finder — 96% unbolded, no FAQ
-- youtube-channel-audit — 95% unbolded, no FAQ
-- more-views-on-youtube — 95% unbolded, no FAQ
-- youtube-partner-program — 93% unbolded, no FAQ
-- youtube-maker — 92% unbolded, has FAQ
-- youtube-analytics — 91% unbolded, has FAQ
-- youtube-analytics-tools — 90% unbolded, has FAQ
-- youtube-algorithm — 89% unbolded, no FAQ
-- youtube-seo-best-practices — 89% unbolded, has FAQ
-- tubebuddy-vs-vidiq — 88% unbolded, has FAQ
-- thumbnail-tester — 88% unbolded, no FAQ
-- youtube-title — 88% unbolded, no FAQ
-- youtube-channel-not-growing — 86% unbolded, no FAQ
-- youtube-thumbnail-ideas — 86% unbolded, no FAQ
-- google-adsense-youtube — 85% unbolded, has FAQ
-- what-is-youtube-seo — 85% unbolded, has FAQ
-- youtube-data-studies — 83% unbolded, no FAQ
-- seo-tools-for-youtube — 83% unbolded, no FAQ
-- youtube-watch-hours — 83% unbolded, has FAQ
-- youtube-cpm — 82% unbolded, has FAQ
-- comedy-video-ideas — 80% unbolded, has FAQ
-- shorts-tagging — 79% unbolded, has FAQ
-- grow-youtube-channel — 78% unbolded, no FAQ
-- youtube-description-template — 78% unbolded, has FAQ
-- youtube-vlog-ideas — 76% unbolded, has FAQ
-- youtube-tags — 75% unbolded, has FAQ
-- youtube-shorts-algorithm — 74% unbolded, has FAQ
-- youtube-sponsorships — 74% unbolded, has FAQ
-- cooking-video-ideas — 73% unbolded, has FAQ
-- youtube-trends — 69% unbolded, has FAQ
-- youtube-keyword-research-tools — 65% unbolded, has FAQ
-- youtube-rpm — 65% unbolded, has FAQ
-- youtube-title-length — 62% unbolded, has FAQ
-- youtube-ctr — 50% unbolded, has FAQ
-- youtube-shorts-pay — 49% unbolded, no FAQ
-- youtube-challenge-ideas — 48% unbolded, has FAQ
-- tech-video-ideas — 47% unbolded, has FAQ
-- gaming-youtube-channel — 47% unbolded, has FAQ
-- best-time-to-post — 44% unbolded, has FAQ
-- gaming-video-ideas — 42% unbolded, has FAQ
-- youtube-channel-phone — 41% unbolded, has FAQ
-- youtube-shorts-ideas — 41% unbolded, has FAQ
-- copyright-free-music — 41% unbolded, has FAQ
-- youtube-monetization-beyond-ads — 38% unbolded, has FAQ (pillar, already
-  gets frequent touch-ups from spoke work)
-- youtube-1-million-views — 34% unbolded, has FAQ
-- faceless-youtube-channel-ideas — 33% unbolded, no FAQ
-- youtube-video-ideas — 32% unbolded, has FAQ
-- youtube-banner-size — 27% unbolded, has FAQ
-- start-youtube-channel — 23% unbolded, has FAQ
-- youtube-brand-account — 22% unbolded, has FAQ
-- chrome-extensions-for-youtube — 22% unbolded, no FAQ
-- how-to-start-a-youtube-video — 13% unbolded, has FAQ
-- youtube-demonetization — 14% unbolded, has FAQ
-- too-late-to-start — 14% unbolded, has FAQ
-- cash-cow-youtube-channels — 7% unbolded, has FAQ
-- restart-youtube-channel — 6% unbolded, has FAQ
-- youtube-ai-policy — 6% unbolded, has FAQ
-- best-youtube-mic — 3% unbolded, has FAQ
+- ~~video-tagging~~ done 2026-09-02 (bold 0%→93%, free-claim fixed, British
+  spellings fixed; still needs a real FAQ array)
+- youtube-competitor-analysis: 100% unbolded, no FAQ
+- youtube-thumbnail-size: 100% unbolded, no FAQ
+- youtube-as-a-business: 100% unbolded, no FAQ
+- youtube-channel-optimization: 100% unbolded, no FAQ
+- free-subs-on-youtube: 100% unbolded, no FAQ
+- youtube-niche: 97% unbolded, no FAQ
+- vidiq-review: 97% unbolded, has FAQ
+- youtube-tag-finder: 96% unbolded, no FAQ
+- youtube-channel-audit: 95% unbolded, no FAQ
+- more-views-on-youtube: 95% unbolded, no FAQ
+- youtube-partner-program: 93% unbolded, no FAQ
+- youtube-maker: 92% unbolded, has FAQ
+- youtube-analytics: 91% unbolded, has FAQ
+- youtube-analytics-tools: 90% unbolded, has FAQ
+- youtube-algorithm: 89% unbolded, no FAQ
+- youtube-seo-best-practices: 89% unbolded, has FAQ
+- tubebuddy-vs-vidiq: 88% unbolded, has FAQ
+- thumbnail-tester: 88% unbolded, no FAQ
+- youtube-title: 88% unbolded, no FAQ
+- youtube-channel-not-growing: 86% unbolded, no FAQ
+- youtube-thumbnail-ideas: 86% unbolded, no FAQ
+- google-adsense-youtube: 85% unbolded, has FAQ
+- what-is-youtube-seo: 85% unbolded, has FAQ
+- youtube-data-studies: 83% unbolded, no FAQ
+- seo-tools-for-youtube: 83% unbolded, no FAQ
+- youtube-watch-hours: 83% unbolded, has FAQ
+- youtube-cpm: 82% unbolded, has FAQ
+- comedy-video-ideas: 80% unbolded, has FAQ
+- shorts-tagging: 79% unbolded, has FAQ
+- grow-youtube-channel: 78% unbolded, no FAQ
+- youtube-description-template: 78% unbolded, has FAQ
+- youtube-vlog-ideas: 76% unbolded, has FAQ
+- youtube-tags: 75% unbolded, has FAQ
+- youtube-shorts-algorithm: 74% unbolded, has FAQ
+- youtube-sponsorships: 74% unbolded, has FAQ
+- cooking-video-ideas: 73% unbolded, has FAQ
+- youtube-trends: 69% unbolded, has FAQ
+- youtube-keyword-research-tools: 65% unbolded, has FAQ
+- youtube-rpm: 65% unbolded, has FAQ
+- youtube-title-length: 62% unbolded, has FAQ
+- youtube-ctr: 50% unbolded, has FAQ
+- youtube-shorts-pay: 49% unbolded, no FAQ
+- youtube-challenge-ideas: 48% unbolded, has FAQ
+- tech-video-ideas: 47% unbolded, has FAQ
+- gaming-youtube-channel: 47% unbolded, has FAQ
+- best-time-to-post: 44% unbolded, has FAQ
+- gaming-video-ideas: 42% unbolded, has FAQ
+- youtube-channel-phone: 41% unbolded, has FAQ
+- youtube-shorts-ideas: 41% unbolded, has FAQ
+- copyright-free-music: 41% unbolded, has FAQ
+- youtube-monetization-beyond-ads: 38% unbolded, has FAQ (pillar, gets
+  touch-ups from spoke work)
+- youtube-1-million-views: 34% unbolded, has FAQ
+- faceless-youtube-channel-ideas: 33% unbolded, no FAQ
+- youtube-video-ideas: 32% unbolded, has FAQ
+- youtube-banner-size: 27% unbolded, has FAQ
+- start-youtube-channel: 23% unbolded, has FAQ
+- youtube-brand-account: 22% unbolded, has FAQ
+- chrome-extensions-for-youtube: 22% unbolded, no FAQ
+- how-to-start-a-youtube-video: 13% unbolded, has FAQ
+- youtube-demonetization: 14% unbolded, has FAQ
+- too-late-to-start: 14% unbolded, has FAQ
+- cash-cow-youtube-channels: 7% unbolded, has FAQ
+- restart-youtube-channel: 6% unbolded, has FAQ
+- youtube-ai-policy: 6% unbolded, has FAQ
+- best-youtube-mic: 3% unbolded, has FAQ
 
-Already clean, no action needed (recent data studies / monetization spokes,
-all bolded during original write, all skip this list): youtube-super-thanks,
-youtube-channel-memberships, video-length-by-niche, shorts-vs-long-form,
-youtube-view-growth-curve, youtube-engagement-rate, music-video-ideas.
+Already clean, skip: youtube-super-thanks, youtube-channel-memberships,
+video-length-by-niche, shorts-vs-long-form, youtube-view-growth-curve,
+youtube-engagement-rate, music-video-ideas.
 
-## Dropped, not queued
+## Shipped (from the previous plan, kept for the record)
 
-- Sponsor-companies article — fails the one test, no differentiator vs. OutlierKit
-- Promotion pass on published studies — user sourcing leads directly, not a content task
+- Video Ideas cluster: ~~pillar~~ (rewritten 2026-08-20), ~~gaming~~
+  (08-13), ~~cooking~~ (08-15), ~~comedy~~ (08-14), ~~tech~~ (08-19),
+  ~~music~~ (08-20)
+- Starting a Channel cluster: ~~pillar~~, ~~phone~~, ~~brand account~~,
+  ~~gaming channel~~
+- Monetization Beyond Ads: ~~pillar~~, ~~channel memberships~~ (09-02),
+  ~~Super Thanks~~ (09-02), ~~sponsorships linked in as a spoke~~ (pillar
+  "Read Next" section, 09-02)
+
+## Dropped this round (reasons, so they don't come back)
+
+Failed the SERP top-3 check on 2026-09-03 (two or more big-authority domains
+in the top 3, or wrong searcher):
+
+- "what is the 7 second rule on youtube": top 3 is two YouTube videos
+- "youtube title vs thumbnail which matters more": youtube.com +
+  support.google in top 3
+- "what keywords should i put in my channel description": Hootsuite +
+  youtube.com, 6 of 10 big
+- "youtube reach tab explained": support.google twice, folded into #1
+- "youtube adsense payment threshold": Google owns 5 of top 8, even though
+  GSC shows us at pos 8-10 on the "official 2026" variants
+- "how to increase rpm on youtube": already the subtitle of
+  `/blog/youtube-rpm`, would cannibalize
+- "how does youtube decide who to show your video to": same intent as
+  `/blog/youtube-algorithm`, would cannibalize
+- "youtube algorithm reset": viewer intent (resetting recommendations)
+- "youtube search traffic zero": SERP is web-SEO zero-click articles
+- "youtube views stuck at 301": historical curiosity, the freeze was
+  removed in 2015
+- "what percentage of youtube channels have 1000 subscribers": a population
+  statistic we cannot measure from a tracked set, fails the one test
+- YouTube shadowban checker as a free tool: real detection needs a
+  search.list call per check (100 units) and cannot be cached across users.
+  Not viable. #18 is the article; no tool.
+
+Carried-over items killed on the new standard:
+
+- Comedy spoke retroactive SERP check: article is live; a SERP check
+  changes nothing unless a rewrite follows, and rewrites wait for the
+  September Search Console export.
+- Vlog / Shorts / Challenge ideas rewrites: the listicle shape is the
+  losing shape in the data (63 hand-written articles averaged 2.2 clicks
+  per page, none of the ideas posts is in the winner set;
+  `youtube-vlog-ideas` sat at 48 impressions, pos 19.8 over the window).
+  No rewrite until a page shows position 8-20 with 500+ impressions.
+- Merch shelf spoke: FOUNDATION.md's merch export already showed 2
+  advice-shaped keywords and a SERP owned by Google's shop, Amazon and
+  Etsy.
+- Sponsor-companies article: fails the one test, no differentiator vs.
+  OutlierKit (carried from old plan).
+- Promotion pass on published studies: replaced by the per-study outreach
+  step in `FOUNDATION.md` → "The SaaS layer".
 
 ## Programmatic pages — built out, not a source of new work
 
-`/youtube-stats/*` and `/youtube-earnings/*` are fully live. See `FOUNDATION.md` for what was checked and why nothing further is queued here.
-
-## After the run order above
-
-Not a keyword round. The real next lever is backlinks/authority for the
-unconverted tier-1 US impressions. Needs its own scoped plan before it
-becomes a numbered item here.
+`/youtube-stats/*` and `/youtube-earnings/*` are fully live. See
+`FOUNDATION.md` for what was checked and why nothing further is queued.
 
 ## Rules
 
-- Only confirmed entries belong here. Unconfirmed candidates live in
-  `FOUNDATION.md`'s parked tracks or dropped log until confirmed.
+- Only entries that passed the confirmation standard belong here.
+  Candidates that have not been checked live in conversation or in
+  `FOUNDATION.md`'s parked tracks, never in this list.
+- Every entry names a product feature. An article with no feature to send
+  the reader to is not written.
 - Update this file the same session something ships or the order changes.
-- No fixed idea counts, no fixed FAQ counts, no reused skeleton, structure
+- No fixed idea counts, no fixed FAQ counts, no reused skeleton; structure
   comes from the research file's coverage matrix every time.
-- Every spoke links back to its pillar and its sibling spokes.
+- New articles link to the feature page in the CtaCard and to the
+  block's sibling articles. Data studies link out to the diagnostic posts
+  they support; diagnostic posts cite the studies for their numbers.
