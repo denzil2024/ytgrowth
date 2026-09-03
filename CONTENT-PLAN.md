@@ -23,9 +23,9 @@ Last updated: 2026-08-28
 6. ~~Shorts vs. long-form: which front-loads views faster~~ — combined into #5's article
 7. ~~Engagement rate by niche~~ — published 2026-08-29 as `/blog/youtube-engagement-rate`
 8. ~~Shorts share over time, by niche~~ — published 2026-08-28 into `/blog/shorts-vs-long-form`
-9. ~~Posting time vs. performance~~ — superseded by #3
-10. CTR benchmark by niche — blocked on `scripts/check_weekly_report_coverage.py`
-11. Retention benchmark by niche — blocked on `scripts/check_weekly_report_coverage.py`
+9. Posting time vs. performance, correlation-based (DATA-STUDIES.md study #10) — NOT superseded by #3, wrongly marked done. `best-time-to-post` measures WHEN top creators post (frequency by hour/day); this study asks whether posting time actually CORRELATES with performance, same Spearman-correlation method that made the title-length study real ("title length explains ~0% of variance" was the finding there). Confirmed, titled, zero quota, `channel_videos` + `video_metric_snapshots`, ready to research and write, nothing blocking it.
+10. CTR benchmark by niche — killed. `scripts/check_weekly_report_coverage.py` run 2026-08-29: 0/17 `weekly_reports` rows have real CTR/retention populated, only 4 distinct channels total. Far below any usable floor. Revisit only if `_assemble_report` coverage grows substantially.
+11. Retention benchmark by niche — killed, same reason as #10 (same source table, same run).
 12. M1/M2/M3 moat studies — blocked. M1: contaminated by the nightly niche-warmer's own seed list, not a runway issue, see `research/fastest-rising-topics.md`. M2: only 7 snapshot dates, too thin. M3: needs 6+ months, have 1.5.
 13. Topics small channels still win on — killed. `channel_tracked` has near-zero small-channel (<50K subs) coverage in every named niche (gaming, cooking, fitness, etc. all show 0 small channels with tracked videos), only "uncategorized" has any (109), which isn't a real niche signal. No small-vs-large comparison is possible with current tracking data. See `scripts/check_micro_channel_feasibility.py`.
 
