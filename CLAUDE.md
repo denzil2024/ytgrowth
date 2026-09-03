@@ -14,7 +14,8 @@ into `FOUNDATION.md` or process/history content into `CONTENT-PLAN.md`.
 
 | Task | Read | Do NOT open |
 |---|---|---|
-| **"What's next?" / roadmap / what should we write** | `CONTENT-PLAN.md` ONLY. It's a numbered list, top to bottom, nothing else on the page. Answer from it directly. | `FOUNDATION.md`, unless CONTENT-PLAN's own links send you there for the why behind an item |
+| **"What's next?" / roadmap / what should we write** | `CONTENT-PLAN.md` ONLY. It's a numbered list, top to bottom, nothing else on the page. Answer from it directly: the next article is the top unstruck entry. | `FOUNDATION.md`, unless CONTENT-PLAN's own links send you there for the why behind an item |
+| **Content strategy / "is the plan right" / refilling the plan** | The "Content strategy is locked" section below, then `FOUNDATION.md` → "Confirmation standard", "Research round", "The SaaS layer" | Anything else. Do not re-derive strategy from the exports. |
 | **Any content or blog work** | `CONTENT-PLAN.md` for what's next, `FOUNDATION.md` for the process/voice/standards, then `research/<slug>.md` if an article is in flight | Everything else, unless sent there for a named reason |
 | **Keyword research round** | `FOUNDATION.md` for the workflow and the dropped log | |
 | **Anything touching YouTube API data** | The quota section below, in full | |
@@ -36,6 +37,69 @@ log, not instructions: read it only when asked why something is the way it is.
 3. **Do not re-derive what is already written down.** The voice reference, the
    data floor, and the queue are all stated in `CONTENT-PLAN.md`. Measuring
    them again from the posts is rework.
+
+## Content strategy is locked (hard rules, 2026-09-03)
+
+The content plan was rebuilt on 2026-09-03 from one research round (94
+real SERP + PAA pulls, the 2026-08-25 Search Console export, Reddit thread
+mining) after four months of a plan that produced ~7 tier-1 visitors a day.
+It took a full session to build. Do not improve it, reinterpret it, or
+"suggest a better approach" on your own. The rules below exist because
+earlier sessions did exactly that.
+
+**The next article is always the top unstruck entry in `CONTENT-PLAN.md`.**
+Not the one that looks easiest, not the one you find interesting, not one you
+thought of. If the user asks "what's next", answer with that entry.
+
+Things you MUST NOT do without the user explicitly asking, in this session,
+for that specific thing:
+
+1. **Do not add an entry to `CONTENT-PLAN.md`** that has not passed the
+   four-part confirmation standard in `FOUNDATION.md` (live SERP top-3 check
+   via `scripts/serper-batch.mjs`, a real demand signal, the
+   diagnostic-question shape, a named product feature) with the evidence
+   written on the entry. A guessed title is not an entry.
+2. **Do not reorder, skip, or "reprioritize"** entries. The block order is
+   deliberate (Search Console gaps first, zero-view beginners last).
+3. **Do not propose keyword clusters, pillar/spoke seeds, Keyword Planner
+   pulls, listicles, "ideas" posts, tool comparisons, or head-term guides.**
+   That workflow was retired 2026-09-03 after three rounds with no proven
+   winner. Keyword Planner is a one-export sanity pass the user runs, never
+   a gate and never something you request per article.
+4. **Do not write an article that names no product feature** in its
+   CtaCard, and do not pick a feature other than the one on the entry.
+5. **Do not refill the plan one article at a time.** Below 30 unshipped
+   entries, run the research round in `FOUNDATION.md` (94-query scale,
+   one session) and present the whole result once.
+6. **Do not merge, split, or restructure the three plan files.**
+   `CONTENT-PLAN.md` is the list, `FOUNDATION.md` is the process,
+   `DATA-STUDIES.md` is study methodology. Each study is numbered once in
+   `DATA-STUDIES.md`; the plan references that number.
+7. **Do not judge a data study by clicks or a diagnostic post by links.**
+   Two content jobs, two KPI columns (`FOUNDATION.md` → "The SaaS layer").
+8. **Do not "relaunch", "refresh", or re-optimize existing pages** as a
+   strategy. On-page passes on the authority-gated pages were done in July
+   and did not move anything. The only allowed touch on an old post is the
+   AI-citation sweep at the bottom of `CONTENT-PLAN.md`, one post per pass,
+   after a new article ships, never instead of one.
+9. **Do not re-diagnose the site from raw exports.** The diagnosis is in
+   `FOUNDATION.md` items 1-8. Read it before saying anything about traffic.
+   The Aug 16 cliff is the 07-09 page-cut purge, not a Google update.
+10. **Do not promise a data figure the tables cannot produce.** The
+    not-measurable list is in `DATA-STUDIES.md`. Gated studies (plan #35)
+    get their floor check run first; if it fails, skip the entry, do not
+    write it thin.
+11. **Do not touch the dropped items.** Everything under "Dropped this
+    round" in `CONTENT-PLAN.md` and the dropped log in `FOUNDATION.md` has a
+    reason next to it. Re-proposing one wastes a turn.
+
+What you MAY do without asking: start the top unstruck entry (research file
+per the runbook), run verification scripts, strike a shipped entry, log a
+failed candidate in the dropped log with its top-3 domains.
+
+If you believe the plan is wrong, say so in two sentences with the evidence,
+then continue with the top entry unless the user redirects. Do not stop work
+to relitigate it, and do not quietly do something else.
 
 ## Quota discipline (hard rule)
 

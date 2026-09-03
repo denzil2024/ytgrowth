@@ -18,6 +18,19 @@ bottom under "Shipped" and "Dropped this round".
 
 Last updated: 2026-09-03
 
+**Guardrails for whoever is working this list** (the full set is in
+`CLAUDE.md` → "Content strategy is locked"):
+
+- The next article is the top unstruck entry. No picking, no reordering.
+- Nothing gets added here without the four-part confirmation standard and
+  the evidence written on the entry. A title you thought of is not an entry.
+- No keyword clusters, no Keyword Planner pulls per article, no listicles,
+  no "ideas" posts, no tool comparisons, no relaunching old pages.
+- Every article links to the feature named on its entry, and only that one.
+- Below 30 unshipped entries, run a full research round (`FOUNDATION.md`),
+  never add one entry at a time.
+- Dropped items stay dropped. Their reasons are at the bottom of this file.
+
 ## How to read an entry
 
 `N. Title phrase · feature · evidence`
