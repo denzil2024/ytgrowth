@@ -268,7 +268,7 @@ Page-1 competitors are vidIQ, TubeBuddy, Ahrefs, Semrush, Wix.
 
 The US alone is 53,249 impressions (40% of all site impressions) at position
 28.78, converting 58 clicks. The demand is there; the ranking is not.
-`MEDIAVINE.md` found this on 2026-07-10, did full on-page passes across every
+The July 2026 work found this on 2026-07-10, did full on-page passes across every
 high-impression US page on 07-11 and 07-13, and positions did not move. Its own
 conclusion, still correct: **the gate is authority (backlinks), not on-page
 work.** Do not redo on-page work on these pages expecting a different result.
@@ -338,12 +338,21 @@ losers are the other shape: broad advice, tool comparisons, listicles
 
 Where the winners came from is on record, not guessed: Reddit-style
 question mining plus PAA clustering (the July 2026 conversational-query
-queue, MEDIAVINE.md 2026-07-13 to 07-16, shipped with no Keyword Planner
-volume and no GSC export), GSC-verified content gaps (demonetization), and
-deep real-SERP research on a factual topic (watch-hours, ctr). The later
+queue, run 07-13 to 07-16 with no Keyword Planner volume and no Search
+Console export), GSC-verified content gaps (demonetization), and deep
+real-SERP research on a factual topic (watch-hours, ctr). The later
 Keyword Planner cluster process (video-ideas, Aug) has no proven winner in
 the data yet. The confirmation standard below is built from the method that
 worked, and the Keyword Planner seed workflow is retired.
+
+**The July queue's hit rate is the evidence for that standard.** Five topics
+were proposed, one was dropped for cannibalizing live posts, and all four
+that shipped (`youtube-ai-policy`, `shorts-vs-long-form`, `too-late-to-start`,
+`restart-youtube-channel`) are in the winner set above. Each was written from
+a deep SERP read, 8 competitor pages fetched for `restart-youtube-channel`
+alone, and each corrected a specific false claim the ranking pages carried.
+Four for four is why the 2026-09-03 research round scaled the same method to
+94 queries rather than replacing it.
 
 The plan itself was also part of the problem: it never held more than about
 six items ahead, three files tracked the same studies under different
@@ -649,9 +658,10 @@ cards, or outro templates.
 
 ## The runbook
 
-**This is the only content process.** `SEO-OPTIMIZATION-CHECKLIST.md` was
-folded into it on 2026-08-14 and is now a stub. A process split across two
-files got skipped for a month.
+**This is the only content process.** A separate 43-check SEO checklist
+existed from 2026-07-13, was never used once, and was folded into this
+runbook on 2026-08-14 (the file itself was deleted 2026-09-03). A process
+split across two files got skipped for a month.
 
 ### Why this exists in this shape
 
@@ -676,7 +686,7 @@ present costs a full review round. Do the complete pass, then present once.
    `Status:` line says where things stand. If there is no article in flight,
    the top unstarted entry in `CONTENT-PLAN.md` is next.
 
-Do not read `MEDIAVINE.md`, `DATA-STUDIES.md`, `HANDOVER.md` or the memory
+Do not read `DATA-STUDIES.md`, `HANDOVER.md` or the memory
 index unless this file or `CONTENT-PLAN.md` sends you there for a specific
 reason. Grep-wandering across a dozen markdown files at session start is a
 real and recurring cost.
@@ -764,7 +774,12 @@ up after: that is what produced six review rounds on one article.
   needs `\'`, JSX text does not) but the rendered words must be identical.
 - `sitemap.xml` entry with today's `lastmod`.
 - `llms.txt` entry. Live acquisition channel, not an afterthought. Write it
-  from the page's own verified content, never from a hub or marketing blurb.
+  from the page's own verified content (its `prerender.js` meta entry or the
+  component itself), never from a hub or marketing blurb. The 2026-07-13 pass
+  copied `ToolsHub.jsx` card text and shipped two factual errors: a tool
+  credited with an earnings estimate it does not have, and another given a
+  different tool's feature. If a description makes a checkable claim, grep the
+  component for it.
 - `updated` date bumped when revising an existing post.
 - `readTime` roughly matches the word count.
 - Prerender route is automatic via `discoverBlogSlugs()`. Nothing to add.
@@ -995,8 +1010,8 @@ article to run the full runbook (Stages 1 through 6) in order.
 work.** `/youtube-stats/*` is 14/14 categories live plus 4/4 tier-1 countries
 (US/UK/Canada/Australia). `/youtube-earnings/*` is 14/14 niches live. The one
 further combination anyone might reach for, niche x country earnings pages,
-was already built, shipped, and retired 2026-07-09 as a templated Mediavine
-thin-content liability, see `MEDIAVINE.md`. A
+was already built, shipped, and retired 2026-07-09 as a templated
+thin-content liability. A
 `/youtube-stats/country/:slug/:category` route exists in `App.jsx` but has no
 prerendered pages and no queue entry, treat it as unbuilt scaffolding and
 apply the same thin-content scrutiny before ever populating it.
@@ -1050,6 +1065,13 @@ youtube automation.
 - Do not write an article that names no product feature, or a listicle, a
   tool comparison, or an "ideas" post: the 08-25 export shows that shape
   averaging 2.2 clicks per page over four months.
+- Do not redo on-page optimization on the authority-gated pages. If a page
+  ever does warrant a look, the selection rule is: pull Search Console over
+  28 to 90 days, sort by impressions, and take pages with real impressions at
+  a weak position or a low CTR for their position, preferring beatable SERPs
+  over head terms. That pass was already run across every high-impression US
+  page in July and moved nothing, so the bar for repeating it is new evidence,
+  not a hunch.
 - Do not refill the plan one article at a time. A research round refills it
   to 30+ entries or it has not run.
 - Do not build a page or page dimension named after a low-tier country.

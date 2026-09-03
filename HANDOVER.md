@@ -13,9 +13,10 @@ next, and every mistake made across the two sessions so they are not repeated.
    there, not at the queue.
 2. `research/TEMPLATE.md` — the research file every article now requires.
    No research file, no article.
-3. `SEO-OPTIMIZATION-CHECKLIST.md` is now a STUB. Its 43 checks were folded
-   into `CONTENT-PLAN.md` Part 3 on 2026-08-14, because a process split across
-   two files went unused for a month. See mistake 6 below.
+3. There is no separate SEO checklist. A 43-check file existed from
+   2026-07-13, went unused for a month, was folded into the runbook on
+   2026-08-14 and deleted on 2026-09-03. The runbook is in `FOUNDATION.md`.
+   See mistake 6 below.
 4. `FOUNDATION.md` — keyword workflow plus the dropped log. The dropped log is
    now longer than the confirmed list. Read it BEFORE proposing any keyword.
 5. `DATA-STUDIES.md` — moat logger status and the data-study backlog.
@@ -77,9 +78,10 @@ Listed so the next session starts from these rather than rediscovering them.
    of the process (build the calendar), which was the day's actual deliverable.
 5. **Worked off a list the user could not see.** The content queue lived only
    in `DATA-STUDIES.md`. Caused four separate "where is the plan?" exchanges.
-6. **Did not run `SEO-OPTIMIZATION-CHECKLIST.md` at all**, despite it existing
-   since 2026-07-13 with 43 checks. Most errors below are items that checklist
-   exists to catch. THIS IS THE ROOT CAUSE OF MOST OF THE REST.
+6. **Did not run the SEO checklist at all**, despite it existing since
+   2026-07-13 with 43 checks (that file was later folded into the runbook and
+   deleted). Most errors below are items those checks existed to catch. THIS
+   IS THE ROOT CAUSE OF MOST OF THE REST.
 
 **Research failures**
 
@@ -114,8 +116,8 @@ Listed so the next session starts from these rather than rediscovering them.
 
 13. **Used a banned intro formula that is already logged.** Opened study #1
     with "Search [phrase] and nearly every result...", a near-duplicate of
-    `/blog/start-youtube-channel` and the exact pattern in `MEDIAVINE.md`
-    mistake 5. Grep existing intros before finalising a new one.
+    `/blog/start-youtube-channel`, and the same pattern was already logged as a
+    mistake in July. Grep existing intros before finalising a new one.
 14. **Shipped a thin first draft.** Gaming post v1: 1,078 body words, ZERO
     tables, FAQ at 37% of the article, 18 one-line bullets doing all the work.
     Sibling posts run 2,385 words with 5 tables.

@@ -21,10 +21,13 @@ into `FOUNDATION.md` or process/history content into `CONTENT-PLAN.md`.
 | **Anything touching YouTube API data** | The quota section below, in full | |
 | **Pricing or checkout** | `PRICING-OVERHAUL.md` | |
 | **Pinterest** | `PINTEREST.md` | |
+| **Bolding / FAQ-schema fix on an OLD post** | `AI-CITATION-SWEEP.md` ONLY. A backlog, not a run order: one pass after a new entry ships, never instead of one. | `CONTENT-PLAN.md`, unless you are also shipping the next entry |
 
-`SEO-OPTIMIZATION-CHECKLIST.md` is a stub. It was folded into
-`CONTENT-PLAN.md` Part 3 on 2026-08-14. `HANDOVER.md` is a historical mistake
-log, not instructions: read it only when asked why something is the way it is.
+The content runbook lives in `FOUNDATION.md` → "The runbook". `HANDOVER.md`
+is a historical mistake log, not instructions: read it only when asked why
+something is the way it is. The Mediavine ad-revenue goal was abandoned
+2026-08-13 and its working doc was deleted 2026-09-03; the conclusions worth
+keeping are in `FOUNDATION.md`. Do not reintroduce ad-revenue framing.
 
 **Three defaults that exist to stop wasted turns:**
 
@@ -34,9 +37,9 @@ log, not instructions: read it only when asked why something is the way it is.
 2. **Do not present partial work.** Run the complete standard, verify it, then
    present once with the numbers. Every partial present costs a full review
    round, and one article cost six of them on 2026-08-14.
-3. **Do not re-derive what is already written down.** The voice reference, the
-   data floor, and the queue are all stated in `CONTENT-PLAN.md`. Measuring
-   them again from the posts is rework.
+3. **Do not re-derive what is already written down.** The run order is in
+   `CONTENT-PLAN.md`; the voice reference and the data floor are in
+   `FOUNDATION.md`. Measuring them again from the posts is rework.
 
 ## Content strategy is locked (hard rules, 2026-09-03)
 
@@ -80,7 +83,7 @@ for that specific thing:
 8. **Do not "relaunch", "refresh", or re-optimize existing pages** as a
    strategy. On-page passes on the authority-gated pages were done in July
    and did not move anything. The only allowed touch on an old post is the
-   AI-citation sweep at the bottom of `CONTENT-PLAN.md`, one post per pass,
+   AI-citation sweep in `AI-CITATION-SWEEP.md`, one post per pass,
    after a new article ships, never instead of one.
 9. **Do not re-diagnose the site from raw exports.** The diagnosis is in
    `FOUNDATION.md` items 1-8. Read it before saying anything about traffic.

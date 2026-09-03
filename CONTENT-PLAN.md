@@ -1,4 +1,4 @@
-# YTGrowth — Content Plan
+# YTGrowth: Content Plan
 
 Site: ytgrowth.io · Niche: YouTube SEO/growth SaaS ($5 Starter pack, Growth
 $49/mo, Agency $149/mo, pay-before-signup)
@@ -13,8 +13,8 @@ only if you need the why.
 
 Rebuilt 2026-09-03 from one research round (94 Serper SERP + PAA pulls, the
 2026-08-25 Search Console export, Reddit thread mining). Previous plan
-archived in git history (`43d5b9562`); the parts that survived are at the
-bottom under "Shipped" and "Dropped this round".
+archived in git history (`43d5b9562`). What shipped before the rebuild is in
+`FOUNDATION.md`'s history log; what was killed is at the bottom of this file.
 
 Last updated: 2026-09-03
 
@@ -30,6 +30,9 @@ Last updated: 2026-09-03
 - Below 30 unshipped entries, run a full research round (`FOUNDATION.md`),
   never add one entry at a time.
 - Dropped items stay dropped. Their reasons are at the bottom of this file.
+- Update this file the same session something ships or the order changes.
+- Structure comes from the research file's coverage matrix every time. No
+  fixed idea counts, no fixed FAQ counts, no reused skeleton.
 
 ## How to read an entry
 
@@ -137,9 +140,9 @@ reaching `/features/channel-audit` or checkout.
 
 ## Block 3 · Click-through, titles, search (Thumbnail IQ / SEO Studio)
 
-Funnel: problem-aware, existing channel. CTA: Thumbnail IQ for 22-25,
-SEO Studio for 24 and 27-28, Outliers for 29-30. KPI: tier-1 visitors
-reaching the named feature page.
+Funnel: problem-aware, existing channel. CTA: Thumbnail IQ for 22-23 and 25,
+SEO Studio for 24 and 27-28, Weekly Report for 26 (data study), Outliers for
+29-30. KPI: tier-1 visitors reaching the named feature page.
 
 22. Why is my YouTube CTR so low (+ what CTR is normal for a new channel)
     · Thumbnail IQ · top3: reddit, quora, facebook · 10 Reddit threads on
@@ -190,7 +193,10 @@ Channel Audit. KPI: tier-1 visitors, calculator use, checkout.
     is already deep, scope this to the YPP application appeal
 34. Do you need a big following for affiliate marketing on YouTube ·
     Monetization pillar spoke (carried from old plan #31) ·
-    top3: reddit, reddit, quora · PAA x4
+    top3: reddit, reddit, quora · PAA x4 · scope: the pillar mentions
+    affiliate 17 times as one of eight methods; check its affiliate
+    section does not already answer the following-size question before
+    outlining, same check as #33
 35. **DATA STUDY** How fast YouTube channels grow, by size tier (+ how
     long it takes to reach 1,000 subscribers) · Channel Audit ·
     top3: reddit, socialstatus, berryviral · PAA x4 · GATED: needs
@@ -245,7 +251,10 @@ visitors, tool use.
 46. YouTube video stuck at 0 impressions · Channel Audit ·
     top3: reddit, support.google, quora · PAA x4
 47. YouTube Shorts getting 0 views · Channel Audit ·
-    top3: reddit, support.google, quora · PAA x4
+    top3: reddit, support.google, quora · PAA x4 · scope for 47-49: these
+    are troubleshooting, `/blog/shorts-vs-long-form` is strategy (does
+    Shorts hurt the channel). Three Shorts entries is the densest cluster
+    in the plan; before writing 48 and 49, confirm 47 did not absorb them
 48. YouTube Shorts views stopped suddenly (+ why Shorts stop getting views
     after an hour, + views freeze) · Channel Audit ·
     top3: reddit, youtube, subscribr · PAA x4
@@ -262,120 +271,28 @@ visitors, tool use.
 
 The July winners (`youtube-ai-policy`, `shorts-vs-long-form`,
 `too-late-to-start`, `restart-youtube-channel`) were sourced from Reddit
-and PAA clustering, not Keyword Planner volume (MEDIAVINE.md 2026-07-13 to
+and PAA clustering, not Keyword Planner volume (the July 2026 queue, 07-13 to
 07-16). Volume is a sanity check here, not the gate. Once: paste all 51
 title phrases into Keyword Planner, one export into `keyword-exports/`, say
 "uploaded". Entries in the lowest bucket AND with no Search Console
 evidence move to the bottom of their block. Nothing gets removed on volume
 alone.
 
-## Data studies status (methodology in `DATA-STUDIES.md`)
+## Data studies
 
-- ~~Video length by niche~~ published 2026-08-13
-- ~~Title length~~ published 2026-08-21
-- ~~Best time to post, measured~~ upgraded 2026-08-26 into `/blog/best-time-to-post`
-- ~~Upload cadence~~ upgraded 2026-08-28 into `/blog/best-time-to-post`
-- ~~View growth curve, first 30 days~~ published 2026-08-28
-- ~~Shorts vs. long-form front-loading~~ combined into the growth-curve article
-- ~~Engagement rate by niche~~ published 2026-08-29
-- ~~Shorts share over time~~ published 2026-08-28 into `/blog/shorts-vs-long-form`
-- Posting time vs. performance (correlation) → run-order #26
-- Viral multiples of channel median → run-order #12
-- Views per video by subscriber tier → run-order #19
-- Growth rate by size tier → run-order #35, gated on snapshot depth
-- CTR benchmark by niche, retention benchmark by niche: killed 2026-08-29,
-  0/17 `weekly_reports` rows populated, 4 channels
-- M1/M2/M3 moat studies: blocked (M1 warmer-contaminated, M2 feeds #35's
-  gate, M3 needs 6+ months)
-- Topics small channels still win on: killed, no small-channel coverage in
-  any named niche (`scripts/check_micro_channel_feasibility.py`)
+Status, methodology, quota math and the gate conditions for every study live
+in `DATA-STUDIES.md`. Do not track study status here as well: a second copy
+is what let study #9 sit wrongly marked "superseded" while it was a real,
+confirmed, zero-quota study. The four studies in the run order above (#12,
+#19, #26, #35) each name their `DATA-STUDIES.md` number.
 
-## AI-citation fitness sweep (older posts, one per pass, secondary track)
+## AI-citation fitness sweep
 
-Audited 2026-09-02. Two gaps per post, checked independently: bold
-coverage (% of `<p>` with zero `<strong>`; target the recent articles'
-~85-95%) and whether a real `faqs` array exists (feeds FAQPage JSON-LD).
-Fix one post per pass, after each new article ships, never instead of one:
-bold pass (real claims only), false-"free"-claim check, British-spelling
-normalize to American, and if FAQ:NO, a real Serper-PAA-sourced FAQ array.
-Verify with `check-drift.mjs` + `check-blog-paragraphs.mjs`.
+Moved to `AI-CITATION-SWEEP.md` (2026-09-03). It is a maintenance backlog
+for 65 older posts, not a run order, and it was crowding this file. One
+sweep pass runs after a new entry ships, never instead of one.
 
-Ordered worst-first by bold %. ~~Struck~~ once done.
-
-- ~~video-tagging~~ done 2026-09-02 (bold 0%→93%, free-claim fixed, British
-  spellings fixed; still needs a real FAQ array)
-- youtube-competitor-analysis: 100% unbolded, no FAQ
-- youtube-thumbnail-size: 100% unbolded, no FAQ
-- youtube-as-a-business: 100% unbolded, no FAQ
-- youtube-channel-optimization: 100% unbolded, no FAQ
-- free-subs-on-youtube: 100% unbolded, no FAQ
-- youtube-niche: 97% unbolded, no FAQ
-- vidiq-review: 97% unbolded, has FAQ
-- youtube-tag-finder: 96% unbolded, no FAQ
-- youtube-channel-audit: 95% unbolded, no FAQ
-- more-views-on-youtube: 95% unbolded, no FAQ
-- youtube-partner-program: 93% unbolded, no FAQ
-- youtube-maker: 92% unbolded, has FAQ
-- youtube-analytics: 91% unbolded, has FAQ
-- youtube-analytics-tools: 90% unbolded, has FAQ
-- youtube-algorithm: 89% unbolded, no FAQ
-- youtube-seo-best-practices: 89% unbolded, has FAQ
-- tubebuddy-vs-vidiq: 88% unbolded, has FAQ
-- thumbnail-tester: 88% unbolded, no FAQ
-- youtube-title: 88% unbolded, no FAQ
-- youtube-channel-not-growing: 86% unbolded, no FAQ
-- youtube-thumbnail-ideas: 86% unbolded, no FAQ
-- google-adsense-youtube: 85% unbolded, has FAQ
-- what-is-youtube-seo: 85% unbolded, has FAQ
-- youtube-data-studies: 83% unbolded, no FAQ
-- seo-tools-for-youtube: 83% unbolded, no FAQ
-- youtube-watch-hours: 83% unbolded, has FAQ
-- youtube-cpm: 82% unbolded, has FAQ
-- comedy-video-ideas: 80% unbolded, has FAQ
-- shorts-tagging: 79% unbolded, has FAQ
-- grow-youtube-channel: 78% unbolded, no FAQ
-- youtube-description-template: 78% unbolded, has FAQ
-- youtube-vlog-ideas: 76% unbolded, has FAQ
-- youtube-tags: 75% unbolded, has FAQ
-- youtube-shorts-algorithm: 74% unbolded, has FAQ
-- youtube-sponsorships: 74% unbolded, has FAQ
-- cooking-video-ideas: 73% unbolded, has FAQ
-- youtube-trends: 69% unbolded, has FAQ
-- youtube-keyword-research-tools: 65% unbolded, has FAQ
-- youtube-rpm: 65% unbolded, has FAQ
-- youtube-title-length: 62% unbolded, has FAQ
-- youtube-ctr: 50% unbolded, has FAQ
-- youtube-shorts-pay: 49% unbolded, no FAQ
-- youtube-challenge-ideas: 48% unbolded, has FAQ
-- tech-video-ideas: 47% unbolded, has FAQ
-- gaming-youtube-channel: 47% unbolded, has FAQ
-- best-time-to-post: 44% unbolded, has FAQ
-- gaming-video-ideas: 42% unbolded, has FAQ
-- youtube-channel-phone: 41% unbolded, has FAQ
-- youtube-shorts-ideas: 41% unbolded, has FAQ
-- copyright-free-music: 41% unbolded, has FAQ
-- youtube-monetization-beyond-ads: 38% unbolded, has FAQ (pillar, gets
-  touch-ups from spoke work)
-- youtube-1-million-views: 34% unbolded, has FAQ
-- faceless-youtube-channel-ideas: 33% unbolded, no FAQ
-- youtube-video-ideas: 32% unbolded, has FAQ
-- youtube-banner-size: 27% unbolded, has FAQ
-- start-youtube-channel: 23% unbolded, has FAQ
-- youtube-brand-account: 22% unbolded, has FAQ
-- chrome-extensions-for-youtube: 22% unbolded, no FAQ
-- how-to-start-a-youtube-video: 13% unbolded, has FAQ
-- youtube-demonetization: 14% unbolded, has FAQ
-- too-late-to-start: 14% unbolded, has FAQ
-- cash-cow-youtube-channels: 7% unbolded, has FAQ
-- restart-youtube-channel: 6% unbolded, has FAQ
-- youtube-ai-policy: 6% unbolded, has FAQ
-- best-youtube-mic: 3% unbolded, has FAQ
-
-Already clean, skip: youtube-super-thanks, youtube-channel-memberships,
-video-length-by-niche, shorts-vs-long-form, youtube-view-growth-curve,
-youtube-engagement-rate, music-video-ideas.
-
-## The 73 existing articles: what happens to them
+## The existing articles: what happens to them
 
 Nothing is deleted and nothing is rewritten. Decided 2026-09-03.
 
@@ -398,7 +315,8 @@ Nothing is deleted and nothing is rewritten. Decided 2026-09-03.
   `shorts-vs-long-form` ↔ #47-49, `restart-youtube-channel` ↔ #20,
   `youtube-demonetization` ↔ #33, monetization pillar "Read Next" ↔ #4/#5/#34,
   `youtube-view-growth-curve` ↔ #12/#45.
-- **The only edit allowed on an old post** is the AI-citation sweep below:
+- **The only edit allowed on an old post** is the AI-citation sweep in
+  `AI-CITATION-SWEEP.md`:
   one post per pass, after a new entry ships, bold pass + false-"free"
   check + American spelling + a real PAA-sourced FAQ array. Adding the
   inbound link above is the other exception. Nothing else.
@@ -407,17 +325,6 @@ Nothing is deleted and nothing is rewritten. Decided 2026-09-03.
   Any post that later shows position 8-20 with 500+ impressions and no
   clicks gets a title/meta review at that point, proposed to the user
   first, never done on sight.
-
-## Shipped (from the previous plan, kept for the record)
-
-- Video Ideas cluster: ~~pillar~~ (rewritten 2026-08-20), ~~gaming~~
-  (08-13), ~~cooking~~ (08-15), ~~comedy~~ (08-14), ~~tech~~ (08-19),
-  ~~music~~ (08-20)
-- Starting a Channel cluster: ~~pillar~~, ~~phone~~, ~~brand account~~,
-  ~~gaming channel~~
-- Monetization Beyond Ads: ~~pillar~~, ~~channel memberships~~ (09-02),
-  ~~Super Thanks~~ (09-02), ~~sponsorships linked in as a spoke~~ (pillar
-  "Read Next" section, 09-02)
 
 ## Dropped this round (reasons, so they don't come back)
 
@@ -463,22 +370,3 @@ Carried-over items killed on the new standard:
   OutlierKit (carried from old plan).
 - Promotion pass on published studies: replaced by the per-study outreach
   step in `FOUNDATION.md` → "The SaaS layer".
-
-## Programmatic pages — built out, not a source of new work
-
-`/youtube-stats/*` and `/youtube-earnings/*` are fully live. See
-`FOUNDATION.md` for what was checked and why nothing further is queued.
-
-## Rules
-
-- Only entries that passed the confirmation standard belong here.
-  Candidates that have not been checked live in conversation or in
-  `FOUNDATION.md`'s parked tracks, never in this list.
-- Every entry names a product feature. An article with no feature to send
-  the reader to is not written.
-- Update this file the same session something ships or the order changes.
-- No fixed idea counts, no fixed FAQ counts, no reused skeleton; structure
-  comes from the research file's coverage matrix every time.
-- New articles link to the feature page in the CtaCard and to the
-  block's sibling articles. Data studies link out to the diagnostic posts
-  they support; diagnostic posts cite the studies for their numbers.
