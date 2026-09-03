@@ -709,23 +709,96 @@ Fill `research/<slug>.md` from `research/TEMPLATE.md`. **No research file, no
 article.** The research rule previously lived in four files and was skipped
 anyway, because skipping left no trace. A missing file leaves a trace.
 
-- Fetch the live top 10. Real URLs, opened this session, dated in the file.
-  Never cite a source that was not fetched: two domains were fabricated on
-  2026-07-28.
-- Build the coverage matrix. Cover the UNION of competitor sections, not the
-  intersection. Compare your section count against the strongest competitor.
-- Name the gap, and what we can answer from our data that they cannot.
-- Answer the applicable test in writing: the one test for a data study, the
-  second test for a diagnostic post. A rejected research file is a success.
-- Copy the entry's feature, funnel stage and CTA from `CONTENT-PLAN.md` into
-  the research file, and name the free tool that links before the feature,
-  if one exists.
-- Pull the PAA for the query plus 2-4 variants (Serper) and log which FAQ
-  questions are PAA-sourced vs. editorial.
-- Run the data pull. Check every figure against the data floor above. Figures
-  that fail the floor get dropped, not caveated.
-- For a data study: build the outreach list (SaaS layer, item 4) now, before
-  writing, so the study is written toward the people who will link it.
+The bar is not "a good article." It is **the best answer on the internet to
+this exact question**, which means beating every page in the current top 10
+on completeness, specificity and honesty. The seven steps below are how that
+gets earned, and each one leaves written evidence in the research file.
+
+**1.1 Pull the SERP and read the intent off it.**
+
+Run `scripts/serper-batch.mjs` on the entry's query plus 2 to 4 real
+variants. Then answer, in writing, before opening anything: **what does the
+searcher want in the first screen?** Classify the intent as one of:
+
+| Intent | The reader wants | The article opens with |
+|---|---|---|
+| Diagnostic | To know why their number moved | The most likely cause, named in the first sentence |
+| Definitional | A number or a definition they can act on | The number or definition, then what it means for them |
+| Decision | Permission or a rule to choose by | The recommendation, then the conditions where it flips |
+| Procedural | The steps, in order | Step 1, not a preamble about why the task matters |
+
+The SERP tells you which: forum threads asking "why is X happening" means
+diagnostic; "what is a good X" means definitional. If the top 10 splits
+between two intents, the article serves the dominant one first and the second
+in a later section. Write that split down.
+
+**1.2 Open the competitors, do not skim the snippets.**
+
+Fetch the **top 10 URLs**, and read **at least 5 of them in full**, always
+including every result in the top 3. Snippets are not research. Record for
+each: URL, publisher, date, word count, and its section headings. Never cite
+a source that was not fetched; two domains were fabricated on 2026-07-28.
+Forum threads (Reddit, Quora, YouTube Help) count as competitors and are read
+the same way. They are usually where the real question lives.
+
+**1.3 Build the coverage matrix.**
+
+A table: every section any competitor has, down the side; each competitor
+across the top; a mark where they cover it. Then a column for us. **Cover the
+union, not the intersection.** A section only one competitor has is still a
+section the article needs, because that competitor is ranking partly on it.
+Count our sections against the strongest competitor's and state both numbers.
+
+**1.4 Find what all ten get wrong, missing, or stale.**
+
+This is the step that makes the article the best rather than the longest.
+Write down, with evidence:
+
+- **A claim the ranking pages repeat that is false or unverifiable.** The
+  `youtube-ai-policy` post ranked by debunking fake "30% commentary"
+  thresholds that appear in no YouTube policy. `restart-youtube-channel`
+  disproved a top-ranking page's claim that old handles 301-redirect.
+- **A question the SERP asks and nobody answers.** Pull PAA for the query
+  plus variants and mark which questions no competitor addresses.
+- **Anything out of date.** Note the publish date of every competitor. A 2023
+  page ranking today is an opening.
+- **What we can answer from our own tables that they cannot.** For a data
+  study this is the whole article; for a diagnostic post it is usually one
+  section citing a published study.
+
+If this step comes back empty, the honest outcome is to say so and move to
+the next entry. A rejected research file is a success.
+
+**1.5 Answer the applicable test in writing.**
+
+The one test for a data study, the second test for a diagnostic post. Both
+are above. A "yes" that cannot name the differentiator from 1.4 is a "no".
+
+**1.6 Copy the entry's commitments in.**
+
+From `CONTENT-PLAN.md`: the feature, the funnel stage, the CTA, the anchor
+post from the link map, and any sibling named in a scope note. Name the free
+tool that links before the paid feature where one exists. These are decided
+already; do not re-litigate them at writing time.
+
+**1.7 Run the data pull, and the outreach list for a study.**
+
+Check every figure against the data floor. Figures that fail get dropped, not
+caveated. For a data study, build the outreach list before writing, so the
+study is written toward the people who will link it.
+
+**The completeness test, before Stage 2.** The research file passes when all
+five are true, and each is checkable by someone else:
+
+1. At least 5 competitors read in full, including all of the top 3, with
+   headings recorded.
+2. The coverage matrix covers the union, and our section count is stated
+   against the strongest competitor's.
+3. At least one named differentiator from 1.4, with evidence.
+4. Every PAA question either answered in the outline or explicitly excluded
+   with a reason.
+5. The stated search intent matches what the outline's first section
+   delivers.
 
 ### Stage 2 — Present and wait
 

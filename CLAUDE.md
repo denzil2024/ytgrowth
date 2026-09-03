@@ -98,6 +98,16 @@ for that specific thing:
     round" in `CONTENT-PLAN.md` and the dropped log in `FOUNDATION.md` has a
     reason next to it. Re-proposing one wastes a turn.
 
+12. **Do not present a research file that fails the completeness test.**
+    Five conditions, all in `FOUNDATION.md` → Stage 1: 5+ competitors read
+    in full including all of the top 3, a union coverage matrix with both
+    section counts stated, at least one named differentiator with evidence,
+    every PAA question answered or excluded with a reason, and a stated
+    search intent that matches what the outline opens with. Snippets are not
+    research. If the differentiator step comes back empty, say so and move
+    to the next entry rather than writing a page that only matches the
+    competition.
+
 What you MAY do without asking: start the top unstruck entry (research file
 per the runbook), run verification scripts, strike a shipped entry, log a
 failed candidate in the dropped log with its top-3 domains.

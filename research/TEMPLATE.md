@@ -1,43 +1,63 @@
 # Research: <slug>
 
-Target query: `<exact keyword phrase>`
-Volume: `<n>/mo` (source: Keyword Planner export, date)
+Plan entry: `#<n>` · Feature: `<feature>` · Anchor post: `/blog/<slug>`
+Target query: `<exact query phrase from the plan entry>`
 Researched: `<YYYY-MM-DD>`
 Status: `researching | awaiting approval | approved, writing | verifying | done`
 
-Copy this file to `research/<slug>.md` and fill it in BEFORE writing a word of
-the article. No research file, no article. Rules and thresholds referenced
-below live in `CONTENT-PLAN.md` Part 1, and the stage-by-stage process is
-Part 3.
+Copy this file to `research/<slug>.md` and fill it in BEFORE writing a word.
+No research file, no article. The process is `FOUNDATION.md` → "Stage 1 —
+Research"; the data floor and voice rules are in the same file.
 
 **This file is also the state file.** A resumed session reads `Status:` and the
-stage log at the bottom to know exactly where things stand, instead of
-re-deriving it by reading the article and guessing. Keep both current.
+stage log at the bottom to know where things stand, instead of re-deriving it
+by reading the article and guessing. Keep both current.
+
+Volume is not required. This site confirms entries on SERP composition, a
+demand signal, question shape and a product feature, not on Keyword Planner
+volume. If a volume figure exists, cite its export; never estimate one.
 
 ---
 
-## 1. The live top 10
+## 1. Search intent
 
-Every row must be a page opened this session. Do not list a URL from memory,
-and do not pad the table to ten if fewer were reachable. Note the ones that
-failed to fetch rather than dropping them silently.
+Answer this BEFORE opening any competitor, from the SERP alone.
 
-| # | URL | Domain | Fetched | Format | Notes |
-|---|---|---|---|---|---|
-| 1 | | | YYYY-MM-DD | | |
-| 2 | | | YYYY-MM-DD | | |
+Dominant intent (pick one): `diagnostic | definitional | decision | procedural`
 
-SERP character: who owns this query, and is it beatable or authority-gated?
-Check against the position data in `CONTENT-PLAN.md` Part 2 before assuming
-it is winnable.
+What the reader wants in the first screen:
+
+What the article must therefore open with (see the intent table in
+FOUNDATION.md Stage 1.1):
+
+Second intent present in the SERP, if any, and where it gets served:
 
 ---
 
-## 2. Coverage matrix
+## 2. The live top 10
+
+Every row is a page opened this session. Do not list a URL from memory, and do
+not pad to ten if fewer were reachable; note the failures instead. **At least
+5 read in full, including every result in the top 3.** Forum threads count as
+competitors and are read the same way.
+
+| # | URL | Domain | Date published | Words | Read in full? | Section headings |
+|---|---|---|---|---|---|---|
+| 1 | | | | | yes/no | |
+| 2 | | | | | yes/no | |
+
+Read in full: `<n>` of 10. Top 3 all read: `yes/no`.
+
+SERP character: who owns this query, and is it beatable? The plan entry's
+`top3:` evidence is the starting point; confirm it still holds.
+
+---
+
+## 3. Coverage matrix
 
 Every H2-level section any competitor covers, down the left. One column per
-competitor. Cover the UNION, not the intersection: a section only one strong
-page has is still a long-tail we cede by skipping it.
+competitor. **Cover the UNION, not the intersection:** a section only one page
+has is still a long-tail we cede by skipping it.
 
 | Section | C1 | C2 | C3 | C4 | C5 | Ours? |
 |---|---|---|---|---|---|---|
@@ -48,18 +68,30 @@ justify it here or fix the outline.
 
 ---
 
-## 3. The gap
+## 4. What the top 10 gets wrong
 
-What every one of them misses:
+The step that makes this the best answer rather than the longest. Each line
+needs evidence, not an assertion.
 
-What we can answer from our own data that they structurally cannot:
+**A claim the ranking pages repeat that is false or unverifiable:**
+(with the page that says it, and the primary source that contradicts it)
 
-Intent the SERP does not close (what is the reader really trying to do, and
-does any ranking page finish the job?):
+**Questions the SERP asks that nobody answers:**
+(from PAA on the query plus 2-4 variants; mark which no competitor covers)
+
+**Stale pages in the top 10:**
+(publish dates; a 2023 page still ranking is an opening)
+
+**What we can answer from our own tables that they structurally cannot:**
+(name the study or the table; for a diagnostic post this is usually one
+section citing a published study)
+
+If all four are empty, say so and stop. Moving to the next plan entry is the
+correct outcome, not a failure.
 
 ---
 
-## 4. The one test
+## 5. The one test
 
 > Could a competitor without our database have written this article?
 
@@ -71,7 +103,7 @@ a published post that competes on advice against DR-80 incumbents.
 
 ---
 
-## 5. The data pull
+## 6. The data pull
 
 ```sql
 -- must include: published_at >= '2025-01-01'
@@ -91,7 +123,7 @@ later and assumes they are usable):
 
 ---
 
-## 6. Outline
+## 7. Outline
 
 Derived from sections 2 and 3 above, not from any previous article. If two
 posts in the same cluster end up with the same shape, that has to be because
@@ -112,7 +144,7 @@ Cover image needed: yes/no, and what it should show
 
 ---
 
-## 7. Approval
+## 8. Approval
 
 Presented: `<date>`
 Outcome: `pending | approved | changes requested`
@@ -120,9 +152,9 @@ Notes:
 
 ---
 
-## 8. Stage log
+## 9. Stage log
 
-Tick as each stage of `CONTENT-PLAN.md` Part 3 completes. A resumed session
+Tick as each stage of `FOUNDATION.md` → "The runbook" completes. A resumed session
 reads this instead of re-inspecting the article to work out what is left.
 
 - [ ] Stage 1, research file complete
