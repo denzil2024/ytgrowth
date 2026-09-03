@@ -424,7 +424,9 @@ by format, or by distinct product feature. Seeds that fail are the generic advic
 ## Research round (replaced 2026-09-03; the Keyword Planner seed workflow is retired)
 
 A research round refills `CONTENT-PLAN.md`. It runs when the plan holds
-fewer than 30 unshipped entries, never article by article. The 2026-09-03
+fewer than 40 unshipped entries, never article by article. The site ships
+1 to 2 articles per day, so 40 entries is only 3 to 6 weeks of runway and a
+round takes a full session; do not let it run closer than that. The 2026-09-03
 round is the reference: 94 queries, 51 confirmed, in one session.
 
 1. **Seed from three sources, in this order.** (a) The latest Search
@@ -451,7 +453,7 @@ round is the reference: 94 queries, 51 confirmed, in one session.
    not re-proposed.
 6. **Hand the user the Keyword Planner sanity pass** (one export).
 7. Report once: confirmed count per block, dropped count with reasons,
-   weeks of runway at 3 per week.
+   weeks of runway at 1 to 2 articles per day.
 
 Pillar/spoke clusters are not the unit any more; the block is. The three
 pillar clusters that exist (video ideas, starting a channel, monetization

@@ -33,7 +33,7 @@ Last updated: 2026-09-03
 - No keyword clusters, no Keyword Planner pulls per article, no listicles,
   no "ideas" posts, no tool comparisons, no relaunching old pages.
 - Every article links to the feature named on its entry, and only that one.
-- Below 30 unshipped entries, run a full research round (`FOUNDATION.md`),
+- Below 40 unshipped entries, run a full research round (`FOUNDATION.md`),
   never add one entry at a time.
 - Dropped items stay dropped. Their reasons are at the bottom of this file.
 - Update this file the same session something ships or the order changes.
@@ -54,10 +54,14 @@ Last updated: 2026-09-03
 - **DATA STUDY** entries use our own tables, zero quota, and follow
   `DATA-STUDIES.md`. They ship with the outreach step, not just a publish.
 
-Cadence target: 3 articles per week, one of them a data study every other
-week. At that pace this list is ~25 weeks of work (through late February
-2027). Strike items as they ship, same session. Do not add an entry that
-skipped the standard.
+Cadence: **1 to 2 articles per day**, with a data study roughly every two
+weeks. At that pace this list is 6 to 10 weeks of work. Strike items as they
+ship, same session. Do not add an entry that skipped the standard.
+
+**Refill trigger.** At this cadence the plan drains fast: 30 remaining
+entries is only 2 to 4 weeks of runway, and a research round takes a full
+session. Run the next round (`FOUNDATION.md` → "Research round") when the
+list drops below **40 unshipped entries**, not 30.
 
 ## Block 1 · Already earning impressions with no page (write first)
 

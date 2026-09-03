@@ -71,9 +71,11 @@ for that specific thing:
    a gate and never something you request per article.
 4. **Do not write an article that names no product feature** in its
    CtaCard, and do not pick a feature other than the one on the entry.
-5. **Do not refill the plan one article at a time.** Below 30 unshipped
+5. **Do not refill the plan one article at a time.** Below 40 unshipped
    entries, run the research round in `FOUNDATION.md` (94-query scale,
-   one session) and present the whole result once.
+   one session) and present the whole result once. The threshold is 40 and
+   not lower because the site ships 1 to 2 articles per day, so 40 entries
+   is only 3 to 6 weeks of runway.
 6. **Do not merge, split, or restructure the three plan files.**
    `CONTENT-PLAN.md` is the list, `FOUNDATION.md` is the process,
    `DATA-STUDIES.md` is study methodology. Each study is numbered once in
