@@ -83,6 +83,20 @@ Cadence: **1 to 2 articles per day**, with a data study roughly every two
 weeks. At that pace this list is 7 to 13 weeks of work. Strike items as they
 ship, same session. Do not add an entry that skipped the standard.
 
+**The order is the write order. Work straight down.** Every entry is
+writable on its own the day you reach it; nothing waits on a later entry.
+Two things to know:
+
+- **A forward reference is a scope note, not a dependency.** Where an entry
+  says a topic "belongs to #N" further down the list, that means leave the
+  topic out, not wait for it.
+- **The four data studies (#12, #19, #26, #35) are the only entries that can
+  be blocked.** Each needs its data-floor count run first
+  (`DATA-STUDIES.md`). If a study fails its floor, skip it, note the date on
+  its entry, and carry on to the next number. Do not stall the queue and do
+  not write it thin. #35 is gated today and will likely fail until the
+  snapshot table has more weeks in it.
+
 **Refill trigger.** At this cadence the plan drains fast: 30 remaining
 entries is only 2 to 4 weeks of runway, and a research round takes a full
 session. Run the next round (`FOUNDATION.md` → "Research round") when the
@@ -301,8 +315,8 @@ visitors, tool use.
 51. How long it takes to get 1,000 subscribers · Channel Audit ·
     top3: reddit, scalelab, quora · PAA x4 · uses study #35's figure once
     it clears the floor, otherwise public sources with one disclosure ·
-    scope: "should I delete old videos with no views" belongs to #62, do
-    not absorb it here
+    scope: leave "should I delete old videos with no views" out entirely,
+    it is #62's topic. No dependency, write #51 when you reach it
 
 ## Block 7 · Policy and enforcement panic (existing channels, high urgency)
 
@@ -578,9 +592,18 @@ what the post's own headings cover, not by keyword overlap.
 - **A data study links out to every diagnostic entry that cites its numbers**,
   and each of those entries cites the study. That pairing is listed on the
   study's own entry.
-- **If an anchor already links to three or more block articles**, stop adding
-  and link the new article to the closest sibling instead. An anchor with
-  fifteen outbound links to its own cluster reads as a link farm.
+- **The link runs one way once an anchor is busy.** Several anchors serve a
+  lot of entries: `/blog/youtube-channel-not-growing` (17),
+  `/blog/start-youtube-channel` (10), `/blog/youtube-analytics` (9). The new
+  article always links UP to its anchor. The anchor only links back for the
+  **first three** articles in its group; after that, the new article links
+  sideways to the nearest already-shipped sibling in the same anchor group
+  instead, and the anchor is left alone. An anchor with seventeen outbound
+  links to its own cluster reads as a link farm and dilutes the page that is
+  already ranking.
+- **Which three get the inbound link:** the first three shipped in run order,
+  because they are the ones live longest. Note them on the anchor's row as
+  they ship.
 - **Never link to an entry that has not shipped.** Check the strike-through
   first; a link to an unwritten article is a 404.
 
