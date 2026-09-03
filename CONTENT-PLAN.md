@@ -22,6 +22,12 @@ feature, and PAA follow-through. 39 passed the SERP check, 6 were dropped
 for cannibalizing live posts. Evidence in
 `research/rounds/2026-09-03b-queries-summary.txt`.
 
+Expanded again 2026-09-03c with Blocks 11 to 16 (entries 75-94): 38 pulls
+into the retention, AI-era, format, positioning, distribution and
+revenue-diagnostic seams. 35 passed the SERP check, 6 were dropped as owned
+by live posts. Evidence in
+`research/rounds/2026-09-03c-queries-summary.txt`.
+
 Last updated: 2026-09-03
 
 **Guardrails for whoever is working this list** (the full set is in
@@ -55,7 +61,7 @@ Last updated: 2026-09-03
   `DATA-STUDIES.md`. They ship with the outreach step, not just a publish.
 
 Cadence: **1 to 2 articles per day**, with a data study roughly every two
-weeks. At that pace this list is 6 to 10 weeks of work. Strike items as they
+weeks. At that pace this list is 7 to 13 weeks of work. Strike items as they
 ship, same session. Do not add an entry that skipped the standard.
 
 **Refill trigger.** At this cadence the plan drains fast: 30 remaining
@@ -379,6 +385,126 @@ Competitor Analysis for 73. KPI: tier-1 visitors reaching the feature page.
     top3: reddit, support.google, quora · pairs with #3 (how often
     analytics updates), write #3 first and confirm it did not absorb this
 
+## Block 11 · Retention and the first 30 seconds
+
+Added 2026-09-03c. The single biggest lever a creator can pull, and the SERP
+is forum-led on every phrasing. `/blog/youtube-analytics` owns how to READ
+the retention graph; none of these are about reading it.
+
+Funnel: problem-aware, existing channel. CTA: Channel Audit. KPI: tier-1
+visitors reaching `/features/channel-audit`.
+
+75. Why viewers click off in the first 30 seconds · Channel Audit ·
+    top3: reddit x3, 8 of 10 forums · CLEAN vs `/blog/youtube-ctr`
+76. YouTube retention drops right at the start · Channel Audit ·
+    top3: reddit, humbleandbrag, etwell · zero big-authority in the top 10 ·
+    scope: the drop-off itself; `/blog/how-to-start-a-youtube-video` owns
+    how to script a hook, this diagnoses why one failed
+77. Why do viewers leave my YouTube video (mid-video drop-off) · Channel
+    Audit · top3: reddit, youtube, trenalittle · scope: mid-video, not the
+    opening, which is #75/#76
+
+## Block 12 · The AI-content era
+
+Added 2026-09-03c. `/blog/youtube-ai-policy` owns the policy and the
+disclosure label. These are the adjacent questions it does not answer, and
+the Reddit SERPs show the anxiety is live.
+
+Funnel: pre-monetization to monetized. CTA: Thumbnail IQ for 78, Channel
+Audit for 79-80. KPI: tier-1 visitors.
+
+78. Can you use AI thumbnails on YouTube · Thumbnail IQ ·
+    top3: reddit, youtube, gyre · CLEAN: `/blog/youtube-ai-policy` owns no
+    heading on thumbnails
+79. Are AI slop channels killing reach for everyone else · Channel Audit ·
+    top3: reddit x3, 8 of 10 forums · the creator-side complaint, not the
+    policy question
+80. Is a faceless AI YouTube channel still worth starting · Channel Audit ·
+    top3: reddit, medium, youtube · scope:
+    `/blog/faceless-youtube-channel-ideas` owns the niches and the tools
+    question; this one answers whether the model still works in 2026
+
+## Block 13 · Format and production decisions
+
+Added 2026-09-03c. Every SERP here is 4 to 10 forum results, which is the
+signal that no publisher owns the answer. These are the questions that stall
+a channel before it starts.
+
+Funnel: pre-monetization mostly. CTA: free tools then Starter pack for 81-83,
+Channel Audit for 84. KPI: tier-1 visitors, tool use.
+
+81. Should I show my face on YouTube (and is a face reveal worth it) ·
+    free tools, then Starter pack · top3: reddit x3, 9 of 10 forums ·
+    CLEAN: `/blog/faceless-youtube-channel-ideas` owns no face-reveal
+    heading
+82. Script vs improvise for YouTube videos · free tools, then Starter pack ·
+    top3: reddit x3, 10 of 10 forums, the cleanest SERP in this round
+83. YouTube editing takes too long, what to cut · free tools, then Starter
+    pack · top3: reddit x3, 8 of 10 forums
+84. Long-form or Shorts first for a new channel · Channel Audit ·
+    top3: reddit x3, 9 of 10 forums · CLEAN:
+    `/blog/shorts-vs-long-form` owns the "do Shorts hurt you" question,
+    not the sequencing one
+
+## Block 14 · Positioning against bigger channels
+
+Added 2026-09-03c. `/blog/youtube-competitor-analysis` is 100% unbolded and
+owns no heading on any of these, so they are additive rather than competing.
+
+Funnel: problem-aware, any size. CTA: Competitor Analysis. KPI: tier-1
+visitors reaching `/features/competitor-analysis`.
+
+85. How to find low-competition YouTube niches · Competitor Analysis ·
+    top3: packapop, reddit, reddit · CLEAN vs `/blog/youtube-niche`
+86. How to differentiate when every channel in your niche is bigger ·
+    Competitor Analysis · top3: reddit, medium, quora · zero
+    big-authority domains in the top 10
+87. How to find a competitor's keywords · Competitor Analysis ·
+    top3: vidiq, keywordtool, reddit · 6 of 10 big, but the top 3 carries
+    Reddit and the query maps directly to the feature · CLEAN vs the live
+    competitor-analysis post
+88. Is copying a successful channel's format a viable strategy ·
+    Competitor Analysis · top3: reddit x3, 9 of 10 forums
+
+## Block 15 · Traffic sources and distribution
+
+Added 2026-09-03c. Sits alongside Block 1's traffic-sources entry (#1), which
+explains the tab; these answer what to do about specific sources.
+
+Funnel: problem-aware, existing channel. CTA: Channel Audit for 89-91, SEO
+Studio for 92. KPI: tier-1 visitors reaching the named feature page.
+
+89. What "external" traffic source means and whether to chase it · Channel
+    Audit · top3: reddit, humbleandbrag, creationdepot · CLEAN vs
+    `/blog/youtube-analytics` · write after #1
+90. Subscribers not getting notified (the bell problem) · Channel Audit ·
+    top3: support.google, reddit, tella · CLEAN vs `/blog/youtube-algorithm`
+91. Does sharing YouTube videos on social media actually help · Channel
+    Audit · top3: reddit, linkedin, facebook · scope:
+    `/blog/more-views-on-youtube` has one heading ("8. Promote Across
+    Platforms"); this answers whether it moves the algorithm, which that
+    section does not
+92. How to get YouTube videos ranking in Google search · SEO Studio ·
+    top3: support.google, reddit, quora · CLEAN:
+    `/blog/what-is-youtube-seo` owns no heading on Google SERP placement
+
+## Block 16 · Revenue diagnostics (money is fine, then it is not)
+
+Added 2026-09-03c. Distinct from Block 4, which is about qualifying for and
+understanding payouts. These are the "my money changed and my views did not"
+questions.
+
+Funnel: monetized creators. CTA: earnings calculators, then Channel Audit.
+KPI: tier-1 visitors, calculator use.
+
+93. YouTube revenue dropped but views stayed the same · money calculators ·
+    top3: reddit, facebook, bettermarketing · CLEAN:
+    `/blog/youtube-rpm` owns "Why Did My RPM Suddenly Drop?", so this
+    entry covers the views-flat case specifically and links there
+94. The seasonal ad-revenue drop (January and Q1) · money calculators ·
+    top3: reddit, reddit, support.google · CLEAN vs `/blog/youtube-cpm` ·
+    fold in "reddit youtube january revenue drop", 8 of 10 forums
+
 ## Keyword Planner sanity pass (user step, one export)
 
 The July winners (`youtube-ai-policy`, `shorts-vs-long-form`,
@@ -497,6 +623,37 @@ that already owns the topic with its own headings, checked against
   Different Things)"
 - "how much to charge for a youtube sponsorship": `/blog/youtube-sponsorships`
   owns "How Much Sponsors Pay and How to Set Your Rate"
+
+Dropped in the 2026-09-03c expansion round. Three failed the SERP top-3
+check:
+
+- "will ai voice get my youtube channel demonetized": tubebuddy +
+  support.google in the top 3
+- "youtube notifications not reaching subscribers": support.google twice
+- "why is my youtube cpm so low": youtube.com + support.google, 4 of 10 big
+
+Six passed the SERP check but a live post already owns the topic with its own
+headings:
+
+- "how to fix low audience retention": `/blog/youtube-watch-hours` owns
+  "Master the 30-Second Hook to Protect Your AVD"
+- "average view duration too low" and "youtube retention graph spikes":
+  `/blog/youtube-analytics` owns "How to Read the Audience Retention Graph"
+  and "Spikes: Moments Worth Repeating"
+- "does an intro hurt retention": `/blog/how-to-start-a-youtube-video` owns
+  "Step 2: Script the Hook First" and "Five Hooks That Work"
+- "youtube ai content policy 2026" and "reddit youtube ai generated content
+  demonetized": `/blog/youtube-ai-policy` owns "What YouTube's Inauthentic
+  Content Policy Says", "Do You Need the AI Disclosure Label?" and "Does
+  YouTube demonetize AI content?"
+- "youtube video length for beginners": `/blog/video-length-by-niche` owns
+  per-niche length headings and is a published data study
+- "do i need a good camera to start youtube": `/blog/best-youtube-mic` owns
+  "Why Your Microphone Matters More Than Your Camera"
+- "reddit youtube rpm dropped suddenly": `/blog/youtube-rpm` owns "Why Did
+  My RPM Suddenly Drop?" (entry #93 covers the views-flat case instead)
+- "youtube shorts vs long form which pays more": `/blog/youtube-shorts-pay`
+  owns "Shorts vs Long-Form: Why Shorts Pay 10 to 100x Less"
 
 Carried-over items killed on the new standard:
 
