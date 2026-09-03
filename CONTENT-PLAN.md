@@ -28,6 +28,12 @@ revenue-diagnostic seams. 35 passed the SERP check, 6 were dropped as owned
 by live posts. Evidence in
 `research/rounds/2026-09-03c-queries-summary.txt`.
 
+Expanded again 2026-09-03d with Blocks 17 to 23 (entries 95-117): 35 pulls
+into comments and community, collaborations, housekeeping, subscriber
+psychology, platform choice, production workflow and pre-upload checks.
+30 passed the SERP check, 7 were dropped as owned by live posts. Evidence in
+`research/rounds/2026-09-03d-queries-summary.txt`.
+
 Last updated: 2026-09-03
 
 **Guardrails for whoever is working this list** (the full set is in
@@ -80,7 +86,7 @@ reader, not the block boundary:
   post named in its scope note. Sibling links are on top of that, not instead.
 
 Cadence: **1 to 2 articles per day**, with a data study roughly every two
-weeks. At that pace this list is 7 to 13 weeks of work. Strike items as they
+weeks. At that pace this list is 9 to 17 weeks of work. Strike items as they
 ship, same session. Do not add an entry that skipped the standard.
 
 **The order is the write order. Work straight down.** Every entry is
@@ -538,6 +544,139 @@ KPI: tier-1 visitors, calculator use.
     top3: reddit, reddit, support.google · CLEAN vs `/blog/youtube-cpm` ·
     fold in "reddit youtube january revenue drop", 8 of 10 forums
 
+## Block 17 · Comments and community management
+
+Added 2026-09-03d. `/blog/grow-youtube-channel` owns no heading on comments
+or community at all, so this whole block is additive rather than competing.
+
+Funnel: problem-aware, any size. CTA: Channel Audit. KPI: tier-1 visitors.
+
+95. Dealing with hate comments on YouTube · Channel Audit ·
+    top3: reddit x3, 7 of 10 forums · CLEAN vs `/blog/grow-youtube-channel`
+96. YouTube comment spam and bot replies · Channel Audit ·
+    top3: reddit x3, 9 of 10 forums · CLEAN
+97. Comments held for review, and how moderation settings work · Channel
+    Audit · top3: support.google, reddit, yttalk · folds in "how to
+    moderate youtube comments" (top3: support.google, reddit, quora)
+98. How to build a community on a small channel · Channel Audit ·
+    top3: reddit x3, 9 of 10 forums · CLEAN
+99. Parasocial dynamics and audience boundaries · Channel Audit ·
+    top3: reddit x3, 7 of 10 forums · CLEAN · the creator-wellbeing angle
+    nobody in this SERP has written properly
+
+## Block 18 · Collaborations
+
+Added 2026-09-03d. `/blog/more-views-on-youtube` has one heading
+("11. Collaborate With Other Creators"), so these are the questions that
+heading raises and does not answer.
+
+Funnel: pre-monetization to mid-size. CTA: Competitor Analysis for 100-101,
+Channel Audit for 102. KPI: tier-1 visitors.
+
+100. How to find YouTube collab partners at your size · Competitor Analysis
+     · top3: reddit x3, 9 of 10 forums · scope: the finding-and-vetting
+     problem; `/blog/more-views-on-youtube` owns the "you should collab"
+     argument
+101. How to approach a bigger YouTube channel for a collab · Competitor
+     Analysis · top3: reddit x3, 9 of 10 forums
+102. Is shoutout-for-shoutout worth it · Channel Audit ·
+     top3: reddit x3, 7 of 10 forums · scope: S4S specifically;
+     `/blog/free-subs-on-youtube` owns sub4sub and generators, link there
+
+## Block 19 · Channel housekeeping
+
+Added 2026-09-03d. Small structural decisions that stall people.
+`/blog/youtube-channel-optimization` owns the About section and the channel
+trailer, so those two were dropped; what remains is clean.
+
+Funnel: any size. CTA: Channel Audit for 103-104, Thumbnail IQ for 105.
+KPI: tier-1 visitors.
+
+103. Should I rebrand my YouTube channel · Channel Audit ·
+     top3: reddit, tubebuddy, quora · scope: the strategic decision;
+     `/blog/restart-youtube-channel` owns "do subscribers carry over if I
+     rename", link there for the mechanics
+104. How many playlists should a channel have, and how to order them ·
+     Channel Audit · top3: reddit, yttalk, support.google · scope:
+     `/blog/youtube-watch-hours` owns playlist sequencing for watch time;
+     this is the organization question
+105. Does the channel banner actually matter · Thumbnail IQ ·
+     top3: reddit x3, 9 of 10 forums · CLEAN:
+     `/blog/youtube-banner-size` owns the specs, not whether it moves
+     anything
+
+## Block 20 · Subscriber psychology
+
+Added 2026-09-03d. Why viewers subscribe, and why they leave. Both SERPs are
+forum-led and neither live post owns a heading on either question.
+
+Funnel: problem-aware, any size. CTA: Channel Audit. KPI: tier-1 visitors.
+
+106. Why people unsubscribe from a YouTube channel · Channel Audit ·
+     top3: reddit x3, 8 of 10 forums · CLEAN vs
+     `/blog/youtube-channel-not-growing` · pairs with #15 (losing
+     subscribers), write #15 first
+107. What actually makes a viewer hit subscribe · Channel Audit ·
+     top3: reddit, quora, socialvideoplaza · CLEAN vs
+     `/blog/free-subs-on-youtube`
+
+## Block 21 · Platform choice, from the creator's side
+
+Added 2026-09-03d. `/blog/shorts-vs-long-form` compares formats inside
+YouTube and mentions no other platform. These compare platforms, which is a
+different decision.
+
+Funnel: pre-monetization mostly. CTA: free tools, then Starter pack.
+KPI: tier-1 visitors, tool use.
+
+108. YouTube vs TikTok for a creator starting today · free tools, then
+     Starter pack · top3: reddit x3, 10 of 10 forums, the cleanest SERP in
+     this round
+109. Should I post the same video to TikTok and YouTube · free tools, then
+     Starter pack · top3: reddit, tiktok, blackhatworld · zero
+     big-authority domains in the top 10
+110. YouTube vs Instagram Reels for growth · free tools, then Starter pack ·
+     top3: reddit x3, 9 of 10 forums
+111. YouTube vs podcasting for the same content · Channel Audit ·
+     top3: elizabethmccravy, reddit, reddit · CLEAN vs
+     `/blog/youtube-as-a-business`
+
+## Block 22 · Production workflow
+
+Added 2026-09-03d. How the work actually gets done, which stalls more
+channels than strategy does. `/blog/best-time-to-post` owns cadence; none of
+these are cadence.
+
+Funnel: pre-monetization to mid-size. CTA: Channel Audit for 112-114, free
+tools for 115. KPI: tier-1 visitors.
+
+112. Is batch filming worth it · Channel Audit ·
+     top3: reddit x3, 6 of 10 forums · CLEAN
+113. Consistency vs quality, which to sacrifice · Channel Audit ·
+     top3: reddit x3, 8 of 10 forums · CLEAN · scope: the trade-off itself,
+     not how often to post, which `/blog/best-time-to-post` owns
+114. Is outsourcing YouTube editing worth it · Channel Audit ·
+     top3: reddit x3, 9 of 10 forums · CLEAN vs `/blog/youtube-as-a-business`
+115. How many videos to have ready before launching a channel · free tools,
+     then Starter pack · top3: reddit, subscribr, quora · CLEAN vs
+     `/blog/start-youtube-channel`
+
+## Block 23 · Pre-upload checks
+
+Added 2026-09-03d. The two settings people get wrong before they hit publish,
+both with real consequences and neither owned by a live post.
+
+Funnel: any size. CTA: Channel Audit. KPI: tier-1 visitors.
+
+116. How to check for copyright issues before uploading · Channel Audit ·
+     top3: reddit, support.google, mubert · scope:
+     `/blog/copyright-free-music` owns sourcing safe music; this is the
+     pre-upload check on a finished video
+117. What "made for kids" actually means and what it costs you · Channel
+     Audit · top3: reddit, reddit, quora · CLEAN vs
+     `/blog/youtube-demonetization` · the comment-and-personalization
+     losses are the part nobody quantifies
+
 ## The internal link map
 
 Every entry gets its links from this section plus its own scope note. Nothing
@@ -581,6 +720,16 @@ what the post's own headings cover, not by keyword overlap.
 | 59, 60, 90 | Community, comments, notifications | `/blog/grow-youtube-channel` | `/blog/youtube-algorithm` |
 | 79, 80 | AI content | `/blog/youtube-ai-policy` | `/blog/faceless-youtube-channel-ideas` |
 | 19, 35 | Growth-rate data studies | `/blog/youtube-engagement-rate` | `/blog/video-length-by-niche` |
+| 95-99 | Comments and community | `/blog/grow-youtube-channel` | `/blog/youtube-channel-audit` |
+| 100-102 | Collaborations | `/blog/more-views-on-youtube` | `/blog/grow-youtube-channel` |
+| 103, 104 | Channel housekeeping | `/blog/youtube-channel-optimization` | `/blog/restart-youtube-channel` |
+| 105 | Banner impact | `/blog/youtube-banner-size` | `/blog/youtube-thumbnail-ideas` |
+| 106, 107 | Subscriber psychology | `/blog/youtube-channel-not-growing` | `/blog/free-subs-on-youtube` |
+| 108-110 | Platform choice | `/blog/shorts-vs-long-form` | `/blog/youtube-shorts-algorithm` |
+| 111, 114 | Treating the channel as a business | `/blog/youtube-as-a-business` | `/blog/cash-cow-youtube-channels` |
+| 112, 113, 115 | Production workflow | `/blog/best-time-to-post` | `/blog/start-youtube-channel` |
+| 116 | Copyright pre-checks | `/blog/copyright-free-music` | `/blog/youtube-demonetization` |
+| 117 | Made-for-kids | `/blog/youtube-demonetization` | `/blog/google-adsense-youtube` |
 
 ### Rules for the anchor link
 
@@ -756,6 +905,35 @@ headings:
   My RPM Suddenly Drop?" (entry #93 covers the views-flat case instead)
 - "youtube shorts vs long form which pays more": `/blog/youtube-shorts-pay`
   owns "Shorts vs Long-Form: Why Shorts Pay 10 to 100x Less"
+
+Dropped in the 2026-09-03d expansion round. Five failed the SERP top-3 check:
+
+- "should i reply to every youtube comment": youtube.com + vidiq in the top 3
+- "how to get viewers to come back youtube": youtube.com twice, 5 of 10 big
+- "youtube video visibility settings explained": support.google + youtube.com
+- "youtube monetization tab explained": support.google + youtube.com
+- "youtube video quality processing 4k": support.google twice
+
+Seven passed the SERP check but a live post owns the topic with its own
+headings:
+
+- "does collaborating help youtube growth": `/blog/more-views-on-youtube`
+  owns "11. Collaborate With Other Creators" (entries 100-102 cover the
+  questions that heading raises instead)
+- "youtube channel trailer worth it" and "youtube about section what to
+  write": `/blog/youtube-channel-optimization` owns "Channel Trailer", "The
+  About Section" and "The 3-Part Description Strategy"
+- "youtube channel sections how to organize": same post, same headings
+- "reddit youtube shoutout for shoutout worth it" partially: 
+  `/blog/free-subs-on-youtube` owns "The 'Free Subscriber' Trap: Why
+  Generators and Sub4Sub Will Kill Your Channel", so entry #102 is scoped to
+  S4S specifically and links there
+- "should i rebrand my youtube channel" partially:
+  `/blog/restart-youtube-channel` owns "Do subscribers carry over if I rename
+  or rebrand my channel?", so entry #103 is scoped to the strategic decision
+- "how many playlists should a youtube channel have" partially:
+  `/blog/youtube-watch-hours` owns "Engineer Binge-Watching with Playlist
+  Sequencing", so entry #104 is scoped to organization
 
 Carried-over items killed on the new standard:
 
