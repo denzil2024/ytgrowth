@@ -3,7 +3,7 @@
 Plan entry: `#2` · Feature: `Outliers` · Anchor post: `/blog/youtube-view-growth-curve`
 Target query: `vph in youtube meaning` / `what does vph mean on youtube`
 Researched: `2026-09-04`
-Status: `approved, writing`
+Status: `done, awaiting push`
 
 ---
 
@@ -203,8 +203,9 @@ answers the search intent, that is fine."
 - [x] Stage 4, verified: parses clean, paragraphs <=5 lines, FAQ array mirrors
       visible (confirmed programmatically, 5/5 match), banned words zero,
       100% body-paragraph bold coverage, 5/5 FAQ answers bolded, 2 Pro Tips
-- [ ] Stage 5, built with `BUILD_API_URL`, pushed, verified live, indexing
-      requested
+- [x] Stage 5 (partial): built (125 routes), cover wired (1600x900 JPG,
+      117KB), sitemap.xml + llms.txt added, committed locally as
+      `68b0b5632`. Push still pending user go-ahead.
 
 FAQ sourcing log: 1 of 5 genuinely PAA-sourced ("What is the full form of
 VPH?" from the `vph in youtube meaning` PAA pull). The other 4 are editorial,
@@ -216,7 +217,4 @@ term, vidIQ-safety questions) and excluded per the FAQ-sourcing rule.
 
 Outstanding for this article:
 
-- Cover image: prompt not yet written, need to check real house cover
-  dimensions before requesting generation.
-- sitemap.xml and llms.txt entries not yet added.
-- Build, commit, push not yet done. Awaiting user go-ahead to push.
+- Awaiting explicit user go-ahead to `git push`. Nothing else remaining.
