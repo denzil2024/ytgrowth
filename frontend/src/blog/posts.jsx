@@ -9639,7 +9639,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>What This Means for When You Should Judge a Video</h2>
 
-        <p>Across the majority of niches, <strong>day 7 is already a reliable read.</strong> If a video is underperforming your own channel's normal by day 7, waiting another three weeks rarely rescues it, 94.5% of whatever it was going to earn by day 30 is already visible. Put that effort into the next video instead of waiting on one that has already shown its hand.</p>
+        <p>Across the majority of niches, <strong>day 7 is already a reliable read.</strong> If a video is underperforming your own channel's normal by day 7, waiting another three weeks rarely rescues it, 94.5% of whatever it was going to earn by day 30 is already visible. Put that effort into the next video instead of waiting on one that has already shown its hand. For a faster, earlier read than waiting a full week, <a href="/blog/youtube-vph-meaning">views per hour (VPH)</a> against your own channel's baseline can flag an outlier within hours instead of days.</p>
 
         <p>The exception is search-driven, evergreen niches: fitness, beauty, tech, gaming, education. These hold back a meaningfully larger share for later, so a slow week-one start there is a weaker signal. <strong>Give a tutorial or how-to video closer to 14 days before writing it off</strong>, the data backs a longer runway specifically for that kind of content, not as a general rule.</p>
 
@@ -18009,6 +18009,147 @@ Free studio checklist: https://yoursite.com/checklist
         <p>A channel where Search sits near zero usually has a metadata problem. A channel where Search accounts for the overwhelming majority of views, with almost nothing from Browse Features or Suggested, usually has a discovery problem, since it means the algorithm is not yet choosing to recommend the content on its own.</p>
 
         <p>Views tell you the score. <strong>Traffic sources tell you why you got it, and Browse Features is where that story usually starts.</strong> Check your own split in Studio, weigh it against the ranges above, and fix the algorithmic sources before chasing anything else.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-vph-meaning',
+    title: 'What Does VPH Mean on YouTube? (And Is Yours Good?)',
+    excerpt: "VPH shows up in the vidIQ extension with no explanation attached. Here is what it means, a real benchmark table by channel size (0.7 to 4,000+ VPH, all documented), and why a 2,826-video study proves the raw number matters less than where it sits versus your own baseline.",
+    date: '2026-09-05',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-vph-meaning-cover.jpg',
+    coverAlt: 'A creator at a desk lamp-lit desk checking a rising view count on his phone, YouTube Studio open on the laptop beside him',
+    author: 'Denzil',
+    readTime: '8 min read',
+    faqs: [
+      { q: 'What is the full form of VPH on YouTube?', a: "VPH stands for <strong>Views Per Hour</strong>, also called view velocity. It is not an official YouTube Studio metric. It comes from third-party tools like the vidIQ browser extension, which divides a video's total views by the hours since it published (or by a shorter recent window once a video ages) to show how fast it is currently accumulating views." },
+      { q: 'Is VPH the same as Outlier Score?', a: "No, and confusing the two is the most common mistake. <strong>VPH is a raw, unadjusted number</strong>: views divided by hours, with no reference to what is normal for that specific channel. <strong>Outlier Score adjusts for baseline.</strong> It measures how far a video's performance sits above or below that channel's own historical average, which is why a 2 VPH video and a 150 VPH video can both be genuine outliers, or both be completely unremarkable, depending on what each channel normally gets." },
+      { q: 'What is a good VPH for a small YouTube channel?', a: "There is no single number, because VPH scales with channel size, but real self-reported data gives a usable range. <strong>Creators under 1,000 subscribers commonly report VPH under 1 as normal</strong> on typical uploads, with a spike into low double digits on a video that is genuinely doing better than usual. A raw VPH of 6 to 15 on a small channel is generally a good sign, not because the number itself is high, but because it sits well above that channel's typical rate." },
+      { q: 'Why does my VPH drop after 24 hours?', a: "This is expected behavior, not a problem. <strong>Most videos see VPH fall sharply in the first 24 to 48 hours</strong> as the initial subscriber-notification and early-momentum traffic tapers off, then the number stabilizes at a lower, steadier rate driven by search and suggested traffic. A video that holds an elevated VPH well past that window, rather than dropping off, is the stronger signal: it means new discovery is still actively feeding it rather than the initial push simply running its course." },
+      { q: 'Can I see VPH inside YouTube Studio?', a: "No, YouTube Studio does not display a views-per-hour figure anywhere in its native analytics. <strong>VPH is exclusively a third-party calculation</strong>, most commonly shown in the vidIQ browser extension as a live number under any video you are viewing. You can approximate it manually by checking a video's total views at two points in time and dividing the difference by the hours between checks, but no first-party YouTube dashboard surfaces it directly." },
+    ],
+    content: () => (
+      <>
+        <p>The vidIQ extension shows a "VPH" number under every video with no explanation attached, and the term has no official YouTube definition anywhere in Studio. <strong>The top-ranking help page for this exact question is six years old and 150 words long.</strong> It gives a definition with no benchmark and no formula, and it never answers the one question every reader has: is my number good or bad?</p>
+
+        <p>It ranges from 0.7 to over 4,000, and <strong>both numbers are real, documented, and normal</strong> for the channel that reported them. That is the entire reason the term confuses people. A raw VPH means close to nothing without a baseline to compare it against, and no page ranking for this query currently builds that comparison.</p>
+
+        <h2>What VPH Means on YouTube</h2>
+
+        <p>VPH stands for <strong>Views Per Hour</strong>, sometimes called view velocity. It is not a YouTube Studio metric; YouTube's own analytics does not display it anywhere. It comes from third-party tools, most commonly the <strong>vidIQ browser extension</strong>, which calculates it by dividing a video's views by the hours since it was published, then updates that number continuously as new views come in.</p>
+
+        <p>The reason it exists at all is that YouTube's recommendation system reacts to <strong>momentum</strong>, not just total views. A video accumulating views quickly right now is a stronger signal to the algorithm than a video with more total views that has gone quiet, which is why creators use VPH to catch early signs that a video is taking off before the total view count makes it obvious.</p>
+
+        <h2>A Worked Example: Same Word, Two Different Meanings</h2>
+
+        <p>Here is why the raw number is misleading on its own. A channel's two-year-old video sitting at 500,000 total views might show <strong>2 VPH</strong>: a slow, steady trickle from search traffic long after its initial push ended. A different video from the same channel, three days old with 50,000 views, might show <strong>150 VPH</strong>, still riding its initial algorithmic push.</p>
+
+        <p>Neither number describes quality on its own. <strong>The old video's 2 VPH is completely normal for its age.</strong> A brand-new video showing 2 VPH instead of 150 is the one worth investigating. VPH only becomes useful once you know what is typical for that specific video's age and that specific channel's size, information no single number communicates by itself.</p>
+
+        <h2>Is Your VPH Good? A Benchmark by Channel Size</h2>
+
+        <p><strong>No competing page publishes a real benchmark table</strong>, every one either skips the question or says some version of "it depends on your niche" and stops. Real self-reported numbers from creators, cross-checked across multiple independent threads, give a usable range by channel size.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Channel size</th>
+              <th>Typical VPH</th>
+              <th>What a strong video looks like</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Under 1,000 subscribers</td><td>Under 1</td><td>Low double digits (6-15)</td></tr>
+            <tr><td>1,000-10,000 subscribers</td><td>1-5</td><td>20-50+</td></tr>
+            <tr><td>10,000-100,000 subscribers</td><td>5-30</td><td>100-300+</td></tr>
+            <tr><td>100,000-1,000,000 subscribers</td><td>15-60</td><td>300-1,000+</td></tr>
+            <tr><td>1,000,000+ subscribers</td><td>50+</td><td>1,000-4,000+</td></tr>
+          </tbody>
+        </table>
+
+        <p>That table is built from real reported numbers, not estimates. <strong>One creator with roughly 317,000 subscribers described 327 views in an hour as completely normal</strong> for a typical upload, which lines up with the mid-range tier above. On the small end, a creator with a new channel described 0.7 VPH as discouraging, while another asked whether 6 VPH on a small channel counted as decent. The honest answer is yes: that is already several multiples above that channel's likely baseline.</p>
+
+        <p>On the high end, a creator self-reported roughly <strong>4,000 VPH</strong> on the day a video crossed 100,000 views, which lines up with the top tier here. <strong>The pattern across every tier is the same: a strong video runs at roughly 5 to 10 times that channel's typical rate</strong>, not some fixed number that applies everywhere.</p>
+
+        <blockquote><strong>Pro Tip:</strong> if you do not know your own channel's typical VPH, check three or four of your last "normal" uploads (not your best or worst performers) 48 hours after publishing. That average is your real baseline, and it is more useful than any table, including the one above.</blockquote>
+
+        <h2>Why Raw VPH Misleads You</h2>
+
+        <p>A published study of 2,826 videos across 83 channels tested this directly by asking what predicts a breakout video, a fixed view count or performance relative to a channel's own baseline. <strong>The answer was relative performance, decisively</strong>: the median breakout video ran at roughly 2.93 times its channel's normal velocity, and that ratio held consistently across channels of wildly different sizes.</p>
+
+        <p>The same study found that raw view counts alone were a poor predictor. Among videos that crossed 100,000 total views, <strong>fewer than 1 in 5 qualified as a relative breakout</strong> for their channel, meaning most big-number videos were just normal performance for an already-large channel, not a real outperformance signal. A smaller channel's video at a fraction of those views can be the far more significant outlier.</p>
+
+        <p><strong>This is the exact confusion VPH creates when read on its own.</strong> A high raw number can mean nothing more than "this channel is large." A modest raw number can mean "this is the best this channel has ever done." Only the ratio to baseline tells you which.</p>
+
+        <h2>VPH vs. Outlier Score: What's the Difference</h2>
+
+        <p>VPH and Outlier Score answer two different questions, and mixing them up is where most of the confusion in this topic comes from. <strong>VPH answers "how fast is this video getting views right now."</strong> It is a raw velocity number with no built-in reference point. <strong>Outlier Score answers "how does this compare to what's normal for this channel."</strong> It is baseline-adjusted by design.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>VPH</th>
+              <th>Outlier Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>What it measures</td><td>Raw view velocity right now</td><td>Performance vs. that channel's own baseline</td></tr>
+            <tr><td>Adjusts for channel size</td><td>No</td><td>Yes</td></tr>
+            <tr><td>Same number, two channels</td><td>Means something different for each</td><td>Means the same thing for each</td></tr>
+            <tr><td>Where you see it</td><td>vidIQ browser extension</td><td>YTGrowth's Outliers feature</td></tr>
+            <tr><td>Best for</td><td>Watching a single video in real time</td><td>Telling a genuine breakout from a normal upload</td></tr>
+          </tbody>
+        </table>
+
+        <p>This is not a small distinction. It is the same finding the 2,826-video study proved independently: <strong>raw velocity without a baseline tells you less than you think</strong>. Outliers, YTGrowth's outlier-detection feature, builds Outlier Score around that correction, comparing a video against that specific channel's own historical average rather than a flat number that means something different for every channel size.</p>
+
+        <p>A video with a modest raw VPH can carry a high Outlier Score if it is dramatically outperforming that channel's norm. A video with an impressive-looking raw VPH can carry a low Outlier Score if it is simply typical for a channel that size. <strong>The raw number and the adjusted score can point in completely different directions</strong>, which is exactly why checking only one of them is how creators misread their own performance.</p>
+
+        <CtaCard
+          to="/features/outliers"
+          title="Stop reading raw numbers without a baseline"
+          sub="Outliers compares every video against your channel's own history, so you see which uploads are genuinely outperforming, not just which ones have big numbers."
+          button="Try Outliers →"
+        />
+
+        <h2>How to Check Your Own VPH</h2>
+
+        <p>The most common way is <strong>the free vidIQ browser extension</strong>, which displays a live VPH figure under any video you view on YouTube, including videos on channels that are not your own. Without a third-party tool, you can approximate it manually: note a video's total view count, wait a set number of hours, check the count again, and divide the difference by the hours elapsed.</p>
+
+        <p>The manual method works but misses the single video's VPH sitting in isolation. <strong>Comparing that number against your own channel's normal rate is the step that turns it into useful information</strong>, and that comparison is what a raw VPH figure cannot do for you on its own.</p>
+
+        <blockquote><strong>Pro Tip:</strong> checking VPH on a competitor's video tells you they are having a good day, not why. Pair it with the video's topic, thumbnail, and title before assuming their spike is repeatable on your own channel.</blockquote>
+
+        <h2>Using VPH to Catch a Topic While It Is Still Rising</h2>
+
+        <p>Watching your own VPH tells you how one video is doing. Watching VPH across your niche tells you when a topic is starting to move before it shows up anywhere else. <strong>A video posted within the last few days running well above that channel's normal VPH is an early signal, not a coincidence</strong>, since it usually means a specific topic or angle is catching attention right now, not just that one creator got lucky.</p>
+
+        <p>The catch is timing. <strong>By the time a video's raw view count makes a topic obvious, the early-mover advantage is already gone.</strong> VPH surfaces that same signal days earlier, while a response video can still ride the same wave instead of arriving after it has passed. Checking a niche's recent uploads for unusual VPH, not just unusual total views, is what turns this into an early-warning system instead of a lagging one.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What is the full form of VPH on YouTube?</h3>
+        <p>VPH stands for <strong>Views Per Hour</strong>, also called view velocity. It is not an official YouTube Studio metric. It comes from third-party tools like the vidIQ browser extension, which divides a video's total views by the hours since it published (or by a shorter recent window once a video ages) to show how fast it is currently accumulating views.</p>
+
+        <h3>Is VPH the same as Outlier Score?</h3>
+        <p>No, and confusing the two is the most common mistake. <strong>VPH is a raw, unadjusted number</strong>: views divided by hours, with no reference to what is normal for that specific channel. <strong>Outlier Score adjusts for baseline.</strong> It measures how far a video's performance sits above or below that channel's own historical average, which is why a 2 VPH video and a 150 VPH video can both be genuine outliers, or both be completely unremarkable, depending on what each channel normally gets.</p>
+
+        <h3>What is a good VPH for a small YouTube channel?</h3>
+        <p>There is no single number, because VPH scales with channel size, but real self-reported data gives a usable range. <strong>Creators under 1,000 subscribers commonly report VPH under 1 as normal</strong> on typical uploads, with a spike into low double digits on a video that is genuinely doing better than usual. A raw VPH of 6 to 15 on a small channel is generally a good sign, not because the number itself is high, but because it sits well above that channel's typical rate.</p>
+
+        <h3>Why does my VPH drop after 24 hours?</h3>
+        <p>This is expected behavior, not a problem. <strong>Most videos see VPH fall sharply in the first 24 to 48 hours</strong> as the initial subscriber-notification and early-momentum traffic tapers off, then the number stabilizes at a lower, steadier rate driven by search and suggested traffic. A video that holds an elevated VPH well past that window, rather than dropping off, is the stronger signal: it means new discovery is still actively feeding it rather than the initial push simply running its course.</p>
+
+        <h3>Can I see VPH inside YouTube Studio?</h3>
+        <p>No, YouTube Studio does not display a views-per-hour figure anywhere in its native analytics. <strong>VPH is exclusively a third-party calculation</strong>, most commonly shown in the vidIQ browser extension as a live number under any video you are viewing. You can approximate it manually by checking a video's total views at two points in time and dividing the difference by the hours between checks, but no first-party YouTube dashboard surfaces it directly.</p>
+
+        <h2>Read VPH Against Your Own Baseline, Not a Fixed Number</h2>
+
+        <p>VPH exists to answer one question: is this video's momentum unusual right now? A raw number cannot answer that on its own, not because the math is wrong, but because <strong>"unusual" only means something relative to what is normal for that specific channel</strong>. A 2 VPH video and a 150 VPH video can both be the biggest outlier that channel has ever posted, or both be a completely average upload, depending entirely on the baseline nobody printed next to the number.</p>
+
+        <p><strong>Check your own channel's typical rate before deciding whether any single video's VPH means anything.</strong> That comparison, not the number itself, is what tells you whether to pay attention.</p>
       </>
     ),
   },
