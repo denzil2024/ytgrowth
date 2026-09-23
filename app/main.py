@@ -5,10 +5,20 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
 from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 load_dotenv()
+
+# Same list and same cf-ipcountry mechanism as the niche_website project
+# (server.mjs) — Cloudflare sits in front of Railway here too and forwards
+# the resolved country on every request. Owner's call 2026-09-23: block
+# outright across the whole app (marketing pages, dashboard, API), no
+# exceptions, confirmed no existing users/customers in these countries.
+BLOCKED_COUNTRIES = {
+    "IN", "PK", "CN", "SG", "AR", "BR",
+    "PH", "ID", "VN", "BD", "NG", "EG", "NP", "LK", "MA", "DZ",
+}
 
 
 class HeadSafeHTMLResponse(HTMLResponse):
@@ -73,6 +83,14 @@ app = FastAPI(title="YTGrowth API", redirect_slashes=False, lifespan=lifespan)
 _SESSION_SECRET = os.environ.get("SESSION_SECRET_KEY", "ytgrowth-secret-change-in-prod")
 if _SESSION_SECRET == "ytgrowth-secret-change-in-prod" and os.environ.get("BASE_URL", "").startswith("https://"):
     print("[main] WARNING: SESSION_SECRET_KEY env var is unset in production — using dev fallback. Set it in your host's env config.")
+
+@app.middleware("http")
+async def block_low_tier_countries(request: Request, call_next):
+    country = request.headers.get("cf-ipcountry", "").upper()
+    if country in BLOCKED_COUNTRIES:
+        return PlainTextResponse("Access denied", status_code=403)
+    return await call_next(request)
+
 
 # SessionMiddleware must be added before CORS so the session cookie is available
 # on every request, including the OAuth callback redirect.
