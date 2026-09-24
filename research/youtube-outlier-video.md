@@ -4,7 +4,7 @@ Plan entry: `#6` · Feature: `Outliers` · Anchor post: `/blog/youtube-view-grow
 Target query: `what is an outlier video on youtube` (+ outlier score, + free
 outlier finder)
 Researched: `2026-09-24`
-Status: `approved, writing`
+Status: `done, awaiting push`
 
 ---
 
@@ -219,9 +219,11 @@ terms?", "How do I interpret outlier results?". Off-topic PAA excluded:
 monetization/viral-payment questions, "8 minute rule," "7 second rule"
 (unrelated YouTube trivia recurring across this query cluster).
 
+- [x] Stage 5 (partial): built (127 routes), cover wired (1600x900 JPG,
+      168KB), sitemap.xml + llms.txt added, all three cross-links verified
+      two-way (anchor + 2 siblings), committed locally as `e982ccf17`.
+      Push still pending user go-ahead.
+
 Outstanding for this article:
 
-- Cover image: prompt not yet written, need to check real house cover
-  dimensions before requesting generation.
-- sitemap.xml and llms.txt entries not yet added.
-- Build, commit, push not yet done.
+- Awaiting explicit user go-ahead to `git push`. Nothing else remaining.

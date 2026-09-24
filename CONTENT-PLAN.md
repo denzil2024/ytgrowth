@@ -135,10 +135,11 @@ Weekly Report ("the specific issue, with a real number from your data").
 ~~5. YouTube monetization under 18~~ — dropped 2026-09-23,
    `/blog/google-adsense-youtube` already owns this at H2+FAQ level (see
    "Dropped this round" for the evidence)
-6. What an outlier video is on YouTube (+ outlier score, + free outlier
+~~6. What an outlier video is on YouTube (+ outlier score, + free outlier
    finder) · Outliers · GSC: "youtube outlier finder" 1 click at pos 35,
    "youtube outliers" pos 33, "youtube outliers finder" pos 34 ·
-   top3: viewstats.zendesk, reddit, outlierkit
+   top3: viewstats.zendesk, reddit, outlierkit~~ — published 2026-09-24 as
+   `/blog/youtube-outlier-video`, commit `e982ccf17`
 7. How to see YouTube Analytics for other channels · Competitor Analysis
    (via `/tools/youtube-channel-stats-checker`, the site's best-converting
    tool page: 15 clicks) · GSC pos 54-56 on 3 variants, currently landing
