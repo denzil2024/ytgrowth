@@ -124,9 +124,10 @@ Weekly Report ("the specific issue, with a real number from your data").
    3 variants ("vph in youtube meaning", "what does vph mean on youtube") ·
    top3: support.vidiq, reddit, alanspicer~~ — published 2026-09-05 as
    `/blog/youtube-vph-meaning`, commit `68b0b5632`
-3. How often YouTube Analytics updates (+ subscriber count not updating,
+~~3. How often YouTube Analytics updates (+ subscriber count not updating,
    + watch hours not updating) · Weekly Report · GSC pos 12.5 ·
-   top3: reddit, qqtube, webapps.stackexchange
+   top3: reddit, qqtube, webapps.stackexchange~~ — published 2026-09-23 as
+   `/blog/youtube-analytics-delay`, commit `4203fde19`
 4. Multiple YouTube channels on one AdSense account · Monetization pillar
    spoke · GSC pos 11.3 ("youtube multiple channels one adsense account
    policy 2026") and 26.9 ("2 youtube channel 1 adsense") ·

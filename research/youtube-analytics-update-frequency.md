@@ -4,7 +4,7 @@ Plan entry: `#3` · Feature: `Weekly Report` · Anchor post: `/blog/youtube-anal
 Target query: `how often does youtube analytics update` (+ subscriber count not
 updating, + watch hours not updating)
 Researched: `2026-09-23`
-Status: `approved, writing`
+Status: `done, awaiting push`
 
 ---
 
@@ -237,9 +237,11 @@ delay, and belongs to a different plan entry. Several recurring
 monetization-income PAA results across all 5 queries were excluded as
 off-topic per the FAQ-sourcing rule.
 
+- [x] Stage 5 (partial): built (126 routes), cover wired (1600x900 JPG,
+      136KB), sitemap.xml + llms.txt added, two-way anchor link with
+      youtube-analytics verified, committed locally as `4203fde19`. Push
+      still pending user go-ahead.
+
 Outstanding for this article:
 
-- Cover image: prompt not yet written, need to check real house cover
-  dimensions before requesting generation.
-- sitemap.xml and llms.txt entries not yet added.
-- Build, commit, push not yet done. Awaiting user go-ahead to push.
+- Awaiting explicit user go-ahead to `git push`. Nothing else remaining.
