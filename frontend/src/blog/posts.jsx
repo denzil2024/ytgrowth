@@ -7710,7 +7710,7 @@ export const posts = [
           </tbody>
         </table>
 
-        <p>YouTube Studio organizes all data across five tabs. Each tab covers a distinct dimension of your channel's performance and answers a different question about your growth.</p>
+        <p>YouTube Studio organizes all data across five tabs. Each tab covers a distinct dimension of your channel's performance and answers a different question about your growth. If your subscriber count or watch hours specifically look stuck rather than just delayed, <a href="/blog/youtube-analytics-delay">there's a separate explanation for each one</a> that has nothing to do with this general update window.</p>
 
         <ul>
           <li><strong>Overview:</strong> How is my channel performing overall?</li>
@@ -18150,6 +18150,128 @@ Free studio checklist: https://yoursite.com/checklist
         <p>VPH exists to answer one question: is this video's momentum unusual right now? A raw number cannot answer that on its own, not because the math is wrong, but because <strong>"unusual" only means something relative to what is normal for that specific channel</strong>. A 2 VPH video and a 150 VPH video can both be the biggest outlier that channel has ever posted, or both be a completely average upload, depending entirely on the baseline nobody printed next to the number.</p>
 
         <p><strong>Check your own channel's typical rate before deciding whether any single video's VPH means anything.</strong> That comparison, not the number itself, is what tells you whether to pay attention.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-analytics-delay',
+    title: 'How Often Does YouTube Analytics Update? (Subscriber Count and Watch Hours Explained)',
+    excerpt: "Google's own support page states roughly a 2-day delay for earnings data, but a stuck subscriber count and stalled watch hours each have a separate, undocumented cause: display rounding above 1,000 subscribers, and the difference between total and qualified watch hours.",
+    date: '2026-09-23',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-analytics-delay-cover.jpg',
+    coverAlt: 'A creator frowning at YouTube Studio channel analytics on a laptop late at night, desk lamp light in a dim room',
+    author: 'Denzil',
+    readTime: '9 min read',
+    faqs: [
+      { q: 'At what time does YouTube analytics update?', a: "There is no fixed time of day. <strong>YouTube Analytics updates on a rolling delay, not a scheduled clock</strong>, so two channels can see the same metric refresh at different times. Real-time data covering the last 48 hours updates continuously, while most other metrics settle in within 24 to 48 hours, and estimated earnings specifically carry roughly a 2-day delay according to Google's own support documentation." },
+      { q: 'Why is my subscriber count not updating on YouTube?', a: "In most cases nothing is broken. <strong>YouTube rounds displayed subscriber counts once a channel passes 1,000</strong>, and it rounds differently across different surfaces (YouTube Studio, your public channel page, and your about page can each show a slightly different number at the same moment). A handful of new subscribers can land inside that rounding gap and show no visible change until the count crosses the next displayed threshold." },
+      { q: 'How long does it take for YouTube to update subscriber count?', a: "The underlying count updates continuously, but the number you see on screen does not always reflect that in real time once rounding applies. <strong>Below 1,000 subscribers, the displayed count is typically exact</strong>; above it, expect the visible number to lag behind the real one until enough subscribers accumulate to move the rounded figure, which can take anywhere from hours to a few days depending on your growth rate." },
+      { q: 'Why are my YouTube watch hours not updating?', a: "The most common reason is a mismatch between total watch hours and <strong>qualified watch hours</strong>, the number YouTube counts toward the 4,000-hour monetization threshold. According to YouTube's own August 2026 announcement, qualified watch hours come only from public long-form videos and archived livestreams; private, unlisted, and deleted videos, ad view time, and any Shorts watch time do not count, even though they can still show up elsewhere in your total view data." },
+      { q: 'What is the difference between valid watch hours and watch hours on YouTube?', a: "\"Watch hours\" or \"total watch hours\" includes all viewing time across your channel, while <strong>qualified (sometimes called valid public) watch hours is the narrower figure YouTube checks against the 4,000-hour monetization requirement</strong>. The gap between the two is usually Shorts views, since Shorts watch time contributes to your overall analytics but never counts toward the long-form monetization threshold, along with any private, unlisted, or deleted video time." },
+    ],
+    content: () => (
+      <>
+        <p>YouTube Studio's numbers do not update in real time, and the platform never states one universal number for how long the delay runs. <strong>Google's own support documentation gives a specific figure for exactly one metric: estimated earnings, at roughly a 2-day delay.</strong> Everything else is described only in general terms, which is why two of the most common complaints, a stuck subscriber count and watch hours that will not move, never get a straight answer from that page.</p>
+
+        <p>Both of those have a real, documented cause that has nothing to do with a broken dashboard. <strong>Neither one is explained on the page that ranks for the question.</strong></p>
+
+        <h2>How Often YouTube Analytics Updates, By Metric</h2>
+
+        <p>Real-time data, the activity graph covering the last 48 hours, updates continuously and is the closest thing YouTube Studio has to a live number. <strong>Most other metrics settle in within 24 to 48 hours</strong>, and some users see delays stretch to 72 hours before a figure is considered final.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Data type</th>
+              <th>Typical update window</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Real-time views (last 48 hours)</td><td>Continuous</td></tr>
+            <tr><td>Most metrics (views, CTR, audience)</td><td>24 to 48 hours</td></tr>
+            <tr><td>Estimated earnings</td><td>~2 days (Google-stated)</td></tr>
+            <tr><td>Weekly summary reports</td><td>Up to 7 days</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Estimated earnings is the only figure Google's own support page commits to a specific number for.</strong> Everything else is described in ranges because the delay depends on your channel's size, upload volume, and which YouTube data centers are processing your videos, not a fixed schedule that applies identically to every channel. The <a href="/blog/youtube-analytics">full guide to reading YouTube Analytics</a> covers what each tab shows once the data does settle.</p>
+
+        <blockquote><strong>Pro Tip:</strong> if a number hasn't moved in under 48 hours, that's normal processing lag, not a bug. Waiting is the fix, not refreshing Studio every ten minutes.</blockquote>
+
+        <h2>Why Your Subscriber Count Looks Stuck</h2>
+
+        <p>Past 1,000 subscribers, <strong>YouTube stops displaying an exact count and switches to a rounded figure</strong>, and it applies that rounding differently across different surfaces. Studio, your public channel page, and your about page can each show a slightly different number at the same moment, which is the real reason a subscriber notification does not always move the visible count.</p>
+
+        <p>Below 1,000, the number shown is typically exact and moves with every subscriber. Above it, <strong>five or ten new subscribers can land inside the rounding gap and produce no visible change at all</strong>, then the count appears to jump once enough accumulate to cross the next displayed threshold. This is a display behavior, not a delay in YouTube recording the subscription.</p>
+
+        <h2>Why Your Watch Hours Aren't Moving Toward 4,000</h2>
+
+        <p>This is the gap nobody ranking for this question explains. YouTube draws a hard line between total watch hours and <strong>qualified watch hours</strong>, the narrower figure it checks against the 4,000-hour monetization threshold. According to YouTube's own August 2026 announcement, qualified watch hours come only from public long-form videos, including podcasts, and archived livestreams.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Counts toward qualified watch hours</th>
+              <th>Does not count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Public long-form videos</td><td>Private or unlisted videos</td></tr>
+            <tr><td>Podcasts (long-form)</td><td>Deleted videos</td></tr>
+            <tr><td>Archived livestreams</td><td>Non-archived livestreams</td></tr>
+            <tr><td>&nbsp;</td><td>Watch time from ads</td></tr>
+            <tr><td>&nbsp;</td><td>Any Shorts viewing time</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Shorts watch time is the gap that catches the most creators off guard.</strong> A channel posting a mix of Shorts and long-form content can rack up real, substantial watch time that shows up across YouTube Analytics generally, while the number that matters for monetization eligibility barely moves, because none of that Shorts time is qualified watch time under the current rule.</p>
+
+        <p>Shorts have their own separate eligibility path built around <strong>qualified views</strong> rather than watch hours: an engaged view, meaning the viewer watched past the initial seconds without the view coming from a loop. A channel can qualify for monetization through Shorts views alone without ever accumulating traditional watch hours, but the two metrics do not combine into one total.</p>
+
+        <blockquote><strong>Pro Tip:</strong> filter your Content tab to long-form videos only and check your watch hours from that filtered view. If the number matches your monetization page, Shorts time was the entire gap, not a delay or a bug.</blockquote>
+
+        <h2>When a Stuck Number Means Something Is Wrong</h2>
+
+        <p>Normal delay explains almost every version of this complaint, but not literally every one. <strong>If a number has not moved at all for longer than a week</strong>, past every version of the delay window above, that is past the range Google's own documentation describes as typical, and worth a fresh look rather than continued waiting.</p>
+
+        <p>Before assuming a platform bug, rule out the two explanations above first: <strong>check whether the "stuck" subscriber count is a rounding artifact</strong> by looking at the exact figure in Studio's Audience tab rather than the rounded number shown elsewhere, and check whether "stuck" watch hours are just unqualified Shorts time by filtering your content tab to long-form videos only.</p>
+
+        <CtaCard
+          to="/dashboard"
+          title="Stop refreshing Studio to check if a number moved"
+          sub="Weekly Report already accounts for YouTube's normal reporting delay and sends you the real picture once a week, not a raw number that looks broken for two days."
+          button="Start for $5 →"
+        />
+
+        <h2>How to Stop Checking Studio Every Hour</h2>
+
+        <p>The anxiety behind this entire question is usually the same: a creator checks Studio, sees no movement, and cannot tell whether that means the platform is behind schedule or something is broken. <strong>Checking more often does not resolve that uncertainty, since the delay is on YouTube's side regardless of how often the dashboard is refreshed.</strong></p>
+
+        <p><strong>Weekly Report is built around the same delay windows covered above</strong>: it pulls your numbers on a schedule that already accounts for YouTube's own processing lag, so the figure you see has had time to settle rather than being read mid-delay and mistaken for a stalled channel.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>At what time does YouTube analytics update?</h3>
+        <p>There is no fixed time of day. <strong>YouTube Analytics updates on a rolling delay, not a scheduled clock</strong>, so two channels can see the same metric refresh at different times. Real-time data covering the last 48 hours updates continuously, while most other metrics settle in within 24 to 48 hours, and estimated earnings specifically carry roughly a 2-day delay according to Google's own support documentation.</p>
+
+        <h3>Why is my subscriber count not updating on YouTube?</h3>
+        <p>In most cases nothing is broken. <strong>YouTube rounds displayed subscriber counts once a channel passes 1,000</strong>, and it rounds differently across different surfaces (YouTube Studio, your public channel page, and your about page can each show a slightly different number at the same moment). A handful of new subscribers can land inside that rounding gap and show no visible change until the count crosses the next displayed threshold.</p>
+
+        <h3>How long does it take for YouTube to update subscriber count?</h3>
+        <p>The underlying count updates continuously, but the number you see on screen does not always reflect that in real time once rounding applies. <strong>Below 1,000 subscribers, the displayed count is typically exact</strong>; above it, expect the visible number to lag behind the real one until enough subscribers accumulate to move the rounded figure, which can take anywhere from hours to a few days depending on your growth rate.</p>
+
+        <h3>Why are my YouTube watch hours not updating?</h3>
+        <p>The most common reason is a mismatch between total watch hours and <strong>qualified watch hours</strong>, the number YouTube counts toward the 4,000-hour monetization threshold. According to YouTube's own August 2026 announcement, qualified watch hours come only from public long-form videos and archived livestreams; private, unlisted, and deleted videos, ad view time, and any Shorts watch time do not count, even though they can still show up elsewhere in your total view data.</p>
+
+        <h3>What is the difference between valid watch hours and watch hours on YouTube?</h3>
+        <p>"Watch hours" or "total watch hours" includes all viewing time across your channel, while <strong>qualified (sometimes called valid public) watch hours is the narrower figure YouTube checks against the 4,000-hour monetization requirement</strong>. The gap between the two is usually Shorts views, since Shorts watch time contributes to your overall analytics but never counts toward the long-form monetization threshold, along with any private, unlisted, or deleted video time.</p>
+
+        <h2>The Delay Is Normal, the Confusion Is Two Different Problems</h2>
+
+        <p>A general reporting delay explains most of what looks broken in YouTube Analytics, and Google says as much directly for at least one metric. But a subscriber count that will not move and watch hours stuck below 4,000 are not both explained by that same delay. <strong>One is a rounding display rule, the other is a separate qualification standard</strong>, and mistaking either for a platform glitch leads to the same loop: refreshing a dashboard that was never going to change any faster for the attention.</p>
+
+        <p><strong>Check the exact number behind a rounded subscriber count</strong>, check whether stalled watch hours are unqualified Shorts time, and give estimated earnings its documented 2-day window before assuming anything is wrong.</p>
       </>
     ),
   },
