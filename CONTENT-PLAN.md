@@ -1,3 +1,4 @@
+
 # YTGrowth: Content Plan
 
 Site: ytgrowth.io · Niche: YouTube SEO/growth SaaS ($5 Starter pack, Growth
@@ -128,12 +129,12 @@ Weekly Report ("the specific issue, with a real number from your data").
    + watch hours not updating) · Weekly Report · GSC pos 12.5 ·
    top3: reddit, qqtube, webapps.stackexchange~~ — published 2026-09-23 as
    `/blog/youtube-analytics-delay`, commit `4203fde19`
-4. Multiple YouTube channels on one AdSense account · Monetization pillar
-   spoke · GSC pos 11.3 ("youtube multiple channels one adsense account
-   policy 2026") and 26.9 ("2 youtube channel 1 adsense") ·
-   top3: reddit, support.google, quora
-5. YouTube monetization under 18 · Monetization pillar spoke · GSC pos
-   10.7 · top3: reddit, quora, support.google
+~~4. Multiple YouTube channels on one AdSense account~~ — dropped
+   2026-09-23, `/blog/google-adsense-youtube` already owns this at H2+FAQ
+   level (see "Dropped this round" for the evidence)
+~~5. YouTube monetization under 18~~ — dropped 2026-09-23,
+   `/blog/google-adsense-youtube` already owns this at H2+FAQ level (see
+   "Dropped this round" for the evidence)
 6. What an outlier video is on YouTube (+ outlier score, + free outlier
    finder) · Outliers · GSC: "youtube outlier finder" 1 click at pos 35,
    "youtube outliers" pos 33, "youtube outliers finder" pos 34 ·
@@ -937,6 +938,18 @@ headings:
 - "how many playlists should a youtube channel have" partially:
   `/blog/youtube-watch-hours` owns "Engineer Binge-Watching with Playlist
   Sequencing", so entry #104 is scoped to organization
+- "multiple youtube channels on one adsense account" (was entry #4):
+  `/blog/google-adsense-youtube` owns "Can One AdSense Account Serve
+  Multiple YouTube Channels?" (H2 + matching FAQ entry), already stating the
+  one-account-per-payee rule and the 32-day change limit sourced from
+  Google's own docs. Caught during entry #4's research round (2026-09-23),
+  writing it standalone would cannibalize our own ranking page.
+- "youtube monetization under 18" (was entry #5): same anchor post,
+  `/blog/google-adsense-youtube` owns "If You Are Under 18: How
+  Monetization Works" (H2 + matching FAQ entry), already stating the
+  parent/guardian-account workaround, the payment handoff, and reactivating
+  at 18. Caught in the same pass as entry #4 (2026-09-23), same
+  cannibalization reasoning.
 
 Carried-over items killed on the new standard:
 

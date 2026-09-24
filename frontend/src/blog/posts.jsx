@@ -9639,7 +9639,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>What This Means for When You Should Judge a Video</h2>
 
-        <p>Across the majority of niches, <strong>day 7 is already a reliable read.</strong> If a video is underperforming your own channel's normal by day 7, waiting another three weeks rarely rescues it, 94.5% of whatever it was going to earn by day 30 is already visible. Put that effort into the next video instead of waiting on one that has already shown its hand. For a faster, earlier read than waiting a full week, <a href="/blog/youtube-vph-meaning">views per hour (VPH)</a> against your own channel's baseline can flag an outlier within hours instead of days.</p>
+        <p>Across the majority of niches, <strong>day 7 is already a reliable read.</strong> If a video is underperforming your own channel's normal by day 7, waiting another three weeks rarely rescues it, 94.5% of whatever it was going to earn by day 30 is already visible. Put that effort into the next video instead of waiting on one that has already shown its hand. For a faster, earlier read than waiting a full week, <a href="/blog/youtube-vph-meaning">views per hour (VPH)</a> against your own channel's baseline can flag <a href="/blog/youtube-outlier-video">an outlier</a> within hours instead of days.</p>
 
         <p>The exception is search-driven, evergreen niches: fitness, beauty, tech, gaming, education. These hold back a meaningfully larger share for later, so a slow week-one start there is a weaker signal. <strong>Give a tutorial or how-to video closer to 14 days before writing it off</strong>, the data backs a longer runway specifically for that kind of content, not as a general rule.</p>
 
@@ -11293,7 +11293,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>Find Outlier Videos Already Breaking Out in Your Niche</h2>
 
-        <p>The fastest way to spot a live trend is to find videos that are massively out-performing the channel that made them. An <strong>outlier is a video pulling far more views than its channel's usual baseline</strong>, which is the clearest signal that a topic, title, or format has struck a nerve right now, not last year.</p>
+        <p>The fastest way to spot a live trend is to find videos that are massively out-performing the channel that made them. An <strong>outlier is a video pulling far more views than its channel's usual baseline</strong>, which is the clearest signal that a topic, title, or format has struck a nerve right now, not last year. See <a href="/blog/youtube-outlier-video">what counts as a genuine outlier</a> for the full formula behind that baseline.</p>
 
         <p>To find them by hand, open channels similar to yours, sort their videos by most popular, and look for recent uploads whose view counts dwarf the rest of their catalog. A channel that averages 10,000 views with one three-week-old video at 400,000 is showing you <strong>a trend with proof of demand already attached</strong>.</p>
 
@@ -11402,7 +11402,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h3>Video Podcasts</h3>
 
-        <p>Audio-first podcasts are migrating to YouTube as creators recognise the platform's search and recommendation infrastructure as a distribution advantage. Video podcast content is one of the fastest growing YouTube keyword trends categories in 2026, with watch time on podcast-format content up significantly year over year.</p>
+        <p>Audio-first podcasts are migrating to YouTube as creators recognize the platform's search and recommendation infrastructure as a distribution advantage. Video podcast content is one of the fastest growing YouTube keyword trends categories in 2026, with watch time on podcast-format content up significantly year over year.</p>
 
         <img src="/blog/youtube-trends-podcasts.webp" alt="Video podcast content growing as a YouTube-native distribution format in 2026" />
 
@@ -18084,7 +18084,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>VPH vs. Outlier Score: What's the Difference</h2>
 
-        <p>VPH and Outlier Score answer two different questions, and mixing them up is where most of the confusion in this topic comes from. <strong>VPH answers "how fast is this video getting views right now."</strong> It is a raw velocity number with no built-in reference point. <strong>Outlier Score answers "how does this compare to what's normal for this channel."</strong> It is baseline-adjusted by design.</p>
+        <p>VPH and Outlier Score answer two different questions, and mixing them up is where most of the confusion in this topic comes from. <strong>VPH answers "how fast is this video getting views right now."</strong> It is a raw velocity number with no built-in reference point. <strong>Outlier Score answers "how does this compare to what's normal for this channel."</strong> It is baseline-adjusted by design, the same idea covered in more depth in <a href="/blog/youtube-outlier-video">what counts as an outlier video</a>.</p>
 
         <table>
           <thead>
@@ -18272,6 +18272,99 @@ Free studio checklist: https://yoursite.com/checklist
         <p>A general reporting delay explains most of what looks broken in YouTube Analytics, and Google says as much directly for at least one metric. But a subscriber count that will not move and watch hours stuck below 4,000 are not both explained by that same delay. <strong>One is a rounding display rule, the other is a separate qualification standard</strong>, and mistaking either for a platform glitch leads to the same loop: refreshing a dashboard that was never going to change any faster for the attention.</p>
 
         <p><strong>Check the exact number behind a rounded subscriber count</strong>, check whether stalled watch hours are unqualified Shorts time, and give estimated earnings its documented 2-day window before assuming anything is wrong.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-outlier-video',
+    title: 'What Is an Outlier Video on YouTube? (Outlier Score Explained)',
+    excerpt: "An outlier is a video that beats its own channel's normal, not a high view count in isolation, a video with 50 subscribers and 10,000 views is a bigger outlier than one with 2 million subscribers and the same number. Here's the real outlier score formula and a real threshold, not the vague 'multiplier vs average' every tool page repeats.",
+    date: '2026-09-24',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-outlier-video-cover.jpg',
+    coverAlt: 'A creator reacting with shock, hand on head, at a sudden view-count spike on a YouTube Studio analytics graph',
+    author: 'Denzil',
+    readTime: '8 min read',
+    faqs: [
+      { q: 'What does outlier mean on YouTube?', a: "An outlier is a video that performs significantly better than that specific channel's own normal, not a video with a high view count in general. <strong>A channel that usually gets 500 views posting one video that gets 10,000 has a genuine outlier</strong>; a channel that usually gets 2 million views posting one that also gets 10,000 does not, even though the raw numbers can look similar out of context." },
+      { q: 'How can I find outlier videos on YouTube?', a: "The free vidIQ browser extension shows an outlier indicator under videos as you browse, and manually, you can compare a video's views against a channel's typical range on its uploads page. <strong>A dedicated outlier tool speeds this up across many channels in a niche at once</strong>, which is the real time-saver over checking channels one at a time." },
+      { q: 'What does outlier score mean?', a: "Outlier score is a number expressing how far a video's performance sits above (or below) what's normal, expressed as a multiplier. <strong>A score of 5 means the video performed 5 times better than the baseline it's being measured against</strong>, though different tools calculate that baseline differently, some use raw view count against channel average, others normalize for subscriber count, which is why the same video can show a different score on two different tools." },
+      { q: 'What is an outlier in simple terms?', a: "In everyday statistics, an outlier is a data point far from the rest of a set. <strong>On YouTube, the term keeps that core meaning but narrows it to one specific comparison: a video's performance versus that same channel's own typical performance</strong>, not versus other channels, other niches, or a fixed view-count number." },
+      { q: 'How do I interpret outlier results?', a: "Treat the multiplier as a starting point for investigation, not a verdict on its own. <strong>A 10x outlier is worth studying for what made it different (topic, thumbnail, title, timing), but a single result doesn't confirm a repeatable pattern</strong>. Check whether a channel has multiple outliers around a similar theme before concluding the topic itself, rather than a one-off circumstance, is what drove the result." },
+    ],
+    content: () => (
+      <>
+        <p>A channel with 50 subscribers posts a video. It gets 10,000 views. A channel with 2 million subscribers posts a different video. It also gets 10,000 views. <strong>Only one of those is an outlier</strong>, and it's not the one with more total views historically, it's the 50-subscriber channel, because 10,000 views is wildly outside what that channel normally gets, while for the 2-million-subscriber channel it barely registers.</p>
+
+        <p>Every tool page selling an "outlier finder" skips explaining that comparison and jumps straight to the pitch. <strong>Here's the real definition, the real formula, and a threshold nobody else states.</strong> If you're trying to catch one early rather than explain one after the fact, most of a video's eventual performance shows up within the <a href="/blog/youtube-view-growth-curve">first week</a>, so an outlier usually shows its shape long before it peaks.</p>
+
+        <h2>What an Outlier Video Means</h2>
+
+        <p>An outlier video is one that performs significantly better than that specific channel's own normal. <strong>Not a high view count on its own, a high view count relative to what that channel usually gets.</strong> A real example from a creator on Reddit: a video crossed 10,000 views on a channel with 50 subscribers at the time, a result the channel had never come close to before. That is a genuine outlier, regardless of how small 10,000 views would look on a larger channel.</p>
+
+        <p>This is also the exact confusion the term causes. <strong>Real creators discussing outliers on forums routinely conflate three different things</strong>: an outlier video (a specific result), outlier score (a number describing that result), and outlier research (the broader practice of studying outliers for content ideas). They're related but distinct, and most explanations blur them together.</p>
+
+        <h2>What Outlier Score Measures (and How It's Calculated)</h2>
+
+        <p>Outlier score expresses how far a video's performance sits above a baseline, as a multiplier. <strong>A score of 5 means 5 times better than that baseline.</strong> Where tools genuinely differ, and where almost none disclose their method, is what that baseline is.</p>
+
+        <p>Some tools compare a video's raw views against a channel's average view count. <strong>That method has a real flaw: it does not correct for channel size</strong>, so a 50,000-view video can score identically whether the channel has 10,000 subscribers or 2 million, even though the first is a far more unusual result.</p>
+
+        <p><strong>Our own Outliers feature calculates it differently: views per subscriber, divided by the median of that same ratio across a comparison set of channels.</strong> Dividing by subscribers first corrects for channel size before the comparison happens, so a 50,000-view video on a 10,000-subscriber channel and a 200,000-view video on a 2-million-subscriber channel land on the same normalized scale instead of being judged by raw view count.</p>
+
+        <blockquote><strong>Pro Tip:</strong> if two tools show different outlier scores for the same video, that's not a bug, they're likely using different baselines. Check whether a tool corrects for subscriber count before trusting a score across channels of different sizes.</blockquote>
+
+        <p>This is the same correction that explains why <a href="/blog/youtube-vph-meaning">views per hour (VPH)</a> reads misleadingly on its own: <strong>a raw number without a baseline describes something different for every channel size.</strong> VPH measures velocity right now; outlier score measures how that performance compares to the channel's own history, two related but distinct readings of the same underlying question.</p>
+
+        <h2>Is Your Outlier Score Good? A Real Threshold</h2>
+
+        <p><strong>Most tool pages give no minimum number at all.</strong> OutlierKit's own site states it identifies over a million outliers per niche scan without ever stating what score qualifies a video for that count in the first place. That omission makes the term feel more precise than it is on most platforms.</p>
+
+        <p>Here's a real one: <strong>our own system uses 1.8x as the floor</strong>, below which a video is not treated as a genuine outlier. A video scoring 1.3, for instance, performed somewhat better than the baseline, but not meaningfully enough to be worth flagging as a signal. This isn't a universal law, another tool's baseline could reasonably use a different cutoff, but it's a disclosed, real number, which is more than most competing pages offer.</p>
+
+        <blockquote><strong>Pro Tip:</strong> a video scoring right at the floor is a maybe, not a signal. Look for videos scoring well above whatever threshold a tool uses, 3x or higher is a much stronger indicator that something specific about the video, not random variance, drove the result.</blockquote>
+
+        <h2>Outlier, Outlier Score, and Outlier Research Are Different Things</h2>
+
+        <p>An <strong>outlier video</strong> is the result itself, one upload that performed unusually well. <strong>Outlier score</strong> is the number quantifying how unusual. <strong>Outlier research</strong> is the practice of deliberately searching a niche for these videos to find patterns worth testing on your own channel.</p>
+
+        <p>Creators asking "what is an outlier" online are frequently asking about the third one, how to use outliers strategically. <strong>Knowing your channel had one outlier tells you something happened. Knowing several outliers across a niche share a theme tells you something repeatable might be happening</strong>, the same reasoning behind <a href="/blog/youtube-trends">publishing on a trend before it peaks</a>, not chasing a single fluke.</p>
+
+        <CtaCard
+          to="/features/outliers"
+          title="See which videos in your niche are genuine outliers, not just big numbers"
+          sub="Outliers corrects for channel size before scoring, so a small channel's real breakout doesn't get buried under a large channel's normal upload."
+          button="Try Outliers →"
+        />
+
+        <h2>Free Ways to Find Outliers (and Where They Fall Short)</h2>
+
+        <p>The free vidIQ browser extension surfaces an outlier indicator on videos as you browse YouTube normally, which works fine for checking channels one at a time. <strong>Manually, you can also just open a channel's uploads, sort by views, and compare recent uploads against that channel's typical range</strong>, no tool required, just slower.</p>
+
+        <p>Where free methods fall short is scale: <strong>checking outliers across an entire niche, dozens of channels, to spot a shared pattern rather than one channel's lucky video</strong>, is where a dedicated tool saves real time rather than just being a convenience.</p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What does outlier mean on YouTube?</h3>
+        <p>An outlier is a video that performs significantly better than that specific channel's own normal, not a video with a high view count in general. <strong>A channel that usually gets 500 views posting one video that gets 10,000 has a genuine outlier</strong>; a channel that usually gets 2 million views posting one that also gets 10,000 does not, even though the raw numbers can look similar out of context.</p>
+
+        <h3>How can I find outlier videos on YouTube?</h3>
+        <p>The free vidIQ browser extension shows an outlier indicator under videos as you browse, and manually, you can compare a video's views against a channel's typical range on its uploads page. <strong>A dedicated outlier tool speeds this up across many channels in a niche at once</strong>, which is the real time-saver over checking channels one at a time.</p>
+
+        <h3>What does outlier score mean?</h3>
+        <p>Outlier score is a number expressing how far a video's performance sits above (or below) what's normal, expressed as a multiplier. <strong>A score of 5 means the video performed 5 times better than the baseline it's being measured against</strong>, though different tools calculate that baseline differently, some use raw view count against channel average, others normalize for subscriber count, which is why the same video can show a different score on two different tools.</p>
+
+        <h3>What is an outlier in simple terms?</h3>
+        <p>In everyday statistics, an outlier is a data point far from the rest of a set. <strong>On YouTube, the term keeps that core meaning but narrows it to one specific comparison: a video's performance versus that same channel's own typical performance</strong>, not versus other channels, other niches, or a fixed view-count number.</p>
+
+        <h3>How do I interpret outlier results?</h3>
+        <p>Treat the multiplier as a starting point for investigation, not a verdict on its own. <strong>A 10x outlier is worth studying for what made it different (topic, thumbnail, title, timing), but a single result doesn't confirm a repeatable pattern</strong>. Check whether a channel has multiple outliers around a similar theme before concluding the topic itself, rather than a one-off circumstance, is what drove the result.</p>
+
+        <h2>A Score With No Disclosed Baseline Is Marketing</h2>
+
+        <p>An outlier is defined by contrast with a specific channel's own history, not by a raw view count, a niche average, or any number that applies the same way to every channel. <strong>The formula matters because two videos with identical view counts can be wildly different outliers depending on the channel behind each one</strong>, and a tool that doesn't correct for that difference is measuring something closer to popularity than to genuine deviation from normal.</p>
+
+        <p><strong>Before trusting any outlier score, check what it's being measured against.</strong> A number with no disclosed baseline is a marketing claim, not a metric.</p>
       </>
     ),
   },
