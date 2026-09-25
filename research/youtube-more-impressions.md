@@ -4,7 +4,7 @@ Plan entry: `#8` · Feature: `Channel Audit` · Anchor post:
 `/blog/youtube-channel-not-growing`
 Target query: `how to get more impressions on youtube`
 Researched: `2026-09-25`
-Status: `approved, writing`
+Status: `done, awaiting push`
 
 ---
 
@@ -218,11 +218,18 @@ Date set to 2026-09-26 (one day ahead of same-day sibling
 youtube-channel-stats) so it sorts as the latest post under the blog's
 stable date-sort, per the same pattern established on the prior article.
 
+- [x] Stage 5 (partial): built (129 routes), cover wired (1600x900 JPG,
+      147KB, a genuinely different flat-lay/no-person composition per user
+      feedback), sitemap.xml + llms.txt added, intro and closing heading
+      rewritten after user feedback (removed a templated "every guide
+      opens with X" scaffold reused from sibling articles, replaced a
+      clever-metaphor closing heading with a plain declarative one), added
+      a missing "where to find it in Studio" section after a fresh
+      competitor coverage audit, both link relationships (anchor + also-
+      link) confirmed genuinely two-way after the also-link was initially
+      one-way only, committed locally as `9aa084845`. Push still pending
+      user go-ahead.
+
 Outstanding for this article:
 
-- Cover image: prompt not yet written, need to check real house cover
-  dimensions before requesting generation, and per user feedback keep the
-  scene genuinely different from the "person + laptop + desk" pattern
-  used repeatedly in recent covers.
-- sitemap.xml and llms.txt entries not yet added.
-- Build, commit, push not yet done.
+- Awaiting explicit user go-ahead to `git push`. Nothing else remaining.

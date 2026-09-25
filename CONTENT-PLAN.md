@@ -146,8 +146,10 @@ Weekly Report ("the specific issue, with a real number from your data").
    on the analytics mega-guide · top3: clipchamp, reddit, reddit~~ —
    published 2026-09-25 as `/blog/youtube-channel-stats`, commit
    `ab0dbc62aa`
-8. How to get more impressions on YouTube · Channel Audit · GSC pos 36.5 ·
-   top3: reddit, reddit, quora · PAA: "Why are my YouTube impressions low?"
+~~8. How to get more impressions on YouTube · Channel Audit · GSC pos 36.5 ·
+   top3: reddit, reddit, quora · PAA: "Why are my YouTube impressions low?"~~
+   — published 2026-09-26 as `/blog/youtube-more-impressions`, commit
+   `9aa084845`
 
 ## Block 2 · "Something dropped" (existing channels, the paying segment)
 
