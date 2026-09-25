@@ -8048,7 +8048,7 @@ export const posts = [
 
         <p>Reading this for one channel by hand is quick. Doing it across ten competitors, every week, is not. That is the gap a dedicated tool closes. <a href="/features/competitor-analysis">Competitor Analysis</a> tracks rival channels and surfaces their winning title patterns, posting times, and the specific videos breaking out above their baseline, so you benchmark against real numbers instead of guessing.</p>
 
-        <p>For a fast one-off look at a single channel, the free <a href="/tools/youtube-channel-stats-checker">channel stats checker</a> returns its public subscriber, view, and upload data in seconds.</p>
+        <p>For a fast one-off look at a single channel, the free <a href="/tools/youtube-channel-stats-checker">channel stats checker</a> returns its public subscriber, view, and upload data in seconds. See <a href="/blog/youtube-channel-stats">what's actually public versus permanently private</a> before trusting any number a tool shows you for a channel that isn't yours.</p>
 
         <p>There is also a native shortcut hiding in your own dashboard. The <strong>Other channels your audience watches</strong> card in the Audience tab, covered above, is effectively a competitor list YouTube built for you out of your viewers' real behavior. Start there, then run the channels it names through the tools above.</p>
 
@@ -13975,7 +13975,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h3>Step 1: Find the Outliers</h3>
 
-        <p>Go to the FinanceFlow channel page and sort all videos by Most Popular. The top three videos sit at 880,000, 640,000, and 510,000 views. Everything else on the channel sits between 12,000 and 60,000.</p>
+        <p>Go to the FinanceFlow channel page and sort all videos by Most Popular, or pull the same public numbers in seconds with the <a href="/blog/youtube-channel-stats">channel stats checker</a>. The top three videos sit at 880,000, 640,000, and 510,000 views. Everything else on the channel sits between 12,000 and 60,000.</p>
 
         <p>The channel baseline is roughly 30,000 views. The outliers are performing at 17x to 29x that baseline. The algorithm did not treat those three videos the same way it treated the other 277. Something triggered a different distribution decision. <a href="/features/outliers">Surfacing the videos performing far above a channel's baseline</a> is what the audit automates, and finding what triggered them is the whole game.</p>
 
@@ -14061,7 +14061,7 @@ Free studio checklist: https://yoursite.com/checklist
           <li><strong>Audience Competitors</strong> are the most dangerous and the most ignored. These are channels your existing viewers are already watching, surfaced through YouTube Studio's "Channels your audience watches" tab. They are not competing for your rankings. They are competing for the same two hours of daily watch time your audience has available.</li>
         </ol>
 
-        <blockquote><strong>Quick Tip:</strong> Build a seed list of five to ten channels across all three types before any YouTube channel competitor analysis begins. A list built only from Direct Competitors produces a picture with two thirds of the competitive landscape missing. The algorithm does not organise content by business model. It organises by watch time, and audience attention does not stay in neat niche boundaries.</blockquote>
+        <blockquote><strong>Quick Tip:</strong> Build a seed list of five to ten channels across all three types before any YouTube channel competitor analysis begins. A list built only from Direct Competitors produces a picture with two thirds of the competitive landscape missing. The algorithm does not organize content by business model. It organizes by watch time, and audience attention does not stay in neat niche boundaries.</blockquote>
 
         <h2>Tracking Real-Time Momentum With Views Per Hour</h2>
 
@@ -14087,7 +14087,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>The video is not the whole picture. What a competitor pins in their comment section and how they structure their calls to action tells you the strategy running behind the content.</p>
 
-        <p>A pinned comment pointing to a free download tells you the video is a lead generation asset. The channel is not optimising for views. It is optimising for email subscribers, and the content is built to serve that goal. A pinned comment driving to a paid product tells you something different: this channel has a buyer audience, not just a viewer audience.</p>
+        <p>A pinned comment pointing to a free download tells you the video is a lead generation asset. The channel is not optimizing for views. It is optimizing for email subscribers, and the content is built to serve that goal. A pinned comment driving to a paid product tells you something different: this channel has a buyer audience, not just a viewer audience.</p>
 
         <p>These are strategic signals that a standard free YouTube competitor analysis workflow ignores entirely. Three things to note on every outlier video during the audit:</p>
 
@@ -14099,7 +14099,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <img src="/blog/youtube-competitor-analysis-your-pinned-comments.webp" alt="Competitor pinned comment and CTA structure revealing reach versus revenue intent" />
 
-        <p>The pattern across multiple outliers reveals whether the competitor is optimising for reach or for revenue. A channel optimising for reach and a channel optimising for revenue require completely different gap strategies.</p>
+        <p>The pattern across multiple outliers reveals whether the competitor is optimizing for reach or for revenue. A channel optimizing for reach and a channel optimizing for revenue require completely different gap strategies.</p>
 
         <p>Filling a reach gap means producing higher volume content on proven topics. Filling a revenue gap means producing content that targets buyers, not browsers.</p>
 
@@ -18365,6 +18365,146 @@ Free studio checklist: https://yoursite.com/checklist
         <p>An outlier is defined by contrast with a specific channel's own history, not by a raw view count, a niche average, or any number that applies the same way to every channel. <strong>The formula matters because two videos with identical view counts can be wildly different outliers depending on the channel behind each one</strong>, and a tool that doesn't correct for that difference is measuring something closer to popularity than to genuine deviation from normal.</p>
 
         <p><strong>Before trusting any outlier score, check what it's being measured against.</strong> A number with no disclosed baseline is a marketing claim, not a metric.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-channel-stats',
+    title: "How to See YouTube Analytics for Other Channels (What's Public vs. Private)",
+    excerpt: "You cannot see another channel's real analytics, no tool can show you their CTR, retention, or revenue. What you can see is specific public data: subscriber count, total views, video count, and upload dates. Here's the honest boundary, and how to check it in seconds.",
+    date: '2026-09-25',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-channel-stats-cover.jpg',
+    coverAlt: 'Overhead view of two phones side by side on a desk, each showing a different YouTube channel page with subscriber counts, hands comparing them',
+    author: 'Denzil',
+    readTime: '7 min read',
+    faqs: [
+      { q: 'How do I check YouTube analytics of other channels?', a: "You cannot see another channel's real YouTube Analytics dashboard, that data is private to the channel owner. <strong>What you can check is the public data YouTube exposes for every channel</strong>: subscriber count, total channel views, video count, upload dates, and each video's individual view count. A free tool like our channel stats checker pulls this directly from YouTube's own public API in seconds." },
+      { q: "Can I see someone else's YouTube analytics?", a: "No, not their real Analytics dashboard. <strong>YouTube Studio only shows detailed metrics like CTR, audience retention, and revenue to the channel owner</strong>, there is no setting, permission, or tool that exposes those numbers for a channel that isn't yours. Any tool claiming to show another channel's CTR or earnings is presenting an estimate, not real data." },
+      { q: 'Can I see video analytics for other YouTube channels?', a: "You can see a video's public view count, like count, and comment count, all visible on the video page itself without any tool. <strong>You cannot see that video's CTR, audience retention graph, or traffic source breakdown</strong>, those are private to the channel that uploaded it, and no third-party tool has a legitimate way around that." },
+      { q: 'Are third-party YouTube analytics tools accurate?', a: "For the data they pull directly from YouTube's public API, yes: subscriber counts, view counts, and video counts are real numbers. <strong>For anything labeled \"estimated,\" especially estimated earnings, treat it as a rough guess</strong>, since real revenue depends on a channel's actual RPM, which varies by niche, audience geography, and ad rates the tool has no access to." },
+      { q: 'Why can I see subscriber count but not other stats?', a: "Subscriber count, total views, and video count are metadata YouTube deliberately makes public as part of a channel's profile, the same way a video's view count is public. <strong>CTR, retention, and revenue are performance and financial data</strong>, categories YouTube treats as private to the account holder by design, similar to how a business's foot traffic might be visible but its internal sales reports are not." },
+    ],
+    content: () => (
+      <>
+        <p>Every tool claiming to show you "YouTube analytics for other channels" is quietly skipping the same disclaimer: <strong>you cannot see another channel's real Analytics dashboard.</strong> No tool, extension, or workaround shows another creator's CTR, audience retention, or actual revenue. That data stays private to the channel owner, full stop.</p>
+
+        <p>What you can see is real, useful, and free. <strong>Here's the honest line between what's public and what isn't</strong>, so you know exactly what a tool is showing you before trusting the number.</p>
+
+        <h2>What You Can See on Another Channel</h2>
+
+        <p>YouTube makes a specific set of channel data public, the same information visible on any channel's About page or through its public API. <strong>Subscriber count, total channel views, total video count, upload dates, and each video's individual view count</strong> are all genuinely public, no special access required.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Data point</th>
+              <th>Public?</th>
+              <th>Where it's visible</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Subscriber count</td><td>Yes</td><td>Channel page, public API</td></tr>
+            <tr><td>Total channel views</td><td>Yes</td><td>Channel page, public API</td></tr>
+            <tr><td>Video count</td><td>Yes</td><td>Channel page, public API</td></tr>
+            <tr><td>Per-video view count</td><td>Yes</td><td>Each video page</td></tr>
+            <tr><td>Upload dates</td><td>Yes</td><td>Channel uploads tab</td></tr>
+            <tr><td>Likes and comment count</td><td>Yes</td><td>Each video page</td></tr>
+            <tr><td>Click-through rate (CTR)</td><td>No</td><td>Channel owner only, in Studio</td></tr>
+            <tr><td>Audience retention</td><td>No</td><td>Channel owner only, in Studio</td></tr>
+            <tr><td>Traffic source breakdown</td><td>No</td><td>Channel owner only, in Studio</td></tr>
+            <tr><td>Real revenue</td><td>No</td><td>Channel owner only, in AdSense</td></tr>
+          </tbody>
+        </table>
+
+        <p>This is enough to answer most of what creators want to know when checking a competitor: how big is this channel, how fast is it growing based on upload pace, and which of its videos are performing best by raw view count. <strong>It just isn't the full picture a Studio dashboard gives the owner.</strong></p>
+
+        <h2>What You Can Never See (No Matter the Tool)</h2>
+
+        <p><strong>Click-through rate, audience retention, traffic source breakdown, and revenue are permanently private</strong> to the channel that owns them. This isn't a setting someone forgot to enable or a loophole a clever tool has found, YouTube does not expose this data through any public interface, and no third-party service has legitimate access to it either.</p>
+
+        <p>A Reddit thread asking for "a website that shows channel analytics for any channel" is a common request, and the honest answer is that no such site can exist for the private metrics, only for the public ones listed above. <strong>Any tool implying otherwise is either showing you public data dressed up to look comprehensive, or an estimate presented as if it were real.</strong></p>
+
+        <blockquote><strong>Pro Tip:</strong> if a tool shows a specific CTR or retention percentage for a channel that isn't yours, that number is fabricated or derived from an unrelated model, not pulled from YouTube. Treat it as noise, not signal.</blockquote>
+
+        <h2>Why "Estimated" Numbers Aren't Real Numbers</h2>
+
+        <p>Tools that show "estimated earnings" for other channels are running view counts through an assumed RPM (revenue per thousand views) to produce a guess. <strong>The problem is that real RPM varies enormously by niche, audience country, and even the specific advertisers running that month</strong>, so the same view count can represent wildly different real revenue on two different channels.</p>
+
+        <p><strong>The same 1 million views produces wildly different real earnings depending on niche and audience</strong>, exactly what a flat RPM assumption cannot account for:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche (typical RPM range)</th>
+              <th>Estimated earnings on 1M views</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Finance ($15-$40 RPM)</td><td>$15,000-$40,000</td></tr>
+            <tr><td>Tech ($8-$20 RPM)</td><td>$8,000-$20,000</td></tr>
+            <tr><td>Gaming ($3-$8 RPM)</td><td>$3,000-$8,000</td></tr>
+            <tr><td>Entertainment/Vlogs ($2-$6 RPM)</td><td>$2,000-$6,000</td></tr>
+          </tbody>
+        </table>
+
+        <p>A tool that applies one flat RPM across every channel it estimates is guessing which row a channel belongs in, and getting it wrong by 5-10x is common, not an edge case. <strong>Treat any "estimated" label as exactly that</strong>: a rough range built on an assumption the tool cannot verify, not a number pulled from the channel's actual AdSense account. The public data (subscribers, views, video count) is exact. The estimated data (earnings, sometimes engagement rate) is a guess wearing a decimal point.</p>
+
+        <blockquote><strong>Pro Tip:</strong> when comparing two tools' estimated earnings for the same channel, a wide gap between them is normal, not a sign one is wrong. Both are guessing with different RPM assumptions, so neither number is more "correct" than the other.</blockquote>
+
+        <h2>How to Check a Channel's Public Stats Right Now</h2>
+
+        <p>The fastest way to pull a channel's public data is our free <a href="/tools/youtube-channel-stats-checker">channel stats checker</a>. <strong>Paste a channel URL, handle, or name, and it returns the same fields YouTube's own public API exposes</strong>:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Example output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Subscribers</td><td>284,000</td></tr>
+            <tr><td>Total views</td><td>41,200,000</td></tr>
+            <tr><td>Video count</td><td>312</td></tr>
+            <tr><td>Most recent upload</td><td>3 days ago</td></tr>
+            <tr><td>Top video by views</td><td>1.8M views</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Every number in that table comes straight from YouTube's own API, not an estimate.</strong> No CTR, no retention, no revenue row, because that data has no public source to pull from, not because the tool is holding back.</p>
+
+        <p>For tracking multiple competitors over time rather than a one-off lookup, <a href="/features/competitor-analysis">Competitor Analysis</a> monitors rival channels continuously. <strong>It surfaces which of their videos are breaking out above that channel's own baseline</strong>, the same public view-count data, read at a scale that would take hours to check by hand. The <a href="/blog/youtube-competitor-analysis">full competitor analysis workflow</a> covers reading that data once you have it.</p>
+
+        <CtaCard
+          to="/tools/youtube-channel-stats-checker"
+          title="Check a channel's real public stats in seconds"
+          sub="Subscriber count, total views, video count, and upload dates, pulled straight from YouTube's own API, not an estimate."
+          button="Check a channel free →"
+        />
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How do I check YouTube analytics of other channels?</h3>
+        <p>You cannot see another channel's real YouTube Analytics dashboard, that data is private to the channel owner. <strong>What you can check is the public data YouTube exposes for every channel</strong>: subscriber count, total channel views, video count, upload dates, and each video's individual view count. A free tool like our channel stats checker pulls this directly from YouTube's own public API in seconds.</p>
+
+        <h3>Can I see someone else's YouTube analytics?</h3>
+        <p>No, not their real Analytics dashboard. <strong>YouTube Studio only shows detailed metrics like CTR, audience retention, and revenue to the channel owner</strong>, there is no setting, permission, or tool that exposes those numbers for a channel that isn't yours. Any tool claiming to show another channel's CTR or earnings is presenting an estimate, not real data.</p>
+
+        <h3>Can I see video analytics for other YouTube channels?</h3>
+        <p>You can see a video's public view count, like count, and comment count, all visible on the video page itself without any tool. <strong>You cannot see that video's CTR, audience retention graph, or traffic source breakdown</strong>, those are private to the channel that uploaded it, and no third-party tool has a legitimate way around that.</p>
+
+        <h3>Are third-party YouTube analytics tools accurate?</h3>
+        <p>For the data they pull directly from YouTube's public API, yes: subscriber counts, view counts, and video counts are real numbers. <strong>For anything labeled "estimated," especially estimated earnings, treat it as a rough guess</strong>, since real revenue depends on a channel's actual RPM, which varies by niche, audience geography, and ad rates the tool has no access to.</p>
+
+        <h3>Why can I see subscriber count but not other stats?</h3>
+        <p>Subscriber count, total views, and video count are metadata YouTube deliberately makes public as part of a channel's profile, the same way a video's view count is public. <strong>CTR, retention, and revenue are performance and financial data</strong>, categories YouTube treats as private to the account holder by design, similar to how a business's foot traffic might be visible but its internal sales reports are not.</p>
+
+        <h2>Public Data Is Real, Estimated Data Is a Guess</h2>
+
+        <p>The subscriber count, view count, and video count you see for another channel are genuine numbers straight from YouTube's own system. <strong>Everything past that, CTR, retention, revenue, is either invisible to you entirely or an estimate built on assumptions no outside tool can verify.</strong> Knowing which category a number falls into before acting on it is the difference between real competitive intelligence and a guess dressed up as data.</p>
+
+        <p><strong>Check the public numbers, treat every estimate as a range rather than a fact</strong>, and use a tool that pulls from YouTube's actual API instead of one that fills gaps with assumptions.</p>
       </>
     ),
   },
