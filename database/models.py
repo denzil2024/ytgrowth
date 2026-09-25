@@ -756,6 +756,15 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
+# Pin the dialect driver explicitly. A bare "postgresql://" leaves
+# SQLAlchemy to pick a default DBAPI, and newer SQLAlchemy versions try
+# psycopg (v3) before psycopg2, even though only psycopg2-binary is
+# installed (requirements.txt). That mismatch crashed every request with
+# "ModuleNotFoundError: No module named 'psycopg'" on 2026-09-25, taking
+# the whole site down since nothing in the app boots without this engine.
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
+
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
