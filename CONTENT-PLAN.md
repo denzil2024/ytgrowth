@@ -140,10 +140,12 @@ Weekly Report ("the specific issue, with a real number from your data").
    "youtube outliers" pos 33, "youtube outliers finder" pos 34 ·
    top3: viewstats.zendesk, reddit, outlierkit~~ — published 2026-09-24 as
    `/blog/youtube-outlier-video`, commit `e982ccf17`
-7. How to see YouTube Analytics for other channels · Competitor Analysis
+~~7. How to see YouTube Analytics for other channels · Competitor Analysis
    (via `/tools/youtube-channel-stats-checker`, the site's best-converting
    tool page: 15 clicks) · GSC pos 54-56 on 3 variants, currently landing
-   on the analytics mega-guide · top3: clipchamp, reddit, reddit
+   on the analytics mega-guide · top3: clipchamp, reddit, reddit~~ —
+   published 2026-09-25 as `/blog/youtube-channel-stats`, commit
+   `ab0dbc62aa`
 8. How to get more impressions on YouTube · Channel Audit · GSC pos 36.5 ·
    top3: reddit, reddit, quora · PAA: "Why are my YouTube impressions low?"
 

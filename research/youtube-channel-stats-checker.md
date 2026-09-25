@@ -5,7 +5,7 @@ Plan entry: `#7` · Feature: `Competitor Analysis` (via
 `/blog/youtube-competitor-analysis`
 Target query: `how to see youtube analytics for other channels`
 Researched: `2026-09-24`
-Status: `written, awaiting cover`
+Status: `done, awaiting push`
 
 ---
 
@@ -220,9 +220,17 @@ Also fixed while this file was open: 7 pre-existing British spellings
 ("organise" x2, "optimising" x5) in `youtube-competitor-analysis`, per the
 standing house rule to fix these in any post already open, same pass.
 
+- [x] Stage 5 (partial): expanded from 1,697 to 1,918 words and 0 to 3
+      tables after user feedback that it read too thin (public/private
+      data table, per-niche RPM table, worked example output table). Built
+      (128 routes), cover wired (1600x900 JPG, 172KB, a genuinely different
+      scene from the prior several covers per user feedback about repeated
+      "person at laptop" compositions), sitemap.xml + llms.txt added, date
+      bumped to 2026-09-25 (one day ahead of same-day sibling
+      youtube-outlier-video) so it sorts as the latest post under the
+      blog's stable date-sort, committed locally as `ab0dbc62aa`. Push
+      still pending user go-ahead.
+
 Outstanding for this article:
 
-- Cover image: prompt not yet written, need to check real house cover
-  dimensions before requesting generation.
-- sitemap.xml and llms.txt entries not yet added.
-- Build, commit, push not yet done.
+- Awaiting explicit user go-ahead to `git push`. Nothing else remaining.
