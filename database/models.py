@@ -747,6 +747,18 @@ class FeatureRequest(Base):
     status       = Column(String, default="new")  # new | planned | shipped | declined
     admin_note   = Column(Text,   nullable=True)
     created_at   = Column(DateTime, default=_now)
+
+
+class EmailLead(Base):
+    """Anonymous blog-visitor email capture (NewsletterCapture.jsx). Not tied to
+    a UserAccount — this is a pre-signup lead list, not a logged-in user's
+    email preferences (see UserEmailPreferences for that). source holds the
+    blog slug the capture fired on, for measuring which posts convert."""
+    __tablename__ = "email_leads"
+    id         = Column(Integer, primary_key=True, autoincrement=True)
+    email      = Column(String, nullable=False, unique=True, index=True)
+    source     = Column(String, nullable=True)
+    created_at = Column(DateTime, default=_now)
     updated_at   = Column(DateTime, default=_now, onupdate=_now)
 
 

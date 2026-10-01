@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
+import NewsletterCapture from '../components/NewsletterCapture'
 import { getPostBySlug, getRelatedPosts, formatPostDate } from '../blog/posts.jsx'
 import { BLOG_SEO } from '../blog/seoMeta'
 
@@ -381,6 +382,8 @@ export default function BlogPost() {
       )}
 
       <LandingFooter />
+
+      <NewsletterCapture source={post.slug} />
 
     </div>
   )
