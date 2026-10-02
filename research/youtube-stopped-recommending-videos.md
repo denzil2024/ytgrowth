@@ -9,7 +9,7 @@ read, two support.google threads and two yttalk threads never got past a
 one-line snippet, and tuberanker.com, the one article written for this
 exact query, had 403'd without a workaround attempt. See section 3b for
 the second pass.)
-Status: `research done, awaiting outline approval`
+Status: `published 2026-10-03 as /blog/youtube-stopped-recommending-videos, commit 309105de6`
 
 ---
 

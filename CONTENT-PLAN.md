@@ -169,8 +169,10 @@ reaching `/features/channel-audit` or checkout.
     top3: reddit, blackhatworld, facebook · PAA x4~~ — published
     2026-10-02 as `/blog/youtube-impressions-dropped-suddenly`, commit
     `c41fc7679`
-11. YouTube stopped recommending my videos (+ suggested traffic dropped) ·
-    Channel Audit · top3: reddit, support.google, quora · PAA x4
+~~11. YouTube stopped recommending my videos (+ suggested traffic dropped) ·
+    Channel Audit · top3: reddit, support.google, quora · PAA x4~~ — published
+    2026-10-03 as `/blog/youtube-stopped-recommending-videos`, commit
+    `309105de6`
 12. **DATA STUDY** How many views counts as viral on YouTube, measured as
     multiples of the channel's own median (+ is 2,000 views in a day good,
     first-week views by channel size) · Outliers · top3: reddit,
