@@ -117,14 +117,39 @@ A dedicated page is the cheapest win on the list.
 Funnel: existing creators reading their own Studio. CTA: Channel Audit /
 Weekly Report ("the specific issue, with a real number from your data").
 
-1. ~~YouTube traffic sources explained (+ direct or unknown traffic source, + reach tab) · Channel Audit · GSC pos 8.4-10.9 on 4 variants · top3: humbleandbrag, support.google, databox · Reddit #4~~ — published 2026-09-04 as `/blog/youtube-traffic-sources`, commit `480e8eab7`
-2. ~~VPH on YouTube, views per hour meaning · Outliers · GSC pos 6.5-8.0 on 3 variants ("vph in youtube meaning", "what does vph mean on youtube") · top3: support.vidiq, reddit, alanspicer~~ — published 2026-09-05 as `/blog/youtube-vph-meaning`, commit `68b0b5632`
-3. ~~How often YouTube Analytics updates (+ subscriber count not updating, + watch hours not updating) · Weekly Report · GSC pos 12.5 · top3: reddit, qqtube, webapps.stackexchange~~ — published 2026-09-23 as `/blog/youtube-analytics-delay`, commit `4203fde19`
-4. ~~Multiple YouTube channels on one AdSense account~~ — dropped 2026-09-23, `/blog/google-adsense-youtube` already owns this at H2+FAQ level (see "Dropped this round" for the evidence)
-5. ~~YouTube monetization under 18~~ — dropped 2026-09-23, `/blog/google-adsense-youtube` already owns this at H2+FAQ level (see "Dropped this round" for the evidence)
-6. ~~What an outlier video is on YouTube (+ outlier score, + free outlier finder) · Outliers · GSC: "youtube outlier finder" 1 click at pos 35, "youtube outliers" pos 33, "youtube outliers finder" pos 34 · top3: viewstats.zendesk, reddit, outlierkit~~ — published 2026-09-24 as `/blog/youtube-outlier-video`, commit `e982ccf17`
-7. ~~How to see YouTube Analytics for other channels · Competitor Analysis (via `/tools/youtube-channel-stats-checker`, the site's best-converting tool page: 15 clicks) · GSC pos 54-56 on 3 variants, currently landing on the analytics mega-guide · top3: clipchamp, reddit, reddit~~ — published 2026-09-25 as `/blog/youtube-channel-stats`, commit `ab0dbc62aa`
-8. ~~How to get more impressions on YouTube · Channel Audit · GSC pos 36.5 · top3: reddit, reddit, quora · PAA: "Why are my YouTube impressions low?"~~ — published 2026-09-26 as `/blog/youtube-more-impressions`, commit `9aa084845`
+1. ~~YouTube traffic sources explained (+ direct or unknown traffic source,
+   + reach tab) · Channel Audit · GSC pos 8.4-10.9 on 4 variants ·
+   top3: humbleandbrag, support.google, databox · Reddit #4~~ — published
+   2026-09-04 as `/blog/youtube-traffic-sources`, commit `480e8eab7`
+2. ~~VPH on YouTube, views per hour meaning · Outliers · GSC pos 6.5-8.0 on
+   3 variants ("vph in youtube meaning", "what does vph mean on youtube") ·
+   top3: support.vidiq, reddit, alanspicer~~ — published 2026-09-05 as
+   `/blog/youtube-vph-meaning`, commit `68b0b5632`
+3. ~~How often YouTube Analytics updates (+ subscriber count not updating,
+   + watch hours not updating) · Weekly Report · GSC pos 12.5 ·
+   top3: reddit, qqtube, webapps.stackexchange~~ — published 2026-09-23 as
+   `/blog/youtube-analytics-delay`, commit `4203fde19`
+4. ~~Multiple YouTube channels on one AdSense account~~ — dropped
+   2026-09-23, `/blog/google-adsense-youtube` already owns this at H2+FAQ
+   level (see "Dropped this round" for the evidence)
+5. ~~YouTube monetization under 18~~ — dropped 2026-09-23,
+   `/blog/google-adsense-youtube` already owns this at H2+FAQ level (see
+   "Dropped this round" for the evidence)
+6. ~~What an outlier video is on YouTube (+ outlier score, + free outlier
+   finder) · Outliers · GSC: "youtube outlier finder" 1 click at pos 35,
+   "youtube outliers" pos 33, "youtube outliers finder" pos 34 ·
+   top3: viewstats.zendesk, reddit, outlierkit~~ — published 2026-09-24 as
+   `/blog/youtube-outlier-video`, commit `e982ccf17`
+7. ~~How to see YouTube Analytics for other channels · Competitor Analysis
+   (via `/tools/youtube-channel-stats-checker`, the site's best-converting
+   tool page: 15 clicks) · GSC pos 54-56 on 3 variants, currently landing
+   on the analytics mega-guide · top3: clipchamp, reddit, reddit~~ —
+   published 2026-09-25 as `/blog/youtube-channel-stats`, commit
+   `ab0dbc62aa`
+8. ~~How to get more impressions on YouTube · Channel Audit · GSC pos 36.5 ·
+   top3: reddit, reddit, quora · PAA: "Why are my YouTube impressions low?"~~
+   — published 2026-09-26 as `/blog/youtube-more-impressions`, commit
+   `9aa084845`
 
 ## Block 2 · "Something dropped" (existing channels, the paying segment)
 
@@ -136,8 +161,14 @@ Funnel: problem-aware, monetized or near-monetized channel. CTA: Channel
 Audit ($5 Starter pack is the natural first purchase). KPI: tier-1 visitors
 reaching `/features/channel-audit` or checkout.
 
-9. ~~Why did my YouTube views drop suddenly · Channel Audit · top3: reddit, subscribr, youtube · Reddit #1 (r/NewTubers), 11 related "reddit" variants~~ — published 2026-10-01 as `/blog/youtube-views-dropped-suddenly`, commit `6593e1ca7`
-10. ~~YouTube impressions dropped suddenly · Channel Audit · top3: reddit, blackhatworld, facebook · PAA x4~~ — published 2026-10-02 as `/blog/youtube-impressions-dropped-suddenly`, commit `c41fc7679`
+9. ~~Why did my YouTube views drop suddenly · Channel Audit ·
+   top3: reddit, subscribr, youtube · Reddit #1 (r/NewTubers), 11 related
+   "reddit" variants~~ — published 2026-10-01 as
+   `/blog/youtube-views-dropped-suddenly`, commit `6593e1ca7`
+10. ~~YouTube impressions dropped suddenly · Channel Audit ·
+    top3: reddit, blackhatworld, facebook · PAA x4~~ — published
+    2026-10-02 as `/blog/youtube-impressions-dropped-suddenly`, commit
+    `c41fc7679`
 11. YouTube stopped recommending my videos (+ suggested traffic dropped) ·
     Channel Audit · top3: reddit, support.google, quora · PAA x4
 12. **DATA STUDY** How many views counts as viral on YouTube, measured as
