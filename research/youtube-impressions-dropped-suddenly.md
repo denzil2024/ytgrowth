@@ -4,7 +4,7 @@ Plan entry: `#10` · Feature: `Channel Audit` · Anchor post:
 `/blog/youtube-channel-not-growing` (also link: `/blog/youtube-algorithm`)
 Target query: `youtube impressions dropped suddenly`
 Researched: `2026-10-01`
-Status: `research done, awaiting outline approval`
+Status: `published 2026-10-02 as /blog/youtube-impressions-dropped-suddenly, commit c41fc7679`
 
 ---
 

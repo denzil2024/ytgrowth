@@ -165,8 +165,10 @@ reaching `/features/channel-audit` or checkout.
    top3: reddit, subscribr, youtube · Reddit #1 (r/NewTubers), 11 related
    "reddit" variants~~ — published 2026-10-01 as
    `/blog/youtube-views-dropped-suddenly`, commit `6593e1ca7`
-10. YouTube impressions dropped suddenly · Channel Audit ·
-    top3: reddit, blackhatworld, facebook · PAA x4
+~~10. YouTube impressions dropped suddenly · Channel Audit ·
+    top3: reddit, blackhatworld, facebook · PAA x4~~ — published
+    2026-10-02 as `/blog/youtube-impressions-dropped-suddenly`, commit
+    `c41fc7679`
 11. YouTube stopped recommending my videos (+ suggested traffic dropped) ·
     Channel Audit · top3: reddit, support.google, quora · PAA x4
 12. **DATA STUDY** How many views counts as viral on YouTube, measured as
