@@ -161,9 +161,10 @@ Funnel: problem-aware, monetized or near-monetized channel. CTA: Channel
 Audit ($5 Starter pack is the natural first purchase). KPI: tier-1 visitors
 reaching `/features/channel-audit` or checkout.
 
-9. Why did my YouTube views drop suddenly · Channel Audit ·
+~~9. Why did my YouTube views drop suddenly · Channel Audit ·
    top3: reddit, subscribr, youtube · Reddit #1 (r/NewTubers), 11 related
-   "reddit" variants
+   "reddit" variants~~ — published 2026-10-01 as
+   `/blog/youtube-views-dropped-suddenly`, commit `6593e1ca7`
 10. YouTube impressions dropped suddenly · Channel Audit ·
     top3: reddit, blackhatworld, facebook · PAA x4
 11. YouTube stopped recommending my videos (+ suggested traffic dropped) ·

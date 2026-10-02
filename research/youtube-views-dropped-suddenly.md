@@ -4,7 +4,7 @@ Plan entry: `#9` · Feature: `Channel Audit` · Anchor post:
 `/blog/youtube-channel-not-growing` (also link: `/blog/youtube-algorithm`)
 Target query: `why did my youtube views drop suddenly`
 Researched: `2026-10-01`
-Status: `research done, awaiting outline approval`
+Status: `published 2026-10-01 as /blog/youtube-views-dropped-suddenly, commit 6593e1ca7`
 
 ---
 
