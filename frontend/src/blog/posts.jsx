@@ -11017,7 +11017,7 @@ Free studio checklist: https://yoursite.com/checklist
         <ol>
           <li><strong>Check CTR in the first 48 hours:</strong> The first 48 hours is when YouTube tests your video against a sample audience. A CTR below 4% in that window means the thumbnail or title needs updating before the test period closes and distribution slows. If CTR and retention already look fine and <a href="/blog/youtube-more-impressions">impressions are still capped</a>, that points to a different problem than packaging.</li>
           <li><strong>Check the retention graph at the 48-hour mark:</strong> Identify the timestamp where the largest viewer drop occurs. Watch the video from 30 seconds before that timestamp to understand what caused the drop. Apply that learning to the next video's script or edit.</li>
-          <li><strong>Check traffic sources after seven days:</strong> Identify whether views are coming from search, suggested feed, browse features, or external sources. A video pulling strong search traffic but weak suggested feed placement has good SEO but needs stronger CTR and retention to trigger broader algorithmic distribution.</li>
+          <li><strong>Check traffic sources after seven days:</strong> Identify whether views are coming from search, suggested feed, browse features, or external sources. A video pulling strong search traffic but weak suggested feed placement has good SEO but needs stronger CTR and retention to trigger broader algorithmic distribution. If suggested traffic has <a href="/blog/youtube-stopped-recommending-videos">dropped off specifically</a>, that has its own separate set of causes worth checking before assuming it's a packaging problem.</li>
         </ol>
 
         <p>Tracking these three data points consistently across every upload builds a clear picture of what your specific audience responds to. That picture is more valuable than any generic YouTube growth advice because it is built entirely from your own channel's real performance data.</p>
@@ -16704,7 +16704,7 @@ Free studio checklist: https://yoursite.com/checklist
           </tbody>
         </table>
 
-        <p>The <a href="/blog/youtube-seo-best-practices">2026 SEO blueprint</a> goes deeper on the specific 6% CTR and 50% AVD benchmarks that flip the algorithm into Browse and Suggested distribution.</p>
+        <p>The <a href="/blog/youtube-seo-best-practices">2026 SEO blueprint</a> goes deeper on the specific 6% CTR and 50% AVD benchmarks that flip the algorithm into Browse and Suggested distribution. If Suggested placement dropped off specifically, <a href="/blog/youtube-stopped-recommending-videos">why that happens</a> is worth checking directly.</p>
 
         <h3>CTR: The Packaging Metric</h3>
 
@@ -18855,7 +18855,105 @@ Free studio checklist: https://yoursite.com/checklist
       </>
     ),
   },
+  {
+    slug: 'youtube-stopped-recommending-videos',
+    title: 'YouTube Stopped Recommending My Videos: The Real Reasons',
+    excerpt: "Most advice on this still explains the algorithm the way it worked in 2023. Session contribution is now the leading signal for Suggested placement, and Shorts recommendation has been fully separate from long-form since late 2025, two current facts that change what's worth checking first.",
+    date: '2026-10-03',
+    category: CATEGORIES.growth,
+    cover: '/blog/youtube-stopped-recommending-videos-cover.jpg',
+    coverAlt: 'A person on a couch holding a tablet showing the YouTube app\'s Up Next panel, warm lamp-lit living room in the background',
+    author: 'Denzil',
+    readTime: '9 min read',
+    faqs: [
+      { q: 'Why is YouTube not suggesting my videos anymore?', a: "Check whether your recent uploads lead viewers into watching something else afterward. <strong>Session contribution, whether a video extends a viewer's time on YouTube, is the leading signal for Suggested placement</strong>, ahead of watch time alone. A video that holds attention but ends the session there gets suggested less than one that leads into another video. Posting inconsistency and weak titles or thumbnails are the other common, fixable causes." },
+      { q: 'What happened to my recommended videos on YouTube?', a: "Three separate things can cause this. <strong>Older uploads keep getting recommended longer than brand-new ones</strong>, since newer videos need time to build engagement signals. A run of recent uploads with weak retention can pull back Suggested placement channel-wide. If you've run paid promotion recently, some creators report it affecting organic reach afterward, though YouTube disputes a direct link." },
+      { q: 'Why is YouTube not pushing my videos?', a: "Check Studio's traffic sources first to confirm it's specifically Suggested that dropped, not views or impressions overall, those have their own causes. <strong>If Suggested fell while Search stayed stable, a recent video's weaker retention or session contribution explains it</strong> more often than a platform-wide change does." },
+      { q: 'Why did YouTube suddenly stop recommending my videos?', a: "Rule out the confirmable causes first: a strike or restriction in Studio's Content tab, and whether your last few uploads performed noticeably worse on retention than your normal range. <strong>If neither applies, the algorithm is deprioritizing content that doesn't extend viewing sessions</strong>, a 2026 ranking shift that affects channels with no policy issues at all." },
+      { q: 'How do I get YouTube to recommend my videos?', a: "There's no reset or override, Suggested placement rebuilds the same way it was earned. <strong>Focus new uploads on content that leads naturally into more watching</strong>: a strong end screen, a series, or a topic your audience already watches more of afterward. Consistent posting and steady retention across several uploads matter more than fixing any single video." },
+    ],
+    content: () => (
+      <>
+        <p><strong>Two facts changed how Suggested placement works, and neither is reflected in most existing guides on this topic.</strong> Session contribution, not watch time by itself, is now the leading ranking signal. Shorts recommendation has been fully separate from long-form since late 2025. Check Studio's traffic sources first: this article is about Suggested specifically, not views or impressions overall, which have their own causes.</p>
 
+        <h2>Shorts and Long-Form Run on Separate Systems</h2>
+
+        <p><strong>A Shorts drop and a long-form drop are unrelated problems.</strong> YouTube fully separated the Shorts recommendation engine from long-form in late 2025. Before the split, weak Shorts performance could drag down long-form distribution on the same channel. It no longer can.</p>
+
+        <p>Shorts rank on <strong>swipe-through rate and loop rate</strong>: how many viewers keep watching past the first second, and how many watch it more than once. Long-form ranks on satisfaction signals and retention curves. Applying long-form fixes to a Shorts problem, or the reverse, targets the wrong metric.</p>
+
+        <h2>Session Contribution Decides Suggested Placement</h2>
+
+        <p><strong>A video that leads a viewer into watching something else gets weighted more heavily for Suggested placement than one that ends the session.</strong> This is the leading 2026 ranking factor, ahead of watch time alone, part of <a href="/blog/youtube-algorithm">the shift</a> toward satisfaction-based ranking. A video can hold attention for its full length and still get suggested less if viewers close the app right after.</p>
+
+        <blockquote><strong>Pro Tip:</strong> check the Audience tab for what viewers watch immediately after your videos. A strong end screen, a next-video prompt, or content that's part of a series extends sessions. A standalone video with nowhere to go next doesn't.</blockquote>
+
+        <p>Duration measures whether viewers stayed. <strong>Session contribution measures what they did next.</strong> Two videos with identical average view duration can get very different Suggested traffic for exactly this reason.</p>
+
+        <p>YouTube's own documentation names a second signal here: <strong>channel reputation and quality, assessed partly through external evaluator ratings on sensitive topics.</strong> This mainly affects news, health, and finance channels; for most niches, session contribution and retention carry far more weight.</p>
+
+        <h2>Three Causes With No Gray Area</h2>
+
+        <p>Weak titles and thumbnails, inconsistent topics, and an irregular upload schedule are the three causes with no gray area. <strong>Each one gives the algorithm a worse signal to work with, and each one is fixable without waiting on anything to reset.</strong></p>
+
+        <p>A title or thumbnail that doesn't say clearly what the video is about gets a lower CTR, which lowers Suggested placement directly. <strong>Jumping between unrelated topics makes it harder for YouTube to match your channel to a specific audience</strong>, so it defaults to showing you less broadly instead of more. Gaps of several weeks between uploads cost the channel some of the distribution trust it built, and that trust rebuilds gradually, not on the next upload alone.</p>
+
+        <h2>Older Videos Keep Getting Suggested Longer Than New Ones</h2>
+
+        <p><strong>A new upload gets less Suggested traffic than videos published months earlier on the same channel, because the algorithm hasn't accumulated engagement data on it yet.</strong> Multiple creators report this pattern independently: a fresh video underperforms next to older uploads with the same style and the same audience.</p>
+
+        <p>This resolves as the video accumulates its own watch history and session data, <strong>typically within one to two weeks, not on publish</strong>.</p>
+
+        <h2>Viewer Feedback Shapes Distribution, Slowly</h2>
+
+        <p>"Not Interested" and "Don't Recommend Channel" are real controls, and a 2022 Mozilla Foundation study measured exactly how effective each one is. <strong>"Don't Recommend Channel" reduced unwanted recommendations from that channel by 43%. "Not Interested" reduced them by 11%.</strong></p>
+
+        <p>A single click from one viewer does not erase a video's reach. <strong>This cause shows up as a slow decline concentrated in Suggested specifically</strong>, not a sudden cliff, and it takes a meaningful share of viewers opting out to move the number.</p>
+
+        <h2>Paid Promotion: Creators Report It, YouTube Disputes It</h2>
+
+        <p><strong>Independent creator reports describe organic Suggested traffic dropping after a paid YouTube Promotion campaign ends.</strong> YouTube states promotion does not affect monetization and treats it as separate from organic reach. Neither claim is confirmed.</p>
+
+        <p>Check your own timeline: did Suggested traffic fall shortly after a promotion campaign ended? <strong>If the dates line up, treat it as one hypothesis worth ruling in or out</strong>, not an assumed cause.</p>
+
+        <h2>Rule Out a Platform-Wide Event Last</h2>
+
+        <p><strong>Confirm whether other creators in your niche saw the same drop on the same date before assuming a platform-wide cause.</strong> One widely circulated 2025 theory blamed Restricted Mode for a documented view-drop event; YouTube officially denied it, attributing the fluctuation to seasonality and ad-blocker-related undercounting instead.</p>
+
+        <p>If views dropped broadly rather than just Suggested traffic, <a href="/blog/youtube-views-dropped-suddenly">a sudden view drop</a> covers that case, including the same undercounting event. If Suggested has been weak since the channel started rather than dropping suddenly, <a href="/blog/youtube-channel-not-growing">why channels stall</a> is the one to read instead.</p>
+
+        <p><strong>A <a href="/features/channel-audit">Channel Audit</a> reads your actual Traffic Source Intelligence data</strong>, confirming whether Suggested fell on its own or alongside everything else. That single distinction determines which cause above to check first.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Confirm it's Suggested traffic specifically"
+          sub="A free Channel Audit reads your real traffic source breakdown, so you know whether Suggested dropped on its own or alongside everything else."
+          button="Run a free Channel Audit →"
+        />
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Why is YouTube not suggesting my videos anymore?</h3>
+        <p>Check whether your recent uploads lead viewers into watching something else afterward. <strong>Session contribution, whether a video extends a viewer's time on YouTube, is the leading signal for Suggested placement</strong>, ahead of watch time alone. A video that holds attention but ends the session there gets suggested less than one that leads into another video. Posting inconsistency and weak titles or thumbnails are the other common, fixable causes.</p>
+
+        <h3>What happened to my recommended videos on YouTube?</h3>
+        <p>Three separate things can cause this. <strong>Older uploads keep getting recommended longer than brand-new ones</strong>, since newer videos need time to build engagement signals. A run of recent uploads with weak retention can pull back Suggested placement channel-wide. If you've run paid promotion recently, some creators report it affecting organic reach afterward, though YouTube disputes a direct link.</p>
+
+        <h3>Why is YouTube not pushing my videos?</h3>
+        <p>Check Studio's traffic sources first to confirm it's specifically Suggested that dropped, not views or impressions overall, those have their own causes. <strong>If Suggested fell while Search stayed stable, a recent video's weaker retention or session contribution explains it</strong> more often than a platform-wide change does.</p>
+
+        <h3>Why did YouTube suddenly stop recommending my videos?</h3>
+        <p>Rule out the confirmable causes first: a strike or restriction in Studio's Content tab, and whether your last few uploads performed noticeably worse on retention than your normal range. <strong>If neither applies, the algorithm is deprioritizing content that doesn't extend viewing sessions</strong>, a 2026 ranking shift that affects channels with no policy issues at all.</p>
+
+        <h3>How do I get YouTube to recommend my videos?</h3>
+        <p>There's no reset or override, Suggested placement rebuilds the same way it was earned. <strong>Focus new uploads on content that leads naturally into more watching</strong>: a strong end screen, a series, or a topic your audience already watches more of afterward. Consistent posting and steady retention across several uploads matter more than fixing any single video.</p>
+
+        <h2>Suggested Fell. Views and Impressions Did Not. Start There.</h2>
+
+        <p><strong>"YouTube stopped recommending my videos" means Suggested traffic fell, not views or impressions as a whole.</strong> Confirm that in Studio first. Then check session contribution, video age, viewer feedback signals, and a platform-wide event, in that order. Fix the cause your own traffic-source data points to, not the one that comes up first in a search result.</p>
+      </>
+    ),
+  },
 ]
 
 export function getPostBySlug(slug) {
