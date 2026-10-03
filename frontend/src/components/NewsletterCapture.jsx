@@ -245,8 +245,8 @@ export function NewsletterCaptureTimed({ source, delayMs = DEFAULT_DELAY_MS }) {
       visible={visible}
       dismissed={dismissed}
       source={source}
-      headline="More free tools, one email away"
-      body="We ship new YouTube data and free tools regularly. No spam, unsubscribe anytime."
+      headline="Get the next data study first"
+      body="One email when we publish new YouTube data. No spam, unsubscribe anytime."
       onDismissed={() => { setVisible(false); setDismissed(true) }}
     />
   )
