@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
+import { NewsletterCaptureTimed } from '../../components/NewsletterCapture'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
 import MoneyCalculatorWidget from '../../components/MoneyCalculatorWidget'
@@ -258,6 +259,8 @@ export default function YoutubeMoneyCalculator() {
       </div>
 
       <LandingFooter />
+
+      <NewsletterCaptureTimed source="youtube-money-calculator" />
     </div>
   )
 }

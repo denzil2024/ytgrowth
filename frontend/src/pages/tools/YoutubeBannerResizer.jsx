@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import LandingFooter from '../../components/LandingFooter'
+import { NewsletterCaptureTimed } from '../../components/NewsletterCapture'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
 
@@ -735,6 +736,8 @@ export default function YoutubeBannerResizer() {
       </section>
 
       <LandingFooter />
+
+      <NewsletterCaptureTimed source="youtube-banner-resizer" />
 
     </div>
   )

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import LandingFooter from '../../components/LandingFooter'
+import { NewsletterCaptureTimed } from '../../components/NewsletterCapture'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
 import EstimateTag from '../../components/EstimateTag'
@@ -660,6 +661,8 @@ export default function YoutubeChannelStatsChecker() {
       </div>
 
       <LandingFooter />
+
+      <NewsletterCaptureTimed source="youtube-channel-stats-checker" />
     </div>
   )
 }

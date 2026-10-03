@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import LandingFooter from '../../components/LandingFooter'
+import { NewsletterCaptureTimed } from '../../components/NewsletterCapture'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
 
@@ -627,6 +628,8 @@ export default function YoutubeChannelNameGenerator() {
       </div>
 
       <LandingFooter />
+
+      <NewsletterCaptureTimed source="youtube-channel-name-generator" />
     </div>
   )
 }

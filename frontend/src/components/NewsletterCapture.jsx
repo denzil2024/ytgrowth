@@ -1,9 +1,17 @@
-/* Scroll-triggered email capture for blog posts. Slides up from the
-   bottom-right once the reader has gotten ~25% through the article — not a
-   blocking modal (PrepayModal is for checkout; this shouldn't interrupt
-   reading). Dismiss is sticky per-browser via localStorage so a visitor who
-   says no is never asked again. Matches PrepayModal's token set and
-   stage-swap pattern (form → done). */
+/* Email capture card, slides up from the bottom-right — not a blocking modal
+   (PrepayModal is for checkout; this shouldn't interrupt the page). Dismiss
+   is sticky per-browser via localStorage so a visitor who says no is never
+   asked again. Matches PrepayModal's token set and stage-swap pattern
+   (form → done).
+
+   Two trigger variants share the same card:
+   - NewsletterCapture        (blog posts): scroll-depth band, 25%-90%, so it
+     appears once the reader is into the article and hides again before the
+     dark footer so it never overlaps it.
+   - NewsletterCaptureTimed   (free tools): plain delay. Tool pages are short
+     and utility-focused (run the tool, get a result, done) — scroll depth
+     doesn't map the same way there, so it just waits `delayMs` after the
+     page loads regardless of scroll position. */
 
 import { useEffect, useState, useRef } from 'react'
 
@@ -18,45 +26,14 @@ const LINE   = 'rgba(20,19,15,0.12)'
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 const DISMISS_KEY = 'ytg_newsletter_dismissed'
-// Shown only in this scroll-depth band: appears once the reader is well into
-// the article, hides again near the footer so it never overlaps it (the
-// footer's own bottom padding/CTA band sits below SCROLL_HIDE).
-const SCROLL_SHOW = 0.25
-const SCROLL_HIDE = 0.9
 
-export default function NewsletterCapture({ source }) {
-  const [visible, setVisible] = useState(false)
-  const [dismissed, setDismissed] = useState(false)
+function Card({ visible, dismissed, source, headline, body, onDismissed }) {
   const [email, setEmail] = useState('')
   const [stage, setStage] = useState('form') // 'form' | 'sending' | 'done'
   const [error, setError] = useState('')
-  const everShownRef = useRef(false)
-
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(DISMISS_KEY)) {
-        setDismissed(true)
-        return
-      }
-    } catch {}
-
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight
-      const progress = max > 0 ? window.scrollY / max : 0
-      const inBand = progress >= SCROLL_SHOW && progress < SCROLL_HIDE
-      if (inBand) everShownRef.current = true
-      // Once it's appeared, keep rendering it (even below SCROLL_SHOW, e.g.
-      // if the reader scrolls back up) so it doesn't flicker in and out —
-      // only the footer band actually hides it.
-      setVisible(everShownRef.current && progress < SCROLL_HIDE)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   const dismiss = () => {
-    setVisible(false)
+    onDismissed()
     try { localStorage.setItem(DISMISS_KEY, '1') } catch {}
   }
 
@@ -155,11 +132,11 @@ export default function NewsletterCapture({ source }) {
                 </svg>
               </div>
               <h3 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 19, color: INK, letterSpacing: '-0.01em', lineHeight: 1.2, margin: 0 }}>
-                Get the next data study first
+                {headline}
               </h3>
             </div>
             <p style={{ fontFamily: SANS, fontSize: 13, color: SOFT, lineHeight: 1.55, margin: '0 0 14px' }}>
-              One email when we publish new YouTube data. No spam, unsubscribe anytime.
+              {body}
             </p>
             <form onSubmit={submit} style={{ display: 'flex', gap: 8 }}>
               <input
@@ -197,3 +174,82 @@ export default function NewsletterCapture({ source }) {
     </div>
   )
 }
+
+function useDismissed() {
+  const [dismissed, setDismissed] = useState(false)
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(DISMISS_KEY)) setDismissed(true)
+    } catch {}
+  }, [])
+  return [dismissed, setDismissed]
+}
+
+// Shown only in this scroll-depth band: appears once the reader is well into
+// the article, hides again near the footer so it never overlaps it (the
+// footer's own bottom padding/CTA band sits below SCROLL_HIDE).
+const SCROLL_SHOW = 0.25
+const SCROLL_HIDE = 0.9
+
+export function NewsletterCapture({ source }) {
+  const [visible, setVisible] = useState(false)
+  const [dismissed, setDismissed] = useDismissed()
+  const everShownRef = useRef(false)
+
+  useEffect(() => {
+    if (dismissed) return
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const progress = max > 0 ? window.scrollY / max : 0
+      const inBand = progress >= SCROLL_SHOW && progress < SCROLL_HIDE
+      if (inBand) everShownRef.current = true
+      // Once it's appeared, keep rendering it (even below SCROLL_SHOW, e.g.
+      // if the reader scrolls back up) so it doesn't flicker in and out —
+      // only the footer band actually hides it.
+      setVisible(everShownRef.current && progress < SCROLL_HIDE)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [dismissed])
+
+  return (
+    <Card
+      visible={visible}
+      dismissed={dismissed}
+      source={source}
+      headline="Get the next data study first"
+      body="One email when we publish new YouTube data. No spam, unsubscribe anytime."
+      onDismissed={() => { setVisible(false); setDismissed(true) }}
+    />
+  )
+}
+
+// Free tool pages are short and utility-focused (run the tool, read the
+// result, done) — scroll depth doesn't mean the same thing there, so this
+// variant just waits a flat delay after mount instead.
+const DEFAULT_DELAY_MS = 20000
+
+export function NewsletterCaptureTimed({ source, delayMs = DEFAULT_DELAY_MS }) {
+  const [visible, setVisible] = useState(false)
+  const [dismissed, setDismissed] = useDismissed()
+
+  useEffect(() => {
+    if (dismissed) return
+    const t = setTimeout(() => setVisible(true), delayMs)
+    return () => clearTimeout(t)
+  }, [dismissed, delayMs])
+
+  return (
+    <Card
+      visible={visible}
+      dismissed={dismissed}
+      source={source}
+      headline="More free tools, one email away"
+      body="We ship new YouTube data and free tools regularly. No spam, unsubscribe anytime."
+      onDismissed={() => { setVisible(false); setDismissed(true) }}
+    />
+  )
+}
+
+export default NewsletterCapture

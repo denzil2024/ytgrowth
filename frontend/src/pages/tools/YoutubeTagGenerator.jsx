@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
+import { NewsletterCaptureTimed } from '../../components/NewsletterCapture'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
 
@@ -311,6 +312,8 @@ export default function YoutubeTagGenerator() {
       </div>
 
       <LandingFooter />
+
+      <NewsletterCaptureTimed source="youtube-tag-generator" />
     </div>
   )
 }
