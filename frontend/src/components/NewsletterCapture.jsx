@@ -1,5 +1,5 @@
 /* Scroll-triggered email capture for blog posts. Slides up from the
-   bottom-right once the reader has gotten ~50% through the article — not a
+   bottom-right once the reader has gotten ~25% through the article — not a
    blocking modal (PrepayModal is for checkout; this shouldn't interrupt
    reading). Dismiss is sticky per-browser via localStorage so a visitor who
    says no is never asked again. Matches PrepayModal's token set and
@@ -21,7 +21,7 @@ const DISMISS_KEY = 'ytg_newsletter_dismissed'
 // Shown only in this scroll-depth band: appears once the reader is well into
 // the article, hides again near the footer so it never overlaps it (the
 // footer's own bottom padding/CTA band sits below SCROLL_HIDE).
-const SCROLL_SHOW = 0.5
+const SCROLL_SHOW = 0.25
 const SCROLL_HIDE = 0.9
 
 export default function NewsletterCapture({ source }) {
