@@ -228,7 +228,7 @@ export function NewsletterCapture({ source }) {
 // Free tool pages are short and utility-focused (run the tool, read the
 // result, done) — scroll depth doesn't mean the same thing there, so this
 // variant just waits a flat delay after mount instead.
-const DEFAULT_DELAY_MS = 20000
+const DEFAULT_DELAY_MS = 8000
 
 export function NewsletterCaptureTimed({ source, delayMs = DEFAULT_DELAY_MS }) {
   const [visible, setVisible] = useState(false)
