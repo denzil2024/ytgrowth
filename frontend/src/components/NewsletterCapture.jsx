@@ -146,25 +146,22 @@ function Card({ visible, dismissed, source, headline, body, onDismissed }) {
               </svg>
             </div>
             <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: INK, letterSpacing: '-0.01em', lineHeight: 1.2, marginBottom: 10 }}>
-              You're on the list
+              You're in
             </h2>
             <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.6, maxWidth: 340, marginLeft: 'auto', marginRight: 'auto' }}>
-              New data studies land there first.
+              New data studies land in your inbox before anywhere else.
             </p>
           </>
         ) : (
           <>
-            <div style={{
-              width: 48, height: 48, borderRadius: 0,
-              background: ACCENT,
-              margin: '0 auto 20px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/>
-              </svg>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ACCENT }} />
+              <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>
+                Data studies
+              </span>
+              <span aria-hidden="true" style={{ width: 26, height: 1, background: ACCENT }} />
             </div>
-            <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: INK, letterSpacing: '-0.01em', lineHeight: 1.18, marginBottom: 12 }}>
+            <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 28, color: INK, letterSpacing: '-0.01em', lineHeight: 1.15, marginBottom: 12 }}>
               {headline}
             </h2>
             <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.6, marginBottom: 22, maxWidth: 360, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -195,12 +192,21 @@ function Card({ visible, dismissed, source, headline, body, onDismissed }) {
                   width: '100%',
                   background: ACCENT,
                   color: '#ffffff',
-                  fontFamily: SANS, fontSize: 14, fontWeight: 600,
+                  fontFamily: SANS, fontSize: 13.5, fontWeight: 700,
                   padding: '13px 24px', borderRadius: 0,
                   border: 'none', cursor: stage === 'sending' ? 'default' : 'pointer',
-                  letterSpacing: '-0.1px', opacity: stage === 'sending' ? 0.7 : 1,
-                }}>
-                {stage === 'sending' ? 'Joining…' : 'Join'}
+                  letterSpacing: '0.04em', textTransform: 'uppercase',
+                  opacity: stage === 'sending' ? 0.7 : 1,
+                  transition: 'filter 0.15s',
+                }}
+                onMouseEnter={e => { if (stage !== 'sending') e.currentTarget.style.filter = 'brightness(1.08)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}>
+                {stage === 'sending' ? 'Sending…' : "Count me in"}
+                {stage !== 'sending' && (
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                )}
               </button>
             </form>
           </>
