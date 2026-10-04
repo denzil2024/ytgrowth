@@ -70,7 +70,7 @@ try {
   await page.screenshot({ path: afterFile })
   console.log('wrote', afterFile)
 
-  const cardVisible = await page.evaluate(() => document.body.innerText.includes('More free tools, one email away'))
+  const cardVisible = await page.evaluate(() => document.body.innerText.includes('Get the next data study first'))
   console.log('card visible after delay:', cardVisible)
 
   const dismissBtn = await page.$('button[aria-label="Dismiss"]')

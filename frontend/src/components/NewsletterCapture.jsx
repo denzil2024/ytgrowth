@@ -1,13 +1,17 @@
-/* Email capture card, slides up from the bottom-right — not a blocking modal
-   (PrepayModal is for checkout; this shouldn't interrupt the page). Dismiss
-   is sticky per-browser via localStorage so a visitor who says no is never
-   asked again. Matches PrepayModal's token set and stage-swap pattern
-   (form → done).
+/* Email capture modal, centered with a dimmed backdrop — same pattern as
+   PrepayModal. Originally shipped as a small bottom-right slide-up card,
+   but that's a documented weak pattern (Sumo/cross-vendor data puts
+   bottom-right/corner widgets around 0.5-1% conversion vs. 3-5% for
+   centered modals, partly "right-rail blindness," partly getting visually
+   filtered as a chat widget) — switched 2026-10-04 after the card produced
+   zero signups across several days of 20+/day traffic. Dismiss is sticky
+   per-browser via localStorage so a visitor who says no is never asked
+   again. Matches PrepayModal's token set and stage-swap pattern (form → done).
 
-   Two trigger variants share the same card:
+   Two trigger variants share the same modal:
    - NewsletterCapture        (blog posts): scroll-depth band, 25%-90%, so it
-     appears once the reader is into the article and hides again before the
-     dark footer so it never overlaps it.
+     appears once the reader is into the article and stops re-triggering
+     near the footer.
    - NewsletterCaptureTimed   (free tools): plain delay. Tool pages are short
      and utility-focused (run the tool, get a result, done) — scroll depth
      doesn't map the same way there, so it just waits `delayMs` after the
@@ -66,108 +70,139 @@ function Card({ visible, dismissed, source, headline, body, onDismissed }) {
     }
   }
 
+  useEffect(() => {
+    if (!visible || dismissed) return
+    const onKey = (e) => { if (e.key === 'Escape') dismiss() }
+    window.addEventListener('keydown', onKey)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prevOverflow
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, dismissed])
+
   if (dismissed || !visible) return null
 
   return (
     <div
+      onClick={dismiss}
       style={{
-        position: 'fixed', bottom: 20, right: 20, left: 20,
-        maxWidth: 380, marginLeft: 'auto',
-        zIndex: 900, fontFamily: SANS,
-        animation: 'ync-slide-up 0.3s cubic-bezier(0.2, 0.7, 0.3, 1)',
+        position: 'fixed', inset: 0, zIndex: 1100,
+        background: 'rgba(20,19,15,0.5)',
+        backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 24,
+        fontFamily: SANS,
+        animation: 'ync-fade 0.16s ease',
       }}>
       <style>{`
-        @keyframes ync-slide-up { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
+        @keyframes ync-fade { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes ync-pop  { from { opacity: 0; transform: translateY(8px) scale(0.98) } to { opacity: 1; transform: none } }
       `}</style>
 
-      <div style={{
-        position: 'relative',
-        background: '#ffffff',
-        border: `1px solid ${LINE}`,
-        boxShadow: '0 12px 32px rgba(20,19,15,0.18)',
-        padding: '22px 24px 20px',
-      }}>
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          position: 'relative',
+          background: '#ffffff',
+          border: `1px solid ${LINE}`,
+          borderRadius: 0,
+          boxShadow: '0 12px 32px rgba(20,19,15,0.14)',
+          padding: '32px 36px 28px',
+          maxWidth: 440, width: '100%',
+          textAlign: 'center',
+          animation: 'ync-pop 0.22s cubic-bezier(0.2, 0.7, 0.3, 1)',
+        }}>
         <button
           onClick={dismiss}
           aria-label="Dismiss"
           style={{
-            position: 'absolute', top: 10, right: 10,
-            width: 26, height: 26, border: 'none', background: 'transparent',
+            position: 'absolute', top: 14, right: 14,
+            width: 30, height: 30, borderRadius: 0,
+            border: 'none', background: 'transparent',
             color: MUTED, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.15s, color 0.15s',
           }}
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(20,19,15,0.06)'; e.currentTarget.style.color = INK }}
           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = MUTED }}>
-          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M3 3l8 8M11 3l-8 8"/>
           </svg>
         </button>
 
         {stage === 'done' ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <>
             <div style={{
-              width: 36, height: 36, flexShrink: 0,
+              width: 48, height: 48, borderRadius: 0,
               background: GREEN,
+              margin: '0 auto 20px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <p style={{ fontFamily: SANS, fontSize: 14, color: INK, lineHeight: 1.5, margin: 0 }}>
-              You're on the list. New data studies land there first.
+            <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: INK, letterSpacing: '-0.01em', lineHeight: 1.2, marginBottom: 10 }}>
+              You're on the list
+            </h2>
+            <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.6, maxWidth: 340, marginLeft: 'auto', marginRight: 'auto' }}>
+              New data studies land there first.
             </p>
-          </div>
+          </>
         ) : (
           <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-              <div style={{
-                width: 30, height: 30, flexShrink: 0,
-                background: ACCENT,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/>
-                </svg>
-              </div>
-              <h3 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 19, color: INK, letterSpacing: '-0.01em', lineHeight: 1.2, margin: 0 }}>
-                {headline}
-              </h3>
+            <div style={{
+              width: 48, height: 48, borderRadius: 0,
+              background: ACCENT,
+              margin: '0 auto 20px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/>
+              </svg>
             </div>
-            <p style={{ fontFamily: SANS, fontSize: 13, color: SOFT, lineHeight: 1.55, margin: '0 0 14px' }}>
+            <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: INK, letterSpacing: '-0.01em', lineHeight: 1.18, marginBottom: 12 }}>
+              {headline}
+            </h2>
+            <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.6, marginBottom: 22, maxWidth: 360, marginLeft: 'auto', marginRight: 'auto' }}>
               {body}
             </p>
-            <form onSubmit={submit} style={{ display: 'flex', gap: 8 }}>
+            <form onSubmit={submit}>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@email.com"
+                autoFocus
                 style={{
-                  flex: 1, minWidth: 0, boxSizing: 'border-box',
-                  fontFamily: SANS, fontSize: 13.5, padding: '10px 12px',
+                  width: '100%', boxSizing: 'border-box',
+                  fontFamily: SANS, fontSize: 14, padding: '12px 14px', marginBottom: 12,
                   border: `1px solid ${error ? ACCENT : LINE}`,
-                  outline: 'none', color: INK,
+                  borderRadius: 0, outline: 'none', color: INK,
                 }}
               />
+              {error && (
+                <div style={{ fontFamily: SANS, fontSize: 12.5, color: ACCENT, marginBottom: 12, textAlign: 'left' }}>{error}</div>
+              )}
               <button
                 type="submit"
                 disabled={stage === 'sending'}
                 style={{
-                  flexShrink: 0,
-                  background: ACCENT, color: '#fff',
-                  fontFamily: SANS, fontSize: 13, fontWeight: 600,
-                  padding: '10px 16px', border: 'none',
-                  cursor: stage === 'sending' ? 'default' : 'pointer',
-                  opacity: stage === 'sending' ? 0.7 : 1,
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  width: '100%',
+                  background: ACCENT,
+                  color: '#ffffff',
+                  fontFamily: SANS, fontSize: 14, fontWeight: 600,
+                  padding: '13px 24px', borderRadius: 0,
+                  border: 'none', cursor: stage === 'sending' ? 'default' : 'pointer',
+                  letterSpacing: '-0.1px', opacity: stage === 'sending' ? 0.7 : 1,
                 }}>
-                {stage === 'sending' ? '…' : 'Join'}
+                {stage === 'sending' ? 'Joining…' : 'Join'}
               </button>
             </form>
-            {error && (
-              <div style={{ fontFamily: SANS, fontSize: 12, color: ACCENT, marginTop: 8 }}>{error}</div>
-            )}
           </>
         )}
       </div>
@@ -186,8 +221,8 @@ function useDismissed() {
 }
 
 // Shown only in this scroll-depth band: appears once the reader is well into
-// the article, hides again near the footer so it never overlaps it (the
-// footer's own bottom padding/CTA band sits below SCROLL_HIDE).
+// the article, stops re-triggering once they're basically done scrolling
+// (past 90%) so it doesn't interrupt right as they finish reading.
 const SCROLL_SHOW = 0.25
 const SCROLL_HIDE = 0.9
 
