@@ -39,7 +39,7 @@ export default function Privacy() {
             <span className="bp-eyebrow-text">Legal</span>
           </span>
           <h1 className="bp-h1" style={{ fontSize: isMobile ? 32 : 48, letterSpacing: '-0.4px' }}>Privacy Policy</h1>
-          <p className="bp-byline-meta" style={{ marginTop: 18 }}>Last updated April 10, 2026</p>
+          <p className="bp-byline-meta" style={{ marginTop: 18 }}>Last updated October 4, 2026</p>
         </div>
       </section>
 
@@ -67,7 +67,7 @@ export default function Privacy() {
           <ul>
             <li>To provide AI-powered analysis of your YouTube channel.</li>
             <li>To enforce token limits and billing entitlements.</li>
-            <li>To send transactional emails (billing receipts, usage warnings). No marketing emails without consent.</li>
+            <li>To send transactional emails (billing receipts, usage warnings) and occasional product updates or YouTube data studies by email. Every marketing email includes a one-click unsubscribe, and opting out never affects your account or transactional emails.</li>
             <li>To improve our AI using aggregated, anonymised patterns only, never your personal channel data.</li>
           </ul>
 
