@@ -26,15 +26,24 @@ from sqlalchemy import text
 from database.models import SessionLocal
 
 TTL_HOURS = 24
+BATCH_SIZE = 2000
 
 COUNT_QUERY = text(
     "SELECT COUNT(*) FROM public_channel_stats_cache "
     "WHERE cached_at < NOW() - make_interval(hours => :ttl_hours)"
 )
 
-DELETE_QUERY = text(
+# Batched delete: deletes BATCH_SIZE rows per transaction instead of all at
+# once. A single DELETE across 100K+ rows on an already-full disk can fail
+# mid-transaction (SSL EOF / connection drop), confirmed on this table
+# 2026-10-06. Small batches keep each transaction's WAL footprint small.
+BATCH_DELETE_QUERY = text(
     "DELETE FROM public_channel_stats_cache "
-    "WHERE cached_at < NOW() - make_interval(hours => :ttl_hours)"
+    "WHERE cache_key IN ("
+    "  SELECT cache_key FROM public_channel_stats_cache "
+    "  WHERE cached_at < NOW() - make_interval(hours => :ttl_hours) "
+    "  LIMIT :batch_size"
+    ")"
 )
 
 
@@ -50,9 +59,17 @@ def main():
             print("Nothing to delete.")
             return
 
-        result = db.execute(DELETE_QUERY, {"ttl_hours": TTL_HOURS})
-        db.commit()
-        print(f"Deleted {result.rowcount} expired rows.")
+        deleted_total = 0
+        while True:
+            result = db.execute(BATCH_DELETE_QUERY, {"ttl_hours": TTL_HOURS, "batch_size": BATCH_SIZE})
+            db.commit()
+            n = result.rowcount
+            deleted_total += n
+            print(f"  deleted batch of {n} (running total: {deleted_total})")
+            if n == 0:
+                break
+
+        print(f"Deleted {deleted_total} expired rows total.")
 
         remaining = db.execute(text("SELECT COUNT(*) FROM public_channel_stats_cache")).scalar()
         print(f"Remaining rows: {remaining}")
