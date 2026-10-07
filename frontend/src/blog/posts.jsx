@@ -18954,6 +18954,161 @@ Free studio checklist: https://yoursite.com/checklist
       </>
     ),
   },
+  {
+    slug: 'youtube-viral-views-multiple',
+    title: 'What Counts as Viral on YouTube, Measured Across 54,880 Videos',
+    excerpt: "Every guide gives a flat number: 1M, 5M, 10K. None of them measure it. We checked 54,880 videos across 1,040 channels against each channel's own median, and half of all videos don't even beat that. The real thresholds, by subscriber tier, format, and niche.",
+    date: '2026-10-07',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-viral-views-multiple-cover.jpg',
+    coverAlt: 'A creator at a desk late at night, lit by the monitor, looking at a YouTube Studio analytics spike on one video next to a flat run of normal uploads',
+    author: 'Denzil',
+    readTime: '11 min read',
+    faqs: [
+      { q: 'Is 10,000 views considered viral?', a: "Depends entirely on the channel. <strong>For a channel whose median video gets 2,000 views, 10,000 is a real 5x spike</strong>, the kind only 8% of videos in our dataset hit. For a channel that normally pulls 500,000 views, 10,000 is a bad day. There's no flat view count that means the same thing twice." },
+      { q: 'Is 2 million views considered viral?', a: "Only relative to the channel. <strong>2 million views is a 50x spike for a channel with a 40,000 median, something only 0.66% of videos in our dataset reached</strong>, about 1 in 150, a real outlier. For a channel that already averages 2 million a video, it's a normal upload. Check the multiple, not the raw number." },
+      { q: 'Is 5,000 views considered viral?', a: "Same answer as any flat number: it depends on what that channel normally gets. <strong>If 5,000 is 10x or more above the channel's typical video, yes</strong>, that rate shows up in under 4% of videos we measured. If the channel's normal range already includes 5,000-view videos, nothing unusual happened." },
+      { q: 'Is 20,000 views considered viral?', a: "Measure it against the channel's own median, not in isolation. <strong>20,000 views against a 2,000-view median is a 10x video</strong>, a threshold only 3.91% of videos in our 54,880-video sample cleared. Against a 50,000-view median, 20,000 views is below average." },
+      { q: 'Is 2,000 views in 1 day good?', a: "We can't measure a single day directly, our tracking runs on weekly snapshots, not daily ones, so treat any site that gives you a precise daily figure with suspicion. <strong>What we can measure: whether 2,000 views beats that channel's own typical video.</strong> If it's roughly double the channel's median or better, it's outperforming. If it's in line with recent uploads, it's a normal video, not a signal either way." },
+      { q: 'Is 30,000 views viral?', a: "Depends on the channel's median, same as every number on this list. <strong>At a 3,000-view median, 30,000 is a 10x video</strong>, something 3.91% of videos in our dataset reached. At a 500,000-view median, it's below average. The question only has an answer once you know what the channel normally gets." },
+    ],
+    content: () => (
+      <>
+        <p><strong>Half of all videos never beat their own channel's median.</strong> We measured 54,880 videos across 1,040 YouTube channels, each video scored as a multiple of that channel's own typical view count, and the midpoint lands at exactly 1.00x. A normal upload does not outperform the channel's normal.</p>
+
+        <p><strong>50,000 views means nothing on its own.</strong> It's a strong video for a channel that usually gets 5,000, and a weak one for a channel that usually gets 500,000. Every published "how many views is viral" benchmark, 1 million, 5 million, 10,000, skips that distinction and gives one number for every channel size. We measured the multiple instead of the raw count.</p>
+
+        <h2>How We Measured It</h2>
+
+        <p><strong>Each channel's median view count across its last 50 uploads became its baseline.</strong> Every video was then scored as a multiple of that baseline: a video at 2x did double its channel's normal, a video at 10x did ten times normal. It's the same definition the Outliers feature uses to flag breakout videos, run here at scale across our tracked dataset.</p>
+
+        <p>Channels needed at least 5 tracked videos for a median worth trusting. That left 1,040 qualifying channels and 54,880 videos, all published since January 2025.</p>
+
+        <h2>The Real Thresholds</h2>
+
+        <p><strong>Clearing 2x your own median is already uncommon: 22.40% of videos manage it.</strong> Past that, the numbers drop fast.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Multiple of channel median</th>
+              <th>Share of videos that clear it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2x</td><td>22.40%</td></tr>
+            <tr><td>5x</td><td>8.08%</td></tr>
+            <tr><td>10x</td><td>3.91%</td></tr>
+            <tr><td>50x</td><td>0.66%</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>50x is the rarest tier we checked, and it's rare by a wide margin: roughly 1 in 150 videos.</strong> That's the number worth treating as a genuine outlier, not 5x, and definitely not 2x.</p>
+
+        <p><strong>The percentiles show how thin the top end is.</strong> p50 is 1.00x, the channel's own normal. p75 is 1.81x, still short of doubling. p90 is 4.14x. p95 is 7.86x. p99, the top 1% of all videos in the dataset, is 34.12x. A small number of videos carry almost all of the spread, which is how one breakout upload can make a channel's average look stronger than its typical video is.</p>
+
+        <h2>Channel Size Barely Changes the Odds</h2>
+
+        <p><strong>Bigger channels clear these thresholds only slightly more often than smaller ones.</strong> If virality got easier at scale, the gap between tiers would be wide. It isn't.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Subscriber tier</th>
+              <th>2x</th>
+              <th>5x</th>
+              <th>10x</th>
+              <th>50x</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10K-100K</td><td>19.67%</td><td>6.07%</td><td>2.64%</td><td>0.26%</td></tr>
+            <tr><td>100K-1M</td><td>21.38%</td><td>7.84%</td><td>3.91%</td><td>0.58%</td></tr>
+            <tr><td>1M+</td><td>23.17%</td><td>8.74%</td><td>4.00%</td><td>0.54%</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>A 1M+ channel clears 2x only about 3.5 percentage points more often than a channel in the 10K-100K range.</strong> That gap holds at every threshold in the table. A mid-size channel's breakout video is just as statistically real as a large channel's.</p>
+
+        <h2>Shorts Beat Long-Form at Every Threshold</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>2x</th>
+              <th>5x</th>
+              <th>10x</th>
+              <th>50x</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Long-form</td><td>22.01%</td><td>7.66%</td><td>3.63%</td><td>0.56%</td></tr>
+            <tr><td>Shorts</td><td>23.29%</td><td>9.06%</td><td>4.58%</td><td>0.88%</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>The gap between formats widens as the threshold climbs.</strong> At 2x, Shorts and long-form are close. At 50x, Shorts hit that mark 57% more often than long-form (0.88% versus 0.56%). Shorts need fewer absolute views to clear a given multiple, but the rate gap holds at every threshold, not just the easy ones.</p>
+
+        <h2>News Breaks Out Most Often of Any Niche We Measured</h2>
+
+        <p><strong>Six niches had enough tracked channels (30+) to report with confidence.</strong> The rest are left out here, a sample that thin produces a number that looks precise and isn't.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>2x</th>
+              <th>5x</th>
+              <th>10x</th>
+              <th>50x</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>News</td><td>26.83%</td><td>11.09%</td><td>5.88%</td><td>0.69%</td></tr>
+            <tr><td>Cooking</td><td>23.84%</td><td>8.68%</td><td>4.16%</td><td>0.73%</td></tr>
+            <tr><td>Travel</td><td>17.59%</td><td>6.91%</td><td>3.13%</td><td>0.20%</td></tr>
+            <tr><td>Fitness</td><td>17.29%</td><td>5.50%</td><td>2.54%</td><td>0.28%</td></tr>
+            <tr><td>Beauty</td><td>18.86%</td><td>4.80%</td><td>2.05%</td><td>0.53%</td></tr>
+            <tr><td>Gaming</td><td>16.73%</td><td>4.05%</td><td>1.20%</td><td>0.06%</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>News runs hot because news videos ride events.</strong> A story breaks and every channel covering it gets a lift at once, not just the best-packaged upload. Gaming's low numbers come from the opposite problem, an enormous, saturated upload volume where any single video has to out-compete far more videos for the same spike. A gaming channel clearing 10x is nearly 5 times rarer (1.20%) than a news channel doing the same (5.88%).</p>
+
+        <CtaCard
+          to="/features/outliers"
+          title="Stop eyeballing which videos broke out"
+          sub="Outliers finds the videos that already cleared your channel's own baseline, the same multiple this study measures, automatically and across your whole upload history."
+          button="Find your outliers →"
+        />
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Is 10,000 views considered viral?</h3>
+        <p>Depends entirely on the channel. <strong>For a channel whose median video gets 2,000 views, 10,000 is a real 5x spike</strong>, the kind only 8% of videos in our dataset hit. For a channel that normally pulls 500,000 views, 10,000 is a bad day. There's no flat view count that means the same thing twice.</p>
+
+        <h3>Is 2 million views considered viral?</h3>
+        <p>Only relative to the channel. <strong>2 million views is a 50x spike for a channel with a 40,000 median, something only 0.66% of videos in our dataset reached</strong>, about 1 in 150, a real outlier. For a channel that already averages 2 million a video, it's a normal upload. Check the multiple, not the raw number.</p>
+
+        <h3>Is 5,000 views considered viral?</h3>
+        <p>Same answer as any flat number: it depends on what that channel normally gets. <strong>If 5,000 is 10x or more above the channel's typical video, yes</strong>, that rate shows up in under 4% of videos we measured. If the channel's normal range already includes 5,000-view videos, nothing unusual happened.</p>
+
+        <h3>Is 20,000 views considered viral?</h3>
+        <p>Measure it against the channel's own median, not in isolation. <strong>20,000 views against a 2,000-view median is a 10x video</strong>, a threshold only 3.91% of videos in our 54,880-video sample cleared. Against a 50,000-view median, 20,000 views is below average.</p>
+
+        <h3>Is 2,000 views in 1 day good?</h3>
+        <p>We can't measure a single day directly, our tracking runs on weekly snapshots, not daily ones, so treat any site that gives you a precise daily figure with suspicion. <strong>What we can measure: whether 2,000 views beats that channel's own typical video.</strong> If it's roughly double the channel's median or better, it's outperforming. If it's in line with recent uploads, it's a normal video, not a signal either way.</p>
+
+        <h3>Is 30,000 views viral?</h3>
+        <p>Depends on the channel's median, same as every number on this list. <strong>At a 3,000-view median, 30,000 is a 10x video</strong>, something 3.91% of videos in our dataset reached. At a 500,000-view median, it's below average. The question only has an answer once you know what the channel normally gets.</p>
+
+        <h2>Your Median Is the Only Baseline That Matters</h2>
+
+        <p><strong>Every flat threshold on the internet, 1M views, 10K views, 5 million, is answering a question nobody should be asking.</strong> The only number that tells you whether a video broke out is the channel's own median, and the multiple above it. A video 2x your normal is already rarer than it feels. A video 10x your normal is one your channel might not see again this year.</p>
+      </>
+    ),
+  },
 ]
 
 export function getPostBySlug(slug) {
