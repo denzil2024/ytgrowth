@@ -165,6 +165,41 @@ scheduler.add_job(
 )
 
 
+# ── Job: Public channel stats cache cleanup ───────────────────────────────────
+# Daily sweep of public_channel_stats_cache. Deletes rows past the 24h TTL
+# already enforced on read (routers/channel_stats_routes.py _CACHE_TTL_SECONDS):
+# an expired row is already treated as a cache miss, nothing was ever deleting
+# it, so the table only grew. It became the single largest table on disk
+# (160MB of ~309MB total DB size) before this job was added 2026-10-06.
+
+def _run_public_stats_cache_cleanup():
+    try:
+        from database.models import SessionLocal, PublicChannelStatsCache
+        db = SessionLocal()
+        try:
+            cutoff = datetime.datetime.now(datetime.timezone.utc) - timedelta(hours=24)
+            deleted = (
+                db.query(PublicChannelStatsCache)
+                  .filter(PublicChannelStatsCache.cached_at < cutoff)
+                  .delete(synchronize_session=False)
+            )
+            db.commit()
+            print(f"[public_stats_cache_cleanup] removed {deleted} expired rows")
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[public_stats_cache_cleanup] job failed: {e}")
+
+
+scheduler.add_job(
+    _run_public_stats_cache_cleanup,
+    trigger="cron",
+    hour=3, minute=0,  # Daily 03:00 UTC
+    id="public_stats_cache_cleanup",
+    replace_existing=True,
+)
+
+
 # ── Job: Daily cache-hit snapshots ────────────────────────────────────────────
 # Runs nightly at 23:55 UTC, just before the day ends. Copies the current
 # hit_count of every non-zero row in youtube_search_cache and ai_output_cache
