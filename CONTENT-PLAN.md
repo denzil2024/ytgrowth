@@ -173,12 +173,15 @@ reaching `/features/channel-audit` or checkout.
     Channel Audit · top3: reddit, support.google, quora · PAA x4~~ — published
     2026-10-03 as `/blog/youtube-stopped-recommending-videos`, commit
     `309105de6`
-12. **DATA STUDY** How many views counts as viral on YouTube, measured as
+~~12. **DATA STUDY** How many views counts as viral on YouTube, measured as
     multiples of the channel's own median (+ is 2,000 views in a day good,
     first-week views by channel size) · Outliers · top3: reddit,
     learningrevolution, bluehost · PAA "Is 30k views viral?", "Is 2 million
     views viral?" · source: `video_metric_snapshots` + `channel_videos`,
-    zero quota, see `DATA-STUDIES.md` #14
+    zero quota, see `DATA-STUDIES.md` #14~~ — published 2026-10-07 as
+    `/blog/youtube-viral-views-multiple`, commit `f10bdb549`. Scope cut:
+    day/first-week sub-claims dropped, unmeasurable on weekly snapshots,
+    see `research/youtube-viral-views-multiple.md`.
 13. YouTube views dropped after monetization · Channel Audit ·
     top3: reddit, facebook, support.google · PAA x4
 14. YouTube watch hours dropping (+ what happens if you miss 4,000 hours
