@@ -23,8 +23,9 @@ SELECT
   pg_size_pretty(pg_total_relation_size(relid)) AS total_size,
   pg_size_pretty(pg_relation_size(relid)) AS table_size,
   pg_size_pretty(pg_total_relation_size(relid) - pg_relation_size(relid)) AS index_size,
-  n_live_tup AS estimated_rows
-FROM pg_catalog.pg_statio_user_tables
+  n_live_tup AS estimated_rows,
+  n_dead_tup AS dead_rows
+FROM pg_catalog.pg_stat_user_tables
 ORDER BY pg_total_relation_size(relid) DESC
 LIMIT 20
 """
@@ -51,6 +52,18 @@ SELECT
 FROM channel_metric_snapshots
 """
 
+WAL_AND_REPLICATION_QUERY = """
+SELECT
+  pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(), '0/0')) AS wal_generated_total
+"""
+
+BLOAT_SUMMARY_QUERY = """
+SELECT
+  SUM(n_dead_tup) AS total_dead_tuples,
+  SUM(n_live_tup) AS total_live_tuples
+FROM pg_catalog.pg_stat_user_tables
+"""
+
 
 def main():
     db = SessionLocal()
@@ -72,6 +85,19 @@ def main():
         print("=== channel_metric_snapshots date range ===")
         cms = db.execute(text(CHANNEL_SNAPSHOT_DATE_RANGE_QUERY)).fetchone()
         print(f"earliest: {cms.earliest}  latest: {cms.latest}  distinct dates: {cms.distinct_dates}  total rows: {cms.total_rows}")
+        print()
+
+        print("=== Dead tuple bloat summary ===")
+        bloat = db.execute(text(BLOAT_SUMMARY_QUERY)).fetchone()
+        print(f"total live rows: {bloat.total_live_tuples}  total dead rows: {bloat.total_dead_tuples}")
+
+        print()
+        print("=== WAL generated since cluster init ===")
+        try:
+            wal = db.execute(text(WAL_AND_REPLICATION_QUERY)).fetchone()
+            print(f"wal_generated_total: {wal.wal_generated_total}")
+        except Exception as e:
+            print(f"(could not read WAL stats: {e})")
     finally:
         db.close()
 
