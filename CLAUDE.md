@@ -27,7 +27,12 @@ The content runbook lives in `FOUNDATION.md` → "The runbook". `HANDOVER.md`
 is a historical mistake log, not instructions: read it only when asked why
 something is the way it is. The Mediavine ad-revenue goal was abandoned
 2026-08-13 and its working doc was deleted 2026-09-03; the conclusions worth
-keeping are in `FOUNDATION.md`. Do not reintroduce ad-revenue framing.
+keeping are in `FOUNDATION.md`. As of 2026-10-09 the user is reconsidering
+ad revenue as a real goal, not yet decided. Do not reintroduce ad-revenue
+framing into content decisions (word count targets, structure, etc.) on
+your own until the user explicitly says the goal is back on; answer direct
+factual questions about ad networks (Mediavine, AdSense, etc.) normally
+when asked, without re-flagging the abandoned-goal history each time.
 
 **Three defaults that exist to stop wasted turns:**
 
