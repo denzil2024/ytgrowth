@@ -185,9 +185,13 @@ reaching `/features/channel-audit` or checkout.
 ~~13. YouTube views dropped after monetization · Channel Audit ·
     top3: reddit, facebook, support.google · PAA x4~~ — published 2026-10-09
     as `/blog/youtube-views-dropped-after-monetization`, commit `a4a587cc0`.
-14. YouTube watch hours dropping (+ what happens if you miss 4,000 hours
+~~14. YouTube watch hours dropping (+ what happens if you miss 4,000 hours
     in a year) · Channel Audit · top3: reddit, support.google, quora ·
-    PAA x4 · distinct from `/blog/youtube-watch-hours` (how to reach 4,000)
+    PAA x4 · distinct from `/blog/youtube-watch-hours` (how to reach 4,000)~~
+    — published 2026-10-10 as `/blog/youtube-watch-hours-dropping`, commit
+    `ccd3a59ae`. Top-3 correction: live check showed reddit, youtube.com
+    (video results), support.google, not quora (quora only appears on the
+    narrower "miss 4000 hours" query variant).
 15. Why am I losing subscribers on YouTube · Channel Audit ·
     top3: reddit, facebook, yourdigitalresource · PAA x4
 16. The "performing worse than usual" notification in YouTube Studio ·
