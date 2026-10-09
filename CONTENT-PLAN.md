@@ -182,8 +182,9 @@ reaching `/features/channel-audit` or checkout.
     `/blog/youtube-viral-views-multiple`, commit `f10bdb549`. Scope cut:
     day/first-week sub-claims dropped, unmeasurable on weekly snapshots,
     see `research/youtube-viral-views-multiple.md`.
-13. YouTube views dropped after monetization · Channel Audit ·
-    top3: reddit, facebook, support.google · PAA x4
+~~13. YouTube views dropped after monetization · Channel Audit ·
+    top3: reddit, facebook, support.google · PAA x4~~ — published 2026-10-09
+    as `/blog/youtube-views-dropped-after-monetization`, commit `a4a587cc0`.
 14. YouTube watch hours dropping (+ what happens if you miss 4,000 hours
     in a year) · Channel Audit · top3: reddit, support.google, quora ·
     PAA x4 · distinct from `/blog/youtube-watch-hours` (how to reach 4,000)
