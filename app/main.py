@@ -1,4 +1,5 @@
 import os
+import re
 import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -15,10 +16,19 @@ load_dotenv()
 # the resolved country on every request. Owner's call 2026-09-23: block
 # outright across the whole app (marketing pages, dashboard, API), no
 # exceptions, confirmed no existing users/customers in these countries.
-BLOCKED_COUNTRIES = {
-    "IN", "PK", "CN", "SG", "AR", "BR",
-    "PH", "ID", "VN", "BD", "NG", "EG", "NP", "LK", "MA", "DZ",
+# 2026-10-09: switched from a blocklist to an allowlist of core markets,
+# same list as workwithdenzil.com / savvyhomie.com.
+ALLOWED_COUNTRIES = {
+    "US", "GB", "CA", "AU",
+    "DE", "FR", "NL", "IE", "CH", "SE", "NO", "DK", "FI",
 }
+
+_BOT_UA_RE = re.compile(
+    r"googlebot|bingbot|duckduckbot|slurp|baiduspider|yandexbot|applebot|"
+    r"facebookexternalhit|twitterbot|linkedinbot|slackbot|discordbot|gptbot|"
+    r"claudebot|perplexitybot|ahrefsbot|semrushbot|mj12bot",
+    re.IGNORECASE,
+)
 
 
 class HeadSafeHTMLResponse(HTMLResponse):
@@ -87,8 +97,18 @@ if _SESSION_SECRET == "ytgrowth-secret-change-in-prod" and os.environ.get("BASE_
 
 @app.middleware("http")
 async def block_low_tier_countries(request: Request, call_next):
+    # Paddle's webhook is signature-verified (HMAC, see routers/billing.py)
+    # and is server-to-server, not a visitor — geo-blocking it would silently
+    # drop real payment/subscription events since Paddle's servers don't sit
+    # in our allowed countries.
+    if request.url.path == "/billing/webhook":
+        return await call_next(request)
+
+    if _BOT_UA_RE.search(request.headers.get("user-agent", "")):
+        return await call_next(request)
+
     country = request.headers.get("cf-ipcountry", "").upper()
-    if country in BLOCKED_COUNTRIES:
+    if country and country not in ALLOWED_COUNTRIES:
         return PlainTextResponse("Access denied", status_code=403)
     return await call_next(request)
 
