@@ -19122,7 +19122,7 @@ Free studio checklist: https://yoursite.com/checklist
     faqs: [
       { q: 'Why did my YouTube views suddenly drop?', a: "Most often, your previous baseline was never your channel's real normal. <strong>One strong video sets a high comparison point the rest of your uploads were never hitting on a normal week</strong>, and when a few quieter videos follow it, that reads as a drop when the baseline is what corrected. Check your last 10 uploads' view counts against each other, not just against your single best video." },
       { q: 'Why did my YouTube views decrease suddenly?', a: "Rule out a real cause before assuming the worst. <strong>Check Studio's Content tab for a strike, claim, or ads-limited restriction first</strong>, since that's the fastest thing to confirm or eliminate. If nothing is flagged, compare your last several uploads' impressions and click-through rate; steady numbers there usually mean a baseline correction, not an audience problem." },
-      { q: 'Why did I lose my YouTube monetization?', a: "A different event from a views drop after GAINING monetization. <strong>Losing YPP status almost always traces to a policy strike, inactivity (no uploads in 6+ months), or falling back below the subscriber and watch-hour thresholds</strong>, all visible in Studio's monetization status page with a stated reason. Check that page directly rather than guessing from views alone." },
+      { q: 'Why did I lose my YouTube monetization?', a: "A different event from a views drop after GAINING monetization. <strong>Losing YPP status almost always traces to a policy strike, inactivity (no uploads in 6+ months), or falling back below the subscriber and watch-hour thresholds</strong>, all visible in Studio's monetization status page with a stated reason. Check that page directly instead of guessing from views alone." },
       { q: 'Why is my YouTube revenue decreasing?', a: "Revenue and views can move independently, which is worth separating before troubleshooting either one. <strong>A view count holding steady while revenue falls usually points to CPM, not reach</strong>: seasonal ad-spend dips, a shift in which countries are watching, or more of your audience watching on ad-blocking browsers. A real view drop pulls revenue down too, but check which one moved first in Studio's Analytics tab." },
       { q: 'Why is my reach so low on YouTube?', a: "Compare impressions, not just views, to isolate whether the algorithm is showing your video to fewer people or people are choosing not to click. <strong>Low impressions with a normal click-through rate points to distribution</strong>, often a newer channel's early testing boost tapering off as it builds more upload history. Low impressions with a falling click-through rate points to your thumbnail and title instead." },
     ],
@@ -19134,7 +19134,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>Your Best Video Got You Monetized, Then Set an Unrealistic Bar</h2>
 
-        <p><strong>The Partner Program's bar is 1,000 subscribers and 4,000 public watch hours in 12 months, or 10 million Shorts views in 90 days.</strong> Channels usually clear that bar on one video that performed well above their normal, not a steady run of average uploads. That video becomes the mental yardstick for how the channel performs, simply because it's the biggest number anyone looked at.</p>
+        <p><strong>The Partner Program's bar is 1,000 subscribers and 4,000 public watch hours in 12 months, or 10 million Shorts views in 90 days</strong>, covered in full in the <a href="/blog/youtube-partner-program">Partner Program guide</a>. Channels usually clear that bar on one video that performed well above their normal, not a steady run of average uploads. That video becomes the mental yardstick for how the channel performs, simply because it's the biggest number anyone looked at.</p>
 
         <p>Once monetized, the next uploads return to the channel's actual normal, and against that outlier, normal looks like a collapse. <strong>It isn't one. It's the baseline correcting</strong> to what the channel's real average always was.</p>
 
@@ -19164,11 +19164,13 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>For the full mechanism, including <strong>a documented case where views fell while likes and revenue held steady</strong>, <a href="/blog/youtube-views-dropped-suddenly">a sudden view drop</a> covers that separately, since it applies whether or not a channel is monetized.</p>
 
-        <h2>Auto-Inserted Mid-Roll Ads Are the One Real Exception</h2>
+        <h2>Mid-Roll Ad Placement Is the One Cause Tied to Monetization</h2>
 
-        <p><strong>This is the one cause monetization directly triggers.</strong> YouTube now turns on automatic mid-roll ads by default for every eligible video once a channel is monetized, including older videos that cross the 8-minute threshold. Creators don't choose the placement, YouTube's system picks the break points.</p>
+        <p><strong>This is the only cause on this list connected to ads themselves, not just timing.</strong> Any monetized video 8 minutes or longer is eligible for mid-roll ads, and <a href="https://support.google.com/youtube/answer/6175006" target="_blank" rel="noopener noreferrer">YouTube's own help page</a> confirms automatic slots are placed on top of manual ones by default once mid-rolls are turned on, unless a creator unchecks that option.</p>
 
-        <p>A poorly placed mid-roll pushes viewers to leave at that exact timestamp, and <strong>YouTube's own Audience Retention graph shows a visible drop right at the ad break.</strong> Lower retention then feeds back into how often that video gets suggested, which can look like a views drop days or weeks later.</p>
+        <p><strong>A newly monetized channel with several videos past 8 minutes can pick up mid-roll placements it never had before</strong>, on videos it already published.</p>
+
+        <p>A poorly placed mid-roll pushes viewers to leave at that exact timestamp, and <strong>YouTube's own Audience Retention graph shows a visible drop right at the ad break.</strong> Lower retention then feeds back into how often that video gets suggested, which can look like a views drop days or weeks later, well after monetization itself turned on.</p>
 
         <blockquote><strong>Pro Tip:</strong> Studio's Audience Retention graph marks ad breaks directly on the timeline. Compare the drop size at a mid-roll against the drop at your intro, if the mid-roll dip is sharper, that placement is costing you viewers, not your content.</blockquote>
 
@@ -19208,7 +19210,7 @@ Free studio checklist: https://yoursite.com/checklist
         <p>Rule out a real cause before assuming the worst. <strong>Check Studio's Content tab for a strike, claim, or ads-limited restriction first</strong>, since that's the fastest thing to confirm or eliminate. If nothing is flagged, compare your last several uploads' impressions and click-through rate; steady numbers there usually mean a baseline correction, not an audience problem.</p>
 
         <h3>Why did I lose my YouTube monetization?</h3>
-        <p>A different event from a views drop after GAINING monetization. <strong>Losing YPP status almost always traces to a policy strike, inactivity (no uploads in 6+ months), or falling back below the subscriber and watch-hour thresholds</strong>, all visible in Studio's monetization status page with a stated reason. Check that page directly rather than guessing from views alone.</p>
+        <p>A different event from a views drop after GAINING monetization. <strong>Losing YPP status almost always traces to a policy strike, inactivity (no uploads in 6+ months), or falling back below the subscriber and watch-hour thresholds</strong>, all visible in Studio's monetization status page with a stated reason. Check that page directly instead of guessing from views alone.</p>
 
         <h3>Why is my YouTube revenue decreasing?</h3>
         <p>Revenue and views can move independently, which is worth separating before troubleshooting either one. <strong>A view count holding steady while revenue falls usually points to CPM, not reach</strong>: seasonal ad-spend dips, a shift in which countries are watching, or more of your audience watching on ad-blocking browsers. A real view drop pulls revenue down too, but check which one moved first in Studio's Analytics tab.</p>
