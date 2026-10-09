@@ -15269,7 +15269,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>The problem is almost always a misunderstanding of how YouTube watch hours accumulate. Views and hours are not the same metric, and the strategies that drive one do not automatically drive the other. <a href="/blog/shorts-vs-long-form">Shorts rack up impressions</a>. <a href="/blog/youtube-trends">Trending content</a> spikes and fades.</p>
 
-        <p>Neither moves the needle on YouTube watch hours for monetization in any meaningful way. Getting 4000 watch hours on YouTube is a retention and format problem. This guide gives you the mathematical framework to solve it faster than generic advice ever will.</p>
+        <p>Neither moves the needle on YouTube watch hours for monetization in any meaningful way. Getting 4000 watch hours on YouTube is a retention and format problem. This guide gives you the mathematical framework to solve it faster than generic advice ever will. If your hours already crossed 4,000 and are now falling instead, <a href="/blog/youtube-watch-hours-dropping">why watch hours drop</a> covers that separately, including what actually happens to monetization status when the number dips.</p>
 
         <h2>The 4,000-Hour Reality Check: What Counts?</h2>
 
@@ -19219,6 +19219,121 @@ Free studio checklist: https://yoursite.com/checklist
         <h2>Measure Every New Upload Against Your Real Average</h2>
 
         <p><strong>Monetization status itself doesn't change how the algorithm distributes a video.</strong> What usually explains a drop right after monetizing is the same video that got a channel approved quietly becoming the wrong yardstick for every upload after it. Check the one real exception, ad placement, in Studio's retention graph, then measure every new video against the real average instead of the best one that got you here.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-watch-hours-dropping',
+    title: 'Why Your YouTube Watch Hours Are Dropping',
+    excerpt: "Falling below 4,000 watch hours does not cost an already-monetized channel its monetization, confirmed directly against YouTube's own help page. Two separate problems get confused under this one question: a channel still climbing toward 4,000, and one already past it. Different causes, different fixes.",
+    date: '2026-10-10',
+    category: CATEGORIES.monetization,
+    cover: '/blog/youtube-watch-hours-dropping-cover.jpg',
+    coverAlt: 'A red YouTube play-button plaque displayed on a sunlit wooden shelf, a potted plant and a stack of notebooks nearby',
+    author: 'Denzil',
+    readTime: '8 min read',
+    faqs: [
+      { q: 'Why are my YouTube watch hours decreasing?', a: "Almost always the rolling 12-month window, not a real audience loss. <strong>YouTube only counts watch time from the trailing 12 months</strong>, so hours earned over a year ago age out of the count automatically, even if nothing about your channel changed. If older videos made up a large share of your total, the counter can fall just from time passing." },
+      { q: 'Why are my watch time hours going down?', a: "Check whether it's one video or several first. <strong>A single video losing steam after its early peak is normal and expected</strong>, every upload spikes then settles. A decline across most of your recent uploads points somewhere else: packaging changes, a shift in upload frequency, or a seasonal dip in your niche." },
+      { q: 'Why are my watch hours not increasing?', a: "A different problem from hours actively falling. <strong>Stalled growth usually means new watch time is roughly matching what's aging out of the 12-month window</strong>, not that nothing is working. Compare your last 90 days of watch time against the 90 days before that. Flat totals alongside rising recent uploads still mean real progress, it just isn't visible in the cumulative counter yet." },
+      { q: "What happens if I don't get 4000 watch hours in a year?", a: "Depends entirely on whether you were already monetized. <strong>A channel that never reached 4,000 hours can't apply yet</strong>, nothing is lost, the application just stays closed until the threshold is met. A channel that already crossed 4,000 hours and got monetized does NOT lose monetization just for falling back below it later, confirmed directly on YouTube's own help page." },
+      { q: 'Is YouTube changing watch hours?', a: "Nothing official and current as of this writing. <strong>Reports of a future change to the entry threshold exist but come from unverified third-party sources</strong>, not a YouTube announcement. Check Studio's own notifications and YouTube's official Partner Program page directly before planning around a change that hasn't been confirmed." },
+    ],
+    content: () => (
+      <>
+        <p><strong>Falling below 4,000 watch hours does not cost an already-monetized channel its monetization.</strong> YouTube's own help page confirms this directly: ongoing status is tied to policy compliance and channel activity, not to watch hours or subscriber count. The 4,000-hour figure is a bar for joining the Partner Program, not one you have to keep clearing once you're in.</p>
+
+        <p><strong>Two different problems hide under this one question.</strong> A channel still climbing toward 4,000 hours watches progress stall or reverse, usually a counting mechanism, not an audience problem. A channel already past 4,000 sees the number drop and panics that monetization is at risk, which is a misconception.</p>
+
+        <p>If you're still working toward the threshold, <a href="/blog/youtube-watch-hours">reaching 4,000 hours faster</a> covers the strategy side. <strong>This article covers what the number dropping means for each one.</strong></p>
+
+        <h2>Hours Age Out of a Rolling 12-Month Window</h2>
+
+        <p><strong>YouTube only counts watch time from the trailing 12 months, not your channel's full history.</strong> A video's watch hours contribute to your total for exactly one year from when they were accumulated, then drop off automatically as that window rolls forward. Nothing about the video changes, nothing about your channel changes, the counter just stops crediting hours that are now too old.</p>
+
+        <p>A channel that built a large share of its early total from a handful of older videos can watch its number fall even while posting consistently, because those older hours are aging out faster than new uploads replace them. <strong>This is the single most common cause of "my watch hours are dropping" for a channel that hasn't been monetized yet.</strong></p>
+
+        <p><strong>A worked example makes the window concrete.</strong> A channel published one video in month 1 that earned 2,500 watch hours on its own, the bulk of the channel's early total, then kept posting smaller videos averaging 50 hours each. By month 11, the cumulative 12-month total sits around 3,800 hours, close to qualifying.</p>
+
+        <p>In month 13, that original 2,500-hour video ages out of the window entirely. Even with 10 more videos published since, each earning their own 50 hours, <strong>the new total can land well below where it was two months earlier</strong>, a visible drop with zero change in upload quality or audience size. The same mechanism is part of what the <a href="/blog/youtube-partner-program">Partner Program guide</a> covers in full.</p>
+
+        <blockquote><strong>Pro Tip:</strong> in Studio's Analytics, compare watch time from your last 90 days against the 90 days before that. If the recent window looks healthy but your cumulative 12-month total is still falling, you're watching old hours age out faster than new ones accumulate, not losing your audience.</blockquote>
+
+        <h2>A Sharp Drop Usually Has One Specific Cause</h2>
+
+        <p><strong>Check whether one video or several are responsible before assuming a channel-wide problem.</strong> A single video losing watch time after its first few days is normal, every upload peaks early and settles into a lower, steady rate. If one previously strong video is now flagged, set to private, or hit with a copyright claim, that alone can pull down a channel's total without anything else being wrong.</p>
+
+        <p><strong>If the drop spans most of your recent uploads, not one video, the cause is more likely a packaging or scheduling change</strong>: a shift in thumbnails or titles, a change in how often you post, or a seasonal dip that affects your whole niche at once.</p>
+
+        <p><strong>Widening the date range in Studio separates a real decline from normal noise.</strong> A drop that disappears once you zoom out to 90 days was likely never a decline to begin with.</p>
+
+        <p>If the decline holds up even after widening the window, check whether interest in your niche has shifted, not just your own channel. <strong>A falling Google Trends line for your core topic explains a watch-time decline no packaging fix will solve</strong>, and it points toward a topic pivot instead of a production change.</p>
+
+        <p><strong>Compare watch time from subscribers against non-subscribers before assuming the whole audience lost interest.</strong> A decline concentrated among subscribers points at a content-direction problem, the people who already know your channel are watching less of what you're making now.</p>
+
+        <p><strong>A decline concentrated among non-subscribers more often reflects a distribution shift, not a content one</strong>, the kind also covered in <a href="/blog/youtube-algorithm">how the algorithm decides</a> what gets shown to new viewers.</p>
+
+        <h2>Falling Below 4,000 Hours After Monetization Is Not a Policy Violation</h2>
+
+        <p><strong>This is the part most guides get wrong or skip entirely.</strong> YouTube's <a href="https://support.google.com/youtube/answer/72851" target="_blank" rel="noopener noreferrer">own eligibility page</a> states that it continuously checks monetized channels against its policies, and that a channel loses monetization for violating those policies, regardless of its watch hours and subscriber count.</p>
+
+        <p><strong>The 1,000-subscriber and 4,000-hour thresholds are listed as criteria for joining the program</strong>, never as a condition you have to keep re-clearing to stay in it.</p>
+
+        <p>What can cost an already-monetized channel its status: <strong>a policy violation, or six or more months with no uploads and no Community Posts activity.</strong> Neither is tied to the watch-hours counter. A channel that's active and compliant keeps its monetization even through a quiet stretch where the 12-month total dips below 4,000.</p>
+
+        <p>One more source of confusion worth ruling out: <strong>Shorts views in the Shorts feed never count toward the 4,000-hour long-form total.</strong> A channel heavy on Shorts can see a healthy view count alongside a flat or falling long-form watch-hours number, and that gap is normal, not a sign anything broke.</p>
+
+        <p><strong>Private, unlisted, and deleted-video watch time are excluded the same way</strong>, along with any watch time generated through paid promotion, not organic viewing.</p>
+
+        <blockquote><strong>Pro Tip:</strong> if you're already monetized and worried about a falling watch-hours number, check Studio's Channel status and features page for any policy flags first. If nothing is flagged there, the number dropping on its own is not a threat to your monetization.</blockquote>
+
+        <h2>Check Studio to Confirm Which Problem You Have</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What you're seeing</th>
+              <th>Likely cause</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Not yet monetized, total watch hours flat or falling despite steady uploads</td><td>Old hours aging out of the 12-month window faster than new ones accumulate</td></tr>
+            <tr><td>One video's watch time fell sharply, rest of the channel is normal</td><td>That video's own status: privacy setting, a claim, or its natural post-upload settling</td></tr>
+            <tr><td>Most recent uploads underperforming at once</td><td>A packaging, scheduling, or seasonal change, not a channel-wide problem</td></tr>
+            <tr><td>Already monetized, watch hours fell below 4,000, no policy flag in Studio</td><td>Not a threat to monetization, the threshold does not apply after approval</td></tr>
+            <tr><td>Already monetized, a flag showing in Channel status and features</td><td>A real policy issue, unrelated to the watch-hours number itself</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Both confusions come from the same mistake: treating 4,000 hours as a line you have to keep standing above.</strong> It's a one-time entry requirement, measured on a rolling basis before you cross it, not an ongoing test afterward.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Confirm whether this is a real problem"
+          sub="A Channel Audit reads your actual Studio data, watch time trends, upload history, and channel status, so you know whether a falling number means something or not."
+          button="Run a Channel Audit →"
+        />
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Why are my YouTube watch hours decreasing?</h3>
+        <p>Almost always the rolling 12-month window, not a real audience loss. <strong>YouTube only counts watch time from the trailing 12 months</strong>, so hours earned over a year ago age out of the count automatically, even if nothing about your channel changed. If older videos made up a large share of your total, the counter can fall just from time passing.</p>
+
+        <h3>Why are my watch time hours going down?</h3>
+        <p>Check whether it's one video or several first. <strong>A single video losing steam after its early peak is normal and expected</strong>, every upload spikes then settles. A decline across most of your recent uploads points somewhere else: packaging changes, a shift in upload frequency, or a seasonal dip in your niche.</p>
+
+        <h3>Why are my watch hours not increasing?</h3>
+        <p>A different problem from hours actively falling. <strong>Stalled growth usually means new watch time is roughly matching what's aging out of the 12-month window</strong>, not that nothing is working. Compare your last 90 days of watch time against the 90 days before that. Flat totals alongside rising recent uploads still mean real progress, it just isn't visible in the cumulative counter yet.</p>
+
+        <h3>What happens if I don't get 4000 watch hours in a year?</h3>
+        <p>Depends entirely on whether you were already monetized. <strong>A channel that never reached 4,000 hours can't apply yet</strong>, nothing is lost, the application just stays closed until the threshold is met. A channel that already crossed 4,000 hours and got monetized does NOT lose monetization just for falling back below it later, confirmed directly on YouTube's own help page.</p>
+
+        <h3>Is YouTube changing watch hours?</h3>
+        <p>Nothing official and current as of this writing. <strong>Reports of a future change to the entry threshold exist but come from unverified third-party sources</strong>, not a YouTube announcement. Check Studio's own notifications and YouTube's official Partner Program page directly before planning around a change that hasn't been confirmed.</p>
+
+        <h2>The 4,000-Hour Line Only Matters Once</h2>
+
+        <p><strong>Watch hours dropping means something completely different depending on which side of monetization you're on.</strong> Before 4,000, it's almost always the rolling window doing ordinary math, not a sign anything is wrong. After 4,000, the number can fall and your monetization stays exactly where it was, because the real conditions for keeping it have nothing to do with the hour count at all.</p>
       </>
     ),
   },
