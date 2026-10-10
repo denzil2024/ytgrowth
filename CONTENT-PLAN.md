@@ -192,8 +192,11 @@ reaching `/features/channel-audit` or checkout.
     `ccd3a59ae`. Top-3 correction: live check showed reddit, youtube.com
     (video results), support.google, not quora (quora only appears on the
     narrower "miss 4000 hours" query variant).
-15. Why am I losing subscribers on YouTube · Channel Audit ·
-    top3: reddit, facebook, yourdigitalresource · PAA x4
+~~15. Why am I losing subscribers on YouTube · Channel Audit ·
+    top3: reddit, facebook, yourdigitalresource · PAA x4~~ — published
+    2026-10-11 as `/blog/youtube-losing-subscribers`, commit `a60e3eefb`.
+    Top-3 correction: live check showed reddit, facebook, youtube.com
+    (video results), with yourdigitalresource at #4, not #3.
 16. The "performing worse than usual" notification in YouTube Studio ·
     Channel Audit · top3: reddit, facebook, support.google
 17. Why YouTube is showing my video to the wrong audience · Channel Audit /
