@@ -273,6 +273,21 @@ Every article opens by leading with a real number from the actual data, not a th
 
 Every FAQ section (the `faqs` array plus its matching visible `<h3>` section) must be built from real Google "People Also Ask" results pulled via the Serper API before writing, never guessed from reasoning about what seems like a plausible question. Pull PAA for the target query plus 2-4 close variants (`https://google.serper.dev/search`, POST, header `X-API-KEY` from the local `.env`'s `SERPER_KEY`, body `{q, num: 10}`, response field `peopleAlsoAsk[].question`). Existing code pattern: `get_serper_keywords()` in `app/keywords.py`. Not every PAA result is on-topic (an unrelated monetization-questions cluster kept surfacing for content-idea queries); filter for relevance rather than forcing every result in. Editorial questions filling a genuine gap PAA didn't surface are fine as long as they're the minority and not misrepresented as PAA-sourced. Log which questions are real vs. editorial in the article's `research/<slug>.md` file.
 
+## Blog article structure, depth, and linking (confirmed 2026-10-11)
+
+These formed over several rounds on one diagnostic post and apply to every new article going forward, checked programmatically before presenting, not eyeballed:
+
+- **12 subheads (H2) minimum per article.** Each section stays substantial, not thinned to hit the count: if a topic doesn't naturally split into 12 real sections, find genuinely new content to add (an unused angle from research, a worked example, a second case), never pad existing sections thinner just to add headings. This also gives mid-content ad units real breathing room once ads are live, a long unbroken block of text with one heading has nowhere for a unit to sit.
+- **No paragraph over roughly 4 lines** at normal article column width (≈16 words/line as a rough estimate). Split at a natural idea boundary, not mid-thought, and re-bold the half that loses its `<strong>` tag when a paragraph is split.
+- **3-4+ internal/external links minimum, spread through the body**, not clustered in one section near the end. Every anchor text is **4 words or fewer**. A real external citation (an official source like a YouTube help page, not a marketing blog) is expected wherever the article makes a specific, checkable factual claim, the same bar FAQ answers are held to.
+- **Word count floor: 1,500+** for a standard Channel-Audit-style diagnostic post, reached through real added substance (a worked example, an extra verified cause, a metric-definition section) never through restating the same point in different words.
+- **Bold coverage ~85-95%+ of body paragraphs**, each FAQ answer bolded on its citable claim. Verify programmatically (count `<p>` vs. zero-`<strong>` `<p>`), don't rely on having "kept it in mind" while writing. See `feedback-verify-bolding-before-presenting` memory for the incident this came from.
+- **2+ Pro Tip blockquotes per article**, one per major mechanism where a concrete, checkable action exists.
+- **FAQ array must exactly match the visible `<h3>` section**, re-diffed after every edit, not just at first write, since a fix to one copy (FAQ array vs. inline H3) is easy to apply to only one side.
+- **Banned filler list, in addition to actually/really/genuinely/truly:** "rather than" (replace with "not," "instead of," or restructure), "simply put," "it's worth noting," "the fact that," filler lead-ins like "The fix is simple:" and announcement phrases like "This is the part almost nobody explains" that assert importance instead of adding information.
+- **No redundant restatement across sections.** A mechanism explained once should be referenced, not re-explained, in later sections. This showed up repeatedly as the same "YouTube runs multiple systems on different schedules" explanation stated three times across one article before being caught and cut.
+- **Verify every specific, checkable factual claim against a live source before publishing**, even ones that feel obviously true. A claim about automatic ad placement being forced on every monetized video shipped inaccurate (the real policy requires a creator to opt in first) until caught on a later pass and corrected with a proper citation. Don't assume a mechanism from general knowledge of "how YouTube probably works."
+
 
 ---
 
