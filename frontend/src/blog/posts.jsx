@@ -19346,21 +19346,21 @@ Free studio checklist: https://yoursite.com/checklist
     date: '2026-10-11',
     category: CATEGORIES.subscribers,
     cover: '/blog/youtube-losing-subscribers-cover.jpg',
-    coverAlt: 'A single empty chair in a sunlit room, a half-finished cup of coffee on a side table nearby',
+    coverAlt: 'A red YouTube play button on a sunlit desk beside a row of wooden figures shrinking in size, a red downward arrow behind them, camera gear and plants in the background',
     author: 'Denzil',
     readTime: '8 min read',
     faqs: [
       { q: 'Why are my YouTube subscribers decreasing?', a: "Almost always one of two things, not a content failure. <strong>YouTube routinely removes inactive, spam, and bot accounts from subscriber lists</strong>, which lowers your count with nothing to do with your videos. Separately, YouTube's public count, search results, and Studio Analytics update on different schedules, so comparing the wrong two numbers can look like a drop that never happened." },
       { q: 'Why did I lose all my subscriptions on YouTube?', a: "A full wipe is different from ordinary churn and points to one of two specific causes. <strong>A terminated account stops counting toward every channel it subscribed to</strong>, which can remove a large block at once if a bot network you picked up got banned together. If the number recovers within 48 hours, it was a display mismatch, not a real loss." },
       { q: 'Why does YouTube keep reducing my subscribers?', a: "Because the count is never static, it reflects live account status, not a running tally. <strong>Accounts get closed, banned for policy violations, or flagged as spam continuously</strong>, and each one is removed from every channel's subscriber count as it happens. A channel with a larger audience naturally sees more of this background churn, not less." },
-      { q: 'Is YouTube purging subscribers?', a: "Yes, this is real and YouTube has confirmed it. <strong>YouTube periodically runs larger enforcement purges of accounts that violate spam or fraud policies</strong>, on top of the continuous background cleanup. YouTube has stated it gives advance notice for major purges, so check your email and Studio notifications before assuming a sudden loss is unexplained." },
-      { q: 'Why am I suddenly losing subscribers on YouTube?', a: "Check the timing against your own upload schedule before assuming the video caused it. <strong>A drop that appears right after posting is frequently a data-sync artifact</strong>, not a reaction to that specific video, since Studio Analytics can lag the public count by up to 48 hours. Compare Studio's Subscribers Lost figure for that exact period against the public number before concluding anything." },
+      { q: 'Is YouTube purging subscribers?', a: "Yes. YouTube has confirmed it directly. <strong>YouTube periodically runs larger enforcement purges of accounts that violate spam or fraud policies</strong>, on top of the continuous background cleanup. YouTube has stated it gives advance notice for major purges, so check your email and Studio notifications before assuming a sudden loss is unexplained." },
+      { q: 'Why am I suddenly losing subscribers on YouTube?', a: "Check the timing against your own upload schedule before assuming the video caused it. <strong>A drop that appears right after posting is usually a data-sync artifact</strong>, not a reaction to that specific video, since Studio Analytics can lag the public count by up to 48 hours. Compare Studio's Subscribers Lost figure for that exact period against the public number before concluding anything." },
     ],
     content: () => (
       <>
-        <p><strong>Studio Analytics can lag your public subscriber count by up to 48 hours.</strong> YouTube runs the public count, search results, and Studio Analytics on separate update schedules, so a drop that looks tied to your newest video is frequently just two numbers from two systems that haven't caught up with each other yet. Most subscriber loss isn't your content failing, it's that mismatch.</p>
+        <p><strong>Studio Analytics can lag your public subscriber count by up to 48 hours.</strong> YouTube runs the public count, search results, and Studio Analytics on separate update schedules, so a drop that looks tied to your newest video is usually just two numbers from two systems that haven't caught up with each other yet. Most subscriber loss isn't your content failing, it's that mismatch.</p>
 
-        <p>Most guides list the same content-quality causes: weak thumbnails, inconsistent uploads, viewer fatigue. <strong>Those are real, but none of them explain why a drop so often lands at the exact moment you hit publish.</strong> That timing has a specific, confirmed mechanism, covered below. Growing from zero is a different problem, with <a href="/blog/free-subs-on-youtube">its own roadmap</a>.</p>
+        <p>Most guides list the same content-quality causes: weak thumbnails, inconsistent uploads, viewer fatigue. <strong>None of them explain why a drop so often lands at the exact moment you hit publish.</strong> That timing has a specific, confirmed mechanism, covered below. Growing from zero is a different problem, with <a href="/blog/free-subs-on-youtube">its own roadmap</a>.</p>
 
         <h2>YouTube Removes Inactive and Fraudulent Accounts Continuously</h2>
 
@@ -19400,7 +19400,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>Viewer Fatigue Is a Slower Version of the Same Pattern</h2>
 
-        <p><strong>People who liked your channel can still unsubscribe after enough repetitive formats or a long stretch without a schedule</strong>, not because anything specific went wrong, just because interest naturally fades over time for some share of any audience. This is normal attrition, not a sign your content got worse.</p>
+        <p><strong>People who liked your channel can still unsubscribe after enough repetitive formats or a long stretch without a schedule.</strong> Nothing specific went wrong, interest fades over time for some share of any audience. This is normal attrition, not a sign your content got worse.</p>
 
         <p>Every channel loses some percentage of its audience to fatigue regardless of quality. <strong>The signal worth tracking isn't whether fatigue happens, it's whether your gain rate still outpaces it.</strong> A channel gaining subscribers faster than fatigue removes them is healthy even with some background loss every week.</p>
 
@@ -19461,10 +19461,10 @@ Free studio checklist: https://yoursite.com/checklist
         <p>Because the count is never static, it reflects live account status, not a running tally. <strong>Accounts get closed, banned for policy violations, or flagged as spam continuously</strong>, and each one is removed from every channel's subscriber count as it happens. A channel with a larger audience naturally sees more of this background churn, not less.</p>
 
         <h3>Is YouTube purging subscribers?</h3>
-        <p>Yes, this is real and YouTube has confirmed it. <strong>YouTube periodically runs larger enforcement purges of accounts that violate spam or fraud policies</strong>, on top of the continuous background cleanup. YouTube has stated it gives advance notice for major purges, so check your email and Studio notifications before assuming a sudden loss is unexplained.</p>
+        <p>Yes. YouTube has confirmed it directly. <strong>YouTube periodically runs larger enforcement purges of accounts that violate spam or fraud policies</strong>, on top of the continuous background cleanup. YouTube has stated it gives advance notice for major purges, so check your email and Studio notifications before assuming a sudden loss is unexplained.</p>
 
         <h3>Why am I suddenly losing subscribers on YouTube?</h3>
-        <p>Check the timing against your own upload schedule before assuming the video caused it. <strong>A drop that appears right after posting is frequently a data-sync artifact</strong>, not a reaction to that specific video, since Studio Analytics can lag the public count by up to 48 hours. Compare Studio's Subscribers Lost figure for that exact period against the public number before concluding anything.</p>
+        <p>Check the timing against your own upload schedule before assuming the video caused it. <strong>A drop that appears right after posting is usually a data-sync artifact</strong>, not a reaction to that specific video, since Studio Analytics can lag the public count by up to 48 hours. Compare Studio's Subscribers Lost figure for that exact period against the public number before concluding anything.</p>
 
         <h2>Two Numbers From Two Systems Are Not the Same Drop</h2>
 
