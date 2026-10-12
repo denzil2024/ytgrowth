@@ -200,8 +200,11 @@ reaching `/features/channel-audit` or checkout.
 ~~16. The "performing worse than usual" notification in YouTube Studio ·
     Channel Audit · top3: reddit, facebook, support.google~~ — dropped
     2026-10-11, see "Dropped this round" below for the evidence.
-17. Why YouTube is showing my video to the wrong audience · Channel Audit /
-    SEO Studio · top3: reddit, facebook, blackhatworld · PAA x4
+~~17. Why YouTube is showing my video to the wrong audience · Channel Audit /
+    SEO Studio · top3: reddit, facebook, blackhatworld · PAA x4~~ —
+    published 2026-10-12 as `/blog/youtube-wrong-audience`, commit
+    `f9cdd0eed`. Feature picked: Channel Audit (reads CTR/retention/
+    traffic-source signals directly, matches the diagnostic).
 18. Is my YouTube channel shadowbanned (what a real reach drop looks like
     vs. a ban) · Channel Audit · top3: reddit, tubepilot, support.google ·
     PAA x4 · SERP also carries "checker" tools, see the free-tools note in
