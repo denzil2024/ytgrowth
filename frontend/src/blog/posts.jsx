@@ -19494,9 +19494,29 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p><strong>YouTube tests every new upload with a small pool of viewers first</strong>, then expands distribution based on how that pool responds. YouTube's <a href="https://support.google.com/youtube/answer/141805" target="_blank" rel="noopener noreferrer">own documentation</a> confirms ranking depends on performance relative to the audience a video is tested with, not an absolute score. If recent signals from your channel pointed it toward the wrong pool, a strong video can test flat through no fault of its own.</p>
 
+        <p><strong>Seven causes explain most of these mismatches, summarized here and covered in full below.</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Cause</th>
+              <th>What fixes it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Inconsistent recent topics</td><td>One consistent lane across several uploads</td></tr>
+            <tr><td>Thumbnail or title overselling</td><td>Honest packaging, even at a slightly lower CTR</td></tr>
+            <tr><td>Vague metadata</td><td>Specific, current title and description for every upload</td></tr>
+            <tr><td>Cross-niche collaboration</td><td>Patience, it corrects over several normal uploads</td></tr>
+            <tr><td>Early-viewer skew</td><td>A clearly packaged follow-up, not a reset</td></tr>
+            <tr><td>Format drift</td><td>One consistent delivery style alongside one topic</td></tr>
+            <tr><td>Reused, stale metadata</td><td>Reviewing tags and description on every upload</td></tr>
+          </tbody>
+        </table>
+
         <h2>Your Recent Topics Have Been Inconsistent</h2>
 
-        <p><strong>Switching topics between uploads gives YouTube no stable signal for who your audience is.</strong> Each video update's the algorithm's read on your channel a little, and a channel that jumps between unrelated topics never lets that read settle on one audience.</p>
+        <p><strong>Switching topics between uploads gives YouTube no stable signal for who your audience is.</strong> Each upload updates the algorithm's read on your channel a little, and a channel that jumps between unrelated topics never lets that read settle on one audience.</p>
 
         <p>This is the single most common cause across every real account of this problem. <strong>A channel that covers five different topics across five videos is training the algorithm to expect five different audiences</strong>, none of which fully matches any single upload. Narrowing to one consistent lane, even temporarily, is the fastest way to let the signal stabilize, the same consistency gap covered in <a href="/blog/youtube-channel-not-growing">why channels stall</a>.</p>
 
@@ -19506,13 +19526,21 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>A channel that instead posts four cooking videos in a row builds a compounding signal. <strong>Each upload reinforces the same test pool</strong>, so by the fourth video, YouTube has a far more confident read on who to show it to than it did on the first.</p>
 
+        <p>Three signs a channel's topics have drifted enough to matter:</p>
+
+        <ul>
+          <li><strong>Your last 10 titles cover 4 or more clearly different subjects</strong>, not just different angles on the same one.</li>
+          <li><strong>A new subscriber couldn't describe your channel in one sentence</strong> after watching your 3 most recent uploads.</li>
+          <li><strong>Your highest-performing video is an outlier</strong> that doesn't represent what most of your other uploads are about.</li>
+        </ul>
+
         <blockquote><strong>Pro Tip:</strong> list your last 10 video topics in one line each. If you can't describe a single common thread connecting most of them, that inconsistency is likely feeding the mismatch directly.</blockquote>
 
         <h2>Your Thumbnail or Title Oversells the Content</h2>
 
         <p><strong>A thumbnail or title promising something the video doesn't deliver pulls in curiosity clicks from people who were never your real audience.</strong> Those viewers click, bounce fast, and that early behavior becomes part of the signal YouTube uses to decide who to show the video to next.</p>
 
-        <p>This creates a cycle that's easy to miss. <strong>The next round of recommendations draws on that same mismatched early audience</strong>, compounding the problem instead of correcting it. Packaging that's honest about the content, even if it pulls a slightly lower click-through rate, tests with a more accurate audience from the first view onward.</p>
+        <p>The cycle is easy to miss while it's happening. <strong>The next round of recommendations draws on that same mismatched early audience</strong>, compounding the problem instead of correcting it. Packaging that's honest about the content, even if it pulls a slightly lower click-through rate, tests with a more accurate audience from the first view onward.</p>
 
         <h2>Your Metadata Is Too Vague to Match Anyone</h2>
 
@@ -19524,25 +19552,33 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p><strong>Collaborating with a creator from an unrelated niche temporarily brings in viewers who were never a fit for your regular content.</strong> That spike of mismatched viewers can shift how the algorithm reads your channel for a stretch of uploads afterward, even on videos that have nothing to do with the collaboration.</p>
 
-        <p>This is a real cost worth weighing before a cross-niche collab, not a reason to avoid them entirely. <strong>The shift is temporary and corrects itself once your next several uploads return to your normal topic</strong>, so the fix is patience and consistency, not undoing the collaboration.</p>
+        <p>It's a cost worth weighing before a cross-niche collab, not a reason to avoid them entirely. <strong>The shift is temporary and corrects itself once your next several uploads return to your normal topic</strong>, so the fix is patience and consistency, not undoing the collaboration.</p>
 
         <h2>Early Viewers Skewed the Algorithm's First Read</h2>
 
         <p><strong>The first viewers a new upload reaches shape who it gets tested with next.</strong> If an early batch of viewers doesn't match your regular audience, whether from a link shared in an unrelated community or a notification that reached inactive subscribers, that skew can carry forward into the video's broader distribution.</p>
 
-        <p>This is one of the harder causes to fix retroactively. <strong>There's no way to reset who already watched a video</strong>, but a follow-up upload with especially clear, specific packaging can help the algorithm recalibrate faster than waiting it out.</p>
+        <p>It's one of the harder causes to fix retroactively. <strong>There's no way to reset who already watched a video</strong>, but a follow-up upload with especially clear, specific packaging can help the algorithm recalibrate faster than waiting it out.</p>
 
         <h2>Telling Early-Skew From a Real View Drop</h2>
 
         <p><strong>Early-skew recovers over your next few uploads; a real decline does not.</strong> The distinction matters because the fixes are opposite: a real decline needs the content itself addressed, covered fully in <a href="/blog/youtube-views-dropped-suddenly">why views drop suddenly</a>, while early-skew just needs time and clear packaging on what comes next.</p>
 
-        <p><strong>Track the next 3 uploads after a suspected skew, not just the one that triggered it.</strong> If each successive video performs a little closer to your normal range, the signal is correcting on its own. If each one performs the same or worse, early-skew was never the real explanation, and it's worth checking the other six causes instead of waiting longer.</p>
+        <p><strong>Track the next 3 uploads after a suspected skew, not just the one that triggered it.</strong> If each successive video performs a little closer to your normal range, the signal is correcting on its own. If each one performs the same or worse, early-skew wasn't the cause, and it's worth checking the other six instead of waiting longer.</p>
 
         <h2>Your Upload Format Keeps Changing</h2>
 
         <p><strong>Mixing long-form, Shorts, reaction content, and vlogs trains the algorithm to expect different viewing habits from the same channel.</strong> A viewer who watches 20-minute tutorials and a viewer who watches 60-second reactions are rarely the same audience, and alternating formats confuses which group a channel is for.</p>
 
         <p>Format consistency works alongside topic consistency, not instead of it. <strong>A channel can stay in one niche and still confuse the algorithm by constantly switching how that niche gets delivered</strong>, which is a separate signal from the topic itself.</p>
+
+        <p>Three format mixes worth checking against your own upload history:</p>
+
+        <ul>
+          <li><strong>Long-form tutorials alternating with Shorts</strong> on the same topic, which split the audience into two different viewing-habit groups.</li>
+          <li><strong>Scripted content alternating with unscripted reactions</strong>, even within the same niche.</li>
+          <li><strong>A consistent series format interrupted by one-off special uploads</strong>, which can throw off the pattern a regular viewer expects.</li>
+        </ul>
 
         <h2>Reused Metadata Describes an Older Video</h2>
 
@@ -19556,17 +19592,52 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p><strong>None of these seven causes are fixed by a toggle, a setting, or a one-time change.</strong> What resets the match is consistent signal across several uploads in a row, the same mechanism that caused the drift in the first place, run in the opposite direction.</p>
 
-        <p>This is why single-video fixes tend to underperform expectations. <strong>One well-packaged video after a stretch of inconsistency competes against several videos' worth of conflicting signal</strong>, so realignment typically takes multiple uploads, not one.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>What creators try</th>
+              <th>What happens instead</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Looking for a "reset algorithm" setting</td><td>No such setting exists, for creators or viewers</td></tr>
+            <tr><td>Rewriting one video's title or thumbnail</td><td>Competes against several prior uploads' conflicting signal, rarely enough alone</td></tr>
+            <tr><td>Deleting or unlisting the mismatched video</td><td>Doesn't remove the signal already sent by other recent uploads</td></tr>
+            <tr><td>Posting several consistent uploads in a row</td><td>The only mechanism confirmed to shift the match back</td></tr>
+          </tbody>
+        </table>
+
+        <p>Single-video fixes tend to underperform expectations for exactly this reason. <strong>One well-packaged video after a stretch of inconsistency competes against several videos' worth of conflicting signal</strong>, so realignment typically takes multiple uploads, not one. Track these three numbers during that stretch:</p>
+
+        <ul>
+          <li><strong>Impressions on each new upload</strong>, compared to your pre-drift average, not to the single video that triggered the problem.</li>
+          <li><strong>Click-through rate</strong>, which should hold steady throughout if packaging was never the real issue.</li>
+          <li><strong>Traffic source mix</strong>, watching specifically for Suggested and Browse recovering toward their normal share.</li>
+        </ul>
 
         <p><strong>Expect the correction curve to be gradual, not a single clean reset.</strong> A channel realigning from six inconsistent uploads to a consistent topic usually sees each new video test a little better than the last, not a sudden jump back to normal on the first try. That gradual improvement is itself the signal the fix is working.</p>
 
         <h2>Check Your Own Studio Data to Confirm Which Cause Applies</h2>
 
-        <p><strong>Click-through rate is the first fork.</strong> If it's holding at your normal rate while views and impressions both sit low, that's a genuine audience-match problem, not a packaging one. If click-through rate itself has dropped, the cause is more likely the thumbnail or title overselling, a packaging problem unrelated to audience match.</p>
+        <p><strong>Click-through rate is the first fork.</strong> If it's holding at your normal rate while views and impressions both sit low, that's a genuine audience-match problem, not a packaging one. If click-through rate itself has dropped, the cause is more likely the thumbnail or title overselling.</p>
 
-        <p>From there, the pattern narrows further. <strong>Recent uploads covering different, unrelated topics points at topic inconsistency confusing the algorithm's read on your niche</strong>, while a recent collaboration or viral spike right before the drop points at temporary audience skew from early or atypical viewers instead.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>What you're seeing</th>
+              <th>Likely cause</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Click-through rate normal, views and impressions both low</td><td>A genuine audience-match problem, not a packaging one</td></tr>
+            <tr><td>Click-through rate itself has dropped</td><td>Thumbnail or title overselling the content</td></tr>
+            <tr><td>Recent uploads cover different, unrelated topics</td><td>Topic inconsistency confusing the algorithm's read on your niche</td></tr>
+            <tr><td>A recent collab or viral spike preceded the drop</td><td>Temporary audience skew from early or atypical viewers</td></tr>
+            <tr><td>Traffic source shows Suggested or Browse specifically underperforming</td><td>The algorithm matching the video to the wrong existing-viewer pool</td></tr>
+          </tbody>
+        </table>
 
-        <p><strong>The traffic source breakdown in Studio is the fastest way to confirm which explanation applies.</strong> A drop concentrated specifically in Suggested or Browse means the algorithm is matching the video to the wrong existing-viewer pool. A drop spread evenly across every source points at something else entirely, most likely the packaging causes covered above.</p>
+        <p><strong>The traffic source breakdown in Studio is the fastest way to confirm which row applies.</strong> A drop concentrated specifically in Suggested or Browse means the algorithm is matching the video to the wrong existing-viewer pool. A drop spread evenly across every source points at something else entirely, most likely the packaging causes covered above.</p>
 
         <blockquote><strong>Pro Tip:</strong> compare this video's traffic source percentages against your channel's typical split from <a href="/blog/youtube-traffic-sources">your last 10 uploads</a>. A source that's unusually low only on this video, not across your channel generally, confirms the mismatch is specific to this upload's signals.</blockquote>
 
