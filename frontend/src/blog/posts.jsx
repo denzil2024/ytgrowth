@@ -19479,7 +19479,7 @@ Free studio checklist: https://yoursite.com/checklist
     date: '2026-10-12',
     category: CATEGORIES.strategy,
     cover: '/blog/youtube-wrong-audience-cover.jpg',
-    coverAlt: 'A target with an arrow landing far outside the rings, set on a desk beside camera gear and plants in a sunlit home studio',
+    coverAlt: 'A creator watching her plant-care video get sent toward a wall of unrelated viewer photos (construction workers, hikers, teens), red arrows showing the mismatched distribution, home studio with camera gear nearby',
     author: 'Denzil',
     readTime: '9 min read',
     faqs: [
