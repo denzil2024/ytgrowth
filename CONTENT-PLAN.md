@@ -197,8 +197,9 @@ reaching `/features/channel-audit` or checkout.
     2026-10-11 as `/blog/youtube-losing-subscribers`, commit `a60e3eefb`.
     Top-3 correction: live check showed reddit, facebook, youtube.com
     (video results), with yourdigitalresource at #4, not #3.
-16. The "performing worse than usual" notification in YouTube Studio ·
-    Channel Audit · top3: reddit, facebook, support.google
+~~16. The "performing worse than usual" notification in YouTube Studio ·
+    Channel Audit · top3: reddit, facebook, support.google~~ — dropped
+    2026-10-11, see "Dropped this round" below for the evidence.
 17. Why YouTube is showing my video to the wrong audience · Channel Audit /
     SEO Studio · top3: reddit, facebook, blackhatworld · PAA x4
 18. Is my YouTube channel shadowbanned (what a real reach drop looks like
@@ -855,6 +856,17 @@ in the top 3, or wrong searcher):
   GSC shows us at pos 8-10 on the "official 2026" variants
 - "how to increase rpm on youtube": already the subtitle of
   `/blog/youtube-rpm`, would cannibalize
+- plan entry #16, "the 'performing worse than usual' notification in
+  YouTube Studio" (2026-10-11): the exact phrase does not exist in
+  Studio, confirmed via 4 SERP queries + 2 WebSearches with zero hits.
+  The real, related feature ("Typical performance" report, Overview
+  tab) is confirmed real on 3 official Google help pages, but PAA
+  demand against the corrected query is thin, 4 live pulls returned
+  almost entirely the off-topic "$10k/month," "is 7 CTR good," "is
+  2000 views good" cluster, only 2 borderline-relevant hits, no real
+  PAA cluster. Real demand signal was a single Reddit thread, not a
+  pattern. See `research/youtube-typical-performance.md` for the full
+  writeup if this is revisited later with a different angle.
 - "how does youtube decide who to show your video to": same intent as
   `/blog/youtube-algorithm`, would cannibalize
 - "youtube algorithm reset": viewer intent (resetting recommendations)
