@@ -49,27 +49,27 @@ function useStyles() {
       .ab-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .ab-erule { width: 26px; height: 1px; background: var(--yte-accent); }
       .ab-elabel { font: 600 11px/1 ${SANS}; letter-spacing: 0.18em; text-transform: uppercase; color: var(--yte-accent); }
-      .ab-sectitle { font: 300 clamp(30px, 4vw, 44px)/1.1 ${DISPLAY}; letter-spacing: -0.025em; color: var(--yte-ink); max-width: 760px; }
+      .ab-sectitle { font: 700 clamp(30px, 4vw, 44px)/1.1 ${DISPLAY}; letter-spacing: -0.025em; color: var(--yte-ink); max-width: 760px; }
       .ab-sublead { margin-top: 16px; font-size: 17px; line-height: 1.75; color: var(--yte-soft); max-width: 640px; }
       .ab-red { color: var(--yte-accent); font-style: normal; font-weight: 800; }  /* Was italic: that exception was granted for Fraunces, which
          shipped a real italic cut. Jakarta has none, so an italic here
          rendered as a synthesised oblique. Emphasis is weight now. */
 
       /* hero */
-      .ab-h1 { font: 300 clamp(38px, 5.4vw, 58px)/1.05 ${DISPLAY}; letter-spacing: -0.02em; color: var(--yte-ink); margin-bottom: 24px; max-width: 900px; }
+      .ab-h1 { font: 700 clamp(38px, 5.4vw, 58px)/1.05 ${DISPLAY}; letter-spacing: -0.02em; color: var(--yte-ink); margin-bottom: 24px; max-width: 900px; }
       .ab-hlead { font-size: 18px; line-height: 1.75; color: var(--yte-soft); max-width: 680px; }
 
       /* founder story */
       .ab-founder { display: grid; grid-template-columns: 320px 1fr; gap: 60px; align-items: start; margin-top: 12px; }
       .ab-founder-media { position: sticky; top: 100px; }
       .ab-founder-photo { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; border: 1px solid var(--yte-bd); background: var(--yte-bg-alt); filter: grayscale(1) contrast(1.02); }
-      .ab-founder-name { margin-top: 18px; font: 400 26px/1.1 ${DISPLAY}; color: var(--yte-ink); }
+      .ab-founder-name { margin-top: 18px; font: 600 26px/1.1 ${DISPLAY}; color: var(--yte-ink); }
       .ab-founder-role { margin-top: 6px; font: 700 11px/1.3 ${SANS}; letter-spacing: 0.14em; text-transform: uppercase; color: var(--yte-muted); }
       .ab-founder-body p { font-size: 16.5px; line-height: 1.82; color: var(--yte-soft); margin-bottom: 20px; }
       .ab-founder-body p:last-child { margin-bottom: 0; }
-      .ab-pullquote { margin: 30px 0; padding-left: 26px; border-left: 2px solid var(--yte-accent); font: 300 clamp(24px, 2.8vw, 32px)/1.28 ${DISPLAY}; color: var(--yte-ink); letter-spacing: -0.025em; }
+      .ab-pullquote { margin: 30px 0; padding-left: 26px; border-left: 2px solid var(--yte-accent); font: 700 clamp(24px, 2.8vw, 32px)/1.28 ${DISPLAY}; color: var(--yte-ink); letter-spacing: -0.025em; }
       .ab-sign { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--yte-bd); display: flex; align-items: baseline; gap: 12px; }
-      .ab-sign-name { font: 400 20px/1 ${DISPLAY}; color: var(--yte-ink); }
+      .ab-sign-name { font: 600 20px/1 ${DISPLAY}; color: var(--yte-ink); }
       .ab-sign-role { font: 700 10.5px/1 ${SANS}; letter-spacing: 0.14em; text-transform: uppercase; color: var(--yte-muted); }
 
       /* product proof — priority-action split (duplicated from features/ChannelAudit) */
@@ -85,14 +85,14 @@ function useStyles() {
       .ab-pillar { padding: 30px 30px 26px 30px; border-left: 1px solid var(--yte-bd); }
       .ab-pillar:nth-child(3n+1) { border-left: none; padding-left: 0; }
       .ab-pn { font: 700 9px/1 ${SANS}; letter-spacing: 0.14em; color: var(--yte-accent); text-transform: uppercase; margin-bottom: 8px; }
-      .ab-pv { font: 400 23px/1.15 ${DISPLAY}; color: var(--yte-ink); }
+      .ab-pv { font: 600 23px/1.15 ${DISPLAY}; color: var(--yte-ink); }
       .ab-pd { margin-top: 12px; font-size: 14px; line-height: 1.65; color: var(--yte-soft); }
 
       /* moat — numbered flow */
       .ab-moat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 40px; }
       .ab-moat-item { }
-      .ab-moat-n { font: 300 40px/1 ${DISPLAY}; color: var(--yte-accent); }
-      .ab-moat-t { margin-top: 16px; font: 400 20px/1.2 ${DISPLAY}; color: var(--yte-ink); }
+      .ab-moat-n { font: 700 40px/1 ${DISPLAY}; color: var(--yte-accent); }
+      .ab-moat-t { margin-top: 16px; font: 600 20px/1.2 ${DISPLAY}; color: var(--yte-ink); }
       .ab-moat-d { margin-top: 12px; font-size: 15px; line-height: 1.72; color: var(--yte-soft); }
 
       /* proof numbers band */
@@ -100,7 +100,7 @@ function useStyles() {
       .ab-proof-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
       .ab-proof-cell { padding: 46px 34px; border-left: 1px solid var(--yte-bd); }
       .ab-proof-cell:first-child { border-left: none; padding-left: 0; }
-      .ab-proof-n { font: 300 44px/1 ${DISPLAY}; color: var(--yte-ink); letter-spacing: -0.025em; }
+      .ab-proof-n { font: 700 44px/1 ${DISPLAY}; color: var(--yte-ink); letter-spacing: -0.025em; }
       .ab-proof-plus { color: var(--yte-ink); }
       .ab-proof-l { margin-top: 10px; font: 700 11px/1.3 ${SANS}; letter-spacing: 0.1em; text-transform: uppercase; color: var(--yte-accent); }
       .ab-proof-d { margin-top: 10px; font-size: 13px; line-height: 1.6; color: var(--yte-soft); }
