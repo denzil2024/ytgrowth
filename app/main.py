@@ -21,6 +21,7 @@ load_dotenv()
 ALLOWED_COUNTRIES = {
     "US", "GB", "CA", "AU",
     "DE", "FR", "NL", "IE", "CH", "SE", "NO", "DK", "FI",
+    "KE",
 }
 
 _BOT_UA_RE = re.compile(
