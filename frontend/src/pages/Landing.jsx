@@ -38,7 +38,7 @@ const ED_LINE   = 'rgba(20,19,15,0.12)'
 import AuthErrorModal from '../components/AuthErrorModal'
 import BrandLockup from '../components/BrandLockup'
 import { isChannelBrain } from '../brandHost'
-import HeroDashboardPreview from '../components/landing/HeroDashboardPreview'
+import HeroFlow from '../components/landing/HeroFlow'
 import ChannelAuditPreview from '../components/landing/ChannelAuditPreview'
 import CompetitorPreview from '../components/landing/CompetitorPreview'
 import ThumbnailPreview from '../components/landing/ThumbnailPreview'
@@ -370,7 +370,7 @@ function useGlobalStyles() {
          on mobile. These rules reproduce the exact isMobile/isTablet values so
          the static HTML is correct on every viewport with no JS re-render. ── */
       .ytg-hero { padding: 72px 48px 64px; }
-      .ytg-hero-h1 { font-size: 76px; line-height: 1.02; letter-spacing: -3px; }
+      .ytg-hero-h1 { font-size: 60px; line-height: 1.04; letter-spacing: -2px; }
       .ytg-hero-sub { font-size: 17.5px; }
       .ytg-hero-cta { flex-direction: row; width: auto; }
       .ytg-hero-cta .ytg-btn-primary, .ytg-hero-cta .ytg-btn-ghost, .ytg-hero-cta a { width: auto; }
@@ -1021,7 +1021,7 @@ export default function Landing() {
       {/* ── HERO ────────────────────────────────────────────────────────── */}
       <div id="hero" className="ytg-hero" style={{ position: 'relative', overflow: 'hidden', background: '#f6f4ef' }}>
 
-        <div className="ytg-hero-grid" style={{ maxWidth: 1240, margin: '0 auto', padding: isMobile ? '0 4px' : '0 32px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.14fr 1fr', gap: isMobile ? 44 : 56, alignItems: isMobile ? 'center' : 'start', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
+        <div className="ytg-hero-grid" style={{ maxWidth: isMobile ? 1240 : 'none', margin: isMobile ? '0 auto' : '0 0 0 max(32px, calc((100vw - 1240px) / 2 + 32px))', padding: isMobile ? '0 4px' : 0, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 1.06fr) minmax(0, 0.94fr)', gap: isMobile ? 44 : 56, alignItems: isMobile ? 'center' : 'center', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
           <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
           {/* Eyebrow */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
@@ -1029,8 +1029,9 @@ export default function Landing() {
             <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>AI YouTube growth platform</span>
           </div>
 
-          <h1 className="ytg-hero-h1" style={{ fontFamily: ED_DISPLAY, fontWeight: 700, color: ED_INK, fontSize: 'clamp(34px, 5.4vw, 72px)', marginBottom: 18, textWrap: 'balance', letterSpacing: '-0.025em', lineHeight: 1.06 }}>
-            Your analytics already know why you're stuck. <em style={{ fontStyle: 'normal', color: ED_ACCENT }}>Now you will too.</em>
+          <h1 className="ytg-hero-h1" style={{ fontFamily: ED_DISPLAY, fontWeight: 700, color: ED_INK, fontSize: 'clamp(34px, 4.4vw, 60px)', marginBottom: 18, textWrap: 'balance', letterSpacing: '-0.025em', lineHeight: 1.06 }}>
+            Your analytics already know why you're stuck.{' '}
+            <em style={{ fontStyle: 'normal', color: ED_ACCENT, display: isMobile ? 'inline' : 'block' }}>Now you will too.</em>
           </h1>
 
           <p className="ytg-hero-sub" style={{ fontFamily: ED_SANS, color: ED_SOFT, lineHeight: 1.65, maxWidth: 620, margin: isMobile ? '0 auto 26px' : '0 0 30px', textWrap: 'pretty' }}>
@@ -1092,8 +1093,8 @@ $5 to start &nbsp;·&nbsp; 5 analyses, credits never expire &nbsp;·&nbsp; No su
           </p>
         </div>
 
-        <div style={isMobile ? undefined : { transform: 'scale(1.03) translateX(18px)', transformOrigin: 'top right', paddingTop: 6 }}>
-          <HeroDashboardPreview isMobile={isMobile} />
+        <div style={isMobile ? undefined : { paddingRight: 0 }}>
+          <HeroFlow isMobile={isMobile} />
         </div>
         </div>
       </div>
