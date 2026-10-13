@@ -1,12 +1,15 @@
 /* Thumbnail IQ product preview. Same editorial skin as the hero, audit, and
-   competitor previews: white surface, sharp hairline cards, Fraunces numbers,
-   Barlow labels, restrained red accent. Shows a real thumbnail being scored,
+   competitor previews: white surface, sharp hairline cards, Jakarta numbers and labels, restrained red accent. Shows a real thumbnail being scored,
    the two-layer breakdown, and the single highest-impact fix. */
 
 import { isChannelBrain } from '../../brandHost'
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS = "'Barlow', system-ui, sans-serif"
+/* Figure face for the numbers in these preview cards. Was Fraunces; the
+   whole public site moved to one Jakarta family 2026-10-13, and these cards
+   are product-UI mockups, so a serif figure read like a magazine pull-quote
+   sitting inside an app screenshot. */
+const FIGURE = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS = "'Plus Jakarta Sans', system-ui, sans-serif"
 const INK = '#14130f'
 const SOFT = '#5c574e'
 const MUT = '#8a8378'
@@ -21,7 +24,7 @@ function LayerRow({ label, score, max }) {
       <span style={{ flex: 1, height: 5, background: 'rgba(20,19,15,0.08)', position: 'relative', overflow: 'hidden' }}>
         <span style={{ position: 'absolute', inset: 0, width: (score / max * 100) + '%', background: 'rgba(20,19,15,0.55)' }} />
       </span>
-      <span style={{ width: 44, flexShrink: 0, textAlign: 'right', fontFamily: SERIF, fontSize: 15, fontWeight: 400, color: INK, letterSpacing: '-0.3px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}<span style={{ fontFamily: SANS, fontSize: 11, color: MUT }}>/{max}</span></span>
+      <span style={{ width: 44, flexShrink: 0, textAlign: 'right', fontFamily: FIGURE, fontSize: 15, fontWeight: 600, color: INK, letterSpacing: '-0.3px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}<span style={{ fontFamily: SANS, fontSize: 11, color: MUT }}>/{max}</span></span>
     </div>
   )
 }
@@ -49,7 +52,7 @@ export default function ThumbnailPreview({ isMobile }) {
       {/* Overall score + verdict */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: isMobile ? '16px 18px' : '18px 24px', borderBottom: '1px solid ' + LINE }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span style={{ fontFamily: SERIF, fontSize: isMobile ? 38 : 46, fontWeight: 400, color: INK, letterSpacing: '-1px', lineHeight: 1 }}>74</span>
+          <span style={{ fontFamily: FIGURE, fontSize: isMobile ? 38 : 46, fontWeight: 600, color: INK, letterSpacing: '-1px', lineHeight: 1 }}>74</span>
           <span style={{ fontFamily: SANS, fontSize: 16, fontWeight: 500, color: MUT }}>/100</span>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>

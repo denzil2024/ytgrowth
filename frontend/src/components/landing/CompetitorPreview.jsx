@@ -1,12 +1,15 @@
 /* Competitor Intelligence product preview. Same editorial skin as the hero
-   and audit previews: white surface, sharp hairline cards, Fraunces numbers,
-   Barlow labels, restrained red accent. Shows a tracked rival: the AI read,
+   and audit previews: white surface, sharp hairline cards, Jakarta numbers and labels, restrained red accent. Shows a tracked rival: the AI read,
    their headline stats, and the top videos worth studying. */
 
 import { isChannelBrain } from '../../brandHost'
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS = "'Barlow', system-ui, sans-serif"
+/* Figure face for the numbers in these preview cards. Was Fraunces; the
+   whole public site moved to one Jakarta family 2026-10-13, and these cards
+   are product-UI mockups, so a serif figure read like a magazine pull-quote
+   sitting inside an app screenshot. */
+const FIGURE = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS = "'Plus Jakarta Sans', system-ui, sans-serif"
 const INK = '#14130f'
 const SOFT = '#5c574e'
 const MUT = '#8a8378'
@@ -48,7 +51,7 @@ export default function CompetitorPreview({ isMobile }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: LINE, margin: isMobile ? '14px 18px' : '16px 24px', border: '1px solid ' + LINE }}>
         {[{ k: '142K', l: 'Subscribers' }, { k: '4.2K', l: 'Avg / video' }, { k: '4.6%', l: 'Avg CTR' }].map((s, i) => (
           <div key={i} style={{ background: '#fff', padding: '12px 14px' }}>
-            <p style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: INK, letterSpacing: '-0.5px', lineHeight: 1, marginBottom: 5, fontVariantNumeric: 'tabular-nums' }}>{s.k}</p>
+            <p style={{ fontFamily: FIGURE, fontSize: 22, fontWeight: 600, color: INK, letterSpacing: '-0.5px', lineHeight: 1, marginBottom: 5, fontVariantNumeric: 'tabular-nums' }}>{s.k}</p>
             <p style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 600, color: MUT, letterSpacing: '0.04em' }}>{s.l}</p>
           </div>
         ))}

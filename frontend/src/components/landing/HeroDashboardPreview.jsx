@@ -1,11 +1,15 @@
 /* Hero product preview. Real product data + the real Sparkline chart
    primitive, rendered in OUR editorial skin: light/white surface, sharp
-   hairline cards, Fraunces numbers, Barlow labels, restrained red accent. */
+   hairline cards, Jakarta numbers and labels, restrained red accent. */
 import { Sparkline } from '../../pages/dashboard/primitives'
 import { isChannelBrain } from '../../brandHost'
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS = "'Barlow', system-ui, sans-serif"
+/* Figure face for the numbers in these preview cards. Was Fraunces; the
+   whole public site moved to one Jakarta family 2026-10-13, and these cards
+   are product-UI mockups, so a serif figure read like a magazine pull-quote
+   sitting inside an app screenshot. */
+const FIGURE = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS = "'Plus Jakarta Sans', system-ui, sans-serif"
 const INK = '#14130f'
 const SOFT = '#5c574e'
 const MUT = '#8a8378'
@@ -15,7 +19,7 @@ const ACCENT = '#e5302a'
 const SUBS = [37.4, 37.6, 37.5, 37.9, 38.2, 38.1, 38.6, 38.9, 39.1, 39.0, 39.5, 39.8, 40.0, 40.3, 40.2, 40.7, 41.0, 41.2, 41.5, 41.4, 41.9, 42.1, 42.4, 42.6, 42.5, 43.0, 43.4, 43.8]
 const VIEWS = [12, 13, 12.5, 14, 13.5, 15, 16, 15.5, 14.8, 16.2, 17, 16.5, 18, 17.5, 19, 18.4, 17.8, 19.5, 20, 19.2, 21, 20.4, 18.4, 19, 20.8, 21.5, 20.9, 22]
 
-/* Editorial score ring: red arc, Fraunces serif number. */
+/* Editorial score ring: red arc, heavy Jakarta number. */
 function ScoreRing({ score, size = 64 }) {
   const r = 27, c = 33, circ = 2 * Math.PI * r
   const dash = (score / 100) * circ
@@ -25,7 +29,7 @@ function ScoreRing({ score, size = 64 }) {
         <circle cx={c} cy={c} r={r} fill="none" stroke="rgba(20,19,15,0.10)" strokeWidth="6" />
         <circle cx={c} cy={c} r={r} fill="none" stroke={ACCENT} strokeWidth="6" strokeDasharray={`${dash} ${circ - dash}`} strokeLinecap="round" transform="rotate(-90 33 33)" />
       </svg>
-      <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: SERIF, fontSize: size * 0.32, fontWeight: 400, color: INK, letterSpacing: '-0.5px' }}>{score}</span>
+      <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FIGURE, fontSize: size * 0.32, fontWeight: 600, color: INK, letterSpacing: '-0.5px' }}>{score}</span>
     </div>
   )
 }
@@ -75,7 +79,7 @@ export default function HeroDashboardPreview({ isMobile }) {
               <span style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: MUT }}>{t.label}</span>
               <Delta>{t.delta}</Delta>
             </div>
-            <p style={{ fontFamily: SERIF, fontSize: isMobile ? 26 : 32, fontWeight: 400, letterSpacing: '-0.5px', color: INK, lineHeight: 1, marginBottom: 12, fontVariantNumeric: 'tabular-nums' }}>{t.value}</p>
+            <p style={{ fontFamily: FIGURE, fontSize: isMobile ? 26 : 32, fontWeight: 600, letterSpacing: '-0.5px', color: INK, lineHeight: 1, marginBottom: 12, fontVariantNumeric: 'tabular-nums' }}>{t.value}</p>
             <Sparkline data={t.series} width={isMobile ? 140 : 200} height={42} stroke={ACCENT} fill="rgba(229,48,42,0.10)" strokeWidth={2} />
           </div>
         ))}

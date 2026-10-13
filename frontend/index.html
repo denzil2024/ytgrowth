@@ -166,15 +166,17 @@
          the fonts the landing renders above the fold are preloaded so they
          load in parallel with the CSS instead of chaining behind it (Lighthouse
          "avoid chaining critical requests"). The set matches the hero + header
-         exactly: Fraunces normal (H1) + italic (the red accent phrase in the
-         H1), and Barlow 400/600/700 (hero sub, eyebrow, CTA button). DM Sans is
-         NOT preloaded — the wordmark now uses Barlow, so DM Sans is unused on
-         the homepage. Inter is gone entirely; the editorial sans is Barlow. -->
-    <link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin/>
-    <link rel="preload" href="/fonts/fraunces-italic-latin.woff2" as="font" type="font/woff2" crossorigin/>
-    <link rel="preload" href="/fonts/barlow-400-latin.woff2" as="font" type="font/woff2" crossorigin/>
-    <link rel="preload" href="/fonts/barlow-600-latin.woff2" as="font" type="font/woff2" crossorigin/>
-    <link rel="preload" href="/fonts/barlow-700-latin.woff2" as="font" type="font/woff2" crossorigin/>
+         exactly: Plus Jakarta Sans, and nothing else. The homepage is set in ONE
+         variable family as of 2026-10-13 (it was Fraunces 300 display +
+         Barlow body): hierarchy comes from weight and tracking, not from a
+         serif/sans contrast. Fraunces read boutique-editorial rather than
+         software, and its italic was carrying the red emphasis on all 11
+         subheads. So five preloads (2x Fraunces + 3x Barlow, ~112KB) became
+         one (~27KB), and the LCP text now needs a single font file.
+         The Barlow, Fraunces, DM Sans and Inter @font-face rules stay defined
+         below because the blog, feature and stats pages still use them; they
+         are simply no longer on the homepage critical path. -->
+    <link rel="preload" href="/fonts/plus-jakarta-latin.woff2" as="font" type="font/woff2" crossorigin/>
     <style>
       /* Editorial design fonts (public site), self-hosted, latin subset, variable
          where available. Replaces the Google Fonts @import that was on every

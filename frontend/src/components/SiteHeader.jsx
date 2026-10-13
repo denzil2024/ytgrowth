@@ -7,7 +7,7 @@ import { isChannelBrain } from '../brandHost'
    the CTA geometry, outline instead of fill), text nav in the middle, Log in +
    solid-red CTA hard-right. Dropdowns are small, sharp, text-forward panels
    (no big icon circles, no rounded mega-cards, no heavy shadow). Matches the
-   editorial design language (Barlow, warm paper, sharp flat, restrained red).
+   editorial design language (Plus Jakarta Sans, warm paper, sharp flat, restrained red).
    See project_design_language_editorial.
 
    To change the nav anywhere on the site, edit this file. */
@@ -92,7 +92,7 @@ function useStyles() {
         padding: 0 32px;
         background: #f6f4ef;
         border-bottom: 1px solid rgba(20,19,15,0.10);
-        font-family: 'Barlow', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
       }
       /* Inner container, aligns the logo + nav + CTA to the same content grid
          (≈1240) used by the page below, so nothing floats off the edge. */
@@ -174,15 +174,15 @@ function useStyles() {
         position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
         background: #f6f4ef; padding: 26px 24px 24px; z-index: 99;
         overflow-y: auto; display: flex; flex-direction: column;
-        font-family: 'Barlow', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
       }
       .sh-mm-section { margin-bottom: 22px; }
-      .sh-mm-label { display: block; font-family: 'Barlow', system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(20,19,15,0.45); margin-bottom: 8px; }
-      .sh-mm-link { display: block; font-family: 'Barlow', system-ui, sans-serif; font-size: 15.5px; font-weight: 600; color: #14130f; text-decoration: none; padding: 7px 0; letter-spacing: -0.1px; line-height: 1.3; transition: color 0.15s; }
+      .sh-mm-label { display: block; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(20,19,15,0.45); margin-bottom: 8px; }
+      .sh-mm-link { display: block; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 15.5px; font-weight: 600; color: #14130f; text-decoration: none; padding: 7px 0; letter-spacing: -0.1px; line-height: 1.3; transition: color 0.15s; }
       .sh-mm-link:hover { color: #e5302a; }
-      .sh-mm-seeall { display: inline-block; font-family: 'Barlow', system-ui, sans-serif; font-size: 13px; font-weight: 600; color: #e5302a; text-decoration: none; padding-top: 8px; letter-spacing: 0.02em; }
+      .sh-mm-seeall { display: inline-block; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 13px; font-weight: 600; color: #e5302a; text-decoration: none; padding-top: 8px; letter-spacing: 0.02em; }
       .sh-mm-cta-row { display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid rgba(20,19,15,0.12); margin-top: auto; }
-      .sh-mm-loginlink { display: block; text-align: center; font-family: 'Barlow', system-ui, sans-serif; padding: 8px 0; font-size: 14px; font-weight: 500; text-decoration: none; color: rgba(20,19,15,0.55); letter-spacing: -0.1px; }
+      .sh-mm-loginlink { display: block; text-align: center; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; padding: 8px 0; font-size: 14px; font-weight: 500; text-decoration: none; color: rgba(20,19,15,0.55); letter-spacing: -0.1px; }
 
       @keyframes shFadeUp { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
     `

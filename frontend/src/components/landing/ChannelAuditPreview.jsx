@@ -1,19 +1,23 @@
 /* Channel Audit product preview. Same editorial skin as HeroDashboardPreview:
-   white surface, sharp hairline cards, Fraunces numbers, Barlow labels,
+   white surface, sharp hairline cards, Jakarta numbers and labels,
    restrained red accent. Shows the audit view, a score ring over a ranked
    set of scored dimensions, ending on the single priority action. */
 
 import { isChannelBrain } from '../../brandHost'
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS = "'Barlow', system-ui, sans-serif"
+/* Figure face for the numbers in these preview cards. Was Fraunces; the
+   whole public site moved to one Jakarta family 2026-10-13, and these cards
+   are product-UI mockups, so a serif figure read like a magazine pull-quote
+   sitting inside an app screenshot. */
+const FIGURE = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS = "'Plus Jakarta Sans', system-ui, sans-serif"
 const INK = '#14130f'
 const SOFT = '#5c574e'
 const MUT = '#8a8378'
 const LINE = 'rgba(20,19,15,0.12)'
 const ACCENT = '#e5302a'
 
-/* Editorial score ring: red arc, Fraunces serif number. */
+/* Editorial score ring: red arc, heavy Jakarta number. */
 function ScoreRing({ score, size = 64 }) {
   const r = 27, c = 33, circ = 2 * Math.PI * r
   const dash = (score / 100) * circ
@@ -23,12 +27,12 @@ function ScoreRing({ score, size = 64 }) {
         <circle cx={c} cy={c} r={r} fill="none" stroke="rgba(20,19,15,0.10)" strokeWidth="6" />
         <circle cx={c} cy={c} r={r} fill="none" stroke={ACCENT} strokeWidth="6" strokeDasharray={`${dash} ${circ - dash}`} strokeLinecap="round" transform="rotate(-90 33 33)" />
       </svg>
-      <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: SERIF, fontSize: size * 0.32, fontWeight: 400, color: INK, letterSpacing: '-0.5px' }}>{score}</span>
+      <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FIGURE, fontSize: size * 0.32, fontWeight: 600, color: INK, letterSpacing: '-0.5px' }}>{score}</span>
     </div>
   )
 }
 
-/* One scored dimension row: label, hairline bar, Fraunces score. The weak
+/* One scored dimension row: label, hairline bar, Jakarta score. The weak
    one carries a small accent flag so the eye lands on what needs fixing. */
 function DimRow({ label, score, weak }) {
   return (
@@ -37,7 +41,7 @@ function DimRow({ label, score, weak }) {
       <span style={{ flex: 1, height: 5, background: 'rgba(20,19,15,0.08)', position: 'relative', overflow: 'hidden' }}>
         <span style={{ position: 'absolute', inset: 0, width: score + '%', background: weak ? ACCENT : 'rgba(20,19,15,0.55)' }} />
       </span>
-      <span style={{ width: 26, flexShrink: 0, textAlign: 'right', fontFamily: SERIF, fontSize: 16, fontWeight: 400, color: weak ? ACCENT : INK, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+      <span style={{ width: 26, flexShrink: 0, textAlign: 'right', fontFamily: FIGURE, fontSize: 16, fontWeight: 600, color: weak ? ACCENT : INK, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
     </div>
   )
 }

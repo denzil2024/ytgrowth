@@ -4,7 +4,7 @@ import { isChannelBrain } from '../brandHost'
 
 /* Shared site footer (big editorial sitemap rebuild, 2026-06-30). Dark band
    (#14130f, the editorial ink) as the page floor, bookending the dark
-   app-preview panes used across the feature pages. Three tiers: a Fraunces
+   app-preview panes used across the feature pages. Three tiers: a Jakarta
    serif statement + CTA pair, a 6-block sitemap (brand + Product + Free tools
    + Resources + Company + Legal), and a copyright strip. On-dark accents use
    gold #e6b35c (the locked rule); the solid-red CTA stays red. Social marks
@@ -12,8 +12,13 @@ import { isChannelBrain } from '../brandHost'
    See project_design_language_editorial. */
 
 const INK   = '#14130f'
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+/* Display face for the footer CTA heading. Matches Landing's ED_DISPLAY:
+   the footer sits directly under the homepage, so a Fraunces serif heading
+   here read as a different site after Landing moved to all-Jakarta
+   (2026-10-13). Kept as its own constant so the footer can be retuned
+   independently. */
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 const GOLD  = '#e6b35c'
 const CREAM = '#f6f4ef'
 
@@ -50,7 +55,7 @@ function useIsMobile() {
   return isMobile
 }
 
-/* Load Fraunces + Barlow so the footer renders in the editorial type on every
+/* Load Plus Jakarta Sans so the footer renders in the site type on every
    page, including ones not migrated yet. (Self-hosted at production build.) */
 function useFooterFont() {
   useEffect(() => {
@@ -158,8 +163,8 @@ function CtaButtons() {
 
 function Statement({ size }) {
   return (
-    <h2 style={{ fontFamily: SERIF, fontWeight: 400, color: CREAM, fontSize: size, lineHeight: 1.1, letterSpacing: '-0.01em', textWrap: 'balance', margin: 0 }}>
-      Grow on YouTube with <em style={{ fontStyle: 'italic', color: GOLD }}>data</em>, not guesswork.
+    <h2 style={{ fontFamily: DISPLAY, fontWeight: 700, color: CREAM, fontSize: size, lineHeight: 1.1, letterSpacing: '-0.025em', textWrap: 'balance', margin: 0 }}>
+      Grow on YouTube with <em style={{ fontStyle: 'normal', fontWeight: 800, color: GOLD }}>data</em>, not guesswork.
     </h2>
   )
 }

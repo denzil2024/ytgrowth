@@ -1,12 +1,16 @@
 /* Weekly Report product preview. Same editorial skin as the hero, audit,
    competitor, and thumbnail previews: white surface, sharp hairline cards,
-   Fraunces numbers, Barlow labels, restrained red accent. Shows the Monday
+   Jakarta numbers and labels, restrained red accent. Shows the Monday
    digest, the week's movement and the one action worth doing. */
 
 import { isChannelBrain } from '../../brandHost'
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS = "'Barlow', system-ui, sans-serif"
+/* Figure face for the numbers in these preview cards. Was Fraunces; the
+   whole public site moved to one Jakarta family 2026-10-13, and these cards
+   are product-UI mockups, so a serif figure read like a magazine pull-quote
+   sitting inside an app screenshot. */
+const FIGURE = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS = "'Plus Jakarta Sans', system-ui, sans-serif"
 const INK = '#14130f'
 const SOFT = '#5c574e'
 const MUT = '#8a8378'
@@ -49,7 +53,7 @@ export default function WeeklyReportPreview({ isMobile }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: isMobile ? '16px 18px' : '18px 24px', borderBottom: '1px solid ' + LINE }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: MUT, marginBottom: 4 }}>Apr 7 – Apr 13</p>
-          <p style={{ fontFamily: SERIF, fontSize: isMobile ? 19 : 22, fontWeight: 400, color: INK, letterSpacing: '-0.3px', lineHeight: 1.1 }}>Your strongest week in six.</p>
+          <p style={{ fontFamily: FIGURE, fontSize: isMobile ? 19 : 22, fontWeight: 600, color: INK, letterSpacing: '-0.3px', lineHeight: 1.1 }}>Your strongest week in six.</p>
         </div>
         <span style={{ flexShrink: 0, fontFamily: SANS, fontSize: 9.5, fontWeight: 700, color: ACCENT, border: '1px solid rgba(229,48,42,0.32)', padding: '3px 9px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Latest</span>
       </div>
@@ -62,7 +66,7 @@ export default function WeeklyReportPreview({ isMobile }) {
               <span style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: MUT }}>{t.label}</span>
               <Delta steady={t.steady}>{t.delta}</Delta>
             </div>
-            <p style={{ fontFamily: SERIF, fontSize: isMobile ? 26 : 30, fontWeight: 400, color: INK, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{t.val}</p>
+            <p style={{ fontFamily: FIGURE, fontSize: isMobile ? 26 : 30, fontWeight: 600, color: INK, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{t.val}</p>
           </div>
         ))}
       </div>
