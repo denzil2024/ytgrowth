@@ -10,13 +10,17 @@ import { postsMeta as posts, formatPostDate } from '../blog/postsMeta.js'
    math entirely, it doesn't eat into the page budget. */
 const POSTS_PER_PAGE = 12
 
-/* Blog index. Migrated to the editorial design language (Fraunces +
-   Barlow, sharp flat cards, warm paper, restrained red). ALL pagination,
+/* Blog index. Set in one type family, Plus Jakarta Sans (sharp flat cards,
+   warm paper, restrained red). Was Fraunces display + Barlow body until
+   2026-10-13, when the whole public site moved to a single family: Fraunces
+   read editorial/boutique rather than software. DISPLAY and SANS are the
+   same face on purpose, kept as two names so card titles can be retuned
+   without touching body copy. ALL pagination,
    SEO (title/description/rel prev-next), and scroll logic are preserved;
    only the skin changed. See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -48,10 +52,10 @@ function useStyles() {
       .bl-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .bl-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .bl-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .bl-h1 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; color: var(--yte-ink); }
-      .bl-h1 em { font-style: italic; color: var(--yte-accent); }
-      .bl-h2 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; color: var(--yte-ink); }
-      .bl-h2 em { font-style: italic; color: var(--yte-accent); }
+      .bl-h1 { font-family: ${DISPLAY}; font-weight: 700; letter-spacing: -0.025em; line-height: 1.04; color: var(--yte-ink); }
+      .bl-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .bl-h2 { font-family: ${DISPLAY}; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; color: var(--yte-ink); }
+      .bl-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .bl-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.7; }
 
       .bl-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
@@ -61,10 +65,10 @@ function useStyles() {
       .bl-card:hover { transform: translateY(-2px); border-color: var(--yte-line-2); box-shadow: 0 10px 30px -16px rgba(20,19,15,0.28); }
       .bl-card-cover { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, var(--yte-bg-2), #e6e1d6); position: relative; overflow: hidden; }
       .bl-card-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
-      .bl-card-cover-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: ${SERIF}; font-weight: 400; font-size: 64px; color: rgba(20,19,15,0.14); }
+      .bl-card-cover-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: ${DISPLAY}; font-weight: 700; font-size: 64px; color: rgba(20,19,15,0.14); }
       .bl-card-cat { position: absolute; top: 12px; left: 12px; background: var(--yte-surface); padding: 4px 10px; font-family: ${SANS}; font-size: 10px; font-weight: 700; color: var(--yte-accent); letter-spacing: 0.1em; text-transform: uppercase; }
       .bl-card-body { padding: 22px 22px 24px; display: flex; flex-direction: column; flex: 1; gap: 10px; }
-      .bl-card-title { font-family: ${SERIF}; font-size: 21px; font-weight: 400; letter-spacing: -0.2px; line-height: 1.22; color: var(--yte-ink); text-wrap: balance; transition: color 0.18s; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+      .bl-card-title { font-family: ${DISPLAY}; font-size: 21px; font-weight: 600; letter-spacing: -0.2px; line-height: 1.22; color: var(--yte-ink); text-wrap: balance; transition: color 0.18s; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
       .bl-card:hover .bl-card-title { color: var(--yte-accent); }
       .bl-card-excerpt { font-family: ${SANS}; font-size: 14px; line-height: 1.65; color: var(--yte-soft); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
       .bl-card-meta { margin-top: auto; padding-top: 14px; font-family: ${SANS}; font-size: 12.5px; color: var(--yte-muted); font-weight: 500; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--yte-line); }
@@ -76,7 +80,7 @@ function useStyles() {
       .bl-featured-cover { aspect-ratio: 16/9; background: linear-gradient(135deg, var(--yte-bg-2), #e6e1d6); position: relative; overflow: hidden; }
       .bl-featured-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
       .bl-featured-body { padding: 48px 48px 48px 44px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
-      .bl-featured-title { font-family: ${SERIF}; font-size: 36px; font-weight: 400; letter-spacing: -0.4px; line-height: 1.1; color: var(--yte-ink); text-wrap: balance; transition: color 0.18s; }
+      .bl-featured-title { font-family: ${DISPLAY}; font-size: 36px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.1; color: var(--yte-ink); text-wrap: balance; transition: color 0.18s; }
       .bl-featured:hover .bl-featured-title { color: var(--yte-accent); }
       .bl-featured-excerpt { font-family: ${SANS}; font-size: 16px; line-height: 1.65; color: var(--yte-soft); }
 

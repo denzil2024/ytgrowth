@@ -6,8 +6,10 @@ import NewsletterCapture from '../components/NewsletterCapture'
 import { getPostBySlug, getRelatedPosts, formatPostDate } from '../blog/posts.jsx'
 import { BLOG_SEO } from '../blog/seoMeta'
 
-/* Single blog post. Migrated to the editorial design language (Fraunces +
-   Barlow, sharp flat cards, warm paper, restrained red). ALL post-rendering
+/* Single blog post. Set in one type family, Plus Jakarta Sans (sharp flat
+   cards, warm paper, restrained red). Was Fraunces display + Barlow body
+   until 2026-10-13. DISPLAY and SANS are the same face on purpose, kept as
+   two names so headings can be retuned independently. ALL post-rendering
    and SEO logic (per-slug meta, BlogPosting + BreadcrumbList JSON-LD, scroll
    reset, related posts) are preserved. The .bp-prose class names are kept
    EXACTLY because the post content in posts.jsx references them
@@ -16,8 +18,8 @@ import { BLOG_SEO } from '../blog/seoMeta'
    the page-level bottom CTA was removed; posts end on their conclusion and
    carry their CTA mid-article. See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -54,9 +56,9 @@ function useStyles() {
       .bp-category { display: inline-block; padding: 6px 14px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; margin-bottom: 26px; transition: filter 0.18s; }
       .bp-category:hover { filter: brightness(1.06); }
 
-      .bp-h1 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.06; color: var(--yte-ink); }
+      .bp-h1 { font-family: ${DISPLAY}; font-weight: 700; letter-spacing: -0.025em; line-height: 1.06; color: var(--yte-ink); }
       .bp-h1 em { font-style: italic; color: var(--yte-accent); }
-      .bp-h2 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; color: var(--yte-ink); }
+      .bp-h2 { font-family: ${DISPLAY}; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; color: var(--yte-ink); }
       .bp-h2 em { font-style: italic; color: var(--yte-accent); }
 
       /* Byline */
@@ -68,7 +70,7 @@ function useStyles() {
       /* Hero image, 16:9, sharp flat */
       .bp-hero-image { max-width: 1080px; width: 100%; margin: 40px auto 0; aspect-ratio: 16/9; background: linear-gradient(135deg, var(--yte-bg-2), #e6e1d6); border: 1px solid var(--yte-line); overflow: hidden; position: relative; }
       .bp-hero-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-      .bp-hero-image-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: ${SERIF}; font-weight: 400; font-size: 96px; color: rgba(20,19,15,0.14); }
+      .bp-hero-image-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: ${DISPLAY}; font-weight: 700; font-size: 96px; color: rgba(20,19,15,0.14); }
 
       /* PROSE, post body typography */
       .bp-prose { max-width: 760px; margin: 0 auto; font-family: ${SANS}; font-size: 17.5px; line-height: 1.78; color: var(--yte-ink); }
@@ -78,9 +80,9 @@ function useStyles() {
       .bp-prose strong { font-weight: 600; color: var(--yte-ink); }
       .bp-prose em { font-style: italic; }
 
-      .bp-prose h2 { font-family: ${SERIF}; font-size: 30px; font-weight: 400; letter-spacing: -0.3px; line-height: 1.15; color: var(--yte-ink); margin-top: 1.9em !important; margin-bottom: 0.5em !important; }
+      .bp-prose h2 { font-family: ${DISPLAY}; font-size: 30px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.15; color: var(--yte-ink); margin-top: 1.9em !important; margin-bottom: 0.5em !important; }
       .bp-prose h2 + p { margin-top: 0.5em !important; }
-      .bp-prose h3 { font-family: ${SERIF}; font-size: 22px; font-weight: 400; letter-spacing: -0.2px; line-height: 1.3; color: var(--yte-ink); margin-top: 1.7em !important; margin-bottom: 0.45em !important; }
+      .bp-prose h3 { font-family: ${DISPLAY}; font-size: 22px; font-weight: 700; letter-spacing: -0.2px; line-height: 1.3; color: var(--yte-ink); margin-top: 1.7em !important; margin-bottom: 0.45em !important; }
       .bp-prose h3 + p { margin-top: 0.5em !important; }
 
       .bp-prose a { color: var(--yte-accent); text-decoration: none; font-weight: 600; background-image: linear-gradient(transparent calc(100% - 1px), rgba(229,48,42,0.35) 1px); background-size: 100% 100%; background-repeat: no-repeat; transition: background-image 0.18s, color 0.18s; }
@@ -109,7 +111,7 @@ function useStyles() {
       .bp-prose .bp-cta-card-link { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 2.5em 0; padding: 26px 30px; background: var(--yte-surface) !important; border: 1px solid var(--yte-line); border-radius: 0; text-decoration: none !important; background-image: none !important; color: var(--yte-ink) !important; transition: border-color 0.2s, background 0.2s; }
       .bp-prose .bp-cta-card-link:hover { border-color: var(--yte-line-2); background: var(--yte-bg-2) !important; color: var(--yte-ink) !important; }
       .bp-cta-card-text { display: block; flex: 1; min-width: 0; }
-      .bp-cta-card-title { display: block; font-family: ${SERIF}; font-size: 20px; font-weight: 400; letter-spacing: -0.2px; color: var(--yte-ink); margin: 0 0 6px 0 !important; line-height: 1.25; }
+      .bp-cta-card-title { display: block; font-family: ${DISPLAY}; font-size: 20px; font-weight: 700; letter-spacing: -0.2px; color: var(--yte-ink); margin: 0 0 6px 0 !important; line-height: 1.25; }
       .bp-cta-card-sub { display: block; font-family: ${SANS}; font-size: 14px; color: var(--yte-soft); margin: 0 !important; line-height: 1.55; }
       .bp-cta-card-pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; background: var(--yte-accent); color: #fff; padding: 13px 24px; font-family: ${SANS}; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 0; white-space: nowrap; transition: filter 0.18s; }
       .bp-prose .bp-cta-card-link:hover .bp-cta-card-pill { filter: brightness(1.06); }
@@ -148,10 +150,10 @@ function useStyles() {
       .bp-related-card:hover { transform: translateY(-2px); border-color: var(--yte-line-2); box-shadow: 0 10px 30px -16px rgba(20,19,15,0.28); }
       .bp-related-card-cover { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, var(--yte-bg-2), #e6e1d6); position: relative; overflow: hidden; }
       .bp-related-card-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
-      .bp-related-card-cover-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: ${SERIF}; font-weight: 400; font-size: 56px; color: rgba(20,19,15,0.14); }
+      .bp-related-card-cover-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: ${DISPLAY}; font-weight: 700; font-size: 56px; color: rgba(20,19,15,0.14); }
       .bp-related-card-body { padding: 20px 20px 22px; display: flex; flex-direction: column; flex: 1; gap: 8px; }
       .bp-related-card-cat { font-family: ${SANS}; font-size: 10px; font-weight: 700; color: var(--yte-accent); letter-spacing: 0.1em; text-transform: uppercase; }
-      .bp-related-card-title { font-family: ${SERIF}; font-size: 18px; font-weight: 400; letter-spacing: -0.2px; line-height: 1.28; color: var(--yte-ink); text-wrap: balance; transition: color 0.18s; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+      .bp-related-card-title { font-family: ${DISPLAY}; font-size: 18px; font-weight: 700; letter-spacing: -0.2px; line-height: 1.28; color: var(--yte-ink); text-wrap: balance; transition: color 0.18s; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
       .bp-related-card:hover .bp-related-card-title { color: var(--yte-accent); }
       .bp-related-card-meta { margin-top: auto; padding-top: 12px; font-family: ${SANS}; font-size: 12.5px; color: var(--yte-muted); display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--yte-line); }
       .bp-related-card-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--yte-muted); }

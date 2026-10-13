@@ -1,13 +1,21 @@
 /* Shared editorial prose styles (the `.bp-prose` system from BlogPost).
    Extracted so the legal pages (Privacy, Terms, Refund) render with the exact
-   same single-blog-post design: Fraunces serif headings, Barlow body, warm
-   paper, sharp flat cards, restrained red accent links. Uses the SAME style
+   same single-blog-post design: one type family (Plus Jakarta Sans), warm
+   paper, sharp flat cards, restrained red accent links.
+
+   Type note, 2026-10-13: headings were Fraunces 400 and body was Barlow. The
+   body was ALREADY sans, so this change is heading-only in effect: Fraunces
+   read editorial/boutique rather than software, and its italic cut carried
+   the red emphasis in every H1/H2. DISPLAY and SANS are the same face on
+   purpose, kept as two names so headings can be retuned independently.
+
+   Uses the SAME style
    id ('bp-styles') as BlogPost, so the two are interchangeable and never
    double-inject. */
 import { useEffect } from 'react'
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 export function useProseStyles() {
   useEffect(() => {
@@ -30,10 +38,10 @@ export function useProseStyles() {
       .bp-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .bp-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
 
-      .bp-h1 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.06; color: var(--yte-ink); }
-      .bp-h1 em { font-style: italic; color: var(--yte-accent); }
-      .bp-h2 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; color: var(--yte-ink); }
-      .bp-h2 em { font-style: italic; color: var(--yte-accent); }
+      .bp-h1 { font-family: ${DISPLAY}; font-weight: 700; letter-spacing: -0.025em; line-height: 1.06; color: var(--yte-ink); }
+      .bp-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .bp-h2 { font-family: ${DISPLAY}; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; color: var(--yte-ink); }
+      .bp-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
 
       /* Byline */
       .bp-byline { text-align: center; position: relative; }
@@ -47,11 +55,14 @@ export function useProseStyles() {
       .bp-prose > p + p { margin-top: 1.5em; }
       .bp-prose p { margin: 0; color: #312e26; }
       .bp-prose strong { font-weight: 600; color: var(--yte-ink); }
-      .bp-prose em { font-style: italic; }
+      .bp-prose em { font-style: normal; font-weight: 600; }  /* Jakarta ships no italic cut, so an italic <em> would render as a
+         synthesised oblique (mechanically slanted, visibly wrong). Emphasis
+         is carried by weight instead, which also matches the no-italics
+         house rule. */
 
-      .bp-prose h2 { font-family: ${SERIF}; font-size: 30px; font-weight: 400; letter-spacing: -0.3px; line-height: 1.15; color: var(--yte-ink); margin-top: 1.9em !important; margin-bottom: 0.5em !important; }
+      .bp-prose h2 { font-family: ${DISPLAY}; font-size: 30px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.15; color: var(--yte-ink); margin-top: 1.9em !important; margin-bottom: 0.5em !important; }
       .bp-prose h2 + p { margin-top: 0.5em !important; }
-      .bp-prose h3 { font-family: ${SERIF}; font-size: 22px; font-weight: 400; letter-spacing: -0.2px; line-height: 1.3; color: var(--yte-ink); margin-top: 1.7em !important; margin-bottom: 0.45em !important; }
+      .bp-prose h3 { font-family: ${DISPLAY}; font-size: 22px; font-weight: 600; letter-spacing: -0.2px; line-height: 1.3; color: var(--yte-ink); margin-top: 1.7em !important; margin-bottom: 0.45em !important; }
       .bp-prose h3 + p { margin-top: 0.5em !important; }
 
       .bp-prose a { color: var(--yte-accent); text-decoration: none; font-weight: 600; background-image: linear-gradient(transparent calc(100% - 1px), rgba(229,48,42,0.35) 1px); background-size: 100% 100%; background-repeat: no-repeat; transition: background-image 0.18s, color 0.18s; }
