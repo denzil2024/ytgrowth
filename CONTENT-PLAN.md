@@ -205,10 +205,14 @@ reaching `/features/channel-audit` or checkout.
     published 2026-10-12 as `/blog/youtube-wrong-audience`, commit
     `f9cdd0eed`. Feature picked: Channel Audit (reads CTR/retention/
     traffic-source signals directly, matches the diagnostic).
-18. Is my YouTube channel shadowbanned (what a real reach drop looks like
+~~18. Is my YouTube channel shadowbanned (what a real reach drop looks like
     vs. a ban) · Channel Audit · top3: reddit, tubepilot, support.google ·
     PAA x4 · SERP also carries "checker" tools, see the free-tools note in
-    `FOUNDATION.md`
+    `FOUNDATION.md`~~ — published 2026-10-13 as `/blog/youtube-shadowban`,
+    commits `6d1479c0e` + `e51d812d8`. Feature picked: Channel Audit (reads
+    Traffic Source Intelligence, matches the diagnostic). Top-3 confirmed
+    exactly as planned. Two-way linked with `/blog/youtube-stopped-
+    recommending-videos` and `/blog/youtube-views-dropped-suddenly`.
 19. **DATA STUDY** Average views per video by subscriber count (+ what
     share of subscribers watch a new upload) · Channel Audit ·
     top3: modash, reddit, sanishtech · source: `channel_metric_snapshots`
