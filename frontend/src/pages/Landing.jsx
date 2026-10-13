@@ -369,18 +369,18 @@ function useGlobalStyles() {
          after hydration, causing the LCP delay + layout shift PageSpeed flagged
          on mobile. These rules reproduce the exact isMobile/isTablet values so
          the static HTML is correct on every viewport with no JS re-render. ── */
-      .ytg-hero { padding: 110px 48px 90px; }
-      .ytg-hero-h1 { font-size: 72px; line-height: 1.02; letter-spacing: -2.5px; }
+      .ytg-hero { padding: 72px 48px 64px; }
+      .ytg-hero-h1 { font-size: 76px; line-height: 1.02; letter-spacing: -3px; }
       .ytg-hero-sub { font-size: 17.5px; }
       .ytg-hero-cta { flex-direction: row; width: auto; }
       .ytg-hero-cta .ytg-btn-primary, .ytg-hero-cta .ytg-btn-ghost, .ytg-hero-cta a { width: auto; }
       .ytg-hero-trust { gap: 18px; }
-      .ytg-hero-ph { margin-top: 28px; }
+      .ytg-hero-ph { margin-top: 18px; }
       @media (max-width: 1024px) {
         .ytg-hero-h1 { font-size: 62px; }
       }
       @media (max-width: 768px) {
-        .ytg-hero { padding: 48px 24px 60px; }
+        .ytg-hero { padding: 40px 20px 48px; }
         .ytg-hero-h1 { font-size: 34px; line-height: 1.1; letter-spacing: -0.6px; }
         .ytg-hero-sub { font-size: 16px; }
         .ytg-hero-cta { flex-direction: column; width: 100%; }
@@ -1021,7 +1021,7 @@ export default function Landing() {
       {/* ── HERO ────────────────────────────────────────────────────────── */}
       <div id="hero" className="ytg-hero" style={{ position: 'relative', overflow: 'hidden', background: '#f6f4ef' }}>
 
-        <div className="ytg-hero-grid" style={{ maxWidth: 1240, margin: '0 auto', padding: isMobile ? '0 4px' : '0 32px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.02fr', gap: isMobile ? 44 : 52, alignItems: 'center', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
+        <div className="ytg-hero-grid" style={{ maxWidth: 1240, margin: '0 auto', padding: isMobile ? '0 4px' : '0 32px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.14fr 1fr', gap: isMobile ? 44 : 56, alignItems: isMobile ? 'center' : 'start', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
           <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
           {/* Eyebrow */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
@@ -1029,18 +1029,18 @@ export default function Landing() {
             <span style={{ fontFamily: ED_SANS, fontSize: 11, fontWeight: 600, color: ED_ACCENT, textTransform: 'uppercase', letterSpacing: '0.18em' }}>AI YouTube growth platform</span>
           </div>
 
-          <h1 className="ytg-hero-h1" style={{ fontFamily: ED_DISPLAY, fontWeight: 700, color: ED_INK, fontSize: 'clamp(34px, 4.8vw, 60px)', marginBottom: 20, textWrap: 'balance', letterSpacing: '-0.025em', lineHeight: 1.06 }}>
+          <h1 className="ytg-hero-h1" style={{ fontFamily: ED_DISPLAY, fontWeight: 700, color: ED_INK, fontSize: 'clamp(34px, 5.4vw, 72px)', marginBottom: 18, textWrap: 'balance', letterSpacing: '-0.025em', lineHeight: 1.06 }}>
             Your analytics already know why you're stuck. <em style={{ fontStyle: 'normal', color: ED_ACCENT }}>Now you will too.</em>
           </h1>
 
-          <p className="ytg-hero-sub" style={{ fontFamily: ED_SANS, color: ED_SOFT, lineHeight: 1.65, maxWidth: 660, margin: isMobile ? '0 auto 28px' : '0 0 32px', textWrap: 'pretty' }}>
-            YouTube Studio gives you fifty charts and zero answers. We read every one, pinpoint what's holding your channel back, and hand you a ranked plan, starting with the single fix that moves the needle most. The vidIQ, TubeBuddy, and Viewstats alternative built around your next move, not another dashboard.
+          <p className="ytg-hero-sub" style={{ fontFamily: ED_SANS, color: ED_SOFT, lineHeight: 1.65, maxWidth: 620, margin: isMobile ? '0 auto 26px' : '0 0 30px', textWrap: 'pretty' }}>
+            The read a $500/hour consultant would give your channel, in about 30 seconds. We find what's holding you back, then hand you one ranked fix list, starting with the change that moves the needle most.
           </p>
 
           <div className="ytg-hero-cta" style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 26 }}>
-            <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: ED_ACCENT, color: '#fff', fontFamily: ED_SANS, fontSize: 13, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '17px 34px', textDecoration: 'none', transition: 'filter 0.18s, transform 0.18s' }}
-              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+            <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: ED_ACCENT, color: '#fff', fontFamily: ED_SANS, fontSize: 14, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '19px 38px', textDecoration: 'none', boxShadow: '0 2px 12px rgba(229,48,42,0.28)', transition: 'filter 0.18s, transform 0.18s, box-shadow 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(229,48,42,0.34)' }}
+              onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(229,48,42,0.28)' }}
             >Audit my channel, $5 →</a>
             <a href="#pricing" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#ffffff', color: ED_SOFT, fontFamily: ED_SANS, fontSize: 13, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '17px 30px', textDecoration: 'none', border: '1px solid rgba(20,19,15,0.14)', transition: 'color 0.15s, border-color 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.color = ED_INK; e.currentTarget.style.borderColor = 'rgba(20,19,15,0.28)' }}
@@ -1048,10 +1048,6 @@ export default function Landing() {
             >See pricing</a>
           </div>
 
-          {/* Trust line */}
-          <p style={{ fontFamily: ED_SANS, fontSize: 13, fontWeight: 500, color: ED_MUTED, letterSpacing: '0.02em' }}>
-$5 to start &nbsp;·&nbsp; 5 analyses, credits never expire &nbsp;·&nbsp; No subscription
-          </p>
 
           {/* Product Hunt badge */}
           <div className="ytg-hero-ph" style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 18, flexWrap: 'wrap', marginTop: isMobile ? 26 : 30 }}>
@@ -1064,6 +1060,7 @@ $5 to start &nbsp;·&nbsp; 5 analyses, credits never expire &nbsp;·&nbsp; No su
                 alt={`${isChannelBrain() ? 'ChannelBrain' : 'YTGrowth'} - YouTube audit tool that turns data into growth actions | Product Hunt`}
                 width="250"
                 height="54"
+                style={{ width: 212, height: 'auto', opacity: 0.92 }}
                 src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1132935&theme=light&t=1777325565998"
               />
             </a>
@@ -1086,9 +1083,18 @@ $5 to start &nbsp;·&nbsp; 5 analyses, credits never expire &nbsp;·&nbsp; No su
               </span>
             </div>
           </div>
+
+          {/* Trust line. Sits UNDER the badge row so the Product Hunt badge,
+              the avatars and this line read as one trust block instead of
+              three stacked rows each competing with the CTA above them. */}
+          <p style={{ fontFamily: ED_SANS, fontSize: 13, fontWeight: 500, color: ED_MUTED, letterSpacing: '0.02em', marginTop: 16 }}>
+$5 to start &nbsp;·&nbsp; 5 analyses, credits never expire &nbsp;·&nbsp; No subscription
+          </p>
         </div>
 
-        <HeroDashboardPreview isMobile={isMobile} />
+        <div style={isMobile ? undefined : { transform: 'scale(1.03) translateX(18px)', transformOrigin: 'top right', paddingTop: 6 }}>
+          <HeroDashboardPreview isMobile={isMobile} />
+        </div>
         </div>
       </div>
 
