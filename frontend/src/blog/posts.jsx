@@ -18718,7 +18718,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>Generic advice treats all three categories as the same problem and hands out the same checklist regardless. <strong>A <a href="/features/channel-audit">Channel Audit</a> scores your channel across 8 weighted categories</strong>, including CTR Health and Audience Retention, using your actual Studio data rather than assumptions. If those categories are still scoring well despite the view drop, that's a strong signal you're in category 2 or 3, not category 1, and no amount of thumbnail or title tweaking is going to fix a problem that isn't there.</p>
 
-        <p>If the drop isn't sudden and has been flat for months instead, that's a different, structural problem, see <a href="/blog/youtube-channel-not-growing">why channels stall</a>. If it's your impressions rather than your views that dropped, <a href="/blog/youtube-impressions-dropped-suddenly">impressions dropping suddenly</a> covers those causes, including cases this article doesn't.</p>
+        <p>If the drop isn't sudden and has been flat for months instead, that's a different, structural problem, see <a href="/blog/youtube-channel-not-growing">why channels stall</a>. If it's your impressions rather than your views that dropped, <a href="/blog/youtube-impressions-dropped-suddenly">impressions dropping suddenly</a> covers those causes, including cases this article doesn't. And if the drop is specifically to new, non-subscribed viewers while Search and subscriber traffic hold steady, <a href="/blog/youtube-shadowban">what a real reach drop looks like</a> covers that narrower, rarer pattern separately.</p>
 
         <CtaCard
           to="/features/channel-audit"
@@ -18920,7 +18920,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p><strong>Confirm whether other creators in your niche saw the same drop on the same date before assuming a platform-wide cause.</strong> One widely circulated 2025 theory blamed Restricted Mode for a documented view-drop event; YouTube officially denied it, attributing the fluctuation to seasonality and ad-blocker-related undercounting instead.</p>
 
-        <p>If views dropped broadly rather than just Suggested traffic, <a href="/blog/youtube-views-dropped-suddenly">a sudden view drop</a> covers that case, including the same undercounting event. If Suggested has been weak since the channel started rather than dropping suddenly, <a href="/blog/youtube-channel-not-growing">why channels stall</a> is the one to read instead.</p>
+        <p>If views dropped broadly rather than just Suggested traffic, <a href="/blog/youtube-views-dropped-suddenly">a sudden view drop</a> covers that case, including the same undercounting event. If Suggested has been weak since the channel started rather than dropping suddenly, <a href="/blog/youtube-channel-not-growing">why channels stall</a> is the one to read instead. If the drop is specifically to new, non-subscribed viewers rather than across the board, <a href="/blog/youtube-shadowban">what a real reach drop looks like</a> covers that narrower pattern.</p>
 
         <p><strong>A <a href="/features/channel-audit">Channel Audit</a> reads your actual Traffic Source Intelligence data</strong>, confirming whether Suggested fell on its own or alongside everything else. That single distinction determines which cause above to check first.</p>
 
@@ -19665,6 +19665,188 @@ Free studio checklist: https://yoursite.com/checklist
         <h2>A Steady Click-Through Rate Is Proof the Video Didn't Fail</h2>
 
         <p><strong>Seven causes, one shared mechanism: inconsistent signal tells YouTube the wrong thing about who a video is for.</strong> None of them mean the video itself is weak, and none of them get fixed by a single clever title. Consistency across the next several uploads does the real work, the same way the inconsistency caused the problem in the first place.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-shadowban',
+    title: 'Is My YouTube Channel Shadowbanned?',
+    excerpt: "YouTube has never used the word \"shadowban.\" It does officially describe a real mechanism: reduced recommendation of borderline content to non-subscribers only, with real numbers attached. Here's how to tell that apart from the far more common causes of a reach drop.",
+    date: '2026-10-13',
+    category: CATEGORIES.growth,
+    cover: '/blog/youtube-shadowban-cover.jpg',
+    coverAlt: 'A creator at a desk checking YouTube Studio traffic source analytics on a laptop, comparing two charts side by side, focused expression, home office setting',
+    author: 'Denzil',
+    readTime: '10 min read',
+    faqs: [
+      { q: 'How do I find out if my YouTube channel is shadowbanned?', a: "There's no setting or tool that confirms it directly, since YouTube doesn't expose a \"shadowban\" flag because the mechanism isn't officially called that. <strong>Check Studio's traffic source breakdown: if Search and subscriber-driven traffic hold steady while Browse and Suggested specifically drop for new, non-subscribed viewers</strong>, that pattern matches YouTube's own documented reduction of borderline content. If every source drops at once, including traffic to existing subscribers, the cause is something else entirely." },
+      { q: 'How long does a YouTube shadowban last?', a: "YouTube has never defined a duration because it has never officially confirmed a mechanism by that name. <strong>The real, named reduction applies per video, tied to that video's content, and lifts once the borderline signal is no longer present</strong>, not on a fixed timer. A channel-wide reach drop with no specific flagged video is far more often a different cause: audience drift, a run of weak retention, or a made-for-kids misclassification, each of which resolves on its own timeline." },
+      { q: 'How to fix a YouTube shadowban?', a: "Confirm the pattern matches the real mechanism first, instead of assuming it. <strong>If Browse and Suggested-to-new-viewers specifically dropped while Search and subscriber traffic held steady</strong>, review the flagged video for content that sits close to a Community Guidelines line and consider whether it needs re-editing or removal. If the drop hit every traffic source evenly, the fix is elsewhere: checking for a made-for-kids misclassification in Studio's audience setting, or addressing a retention slide across recent uploads." },
+      { q: 'What causes shadowban on YouTube?', a: "What creators call a shadowban is almost always one of four separate things. <strong>YouTube's real, documented mechanism reduces recommendation of borderline content, material that comes close to violating Community Guidelines, specifically to non-subscribed viewers</strong>. The other three are a made-for-kids misclassification cutting off comments and some monetization, a niche or audience drift from inconsistent recent uploads, or a routine ranking-signal change that affects many channels at once and gets mistaken for a targeted penalty." },
+      { q: 'Why is my reach so low on YouTube?', a: "Low reach has several common causes, and the real borderline-content reduction is one of the rarer ones. <strong>Check whether the drop is concentrated in Browse and Suggested to new viewers specifically, or spread across every traffic source including Search and subscribers</strong>. A concentrated drop on one video points at that video's content; an across-the-board drop points at retention, packaging, or audience consistency, covered in depth in the causes below." },
+    ],
+    content: () => (
+      <>
+        <p>Search "shadowban" and YouTube itself has never once used the word. What the company has confirmed, in writing, is narrower and stranger: it quietly shows less of certain videos to people who haven't subscribed yet. <strong>That category, "borderline" content sitting just short of a real policy violation, is a fraction of 1% of everything watched on the platform.</strong></p>
+
+        <p>Almost nobody asking "am I shadowbanned" is hitting this mechanism. Here's what the real one looks like, and what's usually happening instead.</p>
+
+        <h2>What YouTube Has Said, Officially</h2>
+
+        <p>The clearest statement comes from <a href="https://blog.youtube/inside-youtube/the-four-rs-of-responsibility-raise-and-reduce/" target="_blank">YouTube's own blog</a>, "The Four Rs of Responsibility, Part 2," published in December 2019 and never walked back since. <strong>It describes reduced recommendations for borderline content on Browse and Suggested specifically</strong>, the two surfaces shown to people who haven't subscribed to a channel. Subscribers were never part of the description.</p>
+
+        <p>Two numbers from that post are worth citing directly. <strong>Borderline content made up "a fraction of 1% of what's watched."</strong> Once the reduction took effect, <strong>YouTube reported a 70% average drop in watch time coming from non-subscribed recommendations for that category.</strong></p>
+
+        <p>Both figures are self-reported, with no outside audit found backing them up. <strong>Treat the 70% as YouTube's own account of its own system</strong>, the best citable figure that exists, but not an independently verified one.</p>
+
+        <blockquote><strong>Pro Tip:</strong> search your own content against YouTube's Community Guidelines pages for the specific category you suspect (violence, dangerous acts, misleading health claims). If nothing in your recent uploads sits close to a real guideline, this mechanism almost certainly isn't your cause, and the time is better spent on the more common causes further down.</blockquote>
+
+        <h2>What Counts as Borderline</h2>
+
+        <p>A video that clearly crosses a Community Guidelines line gets removed outright, not quietly buried. <strong>So a video still live and still monetized is, by definition, unlikely to be the kind of content this mechanism targets.</strong></p>
+
+        <ul>
+          <li>Medical misinformation that doesn't cross into a removable claim</li>
+          <li>Content that normalizes conspiracy theories without directly inciting harm</li>
+          <li>Material at the edge of violent or shocking footage, short of graphic content</li>
+          <li>Harmful pranks or dangerous challenges, short of anything that endangers minors</li>
+        </ul>
+
+        <p>None of these describe a typical gaming channel, tutorial channel, or vlog. <strong>Before spending another hour on this explanation, it's worth checking plainly whether anything recently uploaded resembles one of the four categories above.</strong></p>
+
+        <h2>Where a Real Drop Shows Up in Studio</h2>
+
+        <p>Because the mechanism only touches non-subscribed Browse and Suggested, it leaves a specific fingerprint. <strong>Existing subscribers keep seeing the content exactly as before, and Search traffic isn't affected at all</strong>, since Search isn't a recommendation surface the way Browse and Suggested are.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What you're seeing in Studio</th>
+              <th>Consistent with</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Browse/Suggested to new viewers drops; Search and subscriber traffic hold steady</td><td>The real, named borderline-content reduction</td></tr>
+            <tr><td>Every traffic source drops together, including subscribers</td><td>Audience drift, a retention slide, or a platform-wide ranking change</td></tr>
+            <tr><td>Comments disabled, some monetization features missing, channel-wide</td><td>A made-for-kids misclassification, not the borderline mechanism</td></tr>
+            <tr><td>Drop concentrated on one specific video, others unaffected</td><td>That video's own content or packaging, check it individually first</td></tr>
+          </tbody>
+        </table>
+
+        <p>Pull the traffic source breakdown for the period in question and look at it source by source. <strong>Search holding steady while Browse and Suggested fall, concentrated on new viewers and not your subscriber base too, is the pattern that matches.</strong> Anything broader points elsewhere.</p>
+
+        <h2>Two Channels, Same Symptom, Different Cause</h2>
+
+        <p>A gaming commentary channel saw Browse and Suggested traffic to non-subscribers fall 40% over two weeks, while Search and subscriber views stayed flat. Nothing in the recent catalog came close to a guidelines issue.</p>
+
+        <p><strong>The real explanation turned out to be three uploads in a row covering an unrelated trend topic</strong>, which confused the algorithm's read on who the channel's usual audience was. Niche drift, not a borderline flag.</p>
+
+        <p>A true-crime commentary channel saw the identical pattern, Browse and Suggested down, Search and subscribers flat. But one specific video, covering a real case in graphic detail, sat close to a documented guidelines category. <strong>That single upload matched the real mechanism; the rest of the catalog didn't</strong>, which only became visible by checking traffic per video instead of only the channel-wide total.</p>
+
+        <p>Same chart shape, two unrelated causes. <strong>The channel-wide number alone can't tell them apart; the per-video breakdown can.</strong></p>
+
+        <h2>Why Checker Tools Can't See This</h2>
+
+        <p>Run any public "shadowban checker" and underneath, it's doing one thing: searching for your channel name or a recent video title and reporting whether results came back. <strong>None of these tools have OAuth access to your real Studio data</strong>, the only place traffic source, impression, and distribution numbers live. A public search checks something that has nothing to do with your real distribution.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What a checker tool claims</th>
+              <th>What it can see instead</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>"Your channel is shadowbanned"</td><td>Your channel name didn't surface in one public search snapshot</td></tr>
+            <tr><td>"Shadowban detected on this video"</td><td>That video title wasn't in the top public results it checked</td></tr>
+            <tr><td>Verifies your real Studio traffic data</td><td>Not possible without OAuth login, which no public checker has</td></tr>
+          </tbody>
+        </table>
+
+        <p>This product tried building one of these checkers, and the reason it never shipped is concrete, not philosophical. <strong>A real per-use check needs a YouTube Data API search.list call, which costs 100 units and runs against a hard cap of roughly 100 such calls a day</strong>, shared across every visitor to the entire site, separate from the much larger daily budget available for other, cacheable features.</p>
+
+        <p>No login wall, unpredictable traffic, and a budget that small don't survive contact with each other. <strong>The math doesn't close, so the feature was never shipped here</strong>, and every other free checker making similar promises is working under the identical ceiling, whether or not it says so out loud.</p>
+
+        <h2>Made-for-Kids and Niche Drift, the Two Most Common Stand-Ins</h2>
+
+        <p><strong>Made-for-kids misclassification shuts off comments and parts of monetization channel-wide</strong>, a far more disruptive effect than a quiet recommendation dip. It's also easy to rule in or out: check the audience setting under Studio's channel settings for an incorrect auto-flag.</p>
+
+        <p><strong>Inconsistent topics or formats across a few recent uploads can confuse the algorithm's read on who a channel's audience is</strong>, pulling Suggested distribution toward the wrong test pool entirely. <a href="/blog/youtube-stopped-recommending-videos">Why Suggested placement works</a> covers this mechanism in full, including the session-contribution signal driving most of it now.</p>
+
+        <h2>A Sharp, Sudden Drop Points Somewhere Else Entirely</h2>
+
+        <p>A drop that hits hard and fast, not a fade over weeks, is rarely any of the above. <strong>A strike, a metadata edit, or one badly underperforming upload dragging the whole channel down are the more common explanations here</strong>, walked through separately in <a href="/blog/youtube-views-dropped-suddenly">why views drop suddenly</a>.</p>
+
+        <blockquote><strong>Pro Tip:</strong> a slow fade across several uploads, not a single cliff, usually means a retention slide. Compare your last 5 videos' retention curves against your channel's normal average; a consistent dip there looks identical to a "shadowban" from the outside, with nothing to do with borderline content.</blockquote>
+
+        <ul>
+          <li>Hard, immediate drop on one video: check that video's restriction and claim status first</li>
+          <li>Hard, immediate drop channel-wide: check for a recent metadata edit or posting-frequency change</li>
+          <li>Slow fade over several uploads: check retention curves before assuming anything else</li>
+        </ul>
+
+        <h2>Checking It Yourself, in Order</h2>
+
+        <ul>
+          <li>Open Studio's Content tab and confirm no strike, copyright claim, or restriction is sitting on the channel or a specific video</li>
+          <li>Open the Audience tab's traffic source breakdown and compare Search against Browse/Suggested for the period the drop started</li>
+          <li>Check whether the drop affects subscriber traffic too, or only non-subscribed viewers, since that split is the clearest single signal</li>
+          <li>Confirm the made-for-kids setting under channel settings hasn't been auto-applied incorrectly</li>
+          <li>Review your last 5 uploads' retention curves against your channel's typical average for a slower, broader cause</li>
+        </ul>
+
+        <p>Run through these in the order listed, not whichever explanation feels most alarming. <strong>The strike check alone takes thirty seconds, and it's the only one of the five that shows up as a visible flag</strong> instead of something read off a pattern.</p>
+
+        <h2>How Long a Real Drop Takes to Clear</h2>
+
+        <p>There's no fixed countdown on the real mechanism. <strong>It's tied to the specific video, and it lifts once that video's content no longer trips the borderline signal</strong>, usually meaning it's removed or substantially re-edited. The only way to confirm it's lifted is watching that one video's own traffic numbers over the following weeks, not the channel total.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Cause</th>
+              <th>What resolves it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Real borderline-content reduction</td><td>Removing or re-editing the specific flagged video</td></tr>
+            <tr><td>Made-for-kids misclassification</td><td>Correcting the audience setting in Studio</td></tr>
+            <tr><td>Audience or niche drift</td><td>Several consistent uploads in the same topic and format</td></tr>
+            <tr><td>Retention slide across recent uploads</td><td>Packaging and content fixes on new uploads, not old ones</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Reading the Real Signal Instead of Guessing</h2>
+
+        <p>A Channel Audit pulls Traffic Source Intelligence straight from your connected Studio account, the one data source no public checker tool can touch. <strong>It shows directly whether a drop sits isolated in non-subscribed Browse and Suggested, spreads evenly across every source, or concentrates on a single video</strong>, the exact distinction everything above depends on.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="See where your traffic dropped"
+          sub="A Channel Audit reads your real traffic source breakdown, so you know whether a drop is isolated to non-subscribed viewers or something else entirely, instead of guessing from a public checker tool with no access to your real data."
+          button="Run a Channel Audit →"
+        />
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How do I find out if my YouTube channel is shadowbanned?</h3>
+        <p>Check Studio's traffic source breakdown for the period in question. <strong>Search and subscriber traffic holding steady while Browse and Suggested drop for non-subscribed viewers</strong> matches YouTube's documented mechanism. If every source falls together, including subscribers, the cause is something else, since YouTube has no setting or tool that confirms a "shadowban" flag directly.</p>
+
+        <h3>How long does a YouTube shadowban last?</h3>
+        <p>There's no official duration, since YouTube has never confirmed a mechanism by that name to begin with. <strong>The real, named reduction is tied to a specific video and lifts once that video no longer trips the borderline signal</strong>, not on a timer. A channel-wide drop with no single flagged video usually traces to something else, each with its own separate timeline.</p>
+
+        <h3>How to fix a YouTube shadowban?</h3>
+        <p>Confirm the pattern first instead of assuming it. If Browse and Suggested fell for new viewers while Search and subscriber traffic held steady, <strong>review the specific video for content sitting near a Community Guidelines line</strong> and consider re-editing or removing it. If every source dropped evenly, check the made-for-kids setting or a retention slide instead, since neither of those is the mechanism this term usually gets blamed for.</p>
+
+        <h3>What causes shadowban on YouTube?</h3>
+        <p>Four things get lumped under this one word, and only one of them is what YouTube has confirmed. <strong>The real mechanism reduces recommendation of borderline content specifically to non-subscribed viewers.</strong> The other three, far more common in practice: a made-for-kids misclassification, a niche or audience drift from inconsistent recent uploads, or a routine ranking change mistaken for a targeted penalty.</p>
+
+        <h3>Why is my reach so low on YouTube?</h3>
+        <p>Start with where the drop concentrates. <strong>Browse and Suggested falling for new viewers specifically, while Search and subscribers hold, points at one video's content</strong>; everything falling together points at retention or consistency instead. The real borderline-content mechanism is one of the rarer explanations, not the first one to assume.</p>
+
+        <h2>One Named Mechanism, Three Far More Common Ones</h2>
+
+        <p>"Shadowban" describes a feeling, not anything YouTube has confirmed as a single mechanism. <strong>What's documented is narrow, checkable against your own Studio data, and rare.</strong> The explanations that account for most reach drops, audience drift, a retention slide, a misclassified setting, each have a straightforward fix once correctly named instead of folded into one word the platform itself has never used.</p>
       </>
     ),
   },
