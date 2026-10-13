@@ -36,7 +36,7 @@ export default function UpsellModal({
         backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)',
         overflowY: 'auto',
         padding: '40px 24px',
-        fontFamily: "'Barlow', system-ui, sans-serif",
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
         animation: 'upmFade 0.16s ease',
       }}
     >

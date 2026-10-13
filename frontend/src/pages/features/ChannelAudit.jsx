@@ -12,8 +12,8 @@ import { injectFaqJsonLd } from '../../utils/seo'
    and the bottom CTA band was removed (feedback_no_dark_cta_band). ALL copy
    and product detail are preserved. See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -46,10 +46,10 @@ function useStyles() {
       .ca-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .ca-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .ca-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .ca-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.05; }
-      .ca-h1 em { font-style: italic; color: var(--yte-accent); }
-      .ca-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .ca-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ca-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.05; }
+      .ca-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .ca-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .ca-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .ca-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .ca-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 30px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
@@ -61,7 +61,7 @@ function useStyles() {
       .ca-card { background: var(--yte-surface); border: 1px solid var(--yte-line); }
 
       .ca-faq-item { border-bottom: 1px solid var(--yte-line); }
-      .ca-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${SERIF}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
+      .ca-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${DISPLAY}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
       .ca-faq-q:hover { color: var(--yte-accent); }
       .ca-faq-q.open { color: var(--yte-accent); }
       .ca-faq-plus { flex-shrink: 0; font-family: ${SANS}; font-size: 26px; font-weight: 300; color: var(--yte-accent); line-height: 1; transition: transform 0.2s; }
@@ -121,7 +121,7 @@ function ScoreVisual() {
           <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.92)" strokeWidth="9" strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 60 60)" />
         </svg>
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontFamily: SERIF, fontSize: 46, fontWeight: 400, color: '#fff', letterSpacing: '-1px', lineHeight: 1 }}>{score}</span>
+          <span style={{ fontFamily: DISPLAY, fontSize: 46, fontWeight: 700, color: '#fff', letterSpacing: '-1px', lineHeight: 1 }}>{score}</span>
           <span style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>/ 100</span>
         </div>
       </div>
@@ -376,7 +376,7 @@ export default function ChannelAudit() {
             {CATEGORIES.map((cat, i) => (
               <div key={i} style={{ background: 'var(--yte-surface)', padding: '22px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10, gap: 12 }}>
-                  <p style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px' }}>{cat.name}</p>
+                  <p style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.2px' }}>{cat.name}</p>
                   <span style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', whiteSpace: 'nowrap', color: cat.weight === 'Info' ? 'var(--yte-muted)' : 'var(--yte-accent)', background: cat.weight === 'Info' ? 'rgba(20,19,15,0.05)' : 'var(--yte-accent-soft)', padding: '3px 9px' }}>
                     {cat.weight === 'Info' ? 'Info only' : `Weight · ${cat.weight}`}
                   </span>
@@ -440,7 +440,7 @@ export default function ChannelAudit() {
             const Card = ({ s }) => (
               <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.06em', marginBottom: 14 }}>{s.n}</div>
-                <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
+                <p style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
                 <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{s.b}</p>
               </div>
             )
@@ -493,7 +493,7 @@ export default function ChannelAudit() {
               <div key={i} style={{ background: 'var(--yte-surface)', padding: '26px 28px', display: 'flex', flexDirection: 'column', gap: 13 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
                   <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 700, color: 'var(--yte-accent)', marginTop: 5 }}>{String(i + 1).padStart(2, '0')}</span>
-                  <p style={{ fontFamily: SERIF, fontSize: 20, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.25 }}>{lever.name}</p>
+                  <p style={{ fontFamily: DISPLAY, fontSize: 20, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.25 }}>{lever.name}</p>
                 </div>
                 <div style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 7, background: 'rgba(20,19,15,0.05)', padding: '5px 11px' }}>
                   <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--yte-ink)' }} />
@@ -562,7 +562,7 @@ export default function ChannelAudit() {
                   )}
                   <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
-                    <p style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1 }}>{p.actions}</p>
+                    <p style={{ fontFamily: DISPLAY, fontSize: 40, fontWeight: 700, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1 }}>{p.actions}</p>
                     <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)' }}>priority actions</p>
                   </div>
                   <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', marginBottom: 14 }}>per audit</p>

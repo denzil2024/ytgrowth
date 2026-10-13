@@ -14,8 +14,8 @@ import FaqSchema from '../../components/FaqSchema'
    quiet-grey, never red (see feedback_quiet_toggles). 100% client-side,
    zero API. See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : ''
 
@@ -198,10 +198,10 @@ function useGlobalStyles() {
       .cng-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .cng-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .cng-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .cng-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
-      .cng-h1 em { font-style: italic; color: var(--yte-accent); }
-      .cng-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .cng-h2 em { font-style: italic; color: var(--yte-accent); }
+      .cng-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.04; }
+      .cng-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .cng-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .cng-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .cng-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .cng-label { display: block; font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 9px; }
@@ -233,7 +233,7 @@ function useGlobalStyles() {
       .cng-group:last-child { border-bottom: 0; padding-bottom: 4px; }
       .cng-group:first-child { padding-top: 4px; }
       .cng-group-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-      .cng-group-label { font-family: ${SERIF}; font-size: 22px; font-weight: 400; letter-spacing: -0.3px; color: var(--yte-ink); }
+      .cng-group-label { font-family: ${DISPLAY}; font-size: 22px; font-weight: 600; letter-spacing: -0.3px; color: var(--yte-ink); }
       .cng-group-count { font-family: ${SANS}; font-size: 12px; font-weight: 600; color: var(--yte-muted); letter-spacing: 0.06em; text-transform: uppercase; }
       .cng-group-blurb { font-family: ${SANS}; font-size: 13px; color: var(--yte-muted); margin-left: auto; line-height: 1.5; text-align: right; max-width: 320px; }
       @media (max-width: 720px) { .cng-group-blurb { order: 1; margin-left: 0; text-align: left; max-width: 100%; flex-basis: 100%; } .cng-copy-all { margin-left: auto; } }
@@ -445,7 +445,7 @@ export default function YoutubeChannelNameGenerator() {
                   <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 16 }}>
                     Top pick for {keyword}{second ? ` × ${second}` : ''}
                   </div>
-                  <div style={{ fontFamily: SERIF, fontSize: isMobile ? 38 : 50, fontWeight: 400, letterSpacing: '-1px', lineHeight: 1.04, marginBottom: 16, wordBreak: 'break-word', color: '#fff' }}>
+                  <div style={{ fontFamily: DISPLAY, fontSize: isMobile ? 38 : 50, fontWeight: 600, letterSpacing: '-1px', lineHeight: 1.04, marginBottom: 16, wordBreak: 'break-word', color: '#fff' }}>
                     {featured.name}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
@@ -457,11 +457,11 @@ export default function YoutubeChannelNameGenerator() {
                     <div style={{ display: 'flex', gap: 32 }}>
                       <div>
                         <div style={{ fontFamily: SANS, fontSize: 10.5, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 5 }}>Total ideas</div>
-                        <div style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 400, letterSpacing: '-0.5px', color: '#fff' }}>{names.length}</div>
+                        <div style={{ fontFamily: DISPLAY, fontSize: 28, fontWeight: 700, letterSpacing: '-0.5px', color: '#fff' }}>{names.length}</div>
                       </div>
                       <div>
                         <div style={{ fontFamily: SANS, fontSize: 10.5, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 5 }}>Vibes</div>
-                        <div style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 400, letterSpacing: '-0.5px', color: '#fff' }}>{toneCount}</div>
+                        <div style={{ fontFamily: DISPLAY, fontSize: 28, fontWeight: 700, letterSpacing: '-0.5px', color: '#fff' }}>{toneCount}</div>
                       </div>
                     </div>
                     <button onClick={() => navigator.clipboard?.writeText(featured.name)} style={{ background: '#fff', color: 'var(--yte-ink)', border: 0, fontFamily: SANS, fontWeight: 700, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '12px 22px', cursor: 'pointer' }}>
@@ -473,7 +473,7 @@ export default function YoutubeChannelNameGenerator() {
                 <div className="cng-pane-dark" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
                   <div>
                     <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Sample preview</p>
-                    <p style={{ fontFamily: SERIF, fontSize: isMobile ? 22 : 26, fontWeight: 400, color: '#fff', letterSpacing: '-0.4px', lineHeight: 1.2 }}>
+                    <p style={{ fontFamily: DISPLAY, fontSize: isMobile ? 22 : 26, fontWeight: 600, color: '#fff', letterSpacing: '-0.4px', lineHeight: 1.2 }}>
                       Names like these, for any niche
                     </p>
                   </div>
@@ -559,7 +559,7 @@ export default function YoutubeChannelNameGenerator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {HOW_NAMING_WORKS.map((row, i) => (
               <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
-                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: isMobile ? 21 : 23, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
                 <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
@@ -583,7 +583,7 @@ export default function YoutubeChannelNameGenerator() {
             {GROW.map((card, i) => (
               <a key={i} href={card.href} className="cng-grow-card">
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{card.label}</div>
-                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{card.title}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{card.title}</h3>
                 <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{card.body}</p>
               </a>
             ))}
@@ -610,7 +610,7 @@ export default function YoutubeChannelNameGenerator() {
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
                   >
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`cng-faq-answer${isOpen ? ' open' : ''}`}>

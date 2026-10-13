@@ -21,8 +21,8 @@
 
 import { useEffect, useState, useRef } from 'react'
 
-const SERIF  = "'Fraunces', Georgia, serif"
-const SANS   = "'Barlow', system-ui, sans-serif"
+const DISPLAY  = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS   = "'Plus Jakarta Sans', system-ui, sans-serif"
 const INK    = '#14130f'
 const SOFT   = '#5c574e'
 const MUTED  = '#8a8378'
@@ -123,7 +123,7 @@ function Card({ variant, visible, dismissed, source, headline, body, dismissKey,
       </div>
       {isModal ? (
         <>
-          <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: INK, letterSpacing: '-0.01em', lineHeight: 1.2, marginBottom: 10 }}>
+          <h2 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 26, color: INK, letterSpacing: '-0.025em', lineHeight: 1.2, marginBottom: 10 }}>
             You're in
           </h2>
           <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.6, maxWidth: 340, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -142,11 +142,11 @@ function Card({ variant, visible, dismissed, source, headline, body, dismissKey,
     <>
       {eyebrow}
       {isModal ? (
-        <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 28, color: INK, letterSpacing: '-0.01em', lineHeight: 1.15, marginBottom: 12 }}>
+        <h2 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 28, color: INK, letterSpacing: '-0.025em', lineHeight: 1.15, marginBottom: 12 }}>
           {headline}
         </h2>
       ) : (
-        <h3 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 19, color: INK, letterSpacing: '-0.01em', lineHeight: 1.2, margin: '0 0 8px' }}>
+        <h3 style={{ fontFamily: DISPLAY, fontWeight: 600, fontSize: 19, color: INK, letterSpacing: '-0.025em', lineHeight: 1.2, margin: '0 0 8px' }}>
           {headline}
         </h3>
       )}

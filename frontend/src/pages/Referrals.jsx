@@ -40,7 +40,7 @@ function useReferralsStyles() {
       .referrals-page { max-width: 1040px; margin: 0 auto; }
       .referrals-page, .referrals-page * {
         box-sizing: border-box;
-        font-family: 'Barlow','Inter',system-ui,sans-serif;
+        font-family: 'Plus Jakarta Sans',system-ui,sans-serif;
         -webkit-font-smoothing: antialiased;
       }
       .referrals-page p, .referrals-page span, .referrals-page div, .referrals-page h1 { margin: 0; }

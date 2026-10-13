@@ -18,8 +18,8 @@ import {
    RPM comes from the shared youtubeEarnings table so the stat cards and the
    embedded calculator never disagree. Zero YouTube quota (static data). */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -68,10 +68,10 @@ function useGlobalStyles() {
       .yte-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .yte-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
 
-      .yte-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
-      .yte-h1 em { font-style: italic; color: var(--yte-accent); }
-      .yte-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .yte-h2 em { font-style: italic; color: var(--yte-accent); }
+      .yte-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.04; }
+      .yte-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .yte-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .yte-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .yte-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       /* Stat cards: connected hairline row, flat, serif numbers */
@@ -79,7 +79,7 @@ function useGlobalStyles() {
       @media (max-width: 760px) { .yte-stat-grid { grid-template-columns: 1fr; } }
       .yte-stat { background: var(--yte-surface); padding: 28px; }
       .yte-stat-label { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.13em; margin-bottom: 14px; }
-      .yte-stat-value { font-family: ${SERIF}; font-size: 34px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.5px; line-height: 1.02; }
+      .yte-stat-value { font-family: ${DISPLAY}; font-size: 34px; font-weight: 700; color: var(--yte-ink); letter-spacing: -0.5px; line-height: 1.02; }
       .yte-stat-value .em { color: var(--yte-accent); }
       .yte-stat-sub { font-family: ${SANS}; font-size: 12.5px; color: var(--yte-muted); margin-top: 10px; line-height: 1.5; }
 
@@ -90,13 +90,13 @@ function useGlobalStyles() {
       .yte-table td { font-family: ${SANS}; color: var(--yte-soft); font-variant-numeric: tabular-nums; }
       .yte-table tr:last-child td { border-bottom: none; }
       .yte-table tr.active td { background: var(--yte-accent-soft); color: var(--yte-ink); }
-      .yte-niche-name { font-family: ${SERIF}; font-size: 16px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; }
+      .yte-niche-name { font-family: ${DISPLAY}; font-size: 16px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.2px; }
       .yte-table tr.active .yte-niche-name { color: var(--yte-accent); }
       .yte-table a { color: inherit; text-decoration: none; }
       .yte-table a:hover { color: var(--yte-accent); }
 
       /* Numbered economics list */
-      .yte-num { font-family: ${SERIF}; font-size: 30px; font-weight: 300; color: var(--yte-accent); letter-spacing: -0.5px; line-height: 1; }
+      .yte-num { font-family: ${DISPLAY}; font-size: 30px; font-weight: 700; color: var(--yte-accent); letter-spacing: -0.5px; line-height: 1; }
 
       .yte-faq-answer { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
       .yte-faq-answer.open { grid-template-rows: 1fr; opacity: 1; }
@@ -105,7 +105,7 @@ function useGlobalStyles() {
       .yte-related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; background: var(--yte-line); border: 1px solid var(--yte-line); }
       .yte-related-card { display: block; text-decoration: none; padding: 18px 18px; background: var(--yte-surface); transition: background 0.15s; }
       .yte-related-card:hover { background: var(--yte-bg-2); }
-      .yte-related-label { font-family: ${SERIF}; font-size: 16px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.2; }
+      .yte-related-label { font-family: ${DISPLAY}; font-size: 16px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.2; }
       .yte-related-meta { font-family: ${SANS}; font-size: 11.5px; color: var(--yte-muted); font-weight: 500; margin-top: 6px; letter-spacing: 0.04em; }
 
       @media (max-width: 768px) {
@@ -376,7 +376,7 @@ export default function NicheEarnings() {
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
                   >
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`yte-faq-answer${isOpen ? ' open' : ''}`}>

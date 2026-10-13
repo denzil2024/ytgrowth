@@ -15,8 +15,8 @@ import { injectFaqJsonLd } from '../../utils/seo'
    avoid collision with the in-app product page. See
    project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 /* On-dark accent. Red goes muddy on near-black, so the dark "app preview"
    panes use a warm gold (the Zennara-lineage on-dark tone) instead. */
 const GOLD = '#e6b35c'
@@ -52,10 +52,10 @@ function useStyles() {
       .tiq-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .tiq-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .tiq-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .tiq-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.05; }
-      .tiq-h1 em { font-style: italic; color: var(--yte-accent); }
-      .tiq-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .tiq-h2 em { font-style: italic; color: var(--yte-accent); }
+      .tiq-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.05; }
+      .tiq-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .tiq-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .tiq-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .tiq-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .tiq-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 30px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
@@ -65,7 +65,7 @@ function useStyles() {
       .tiq-ghost:hover { color: var(--yte-ink); border-color: var(--yte-line-2); }
 
       .tiq-faq-item { border-bottom: 1px solid var(--yte-line); }
-      .tiq-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${SERIF}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
+      .tiq-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${DISPLAY}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
       .tiq-faq-q:hover { color: var(--yte-accent); }
       .tiq-faq-q.open { color: var(--yte-accent); }
       .tiq-faq-plus { flex-shrink: 0; font-family: ${SANS}; font-size: 26px; font-weight: 300; color: var(--yte-accent); line-height: 1; transition: transform 0.2s; }
@@ -134,7 +134,7 @@ function ThumbnailScorecardVisual() {
       </div>
       {/* Score header */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 18 }}>
-        <span style={{ fontFamily: SERIF, fontSize: 48, fontWeight: 400, color: GOLD, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>78</span>
+        <span style={{ fontFamily: DISPLAY, fontSize: 48, fontWeight: 700, color: GOLD, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>78</span>
         <span style={{ fontFamily: SANS, fontSize: 18, color: 'rgba(255,255,255,0.35)' }}>/100</span>
         <span style={{ marginLeft: 'auto', fontFamily: SANS, fontSize: 10, fontWeight: 700, color: GOLD, border: '1px solid rgba(230,179,92,0.4)', padding: '4px 10px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Stands out</span>
       </div>
@@ -147,7 +147,7 @@ function ThumbnailScorecardVisual() {
           <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', padding: '12px 14px' }}>
             <p style={{ fontFamily: SANS, fontSize: 9.5, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>{c.l}</p>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-              <span style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', letterSpacing: '-0.5px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{c.n}</span>
+              <span style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: '#fff', letterSpacing: '-0.5px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{c.n}</span>
               <span style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>/{c.d}</span>
             </div>
             <p style={{ fontFamily: SANS, fontSize: 10.5, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{c.sub}</p>
@@ -345,7 +345,7 @@ function DimensionCard({ index, d }) {
     <div style={{ background: 'var(--yte-surface)', padding: '22px 24px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
         <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)' }}>{String(index).padStart(2, '0')}</span>
-        <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px', flex: 1 }}>{d.name}</p>
+        <p style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.2px', flex: 1 }}>{d.name}</p>
         <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: 'var(--yte-muted)', letterSpacing: '0.06em', textTransform: 'uppercase', fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{d.weight} pts</span>
       </div>
       <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{d.what}</p>
@@ -499,7 +499,7 @@ export default function ThumbnailIq() {
             const Card = ({ s }) => (
               <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.06em', marginBottom: 14 }}>{s.n}</div>
-                <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
+                <p style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
                 <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{s.b}</p>
               </div>
             )
@@ -613,7 +613,7 @@ export default function ThumbnailIq() {
                   )}
                   <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
-                    <p style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{p.runs}</p>
+                    <p style={{ fontFamily: DISPLAY, fontSize: 40, fontWeight: 700, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{p.runs}</p>
                     <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)' }}>{p.plan === 'Free' ? 'analysis' : 'analyses'}</p>
                   </div>
                   <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', marginBottom: 14 }}>{p.plan === 'Free' ? 'per cycle' : 'included per month'}</p>

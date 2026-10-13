@@ -7,7 +7,7 @@ import { brandName } from '../brandHost'
 /* Terms of Service. Styled as a single blog post (the .bp-prose editorial
    system). All legal content preserved verbatim. */
 
-const SANS = "'Barlow', system-ui, sans-serif"
+const SANS = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)

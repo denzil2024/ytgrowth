@@ -8,8 +8,8 @@ import SiteHeader from '../components/SiteHeader'
    CTA, not the banned generic dark band, see feedback_no_dark_cta_band),
    so it stays. See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -42,10 +42,10 @@ function useGlobalStyles() {
       .ct-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .ct-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .ct-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .ct-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.05; }
-      .ct-h1 em { font-style: italic; color: var(--yte-accent); }
-      .ct-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .ct-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ct-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.05; }
+      .ct-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .ct-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .ct-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .ct-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .contact-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 30px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
@@ -207,7 +207,7 @@ export default function Contact() {
                 <span aria-hidden="true" className="ct-eyebrow-rule" />
                 <span className="ct-eyebrow-text">Direct line</span>
               </div>
-              <a href="mailto:royalbluemedia.agency@gmail.com" style={{ display: 'inline-block', fontFamily: SERIF, fontSize: isMobile ? 26 : 32, fontWeight: 400, letterSpacing: '-0.6px', color: 'var(--yte-ink)', textDecoration: 'none', lineHeight: 1.15, marginBottom: 10, wordBreak: 'break-word' }}>
+              <a href="mailto:royalbluemedia.agency@gmail.com" style={{ display: 'inline-block', fontFamily: DISPLAY, fontSize: isMobile ? 26 : 32, fontWeight: 600, letterSpacing: '-0.6px', color: 'var(--yte-ink)', textDecoration: 'none', lineHeight: 1.15, marginBottom: 10, wordBreak: 'break-word' }}>
                 royalbluemedia.agency@gmail.com
               </a>
               <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', lineHeight: 1.6, marginBottom: 24 }}>
@@ -244,7 +244,7 @@ export default function Contact() {
               { value: '7d',    label: 'Inbox monitored',          sub: 'Urgent issues handled at weekends too' },
             ].map((s, i) => (
               <div key={i} style={{ minWidth: 120 }}>
-                <div style={{ fontFamily: SERIF, fontSize: isMobile ? 34 : 42, fontWeight: 400, letterSpacing: '-0.8px', color: 'var(--yte-ink)', lineHeight: 1, marginBottom: 10 }}>{s.value}</div>
+                <div style={{ fontFamily: DISPLAY, fontSize: isMobile ? 34 : 42, fontWeight: 600, letterSpacing: '-0.8px', color: 'var(--yte-ink)', lineHeight: 1, marginBottom: 10 }}>{s.value}</div>
                 <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 5 }}>{s.label}</div>
                 <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', lineHeight: 1.5 }}>{s.sub}</div>
               </div>
@@ -269,7 +269,7 @@ export default function Contact() {
             {STEPS.map((step, i) => (
               <div key={i} className="contact-card">
                 <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.06em', marginBottom: 20 }}>{step.n}</div>
-                <div style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 12, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{step.title}</div>
+                <div style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 12, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{step.title}</div>
                 <div style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.7 }}>{step.body}</div>
               </div>
             ))}
@@ -306,7 +306,7 @@ export default function Contact() {
                     </span>
                   )}
                 </div>
-                <p style={{ fontFamily: SERIF, fontSize: 20, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px', marginBottom: 10, lineHeight: 1.2 }}>{r.title}</p>
+                <p style={{ fontFamily: DISPLAY, fontSize: 20, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.2px', marginBottom: 10, lineHeight: 1.2 }}>{r.title}</p>
                 <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', lineHeight: 1.7 }}>{r.desc}</p>
               </div>
             ))}

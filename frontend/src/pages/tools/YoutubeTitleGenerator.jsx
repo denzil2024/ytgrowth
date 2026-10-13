@@ -12,8 +12,8 @@ import FaqSchema from '../../components/FaqSchema'
    only the skin changed. Mode toggle stays quiet-grey, never red (see
    feedback_quiet_toggles). See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -46,10 +46,10 @@ function useGlobalStyles() {
       .tg-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .tg-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .tg-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .tg-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
-      .tg-h1 em { font-style: italic; color: var(--yte-accent); }
-      .tg-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .tg-h2 em { font-style: italic; color: var(--yte-accent); }
+      .tg-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.04; }
+      .tg-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .tg-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .tg-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .tg-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .tg-label { display: block; font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 9px; }
@@ -316,7 +316,7 @@ export default function YoutubeTitleGenerator() {
               {mode === 'generate' ? (
                 titles.length === 0 ? (
                   <div style={{ minHeight: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-                    <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', marginBottom: 8 }}>Your titles appear here</div>
+                    <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: '#fff', marginBottom: 8 }}>Your titles appear here</div>
                     <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: 300 }}>Enter a topic and hit generate. Each title comes scored so you can pick the strongest.</div>
                   </div>
                 ) : (
@@ -338,15 +338,15 @@ export default function YoutubeTitleGenerator() {
               ) : (
                 !analysis ? (
                   <div style={{ minHeight: 280, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-                    <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', marginBottom: 8 }}>Your score appears here</div>
+                    <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: '#fff', marginBottom: 8 }}>Your score appears here</div>
                     <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: 300 }}>Paste a title to see its score and a breakdown of what is helping and hurting.</div>
                   </div>
                 ) : (
                   <>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 22 }}>
-                      <div className="tg-chip" style={{ fontFamily: SERIF, fontSize: 44, fontWeight: 400, letterSpacing: '-1.5px', lineHeight: 1, padding: 0, background: 'transparent', color: bandColor(analysis.band, true).fg }}>{analysis.score}</div>
+                      <div className="tg-chip" style={{ fontFamily: DISPLAY, fontSize: 44, fontWeight: 700, letterSpacing: '-1.5px', lineHeight: 1, padding: 0, background: 'transparent', color: bandColor(analysis.band, true).fg }}>{analysis.score}</div>
                       <div>
-                        <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', letterSpacing: '-0.3px' }}>{analysis.band}</div>
+                        <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: '#fff', letterSpacing: '-0.3px' }}>{analysis.band}</div>
                         <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'rgba(255,255,255,0.5)' }}>out of 100 · {analysis.len} characters</div>
                       </div>
                     </div>
@@ -385,7 +385,7 @@ export default function YoutubeTitleGenerator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {HOW_IT_WORKS.map((row, i) => (
               <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
-                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: isMobile ? 21 : 23, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
                 <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
@@ -405,7 +405,7 @@ export default function YoutubeTitleGenerator() {
             {GROW.map((c, i) => (
               <a key={i} href={c.href} className="tg-grow-card">
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{c.label}</div>
-                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{c.title}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{c.title}</h3>
                 <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{c.body}</p>
               </a>
             ))}
@@ -432,7 +432,7 @@ export default function YoutubeTitleGenerator() {
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
                   >
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`tg-faq-answer${isOpen ? ' open' : ''}`}>

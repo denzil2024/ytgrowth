@@ -57,9 +57,9 @@ function useStyles() {
       .bp-category:hover { filter: brightness(1.06); }
 
       .bp-h1 { font-family: ${DISPLAY}; font-weight: 700; letter-spacing: -0.025em; line-height: 1.06; color: var(--yte-ink); }
-      .bp-h1 em { font-style: italic; color: var(--yte-accent); }
+      .bp-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .bp-h2 { font-family: ${DISPLAY}; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; color: var(--yte-ink); }
-      .bp-h2 em { font-style: italic; color: var(--yte-accent); }
+      .bp-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
 
       /* Byline */
       .bp-byline { text-align: center; position: relative; }

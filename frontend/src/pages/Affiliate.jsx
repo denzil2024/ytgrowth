@@ -9,8 +9,8 @@ import SiteHeader from '../components/SiteHeader'
    was removed (the join action stays in the hero + calculator), see
    feedback_no_dark_cta_band. See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -43,10 +43,10 @@ function useGlobalStyles() {
       .aff-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .aff-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .aff-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .aff-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.05; }
-      .aff-h1 em { font-style: italic; color: var(--yte-accent); }
-      .aff-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .aff-h2 em { font-style: italic; color: var(--yte-accent); }
+      .aff-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.05; }
+      .aff-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .aff-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .aff-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .aff-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .aff-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 30px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
@@ -252,7 +252,7 @@ export default function Affiliate() {
               { value: '∞',      label: 'Earnings cap',            sub: 'No limit, no ceiling, ever' },
             ].map((s, i) => (
               <div key={i} style={{ minWidth: 150 }}>
-                <div style={{ fontFamily: SERIF, fontSize: isMobile ? 36 : 42, fontWeight: 400, letterSpacing: '-0.8px', color: 'var(--yte-ink)', lineHeight: 1, marginBottom: 10 }}>{s.value}</div>
+                <div style={{ fontFamily: DISPLAY, fontSize: isMobile ? 36 : 42, fontWeight: 600, letterSpacing: '-0.8px', color: 'var(--yte-ink)', lineHeight: 1, marginBottom: 10 }}>{s.value}</div>
                 <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 5 }}>{s.label}</div>
                 <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', lineHeight: 1.5 }}>{s.sub}</div>
               </div>
@@ -282,7 +282,7 @@ export default function Affiliate() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 10 }}>
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Referrals per month</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-                  <span style={{ fontFamily: SERIF, fontSize: 52, fontWeight: 400, color: 'var(--yte-accent)', letterSpacing: '-1.5px', lineHeight: 1 }}>{referrals}</span>
+                  <span style={{ fontFamily: DISPLAY, fontSize: 52, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '-1.5px', lineHeight: 1 }}>{referrals}</span>
                   <span style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-muted)' }}>/ mo</span>
                 </div>
               </div>
@@ -303,7 +303,7 @@ export default function Affiliate() {
                     <div style={{ fontFamily: SANS, fontSize: 12.5, color: 'var(--yte-muted)', marginTop: 2 }}>${plan.price}/mo · {plan.desc}</div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontFamily: SERIF, fontSize: 23, fontWeight: 400, color: 'var(--yte-accent)', letterSpacing: '-0.3px' }}>
+                    <div style={{ fontFamily: DISPLAY, fontSize: 23, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '-0.3px' }}>
                       {formatMoney(referrals * plan.price * 0.30)}
                     </div>
                     <div style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', marginTop: 2 }}>per month</div>
@@ -324,18 +324,18 @@ export default function Affiliate() {
                   If all {referrals} referrals take Growth ($49/mo)
                 </div>
                 <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>Monthly recurring</div>
-                <div style={{ fontFamily: SERIF, fontSize: isMobile ? 42 : 50, fontWeight: 400, letterSpacing: '-1.5px', lineHeight: 1, marginBottom: 22, color: '#fff' }}>
+                <div style={{ fontFamily: DISPLAY, fontSize: isMobile ? 42 : 50, fontWeight: 600, letterSpacing: '-1.5px', lineHeight: 1, marginBottom: 22, color: '#fff' }}>
                   {formatMoney(referrals * 49 * 0.30)}
                 </div>
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.14)', marginBottom: 22 }} />
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 20 }}>
                   <div>
                     <div style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Year 1 projection</div>
-                    <div style={{ fontFamily: SERIF, fontSize: 27, fontWeight: 400, letterSpacing: '-0.6px', color: '#fff' }}>{formatMoney(referrals * 49 * 0.30 * 12)}</div>
+                    <div style={{ fontFamily: DISPLAY, fontSize: 27, fontWeight: 600, letterSpacing: '-0.6px', color: '#fff' }}>{formatMoney(referrals * 49 * 0.30 * 12)}</div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Per referral / yr</div>
-                    <div style={{ fontFamily: SERIF, fontSize: 27, fontWeight: 400, letterSpacing: '-0.6px', color: '#fff' }}>{formatMoney(49 * 0.30 * 12)}</div>
+                    <div style={{ fontFamily: DISPLAY, fontSize: 27, fontWeight: 600, letterSpacing: '-0.6px', color: '#fff' }}>{formatMoney(49 * 0.30 * 12)}</div>
                   </div>
                 </div>
               </div>
@@ -392,7 +392,7 @@ export default function Affiliate() {
             ].map((step, i) => (
               <div key={i} className="aff-card">
                 <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.06em', marginBottom: 20 }}>{step.n}</div>
-                <div style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 12, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{step.title}</div>
+                <div style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 12, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{step.title}</div>
                 <div style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.7 }}>{step.body}</div>
               </div>
             ))}
@@ -496,7 +496,7 @@ export default function Affiliate() {
                   <div className="aff-faq-q" role="button" tabIndex={0}
                     onClick={() => setOpenFaq(isOpen ? -1 : i)}
                     onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? -1 : i) } }}>
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   {isOpen && (

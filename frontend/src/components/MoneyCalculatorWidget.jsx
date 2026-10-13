@@ -24,13 +24,13 @@ function useWidgetStyles() {
         background: var(--yte-surface, #fff); padding: 30px;
       }
       .mcw-label {
-        display: block; font-family: 'Barlow', system-ui, sans-serif;
+        display: block; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
         font-size: 11px; font-weight: 600; color: var(--yte-muted, #8a8378);
         text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 9px;
       }
       .mcw-input {
         width: 100%; padding: 13px 14px; font-size: 16px; font-weight: 500;
-        font-family: 'Barlow', system-ui, sans-serif; color: var(--yte-ink, #14130f);
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: var(--yte-ink, #14130f);
         background: var(--yte-bg, #f6f4ef);
         border: 1px solid var(--yte-line, rgba(20,19,15,0.14)); border-radius: 0; outline: none;
         transition: border-color 0.15s, background 0.15s; -webkit-appearance: none;
@@ -40,7 +40,7 @@ function useWidgetStyles() {
       select.mcw-input { font-size: 14px; }
       .mcw-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px; }
       .mcw-chip {
-        font-family: 'Barlow', system-ui, sans-serif;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
         font-size: 12px; font-weight: 600;
         color: var(--yte-soft, #5c574e); background: transparent;
         border: 1px solid var(--yte-line, rgba(20,19,15,0.16)); border-radius: 0;
@@ -52,7 +52,7 @@ function useWidgetStyles() {
         display: flex; flex-direction: column; background: var(--yte-ink, #14130f);
         color: #fff; padding: 32px;
       }
-      .mcw-serif { font-family: 'Fraunces', Georgia, serif; }
+      .mcw-serif { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
     `
     document.head.appendChild(el)
   }, [])
@@ -138,31 +138,31 @@ export default function MoneyCalculatorWidget({
 
       {/* Result */}
       <div className="mcw-result">
-        <div style={{ fontFamily: "'Barlow', system-ui, sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', opacity: 0.62, marginBottom: 14 }}>
+        <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', opacity: 0.62, marginBottom: 14 }}>
           Estimated monthly earnings
         </div>
         <div className="mcw-serif" style={{ fontSize: 46, fontWeight: 400, letterSpacing: '-1px', lineHeight: 1.02, marginBottom: 10 }}>
           {fmtMoney(r.monthlyLow)} – {fmtMoney(r.monthlyHigh)}
         </div>
-        <div style={{ fontFamily: "'Barlow', system-ui, sans-serif", fontSize: 13, opacity: 0.7 }}>
+        <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 13, opacity: 0.7 }}>
           {fmtViews(views)} views/mo · {r.label}
         </div>
         <div style={{ height: 1, background: 'rgba(255,255,255,0.16)', margin: '24px 0' }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16 }}>
           <div>
-            <div style={{ fontFamily: "'Barlow', system-ui, sans-serif", fontSize: 10.5, opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 7 }}>Per year</div>
+            <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 10.5, opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 7 }}>Per year</div>
             <div className="mcw-serif" style={{ fontSize: 22, fontWeight: 400, letterSpacing: '-0.3px' }}>
               {fmtMoney(r.annualLow)} – {fmtMoney(r.annualHigh)}
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontFamily: "'Barlow', system-ui, sans-serif", fontSize: 10.5, opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 7 }}>RPM range</div>
+            <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 10.5, opacity: 0.6, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 7 }}>RPM range</div>
             <div className="mcw-serif" style={{ fontSize: 22, fontWeight: 400, letterSpacing: '-0.3px' }}>
               ${r.lowRpm.toFixed(2)} – ${r.highRpm.toFixed(2)}
             </div>
           </div>
         </div>
-        <div style={{ marginTop: 'auto', paddingTop: 26, fontFamily: "'Barlow', system-ui, sans-serif", fontSize: 12.5, opacity: 0.7, lineHeight: 1.55 }}>
+        <div style={{ marginTop: 'auto', paddingTop: 26, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 12.5, opacity: 0.7, lineHeight: 1.55 }}>
           RPM is what hits your AdSense after YouTube's 45% cut and unmonetized views. CPM (advertiser gross) runs roughly ${rpmToCpm(r.lowRpm).toFixed(0)}–${rpmToCpm(r.highRpm).toFixed(0)}. These figures are YTGrowth estimates, not YouTube data.
         </div>
       </div>

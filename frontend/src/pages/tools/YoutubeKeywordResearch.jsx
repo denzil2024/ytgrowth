@@ -20,8 +20,8 @@ import FaqSchema from '../../components/FaqSchema'
    preserved verbatim; only the skin changed. See
    project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -55,10 +55,10 @@ function useGlobalStyles() {
       .kwt-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .kwt-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .kwt-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .kwt-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
-      .kwt-h1 em { font-style: italic; color: var(--yte-accent); }
-      .kwt-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .kwt-h2 em { font-style: italic; color: var(--yte-accent); }
+      .kwt-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.04; }
+      .kwt-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .kwt-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .kwt-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .kwt-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .kwt-label { display: block; font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 9px; }
@@ -314,7 +314,7 @@ export default function YoutubeKeywordResearch() {
 
               <div className="kwt-pane" style={{ flex: 1, background: 'var(--yte-bg-2)' }}>
                 <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Go deeper</p>
-                <p style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', lineHeight: 1.25, marginBottom: 10, letterSpacing: '-0.3px' }}>One keyword is a start. A strategy wins.</p>
+                <p style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', lineHeight: 1.25, marginBottom: 10, letterSpacing: '-0.3px' }}>One keyword is a start. A strategy wins.</p>
                 <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', lineHeight: 1.65, marginBottom: 18 }}>
                   Connect your channel for the full Keyword Research feature: opportunities scored against your channel size, keyword clusters, and a free AI audit.
                 </p>
@@ -333,12 +333,12 @@ export default function YoutubeKeywordResearch() {
                   </div>
                 ) : !result ? (
                   <div style={{ flex: 1, minHeight: 320, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
-                    <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', marginBottom: 8 }}>Your keywords appear here</div>
+                    <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: '#fff', marginBottom: 8 }}>Your keywords appear here</div>
                     <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: 320 }}>Enter a topic on the left and hit Research. Each keyword comes scored so you can pick the winnable ones.</div>
                   </div>
                 ) : (result.reason === 'too_short' || suggestions.length === 0) ? (
                   <div style={{ flex: 1, minHeight: 320, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 24 }}>
-                    <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: '#fff', marginBottom: 8 }}>
+                    <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: '#fff', marginBottom: 8 }}>
                       {result.reason === 'too_short' ? 'Try a longer keyword' : result.reason === 'rate_limited' ? 'One moment' : 'No keywords found'}
                     </div>
                     <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: 320 }}>
@@ -435,7 +435,7 @@ export default function YoutubeKeywordResearch() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {HOW_IT_WORKS.map((row, i) => (
               <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
-                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: isMobile ? 21 : 23, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
                 <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
@@ -460,7 +460,7 @@ export default function YoutubeKeywordResearch() {
             {GROW.map((card, i) => (
               <a key={i} href={card.href} className="kwt-grow-card">
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{card.label}</div>
-                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{card.title}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{card.title}</h3>
                 <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{card.body}</p>
               </a>
             ))}
@@ -491,7 +491,7 @@ export default function YoutubeKeywordResearch() {
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
                   >
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`kwt-faq-answer${isOpen ? ' open' : ''}`}>

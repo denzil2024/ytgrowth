@@ -16,7 +16,7 @@
 
 const RED = '#e5251b'
 const INK = '#17171c'
-const FONT = "'Barlow', system-ui, sans-serif"
+const FONT = "'Plus Jakarta Sans', system-ui, sans-serif"
 const WEIGHT = 600
 
 export default function ChannelBrainLockup({ height = 30, tone = 'dark' }) {

@@ -131,7 +131,7 @@ export default function AuditProgress({ done = false, onDone }) {
           box-shadow: none;
           padding: 28px 32px;
           margin-bottom: 24px;
-          font-family: 'Barlow', system-ui, sans-serif;
+          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
           animation: apIn 0.4s cubic-bezier(0.2, 0.7, 0.3, 1);
         }
         @keyframes apIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }

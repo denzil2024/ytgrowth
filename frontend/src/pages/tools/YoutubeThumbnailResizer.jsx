@@ -27,8 +27,8 @@ import FaqSchema from '../../components/FaqSchema'
    See project_design_language_editorial.
 */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 const PRESETS = [
   { id: 'hd',     label: 'HD',         sub: '1280×720',   w: 1280, h: 720,  badge: '720p',  recommended: true,  cap: 2 * 1024 * 1024,
@@ -70,10 +70,10 @@ function useGlobalStyles() {
       .ytr-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .ytr-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .ytr-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.14em; }
-      .ytr-h1 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; color: var(--yte-ink); }
-      .ytr-h1 em { font-style: italic; color: var(--yte-accent); }
-      .ytr-h2 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; color: var(--yte-ink); }
-      .ytr-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ytr-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; line-height: 1.04; color: var(--yte-ink); }
+      .ytr-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .ytr-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; line-height: 1.08; color: var(--yte-ink); }
+      .ytr-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .ytr-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .ytr-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 28px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; white-space: nowrap; }
@@ -255,7 +255,7 @@ function FaqItem({ q, a }) {
   return (
     <div style={{ borderBottom: '1px solid var(--yte-line)' }}>
       <button onClick={() => setOpen(o => !o)}
-        style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', padding: '22px 0', fontFamily: SERIF, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, fontSize: 20, fontWeight: 400, color: open ? 'var(--yte-accent)' : 'var(--yte-ink)', letterSpacing: '-0.2px', lineHeight: 1.3, transition: 'color 0.2s' }}>
+        style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', padding: '22px 0', fontFamily: DISPLAY, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, fontSize: 20, fontWeight: 600, color: open ? 'var(--yte-accent)' : 'var(--yte-ink)', letterSpacing: '-0.2px', lineHeight: 1.3, transition: 'color 0.2s' }}>
         <span style={{ flex: 1 }}>{q}</span>
         <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: open ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
       </button>
@@ -579,7 +579,7 @@ export default function YoutubeThumbnailResizer() {
                   <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.2px' }}>{p.label}</p>
                   <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, color: 'var(--yte-muted)', letterSpacing: '0.08em' }}>{p.badge.toUpperCase()}</p>
                 </div>
-                <p style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.5px', marginBottom: 8, fontVariantNumeric: 'tabular-nums' }}>
+                <p style={{ fontFamily: DISPLAY, fontSize: 32, fontWeight: 700, color: 'var(--yte-ink)', letterSpacing: '-0.5px', marginBottom: 8, fontVariantNumeric: 'tabular-nums' }}>
                   {p.w}<span style={{ color: 'var(--yte-muted)' }}>×</span>{p.h}
                 </p>
                 <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.7, marginBottom: 16 }}>{p.note}</p>
@@ -661,7 +661,7 @@ export default function YoutubeThumbnailResizer() {
             ].map((c, i) => (
               <div key={i} style={{ background: 'var(--yte-surface)', padding: 26 }}>
                 <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.08em', marginBottom: 14 }}>{c.num}</p>
-                <p style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px', marginBottom: 8, lineHeight: 1.2 }}>{c.title}</p>
+                <p style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.2px', marginBottom: 8, lineHeight: 1.2 }}>{c.title}</p>
                 <p style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-soft)', lineHeight: 1.68 }}>{c.body}</p>
               </div>
             ))}

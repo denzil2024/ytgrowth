@@ -11,8 +11,8 @@ import FaqSchema from '../../components/FaqSchema'
    paper). All format data, URL sync, copy logic, and content preserved.
    See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 const cap = (s) => { const t = (s || '').trim(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : t }
 const lower = (s) => (s || '').toLowerCase()
@@ -268,10 +268,10 @@ function useGlobalStyles() {
       .vig-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .vig-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .vig-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .vig-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
-      .vig-h1 em { font-style: italic; color: var(--yte-accent); }
-      .vig-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .vig-h2 em { font-style: italic; color: var(--yte-accent); }
+      .vig-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.04; }
+      .vig-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .vig-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .vig-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .vig-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
       .vig-label { display: block; font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; }
       .vig-input { width: 100%; padding: 14px 15px; font-size: 16px; font-weight: 500; font-family: ${SANS}; color: var(--yte-ink); background: var(--yte-bg); border: 1px solid var(--yte-line); border-radius: 0; outline: none; transition: border-color 0.15s, background 0.15s; -webkit-appearance: none; }
@@ -295,7 +295,7 @@ function useGlobalStyles() {
       .vig-section { padding: 18px 0; border-bottom: 1px solid var(--yte-line); }
       .vig-section:last-child { border-bottom: none; }
       .vig-section-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-      .vig-section-label { font-family: ${SERIF}; font-size: 18px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; }
+      .vig-section-label { font-family: ${DISPLAY}; font-size: 18px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.2px; }
       .vig-section-count { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.08em; }
       .vig-section-blurb { font-family: ${SANS}; font-size: 12.5px; color: var(--yte-muted); flex: 1; min-width: 120px; }
       .vig-section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -567,7 +567,7 @@ export default function YoutubeVideoIdeasGenerator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {HOW_IT_WORKS.map((row, i) => (
               <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
-                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: isMobile ? 21 : 23, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
                 <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
@@ -587,7 +587,7 @@ export default function YoutubeVideoIdeasGenerator() {
             {GROW.map((c, i) => (
               <a key={i} href={c.href} className="vig-grow-card">
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{c.label}</div>
-                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{c.title}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{c.title}</h3>
                 <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{c.body}</p>
               </a>
             ))}
@@ -614,7 +614,7 @@ export default function YoutubeVideoIdeasGenerator() {
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
                   >
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`vig-faq-answer${isOpen ? ' open' : ''}`}>

@@ -8,7 +8,7 @@ import { brandName } from '../brandHost'
    system: Fraunces serif headings, Barlow body, warm paper, sharp flat
    cards, accent links). All legal content preserved verbatim. */
 
-const SANS = "'Barlow', system-ui, sans-serif"
+const SANS = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [w, setW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)

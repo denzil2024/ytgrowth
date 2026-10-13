@@ -11,8 +11,8 @@ import FaqSchema from '../../components/FaqSchema'
    the dark pane right). All logic + content preserved.
    See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function parseTime(s) {
   const t = (s || '').trim()
@@ -85,10 +85,10 @@ function useGlobalStyles() {
       .ch-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .ch-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .ch-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .ch-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
-      .ch-h1 em { font-style: italic; color: var(--yte-accent); }
-      .ch-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .ch-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ch-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.04; }
+      .ch-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .ch-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .ch-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .ch-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .ch-input { padding: 11px 13px; font-size: 14.5px; font-weight: 500; font-family: ${SANS}; color: var(--yte-ink); background: var(--yte-bg); border: 1px solid var(--yte-line); border-radius: 0; outline: none; transition: border-color 0.15s, background 0.15s; -webkit-appearance: none; }
@@ -104,7 +104,7 @@ function useGlobalStyles() {
       @media (max-width: 820px) { .ch-tool { grid-template-columns: 1fr; } }
       .ch-pane { background: var(--yte-surface); border: 1px solid var(--yte-line); padding: 26px; }
       .ch-pane-dark { background: var(--yte-ink); padding: 24px; color: #fff; display: flex; flex-direction: column; min-height: 0; }
-      .ch-pre { flex: 1; min-height: 0; max-height: 280px; margin: 0; font-family: 'Barlow', ui-monospace, monospace; font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.9); white-space: pre-wrap; word-break: break-word; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); padding: 16px; overflow: auto; font-variant-numeric: tabular-nums; }
+      .ch-pre { flex: 1; min-height: 0; max-height: 280px; margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.9); white-space: pre-wrap; word-break: break-word; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); padding: 16px; overflow: auto; font-variant-numeric: tabular-nums; }
       .ch-copy { font-family: ${SANS}; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.22); background: transparent; color: #fff; padding: 6px 14px; cursor: pointer; transition: background 0.15s; }
       .ch-copy:hover { background: rgba(255,255,255,0.1); }
       .ch-copy:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -259,7 +259,7 @@ export default function YoutubeChapterGenerator() {
                 <pre className="ch-pre">{result.text}</pre>
               ) : (
                 <div style={{ flex: 1, minHeight: 120, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-                  <div style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: '#fff', marginBottom: 8 }}>Your chapters appear here</div>
+                  <div style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: '#fff', marginBottom: 8 }}>Your chapters appear here</div>
                   <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: 300 }}>Fill in a time and title for each section on the left.</div>
                 </div>
               )}
@@ -278,7 +278,7 @@ export default function YoutubeChapterGenerator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {HOW_IT_WORKS.map((row, i) => (
               <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
-                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: isMobile ? 21 : 23, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
                 <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
@@ -298,7 +298,7 @@ export default function YoutubeChapterGenerator() {
             {GROW.map((c, i) => (
               <a key={i} href={c.href} className="ch-grow-card">
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{c.label}</div>
-                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{c.title}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{c.title}</h3>
                 <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{c.body}</p>
               </a>
             ))}
@@ -325,7 +325,7 @@ export default function YoutubeChapterGenerator() {
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
                   >
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`ch-faq-answer${isOpen ? ' open' : ''}`}>

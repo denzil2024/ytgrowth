@@ -31,8 +31,8 @@ import { isChannelBrain } from '../brandHost'
 // same as checkout.js already does for the logged-in flow.
 const CHECKOUT_ORIGIN = 'https://ytgrowth.io'
 
-const SERIF  = "'Fraunces', Georgia, serif"
-const SANS   = "'Barlow', system-ui, sans-serif"
+const DISPLAY  = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS   = "'Plus Jakarta Sans', system-ui, sans-serif"
 const INK    = '#14130f'
 const SOFT   = '#5c574e'
 const MUTED  = '#8a8378'
@@ -219,7 +219,7 @@ export default function PrepayModal({ open, onClose, planKey = 'pack_5' }) {
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 28, color: INK, letterSpacing: '-0.01em', lineHeight: 1.15, marginBottom: 12 }}>
+            <h2 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 28, color: INK, letterSpacing: '-0.025em', lineHeight: 1.15, marginBottom: 12 }}>
               Payment received
             </h2>
             <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.65, marginBottom: 8, maxWidth: 360, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -245,7 +245,7 @@ export default function PrepayModal({ open, onClose, planKey = 'pack_5' }) {
                 <rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/>
               </svg>
             </div>
-            <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 28, color: INK, letterSpacing: '-0.01em', lineHeight: 1.15, marginBottom: 12 }}>
+            <h2 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 28, color: INK, letterSpacing: '-0.025em', lineHeight: 1.15, marginBottom: 12 }}>
               Get instant access
             </h2>
             <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.65, marginBottom: 24, maxWidth: 360, marginLeft: 'auto', marginRight: 'auto' }}>

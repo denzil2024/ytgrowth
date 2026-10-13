@@ -10,8 +10,8 @@ import { NICHES, fmtMoney } from '../data/youtubeEarnings'
    them (de-orphans the earnings pages). Editorial design language (Fraunces +
    Barlow, sharp flat cards, warm paper). See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 /* Free tools grouped into labeled clusters so 15 tools read as an organized
    gallery, not one flat wall. */
@@ -84,16 +84,16 @@ function useGlobalStyles() {
       .tlh-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .tlh-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .tlh-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .tlh-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
-      .tlh-h1 em { font-style: italic; color: var(--yte-accent); }
-      .tlh-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.1; }
-      .tlh-h2 em { font-style: italic; color: var(--yte-accent); }
+      .tlh-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.04; }
+      .tlh-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .tlh-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.1; }
+      .tlh-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .tlh-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       /* Hero stat strip (connected hairline, controlled count = 3) */
       .tlh-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--yte-line); border: 1px solid var(--yte-line); max-width: 560px; }
       .tlh-stat { background: var(--yte-surface); padding: 20px 22px; }
-      .tlh-stat-n { font-family: ${SERIF}; font-size: 34px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.5px; line-height: 1; }
+      .tlh-stat-n { font-family: ${DISPLAY}; font-size: 34px; font-weight: 700; color: var(--yte-ink); letter-spacing: -0.5px; line-height: 1; }
       .tlh-stat-l { font-family: ${SANS}; font-size: 12px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; }
 
       /* Jump index */
@@ -113,7 +113,7 @@ function useGlobalStyles() {
       .tlh-card { display: flex; flex-direction: column; gap: 7px; background: var(--yte-surface); border: 1px solid var(--yte-line); padding: 20px 22px 22px; text-decoration: none; transition: border-color 0.15s, transform 0.15s; }
       .tlh-card:hover { border-color: var(--yte-line-2); transform: translateY(-2px); }
       .tlh-card-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-      .tlh-card-name { font-family: ${SERIF}; font-size: 19px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.15; }
+      .tlh-card-name { font-family: ${DISPLAY}; font-size: 19px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.15; }
       .tlh-card-arrow { font-family: ${SANS}; font-size: 15px; color: var(--yte-accent); flex-shrink: 0; }
       .tlh-card-blurb { font-family: ${SANS}; font-size: 13.5px; color: var(--yte-soft); line-height: 1.55; }
 
@@ -121,7 +121,7 @@ function useGlobalStyles() {
       .tlh-earn { display: flex; flex-direction: column; background: var(--yte-surface); border: 1px solid var(--yte-line); padding: 20px 22px; text-decoration: none; transition: border-color 0.15s, transform 0.15s; }
       .tlh-earn:hover { border-color: var(--yte-line-2); transform: translateY(-2px); }
       .tlh-earn-name { font-family: ${SANS}; font-size: 12px; font-weight: 600; color: var(--yte-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
-      .tlh-earn-rpm { font-family: ${SERIF}; font-size: 28px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.5px; line-height: 1; }
+      .tlh-earn-rpm { font-family: ${DISPLAY}; font-size: 28px; font-weight: 700; color: var(--yte-ink); letter-spacing: -0.5px; line-height: 1; }
       .tlh-earn-rpm .em { color: var(--yte-accent); }
       .tlh-earn-sub { font-family: ${SANS}; font-size: 12px; color: var(--yte-muted); margin-top: 8px; }
 

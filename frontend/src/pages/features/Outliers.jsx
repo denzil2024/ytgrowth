@@ -13,8 +13,8 @@ import { injectFaqJsonLd } from '../../utils/seo'
    CTA removed. ALL copy, FAQs, the 3 reports, and product detail preserved.
    Classes use the .otl- prefix. See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 /* On-dark accent. Red goes muddy on near-black, so the dark "app preview"
    panes use a warm gold (the Zennara-lineage on-dark tone) instead. */
 const GOLD = '#e6b35c'
@@ -50,10 +50,10 @@ function useStyles() {
       .otl-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .otl-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .otl-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .otl-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.05; }
-      .otl-h1 em { font-style: italic; color: var(--yte-accent); }
-      .otl-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .otl-h2 em { font-style: italic; color: var(--yte-accent); }
+      .otl-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.05; }
+      .otl-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .otl-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .otl-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .otl-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .otl-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 30px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; }
@@ -63,7 +63,7 @@ function useStyles() {
       .otl-ghost:hover { color: var(--yte-ink); border-color: var(--yte-line-2); }
 
       .otl-faq-item { border-bottom: 1px solid var(--yte-line); }
-      .otl-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${SERIF}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
+      .otl-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: ${DISPLAY}; display: flex; justify-content: space-between; align-items: center; gap: 18px; font-size: 20px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.2px; line-height: 1.3; transition: color 0.2s; }
       .otl-faq-q:hover { color: var(--yte-accent); }
       .otl-faq-q.open { color: var(--yte-accent); }
       .otl-faq-plus { flex-shrink: 0; font-family: ${SANS}; font-size: 26px; font-weight: 300; color: var(--yte-accent); line-height: 1; transition: transform 0.2s; }
@@ -133,7 +133,7 @@ function OutlierVideoVisual() {
         <div>
           <p style={{ fontFamily: SANS, fontSize: 9.5, fontWeight: 700, color: GOLD, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 2 }}>Outlier score</p>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 400, color: GOLD, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>17.3</span>
+            <span style={{ fontFamily: DISPLAY, fontSize: 28, fontWeight: 700, color: GOLD, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>17.3</span>
             <span style={{ fontFamily: SANS, fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>×</span>
           </div>
         </div>
@@ -182,14 +182,14 @@ function BreakoutChannelsVisual() {
       {channels.map((c, i) => (
         <div key={i} style={{ background: 'var(--yte-ink)', borderLeft: `3px solid ${GOLD}`, padding: '16px 18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-            <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: SERIF, fontSize: 15, fontWeight: 400, color: 'rgba(255,255,255,0.75)' }}>{c.name[0]}</div>
+            <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: DISPLAY, fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.75)' }}>{c.name[0]}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontFamily: SANS, fontSize: 13.5, fontWeight: 600, color: '#fff', letterSpacing: '-0.2px' }}>{c.name}</p>
               <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{c.subs} subscribers · in your exact niche</p>
             </div>
             <div style={{ textAlign: 'right', flexShrink: 0 }}>
               <p style={{ fontFamily: SANS, fontSize: 9.5, fontWeight: 700, color: GOLD, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Outlier</p>
-              <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: '#fff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px', lineHeight: 1.1 }}>{c.outlier}</p>
+              <p style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 600, color: '#fff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px', lineHeight: 1.1 }}>{c.outlier}</p>
             </div>
           </div>
           <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
@@ -373,7 +373,7 @@ export default function Outliers() {
             {RESULT_TABS.map((t, i) => (
               <div key={i} style={{ background: 'var(--yte-surface)', padding: '24px 24px 26px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
-                  <p style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px' }}>{t.name}</p>
+                  <p style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.2px' }}>{t.name}</p>
                   <span style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, color: 'var(--yte-muted)', letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0 }}>{t.count}</span>
                 </div>
                 <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{t.what}</p>
@@ -437,7 +437,7 @@ export default function Outliers() {
             const Card = ({ s }) => (
               <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, color: 'var(--yte-accent)', letterSpacing: '0.06em', marginBottom: 14 }}>{s.n}</div>
-                <p style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
+                <p style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{s.t}</p>
                 <p style={{ fontFamily: SANS, fontSize: 13, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{s.b}</p>
               </div>
             )
@@ -552,7 +552,7 @@ export default function Outliers() {
                   )}
                   <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
-                    <p style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{p.runs}</p>
+                    <p style={{ fontFamily: DISPLAY, fontSize: 40, fontWeight: 700, color: 'var(--yte-ink)', letterSpacing: '-0.8px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{p.runs}</p>
                     <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)' }}>searches</p>
                   </div>
                   <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', marginBottom: 14 }}>included per month</p>

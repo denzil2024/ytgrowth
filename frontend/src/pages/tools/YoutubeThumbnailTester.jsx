@@ -18,8 +18,8 @@ import FaqSchema from '../../components/FaqSchema'
    pick buttons are quiet (active = ink, never red, see feedback_quiet_toggles).
    See project_design_language_editorial. */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 function useBreakpoint() {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -52,10 +52,10 @@ function useGlobalStyles() {
       .ab-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .ab-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .ab-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .ab-h1 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.04; color: var(--yte-ink); }
-      .ab-h1 em { font-style: italic; color: var(--yte-accent); }
-      .ab-h2 { font-family: ${SERIF}; font-weight: 400; letter-spacing: -0.01em; line-height: 1.08; color: var(--yte-ink); }
-      .ab-h2 em { font-style: italic; color: var(--yte-accent); }
+      .ab-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; line-height: 1.04; color: var(--yte-ink); }
+      .ab-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .ab-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; line-height: 1.08; color: var(--yte-ink); }
+      .ab-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .ab-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       /* Quiet view toggle. Active = ink, never red. */
@@ -66,7 +66,7 @@ function useGlobalStyles() {
       .ab-seg button.active { background: var(--yte-ink); color: #fff; }
 
       /* Title input keeps YouTube's own typography (this is a mock tile). */
-      .ab-title-input { width: 100%; font-family: 'Roboto', 'Barlow', system-ui, sans-serif; border: none; background: transparent; outline: none; color: #0f0f0f; padding: 0; resize: none; }
+      .ab-title-input { width: 100%; font-family: 'Roboto', 'Plus Jakarta Sans', system-ui, sans-serif; border: none; background: transparent; outline: none; color: #0f0f0f; padding: 0; resize: none; }
       .ab-title-input:focus { background: rgba(10,10,15,0.03); border-radius: 4px; }
 
       .ab-drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 100%; cursor: pointer; color: var(--yte-muted); text-align: center; padding: 12px; background: var(--yte-bg-2); transition: background 0.15s; }
@@ -381,7 +381,7 @@ export default function YoutubeThumbnailTester() {
           <div style={{ marginTop: 12, background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: isMobile ? 22 : 30 }}>
             {!analysis ? (
               <div style={{ textAlign: 'center', padding: '18px 0' }}>
-                <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: 'var(--yte-ink)', marginBottom: 8 }}>Upload both thumbnails to analyze</div>
+                <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: 'var(--yte-ink)', marginBottom: 8 }}>Upload both thumbnails to analyze</div>
                 <div style={{ fontFamily: SANS, fontSize: 13.5, color: 'var(--yte-muted)', lineHeight: 1.6, maxWidth: 440, margin: '0 auto' }}>We read each image in your browser and score contrast, color, brightness, and clarity, then call the stronger one with the reasons.</div>
               </div>
             ) : (
@@ -398,7 +398,7 @@ export default function YoutubeThumbnailTester() {
                       const win = analysis.winner === lbl
                       return (
                         <div key={lbl} style={{ textAlign: 'center', minWidth: 62, padding: '10px 14px', background: win ? 'var(--yte-ink)' : 'var(--yte-bg-2)', color: win ? '#fff' : 'var(--yte-muted)' }}>
-                          <div style={{ fontFamily: SERIF, fontSize: 26, fontWeight: 400, lineHeight: 1 }}>{sc}</div>
+                          <div style={{ fontFamily: DISPLAY, fontSize: 26, fontWeight: 600, lineHeight: 1 }}>{sc}</div>
                           <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, marginTop: 4, opacity: 0.8, letterSpacing: '0.06em' }}>{lbl}</div>
                         </div>
                       )
@@ -449,7 +449,7 @@ export default function YoutubeThumbnailTester() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {HOW_IT_WORKS.map((row, i) => (
               <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '320px 1fr', gap: isMobile ? 10 : 48, padding: '26px 0', borderTop: i === 0 ? 'none' : '1px solid var(--yte-line)' }}>
-                <h3 style={{ fontFamily: SERIF, fontSize: isMobile ? 21 : 23, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: isMobile ? 21 : 23, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{row.h}</h3>
                 <p style={{ fontFamily: SANS, fontSize: isMobile ? 15 : 16, color: 'var(--yte-soft)', lineHeight: 1.72 }}>{row.p}</p>
               </div>
             ))}
@@ -471,7 +471,7 @@ export default function YoutubeThumbnailTester() {
             {GROW.map((card, i) => (
               <a key={i} href={card.href} className="ab-grow-card">
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, color: 'var(--yte-accent)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>{card.label}</div>
-                <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{card.title}</h3>
+                <h3 style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.3px', marginBottom: 12, lineHeight: 1.2 }}>{card.title}</h3>
                 <p style={{ fontFamily: SANS, fontSize: 14.5, color: 'var(--yte-soft)', lineHeight: 1.65 }}>{card.body}</p>
               </a>
             ))}
@@ -497,7 +497,7 @@ export default function YoutubeThumbnailTester() {
                   <div onClick={() => setOpenFaq(isOpen ? null : i)} role="button" tabIndex={0}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}>
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`ab-faq-answer${isOpen ? ' open' : ''}`}>

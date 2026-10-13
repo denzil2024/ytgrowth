@@ -10,7 +10,7 @@
 import { useEffect, useState, useRef } from 'react'
 
 const SERIF = "'Cormorant Garamond', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 const GOLD  = '#c9a030'
 const INK   = '#14130f'
 const SOFT  = '#6b6862'

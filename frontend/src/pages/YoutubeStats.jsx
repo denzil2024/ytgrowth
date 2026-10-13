@@ -19,8 +19,8 @@ import { COUNTRY_META }  from '../data/youtubeStatsCountries'
    the skin changed. See project_design_language_editorial.
 */
 
-const SERIF = "'Fraunces', Georgia, serif"
-const SANS  = "'Barlow', system-ui, sans-serif"
+const DISPLAY = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS  = "'Plus Jakarta Sans', system-ui, sans-serif"
 
 const FAQS = [
   { q: 'Where does this data come from?',
@@ -91,10 +91,10 @@ function useGlobalStyles() {
       .yts-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 22px; }
       .yts-eyebrow-rule { width: 26px; height: 1px; background: var(--yte-accent); }
       .yts-eyebrow-text { font-family: ${SANS}; font-size: 11px; font-weight: 600; color: var(--yte-accent); text-transform: uppercase; letter-spacing: 0.18em; }
-      .yts-h1 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.04; }
-      .yts-h1 em { font-style: italic; color: var(--yte-accent); }
-      .yts-h2 { font-family: ${SERIF}; font-weight: 300; letter-spacing: -0.01em; color: var(--yte-ink); line-height: 1.08; }
-      .yts-h2 em { font-style: italic; color: var(--yte-accent); }
+      .yts-h1 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.04; }
+      .yts-h1 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
+      .yts-h2 { font-family: ${DISPLAY}; font-weight: 600; letter-spacing: -0.025em; color: var(--yte-ink); line-height: 1.08; }
+      .yts-h2 em { font-style: normal; font-weight: 800; color: var(--yte-accent); }
       .yts-lead { font-family: ${SANS}; color: var(--yte-soft); line-height: 1.75; }
 
       .yts-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--yte-accent); color: #fff; font-family: ${SANS}; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 28px; border: none; border-radius: 0; cursor: pointer; text-decoration: none; transition: filter 0.18s, transform 0.18s; white-space: nowrap; }
@@ -125,7 +125,7 @@ function useGlobalStyles() {
       .yts-row-thumb { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--yte-bg-2); }
       .yts-row-name { font-family: ${SANS}; font-size: 15px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.1px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .yts-row-meta { font-family: ${SANS}; font-size: 12px; color: var(--yte-muted); font-weight: 500; margin-top: 3px; font-variant-numeric: tabular-nums; }
-      .yts-row-subs { font-family: ${SERIF}; font-size: 19px; font-weight: 400; color: var(--yte-ink); letter-spacing: -0.3px; font-variant-numeric: tabular-nums; text-align: right; }
+      .yts-row-subs { font-family: ${DISPLAY}; font-size: 19px; font-weight: 600; color: var(--yte-ink); letter-spacing: -0.3px; font-variant-numeric: tabular-nums; text-align: right; }
       .yts-row-subs-label { font-family: ${SANS}; font-size: 10px; color: var(--yte-muted); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; text-align: right; }
 
       @media (max-width: 720px) {
@@ -274,12 +274,12 @@ export default function YoutubeStats() {
           {/* Stats strip */}
           <div style={{ display: 'inline-flex', gap: isMobile ? 18 : 28, alignItems: 'center', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
-              <span style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.4px' }}>{CATEGORY_META.length}</span>
+              <span style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.4px' }}>{CATEGORY_META.length}</span>
               <span style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--yte-muted)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>categories</span>
             </div>
             <span style={{ width: 1, height: 18, background: 'var(--yte-line)' }} />
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
-              <span style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.4px' }}>700+</span>
+              <span style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.4px' }}>700+</span>
               <span style={{ fontFamily: SANS, fontSize: 11.5, color: 'var(--yte-muted)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>channels</span>
             </div>
             {fmtUpdatedDate(data?.fetched_at) && (
@@ -356,7 +356,7 @@ export default function YoutubeStats() {
 
           {sections.length === 0 && (
             <div style={{ background: 'var(--yte-surface)', border: '1px solid var(--yte-line)', padding: isMobile ? 32 : 56, textAlign: 'center' }}>
-              <p style={{ fontFamily: SERIF, fontSize: isMobile ? 24 : 30, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.4px', marginBottom: 10 }}>
+              <p style={{ fontFamily: DISPLAY, fontSize: isMobile ? 24 : 30, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.4px', marginBottom: 10 }}>
                 Loading the leaderboard…
               </p>
               <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', maxWidth: 460, margin: '0 auto', lineHeight: 1.6 }}>
@@ -398,7 +398,7 @@ export default function YoutubeStats() {
                       <span className={`yts-row-rank${rank <= 3 ? ' top3' : ''}`}>#{rank}</span>
                       {c.thumbnail
                         ? <img src={c.thumbnail} alt={c.title || "YouTube channel avatar"} className="yts-row-thumb" loading="lazy" />
-                        : <div className="yts-row-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: SERIF, fontSize: 20, fontWeight: 400, color: 'var(--yte-soft)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
+                        : <div className="yts-row-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: DISPLAY, fontSize: 20, fontWeight: 600, color: 'var(--yte-soft)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
                       }
                       <div style={{ minWidth: 0 }}>
                         <div className="yts-row-name">{c.title}</div>
@@ -434,7 +434,7 @@ export default function YoutubeStats() {
             {MILESTONES.map((m, i) => (
               <div key={m.channel} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '200px 1fr', gap: isMobile ? 6 : 24, padding: '20px 22px', borderBottom: i < MILESTONES.length - 1 ? '1px solid var(--yte-line)' : 'none' }}>
                 <div>
-                  <p style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 400, color: 'var(--yte-ink)', letterSpacing: '-0.2px', marginBottom: 3 }}>{m.channel}</p>
+                  <p style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 600, color: 'var(--yte-ink)', letterSpacing: '-0.2px', marginBottom: 3 }}>{m.channel}</p>
                   <p style={{ fontFamily: SANS, fontSize: 12, color: 'var(--yte-muted)', fontWeight: 600, letterSpacing: '0.02em' }}>{m.period}</p>
                 </div>
                 <p style={{ fontFamily: SANS, fontSize: 14, color: 'var(--yte-soft)', lineHeight: 1.65, margin: 0 }}>{m.note}</p>
@@ -470,7 +470,7 @@ export default function YoutubeStats() {
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, padding: isMobile ? '20px 0' : '24px 0', cursor: 'pointer', userSelect: 'none' }}
                   >
-                    <span style={{ flex: 1, fontFamily: SERIF, fontSize: isMobile ? 18 : 20, fontWeight: 400, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
+                    <span style={{ flex: 1, fontFamily: DISPLAY, fontSize: isMobile ? 18 : 20, fontWeight: 600, color: isOpen ? 'var(--yte-accent)' : 'var(--yte-ink)', lineHeight: 1.3, letterSpacing: '-0.2px', transition: 'color 0.2s' }}>{item.q}</span>
                     <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: SANS, fontSize: 26, fontWeight: 300, color: 'var(--yte-accent)', lineHeight: 1, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
                   </div>
                   <div className={`yts-faq-answer${isOpen ? ' open' : ''}`}>

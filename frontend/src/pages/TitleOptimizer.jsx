@@ -247,7 +247,7 @@ export default function TitleOptimizer() {
     : ''
 
   return (
-    <div style={{ maxWidth: 860, fontFamily: "'Barlow', system-ui, sans-serif" }}>
+    <div style={{ maxWidth: 860, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>

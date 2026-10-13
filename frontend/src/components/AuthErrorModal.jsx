@@ -21,8 +21,8 @@ import { useEffect } from 'react'
 import { supportEmail } from '../brandHost'
 
 /* Editorial tokens, matching Landing.jsx's ED_* constants exactly. */
-const SERIF  = "'Fraunces', Georgia, serif"
-const SANS   = "'Barlow', system-ui, sans-serif"
+const DISPLAY  = "'Plus Jakarta Sans', system-ui, sans-serif"
+const SANS   = "'Plus Jakarta Sans', system-ui, sans-serif"
 const INK    = '#14130f'
 const SOFT   = '#5c574e'
 const MUTED  = '#8a8378'
@@ -219,7 +219,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
           {cfg.icon}
         </div>
 
-        <h2 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 28, color: INK, letterSpacing: '-0.01em', lineHeight: 1.15, marginBottom: 12 }}>
+        <h2 style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: 28, color: INK, letterSpacing: '-0.025em', lineHeight: 1.15, marginBottom: 12 }}>
           {cfg.title}
         </h2>
         <p style={{ fontFamily: SANS, fontSize: 14.5, color: SOFT, lineHeight: 1.65, marginBottom: 24, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
