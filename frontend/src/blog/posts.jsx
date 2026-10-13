@@ -19675,7 +19675,7 @@ Free studio checklist: https://yoursite.com/checklist
     date: '2026-10-13',
     category: CATEGORIES.growth,
     cover: '/blog/youtube-shadowban-cover.jpg',
-    coverAlt: 'A creator at a desk checking YouTube Studio traffic source analytics on a laptop, comparing two charts side by side, focused expression, home office setting',
+    coverAlt: 'A creator sitting at a desk in a home studio, worried expression, looking at a wall of video thumbnails each marked with a crossed-out eye icon',
     author: 'Denzil',
     readTime: '10 min read',
     faqs: [
