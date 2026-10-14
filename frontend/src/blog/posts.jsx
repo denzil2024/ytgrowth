@@ -9658,7 +9658,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <blockquote><strong>Quick update:</strong> YouTube changed how it counts a view on August 24, 2026, now counting as soon as playback starts rather than requiring a watch-duration threshold. Each historical snapshot reflects whichever rule was live on that date, so only the small slice of this cohort whose day-30 checkpoint fell in the days right around the change could see a marginal boost from the newer, looser counting bar. The bulk of the sample was snapshotted well before the change and is unaffected.</blockquote>
 
-        <p>This measures each video against its own trajectory, not against other channels, so a small channel's video and a large channel's video count equally. <strong>It is a pace measurement, not a size measurement.</strong></p>
+        <p>This measures each video against its own trajectory, not against other channels, so a small channel's video and a large channel's video count equally. <strong>It is a pace measurement, not a size measurement.</strong> For the size side of the question, how many views a video should get given your subscriber count, <a href="/blog/youtube-views-per-sub-tier">average views by subscriber tier</a> covers that separately, measured the same way across 1,152 channels.</p>
 
         <h2>Frequently Asked Questions</h2>
 
@@ -10978,7 +10978,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>A channel that only retains its existing audience is not growing. It is maintaining. Subscriber counts plateau, view counts stabilize, and the algorithm stops expanding your reach because it has no signal that new audiences are responding to your content.</p>
 
-        <p>Check the Audience tab in YouTube Studio and find the new versus returning viewers graph. A healthy growing channel pulls a consistent percentage of new viewers on every upload. If returning viewers account for more than 70% of your views consistently, your content is not reaching beyond your existing subscriber base.</p>
+        <p>Check the Audience tab in YouTube Studio and find the new versus returning viewers graph. A healthy growing channel pulls a consistent percentage of new viewers on every upload. If returning viewers account for more than 70% of your views consistently, your content is not reaching beyond your existing subscriber base. That's a different measure than what share of your total subscriber count watches a given upload, a number that naturally shrinks as a channel grows; <a href="/blog/youtube-views-per-sub-tier">average views by subscriber tier</a> covers what that normal shrinkage looks like.</p>
 
         <p>New viewers come from two primary sources: search traffic and suggested feed placement. Search traffic requires strong SEO and keyword-targeted content. Suggested feed placement requires strong CTR and retention signals that tell the algorithm your content is worth showing to audiences similar to your existing viewers.</p>
 
@@ -19847,6 +19847,213 @@ Free studio checklist: https://yoursite.com/checklist
         <h2>One Named Mechanism, Three Far More Common Ones</h2>
 
         <p>"Shadowban" describes a feeling, not anything YouTube has confirmed as a single mechanism. <strong>What's documented is narrow, checkable against your own Studio data, and rare.</strong> The explanations that account for most reach drops, audience drift, a retention slide, a misclassified setting, each have a straightforward fix once correctly named instead of folded into one word the platform itself has never used.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-views-per-sub-tier',
+    title: 'Average YouTube Views Per Video by Subscriber Count',
+    excerpt: "Measured across 1,152 tracked channels and 55,964 videos: median views per upload at 10K, 100K, and 1M subscribers, plus the real finding behind the view count that looks low next to your subscriber total. The share of subscribers who watch a new upload falls from 10.58% to 2.93% as a channel grows.",
+    date: '2026-10-14',
+    category: CATEGORIES.analytics,
+    cover: '/blog/youtube-views-per-sub-tier-cover.jpg',
+    coverAlt: 'A creator comparing two bar charts on a laptop screen, one showing subscriber count and one showing view count, desk setup with notebook and coffee',
+    author: 'Denzil',
+    readTime: '10 min read',
+    faqs: [
+      { q: 'What is the average number of views per subscriber on YouTube?', a: "It shrinks as a channel grows, and the drop is steep. <strong>Across 1,152 tracked channels, the median share of subscribers who watch a new upload is 10.58% at 10,000 subscribers, 5.29% at 100,000, and 2.93% at 1 million.</strong> A channel at 1M subscribers getting \"only\" 3% of its subscriber base per video isn't underperforming, that's the typical pattern at that size." },
+      { q: "What percentage of subscribers watch your videos?", a: "Based on 1,152 tracked channels, the median is roughly 11% at 10K subscribers, 5% at 100K, and 3% at 1M. <strong>The percentage drops as the channel grows, not because the channel got worse, but because a larger subscriber base includes more people who subscribed once and stopped actively watching.</strong> Compare your own ratio against your own tier, not a flat benchmark." },
+      { q: 'What is the average amount of views for a successful YouTube channel?', a: "There's no single number, since it depends entirely on subscriber count and niche. <strong>Measured medians: 1,502 views per upload at 10,000 subscribers, 7,722 at 100,000, and 65,414 at 1 million</strong>, pooled across 1,152 channels. A channel performing near its own tier's median, not some flat industry figure, is the one worth calling successful." },
+      { q: 'Is 2000 views in 1 day good?', a: "It depends on the channel's own subscriber tier far more than on the raw number. <strong>A channel around 10,000 subscribers has a median of 1,502 views per upload</strong>, so 2,000 in a day would be a strong result at that size. The same number would be well below median for a channel at 100,000 subscribers, where the typical upload clears 7,722." },
+    ],
+    content: () => (
+      <>
+        <p>A channel at 1 million subscribers gets a median of <strong>65,414 views on a new upload</strong>, not the million a raw subscriber count might suggest. At 100,000 subscribers the median is 7,722. At 10,000, it's 1,502. These are measured medians across 1,152 tracked channels and 55,964 videos published since January 2025, not estimates.</p>
+
+        <p>The more useful number isn't the view count itself. <strong>It's what share of a channel's subscriber base that view count represents, and that share falls hard as a channel grows: 10.58% at 10K subscribers, 5.29% at 100K, 2.93% at 1M.</strong> A video "only" reaching 3% of a million-subscriber audience isn't a failing channel, it's the typical pattern at that size.</p>
+
+        <h2>How This Was Measured</h2>
+
+        <p>Every tracked channel is tiered by its most recent subscriber count. <strong>Every video published since January 1, 2025 gets its latest recorded view count</strong>, pulled from weekly tracking snapshots, not a strict 30-day window, so the figures reflect views as of the most recent check, not a fixed calendar cutoff.</p>
+
+        <p>Each channel's own figure is the median across its uploads. <strong>The tier-wide number is then the median of those per-channel medians</strong>, a median of medians, so one unusually large channel inside a tier can't drag the whole figure upward.</p>
+
+        <blockquote><strong>Pro Tip:</strong> compare your channel against the median for your own subscriber tier, not the raw tier-wide average or a number pulled from a different-sized channel. A video performing at or above your tier's median is doing its job, even if the raw number looks small next to a bigger creator's upload.</blockquote>
+
+        <ul>
+          <li>Minimum 5 tracked uploads per channel, or a per-channel median isn't meaningful</li>
+          <li>Views pulled from each video's latest weekly snapshot, not a single fixed date</li>
+          <li>Channel tier set by the most recent subscriber count on file, not a historical average</li>
+        </ul>
+
+        <h2>Why the 1K Tier Isn't in This Study</h2>
+
+        <p>Channels under 10,000 subscribers didn't clear this site's own data floor: 24 tracked channels at that tier, below the 30-channel minimum this product requires before publishing any figure. <strong>Reporting a median from 24 channels risks one or two outliers swinging the whole number</strong>, so that tier is dropped here instead of published thin. 10K, 100K, and 1M subscribers all clear the floor comfortably.</p>
+
+        <h2>The Core Table: Median Views Per Upload by Tier</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Subscriber tier</th>
+              <th>Median views per upload</th>
+              <th>Channels measured</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10,000</td><td>1,502</td><td>96</td></tr>
+            <tr><td>100,000</td><td>7,722</td><td>343</td></tr>
+            <tr><td>1,000,000</td><td>65,414</td><td>561</td></tr>
+          </tbody>
+        </table>
+
+        <p>Views scale with subscriber count, but not proportionally. <strong>Going from 10K to 100K subscribers is a 10x jump in audience, yet median views only rose about 5.1x.</strong> Going from 100K to 1M is another 10x audience jump, and views rose roughly 8.5x. Neither ratio matches the subscriber growth itself, which is exactly what the next section explains.</p>
+
+        <h2>The Real Finding: Subscriber-Watch Share Falls as Channels Grow</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Subscriber tier</th>
+              <th>Median share watching a new upload</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10,000</td><td>10.58%</td></tr>
+            <tr><td>100,000</td><td>5.29%</td></tr>
+            <tr><td>1,000,000</td><td>2.93%</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>This is the clean, monotonic pattern behind the "my views feel low compared to my subscribers" complaint.</strong> It isn't a sign of a declining channel. A larger subscriber count accumulates more people who subscribed once, years ago, and never came back: dormant accounts, people who changed interests, duplicate signups from the same viewer across devices. The percentage that's still actively watching shrinks as the raw subscriber number grows.</p>
+
+        <ul>
+          <li>At 10K subscribers, a channel is usually still young enough that most subscribers subscribed recently and remain active</li>
+          <li>At 100K, several years of accumulated subscribers typically include a meaningful dormant share</li>
+          <li>At 1M, the subscriber count reflects the channel's entire history, including viewers whose interests moved on long ago</li>
+        </ul>
+
+        <h2>Two Channels, Same Niche, Different Tier</h2>
+
+        <p>A gaming channel at 100K subscribers and one at 1M both upload the same type of content. <strong>The smaller channel has no median of its own in the gaming cell at 100K</strong>, since gaming only has 2 tracked channels at that tier, far below the floor. Its honest comparison point is the 100K tier-wide median of 7,722, not a gaming-specific figure that doesn't exist yet at its size.</p>
+
+        <p>The 1M gaming channel has a real niche figure to check against: 127,354 median views per upload, measured across 91 tracked channels. <strong>Gaming specifically tends to outperform the general 1M tier median of 65,414</strong>, so a gaming channel sitting at the tier-wide figure instead of the niche figure is underperforming its own category, even though the raw number looks fine on its own.</p>
+
+        <blockquote><strong>Pro Tip:</strong> when your own niche doesn't have a published figure at your tier, use the tier-wide median as the fallback, not a number borrowed from your niche at a different tier. A gaming channel at 100K shouldn't benchmark against gaming's 1M figure, the audience size changes what's achievable.</blockquote>
+
+        <h2>Views Per Upload, Broken Down by Niche at 1 Million Subscribers</h2>
+
+        <p>Nine of fifteen tracked niches clear the 30-channel floor at this tier. <strong>Travel leads at a median of 155,916 views per upload, nearly 5x education's 33,245</strong>, the widest spread of any tier.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Median views per upload</th>
+              <th>Channels</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Travel</td><td>155,916</td><td>55</td></tr>
+            <tr><td>Gaming</td><td>127,354</td><td>91</td></tr>
+            <tr><td>Tech</td><td>109,076</td><td>34</td></tr>
+            <tr><td>Music</td><td>61,572</td><td>56</td></tr>
+            <tr><td>Fitness</td><td>47,660</td><td>45</td></tr>
+            <tr><td>Cooking</td><td>41,110</td><td>71</td></tr>
+            <tr><td>Beauty</td><td>40,478</td><td>47</td></tr>
+            <tr><td>Education</td><td>33,245</td><td>50</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>News, sports, finance, entertainment, comedy, and vlogs all have tracked channels at 1M subscribers but none clear the 30-channel floor individually</strong>, so they're left out of the niche table instead of reported on a handful of channels.</p>
+
+        <h2>Views Per Upload at 100K Subscribers: Only Three Niches Clear the Floor</h2>
+
+        <p>At this tier, most niches thin out below the 30-channel minimum. <strong>Only travel, education, and music have enough tracked channels to report individually.</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Median views per upload</th>
+              <th>Channels</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Travel</td><td>29,702</td><td>30</td></tr>
+            <tr><td>Education</td><td>6,473</td><td>78</td></tr>
+            <tr><td>Music</td><td>4,220</td><td>51</td></tr>
+          </tbody>
+        </table>
+
+        <p>Vlogs, fitness, and news each sit close to the floor (29, 24, and 21 channels) without quite clearing it, and the remaining niches fall further short. <strong>The tier-wide median of 7,722 remains the reliable figure for any niche not listed here.</strong></p>
+
+        <h2>Views Per Upload at 10K Subscribers: Music and Education Only</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Niche</th>
+              <th>Median views per upload</th>
+              <th>Channels</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Music</td><td>5,710</td><td>30</td></tr>
+            <tr><td>Education</td><td>740</td><td>30</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Tech, vlogs, and uncategorized channels at this tier all fall short of 30 tracked channels</strong>, so the tier-wide median of 1,502 applies to them instead.</p>
+
+        <h2>A Flagged Anomaly: Education's Jump From 10K to 100K</h2>
+
+        <p>Education goes from 740 views per upload at 10K subscribers to 6,473 at 100K, an 8.7x increase. <strong>No other niche shows a jump that steep across the same tier gap</strong>; travel, by comparison, goes from 29,702 to 155,916 at the next tier up, roughly 5.2x.</p>
+
+        <p>The likely explanation: small education channels lean on long-tail tutorial content that accumulates views slowly over months, not in the first week the way trend-driven content does. <strong>A weekly snapshot catches that kind of video earlier in its view curve</strong>, understating its eventual total compared to a front-loaded upload.</p>
+
+        <p><strong>This is the probable cause, not a confirmed one.</strong> It's stated here as an observation worth factoring in, not a settled fact.</p>
+
+        <h2>Reading Your Own Channel Against These Numbers</h2>
+
+        <p>A channel's own historical performance is still the better baseline than any tier-wide figure, including this one. These numbers exist to answer one specific question: <strong>is my view count in the range other channels my size see, or meaningfully off from it?</strong></p>
+
+        <ul>
+          <li>Check the tier-wide median first: 1,502 at 10K, 7,722 at 100K, 65,414 at 1M</li>
+          <li>Check the niche table next, if your niche clears the floor at your tier</li>
+          <li>If neither applies to your exact tier, the nearest tier-wide figure is still more useful than a flat, unsourced industry number</li>
+        </ul>
+
+        <p>A channel sitting well below its tier's median has something worth investigating. <strong>One sitting at or above it is performing normally</strong>, whatever the raw number feels like next to a bigger creator.</p>
+
+        <p>For a channel whose views have stalled relative to its own past uploads, not just relative to these benchmarks, <strong><a href="/blog/youtube-channel-not-growing">why channels stop growing</a> covers the diagnostic for that separately.</strong></p>
+
+        <p>For how fast a video's views accumulate once it's live, <strong><a href="/blog/youtube-view-growth-curve">the view growth curve</a> measured that directly</strong> across 18,423 videos. For where those views come from in the first place, <a href="/blog/youtube-traffic-sources">traffic sources explained</a> breaks that down separately.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Compare your channel against its real tier"
+          sub="A Channel Audit scores your actual views, CTR, and retention against your channel's own history, so you know whether a number that looks low is a real problem or just the normal pattern at your size."
+          button="Run a Channel Audit →"
+        />
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What is the average number of views per subscriber on YouTube?</h3>
+        <p>It shrinks as a channel grows, and the drop is steep. <strong>Across 1,152 tracked channels, the median share of subscribers who watch a new upload is 10.58% at 10,000 subscribers, 5.29% at 100,000, and 2.93% at 1 million.</strong> A channel at 1M subscribers getting "only" 3% of its subscriber base per video isn't underperforming, that's the typical pattern at that size.</p>
+
+        <h3>What percentage of subscribers watch your videos?</h3>
+        <p>Based on 1,152 tracked channels, the median is roughly 11% at 10K subscribers, 5% at 100K, and 3% at 1M. <strong>The percentage drops as the channel grows, not because the channel got worse, but because a larger subscriber base includes more people who subscribed once and stopped actively watching.</strong> Compare your own ratio against your own tier, not a flat benchmark.</p>
+
+        <h3>What is the average amount of views for a successful YouTube channel?</h3>
+        <p>There's no single number, since it depends entirely on subscriber count and niche. <strong>Measured medians: 1,502 views per upload at 10,000 subscribers, 7,722 at 100,000, and 65,414 at 1 million</strong>, pooled across 1,152 channels. A channel performing near its own tier's median, not some flat industry figure, is the one worth calling successful.</p>
+
+        <h3>Is 2000 views in 1 day good?</h3>
+        <p>It depends on the channel's own subscriber tier far more than on the raw number. <strong>A channel around 10,000 subscribers has a median of 1,502 views per upload</strong>, so 2,000 in a day would be a strong result at that size. The same number would be well below median for a channel at 100,000 subscribers, where the typical upload clears 7,722.</p>
+
+        <h2>Three Percent of a Million Is Still the Normal Pattern</h2>
+
+        <p>The raw view count climbs with subscriber count, but never at the same rate. <strong>The share of subscribers who show up for any single upload falls steadily instead</strong>, from roughly one in ten at 10,000 subscribers to about one in thirty-four at a million. That's not a channel losing its audience, it's the measured shape every tracked channel follows as it grows.</p>
       </>
     ),
   },
