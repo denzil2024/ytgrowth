@@ -19852,7 +19852,7 @@ Free studio checklist: https://yoursite.com/checklist
   },
   {
     slug: 'youtube-views-per-sub-tier',
-    title: 'Average YouTube Views Per Video by Subscriber Count',
+    title: 'How Many Views Should You Get Per Subscriber on YouTube? Measured Across 1,152 Channels',
     excerpt: "Measured across 1,152 tracked channels and 55,964 videos: median views per upload at 10K, 100K, and 1M subscribers, plus the real finding behind the view count that looks low next to your subscriber total. The share of subscribers who watch a new upload falls from 10.58% to 2.93% as a channel grows.",
     date: '2026-10-14',
     category: CATEGORIES.analytics,
@@ -19861,7 +19861,7 @@ Free studio checklist: https://yoursite.com/checklist
     author: 'Denzil',
     readTime: '10 min read',
     faqs: [
-      { q: 'What is the average number of views per subscriber on YouTube?', a: "It shrinks as a channel grows, and the drop is steep. <strong>Across 1,152 tracked channels, the median share of subscribers who watch a new upload is 10.58% at 10,000 subscribers, 5.29% at 100,000, and 2.93% at 1 million.</strong> A channel at 1M subscribers getting \"only\" 3% of its subscriber base per video isn't underperforming, that's the typical pattern at that size." },
+      { q: 'What is the average number of views per subscriber on YouTube?', a: "It shrinks as a channel grows, and the drop is steep. <strong>Across 1,152 tracked channels, the median share of subscribers who watch a new upload is 10.58% at 10,000 subscribers, 5.29% at 100,000, and 2.93% at 1 million.</strong> A channel at 1M subscribers reaching 3% of its subscriber base per video is hitting the typical mark for that size, not falling short of it." },
       { q: "What percentage of subscribers watch your videos?", a: "Based on 1,152 tracked channels, the median is roughly 11% at 10K subscribers, 5% at 100K, and 3% at 1M. <strong>The percentage drops as the channel grows, not because the channel got worse, but because a larger subscriber base includes more people who subscribed once and stopped actively watching.</strong> Compare your own ratio against your own tier, not a flat benchmark." },
       { q: 'What is the average amount of views for a successful YouTube channel?', a: "There's no single number, since it depends entirely on subscriber count and niche. <strong>Measured medians: 1,502 views per upload at 10,000 subscribers, 7,722 at 100,000, and 65,414 at 1 million</strong>, pooled across 1,152 channels. A channel performing near its own tier's median, not some flat industry figure, is the one worth calling successful." },
       { q: 'Is 2000 views in 1 day good?', a: "It depends on the channel's own subscriber tier far more than on the raw number. <strong>A channel around 10,000 subscribers has a median of 1,502 views per upload</strong>, so 2,000 in a day would be a strong result at that size. The same number would be well below median for a channel at 100,000 subscribers, where the typical upload clears 7,722." },
@@ -19870,7 +19870,7 @@ Free studio checklist: https://yoursite.com/checklist
       <>
         <p>A channel at 1 million subscribers gets a median of <strong>65,414 views on a new upload</strong>, not the million a raw subscriber count might suggest. At 100,000 subscribers the median is 7,722. At 10,000, it's 1,502. These are measured medians across 1,152 tracked channels and 55,964 videos published since January 2025, not estimates.</p>
 
-        <p>The more useful number isn't the view count itself. <strong>It's what share of a channel's subscriber base that view count represents, and that share falls hard as a channel grows: 10.58% at 10K subscribers, 5.29% at 100K, 2.93% at 1M.</strong> A video "only" reaching 3% of a million-subscriber audience isn't a failing channel, it's the typical pattern at that size.</p>
+        <p>The view count alone isn't the useful number. <strong>What matters is the share of a channel's subscriber base that view count represents, and that share falls hard as a channel grows: 10.58% at 10K subscribers, 5.29% at 100K, 2.93% at 1M.</strong> A video reaching 3% of a million-subscriber audience is hitting the typical mark for that size, not falling short of it.</p>
 
         <h2>How This Was Measured</h2>
 
@@ -19888,7 +19888,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <h2>Why the 1K Tier Isn't in This Study</h2>
 
-        <p>Channels under 10,000 subscribers didn't clear this site's own data floor: 24 tracked channels at that tier, below the 30-channel minimum this product requires before publishing any figure. <strong>Reporting a median from 24 channels risks one or two outliers swinging the whole number</strong>, so that tier is dropped here instead of published thin. 10K, 100K, and 1M subscribers all clear the floor comfortably.</p>
+        <p>Channels under 10,000 subscribers didn't clear this product's own data floor: 24 tracked channels at that tier, short of the 30-channel minimum required before any figure gets published. <strong>A median from 24 channels is one or two outliers away from swinging the whole number</strong>, so that tier is dropped here instead of published thin. 10K, 100K, and 1M subscribers all clear the floor comfortably.</p>
 
         <h2>The Core Table: Median Views Per Upload by Tier</h2>
 
@@ -19925,7 +19925,9 @@ Free studio checklist: https://yoursite.com/checklist
           </tbody>
         </table>
 
-        <p><strong>This is the clean, monotonic pattern behind the "my views feel low compared to my subscribers" complaint.</strong> It isn't a sign of a declining channel. A larger subscriber count accumulates more people who subscribed once, years ago, and never came back: dormant accounts, people who changed interests, duplicate signups from the same viewer across devices. The percentage that's still actively watching shrinks as the raw subscriber number grows.</p>
+        <p><strong>This clean, monotonic pattern is the real answer behind "why do my views look low next to my subscriber count."</strong> A larger subscriber count accumulates more people who subscribed once, years ago, and never came back: dormant accounts, abandoned interests, duplicate signups from the same viewer across devices.</p>
+
+        <p><strong>The share still actively watching shrinks as the raw subscriber number climbs.</strong> That's a structural fact of channel growth, not a sign of a declining channel.</p>
 
         <ul>
           <li>At 10K subscribers, a channel is usually still young enough that most subscribers subscribed recently and remain active</li>
@@ -20006,13 +20008,11 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p><strong>Tech, vlogs, and uncategorized channels at this tier all fall short of 30 tracked channels</strong>, so the tier-wide median of 1,502 applies to them instead.</p>
 
-        <h2>A Flagged Anomaly: Education's Jump From 10K to 100K</h2>
+        <h2>Education's Steepest Jump Has a Likely Cause, Not a Confirmed One</h2>
 
         <p>Education goes from 740 views per upload at 10K subscribers to 6,473 at 100K, an 8.7x increase. <strong>No other niche shows a jump that steep across the same tier gap</strong>; travel, by comparison, goes from 29,702 to 155,916 at the next tier up, roughly 5.2x.</p>
 
-        <p>The likely explanation: small education channels lean on long-tail tutorial content that accumulates views slowly over months, not in the first week the way trend-driven content does. <strong>A weekly snapshot catches that kind of video earlier in its view curve</strong>, understating its eventual total compared to a front-loaded upload.</p>
-
-        <p><strong>This is the probable cause, not a confirmed one.</strong> It's stated here as an observation worth factoring in, not a settled fact.</p>
+        <p>Small education channels lean on long-tail tutorial content that accumulates views slowly over months, not in the first week the way trend-driven content does. <strong>A weekly snapshot catches that kind of video earlier in its view curve</strong>, understating its eventual total against a front-loaded upload. Treat this as the likely driver behind the gap, not a proven one.</p>
 
         <h2>Reading Your Own Channel Against These Numbers</h2>
 
@@ -20040,7 +20040,7 @@ Free studio checklist: https://yoursite.com/checklist
         <h2>Frequently Asked Questions</h2>
 
         <h3>What is the average number of views per subscriber on YouTube?</h3>
-        <p>It shrinks as a channel grows, and the drop is steep. <strong>Across 1,152 tracked channels, the median share of subscribers who watch a new upload is 10.58% at 10,000 subscribers, 5.29% at 100,000, and 2.93% at 1 million.</strong> A channel at 1M subscribers getting "only" 3% of its subscriber base per video isn't underperforming, that's the typical pattern at that size.</p>
+        <p>It shrinks as a channel grows, and the drop is steep. <strong>Across 1,152 tracked channels, the median share of subscribers who watch a new upload is 10.58% at 10,000 subscribers, 5.29% at 100,000, and 2.93% at 1 million.</strong> A channel at 1M subscribers reaching 3% of its subscriber base per video is hitting the typical mark for that size, not falling short of it.</p>
 
         <h3>What percentage of subscribers watch your videos?</h3>
         <p>Based on 1,152 tracked channels, the median is roughly 11% at 10K subscribers, 5% at 100K, and 3% at 1M. <strong>The percentage drops as the channel grows, not because the channel got worse, but because a larger subscriber base includes more people who subscribed once and stopped actively watching.</strong> Compare your own ratio against your own tier, not a flat benchmark.</p>
@@ -20051,9 +20051,9 @@ Free studio checklist: https://yoursite.com/checklist
         <h3>Is 2000 views in 1 day good?</h3>
         <p>It depends on the channel's own subscriber tier far more than on the raw number. <strong>A channel around 10,000 subscribers has a median of 1,502 views per upload</strong>, so 2,000 in a day would be a strong result at that size. The same number would be well below median for a channel at 100,000 subscribers, where the typical upload clears 7,722.</p>
 
-        <h2>Three Percent of a Million Is Still the Normal Pattern</h2>
+        <h2>Three Percent of a Million Is the Normal Pattern, Not a Red Flag</h2>
 
-        <p>The raw view count climbs with subscriber count, but never at the same rate. <strong>The share of subscribers who show up for any single upload falls steadily instead</strong>, from roughly one in ten at 10,000 subscribers to about one in thirty-four at a million. That's not a channel losing its audience, it's the measured shape every tracked channel follows as it grows.</p>
+        <p>Raw view counts climb with subscriber count, but never at the same rate. <strong>The share of subscribers who show up for any single upload falls steadily instead</strong>, from roughly one in ten at 10,000 subscribers to about one in thirty-four at a million. That's not a channel losing its audience. It's the measured shape every tracked channel follows as it grows.</p>
       </>
     ),
   },
