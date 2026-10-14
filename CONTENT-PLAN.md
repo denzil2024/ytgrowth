@@ -213,10 +213,17 @@ reaching `/features/channel-audit` or checkout.
     Traffic Source Intelligence, matches the diagnostic). Top-3 confirmed
     exactly as planned. Two-way linked with `/blog/youtube-stopped-
     recommending-videos` and `/blog/youtube-views-dropped-suddenly`.
-19. **DATA STUDY** Average views per video by subscriber count (+ what
+~~19. **DATA STUDY** Average views per video by subscriber count (+ what
     share of subscribers watch a new upload) · Channel Audit ·
     top3: modash, reddit, sanishtech · source: `channel_metric_snapshots`
-    + `video_metric_snapshots`, zero quota, see `DATA-STUDIES.md` #15
+    + `video_metric_snapshots`, zero quota, see `DATA-STUDIES.md` #15~~ —
+    published 2026-10-14 as `/blog/youtube-views-per-sub-tier`, commits
+    `4f10d6819` + `c18b897da` + `751272e59`. Floor check dropped the 1K
+    tier (24 channels, below the 30-channel minimum); shipped as
+    10K/100K/1M only, 1,152 channels, 55,964 videos. Real finding:
+    subscriber-watch share falls from 10.58% to 5.29% to 2.93% as
+    channels grow 10K → 100K → 1M. No competitor in the SERP publishes a
+    comparable cross-channel dataset.
 20. YouTube channel plateaued after 1,000 subscribers · Channel Audit ·
     top3: reddit, quora, support.google · "reddit youtube channel plateau"
     returns 9 threads · scope: growth that stopped, not growth that never
