@@ -825,10 +825,12 @@ sweep pass runs after a new entry ships, never instead of one.
 
 Nothing is deleted and nothing is rewritten. Decided 2026-09-03.
 
-- **No deletions.** The 07-09 cut removed thin programmatic pages and still
-  cost five weeks of impressions when the purge landed. The articles are
-  not thin, they rank for the site's only real clicks, and cutting any of
-  them would repeat that cliff for no gain.
+- **No deletions.** The 07-09 cut removed thin programmatic pages and the
+  site has not recovered: impressions are still at 2.3% of the pre-cut
+  baseline eight weeks later (`FOUNDATION.md` item 7, corrected 2026-10-14,
+  the cause was a shipped redirect bug, not an index purge). The articles
+  are not thin, they rank for the site's only real clicks, and cutting any
+  of them would repeat that outcome for no gain.
 - **No rewrites, retitles, or "relaunches."** On-page passes across the
   high-impression pages were done in July and moved nothing
   (`FOUNDATION.md` → "What NOT to do"). The authority-gated commercial

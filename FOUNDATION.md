@@ -297,32 +297,75 @@ by DR-80+ incumbents, or polluted with watch intent.
 result. This finding is what makes "What we are building" above necessary: the
 way forward is data we own, not keywords we find.
 
-### 7. The 2026-08-16 impressions cliff is the delayed tail of the 07-09 page cuts, not a new incident
+### 7. The 2026-08-16 impressions cliff is a shipped redirect bug, not a delayed index tail (corrected 2026-10-14)
 
-`gsc-exports/Chart.csv` shows daily impressions falling from ~2,000/day to
-~70/day, and average position from ~20 to ~55, in one day (08-16), sustained
-through the end of that export (08-20). Checked and ruled out: no page-cutting
-or robots/sitemap commit landed that week (git log 08-13 to 08-17 is publish
-commits only); the live site serves gaming-video-ideas with full prerendered
-content, no noindex, robots.txt matches the repo.
+**This item said the wrong thing from 2026-09-03 to 2026-10-14.** It claimed
+the cliff was Google taking five weeks to purge the 07-09 cuts, and that the
+retired pages redirected to their parent hubs. Both were wrong. The original
+text is kept in the history log; what follows replaces it. The practical cost
+of the error: seven weeks of reading a live bug as expected behaviour, with
+"nothing broken, nothing to fix" written at the top of the diagnosis.
 
-The actual cause is `1c494b37d`/`56b574f74` (2026-07-09, retiring ~302 thin
-programmatic pages, see the history log's Combo layer entry): Google took
-about five weeks to finish purging that batch from its index, which is
-ordinary lag for a redirect-based removal with no explicit Search Console
-removal request. The math confirms it rather than just the dates: the retired
-pages averaged position 8.6, so losing them both crashes impressions AND
-drags the average position *up* (worse), landing exactly in the 51-67 range
-item 3 above already documented for the authority-gated commercial clusters
-that are what's left. Nothing broken, nothing to fix, this was the expected
-outcome of a deliberate cut finally landing in the data five weeks later.
+`1c494b37d`/`56b574f74` (2026-07-09) say in their commit bodies that the
+~225 retired combo pages "redirect to their parent hub". **No redirect was
+ever wired.** The URLs fell through the SPA catch-all in `app/main.py` to
+`dist/index.html`, so they served the Landing page with a 200, and
+`_render_index_with_meta()` injected a **self-referencing** canonical on top.
 
-**Consequence for reading new content's performance:** every spoke and study
-shipped 08-13 through 08-21 (gaming, comedy, cooking, tech, music,
-video-length-by-niche, title-length) shipped into or right before this
-cliff, so a "zero impressions" read on any of them right now is confounded,
-not a verdict. Do not judge them before a GSC export dated 2026-09-05 or
-later, once the site has had real runway past the cliff.
+Verified live 2026-10-14, not inferred:
+`/youtube-stats/country/india/travel` returned the Landing hero
+("Your analytics already know why you're stuck"), the generic homepage
+title, zero occurrences of "india" or "travel" in the rendered text,
+`rel="canonical"` pointing at itself, and `robots: index, follow`. Google
+was being shown ~225 self-canonicalising duplicates of the homepage.
+
+**The shape of the drop is what falsifies the old explanation.** An index
+purge tapers. This did not: 08-15 closed at 1,118 impressions, 08-16 opened
+at 77. One day. That is a mass duplicate collapse on re-crawl, not five
+weeks of lag finishing.
+
+Measured against the 2026-10-11 export (`keyword-exports/`):
+
+| Window | Clicks/day | Impressions/day | Avg position |
+|---|---|---|---|
+| Pre-cliff (07-12 to 08-15) | 7.3 | 1,926 | 20.8 |
+| Cliff fortnight (08-16 to 08-31) | 1.0 | 90 | 50.5 |
+| September | 1.3 | 53 | 26.2 |
+| October (to 10-11) | 2.0 | 44 | 20.6 |
+
+**It never recovered.** Eight weeks on, impressions sit at 2.3% of baseline.
+The old item's position math was also backwards as a reassurance: average
+position "recovering" to 20.6 is a composition artifact, because the
+high-impression pages left the index and the few decent pages that remain
+flatter the average. And 168 of the supposedly-retired URLs were still in
+Search Console earning clicks: the cut removed them from the sitemap and
+nothing else.
+
+Fixed in `e68faef47`: retired URLs resolve before the SPA fallback, 301 to
+the surviving hub (tier-1 geos only, US/UK/CA/AU for stats plus Germany for
+earnings), 410 Gone where the geo was deliberately dropped for the tier-1
+push. 410 is the correct signal for "cut on purpose, stop re-crawling".
+
+**Do not reinstate the dropped geos.** India, Pakistan, Indonesia,
+Philippines, Nigeria and Ukraine were cut on purpose per `56b574f74`. Some
+still rank (`/youtube-stats/country/india/travel` held position 6.4 while
+serving the Landing page), and that ranking is not a reason to bring them
+back: they are low-CPM geos and the whole strategy is the tier-1 push. A
+good position on a page you do not want traffic from is worth nothing.
+
+**Consequence for reading content performance:** everything shipped from
+08-13 onward shipped into this crater, and the bug was live for all of it,
+so the site's whole impression ceiling was ~44/day. Zero-impression reads
+across that window are confounded by infrastructure, not a verdict on the
+content. The old gate ("judge after a 2026-09-05 export") was satisfied in
+calendar terms and still produced nothing readable, because the cause was
+never the one this item named. **The real gate is a GSC export pulled 3 to 4
+weeks after `e68faef47` is live**, which is the first window where position
+and impressions reflect content rather than duplicate collapse.
+
+The method lesson, since this is the second time it has cost real time:
+a commit body describing an outcome is not evidence the outcome shipped.
+Check the live URL.
 
 ### 8. What won, and where it came from (verified 2026-09-02 against the 08-25 export and git)
 
@@ -977,6 +1020,32 @@ Missed three times. Slugs are 2 to 4 words.
 ---
 
 ## History log
+
+**Item 7 was wrong for seven weeks (2026-09-03 to 2026-10-14).** The original
+text, superseded by the rewritten item 7 above:
+
+> The actual cause is `1c494b37d`/`56b574f74` (2026-07-09, retiring ~302 thin
+> programmatic pages): Google took about five weeks to finish purging that
+> batch from its index, which is ordinary lag for a redirect-based removal
+> with no explicit Search Console removal request. [...] Nothing broken,
+> nothing to fix, this was the expected outcome of a deliberate cut finally
+> landing in the data five weeks later.
+
+Two errors. It accepted the commit bodies' claim that the retired pages
+redirected to their parent hubs (they never did, they served the Landing page
+under a self-canonical), and it read a one-day drop as a five-week taper.
+Both were checkable at the time: one curl of a retired URL, or one look at
+the daily series showing 1,118 impressions on 08-15 and 77 on 08-16.
+
+The cost was not the wrong label, it was "nothing broken, nothing to fix"
+sitting at the top of the diagnosis while ~225 self-canonicalising homepage
+duplicates stayed live, through seven weeks of shipping content into a crater
+and reading the results as content performance. Fixed in `e68faef47`.
+
+Rule it produced: **a commit body describing an outcome is not evidence the
+outcome shipped.** Verify infrastructure claims against the live URL before
+building a diagnosis on them, and when a metric moves in one day, do not
+explain it with a mechanism that takes weeks.
 
 **Comedy shipped without Stages 1 and 2.** Live at
 `/blog/comedy-video-ideas` since 2026-08-14, commit `839a04d24`. No SERP was

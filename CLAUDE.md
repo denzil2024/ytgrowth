@@ -94,7 +94,11 @@ for that specific thing:
    after a new article ships, never instead of one.
 9. **Do not re-diagnose the site from raw exports.** The diagnosis is in
    `FOUNDATION.md` items 1-8. Read it before saying anything about traffic.
-   The Aug 16 cliff is the 07-09 page-cut purge, not a Google update.
+   The Aug 16 cliff is the 07-09 page cut, not a Google update: specifically
+   the redirect that cut's commits claimed but never shipped, fixed in
+   `e68faef47` (`FOUNDATION.md` item 7, corrected 2026-10-14). Traffic has
+   not recovered; do not read post-08-16 content performance as a verdict on
+   the content until a GSC export pulled 3 to 4 weeks after that fix is live.
 10. **Do not promise a data figure the tables cannot produce.** The
     not-measurable list is in `DATA-STUDIES.md`. Gated studies (plan #35)
     get their floor check run first; if it fails, skip the entry, do not
