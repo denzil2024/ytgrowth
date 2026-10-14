@@ -6,7 +6,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 load_dotenv()
@@ -435,6 +435,76 @@ def _rebrand_channelbrain(html: str) -> str:
     return html
 
 
+# ---------------------------------------------------------------------------
+# Retired programmatic routes (cut 2026-07-09 by 1c494b37d / 56b574f74).
+#
+# Those two commits said the ~225 retired combo pages "redirect to their parent
+# hub", but no redirect was ever wired. They fell through to the SPA fallback
+# below, which served dist/index.html (the Landing page) with a 200 AND a
+# self-referencing canonical injected by _render_index_with_meta(). Verified
+# live 2026-10-14: /youtube-stats/country/india/travel returned the Landing
+# hero, zero mentions of "india" or "travel", canonical pointing at itself,
+# robots "index, follow".
+#
+# Google saw ~225 self-canonicalising duplicates of the homepage. Impressions
+# went 1,118 (08-15) -> 77 (08-16) and sat at ~44/day through 10-11, i.e. 2.3%
+# of the pre-cut baseline, and 168 of these URLs were still in Search Console
+# earning clicks. Same soft-404 class as the /blog/* ghosts handled below, but
+# worse: these also competed with "/" on canonical.
+#
+# Fix: resolve each retired URL to its surviving parent hub and 301. Where no
+# hub survives (the non-tier-1 geos deliberately dropped for the tier-1 push:
+# India, Pakistan, Indonesia, Philippines, Nigeria, Ukraine) return 410 Gone,
+# which is the correct signal for "cut on purpose, do not re-crawl".
+_STATS_CATEGORIES = {
+    "beauty", "comedy", "cooking", "education", "entertainment", "finance",
+    "fitness", "gaming", "music", "news", "sports", "tech", "travel", "vlogs",
+}
+# Geos still shipping a page. Stats kept US/UK/CA/AU; earnings kept those plus
+# Germany (per 56b574f74's commit body).
+_STATS_COUNTRIES = {"united-states", "united-kingdom", "canada", "australia"}
+_EARNINGS_COUNTRIES = _STATS_COUNTRIES | {"germany"}
+
+
+def _retired_route_target(norm: str):
+    """Map a retired programmatic URL to (target_path_or_None, status).
+
+    Returns None when `norm` is not a retired route, so the caller falls
+    through to normal handling. A None target means 410 Gone.
+    """
+    parts = norm.split("/")
+
+    # /youtube-stats/country/<geo>/<category>  (56 retired combos)
+    if len(parts) == 4 and parts[0] == "youtube-stats" and parts[1] == "country":
+        geo, category = parts[2], parts[3]
+        if category not in _STATS_CATEGORIES:
+            return None
+        if geo in _STATS_COUNTRIES:
+            # Tier-1 geo: the country hub survives, send the equity there.
+            return (f"/youtube-stats/country/{geo}", 301)
+        # Dropped geo: nothing survives to absorb it.
+        return (None, 410)
+
+    # /youtube-earnings/<category>/<geo>  (70 retired combos)
+    if len(parts) == 3 and parts[0] == "youtube-earnings":
+        category, geo = parts[1], parts[2]
+        if category not in _STATS_CATEGORIES:
+            return None
+        if geo in _EARNINGS_COUNTRIES:
+            # Category hub survives for every kept geo.
+            return (f"/youtube-earnings/{category}", 301)
+        return (None, 410)
+
+    # /youtube-stats/country/<dropped geo>  (India + the low-tier geos)
+    if len(parts) == 3 and parts[0] == "youtube-stats" and parts[1] == "country":
+        geo = parts[2]
+        if geo in _STATS_COUNTRIES:
+            return None
+        return (None, 410)
+
+    return None
+
+
 @app.api_route("/{full_path:path}", methods=["GET", "HEAD"])
 def serve_frontend(full_path: str, request: Request):
     file = DIST / full_path
@@ -483,6 +553,23 @@ def serve_frontend(full_path: str, request: Request):
     # Return a real 404 so Google drops them. We still serve branded HTML;
     # BlogPost navigates back to /blog client-side, so users land somewhere.
     norm = full_path.strip("/")
+
+    # Retired programmatic route: 301 to the surviving hub, or 410 if the geo
+    # was deliberately dropped. Must run BEFORE the SPA fallback, which would
+    # otherwise serve the Landing page under a self-canonical. See
+    # _retired_route_target() above for the incident this fixes.
+    retired = _retired_route_target(norm)
+    if retired is not None:
+        target, code = retired
+        if target is not None:
+            return RedirectResponse(target, status_code=code)
+        return HeadSafeHTMLResponse(
+            content=_rebrand_channelbrain((DIST / "index.html").read_text(encoding="utf-8"))
+            if is_cb
+            else (DIST / "index.html").read_text(encoding="utf-8"),
+            status_code=410,
+        )
+
     status = 404 if norm.startswith("blog/") else 200
 
     # SPA fallback — inject route-specific SEO meta tags.
