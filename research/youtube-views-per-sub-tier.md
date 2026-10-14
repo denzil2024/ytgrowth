@@ -22,10 +22,18 @@ PAA used (filtered for relevance, monetization-cluster questions excluded):
 1. "What is the average number of views per subscriber on YouTube?" — real
 2. "What percentage of subscribers watch your videos?" (phrasing merged from
    two near-duplicate PAA hits) — real
-3. "Is 2000 views in 1 day good?" — real, but already answered on
-   `/blog/youtube-views-dropped-suddenly`'s FAQ; not reused here to avoid
-   duplicating an existing FAQ verbatim
-4. "What is the average amount of views for a successful YouTube channel?" — real
+3. "What is the average amount of views for a successful YouTube channel?" — real
+
+**Correction, 2026-10-14:** the 4th FAQ was drafted as "Is 2000 views in 1
+day good?", real PAA but already an FAQ on both `/blog/youtube-views-dropped
+-suddenly` and `/blog/youtube-view-growth-curve` (3 articles answering the
+identical question would have diluted which page Google treats as
+authoritative for it). Shipped initially with the duplicate anyway, caught
+on a later pass and swapped for an editorial question this article alone
+can answer with real data: "How many views should a video with 100,000
+subscribers get?", answered with the measured 7,722 median. Logged here so
+the next research round checks this FAQ against sibling articles before
+drafting, not just at write time.
 
 ## 2. Competitor research: no one publishes this data
 

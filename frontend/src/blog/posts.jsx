@@ -19857,14 +19857,14 @@ Free studio checklist: https://yoursite.com/checklist
     date: '2026-10-14',
     category: CATEGORIES.analytics,
     cover: '/blog/youtube-views-per-sub-tier-cover.jpg',
-    coverAlt: 'A creator comparing two bar charts on a laptop screen, one showing subscriber count and one showing view count, desk setup with notebook and coffee',
+    coverAlt: 'A desk arrangement of printed channel cards, each showing a creator photo and a small bar chart of view counts, grouped on wooden stands next to a notebook and camera gear',
     author: 'Denzil',
     readTime: '10 min read',
     faqs: [
       { q: 'What is the average number of views per subscriber on YouTube?', a: "It shrinks as a channel grows, and the drop is steep. <strong>Across 1,152 tracked channels, the median share of subscribers who watch a new upload is 10.58% at 10,000 subscribers, 5.29% at 100,000, and 2.93% at 1 million.</strong> A channel at 1M subscribers reaching 3% of its subscriber base per video is hitting the typical mark for that size, not falling short of it." },
       { q: "What percentage of subscribers watch your videos?", a: "Based on 1,152 tracked channels, the median is roughly 11% at 10K subscribers, 5% at 100K, and 3% at 1M. <strong>The percentage drops as the channel grows, not because the channel got worse, but because a larger subscriber base includes more people who subscribed once and stopped actively watching.</strong> Compare your own ratio against your own tier, not a flat benchmark." },
       { q: 'What is the average amount of views for a successful YouTube channel?', a: "There's no single number, since it depends entirely on subscriber count and niche. <strong>Measured medians: 1,502 views per upload at 10,000 subscribers, 7,722 at 100,000, and 65,414 at 1 million</strong>, pooled across 1,152 channels. A channel performing near its own tier's median, not some flat industry figure, is the one worth calling successful." },
-      { q: 'Is 2000 views in 1 day good?', a: "It depends on the channel's own subscriber tier far more than on the raw number. <strong>A channel around 10,000 subscribers has a median of 1,502 views per upload</strong>, so 2,000 in a day would be a strong result at that size. The same number would be well below median for a channel at 100,000 subscribers, where the typical upload clears 7,722." },
+      { q: 'How many views should a video with 100,000 subscribers get?', a: "<strong>The measured median across 343 tracked channels at this tier is 7,722 views per upload.</strong> That figure rises for some niches, travel's 100K median is 29,702, and falls for others, music sits at 4,220, so check the niche table if your category has enough tracked channels to clear the data floor. A channel sitting well below 7,722 without a niche-specific figure to point to has something worth investigating." },
     ],
     content: () => (
       <>
@@ -20048,8 +20048,8 @@ Free studio checklist: https://yoursite.com/checklist
         <h3>What is the average amount of views for a successful YouTube channel?</h3>
         <p>There's no single number, since it depends entirely on subscriber count and niche. <strong>Measured medians: 1,502 views per upload at 10,000 subscribers, 7,722 at 100,000, and 65,414 at 1 million</strong>, pooled across 1,152 channels. A channel performing near its own tier's median, not some flat industry figure, is the one worth calling successful.</p>
 
-        <h3>Is 2000 views in 1 day good?</h3>
-        <p>It depends on the channel's own subscriber tier far more than on the raw number. <strong>A channel around 10,000 subscribers has a median of 1,502 views per upload</strong>, so 2,000 in a day would be a strong result at that size. The same number would be well below median for a channel at 100,000 subscribers, where the typical upload clears 7,722.</p>
+        <h3>How many views should a video with 100,000 subscribers get?</h3>
+        <p><strong>The measured median across 343 tracked channels at this tier is 7,722 views per upload.</strong> That figure rises for some niches, travel's 100K median is 29,702, and falls for others, music sits at 4,220, so check the niche table if your category has enough tracked channels to clear the data floor. A channel sitting well below 7,722 without a niche-specific figure to point to has something worth investigating.</p>
 
         <h2>Three Percent of a Million Is the Normal Pattern, Not a Red Flag</h2>
 
