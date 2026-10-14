@@ -563,12 +563,21 @@ def serve_frontend(full_path: str, request: Request):
         target, code = retired
         if target is not None:
             return RedirectResponse(target, status_code=code)
-        return HeadSafeHTMLResponse(
-            content=_rebrand_channelbrain((DIST / "index.html").read_text(encoding="utf-8"))
-            if is_cb
-            else (DIST / "index.html").read_text(encoding="utf-8"),
-            status_code=410,
+        # 410 body: branded HTML so a human lands somewhere, but the baked
+        # index.html carries robots "index, follow", which contradicts the
+        # status line. The status code is what crawlers act on, so this is
+        # cosmetic for Google, but a page that 410s should not also ask to be
+        # indexed. Force noindex on the body.
+        gone = (DIST / "index.html").read_text(encoding="utf-8")
+        gone = re.sub(
+            r'<meta name="robots" content="[^"]*"\s*/?>',
+            '<meta name="robots" content="noindex, follow" />',
+            gone,
+            count=1,
         )
+        if is_cb:
+            gone = _rebrand_channelbrain(gone)
+        return HeadSafeHTMLResponse(content=gone, status_code=410)
 
     status = 404 if norm.startswith("blog/") else 200
 
