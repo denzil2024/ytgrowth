@@ -11026,7 +11026,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>Every creator who has built a substantial YouTube channel went through a period where the data showed almost nothing. Flat view counts, single-digit subscriber gains, and videos that pulled fewer than 100 views in the first month are not signs of a failing channel. They are the normal early stage of every channel that eventually grows.</p>
 
-        <p>YouTube's recommendation system needs a body of content to work with before it can accurately categorize your channel and match it to a consistent audience. A channel with five videos gives the algorithm very little signal. A channel with fifty videos across a focused niche gives it enough pattern data to start distributing content more aggressively to the right viewers.</p>
+        <p>YouTube's recommendation system needs a body of content to work with before it can accurately categorize your channel and match it to a consistent audience. A channel with five videos gives the algorithm very little signal. If the channel did grow and then flattened, that is a <a href="/blog/youtube-channel-plateau">plateau after 1,000 subscribers</a>, which has different causes. A channel with fifty videos across a focused niche gives it enough pattern data to start distributing content more aggressively to the right viewers.</p>
 
         <p>The compound effect on YouTube is real but it is slow. Your tenth video benefits from the audience signal your first nine videos built. Your fiftieth video benefits from <a href="/blog/restart-youtube-channel">everything that came before</a> it. Creators who quit at twenty videos never reach the point where that compounding starts to show in their analytics. The same compounding sits at the core of <a href="/blog/grow-youtube-channel">how every channel grows</a> from zero.</p>
 
@@ -19148,7 +19148,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p><strong>YouTube gives newer channels wider initial distribution to gather engagement signal, then narrows it once it has enough data to judge the content on its own.</strong> A channel often crosses the monetization threshold around the same point this early boost naturally tapers, since both depend on the same thing: enough upload history for a confident read.</p>
 
-        <p>From inside the channel, this looks identical to a monetization-caused drop. <strong>It isn't.</strong> It's a channel maturing past its early testing window, which was always going to happen on its own timeline.</p>
+        <p>From inside the channel, this looks identical to a monetization-caused drop. <strong>It isn't.</strong> It's a channel maturing past its early testing window, which was always going to happen on its own timeline. The same fading boost shows up in subscriber intake as a <a href="/blog/youtube-channel-plateau">plateau at 1,000 subscribers</a>.</p>
 
         <p><strong>Shorts and long-form reach that point on different timelines.</strong> A channel that qualified through 10 million Shorts views in 90 days can clear that bar in a few weeks with almost no long-form history. If its long-form uploads then look quiet after monetization, <strong>there's nothing tapering, that distribution was never tested in the first place.</strong></p>
 
@@ -19847,6 +19847,233 @@ Free studio checklist: https://yoursite.com/checklist
         <h2>One Named Mechanism, Three Far More Common Ones</h2>
 
         <p>"Shadowban" describes a feeling, not anything YouTube has confirmed as a single mechanism. <strong>What's documented is narrow, checkable against your own Studio data, and rare.</strong> The explanations that account for most reach drops, audience drift, a retention slide, a misclassified setting, each have a straightforward fix once correctly named instead of folded into one word the platform itself has never used.</p>
+      </>
+    ),
+  },
+  {
+    slug: 'youtube-channel-plateau',
+    title: 'YouTube Channel Plateaued After 1,000 Subscribers?',
+    excerpt: "The same 50 subscribers a month is 50% growth at 100 subscribers and 5% at 1,000. Nothing has to break for growth to feel like it stopped, and YouTube's published recommendation signals contain no subscriber-count threshold at all. Here's how to tell arithmetic apart from a real stall.",
+    date: '2026-10-15',
+    category: CATEGORIES.growth,
+    cover: '/blog/youtube-channel-plateau-cover.jpg',
+    coverAlt: 'A creator at a desk studying a subscriber growth chart on a laptop, the line rising steeply then flattening out, warm afternoon light from a window',
+    author: 'Denzil',
+    readTime: '10 min read',
+    faqs: [
+      { q: 'Why did my YouTube channel stop growing?', a: "Separate the growth rate from the growth itself before looking for a cause. <strong>If you are still gaining roughly the same number of subscribers each month, nothing stopped, the percentage just fell because it is measured against a bigger base.</strong> A real stall looks different: the absolute count of new subscribers per month drops too. Studio's Subscribers report shows the monthly figure directly, which is the number that tells you which of the two you are looking at." },
+      { q: 'What happens when your YouTube channel gets 1000 subscribers?', a: "One thing changes, and it is financial. <strong>1,000 subscribers plus 4,000 qualified public watch hours makes a channel eligible to apply to the YouTube Partner Program, which is a payment threshold, not a distribution one.</strong> Nothing in YouTube's published description of how recommendations work references a subscriber count, so crossing it does not change how your videos are distributed." },
+      { q: 'What will happen after 1000 subscribers on YouTube?', a: "Expect the percentage growth rate to keep falling even while the channel grows normally, because the denominator keeps getting larger. <strong>Our own measurement across 1,152 channels found the share of subscribers who watch a new upload falls from 10.58% to 2.93% as channels grow from 10,000 to 1 million subscribers.</strong> That decline is the normal pattern at every size, not a sign that something went wrong after the milestone." },
+      { q: 'What percent of YouTubers reach 1000 subs?', a: "Nobody publishing a figure for this has the data to know it. <strong>YouTube has never released the number, and it is a population statistic: it requires every channel on the platform, including the millions that are private, abandoned, or have never uploaded.</strong> A sample of tracked channels cannot produce it, because the channels anyone can track are the ones already visible enough to be tracked. Treat any specific percentage you see, including the common \"over 90%\" claim, as unsourced." },
+      { q: 'Why are my subscribers not increasing on YouTube?', a: "Check the subscribe rate per viewer, not the subscriber total. <strong>If views are steady but subscribers are flat, the videos are reaching people who are not converting, which is a packaging and payoff problem, not a reach problem.</strong> Studio shows subscribers gained per video, so divide that by the video's views: a rate that fell while views held steady points at the content, and both falling together points at distribution." },
+      { q: 'What happens to a YouTube channel after monetization?', a: "Distribution does not change when monetization turns on, because ads were already running. <strong>YouTube states it retains the right to serve ads on all content on the platform, so the ads themselves are not new at the point a channel joins the Partner Program, only the revenue share is.</strong> The one real mechanism tied to ads is mid-roll placement on longer videos hurting retention, which is covered separately in our piece on views dropping after monetization." },
+      { q: 'Is 500 subscribers in 2 months good?', a: "That pace is well above the typical new channel, but the number on its own does not predict what comes next. <strong>What matters is where those 500 came from: a single video that overperformed, or a repeatable source like search and suggested traffic.</strong> A one-video spike tends to be followed by a flat stretch, which is the most common reason a channel appears to plateau shortly after a strong start." },
+      { q: 'How long will it take to get 1000 subscribers on YouTube?', a: "There is no reliable average, and the ones published are usually drawn from channels that already succeeded, which excludes every channel that stalled. <strong>The useful version of the question is your own current rate: subscribers gained in the last 28 days, divided into the number you still need.</strong> That gives a projection grounded in your actual channel instead of someone else's sample." },
+      { q: 'Does YouTube stop recommending your channel after monetization?', a: "No, and YouTube's published description of its recommendation system is the evidence. <strong>The signals it lists are viewing behavior, likes, dislikes, subscriptions, feedback from satisfaction surveys, and channel reputation and quality. Monetization status is not among them, and neither is subscriber count.</strong> Reach drops that happen to land near monetization are far more often a fading early-upload testing period or a retention slide on recent videos." },
+    ],
+    content: () => (
+      <>
+        <p>Fifty new subscribers a month is 50% growth at 100 subscribers and 5% growth at 1,000. <strong>The channel did not slow down, the divisor got bigger.</strong> This is the single most common reason a channel appears to plateau right around the 1,000-subscriber mark, and it is arithmetic, not a penalty.</p>
+
+        <p>The milestone attracts the suspicion because it is the one creators watch for. It is also the one point where something real does change, so it feels like a plausible culprit. <strong>What changes is eligibility to be paid, not how videos get distributed.</strong> If your channel <a href="/blog/youtube-channel-not-growing">never started growing</a>, that is a different problem with different causes.</p>
+
+        <h2>The Same 50 Subscribers a Month Is 50% Growth, Then 5%</h2>
+
+        <p>Percentage growth has your current subscriber count in the denominator, so it falls as the channel grows even when absolute intake holds perfectly steady. <strong>A channel adding exactly 50 subscribers every month sees its growth rate fall by a factor of ten between 100 and 1,000 subscribers, having done nothing differently.</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Subscribers at month start</th>
+              <th>New subscribers that month</th>
+              <th>Growth rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>100</td><td>50</td><td>50%</td></tr>
+            <tr><td>500</td><td>50</td><td>10%</td></tr>
+            <tr><td>1,000</td><td>50</td><td>5%</td></tr>
+            <tr><td>5,000</td><td>50</td><td>1%</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Every row describes the same channel doing the same thing.</strong> The early months feel fast because small denominators make modest numbers look dramatic, and the 1,000 mark is roughly where that flattering effect wears off for most channels.</p>
+
+        <h2>Nothing in YouTube's Published Signals Changes at 1,000</h2>
+
+        <p>YouTube describes what drives its recommendation system in public. <strong>The listed signals are viewing behavior, likes, dislikes, subscriptions, and feedback including satisfaction surveys, plus the reputation and quality of a channel.</strong> Subscriber count is not among them as a threshold, and there is no step function described anywhere in that documentation.</p>
+
+        <p>That matters because the plateau theories circulating all assume a switch gets flipped. <a href="https://www.youtube.com/howyoutubeworks/product-features/recommendations/">YouTube's own description</a> has no switch in it. <strong>Recommendations are personalized per viewer, so your video competes for one person's next click at a time, regardless of your channel's total.</strong></p>
+
+        <h2>1,000 Subscribers Is a Payment Threshold, Not an Algorithmic One</h2>
+
+        <p>The number exists for one documented reason: <strong>1,000 subscribers plus 4,000 qualified public watch hours in the previous 12 months is the bar to apply to the YouTube Partner Program.</strong> It is an accounting line that decides when YouTube will start sharing revenue with you.</p>
+
+        <p><strong>Nothing in the <a href="https://support.google.com/youtube/answer/72851">YPP eligibility requirements</a> describes a change to distribution, reach, or recommendation weighting on either side of the line.</strong> Creators reasonably assume a number YouTube cares about this much must matter to the algorithm too. It does not follow, and the documentation does not support it.</p>
+
+        <h2>Your Subscriber Watch Share Falls as the Channel Grows</h2>
+
+        <p>There is a measurable version of this effect, and we published it. <strong>Across 1,152 channels and 55,964 videos, the share of a channel's subscribers who watch a new upload falls from 10.58% at 10,000 subscribers, to 5.29% at 100,000, to 2.93% at 1 million.</strong></p>
+
+        <p>Subscribers are not a mailing list, and a growing count does not translate into proportionally growing views. Our full <a href="/blog/youtube-views-per-sub-tier">subscriber watch share</a> study has the per-tier breakdown. <strong>The practical consequence: expecting views to scale linearly with subscribers sets a target that no channel at any size hits.</strong></p>
+
+        <h2>Check Whether Intake Fell, or Only the Rate</h2>
+
+        <p>This is the one diagnostic that separates arithmetic from a real problem, and it takes about a minute in Studio. <strong>Pull your monthly subscribers-gained figure for the last six months and read the absolute numbers, not the percentages.</strong></p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>What the last 6 months show</th>
+              <th>What it means</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Rate falling, absolute new subscribers roughly flat</td><td>Arithmetic. Nothing is broken, and there is nothing to fix.</td></tr>
+            <tr><td>Rate falling and absolute new subscribers falling</td><td>A real stall. Work through the causes below.</td></tr>
+            <tr><td>Absolute new subscribers fell in one specific month, then recovered</td><td>A single video overperformed earlier, not a trend.</td></tr>
+            <tr><td>Views steady, new subscribers falling</td><td>A conversion problem, not a distribution one.</td></tr>
+          </tbody>
+        </table>
+
+        <blockquote><strong>Pro Tip:</strong> set Studio's date range to the last 365 days and compare subscribers gained month over month, not the lifetime chart. The lifetime view is cumulative, so it always slopes upward and always looks like it is flattening, which makes it useless for spotting a genuine change.</blockquote>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Find out which plateau you have"
+          sub="A Channel Audit reads your real subscriber intake and traffic sources month by month, so you can see whether your growth rate fell on its own or your actual new-subscriber count dropped, instead of guessing from a cumulative chart."
+          button="Run a Channel Audit →"
+        />
+
+        <h2>Monetization Did Not Throttle Your Reach</h2>
+
+        <p>A common version of this question blames the Partner Program, usually because monetization and the apparent slowdown happened within weeks of each other. <strong>Ads were already running on your videos before you were accepted: YouTube states it retains the right to serve ads on all content on the platform, so what changed at monetization was the revenue share, not the advertising.</strong></p>
+
+        <p><strong>One real mechanism does tie ads to performance: mid-roll placement hurting retention on longer videos.</strong> We cover it in detail in our piece on <a href="/blog/youtube-views-dropped-after-monetization">views dropped after monetization</a>, so it is not repeated here.</p>
+
+        <h2>The Early-Channel Testing Boost Was Always Temporary</h2>
+
+        <p>New channels get their uploads shown to small test audiences to gather response data, and a channel with few videos has that happen to a large share of its catalog at once. <strong>As the catalog grows, each new upload is a smaller fraction of the channel, so the share of your library in active testing drops.</strong></p>
+
+        <p><strong>This reads as a slowdown in subscriber intake specifically, because testing exposure reaches people who have never seen the channel, and those are the viewers who subscribe.</strong> Existing subscribers cannot subscribe twice.</p>
+
+        <p>The signs separate this from a content problem, because they show up in reach instead of conversion:</p>
+
+        <ul>
+          <li><strong>Impressions per new upload trending down</strong> while your older videos hold their numbers.</li>
+          <li><strong>Click-through rate unchanged.</strong> Fewer people are being shown the video, and the ones who see it still click.</li>
+          <li><strong>Browse and Suggested shrinking as a share of traffic</strong> while Search holds, since search does not depend on a testing push.</li>
+          <li><strong>The decline tracks catalog size</strong>, not any single upload or date.</li>
+        </ul>
+
+        <h2>Your First 1,000 Came From a Source That Does Not Scale</h2>
+
+        <p>Where the first 1,000 subscribers came from predicts whether the next 1,000 arrive the same way. <strong>Several common sources are one-time events that cannot repeat, which produces a plateau that looks algorithmic but is just a well running dry.</strong></p>
+
+        <ul>
+          <li><strong>Friends, family, and personal networks.</strong> Finite by definition, and usually exhausted in the first few hundred.</li>
+          <li><strong>One video that overperformed.</strong> Delivers a spike, then stops, unless the format is repeatable.</li>
+          <li><strong>An external push.</strong> A link from a forum, a subreddit, or another creator's audience, which ends when the post stops circulating.</li>
+          <li><strong>A trend or news cycle.</strong> Converts well while the topic is live and goes to zero afterward.</li>
+          <li><strong>Search and suggested traffic.</strong> The one source on this list that compounds, because it keeps delivering as the catalog grows.</li>
+        </ul>
+
+        <p><strong>If the first four describe your first 1,000, the plateau was scheduled from the beginning.</strong> Studio's traffic source report shows which of these drove your growth.</p>
+
+        <h2>The Subscribe Rate Per Viewer Is the Metric That Matters</h2>
+
+        <p>Subscriber totals hide the thing you can act on. <strong>Subscribe rate is subscribers gained from a video divided by that video's views, and it isolates how persuasive the content is from how many people saw it.</strong></p>
+
+        <ul>
+          <li><strong>Views up, subscribe rate steady:</strong> distribution is working and the content converts. Keep going.</li>
+          <li><strong>Views steady, subscribe rate down:</strong> the videos are reaching people they do not suit, or the payoff is weak.</li>
+          <li><strong>Views down, subscribe rate steady:</strong> a reach problem, not a content problem.</li>
+          <li><strong>Both down:</strong> the content shifted away from what the audience came for.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> Studio lists subscribers gained per video under each video's analytics. Work out the rate for your five best and five worst performers by subscriber gain, and the gap between those two groups tells you what your audience subscribes for, measured instead of guessed.</blockquote>
+
+        <h2>One Video Carried the Channel and Nothing Followed It</h2>
+
+        <p>A single video far above a channel's normal range brings in subscribers who came for that one topic. <strong>When the next upload returns to the channel's usual subject, those subscribers do not watch, which suppresses early engagement and limits how widely the new video gets shown.</strong></p>
+
+        <p>The scale of the mismatch is worth knowing before diagnosing it as a plateau. Our study on <a href="/blog/youtube-viral-views-multiple">viral view multiples</a> measured how far outlier videos sit above a channel's median. <strong>The gap is usually large enough that a normal follow-up looks like a collapse by comparison.</strong></p>
+
+        <h2>Returning Viewers Replaced New Ones</h2>
+
+        <p>A channel can hold its view count steady while its audience composition quietly changes. <strong>If returning viewers grow as a share of total views while new viewers shrink, total views look stable but subscriber intake falls, because only new viewers can subscribe.</strong></p>
+
+        <p>Studio reports new and returning viewers separately. <strong>A channel that has drifted toward serving its existing audience, through in-jokes, running series, or assumed context, often sees exactly this pattern.</strong></p>
+
+        <h2>Nobody Knows What Share of Channels Reach 1,000</h2>
+
+        <p>The most-repeated figure on this topic is that over 90% of channels never reach 1,000 subscribers, and it appears without a source on the page currently ranking first for this question. <strong>YouTube has never published it.</strong></p>
+
+        <p>It is a population statistic, which means answering it requires every channel on the platform, including the millions that are private, abandoned, or have never uploaded. <strong>A sample of tracked channels cannot produce it, because the channels anyone can track are the ones already prominent enough to be tracked.</strong></p>
+
+        <p><strong>That selection bias is the thing that would decide the answer.</strong> We hold data on 1,152 channels and still cannot answer it, which is why we are not publishing a number for it.</p>
+
+        <h2>The Content Drifted While the Audience Stayed</h2>
+
+        <p>The cause every guide on this topic names is real, and it belongs here even though it is the least specific one. <strong>Early subscribers arrived for a particular kind of video, and a channel that gradually broadens its topics loses the signal that told YouTube who to show the next upload to.</strong></p>
+
+        <p>The tell is in the numbers, not the feel of it. <strong>Impressions falling while click-through rate holds steady means YouTube is showing the video to fewer people, not that the packaging stopped working.</strong></p>
+
+        <h2>What a Real Stall Looks Like Next to Arithmetic</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Cause</th>
+              <th>What you would see</th>
+              <th>Where to check</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Denominator effect</td><td>Rate down, absolute new subscribers flat</td><td>Subscribers report, monthly</td></tr>
+            <tr><td>Non-scaling first 1,000</td><td>Growth tracks one past event, no steady source</td><td>Traffic sources, 12 months</td></tr>
+            <tr><td>Testing exposure shrinking</td><td>Fewer impressions on new uploads as catalog grew</td><td>Impressions per video over time</td></tr>
+            <tr><td>Outlier video aftermath</td><td>One video far above median, weak follow-up</td><td>Video list sorted by views</td></tr>
+            <tr><td>Audience composition shift</td><td>Returning viewers up, new viewers down</td><td>New vs. returning viewers</td></tr>
+            <tr><td>Conversion problem</td><td>Views steady, subscribe rate falling</td><td>Subscribers gained per video</td></tr>
+            <tr><td>Content drift</td><td>Impressions down, click-through rate steady</td><td>Impressions and CTR together</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Why did my YouTube channel stop growing?</h3>
+        <p>Separate the growth rate from the growth itself before looking for a cause. <strong>If you are still gaining roughly the same number of subscribers each month, nothing stopped, the percentage just fell because it is measured against a bigger base.</strong> A real stall looks different: the absolute count of new subscribers per month drops too. Studio's Subscribers report shows the monthly figure directly, which is the number that tells you which of the two you are looking at.</p>
+
+        <h3>What happens when your YouTube channel gets 1000 subscribers?</h3>
+        <p>One thing changes, and it is financial. <strong>1,000 subscribers plus 4,000 qualified public watch hours makes a channel eligible to apply to the YouTube Partner Program, which is a payment threshold, not a distribution one.</strong> Nothing in YouTube's published description of how recommendations work references a subscriber count, so crossing it does not change how your videos are distributed.</p>
+
+        <h3>What will happen after 1000 subscribers on YouTube?</h3>
+        <p>Expect the percentage growth rate to keep falling even while the channel grows normally, because the denominator keeps getting larger. <strong>Our own measurement across 1,152 channels found the share of subscribers who watch a new upload falls from 10.58% to 2.93% as channels grow from 10,000 to 1 million subscribers.</strong> That decline is the normal pattern at every size, not a sign that something went wrong after the milestone.</p>
+
+        <h3>What percent of YouTubers reach 1000 subs?</h3>
+        <p>Nobody publishing a figure for this has the data to know it. <strong>YouTube has never released the number, and it is a population statistic: it requires every channel on the platform, including the millions that are private, abandoned, or have never uploaded.</strong> A sample of tracked channels cannot produce it, because the channels anyone can track are the ones already visible enough to be tracked. Treat any specific percentage you see, including the common "over 90%" claim, as unsourced.</p>
+
+        <h3>Why are my subscribers not increasing on YouTube?</h3>
+        <p>Check the subscribe rate per viewer, not the subscriber total. <strong>If views are steady but subscribers are flat, the videos are reaching people who are not converting, which is a packaging and payoff problem, not a reach problem.</strong> Studio shows subscribers gained per video, so divide that by the video's views: a rate that fell while views held steady points at the content, and both falling together points at distribution.</p>
+
+        <h3>What happens to a YouTube channel after monetization?</h3>
+        <p>Distribution does not change when monetization turns on, because ads were already running. <strong>YouTube states it retains the right to serve ads on all content on the platform, so the ads themselves are not new at the point a channel joins the Partner Program, only the revenue share is.</strong> The one real mechanism tied to ads is mid-roll placement on longer videos hurting retention, which is covered separately in our piece on views dropping after monetization.</p>
+
+        <h3>Is 500 subscribers in 2 months good?</h3>
+        <p>That pace is well above the typical new channel, but the number on its own does not predict what comes next. <strong>What matters is where those 500 came from: a single video that overperformed, or a repeatable source like search and suggested traffic.</strong> A one-video spike tends to be followed by a flat stretch, which is the most common reason a channel appears to plateau shortly after a strong start.</p>
+
+        <h3>How long will it take to get 1000 subscribers on YouTube?</h3>
+        <p>There is no reliable average, and the ones published are usually drawn from channels that already succeeded, which excludes every channel that stalled. <strong>The useful version of the question is your own current rate: subscribers gained in the last 28 days, divided into the number you still need.</strong> That gives a projection grounded in your actual channel instead of someone else's sample.</p>
+
+        <h3>Does YouTube stop recommending your channel after monetization?</h3>
+        <p>No, and YouTube's published description of its recommendation system is the evidence. <strong>The signals it lists are viewing behavior, likes, dislikes, subscriptions, feedback from satisfaction surveys, and channel reputation and quality. Monetization status is not among them, and neither is subscriber count.</strong> Reach drops that happen to land near monetization are far more often a fading early-upload testing period or a retention slide on recent videos.</p>
+
+        <h2>A Flat Rate and a Falling Count Are Different Problems</h2>
+
+        <p><strong>Pull the monthly subscribers-gained numbers before doing anything else.</strong> If the absolute figure is holding and only the percentage fell, the channel is working and the metric is misleading you. That case needs no fix, and every hour spent hunting for one is an hour not spent making videos.</p>
+
+        <p>If the absolute figure fell too, the table above narrows it to a handful of causes, each with a specific place in Studio to confirm it. <strong>What will not help is treating 1,000 as the explanation, because the only thing that changes there is who pays you.</strong></p>
       </>
     ),
   },

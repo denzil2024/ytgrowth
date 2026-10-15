@@ -3,7 +3,7 @@
 Plan entry: `#20` · Feature: `Channel Audit` · Anchor post: `/blog/youtube-channel-not-growing`
 Target query: `youtube channel plateaued after 1000 subscribers`
 Researched: `2026-10-15`
-Status: `awaiting approval`
+Status: `done`
 
 ---
 
@@ -318,3 +318,31 @@ anchor ≤ 4 words, FAQ array matching the visible H3 exactly.
 
 CtaCard: **Channel Audit**, mid-article after section 5, which is where the
 reader has just been told to check which of the two cases they are in.
+
+- **2026-10-15** Stage 2-3 complete. Published as `/blog/youtube-channel-plateau`.
+  Verified programmatically before presenting: 16 H2, 2,608 words, 3 tables,
+  3 bullet lists, 2 Pro Tip blockquotes, 97.4% bold coverage (1 of 39 `<p>`
+  unbolded, a list lead-in), max body paragraph 61 words, FAQ array and
+  visible H3 diffed exact on both questions and answers, 6 links all with
+  anchors of 4 words or fewer, 0 banned filler, 0 em-dashes, 0 italics,
+  0 shared H2 with any sibling. `check-drift.mjs` all green. Build clean,
+  140/140 routes prerendered. Two-way backlinks added to
+  `/blog/youtube-channel-not-growing` and
+  `/blog/youtube-views-dropped-after-monetization`.
+  **Cover image still needed:** prompt written below, user generates it.
+
+## 11. Cover image prompt (user runs this, per the cover-image process)
+
+Required output: **1600x900 JPG**, saved as
+`frontend/public/blog/youtube-channel-plateau-cover.jpg`, target 100-150KB.
+
+Prompt:
+
+> A content creator in their late twenties sitting at a home desk in warm
+> late-afternoon light from a window to the left, seen candidly over the
+> shoulder from slightly behind. On the laptop screen, a subscriber growth
+> chart: a line that climbs steeply and then flattens into a long plateau.
+> The creator is leaning in, one hand on the trackpad, studying the flat part
+> of the line with a thoughtful expression, not distress. Shallow depth of
+> field, the screen in focus and the room softly blurred. Natural photographic
+> style, no text overlays, no logos, no graphic-design elements.

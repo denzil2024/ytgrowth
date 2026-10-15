@@ -224,10 +224,19 @@ reaching `/features/channel-audit` or checkout.
     subscriber-watch share falls from 10.58% to 5.29% to 2.93% as
     channels grow 10K → 100K → 1M. No competitor in the SERP publishes a
     comparable cross-channel dataset.
-20. YouTube channel plateaued after 1,000 subscribers · Channel Audit ·
+~~20. YouTube channel plateaued after 1,000 subscribers · Channel Audit ·
     top3: reddit, quora, support.google · "reddit youtube channel plateau"
     returns 9 threads · scope: growth that stopped, not growth that never
-    started (that is `/blog/youtube-channel-not-growing`)
+    started (that is `/blog/youtube-channel-not-growing`)~~ — published
+    2026-10-15 as `/blog/youtube-channel-plateau`. Top-3 correction: live
+    check showed youtube.com, reddit, yttalk, not reddit/quora/support.google.
+    Differentiator: the denominator arithmetic plus 1,000 being a payment
+    threshold, not an algorithmic one (verified against YouTube's published
+    recommendation signals and the YPP eligibility page). Scoped away from
+    entry #13's monetization territory mid-session; that section links out
+    instead of re-explaining mid-rolls. 16 H2, 2,608 words, 3 tables,
+    3 bullet lists, 2 Pro Tips, 97.4% bold coverage, 9 FAQ (8 PAA + 1
+    editorial), 6 links, two-way backlinks added to #13 and not-growing.
 21. YouTube subscribers not increasing while views are fine · Channel
     Audit · top3: reddit, quora, support.google · PAA x4 · scope: the
     viewer-to-subscriber step only, check it does not restate the 10
