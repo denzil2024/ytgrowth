@@ -19875,7 +19875,7 @@ Free studio checklist: https://yoursite.com/checklist
       <>
         <p>Fifty new subscribers a month is 50% growth at 100 subscribers and 5% growth at 1,000. <strong>The channel did not slow down, the divisor got bigger.</strong> This is the single most common reason a channel appears to plateau right around the 1,000-subscriber mark, and it is arithmetic, not a penalty.</p>
 
-        <p>The milestone attracts the suspicion because it is the one creators watch for. It is also the one point where something real does change, so it feels like a plausible culprit. <strong>What changes is eligibility to be paid, not how videos get distributed.</strong> If your channel <a href="/blog/youtube-channel-not-growing">never started growing</a>, that is a different problem with different causes.</p>
+        <p>The milestone attracts the suspicion because it is the one creators watch for. It is also the one point where something real does change, which is why it gets blamed. <strong>What changes is eligibility to be paid, not how videos get distributed.</strong> If your channel <a href="/blog/youtube-channel-not-growing">never started growing</a>, that is a different problem with different causes.</p>
 
         <h2>The Same 50 Subscribers a Month Is 50% Growth, Then 5%</h2>
 
@@ -19905,7 +19905,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>That matters because the plateau theories circulating all assume a switch gets flipped. <a href="https://www.youtube.com/howyoutubeworks/product-features/recommendations/">YouTube's own description</a> has no switch in it. <strong>Recommendations are personalized per viewer, so your video competes for one person's next click at a time, regardless of your channel's total.</strong></p>
 
-        <h2>1,000 Subscribers Is a Payment Threshold, Not an Algorithmic One</h2>
+        <h2>1,000 Subscribers Is a Billing Threshold, Nothing Else</h2>
 
         <p>The number exists for one documented reason: <strong>1,000 subscribers plus 4,000 qualified public watch hours in the previous 12 months is the bar to apply to the YouTube Partner Program.</strong> It is an accounting line that decides when YouTube will start sharing revenue with you.</p>
 
@@ -19955,7 +19955,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>New channels get their uploads shown to small test audiences to gather response data, and a channel with few videos has that happen to a large share of its catalog at once. <strong>As the catalog grows, each new upload is a smaller fraction of the channel, so the share of your library in active testing drops.</strong></p>
 
-        <p><strong>This reads as a slowdown in subscriber intake specifically, because testing exposure reaches people who have never seen the channel, and those are the viewers who subscribe.</strong> Existing subscribers cannot subscribe twice.</p>
+        <p><strong>This slows subscriber intake specifically, because testing exposure reaches people who have never seen the channel, and those are the viewers who subscribe.</strong> Existing subscribers cannot subscribe twice.</p>
 
         <p>The signs separate this from a content problem, because they show up in reach instead of conversion:</p>
 
@@ -19997,7 +19997,7 @@ Free studio checklist: https://yoursite.com/checklist
 
         <p>A single video far above a channel's normal range brings in subscribers who came for that one topic. <strong>When the next upload returns to the channel's usual subject, those subscribers do not watch, which suppresses early engagement and limits how widely the new video gets shown.</strong></p>
 
-        <p>The scale of the mismatch is worth knowing before diagnosing it as a plateau. Our study on <a href="/blog/youtube-viral-views-multiple">viral view multiples</a> measured how far outlier videos sit above a channel's median. <strong>The gap is usually large enough that a normal follow-up looks like a collapse by comparison.</strong></p>
+        <p>The scale of the mismatch matters before diagnosing it as a plateau. Our study on <a href="/blog/youtube-viral-views-multiple">viral view multiples</a> measured how far outlier videos sit above a channel's median. <strong>The gap is usually large enough that a normal follow-up looks like a collapse by comparison.</strong></p>
 
         <h2>Returning Viewers Replaced New Ones</h2>
 
