@@ -106,6 +106,29 @@ number, it is saying plainly that nobody publishing this figure has the data
 to know it, and explaining why a tracked sample cannot produce it. That is
 honest and it is the opposite of what every competitor does.
 
+**Scope correction, 2026-10-15 (user flagged entry #13 mid-session).**
+`/blog/youtube-views-dropped-after-monetization` (entry #13, shipped
+2026-10-09) already owns the "views dropped after monetization" question, and
+its section "Mid-Roll Ad Placement Is the One Cause Tied to Monetization"
+already identifies the one real ads-linked mechanism. The original draft of
+this file made the monetization-throttling debunk entry #20's **central**
+differentiator, which would have duplicated #13.
+
+Verified distinction (H2 and keyword counts extracted from `posts.jsx`):
+
+| | #13 (shipped) | #20 (this entry) |
+|---|---|---|
+| Metric | views per video dropped | subscriber intake slowed |
+| Trigger | monetization turning on | crossing a subscriber count |
+| Shape | something fell | nothing fell, the rate flattened |
+| "plateau" / "growth rate" / "subscriber count" | **0 / 0 / 0 mentions** | the whole subject |
+
+So the monetization belief gets **one short section** here that states the
+conclusion and links to #13 for the mechanism, never re-explaining mid-rolls.
+The no-redundant-restatement rule requires exactly that. The central
+differentiator for #20 is instead the denominator arithmetic plus the
+payment-threshold-not-algorithmic-threshold point, which #13 does not touch.
+
 **A question the SERP asks and nobody answers.**
 The real belief driving this query is that crossing 1,000 subscribers (or
 getting monetized) causes YouTube to throttle reach. Evidence, all pulled this
@@ -161,8 +184,12 @@ grows. The threshold itself does nothing: YouTube's published recommendation
 signals contain no subscriber-count gate and no monetization gate.
 
 That reframes the fix: stop looking for what broke at 1,000, and look at
-whether absolute new-subscriber intake is actually falling, which is a
-different and checkable question.
+whether absolute new-subscriber intake is falling, which is a different and
+checkable question.
+
+**1,000 is a payment threshold, not an algorithmic one.** That is the line the
+article turns on, and no competitor states it. YPP eligibility is a billing
+gate; the published recommendation signals contain no subscriber-count input.
 
 ---
 
@@ -223,6 +250,7 @@ Internal (anchor text ≤ 4 words):
 - `/blog/youtube-channel-not-growing` → "never started growing" (intro, anchor post)
 - `/blog/youtube-views-per-sub-tier` → "subscriber watch share" (denominator section)
 - `/blog/youtube-viral-views-multiple` → "viral view multiples" (expectations section)
+- `/blog/youtube-views-dropped-after-monetization` → "views dropped after monetization" (monetization section, so the mid-roll mechanism is referenced not repeated)
 - `/features/channel-audit` → CtaCard, mid-article
 
 External (official only):
@@ -240,3 +268,53 @@ External (official only):
   Differentiator found and verified against two official YouTube sources.
   Cannibalization clear against all 3 siblings. **Awaiting approval of this
   file and the outline before writing.**
+
+---
+
+## 10. Outline (17 H2, awaiting approval)
+
+Opens with a real number from our own data, leading with the cause, per the
+diagnostic intent in §1.
+
+1. **The Same 50 Subscribers a Month Is 50% Growth, Then 5%** — opens with the
+   arithmetic. Worked table: 50/month against 100, 500, 1,000, 5,000 subs.
+2. **Nothing in YouTube's Published Signals Changes at 1,000** — the official
+   recommendation signals list, quoted. External link.
+3. **1,000 Subscribers Is a Payment Threshold, Not an Algorithmic One** — YPP
+   eligibility is a billing gate. External link to answer/72851.
+4. **Your Subscriber Watch Share Falls as the Channel Grows** — our measured
+   10.58% → 5.29% → 2.93%. Internal link to views-per-sub-tier.
+5. **Check Whether Intake Actually Fell, or Only the Rate** — the diagnostic
+   split. Decision table: rate down + intake flat = arithmetic; both down =
+   a real cause.
+6. **Monetization Did Not Throttle Your Reach** — short. States the
+   conclusion, links to entry #13 for the mid-roll mechanism. No re-explain.
+7. **The Early-Channel Testing Boost Was Always Temporary** — distinct from
+   #13's framing: here it is about subscriber intake, not per-video views.
+8. **Your First 1,000 Came From a Source That Does Not Scale** — friends,
+   one video, one external push. Bullet list of the non-scaling sources.
+9. **The Subscribe Rate Per Viewer Is the Metric That Matters** — definition
+   section, how to find it in Studio.
+10. **One Video Carried the Channel and Nothing Followed It** — internal link
+    to viral-views-multiple.
+11. **Returning Viewers Replaced New Ones** — the composition shift, checkable
+    in Studio's New vs. Returning.
+12. **Nobody Knows What Share of Channels Reach 1,000** — the honesty section.
+    Names the unsourced 90% claim, explains why a tracked set cannot produce a
+    population statistic.
+13. **The Content Drifted While the Audience Stayed** — the one cause every
+    competitor covers, kept because the union rule requires it.
+14. **What a Real Stall Looks Like Next to Arithmetic** — summary table,
+    cause → what you would see → what to check.
+15. **Frequently Asked Questions** — 8 PAA + 1 editorial, per §6.
+16. **A Flat Rate and a Falling Count Are Different Problems** — closing H2.
+    Plain declarative claim, not wordplay, per the data-study exception since
+    this post's headings all state findings.
+
+Counts to verify programmatically before presenting: 12+ H2 (16 here), 3+
+tables (sections 1, 5, 14, plus FAQ-adjacent), 3+ bullet lists (8, 9, 11),
+2+ Pro Tip blockquotes (5, 9), 1,500+ words, bold coverage 85-95%, every
+anchor ≤ 4 words, FAQ array matching the visible H3 exactly.
+
+CtaCard: **Channel Audit**, mid-article after section 5, which is where the
+reader has just been told to check which of the two cases they are in.
