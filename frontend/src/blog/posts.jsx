@@ -19857,7 +19857,7 @@ Free studio checklist: https://yoursite.com/checklist
     date: '2026-10-15',
     category: CATEGORIES.growth,
     cover: '/blog/youtube-channel-plateau-cover.jpg',
-    coverAlt: 'A creator at a desk studying a subscriber growth chart on a laptop, the line rising steeply then flattening out, warm afternoon light from a window',
+    coverAlt: 'A figure climbing a staircase of wooden blocks topped with red subscriber icons toward a glass barrier, a glowing line chart rising and then flattening',
     author: 'Denzil',
     readTime: '10 min read',
     faqs: [
